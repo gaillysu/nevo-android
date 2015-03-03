@@ -158,10 +158,16 @@ public class Optional<T> {
 
 ####  3- Everything which have a close relation to the UI, should be inside a View
 Ex This shouldn't be inside a Controller :
+
+```
+#!swift
+
         var titleLabel:UILabel = UILabel(frame: CGRectMake(0, 0, 120, 30))
         titleLabel.textColor = UIColor.whiteColor()
         titleLabel.text = NSLocalizedString("stepGoalTitle", comment: "")
         titleLabel.font = UIFont.systemFontOfSize(25)
+```
+
 Everything that starts with UIXXXXX or ColorXXX should be done inside a View
 (Why ? UI changes often, Controller much less often. So every thigns specific to teh appearance. Colors, Fonts, positions. Should be isolated from the rest of the code)
 ​
@@ -180,8 +186,14 @@ This is ok :
 Error : The connection has timed out unexpectedly. for peripheral : Nevo
 
 This is not ok :
+
+```
+#!Java
+
 Log.v("AAA","end");
 Log.v("AAA","begin");
+```
+
 
 ### Tips to a cleaner code ###
 
