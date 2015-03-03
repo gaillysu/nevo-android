@@ -8,35 +8,89 @@ This is the repository of Nevo-Android version
 
 #### 1-Naming conventions :
 Variable :
+
+```
+#!Java
+
     /**
      * Comment goes here 
      */
-    private boolean mIsJavaCamera = true;  (all Object variables should be private or (default) and start with an m.
+    private int mObjectName; 
+```
+
+
+(all Object variables should be private or (default) and start with an m.
 If you want to get or set a variable, create a getter or setter)
 
 Constant :
+
+```
+#!Java
+
 public static int NAME_OF_VARIABLE
+```
+
+
+
+```
+#!Java
 
 Class :
 ​public class NameOfClass {
 
 }​
+```
+
 or
+
+```
+#!Java
+
 ​/*package*/ class NameOfClass {
 
 }
+```
+
 ​(Why : Because if all variables are private, a variable won't be changed without your consent)​
 
 
 ####  2- Optionals​
 
-https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID330
-
 null is a big big plague in Java.
 
-So no variable should ever be null. Except inside an Optional.
+So no variable should ever be null. Ever. Except inside an Optional.
+
+We should never do :
+
+
+```
+#!Java
+
+private ClassName mName;
+
+mName = null
+```
+
+
+but always (if we need to be able to put it null sometimes)
+
+```
+#!Java
+
+
+private Optional<ClassName> mName;
+
+mName = new Optional<ClassName>(null);
+
+```
+
+That way we will never do mName.afunction() and have the app crash.
 
 Since android doesn't have optionals, use the following class (I add it to most projects usually) :
+
+
+```
+#!Java
 
 /**
  * Concept stolen from Java 8, it is a convenience method to warn that this object of type T can be null
@@ -98,6 +152,8 @@ public class Optional<T> {
 	}
 	
 }
+```
+
 
 
 ####  3- Everything which have a close relation to the UI, should be inside a View
