@@ -36,7 +36,7 @@ null is a big big plague in Java.
 
 So no variable should ever be null. Except inside an Optional.
 
-Since android doesn't have optionals, use the following class :
+Since android doesn't have optionals, use the following class (I add it to most projects usually) :
 
 /**
  * Concept stolen from Java 8, it is a convenience method to warn that this object of type T can be null
