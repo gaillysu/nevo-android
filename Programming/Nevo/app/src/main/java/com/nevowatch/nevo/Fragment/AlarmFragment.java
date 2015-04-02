@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,19 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
     private AlarmFragmentCallbacks mCallbacks;
     private TextView mClockTextView;
-    private String mClockSr;
+    private String mClockStr;
     private ImageButton mImageButton;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null){
+            mClockStr = savedInstanceState.getString("ClockStr");
+            mCallbacks.setClockTime(mClockStr);
+            Log.d("AlarmFragment", "create");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,20 +46,15 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         mImageButton = (ImageButton) rootView.findViewById(R.id.edit_clock_imageButton);
         mImageButton.setOnClickListener(this);
 
-    /*    if(savedInstanceState != null){
-            mCallbacks.setClockTime(mClockSr);
-        }*/
-
         return rootView;
     }
 
-/*
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mClockSr = mClockTextView.getText().toString();
+        mClockStr = mClockTextView.getText().toString();
+        outState.putString("ClockStr", mClockStr);
     }
-*/
 
     @Override
     public void onAttach(Activity activity) {
