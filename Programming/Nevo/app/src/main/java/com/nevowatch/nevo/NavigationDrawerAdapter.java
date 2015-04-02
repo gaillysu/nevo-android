@@ -40,7 +40,7 @@ public class NavigationDrawerAdapter extends ArrayAdapter<DrawerIcon> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.iconImage.setImageResource(drawerIcon.getIconId());
+        viewHolder.iconImage.setImageResource(drawerIcon.getmIconId());
         return view;
     }
 

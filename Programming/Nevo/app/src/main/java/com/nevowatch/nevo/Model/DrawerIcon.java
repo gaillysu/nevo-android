@@ -5,13 +5,13 @@ package com.nevowatch.nevo.Model;
  */
 public class DrawerIcon {
 
-    private int iconId;
+    private int mIconId;
 
-    public DrawerIcon(int iconId){
-        this.iconId = iconId;
+    public DrawerIcon(int mIconId){
+        this.mIconId = mIconId;
     }
 
-    public int getIconId() {
-        return iconId;
+    public int getmIconId() {
+        return mIconId;
     }
 }

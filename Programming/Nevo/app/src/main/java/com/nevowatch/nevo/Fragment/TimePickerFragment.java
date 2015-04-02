@@ -33,7 +33,11 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallbacks = (TimePickerFragmentCallbacks) activity;
+        try {
+            mCallbacks = (TimePickerFragmentCallbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement TimePickerFragmentCallbacks.");
+        }
     }
 
     @Override
