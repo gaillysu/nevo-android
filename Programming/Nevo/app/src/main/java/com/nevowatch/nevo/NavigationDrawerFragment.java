@@ -92,9 +92,9 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void initDrawerIcon(List<DrawerIcon> list){
-        list.add(new DrawerIcon(R.mipmap.ic_launcher));
-        list.add(new DrawerIcon(R.mipmap.ic_launcher));
-        list.add(new DrawerIcon(R.mipmap.ic_launcher));
+        list.add(new DrawerIcon(R.drawable.icon_home_button_selected));
+        list.add(new DrawerIcon(R.drawable.icon_goal_button_selected));
+        list.add(new DrawerIcon(R.drawable.icon_alarm_button_selected));
     }
 
     @Override
