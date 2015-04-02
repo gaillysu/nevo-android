@@ -9,18 +9,23 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_marginBottom="30dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
-            android:text="08:30" />
+            android:textSize="80sp"
+            android:text="@string/clock"
+            android:id="@+id/clock_textView"
+            android:layout_marginRight="10dp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_clock_imageView" />
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/edit_clock_imageButton"
+            android:layout_gravity="center_vertical"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -29,14 +34,17 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/on_mode_imageView" />
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/on_mode_button"
+            android:background="@drawable/alarm_open_button_selector"
+            android:layout_marginRight="25dp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/off_mode_imageView" />
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/off_mode_button"
+            android:background="@drawable/alarm_close_button_selector"/>
     </LinearLayout>
 </LinearLayout>

@@ -18,8 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.nevowatch.nevo.Model.DrawerIcon;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -56,6 +60,8 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private List<DrawerIcon> mIconList;
+    private ListView listView;
 
     public NavigationDrawerFragment() {
     }
@@ -85,6 +91,12 @@ public class NavigationDrawerFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    private void initDrawerIcon(List<DrawerIcon> list){
+        list.add(new DrawerIcon(R.mipmap.ic_launcher));
+        list.add(new DrawerIcon(R.mipmap.ic_launcher));
+        list.add(new DrawerIcon(R.mipmap.ic_launcher));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,15 +108,12 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
+
+        mIconList = new ArrayList<DrawerIcon>();
+        initDrawerIcon(mIconList);
+        NavigationDrawerAdapter navigationDrawerAdapter = new NavigationDrawerAdapter(getActionBar().getThemedContext(), R.layout.navigation_drawer_list_item, mIconList);
+
+        mDrawerListView.setAdapter(navigationDrawerAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }

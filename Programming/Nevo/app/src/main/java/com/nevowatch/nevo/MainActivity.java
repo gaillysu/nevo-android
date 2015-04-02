@@ -1,6 +1,9 @@
 package com.nevowatch.nevo;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -10,12 +13,16 @@ import android.view.Menu;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
+import com.nevowatch.nevo.Fragment.TimePickerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
 
-
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, GoalFragment.GoalFragmentCallbacks, AlarmFragment.AlarmFragmentCallbacks, WelcomeFragment.WelcomeFragmentCallbacks{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        GoalFragment.GoalFragmentCallbacks,
+        AlarmFragment.AlarmFragmentCallbacks,
+        WelcomeFragment.WelcomeFragmentCallbacks, TimePickerFragment.TimePickerFragmentCallbacks{
 
+    private static final int SETCLOCKTIME = 1;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -25,6 +32,19 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case SETCLOCKTIME:
+                    AlarmFragment fragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag("AlarmFragment");
+                    fragment.setClock(msg.getData().getString("Clock"));
+                   break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +64,23 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        String tag = null;
+        switch (position+1){
+            case 1:
+                tag = "WelcomeFragment";
+                break;
+            case 2:
+                tag = "GoalFragment";
+                break;
+            case 3:
+                tag = "AlarmFragment";
+            default:
+                break;
+
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
     }
 
@@ -63,6 +97,11 @@ public class MainActivity extends ActionBarActivity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
+    }
+
+    @Override
+    public void showTime() {
+        showTimePickerDialog();
     }
 
     public void restoreActionBar() {
@@ -84,6 +123,21 @@ public class MainActivity extends ActionBarActivity
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void setClockTime(String clockTime) {
+        Message msg = new Message();
+        msg.what = SETCLOCKTIME;
+        Bundle bundle = new Bundle();
+        bundle.putString("Clock", clockTime);
+        msg.setData(bundle);
+        handler.sendMessage(msg);
+    }
+
+    public void showTimePickerDialog() {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
 /*    @Override
