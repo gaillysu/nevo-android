@@ -22,6 +22,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_marginBottom="15dp"
             android:id="@+id/edit_steps_imageView"
             android:background="@drawable/editor"
             android:layout_gravity="bottom"
@@ -43,6 +44,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:layout_marginTop="50dp"
             android:text="Modarate"
             android:id="@+id/modarateButton"
             android:layout_gravity="center_horizontal"
