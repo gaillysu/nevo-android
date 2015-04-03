@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.nevowatch.nevo.Model.DrawerIcon;
@@ -61,7 +63,12 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private List<DrawerIcon> mIconList;
-    private ListView listView;
+    private DrawerIcon mDrawerIconArray[] = new DrawerIcon[]{
+            new DrawerIcon(R.drawable.icon_home_button_selected),
+            new DrawerIcon(R.drawable.icon_goal_button_selected),
+            new DrawerIcon(R.drawable.icon_alarm_button_selected)
+    };
+    private ImageView mDrawerIconImageArray[] = new ImageView[mDrawerIconArray.length];
 
     public NavigationDrawerFragment() {
     }
@@ -92,9 +99,9 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void initDrawerIcon(List<DrawerIcon> list){
-        list.add(new DrawerIcon(R.drawable.icon_home_button_selected));
-        list.add(new DrawerIcon(R.drawable.icon_goal_button_selected));
-        list.add(new DrawerIcon(R.drawable.icon_alarm_button_selected));
+        int i;
+        for(i=0; i<mDrawerIconArray.length; i++)
+            list.add(mDrawerIconArray[i]);
     }
 
     @Override
@@ -105,6 +112,8 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getDrawerIcon();
+                setDrawerIconLight(position);
                 selectItem(position);
             }
         });
@@ -196,6 +205,36 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
+    private void getDrawerIcon(){
+        int i;
+        for (i=0; i<mDrawerIconArray.length; i++){
+            LinearLayout linearLayout = (LinearLayout) mDrawerListView.getChildAt(i);
+            mDrawerIconImageArray[i] = (ImageView)linearLayout.findViewById(R.id.drawer_icon_imageView);
+        }
+    }
+
+    private void setDrawerIconLight(int position){
+
+        switch (position){
+            case 0:
+                mDrawerIconImageArray[0].setSelected(true);
+                mDrawerIconImageArray[1].setSelected(false);
+                mDrawerIconImageArray[2].setSelected(false);
+                break;
+            case 1:
+                mDrawerIconImageArray[0].setSelected(false);
+                mDrawerIconImageArray[1].setSelected(true);
+                mDrawerIconImageArray[2].setSelected(false);
+                break;
+            case 2:
+                mDrawerIconImageArray[0].setSelected(false);
+                mDrawerIconImageArray[1].setSelected(false);
+                mDrawerIconImageArray[2].setSelected(true);
+                break;
+            default:
+                break;
+        }
+    }
     private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {

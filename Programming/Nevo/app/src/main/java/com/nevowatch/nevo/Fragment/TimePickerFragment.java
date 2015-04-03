@@ -49,12 +49,12 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         String hourStr = null , minStr = null;
-        if(hourOfDay < 9){
+        if(hourOfDay <= 9){
             hourStr = "0" + hourOfDay;
         }else {
             hourStr = new Integer(hourOfDay).toString();
         }
-        if(minute < 9){
+        if(minute <= 9){
             minStr = "0" + minute;
         }else {
             minStr = new Integer(minute).toString();

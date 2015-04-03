@@ -24,8 +24,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     private TextView mClockTextView;
     private String mClockStr;
     private ImageButton mImageButton;
-    private Button onButton;
-    private Button offButton;
+    private Button mOnButton;
+    private Button mOffButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,10 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         mClockTextView.setOnClickListener(this);
         mImageButton = (ImageButton) rootView.findViewById(R.id.edit_clock_imageButton);
         mImageButton.setOnClickListener(this);
-        onButton =  (Button)rootView.findViewById(R.id.on_mode_button);
-        onButton.setOnClickListener(this);
-        offButton =  (Button)rootView.findViewById(R.id.off_mode_button);
-        offButton.setOnClickListener(this);
+        mOnButton =  (Button)rootView.findViewById(R.id.on_mode_button);
+        mOnButton.setOnClickListener(this);
+        mOffButton =  (Button)rootView.findViewById(R.id.off_mode_button);
+        mOffButton.setOnClickListener(this);
 
         return rootView;
     }
@@ -88,18 +88,16 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                 mCallbacks.showTime();
                 break;
             case R.id.on_mode_button:
-                Log.d("onButton","on");
-                offButton.setTextColor(0xff000000);
-                onButton.setTextColor(0xffffffff);
-                offButton.setSelected(false);
-                onButton.setSelected(true);
+                mOffButton.setTextColor(0xff000000);
+                mOnButton.setTextColor(0xffffffff);
+                mOffButton.setSelected(false);
+                mOnButton.setSelected(true);
                 break;
             case R.id.off_mode_button:
-                Log.d("offButton","off");
-                offButton.setTextColor(0xffffffff);
-                onButton.setTextColor(0xff000000);
-                offButton.setSelected(true);
-                onButton.setSelected(false);
+                mOffButton.setTextColor(0xffffffff);
+                mOnButton.setTextColor(0xff000000);
+                mOffButton.setSelected(true);
+                mOnButton.setSelected(false);
                 break;
             default:
                 break;
