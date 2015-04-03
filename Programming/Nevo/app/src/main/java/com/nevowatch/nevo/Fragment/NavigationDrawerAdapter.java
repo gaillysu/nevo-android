@@ -1,4 +1,4 @@
-package com.nevowatch.nevo;
+package com.nevowatch.nevo.Fragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.nevowatch.nevo.Model.DrawerIcon;
+import com.nevowatch.nevo.R;
 
 import java.util.List;
 

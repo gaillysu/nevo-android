@@ -1,4 +1,4 @@
-package com.nevowatch.nevo;
+package com.nevowatch.nevo.Fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.nevowatch.nevo.Model.DrawerIcon;
+import com.nevowatch.nevo.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,9 +113,9 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItem(position);
                 getDrawerIcon();
                 setDrawerIconLight(position);
-                selectItem(position);
             }
         });
 
