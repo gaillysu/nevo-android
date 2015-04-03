@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
@@ -17,6 +18,9 @@ import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.StepPickerFragment;
 import com.nevowatch.nevo.Fragment.TimePickerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
@@ -24,9 +28,10 @@ public class MainActivity extends ActionBarActivity
         AlarmFragment.AlarmFragmentCallbacks,
         WelcomeFragment.WelcomeFragmentCallbacks,
         TimePickerFragment.TimePickerFragmentCallbacks,
-        StepPickerFragment.StepPickerFragmentCallbacks{
+        StepPickerFragment.StepPickerFragmentCallbacks,OnSyncControllerListener {
 
     private static final int SETCLOCKTIME = 1;
+    private SyncController mSyncController;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -63,6 +68,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        mSyncController = SyncController.Factory.newInstance(this);
+        //mSyncController.startConnect(true,this);
     }
 
     @Override
@@ -152,6 +159,24 @@ public class MainActivity extends ActionBarActivity
     public void showStepPickerDialog(){
         DialogFragment newFragment = new StepPickerFragment();
         newFragment.show(getSupportFragmentManager(), "stepPicker");
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+        if (isConnected)
+        {
+            Toast.makeText(this,"Nevo Connected!",Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(this,"Nevo Disconnect!",Toast.LENGTH_LONG).show();
+        }
+
     }
 
 /*    @Override
