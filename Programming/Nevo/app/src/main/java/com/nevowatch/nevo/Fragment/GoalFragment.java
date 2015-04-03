@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 /**
@@ -27,7 +28,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     private static final int MODERATE = 0;
     private static final int INTENSIVE = 1;
     private static final int SPORTIVE = 2;
-    private int mState = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,6 +58,12 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mStepsTextView.setText(SaveData.getStepGoalFromPreference(getActivity()));
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
@@ -71,6 +77,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
 
     public void setStep(String goal){
         mStepsTextView.setText(goal);
+        SaveData.saveStepGoalToPreference(getActivity(), goal);
     }
 
     @Override
@@ -83,35 +90,19 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
             case R.id.modarateButton:
                 setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mModarateButton);
                 mCallbacks.setStepMode(MODERATE);
-                mState = MODERATE;
                 break;
             case R.id.intensiveButton:
                 setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mIntensiveButton);
                 mCallbacks.setStepMode(INTENSIVE);
-                mState = INTENSIVE;
                 break;
             case R.id.sportiveButton:
                 setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mSportiveButton);
                 mCallbacks.setStepMode(SPORTIVE);
-                mState = SPORTIVE;
                 break;
             default:
                 break;
         }
 
-    }
-
-    public int getStepsGoal() {
-        if(mState == MODERATE)
-        {
-            return 6;
-        }else if(mState == INTENSIVE){
-            return 9;
-        }else if(mState == SPORTIVE){
-            return 19;
-        }else {
-            return 0;
-        }
     }
 
     public void setSelectedButtonProperty(Button[] v,Button l){

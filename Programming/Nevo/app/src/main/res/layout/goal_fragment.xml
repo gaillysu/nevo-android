@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
+            android:textSize="80sp"
             android:text="7000"
             android:id="@+id/steps_textView"
             android:layout_marginTop="50dp"/>
@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="30dp"
             android:id="@+id/edit_steps_imageView"
             android:background="@drawable/editor"
             android:layout_gravity="bottom"
@@ -44,7 +44,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:text="Modarate"
             android:id="@+id/modarateButton"
             android:layout_gravity="center_horizontal"
