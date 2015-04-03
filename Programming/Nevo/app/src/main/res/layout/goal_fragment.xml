@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="50sp"
-            android:text="20000"
+            android:text="0"
             android:id="@+id/steps_textView"
             android:layout_marginTop="50dp"/>
 
