@@ -31,7 +31,12 @@ public class MainActivity extends ActionBarActivity
         StepPickerFragment.StepPickerFragmentCallbacks,OnSyncControllerListener {
 
     private static final int SETCLOCKTIME = 1;
+
     private SyncController mSyncController;
+
+    private static final int SETSTEPGOAL = 2;
+    private static final int SETSTEPMODE = 3;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -46,9 +51,30 @@ public class MainActivity extends ActionBarActivity
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case SETCLOCKTIME:
-                    AlarmFragment fragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag("AlarmFragment");
-                    fragment.setClock(msg.getData().getString("Clock"));
-                   break;
+                    AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag("AlarmFragment");
+                    alramfragment.setClock(msg.getData().getString("Clock"));
+                    break;
+                case SETSTEPGOAL:
+                case SETSTEPMODE:
+                    GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
+                    if(msg.what == SETSTEPGOAL){
+                        goalfragment.setStep(msg.getData().getString("Goal"));
+                    }else if(msg.what == SETSTEPMODE){
+                        switch (msg.getData().getInt("Mode")){
+                            case 0:
+                                goalfragment.setStep(new Integer(7000).toString());
+                                break;
+                            case 1:
+                                goalfragment.setStep(new Integer(10000).toString());
+                                break;
+                            case 2:
+                                goalfragment.setStep(new Integer(20000).toString());
+                                break;
+                            default:
+                                break;
+                       }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -116,6 +142,16 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    public void setStepMode(int mode) {
+        Message msg = new Message();
+        msg.what = SETSTEPMODE;
+        Bundle bundle = new Bundle();
+        bundle.putInt("Mode", mode);
+        msg.setData(bundle);
+        handler.sendMessage(msg);
+    }
+
+    @Override
     public void showTime() {
         showTimePickerDialog();
     }
@@ -162,6 +198,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+
     public void packetReceived(NevoPacket packet) {
 
     }
@@ -177,6 +214,19 @@ public class MainActivity extends ActionBarActivity
             Toast.makeText(this,"Nevo Disconnect!",Toast.LENGTH_LONG).show();
         }
 
+    public void setStepGoal(String stepGoal) {
+        Message msg = new Message();
+        msg.what = SETSTEPGOAL;
+        Bundle bundle = new Bundle();
+        bundle.putString("Goal", stepGoal);
+        msg.setData(bundle);
+        handler.sendMessage(msg);
+    }
+
+    @Override
+    public int getStepGoal() {
+        GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
+        return goalfragment.getStepsGoal();
     }
 
 /*    @Override

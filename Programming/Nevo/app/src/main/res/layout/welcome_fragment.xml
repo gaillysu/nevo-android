@@ -3,8 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/clock_imageView" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent = "true"
+            android:id="@+id/clock_imageView"
+            android:background="@drawable/clockview600"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent = "true"
+            android:id="@+id/HomeClockHour"
+            android:background="@drawable/clockview_hour" />
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerInParent = "true"
+            android:id="@+id/HomeClockMinute"
+            android:background="@drawable/clockview_minute" />
+    </RelativeLayout>
 </LinearLayout>

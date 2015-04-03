@@ -1,14 +1,12 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.NumberPicker;
 
 import com.nevowatch.nevo.R;
@@ -29,22 +27,38 @@ public class StepPickerFragment extends DialogFragment{
             mDisplayedValues[i] = String.valueOf(VALUES_INTERVAL * (i+1));
     }
 
+
+    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.step_picker_fragment, container, false);
-        mNumberPicker = (NumberPicker) rootView.findViewById(R.id.step_number_picker);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        mNumberPicker = new NumberPicker(getActivity());
         mDisplayedValues = new String[NUMBER_OF_VALUES];
         setDisplayedValues();
         mNumberPicker.setMaxValue(NUMBER_OF_VALUES - 1);
         mNumberPicker.setMinValue(0);
         mNumberPicker.setDisplayedValues(mDisplayedValues);
-        return rootView;
-    }
+        mNumberPicker.setValue(mCallbacks.getStepGoal());
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return super.onCreateDialog(savedInstanceState);
+        return new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.step_picker_title)
+                .setPositiveButton(R.string.step_picker_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                int temp = (mNumberPicker.getValue() + 1) * VALUES_INTERVAL;
+                                mCallbacks.setStepGoal(new Integer(temp).toString());
+                            }
+                        }
+                )
+                .setNegativeButton(R.string.step_picker_cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // ((FragmentAlertDialog)getActivity()).doNegativeClick();
+                            }
+                        }
+                )
+                .setView(mNumberPicker)
+                .create();
     }
 
     @Override
@@ -64,6 +78,7 @@ public class StepPickerFragment extends DialogFragment{
     }
 
     public interface StepPickerFragmentCallbacks{
-
+        void setStepGoal(String stepGoal);
+        int getStepGoal();
     }
 }
