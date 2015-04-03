@@ -210,14 +210,12 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if (isConnected)
-        {
-            Toast.makeText(this,"Nevo Connected!",Toast.LENGTH_LONG).show();
+        if (isConnected) {
+            Toast.makeText(this, "Nevo Connected!", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Nevo Disconnect!", Toast.LENGTH_LONG).show();
         }
-        else
-        {
-            Toast.makeText(this,"Nevo Disconnect!",Toast.LENGTH_LONG).show();
-        }
+    }
 
     public void setStepGoal(String stepGoal) {
         Message msg = new Message();
