@@ -14,6 +14,7 @@ import android.view.Menu;
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
+import com.nevowatch.nevo.Fragment.StepPickerFragment;
 import com.nevowatch.nevo.Fragment.TimePickerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
 
@@ -21,7 +22,9 @@ public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         GoalFragment.GoalFragmentCallbacks,
         AlarmFragment.AlarmFragmentCallbacks,
-        WelcomeFragment.WelcomeFragmentCallbacks, TimePickerFragment.TimePickerFragmentCallbacks{
+        WelcomeFragment.WelcomeFragmentCallbacks,
+        TimePickerFragment.TimePickerFragmentCallbacks,
+        StepPickerFragment.StepPickerFragmentCallbacks{
 
     private static final int SETCLOCKTIME = 1;
     /**
@@ -101,6 +104,11 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    public void showStep() {
+        showStepPickerDialog();
+    }
+
+    @Override
     public void showTime() {
         showTimePickerDialog();
     }
@@ -139,6 +147,11 @@ public class MainActivity extends ActionBarActivity
     public void showTimePickerDialog() {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void showStepPickerDialog(){
+        DialogFragment newFragment = new StepPickerFragment();
+        newFragment.show(getSupportFragmentManager(), "stepPicker");
     }
 
 /*    @Override

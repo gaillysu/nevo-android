@@ -100,8 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void initDrawerIcon(List<DrawerIcon> list){
-        int i;
-        for(i=0; i<mDrawerIconArray.length; i++)
+        for(int i=0; i<mDrawerIconArray.length; i++)
             list.add(mDrawerIconArray[i]);
     }
 
@@ -187,6 +186,7 @@ public class NavigationDrawerFragment extends Fragment {
 
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
+
         };
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
@@ -207,8 +207,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void getDrawerIcon(){
-        int i;
-        for (i=0; i<mDrawerIconArray.length; i++){
+        for (int i=0; i<mDrawerIconArray.length; i++){
             LinearLayout linearLayout = (LinearLayout) mDrawerListView.getChildAt(i);
             mDrawerIconImageArray[i] = (ImageView)linearLayout.findViewById(R.id.drawer_icon_imageView);
         }

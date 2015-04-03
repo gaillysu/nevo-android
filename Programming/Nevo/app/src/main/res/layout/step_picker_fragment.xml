@@ -7,7 +7,8 @@
     <NumberPicker
         android:id="@+id/step_number_picker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
     </NumberPicker>
 
 </LinearLayout>

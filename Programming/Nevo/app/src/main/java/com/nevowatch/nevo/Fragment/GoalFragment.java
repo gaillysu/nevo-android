@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Button;
 
 import com.nevowatch.nevo.R;
 
@@ -20,15 +21,25 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     private GoalFragmentCallbacks mCallbacks;
     private TextView mStepsTextView;
     private ImageView mEditStepsImage;
+    private Button mModarateButton;
+    private Button mIntensiveButton;
+    private Button mSportiveButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.goal_fragment, container, false);
         mCallbacks.onSectionAttached(2);
+
         mStepsTextView = (TextView) rootView.findViewById(R.id.steps_textView);
         mStepsTextView.setOnClickListener(this);
         mEditStepsImage = (ImageView) rootView.findViewById(R.id.edit_steps_imageView);
         mEditStepsImage.setOnClickListener(this);
+        mModarateButton =  (Button)rootView.findViewById(R.id.modarateButton);
+        mModarateButton.setOnClickListener(this);
+        mIntensiveButton =  (Button)rootView.findViewById(R.id.intensiveButton);
+        mIntensiveButton.setOnClickListener(this);
+        mSportiveButton =  (Button)rootView.findViewById(R.id.sportiveButton);
+        mSportiveButton.setOnClickListener(this);
         return rootView;
     }
 
@@ -48,20 +59,47 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
         mCallbacks = null;
     }
 
+    public static interface GoalFragmentCallbacks {
+        void onSectionAttached(int position);
+        void showStep();
+    }
+
+
     @Override
-    public void onClick(View v) {
+    public void onClick(View v){
         switch (v.getId()){
             case R.id.steps_textView:
             case R.id.edit_steps_imageView:
                 mCallbacks.showStep();
                 break;
+            case R.id.modarateButton:
+                setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mModarateButton);
+                break;
+            case R.id.intensiveButton:
+                setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mIntensiveButton);
+                break;
+            case R.id.sportiveButton:
+                setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mSportiveButton);
+                break;
             default:
                 break;
         }
+
     }
 
-    public static interface GoalFragmentCallbacks {
-        void onSectionAttached(int position);
-        void showStep();
+
+    public void setSelectedButtonProperty(Button[] v,Button l){
+        for (int i = 0; i <v.length; i++) {
+            v[i].setTextColor(0xff000000);
+            v[i].setSelected(false);
+            if (l.equals(v[i])) {
+                v[i].setTextColor(0xffffffff);
+                v[i].setSelected(true);
+            }
+        }
     }
+
 }
+
+
+

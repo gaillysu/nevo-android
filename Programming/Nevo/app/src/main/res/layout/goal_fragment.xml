@@ -40,20 +40,30 @@
             android:text="Stpes"
             android:layout_gravity="center_horizontal"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/light_mode_imageView" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="Modarate"
+            android:id="@+id/modarateButton"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/goal_button_xml_selected7000" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/moderate_mode_imageView" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="Intensive"
+            android:id="@+id/intensiveButton"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/goal_button_xml_selected10000" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/intensive_mode_imageView" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="Sportive"
+            android:id="@+id/sportiveButton"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/goal_button_xml_selected20000" />
+
     </LinearLayout>
 
 
