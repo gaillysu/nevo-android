@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 
@@ -79,6 +80,11 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         mCallbacks = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mClockTextView.setText(SaveData.getAlarmFromPreference(getActivity()));
+    }
 
     @Override
     public void onClick(View v) {
@@ -107,6 +113,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
     public void setClock(String time){
         mClockTextView.setText(time);
+        SaveData.saveAlarmToPreference(getActivity(), time);
     }
 
     public static interface  AlarmFragmentCallbacks {

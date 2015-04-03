@@ -33,6 +33,7 @@ public class MainActivity extends ActionBarActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+    private DrawerLayout mDrawerLayout;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -77,6 +78,10 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //disenable navigation drawer shadow
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -195,12 +200,6 @@ public class MainActivity extends ActionBarActivity
         bundle.putString("Goal", stepGoal);
         msg.setData(bundle);
         handler.sendMessage(msg);
-    }
-
-    @Override
-    public int getStepGoal() {
-        GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
-        return goalfragment.getStepsGoal();
     }
 
 /*    @Override

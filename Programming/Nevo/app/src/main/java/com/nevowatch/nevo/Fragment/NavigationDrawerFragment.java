@@ -1,10 +1,8 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -22,29 +20,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.Model.DrawerIcon;
 import com.nevowatch.nevo.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
- */
+
 public class NavigationDrawerFragment extends Fragment {
 
     /**
      * Remember the position of the selected item.
      */
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
-
-    /**
-     * Per the design guidelines, you should show the drawer on launch until the user manually
-     * expands it. This shared preference tracks this.
-     */
-    private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     /**
      * A pointer to the current callbacks instance (the Activity).
@@ -80,8 +69,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+        mUserLearnedDrawer = SaveData.getUserLearnFromPreference(getActivity());
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
@@ -108,7 +96,7 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+                R.layout.navigation_drawer_fragment, container, false);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -179,9 +167,7 @@ public class NavigationDrawerFragment extends Fragment {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+                    SaveData.saveUserLearnToPreference(getActivity(),mUserLearnedDrawer);
                 }
 
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()

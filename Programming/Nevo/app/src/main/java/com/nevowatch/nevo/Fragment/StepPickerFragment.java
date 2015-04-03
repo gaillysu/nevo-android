@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.NumberPicker;
 
+import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 /**
@@ -38,7 +39,6 @@ public class StepPickerFragment extends DialogFragment{
         mNumberPicker.setMaxValue(NUMBER_OF_VALUES - 1);
         mNumberPicker.setMinValue(0);
         mNumberPicker.setDisplayedValues(mDisplayedValues);
-        mNumberPicker.setValue(mCallbacks.getStepGoal());
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.step_picker_title)
@@ -62,6 +62,12 @@ public class StepPickerFragment extends DialogFragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mNumberPicker.setValue(Integer.parseInt(SaveData.getStepGoalFromPreference(getActivity())) / 1000 - 1);
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -79,6 +85,5 @@ public class StepPickerFragment extends DialogFragment{
 
     public interface StepPickerFragmentCallbacks{
         void setStepGoal(String stepGoal);
-        int getStepGoal();
     }
 }
