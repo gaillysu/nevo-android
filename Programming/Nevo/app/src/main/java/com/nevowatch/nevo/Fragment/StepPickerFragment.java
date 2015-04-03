@@ -42,7 +42,7 @@ public class StepPickerFragment extends DialogFragment{
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.step_picker_title)
-                .setPositiveButton(R.string.step_picker_cancel,
+                .setPositiveButton(R.string.step_picker_ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 int temp = (mNumberPicker.getValue() + 1) * VALUES_INTERVAL;
@@ -50,7 +50,7 @@ public class StepPickerFragment extends DialogFragment{
                             }
                         }
                 )
-                .setNegativeButton(R.string.step_picker_ok,
+                .setNegativeButton(R.string.step_picker_cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // ((FragmentAlertDialog)getActivity()).doNegativeClick();
