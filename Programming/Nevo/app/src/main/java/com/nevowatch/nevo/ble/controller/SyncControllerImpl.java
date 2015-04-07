@@ -1,7 +1,9 @@
 package com.nevowatch.nevo.ble.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
 
 import com.nevowatch.nevo.ble.ble.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
@@ -13,26 +15,41 @@ import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
+import com.nevowatch.nevo.ble.model.packet.DailyTrackerNevoPacket;
+import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
+import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.nevowatch.nevo.ble.model.request.Goal;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.model.request.SetAlarmNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetGoalNevoRequest;
+import com.nevowatch.nevo.ble.model.request.SetProfileNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetRtcNevoRequest;
+import com.nevowatch.nevo.ble.model.request.WriteSettingNevoRequest;
+import com.nevowatch.nevo.ble.model.request.SetCardioNevoRequest;
+import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
+import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
+import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 public class SyncControllerImpl implements SyncController{
 
 	Context mContext;
-	
+	private static final int SYNC_INTERVAL = 0*60*60*1000; //every hour , do sync when connected again
 	private ImazeBT  mImazeBT;
 	private OnSyncControllerListener mOnSyncControllerListener;
-	
+    private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
+
+    private ArrayList<NevoPacket.DailyHistory> savedDailyHistory = new ArrayList<NevoPacket.DailyHistory>();
+    private int currentDay = 0;
+
 	/**
 	 * This listener is called when new data is received
 	 */
@@ -45,13 +62,60 @@ public class SyncControllerImpl implements SyncController{
 			if (data.getType().equals(NevoRawData.TYPE))
 			{
 				final NevoRawData nevoData = (NevoRawData) data;
+                mPacketsbuffer.add(nevoData);
+
 				if((byte)0xFF == nevoData.getRawData()[0])
 				{
 					QueuedMainThreadHandler.getInstance().next();
 					
-					NevoPacket packet = new NevoPacket();
+					NevoPacket packet = new NevoPacket(mPacketsbuffer);
 					mOnSyncControllerListener.packetReceived(packet);
-				}
+
+                    if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //setp2:start set user profile
+                        sendRequest(new SetProfileNevoRequest());
+                    }
+                    if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //step3:WriteSetting
+                        sendRequest(new WriteSettingNevoRequest());
+                    }
+                    if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //step4:SetCardio
+                        sendRequest(new SetCardioNevoRequest());
+                    }
+                    if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //start sync data
+                        syncActivityData();
+                    }
+                    if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
+                        currentDay = 0;
+                        savedDailyHistory = infopacket.getDailyTrackerInfo();
+                        getDailyTracker(currentDay);
+                    }
+
+                    if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        /*TODO  save to google fit or local database*/
+                        currentDay++;
+                        if(currentDay < savedDailyHistory.size())
+                        {
+                            getDailyTracker(currentDay);
+                        }
+                        else
+                        {
+                            currentDay = 0;
+                            syncFinished();
+                        }
+                    }
+
+                    mPacketsbuffer.clear();
+                }
 			}
 			
 		}
@@ -62,7 +126,7 @@ public class SyncControllerImpl implements SyncController{
 		@Override
 		public void onConnect(String peripheralAdress) {
 			mOnSyncControllerListener.connectionStateChanged(true);
-
+            //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -98,6 +162,56 @@ public class SyncControllerImpl implements SyncController{
 			mOnSyncControllerListener.connectionStateChanged(false);
 		}
 	};
+
+    private void setRtc() {
+        sendRequest(new SetRtcNevoRequest());
+    }
+
+    private void sendRequest(final SensorRequest request)
+    {
+        QueuedMainThreadHandler.getInstance().post(new Runnable(){
+            @Override
+            public void run() {
+                mImazeBT.sendRequest(request);
+            }
+        });
+
+    }
+
+    void  getDailyTrackerInfo()
+    {
+        sendRequest(new ReadDailyTrackerInfoNevoRequest());
+    }
+
+    void  getDailyTracker(int trackerno)
+    {
+        sendRequest(new ReadDailyTrackerNevoRequest(trackerno));
+    }
+
+    /**
+     This function will syncrhonise activity data with the watch.
+     It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
+     The watch should be emptied after all data have been saved.
+     */
+    void syncActivityData() {
+
+        long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
+
+        if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL) {
+            //We haven't synched for a while, let's sync now !
+            Log.i("SyncControllerImpl","*** Sync started ! ***");
+            getDailyTrackerInfo();
+        }
+
+    }
+
+    /**
+     When the sync process is finished, le't refresh the date of sync
+     */
+    void syncFinished() {
+        Log.i("SyncControllerImpl","*** Sync finished ***");
+        mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
+    }
 		
 	public SyncControllerImpl(Context context)
 	{
@@ -110,8 +224,7 @@ public class SyncControllerImpl implements SyncController{
 		mImazeBT.exceptionCallback(mExceptionListener);				
 	}
 
-	@Override
-	public void setContext(Context context) {
+	/*package*/void setContext(Context context) {
 		mContext = context;		
 	}
 
@@ -145,36 +258,27 @@ public class SyncControllerImpl implements SyncController{
 		
 	}
 
-	private void sendRequest(final SensorRequest request)
-	{
-		QueuedMainThreadHandler.getInstance().post(new Runnable(){
-			@Override
-			public void run() {
-				mImazeBT.sendRequest(request);
-			}			
-		});
-		
-	}
 	@Override
 	public void setGoal(Goal goal) {
 		sendRequest(new SetGoalNevoRequest(goal));
 	}
 
     @Override
-    public void setRtc() {
-        sendRequest(new SetRtcNevoRequest());
-    }
-
-    @Override
 	public void setAlarm(int hour, int minute, boolean enable) {
 		sendRequest(new SetAlarmNevoRequest(hour,minute,enable));	
 	}
 
+    @Override
+    public void getStepsAndGoal() {
+        sendRequest(new GetStepsGoalNevoRequest());
+    }
 
-	@Override
+
+    @Override
 	public boolean isConnected() {
 		
 		return !mImazeBT.isDisconnected();
 	}
+
 	
 }

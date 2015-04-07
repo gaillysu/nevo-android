@@ -4,19 +4,31 @@ public class ReadDailyTrackerInfoNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x24;
 	@Override
 	public byte[] getRawData() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public byte[][] getRawDataEx() {
-		// TODO Auto-generated method stub
-		return null;
+        return new byte[][] {
+                {0,HEADER,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0
+                },
+                {(byte) 0xFF,HEADER,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0
+                }
+        };
 	}
 
 	@Override
 	public byte getHeader() {
-		// TODO Auto-generated method stub
+
 		return HEADER;
 	}
 

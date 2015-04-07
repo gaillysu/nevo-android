@@ -6,12 +6,20 @@ import android.content.Context;
 
 /**
  * this class define some functions for communication with Nevo,
- * all UI activity should use this interface,
- * Usage in one Activity, eg: setGoalActivity
- * 
+ * all UI activity or Fragment should use this interface,
+ * Usage in  Activity or Fragment
+ *
+ * SyncController  sync = SyncController.Factory.newInstance(this)
+ *  "this"  object should implement OnSyncControllerListener, mostly "this" object is a activity, it also is
+ *  a Fragment. such as  GoalFragment
+ *
+ *  step1: sync.startConnect(true,this); // step1 should be called when the app start or user press "connect"
+ *                                       //only step1 connected, can do step2, otherwise, step2 will return without sending request.
+ *  step2: sync.setGoal(new NumberOfStepsGoal(10000))
+ *
+ *
  * @author Gaillysu
- *  SyncController  sync = SyncController.Factory.newInstance(setGoalActivity.this)
- *  setGoalActivity should implement OnSyncControllerListener
+ *
  */
 public interface SyncController {
 
@@ -28,13 +36,37 @@ public interface SyncController {
 		}
 	}
 	
-	void setContext(Context context);
-	public Context getContext();	
+    /*
+    return SyncController 's Context , mostly it is a activity, such as MainActivity or OTA activity
+     */
+	public Context getContext();
+
+    /*
+    start Connect Nevo
+    input:forceScan, if true,do scanning before connect (will forget old UDID, and save new UUID when connected)
+    if false, connect the saved UDID 's Nevo
+     */
 	void startConnect(boolean forceScan,OnSyncControllerListener listenser);
-	
+
+    /*
+    return Nevo connect true or false
+     */
 	public boolean isConnected();
+
+    /*
+    set Steps Goal
+    inputL goal =  new NumberOfStepsGoal(XXXX)
+     */
 	public void setGoal(Goal goal);
-    public void setRtc();
+    /*
+    input hour:0~23
+          minute:0~59
+          enable : true or false
+     */
 	public void setAlarm(int hour,int minute,boolean enable);
+    /*
+      return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
+     */
+    public void getStepsAndGoal();
 	
 }
