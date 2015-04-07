@@ -655,7 +655,7 @@ public class ImazeBTService extends Service {
     
     private void sendRequest(SensorRequest deviceRequest) {
 		UUID serviceUUID = deviceRequest.getServiceUUID();
-		UUID characteristicUUID = deviceRequest.getCharacteristicUUID();
+		UUID characteristicUUID = deviceRequest.getInputCharacteristicUUID();
 		byte[] rawData = deviceRequest.getRawData();
 		byte[][] rawDatas = deviceRequest.getRawDataEx();
 			

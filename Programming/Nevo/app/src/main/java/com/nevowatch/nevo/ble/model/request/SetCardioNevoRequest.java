@@ -9,9 +9,17 @@ public class SetCardioNevoRequest extends NevoRequest {
 
 	@Override
 	public byte[][] getRawDataEx() {
-		return new byte[][] {
-				   {0,HEADER,0,0,
-					0,0,0,0,
+
+        int maxHR  = 210;
+        int restHR = 65;
+        int zone_HR_H  = 180;
+        int zone_HR_L  = 60;
+
+        return new byte[][] {
+				   {0,HEADER,
+                   (byte)(maxHR&0xFF),(byte)(restHR&0xFF),
+                   (byte)(zone_HR_H&0xFF),(byte)(zone_HR_L&0xFF),
+                    0,0,
 					0,0,0,0,
 					0,0,0,0,
 					0,0,0,0

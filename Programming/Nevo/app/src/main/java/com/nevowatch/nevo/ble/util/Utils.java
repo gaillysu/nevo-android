@@ -11,14 +11,6 @@ import com.nevowatch.nevo.ble.ble.GattAttributes;
 
 public class Utils {
 
-	public static boolean isAvaialbleBLEDevice(String deviceName) {
-		if (deviceName.contains(Constants.BLE_DEVICE_NAME_POWER)
-				|| deviceName.contains(Constants.BLE_DEVICE_NAME_BSC) || deviceName.contains(Constants.BLE_DEVICE_NAME_HRM))
-			return true;
-
-		return false;
-	}
-
 	public static int getValueForOctet(String octet, int startIndex,
 			int length, int powerValue) {
 		int value = 0;

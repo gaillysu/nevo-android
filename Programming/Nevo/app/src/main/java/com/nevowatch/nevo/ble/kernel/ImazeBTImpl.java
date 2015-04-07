@@ -32,6 +32,7 @@ import com.nevowatch.nevo.ble.ble.ImazeBTService;
 import com.nevowatch.nevo.ble.ble.SupportedService;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
+import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 
 
@@ -112,8 +113,6 @@ import com.nevowatch.nevo.ble.util.Optional;
     private List<SupportedService> mSupportServicelist = new ArrayList<SupportedService>();
 	
     private String saveAddress;
-    private String PREF_NAME = "NevoPrefs";
-	private String SAVE_MAC_ADDRESS = "savemacaddress";
 	private Timer mAutoReconnectTimer = null;
     private int  mTimerIndex = 0;
     private final static int[] mReConnectTimerPattern = new int[]{10000,10000,10000,60000,120000,240000,3600000};
@@ -692,16 +691,16 @@ import com.nevowatch.nevo.ble.util.Optional;
 
 	private void setSaveAddress(String address)
 	{
-		mContext.getSharedPreferences(PREF_NAME, 0).edit().putString(SAVE_MAC_ADDRESS, address).commit();
+		mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, address).commit();
 	}
 	private String getSaveAddress()
 	{
-		return mContext.getSharedPreferences(PREF_NAME, 0).getString(SAVE_MAC_ADDRESS, "");
+		return mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "");
 	}
 	
 	@Override
 	public boolean hasSavedAddress() {
-		if(!mContext.getSharedPreferences(PREF_NAME, 0).getString(SAVE_MAC_ADDRESS, "").equals(""))
+		if(!mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "").equals(""))
 		{			
 			return true;
 		}
@@ -714,13 +713,13 @@ import com.nevowatch.nevo.ble.util.Optional;
 		{
 			saveAddress = getSaveAddress();
 		}
-		mContext.getSharedPreferences(PREF_NAME, 0).edit().putString(SAVE_MAC_ADDRESS, "").commit();
+		mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, "").commit();
 	}
 
 	@Override
 	public void restoreSavedAddress() {
 		if(!saveAddress.equals(""))
-			mContext.getSharedPreferences(PREF_NAME, 0).edit().putString(SAVE_MAC_ADDRESS, saveAddress).commit();
+			mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, saveAddress).commit();
 		
 	}
 
