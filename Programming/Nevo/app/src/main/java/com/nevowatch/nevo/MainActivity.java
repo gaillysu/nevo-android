@@ -36,6 +36,9 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
+import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
+import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
+import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,10 +137,10 @@ public class MainActivity extends ActionBarActivity
                             /*when user click Alarm on/off button , or select new Alarm time, all the three cases
                     ,need call mSyncController.setAlarm(...)*/
 
-                   // mSyncController.setAlarm((int)(msg.getData().getFloat("HourDegree")),
-                   //         (int)(msg.getData().getFloat("MinDegree")),
-                   //         SaveData.getClockStateFromPreference(MainActivity.this));
-
+                    String[] strAlarm = msg.getData().getString("Clock").split(":");
+                    mSyncController.setAlarm(Integer.parseInt(strAlarm[0]),
+                            Integer.parseInt(strAlarm[1]),
+                            SaveData.getClockStateFromPreference(MainActivity.this));
                     break;
                 case SETSTEPGOAL:
                 case SETSTEPMODE:
@@ -358,7 +361,17 @@ public class MainActivity extends ActionBarActivity
     @Override
 
     public void packetReceived(NevoPacket packet) {
+        if((byte) GetStepsGoalNevoRequest.HEADER == packet.getHeader())
+        {
+            DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
+            WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
+            int dailySteps = steppacket.getDailySteps();
+            int dailyGoal = steppacket.getDailyStepsGoal();
+            Log.i("MainActivity","dailySteps =" + dailySteps +",dailyGoal" + dailyGoal );
+            welcomefragment.setText(dailySteps+"/"+dailyGoal);
+            welcomefragment.setProgressBar((int)(100.0*dailySteps/dailyGoal));
 
+        }
     }
 
     @Override

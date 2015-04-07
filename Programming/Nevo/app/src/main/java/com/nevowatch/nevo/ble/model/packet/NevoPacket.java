@@ -26,6 +26,14 @@ public class NevoPacket {
     {
         return new DailyStepsNevoPacket(mPackets);
     }
+    public byte getHeader()
+    {
+        return mPackets.get(0).getRawData()[1];
+    }
+    public ArrayList<NevoRawData> getPackets()
+    {
+        return mPackets;
+    }
 
     public class DailyHistory
     {

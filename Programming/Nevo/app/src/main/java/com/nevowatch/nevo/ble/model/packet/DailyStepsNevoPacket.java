@@ -18,7 +18,12 @@ public class DailyStepsNevoPacket extends NevoPacket {
     public int getDailySteps()
     {
         int dailySteps = 0;
-       /* TODO : parse packets */
+
+        dailySteps = (int)getPackets().get(0).getRawData()[2]
+                      + (int)getPackets().get(0).getRawData()[3]<<8
+                      + (int)getPackets().get(0).getRawData()[4]<<16
+                      + (int)getPackets().get(0).getRawData()[5]<<24;
+
         return dailySteps;
     }
     /**
@@ -27,7 +32,12 @@ public class DailyStepsNevoPacket extends NevoPacket {
     public int getDailyStepsGoal()
     {
         int dailyStepGoal = 0;
-        /* TODO : parse packets */
+
+        dailyStepGoal = (int)getPackets().get(0).getRawData()[6]
+                + (int)getPackets().get(0).getRawData()[7]<<8
+                + (int)getPackets().get(0).getRawData()[8]<<16
+                + (int)getPackets().get(0).getRawData()[9]<<24;
+
         return dailyStepGoal;
     }
 
