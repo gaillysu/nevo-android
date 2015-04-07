@@ -28,6 +28,7 @@ import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.StepPickerFragment;
 import com.nevowatch.nevo.Fragment.TimePickerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
+import com.nevowatch.nevo.Function.Optional;
 import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.Service.GetDataService;
 import com.nevowatch.nevo.Service.MyService;
@@ -185,18 +186,18 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        String tag = null;
+        Optional<String> tag = new Optional<String>(null);
         switch (position+1){
             case 1:
-                tag = "WelcomeFragment";
+                tag.set("WelcomeFragment");
                 break;
             case 2:
-                tag = "GoalFragment";
+                tag.set("GoalFragment");
                 mPosition = 1;
                 mTag = "GoalFragment";
                 break;
             case 3:
-                tag = "AlarmFragment";
+                tag.set("AlarmFragment");
                 mPosition = 2;
                 mTag = "AlarmFragment";
                 break;
@@ -206,13 +207,13 @@ public class MainActivity extends ActionBarActivity
         if(SaveData.getBleConnectFromPreference(getApplicationContext()) == false){
             Log.d("MainActivity", "DisConnect");
             if((position+1) == 1){
-                replaceFragment(position, tag);
+                replaceFragment(position, tag.get());
             }else{
                 replaceFragment(3, "ConnectAnimationFragment");
             }
         }else{
             Log.d("MainActivity", "Connect");
-            replaceFragment(position, tag);
+            replaceFragment(position, tag.get());
         }
     }
 
@@ -361,31 +362,31 @@ public class MainActivity extends ActionBarActivity
          * number.
          */
         public static Fragment newInstance(int sectionNumber) {
-            Fragment fragment = null;
+            Optional<Fragment> fragment = new Optional<Fragment>(null);
 
             if(sectionNumber <4) {
                 switch (sectionNumber) {
                     case 1:
-                        fragment = new WelcomeFragment();
+                        fragment.set(new WelcomeFragment());
                         break;
                     case 2:
-                        fragment = new GoalFragment();
+                        fragment.set(new GoalFragment());
                         break;
                     case 3:
-                        fragment = new AlarmFragment();
+                        fragment.set(new AlarmFragment());
                         break;
                     default:
                         break;
                 }
             }else if(sectionNumber == 4){
-                fragment = new ConnectAnimationFragment();
+                fragment.set(new ConnectAnimationFragment());
                 Bundle args = new Bundle();
                 args.putInt(POSTITION, mPosition);
                 args.putString(TAG, mTag);
                 args.putInt(SECTION_NUMBER, sectionNumber);
-                fragment.setArguments(args);
+                fragment.get().setArguments(args);
             }
-            return fragment;
+            return fragment.get();
         }
     }
 
