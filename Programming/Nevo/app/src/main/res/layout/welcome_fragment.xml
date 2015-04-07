@@ -8,62 +8,79 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="378dp"
+        android:layout_height="match_parent"
         android:layout_weight="0.28">
 
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent = "true"
-            android:id="@+id/clock_imageView"
-            android:src="@drawable/clockview600"/>
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="315dp"
+            android:layout_height="315dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.18"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="false"
+            android:layout_marginTop="100dp" >
 
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent = "true"
-            android:id="@+id/HomeClockHour"
-            android:src="@drawable/clockview_hour" />
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerInParent = "true"
+                android:id="@+id/clock_imageView"
+                android:src="@drawable/clockview600"/>
 
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_centerInParent = "true"
-            android:id="@+id/HomeClockMinute"
-            android:src="@drawable/clockview_minute" />
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerInParent = "true"
+                android:id="@+id/HomeClockHour"
+                android:src="@drawable/clockview_hour" />
 
-        <com.nevowatch.nevo.Fragment.RoundProgressBar
-            android:id="@+id/roundProgressBar"
-            android:layout_width="345dp"
-            android:layout_height="345dp"
-            android:layout_centerInParent = "true"
-            android_custom:roundColor="#FFFFFF"
-            android_custom:roundWidth="10dp"
-            android_custom:roundProgressColor="#FF7F00"
-            android_custom:textIsDisplayable="false" />
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerInParent = "true"
+                android:id="@+id/HomeClockMinute"
+                android:src="@drawable/clockview_minute" />
 
-    </RelativeLayout>
+            <com.nevowatch.nevo.Fragment.RoundProgressBar
+                android:id="@+id/roundProgressBar"
+                android:layout_width="315dp"
+                android:layout_height="315dp"
+                android:layout_centerInParent = "true"
+                android_custom:roundColor="#00000000"
+                android_custom:roundWidth="5dp"
+                android_custom:roundProgressColor="#fff5a41c"
+                android_custom:textIsDisplayable="false" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.18">
+        </RelativeLayout>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/open_round_orange"
-            android:layout_marginRight="10dp"/>
-
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 / 0"
-            android:id="@+id/textView"
-            android:layout_marginTop="10dp"
-            android:textSize="30sp"/>
-    </LinearLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.18"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/setps_goal_button"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 / 0"
+                android:id="@+id/textView"
+                android:layout_marginTop="10dp"
+                android:textSize="30sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>
