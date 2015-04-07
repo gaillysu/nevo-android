@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity
     private static final int SETCLOCKTIME = 1;
     private static final int SETSTEPGOAL = 2;
     private static final int SETSTEPMODE = 3;
-    private static final int SETDEGREE = 4;
+    private static final int SETWECLOMETIME = 4;
     private static final String MYSERVICE = "com.nevowatch.nevo.MyService";
 
     private static int mPosition;
@@ -96,7 +96,7 @@ public class MainActivity extends ActionBarActivity
             if (intent.getAction().equals(MYSERVICE)) {
                 if(fragment != null){
                     Message msg = new Message();
-                    msg.what = SETDEGREE;
+                    msg.what = SETWECLOMETIME;
                     Bundle bundle = new Bundle();
                     bundle.putFloat("HourDegree", intent.getFloatExtra("HourDegree", 0));
                     bundle.putFloat("MinDegree", intent.getFloatExtra("MinDegree", 0));
@@ -165,7 +165,7 @@ public class MainActivity extends ActionBarActivity
                        }
                     }
                     break;
-                case SETDEGREE:
+                case SETWECLOMETIME:
                     WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
                     welcomefragment.setHour(msg.getData().getFloat("HourDegree"));
                     welcomefragment.setMin(msg.getData().getFloat("MinDegree"));
@@ -253,7 +253,7 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 //.replace(R.id.container, mListArray.get(1), tag)
-                .replace(R.id.container, PlaceholderFragment.newInstance(position+1), tag)
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
     }
 
@@ -398,7 +398,7 @@ public class MainActivity extends ActionBarActivity
     /*Store Fragment in Array in order to improve efficiency*/
     private void initFragmentArray(){
         for(int i=0; i<4; i++){
-            mListArray.add(PlaceholderFragment.newInstance(i+1));
+            mListArray.add(PlaceholderFragment.newInstance(i + 1));
         }
 
         Log.d("initFragmentArray", ""+mListArray.size());
