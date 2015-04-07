@@ -179,6 +179,9 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Initialize FragmentArray
+        initFragmentArray();
+
         setContentView(R.layout.activity_main);
 
         //disenable navigation drawer shadow
@@ -202,10 +205,6 @@ public class MainActivity extends ActionBarActivity
         mReciver = new MyReciver();
         IntentFilter intentFilter = new IntentFilter(MYSERVICE);
         this.registerReceiver(mReciver, intentFilter);
-
-
-        //Initialize FragmentArray
-        initFragmentArray();
 
         mSyncController = SyncController.Factory.newInstance(this);
         mSyncController.startConnect(true,this);
