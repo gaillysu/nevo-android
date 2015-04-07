@@ -1,31 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:android_custom="http://schemas.android.com/apk/res/com.nevowatch.nevo"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="378dp"
+        android:layout_weight="0.28">
 
         <ImageView
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_centerInParent = "true"
             android:id="@+id/clock_imageView"
-            android:background="@drawable/clockview600"/>
+            android:src="@drawable/clockview600"/>
 
         <ImageView
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_centerInParent = "true"
             android:id="@+id/HomeClockHour"
-            android:background="@drawable/clockview_hour" />
+            android:src="@drawable/clockview_hour" />
 
         <ImageView
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_centerInParent = "true"
             android:id="@+id/HomeClockMinute"
-            android:background="@drawable/clockview_minute" />
+            android:src="@drawable/clockview_minute" />
+
+        <com.nevowatch.nevo.Fragment.RoundProgressBar
+            android:id="@+id/roundProgressBar"
+            android:layout_width="345dp"
+            android:layout_height="345dp"
+            android:layout_centerInParent = "true"
+            android_custom:roundColor="#FFFFFF"
+            android_custom:roundWidth="10dp"
+            android_custom:roundProgressColor="#FF7F00"
+            android_custom:textIsDisplayable="false" />
+
     </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.18">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/open_round_orange"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 / 0"
+            android:id="@+id/textView"
+            android:layout_marginTop="10dp"
+            android:textSize="30sp"/>
+    </LinearLayout>
+
 </LinearLayout>

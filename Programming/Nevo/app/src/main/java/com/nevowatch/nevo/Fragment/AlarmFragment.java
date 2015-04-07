@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.Function.SaveData;
@@ -31,19 +30,19 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+/*
         if(savedInstanceState != null){
             mClockStr = savedInstanceState.getString("ClockStr");
             mCallbacks.setClockTime(mClockStr);
             Log.d("AlarmFragment", "create");
-        }
+        }*/
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.alarm_fragment, container, false);
-        mCallbacks.onSectionAttached(3);
+       // mCallbacks.onSectionAttached(3);
 
         mClockTextView = (TextView) rootView.findViewById(R.id.clock_textView);
         mClockTextView.setOnClickListener(this);
@@ -83,7 +82,13 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
+        mCallbacks.onSectionAttached(3);
         mClockTextView.setText(SaveData.getAlarmFromPreference(getActivity()));
+        if(SaveData.getClockStateFromPreference(getActivity())){
+            onClick(mOnButton);
+        }else{
+            onClick(mOffButton);
+        }
     }
 
     @Override
@@ -98,12 +103,14 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                 mOnButton.setTextColor(0xffffffff);
                 mOffButton.setSelected(false);
                 mOnButton.setSelected(true);
+                SaveData.saveClockStateToPreference(getActivity(), true);
                 break;
             case R.id.off_mode_button:
                 mOffButton.setTextColor(0xffffffff);
                 mOnButton.setTextColor(0xff000000);
                 mOffButton.setSelected(true);
                 mOnButton.setSelected(false);
+                SaveData.saveClockStateToPreference(getActivity(), false);
                 break;
             default:
                 break;

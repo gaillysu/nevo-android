@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
+import com.nevowatch.nevo.Function.SaveData;
 
 /**
  * Created by imaze on 15/4/2.
@@ -22,9 +22,10 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int mintue = c.get(Calendar.MINUTE);
+        String str = new String(SaveData.getAlarmFromPreference(getActivity()));
+        String tmp[] = str.split(":");
+        int hour = new Integer(tmp[0]).intValue();
+        int mintue = new Integer(tmp[1]).intValue();
         mTimePickerDialog = new TimePickerDialog(getActivity(), this, hour, mintue,
                 DateFormat.is24HourFormat(getActivity()));
         return mTimePickerDialog;

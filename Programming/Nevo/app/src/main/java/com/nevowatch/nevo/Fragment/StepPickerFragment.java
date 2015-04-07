@@ -42,18 +42,11 @@ public class StepPickerFragment extends DialogFragment{
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.step_picker_title)
-                .setPositiveButton(R.string.step_picker_ok,
+                .setPositiveButton(R.string.ok_button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 int temp = (mNumberPicker.getValue() + 1) * VALUES_INTERVAL;
                                 mCallbacks.setStepGoal(new Integer(temp).toString());
-                            }
-                        }
-                )
-                .setNegativeButton(R.string.step_picker_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // ((FragmentAlertDialog)getActivity()).doNegativeClick();
                             }
                         }
                 )

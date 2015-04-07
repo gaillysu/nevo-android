@@ -25,14 +25,15 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     private Button mModarateButton;
     private Button mIntensiveButton;
     private Button mSportiveButton;
+    private Button[] mButtonArray;
     private static final int MODERATE = 0;
     private static final int INTENSIVE = 1;
     private static final int SPORTIVE = 2;
+    private static final int CUSTOM = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.goal_fragment, container, false);
-        mCallbacks.onSectionAttached(2);
 
         mStepsTextView = (TextView) rootView.findViewById(R.id.steps_textView);
         mStepsTextView.setOnClickListener(this);
@@ -44,6 +45,11 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
         mIntensiveButton.setOnClickListener(this);
         mSportiveButton =  (Button)rootView.findViewById(R.id.sportiveButton);
         mSportiveButton.setOnClickListener(this);
+        mButtonArray = new Button[]{
+                mModarateButton,
+                mIntensiveButton,
+                mSportiveButton
+        };
         return rootView;
     }
 
@@ -60,7 +66,25 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onResume() {
         super.onResume();
+        mCallbacks.onSectionAttached(2);
         mStepsTextView.setText(SaveData.getStepGoalFromPreference(getActivity()));
+
+        switch(SaveData.getGoalModeFromPreference(getActivity())){
+            case MODERATE:
+                setSelectedButtonProperty(mButtonArray,mModarateButton);
+                break;
+            case INTENSIVE:
+                setSelectedButtonProperty(mButtonArray,mIntensiveButton);
+                break;
+            case SPORTIVE:
+                setSelectedButtonProperty(mButtonArray,mSportiveButton);
+                break;
+            case CUSTOM:
+                setSelectedButtonProperty(mButtonArray, new Button(getActivity()));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -86,18 +110,23 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
             case R.id.steps_textView:
             case R.id.edit_steps_imageView:
                 mCallbacks.showStep();
+                SaveData.saveGoalModeToPreference(getActivity(), CUSTOM);
+                setSelectedButtonProperty(mButtonArray, new Button(getActivity()));
                 break;
             case R.id.modarateButton:
-                setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mModarateButton);
+                setSelectedButtonProperty(mButtonArray,mModarateButton);
                 mCallbacks.setStepMode(MODERATE);
+                SaveData.saveGoalModeToPreference(getActivity(), MODERATE);
                 break;
             case R.id.intensiveButton:
-                setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mIntensiveButton);
+                setSelectedButtonProperty(mButtonArray,mIntensiveButton);
                 mCallbacks.setStepMode(INTENSIVE);
+                SaveData.saveGoalModeToPreference(getActivity(), INTENSIVE);
                 break;
             case R.id.sportiveButton:
-                setSelectedButtonProperty(new Button[]{mModarateButton,mIntensiveButton,mSportiveButton},mSportiveButton);
+                setSelectedButtonProperty(mButtonArray,mSportiveButton);
                 mCallbacks.setStepMode(SPORTIVE);
+                SaveData.saveGoalModeToPreference(getActivity(), SPORTIVE);
                 break;
             default:
                 break;

@@ -1,7 +1,14 @@
 package com.nevowatch.nevo;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -9,15 +16,21 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
+import com.nevowatch.nevo.Fragment.AlertDialogFragment;
+import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.StepPickerFragment;
 import com.nevowatch.nevo.Fragment.TimePickerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
+import com.nevowatch.nevo.Function.SaveData;
+import com.nevowatch.nevo.Service.GetDataService;
+import com.nevowatch.nevo.Service.MyService;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -28,14 +41,65 @@ public class MainActivity extends ActionBarActivity
         AlarmFragment.AlarmFragmentCallbacks,
         WelcomeFragment.WelcomeFragmentCallbacks,
         TimePickerFragment.TimePickerFragmentCallbacks,
-        StepPickerFragment.StepPickerFragmentCallbacks,OnSyncControllerListener {
+        StepPickerFragment.StepPickerFragmentCallbacks,
+        ConnectAnimationFragment.ConnectAnimationFragmentCallbacks,
+        OnSyncControllerListener {
 
     private static final int SETCLOCKTIME = 1;
-
-    private SyncController mSyncController;
-
     private static final int SETSTEPGOAL = 2;
     private static final int SETSTEPMODE = 3;
+    private static final int SETDEGREE = 4;
+    private static final String MYSERVICE = "com.nevowatch.nevo.MyService";
+
+    private static int mPosition;
+    private static String mTag;
+    private MyReciver mReciver;
+    private GetDataService mService;
+    private SyncController mSyncController;
+
+    /**
+     * Interactions between Activity and Service
+     */
+    public ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = (GetDataService) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    /**
+     * BroadCast from MyService
+     */
+    private void saveDegreeToPref(Intent intent){
+        SaveData.saveHourDegreeToPreference(MainActivity.this, intent.getFloatExtra("HourDegree", 0));
+        SaveData.saveMinDegreeToPreference(MainActivity.this, intent.getFloatExtra("MinDegree", 0));
+    }
+    public class MyReciver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            WelcomeFragment fragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
+            if (intent.getAction().equals(MYSERVICE)) {
+                if(fragment != null){
+                    Message msg = new Message();
+                    msg.what = SETDEGREE;
+                    Bundle bundle = new Bundle();
+                    bundle.putFloat("HourDegree", intent.getFloatExtra("HourDegree", 0));
+                    bundle.putFloat("MinDegree", intent.getFloatExtra("MinDegree", 0));
+                    msg.setData(bundle);
+                    handler.sendMessage(msg);
+                    saveDegreeToPref(intent);
+                }else{
+                    saveDegreeToPref(intent);
+                }
+            }
+        }
+    }
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -76,6 +140,11 @@ public class MainActivity extends ActionBarActivity
                        }
                     }
                     break;
+                case SETDEGREE:
+                    WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
+                    welcomefragment.setHour(msg.getData().getFloat("HourDegree"));
+                    welcomefragment.setMin(msg.getData().getFloat("MinDegree"));
+                    break;
                 default:
                     break;
             }
@@ -88,8 +157,8 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
 
         //disenable navigation drawer shadow
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
+ /*       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));*/
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -99,6 +168,16 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //Start Service
+        Intent intent = new Intent(this, MyService.class);
+        this.bindService(intent, mConnection, BIND_AUTO_CREATE);
+
+        //Initialize BroadCast
+        mReciver = new MyReciver();
+        IntentFilter intentFilter = new IntentFilter(MYSERVICE);
+        this.registerReceiver(mReciver, intentFilter);
+
         //mSyncController = SyncController.Factory.newInstance(this);
         //mSyncController.startConnect(true,this);
     }
@@ -113,17 +192,41 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 2:
                 tag = "GoalFragment";
+                mPosition = 1;
+                mTag = "GoalFragment";
                 break;
             case 3:
                 tag = "AlarmFragment";
+                mPosition = 2;
+                mTag = "AlarmFragment";
+                break;
             default:
                 break;
-
         }
+        if(SaveData.getBleConnectFromPreference(getApplicationContext()) == false){
+            Log.d("MainActivity", "DisConnect");
+            if((position+1) == 1){
+                replaceFragment(position, tag);
+            }else{
+                replaceFragment(3, "ConnectAnimationFragment");
+            }
+        }else{
+            Log.d("MainActivity", "Connect");
+            replaceFragment(position, tag);
+        }
+    }
+
+    @Override
+    public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
+    }
+
+    @Override
+    public void showWarning() {
+        showAlertDialog();
     }
 
     @Override
@@ -137,6 +240,8 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                break;
+            default:
                 break;
         }
     }
@@ -202,6 +307,11 @@ public class MainActivity extends ActionBarActivity
         newFragment.show(getSupportFragmentManager(), "stepPicker");
     }
 
+    public void showAlertDialog(){
+        DialogFragment newFragment = new AlertDialogFragment();
+        newFragment.show(getSupportFragmentManager(), "warning");
+    }
+
     @Override
 
     public void packetReceived(NevoPacket packet) {
@@ -242,7 +352,9 @@ public class MainActivity extends ActionBarActivity
     }*/
 
     public static class PlaceholderFragment {
-        private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String POSTITION = "position";
+        private static final String TAG = "tag";
+        private static final String SECTION_NUMBER = "section_number";
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -251,24 +363,38 @@ public class MainActivity extends ActionBarActivity
         public static Fragment newInstance(int sectionNumber) {
             Fragment fragment = null;
 
-            switch (sectionNumber){
-                case 1:
-                    fragment = new WelcomeFragment();
-                    break;
-                case 2:
-                    fragment = new GoalFragment();
-                    break;
-                case 3:
-                    fragment = new AlarmFragment();
-                    break;
-                default:
-                    Bundle args = new Bundle();
-                    args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-                    fragment.setArguments(args);
-                    break;
+            if(sectionNumber <4) {
+                switch (sectionNumber) {
+                    case 1:
+                        fragment = new WelcomeFragment();
+                        break;
+                    case 2:
+                        fragment = new GoalFragment();
+                        break;
+                    case 3:
+                        fragment = new AlarmFragment();
+                        break;
+                    default:
+                        break;
+                }
+            }else if(sectionNumber == 4){
+                fragment = new ConnectAnimationFragment();
+                Bundle args = new Bundle();
+                args.putInt(POSTITION, mPosition);
+                args.putString(TAG, mTag);
+                args.putInt(SECTION_NUMBER, sectionNumber);
+                fragment.setArguments(args);
             }
             return fragment;
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.unbindService(mConnection);
+        this.unregisterReceiver(mReciver);
+        SaveData.saveBleConnectToPreference(getApplicationContext(), false);
+        Log.d("MainActivity", "onDestory");
+    }
 }
