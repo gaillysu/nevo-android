@@ -36,6 +36,9 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
  * */
@@ -58,6 +61,7 @@ public class MainActivity extends ActionBarActivity
     private static int mPosition;
     private static String mTag;
     private MyReciver mReciver;
+    private List<Fragment> mListArray = new ArrayList<Fragment>();
     private GetDataService mService;
     private SyncController mSyncController;
 
@@ -186,6 +190,9 @@ public class MainActivity extends ActionBarActivity
         IntentFilter intentFilter = new IntentFilter(MYSERVICE);
         this.registerReceiver(mReciver, intentFilter);
 
+        //Initialize FragmentArray
+        //initFragmentArray();
+
         //mSyncController = SyncController.Factory.newInstance(this);
         //mSyncController.startConnect(true,this);
     }
@@ -231,7 +238,8 @@ public class MainActivity extends ActionBarActivity
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
+                //.replace(R.id.container, mListArray.get(1), tag)
+                .replace(R.id.container, PlaceholderFragment.newInstance(position+1), tag)
                 .commit();
     }
 
@@ -371,6 +379,15 @@ public class MainActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }*/
+
+    /*Store Fragment in Array in order to improve efficiency*/
+    private void initFragmentArray(){
+        for(int i=0; i<4; i++){
+            mListArray.add(PlaceholderFragment.newInstance(i+1));
+        }
+
+        Log.d("initFragmentArray", ""+mListArray.size());
+    }
 
     public static class PlaceholderFragment {
         private static final String POSTITION = "position";
