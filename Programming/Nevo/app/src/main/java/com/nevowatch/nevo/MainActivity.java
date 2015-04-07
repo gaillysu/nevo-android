@@ -127,6 +127,13 @@ public class MainActivity extends ActionBarActivity
                 case SETCLOCKTIME:
                     AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag("AlarmFragment");
                     alramfragment.setClock(msg.getData().getString("Clock"));
+                            /*when user click Alarm on/off button , or select new Alarm time, all the three cases
+                    ,need call mSyncController.setAlarm(...)*/
+
+                   // mSyncController.setAlarm((int)(msg.getData().getFloat("HourDegree")),
+                   //         (int)(msg.getData().getFloat("MinDegree")),
+                   //         SaveData.getClockStateFromPreference(MainActivity.this));
+
                     break;
                 case SETSTEPGOAL:
                 case SETSTEPMODE:
@@ -158,11 +165,6 @@ public class MainActivity extends ActionBarActivity
                     WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
                     welcomefragment.setHour(msg.getData().getFloat("HourDegree"));
                     welcomefragment.setMin(msg.getData().getFloat("MinDegree"));
-                    /*when user click Alarm on/off button , or select new Alarm time, all the three cases
-                    ,need call mSyncController.setAlarm(...)*/
-                    mSyncController.setAlarm((int)(msg.getData().getFloat("HourDegree")),
-                            (int)(msg.getData().getFloat("MinDegree")),
-                            SaveData.getClockStateFromPreference(MainActivity.this));
                     break;
                 default:
                     break;
