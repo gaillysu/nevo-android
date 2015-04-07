@@ -367,7 +367,7 @@ public class MainActivity extends ActionBarActivity
             WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
             int dailySteps = steppacket.getDailySteps();
             int dailyGoal = steppacket.getDailyStepsGoal();
-            Log.i("MainActivity","dailySteps =" + dailySteps +",dailyGoal" + dailyGoal );
+            Log.i("MainActivity","dailySteps = " + dailySteps +",dailyGoal = " + dailyGoal );
             welcomefragment.setText(dailySteps+"/"+dailyGoal);
             welcomefragment.setProgressBar((int)(100.0*dailySteps/dailyGoal));
 
