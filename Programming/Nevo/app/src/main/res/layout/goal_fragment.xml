@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="30dp"
-            android:text="Modarate"
+            android:text="@string/modarate_string"
             android:id="@+id/modarateButton"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected7000" />
@@ -53,7 +53,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:text="Intensive"
+            android:text="@string/intensive_string"
             android:id="@+id/intensiveButton"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected10000" />
@@ -61,7 +61,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:text="Sportive"
+            android:text="@string/sportive_string"
             android:id="@+id/sportiveButton"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected20000" />
