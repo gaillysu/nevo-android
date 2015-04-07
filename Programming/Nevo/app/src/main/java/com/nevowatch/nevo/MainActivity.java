@@ -35,6 +35,7 @@ import com.nevowatch.nevo.Service.MyService;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
@@ -132,16 +133,21 @@ public class MainActivity extends ActionBarActivity
                     GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
                     if(msg.what == SETSTEPGOAL){
                         goalfragment.setStep(msg.getData().getString("Goal"));
+                        mSyncController.setGoal(new NumberOfStepsGoal(Integer.parseInt(msg.getData().getString("Goal"))));
+
                     }else if(msg.what == SETSTEPMODE){
                         switch (msg.getData().getInt("Mode")){
                             case 0:
                                 goalfragment.setStep(new Integer(7000).toString());
+                                mSyncController.setGoal(new NumberOfStepsGoal(7000));
                                 break;
                             case 1:
                                 goalfragment.setStep(new Integer(10000).toString());
+                                mSyncController.setGoal(new NumberOfStepsGoal(10000));
                                 break;
                             case 2:
                                 goalfragment.setStep(new Integer(20000).toString());
+                                mSyncController.setGoal(new NumberOfStepsGoal(20000));
                                 break;
                             default:
                                 break;
@@ -152,6 +158,11 @@ public class MainActivity extends ActionBarActivity
                     WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
                     welcomefragment.setHour(msg.getData().getFloat("HourDegree"));
                     welcomefragment.setMin(msg.getData().getFloat("MinDegree"));
+                    /*when user click Alarm on/off button , or select new Alarm time, all the three cases
+                    ,need call mSyncController.setAlarm(...)*/
+                    mSyncController.setAlarm((int)(msg.getData().getFloat("HourDegree")),
+                            (int)(msg.getData().getFloat("MinDegree")),
+                            SaveData.getClockStateFromPreference(MainActivity.this));
                     break;
                 default:
                     break;
@@ -186,8 +197,8 @@ public class MainActivity extends ActionBarActivity
         IntentFilter intentFilter = new IntentFilter(MYSERVICE);
         this.registerReceiver(mReciver, intentFilter);
 
-        //mSyncController = SyncController.Factory.newInstance(this);
-        //mSyncController.startConnect(true,this);
+        mSyncController = SyncController.Factory.newInstance(this);
+        mSyncController.startConnect(true,this);
     }
 
     @Override
@@ -245,6 +256,7 @@ public class MainActivity extends ActionBarActivity
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
+                mSyncController.getStepsAndGoal();
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
