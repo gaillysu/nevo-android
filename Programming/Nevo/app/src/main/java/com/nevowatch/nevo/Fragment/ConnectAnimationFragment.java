@@ -15,7 +15,7 @@ import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 /**
- * Created by Administrator on 15-4-5.
+ * A Round Pointer Animation
  */
 public class ConnectAnimationFragment extends Fragment implements View.OnClickListener{
 

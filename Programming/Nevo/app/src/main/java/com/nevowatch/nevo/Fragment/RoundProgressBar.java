@@ -14,7 +14,7 @@ import android.view.View;
 import com.nevowatch.nevo.R;
 
 /**
- * Custom Circle Progress Bar
+ * Custom Circle Progress Bar in WelcomeFragment
  */
 public class RoundProgressBar extends View {
     private Paint paint;

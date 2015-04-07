@@ -27,6 +27,10 @@ import com.nevowatch.nevo.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * NavigationDrawerFragment is responsible for showing slide menu when users swipe right and click the Top-Left icon,
+ * and redirect the related page once you press the icon in the slide menu.
+ * */
 
 public class NavigationDrawerFragment extends Fragment {
 

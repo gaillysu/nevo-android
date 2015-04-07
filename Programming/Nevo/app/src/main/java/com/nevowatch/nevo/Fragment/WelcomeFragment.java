@@ -14,7 +14,7 @@ import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 /**
- * WelcomeFragment
+ * WelcomeFragment aims to display current time and steps how many you took.
  */
 public class WelcomeFragment extends Fragment{
 

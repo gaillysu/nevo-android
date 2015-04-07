@@ -13,7 +13,7 @@ import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 /**
- * Created by imaze on 15/4/2.
+ * StepPickerFragment is a dialog fragment which shows the hour and minute of time in the whole day.
  */
 public class StepPickerFragment extends DialogFragment{
 

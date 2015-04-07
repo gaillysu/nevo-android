@@ -13,7 +13,7 @@ import com.nevowatch.nevo.R;
 import java.util.List;
 
 /**
- * Created by imaze on 15/4/1.
+ * NavigationDrawerAdapter provides items for ListView
  */
 public class NavigationDrawerAdapter extends ArrayAdapter<DrawerIcon> {
 

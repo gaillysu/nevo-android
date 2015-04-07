@@ -15,7 +15,7 @@ import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
 
 /**
- * Created by imaze on 4/1/15.
+ * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
 public class GoalFragment extends Fragment implements View.OnClickListener{
 
@@ -134,6 +134,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    /*Highlight the selected imageView*/
     public void setSelectedButtonProperty(Button[] v,Button l){
         for (int i = 0; i <v.length; i++) {
             v[i].setTextColor(0xff000000);

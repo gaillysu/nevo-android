@@ -1,7 +1,7 @@
 package com.nevowatch.nevo.Function;
 
 /**
- * Created by imaze on 4/3/15.
+ * SaveData save all kinds of important data
  */
 
 import android.content.Context;

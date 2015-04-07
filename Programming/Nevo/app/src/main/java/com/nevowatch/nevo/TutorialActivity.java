@@ -10,7 +10,7 @@ import com.nevowatch.nevo.Fragment.TutorialFragment;
 import com.nevowatch.nevo.Function.SaveData;
 
 /**
- * Created by Administrator on 15-4-5.
+ * TutorialActivity is a container, which is filled with tutorial fragments. Additionally, users can swipe left and right to change pages.
  */
 public class TutorialActivity extends FragmentActivity
         implements TutorialFragment.TutorialFragmentCallbcaks,ViewPager.OnPageChangeListener{
@@ -61,6 +61,9 @@ public class TutorialActivity extends FragmentActivity
 
         }
 
+    /**
+     * Transfer from TutorialActivity to MainActivity
+     * */
     @Override
     public void startMainActivity() {
         Intent intent = new Intent(TutorialActivity.this, MainActivity.class);

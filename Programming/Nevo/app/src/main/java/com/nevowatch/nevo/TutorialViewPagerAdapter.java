@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 /**
- * Created by Administrator on 15-4-6.
+ * TutorialViewPagerAdapter supplies ViewPager with custom tutorial fragments.
  */
 public class TutorialViewPagerAdapter extends FragmentPagerAdapter {
 

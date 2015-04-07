@@ -12,7 +12,7 @@ import android.widget.TimePicker;
 import com.nevowatch.nevo.Function.SaveData;
 
 /**
- * Created by imaze on 15/4/2.
+ * TimePickerFragment is a dialog fragment which shows the goal of steps from 7000 to 300000 steps.
  */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
@@ -47,6 +47,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         mCallbacks = null;
     }
 
+    /*Time Format */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         String hourStr = null , minStr = null;

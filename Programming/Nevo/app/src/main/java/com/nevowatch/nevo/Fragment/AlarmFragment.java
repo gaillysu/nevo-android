@@ -16,7 +16,7 @@ import com.nevowatch.nevo.R;
 
 
 /**
- * Created by imaze on 4/1/15.
+ * AlarmFragment, it works for setting alarm and turning alarm on or off.
  */
 public class AlarmFragment extends Fragment implements View.OnClickListener{
 

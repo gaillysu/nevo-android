@@ -36,6 +36,9 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
+/**
+ * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
+ * */
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         GoalFragment.GoalFragmentCallbacks,
@@ -112,6 +115,10 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    /**
+     * Update UI using Handler Mechanism
+     * */
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -217,6 +224,9 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    /**
+     * Replace fragment in the MainActivity
+     * */
     @Override
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -298,16 +308,26 @@ public class MainActivity extends ActionBarActivity
         handler.sendMessage(msg);
     }
 
+    /**
+     * Show Time in a dialog
+     * */
     public void showTimePickerDialog() {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
+    /**
+     * Show Step Goals in a dialog
+     * */
     public void showStepPickerDialog(){
         DialogFragment newFragment = new StepPickerFragment();
         newFragment.show(getSupportFragmentManager(), "stepPicker");
     }
 
+
+    /**
+     * Pop-up window showing waring messages which means "Nevo Watch Not Found"
+     * */
     public void showAlertDialog(){
         DialogFragment newFragment = new AlertDialogFragment();
         newFragment.show(getSupportFragmentManager(), "warning");

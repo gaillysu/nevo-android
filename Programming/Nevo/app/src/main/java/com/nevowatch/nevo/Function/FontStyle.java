@@ -1,7 +1,7 @@
 package com.nevowatch.nevo.Function;
 
 /**
- * Created by imaze on 4/3/15.
+ * FontStyle
  */
 public class FontStyle {
 

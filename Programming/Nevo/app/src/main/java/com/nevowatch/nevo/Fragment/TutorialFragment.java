@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import com.nevowatch.nevo.R;
 
 /**
- * Created by Administrator on 15-4-6.
+ * TutorialFragment, namely introduction pages.
  */
 public class TutorialFragment extends Fragment {
 

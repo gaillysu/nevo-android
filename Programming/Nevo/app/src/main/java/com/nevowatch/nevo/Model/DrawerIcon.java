@@ -1,7 +1,7 @@
 package com.nevowatch.nevo.Model;
 
 /**
- * Created by imaze on 15/4/1.
+ * DrawerIcon works for the icon on the NavigationDrawer
  */
 public class DrawerIcon {
 
