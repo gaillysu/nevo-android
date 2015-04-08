@@ -275,5 +275,14 @@ public class Utils {
  
 		return bcd;
 	}
+
+    //Little endian bytes !
+    public static int bytesToInt( byte[] bytes ) {
+        int result = 0;
+        for (int i=0; i<bytes.length; i++) {
+            result =  (int) (result + ( (int)( bytes[i] & 0xFF) ) * Math.pow(2, 8*i));
+        }
+        return result;
+    }
 	
 }

@@ -84,6 +84,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                 mOffButton.setSelected(false);
                 mOnButton.setSelected(true);
                 SaveData.saveClockStateToPreference(getActivity(), true);
+                mCallbacks.setClockTime(SaveData.getAlarmFromPreference(getActivity()),true);
                 break;
             case R.id.off_mode_button:
                 mOffButton.setTextColor(0xffffffff);
@@ -91,6 +92,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
                 mOffButton.setSelected(true);
                 mOnButton.setSelected(false);
                 SaveData.saveClockStateToPreference(getActivity(), false);
+                mCallbacks.setClockTime(SaveData.getAlarmFromPreference(getActivity()),false);
                 break;
             default:
                 break;
@@ -106,5 +108,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     public static interface  AlarmFragmentCallbacks {
         void onSectionAttached(int position);
         void showTime();
+        void setClockTime(String clockTime,boolean OnOff);
     }
 }
