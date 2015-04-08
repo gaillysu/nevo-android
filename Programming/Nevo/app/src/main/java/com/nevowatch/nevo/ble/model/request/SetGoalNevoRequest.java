@@ -1,9 +1,11 @@
 package com.nevowatch.nevo.ble.model.request;
 
 
+import com.nevowatch.nevo.Model.Goal;
+
 public class SetGoalNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x22;
-    private Goal  mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
+    private Goal mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
 	public SetGoalNevoRequest(Goal goal )
 	{
 		mGoal = goal;

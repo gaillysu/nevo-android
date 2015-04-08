@@ -1,10 +1,10 @@
 package com.nevowatch.nevo.ble.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Calendar;
 
+import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.ble.ble.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
@@ -16,11 +16,9 @@ import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
-import com.nevowatch.nevo.ble.model.packet.DailyTrackerNevoPacket;
-import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
-import com.nevowatch.nevo.ble.model.request.Goal;
+import com.nevowatch.nevo.Model.Goal;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.model.request.SetAlarmNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetGoalNevoRequest;
@@ -47,8 +45,8 @@ public class SyncControllerImpl implements SyncController{
 	private OnSyncControllerListener mOnSyncControllerListener;
     private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
 
-    private ArrayList<NevoPacket.DailyHistory> savedDailyHistory = new ArrayList<NevoPacket.DailyHistory>();
-    private int currentDay = 0;
+    private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
+    private int mCurrentDay = 0;
 
 	/**
 	 * This listener is called when new data is received
@@ -94,22 +92,22 @@ public class SyncControllerImpl implements SyncController{
                     if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
-                        currentDay = 0;
-                        savedDailyHistory = infopacket.getDailyTrackerInfo();
-                        getDailyTracker(currentDay);
+                        mCurrentDay = 0;
+                        mSavedDailyHistory.add(infopacket.getDailyTrackerInfo());
+                        getDailyTracker(mCurrentDay);
                     }
 
                     if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                        /*TODO  save to google fit or local database*/
-                        currentDay++;
-                        if(currentDay < savedDailyHistory.size())
+                        /*TODO by gailly save to google fit or local database*/
+                        mCurrentDay++;
+                        if(mCurrentDay < mSavedDailyHistory.size())
                         {
-                            getDailyTracker(currentDay);
+                            getDailyTracker(mCurrentDay);
                         }
                         else
                         {
-                            currentDay = 0;
+                            mCurrentDay = 0;
                             syncFinished();
                         }
                     }
@@ -249,11 +247,11 @@ public class SyncControllerImpl implements SyncController{
 		try {
 			mImazeBT.connect(Servicelist);
 		} catch (BLENotSupportedException e) {
-			// TODO Auto-generated catch block
+			Log.d("SyncControllerImpl", "Ble not supported !");
 			e.printStackTrace();
 		} catch (BluetoothDisabledException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+            Log.d("SyncControllerImpl", "Ble not supported !");
 		}
 		
 	}

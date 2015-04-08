@@ -1,6 +1,6 @@
 package com.nevowatch.nevo.ble.controller;
 
-import com.nevowatch.nevo.ble.model.request.Goal;
+import com.nevowatch.nevo.Model.Goal;
 
 import android.content.Context;
 
@@ -19,6 +19,8 @@ import android.content.Context;
  *
  *
  * @author Gaillysu
+ *
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  *
  */
 public interface SyncController {

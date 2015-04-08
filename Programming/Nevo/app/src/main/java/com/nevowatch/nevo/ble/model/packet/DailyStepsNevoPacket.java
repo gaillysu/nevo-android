@@ -1,6 +1,6 @@
 package com.nevowatch.nevo.ble.model.packet;
 
-import com.nevowatch.nevo.ble.util.Utils;
+import com.nevowatch.nevo.ble.util.HexUtils;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class DailyStepsNevoPacket extends NevoPacket {
     {
         int dailySteps = 0;
 
-        dailySteps = Utils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2],
+        dailySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2],
                 getPackets().get(0).getRawData()[3],
                 getPackets().get(0).getRawData()[4],
                 getPackets().get(0).getRawData()[5]});
@@ -34,7 +34,7 @@ public class DailyStepsNevoPacket extends NevoPacket {
     {
         int dailyStepGoal = 0;
 
-        dailyStepGoal  = Utils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[6],
+        dailyStepGoal  = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[6],
                 getPackets().get(0).getRawData()[7],
                 getPackets().get(0).getRawData()[8],
                 getPackets().get(0).getRawData()[9]});

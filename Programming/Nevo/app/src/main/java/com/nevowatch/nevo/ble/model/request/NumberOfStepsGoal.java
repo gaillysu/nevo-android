@@ -1,5 +1,7 @@
 package com.nevowatch.nevo.ble.model.request;
 
+import com.nevowatch.nevo.Model.Goal;
+
 public class NumberOfStepsGoal implements Goal {
 	
 	public static final int LOW = 7000;

@@ -35,11 +35,4 @@ public class NevoPacket {
         return mPackets;
     }
 
-    public class DailyHistory
-    {
-        public int TotalSteps;
-        public int HourlySteps;
-        public Date  date;
-    }
-
 }

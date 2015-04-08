@@ -17,6 +17,7 @@ import java.util.concurrent.BlockingQueue;
  * a- mQueuedMainThreadHandler.next() is called
  * or
  * b- that the maximum lock time have passed
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 public class QueuedMainThreadHandler {
 	/*Classic singleton class*/

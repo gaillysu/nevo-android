@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.ble.model.request;
+package com.nevowatch.nevo.Model;
 
 public interface Goal {
 	
