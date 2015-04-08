@@ -113,20 +113,11 @@ public class RoundProgressBar extends View {
 
     }
 
-
-    public synchronized int getMax() {
-        return mMax;
-    }
-
     public synchronized void setMax(int max) {
         if(max < 0){
             throw new IllegalArgumentException("mMax not less than 0");
         }
         this.mMax = max;
-    }
-
-    public synchronized int getProgress() {
-        return mProgress;
     }
 
     public synchronized void setProgress(int progress) {
@@ -141,46 +132,6 @@ public class RoundProgressBar extends View {
             postInvalidate();
         }
 
-    }
-
-    public int getCricleColor() {
-        return mRoundColor;
-    }
-
-    public void setCricleColor(int cricleColor) {
-        this.mRoundColor = cricleColor;
-    }
-
-    public int getCricleProgressColor() {
-        return mRoundProgressColor;
-    }
-
-    public void setCricleProgressColor(int cricleProgressColor) {
-        this.mRoundProgressColor = cricleProgressColor;
-    }
-
-    public int getTextColor() {
-        return mTextColor;
-    }
-
-    public void setTextColor(int textColor) {
-        this.mTextColor = textColor;
-    }
-
-    public float getTextSize() {
-        return mTextSize;
-    }
-
-    public void setTextSize(float textSize) {
-        this.mTextSize = textSize;
-    }
-
-    public float getRoundWidth() {
-        return mRoundWidth;
-    }
-
-    public void setRoundWidth(float roundWidth) {
-        this.mRoundWidth = roundWidth;
     }
 
 }
