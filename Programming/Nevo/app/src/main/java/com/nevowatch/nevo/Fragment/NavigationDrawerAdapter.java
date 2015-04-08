@@ -17,11 +17,11 @@ import java.util.List;
  */
 public class NavigationDrawerAdapter extends ArrayAdapter<DrawerIcon> {
 
-    private int listItemResourceId;
+    private int mListItemResourceId;
 
-    public NavigationDrawerAdapter(Context context, int listItemResourceId, List<DrawerIcon> objects){
-        super(context, listItemResourceId, objects);
-        this.listItemResourceId = listItemResourceId;
+    public NavigationDrawerAdapter(Context context, int mListItemResourceId, List<DrawerIcon> objects){
+        super(context, mListItemResourceId, objects);
+        this.mListItemResourceId = mListItemResourceId;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class NavigationDrawerAdapter extends ArrayAdapter<DrawerIcon> {
         ViewHolder viewHolder;
 
         if(convertView == null){
-            view = LayoutInflater.from(getContext()).inflate(listItemResourceId, null);
+            view = LayoutInflater.from(getContext()).inflate(mListItemResourceId, null);
             viewHolder = new ViewHolder();
             viewHolder.iconImage = (ImageView) view.findViewById(R.id.drawer_icon_imageView);
             view.setTag(viewHolder);

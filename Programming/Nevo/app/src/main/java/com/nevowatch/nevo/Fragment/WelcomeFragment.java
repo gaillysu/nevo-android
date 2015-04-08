@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.RoundProgressBar;
 
 /**
  * WelcomeFragment aims to display current time and steps how many you took.
