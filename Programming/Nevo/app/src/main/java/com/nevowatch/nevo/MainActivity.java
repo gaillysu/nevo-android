@@ -140,7 +140,7 @@ public class MainActivity extends ActionBarActivity
                     String[] strAlarm = msg.getData().getString("Clock").split(":");
                     mSyncController.setAlarm(Integer.parseInt(strAlarm[0]),
                             Integer.parseInt(strAlarm[1]),
-                            SaveData.getClockStateFromPreference(MainActivity.this));
+                            msg.getData().getBoolean("OnOff"));
                     break;
                 case SETSTEPGOAL:
                 case SETSTEPMODE:
@@ -324,11 +324,12 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void setClockTime(String clockTime) {
+    public void setClockTime(String clockTime,boolean OnOff) {
         Message msg = new Message();
         msg.what = SETCLOCKTIME;
         Bundle bundle = new Bundle();
         bundle.putString("Clock", clockTime);
+        bundle.putBoolean("OnOff", OnOff);
         msg.setData(bundle);
         handler.sendMessage(msg);
     }

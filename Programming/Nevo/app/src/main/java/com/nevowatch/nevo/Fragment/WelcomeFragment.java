@@ -51,8 +51,8 @@ public class WelcomeFragment extends Fragment{
         setHour(SaveData.getHourDegreeFromPreference(getActivity()));
         setMin(SaveData.getMinDegreeFromPreference(getActivity()));
         double tmp = Integer.parseInt(SaveData.getStepGoalFromPreference(getActivity())) * 1.0;
-        setProgressBar((int)((1245/tmp)*100));
-        String str = 1245 + " / " + SaveData.getStepGoalFromPreference(getActivity());
+        setProgressBar((int)((0/tmp)*100));
+        String str =  "- / " + SaveData.getStepGoalFromPreference(getActivity());
         setText(str);
     }
 

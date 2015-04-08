@@ -62,10 +62,10 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
             minStr = new Integer(minute).toString();
         }
 
-        mCallbacks.setClockTime(hourStr + ":" + minStr);
+        mCallbacks.setClockTime(hourStr + ":" + minStr,SaveData.getClockStateFromPreference(getActivity()));
     }
 
     public static interface  TimePickerFragmentCallbacks {
-        void setClockTime(String clockTime);
+        void setClockTime(String clockTime,boolean OnOff);
     }
 }
