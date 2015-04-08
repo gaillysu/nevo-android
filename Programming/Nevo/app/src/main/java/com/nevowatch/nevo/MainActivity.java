@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity
     private static int mPosition;
     private static String mTag;
     private MyReciver mReciver;
-    private List<Fragment> mListArray = new ArrayList<Fragment>();
+    private static List<Fragment> mListArray = new ArrayList<Fragment>();
     private GetDataService mService;
     private SyncController mSyncController;
 
@@ -253,7 +253,7 @@ public class MainActivity extends ActionBarActivity
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-              //  .replace(R.id.container, mListArray.get(position), tag)
+        //        .replace(R.id.container, mListArray.get(position), tag)
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
     }
@@ -408,7 +408,7 @@ public class MainActivity extends ActionBarActivity
     }*/
 
     /*Store Fragment in Array in order to improve efficiency*/
-    private void initFragmentArray(){
+    public static void initFragmentArray(){
         for(int i=0; i<4; i++){
             mListArray.add(PlaceholderFragment.newInstance(i + 1));
         }
