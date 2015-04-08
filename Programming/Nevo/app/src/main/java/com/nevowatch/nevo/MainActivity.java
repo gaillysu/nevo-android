@@ -375,12 +375,17 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if (isConnected) {
-            Toast.makeText(this, "Nevo Connected!", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Nevo Disconnect!", Toast.LENGTH_LONG).show();
-        }
+    public void connectionStateChanged(final boolean isConnected) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isConnected) {
+                    Toast.makeText(MainActivity.this, "Nevo Connected!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Nevo Disconnect!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     public void setStepGoal(String stepGoal) {
