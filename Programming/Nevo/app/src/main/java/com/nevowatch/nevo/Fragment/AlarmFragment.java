@@ -22,27 +22,14 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
     private AlarmFragmentCallbacks mCallbacks;
     private TextView mClockTextView;
-    private String mClockStr;
     private ImageButton mImageButton;
     private Button mOnButton;
     private Button mOffButton;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-/*
-        if(savedInstanceState != null){
-            mClockStr = savedInstanceState.getString("ClockStr");
-            mCallbacks.setClockTime(mClockStr);
-            Log.d("AlarmFragment", "create");
-        }*/
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.alarm_fragment, container, false);
-       // mCallbacks.onSectionAttached(3);
 
         mClockTextView = (TextView) rootView.findViewById(R.id.clock_textView);
         mClockTextView.setOnClickListener(this);
@@ -54,13 +41,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         mOffButton.setOnClickListener(this);
 
         return rootView;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mClockStr = mClockTextView.getText().toString();
-        outState.putString("ClockStr", mClockStr);
     }
 
     @Override
@@ -126,6 +106,5 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     public static interface  AlarmFragmentCallbacks {
         void onSectionAttached(int position);
         void showTime();
-        void setClockTime(String clockTime);
     }
 }

@@ -47,7 +47,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         try {
             mCallbacks = (ConnectAnimationFragmentCallbacks) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement ConnectAnimationFragment.");
+            throw new ClassCastException("Activity must implement ConnectAnimationFragmentCallbacks.");
         }
     }
 

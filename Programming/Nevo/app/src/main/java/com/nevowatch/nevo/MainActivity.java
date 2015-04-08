@@ -34,11 +34,10 @@ import com.nevowatch.nevo.Service.GetDataService;
 import com.nevowatch.nevo.Service.MyService;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
-import com.nevowatch.nevo.ble.model.packet.NevoPacket;
-import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
-import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
+import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +182,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Initialize FragmentArray
-        initFragmentArray();
+        //initFragmentArray();
 
         setContentView(R.layout.activity_main);
 
@@ -254,8 +253,8 @@ public class MainActivity extends ActionBarActivity
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, mListArray.get(position), tag)
-                //.replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
+              //  .replace(R.id.container, mListArray.get(position), tag)
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
     }
 

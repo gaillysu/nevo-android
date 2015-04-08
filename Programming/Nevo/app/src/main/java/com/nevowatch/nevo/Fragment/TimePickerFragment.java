@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
+import com.nevowatch.nevo.Function.Optional;
 import com.nevowatch.nevo.Function.SaveData;
 
 /**
@@ -50,19 +51,19 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     /*Time Format */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String hourStr = null , minStr = null;
+        Optional<String> hourStr = new Optional<String>(null), minStr = new Optional<String>();
         if(hourOfDay <= 9){
-            hourStr = "0" + hourOfDay;
+            hourStr.set("0" + hourOfDay);
         }else {
-            hourStr = new Integer(hourOfDay).toString();
+            hourStr.set(new Integer(hourOfDay).toString());
         }
         if(minute <= 9){
-            minStr = "0" + minute;
+            minStr.set("0" + minute);
         }else {
-            minStr = new Integer(minute).toString();
+            minStr.set(new Integer(minute).toString());
         }
 
-        mCallbacks.setClockTime(hourStr + ":" + minStr);
+        mCallbacks.setClockTime(hourStr.get() + ":" + minStr.get());
     }
 
     public static interface  TimePickerFragmentCallbacks {
