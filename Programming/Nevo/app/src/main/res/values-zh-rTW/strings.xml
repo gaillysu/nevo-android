@@ -18,4 +18,5 @@
     <string name="open_string">打开</string>
     <string name="close_string">关闭</string>
     <string name="goal_steps">Stpes</string>
+    <string name="time_picker">Set Clock Time</string>
 </resources>

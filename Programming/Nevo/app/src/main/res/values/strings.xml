@@ -11,7 +11,7 @@
     <string name="clock">00:00</string>
     <string name="ok_button">Ok</string>
     <string name="step_picker_title">Set Step Goal</string>
-    <string name="message">Nevo watch not found, please scan devices again</string>
+    <string name="message">Nevo Not Found 404.Please try again...</string>
     <string name="warning">Warning</string>
     <string name="modarate_string">Modarate</string>
     <string name="intensive_string">Intensive</string>
@@ -19,4 +19,5 @@
     <string name="open_string">Open</string>
     <string name="close_string">Close</string>
     <string name="goal_steps">Stpes</string>
+    <string name="time_picker">Set Clock Time</string>
 </resources>
