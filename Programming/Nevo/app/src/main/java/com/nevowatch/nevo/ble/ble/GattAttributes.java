@@ -16,6 +16,9 @@ import com.nevowatch.nevo.ble.util.Optional;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+/**
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 public class GattAttributes {
     private static HashMap<String, String> attributes = new HashMap<String, String>();
     

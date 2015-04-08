@@ -52,6 +52,7 @@ import java.util.UUID;
  * Service for managing connection and data communication with a GATT server
  * hosted on a given Bluetooth LE device.
  * WARNING ! DO NOT RENAME OF MOVE THIS CLASS, BECAUSE IT HAVE TO BE DECLARED IN THE MANIFEST
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class ImazeBTService extends Service {

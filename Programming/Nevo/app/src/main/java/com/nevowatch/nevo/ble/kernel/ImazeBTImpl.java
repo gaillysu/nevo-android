@@ -37,6 +37,9 @@ import com.nevowatch.nevo.ble.util.Optional;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+/**
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 /*package*/ class ImazeBTImpl implements ImazeBT {
 	/*
 	 * Here's how it works under the hood.
@@ -53,6 +56,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 	 * 
 	 * In this whole package, all the *Impl classes, are Package wide classes and all the callable functions are called through an interface
 	 * Also, instanciation is only done Through Builders
+	 * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
 	 */
 	
 	/**

@@ -41,6 +41,8 @@ import com.nevowatch.nevo.ble.util.Optional;
  * Also, the minimum target should be android 4.3 !
  * 
  * And don't forget to disconnect(null) before stopping the parent activity
+ *
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 public interface ImazeBT {
 	
