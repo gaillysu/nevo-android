@@ -44,13 +44,15 @@
             android:id="@+id/on_mode_button"
             android:background="@drawable/alarm_open_button_selector"
             android:layout_marginRight="25dp"
-            android:text="@string/open_string" />
+            android:text="@string/open_string"
+            android:textAllCaps="false"/>
 
         <Button
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:id="@+id/off_mode_button"
             android:background="@drawable/alarm_close_button_selector"
-            android:text="@string/close_string" />
+            android:text="@string/close_string"
+            android:textAllCaps="false"/>
     </LinearLayout>
 </LinearLayout>

@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:textSize="80sp"
             android:text="7000"
+            android:textAllCaps="false"
             android:id="@+id/steps_textView"
             android:layout_marginTop="50dp"/>
 
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/goal_steps"
+            android:textAllCaps="false"
             android:layout_gravity="center_horizontal"/>
 
         <Button
@@ -46,6 +48,8 @@
             android:layout_height="70dp"
             android:layout_marginTop="30dp"
             android:text="@string/modarate_string"
+            android:textSize="20sp"
+            android:textAllCaps="false"
             android:id="@+id/modarateButton"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected7000" />
@@ -54,6 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:text="@string/intensive_string"
+            android:textSize="20sp"
+            android:textAllCaps="false"
             android:id="@+id/intensiveButton"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected10000" />
@@ -62,6 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:text="@string/sportive_string"
+            android:textSize="20sp"
+            android:textAllCaps="false"
             android:id="@+id/sportiveButton"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected20000" />

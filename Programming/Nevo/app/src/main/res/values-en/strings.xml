@@ -20,4 +20,5 @@
     <string name="close_string">Close</string>
     <string name="goal_steps">Stpes</string>
     <string name="time_picker">Set Clock Time</string>
+    <string name="acheter"></string>
 </resources>
