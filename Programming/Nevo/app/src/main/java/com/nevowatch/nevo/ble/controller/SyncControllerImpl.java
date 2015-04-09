@@ -3,7 +3,7 @@ package com.nevowatch.nevo.ble.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
-
+import java.util.Date;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
@@ -14,6 +14,8 @@ import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
+import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
+import com.nevowatch.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
@@ -40,7 +42,7 @@ import android.util.Log;
 public class SyncControllerImpl implements SyncController{
 
 	Context mContext;
-	private static final int SYNC_INTERVAL = 0*60*60*1000; //every hour , do sync when connected again
+	private static final int SYNC_INTERVAL = 1*60*60*1000; //every hour , do sync when connected again
 	private NevoBT mNevoBT;
 	private OnSyncControllerListener mOnSyncControllerListener;
     private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
@@ -52,10 +54,10 @@ public class SyncControllerImpl implements SyncController{
 	 * This listener is called when new data is received
 	 */
 	private OnDataReceivedListener mDataReceivedListener = new OnDataReceivedListener() {
-		
+
 		@Override
 		public void onDataReceived(com.nevowatch.nevo.ble.model.packet.SensorData data) {
-			
+
 			//if(last Packet)
 			if (data.getType().equals(NevoRawData.TYPE))
 			{
@@ -65,7 +67,7 @@ public class SyncControllerImpl implements SyncController{
 				if((byte)0xFF == nevoData.getRawData()[0])
 				{
 					QueuedMainThreadHandler.getInstance().next();
-					
+
 					NevoPacket packet = new NevoPacket(mPacketsbuffer);
 					mOnSyncControllerListener.packetReceived(packet);
 
@@ -93,13 +95,21 @@ public class SyncControllerImpl implements SyncController{
                     {
                         DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
                         mCurrentDay = 0;
-                        mSavedDailyHistory.add(infopacket.getDailyTrackerInfo());
+                        mSavedDailyHistory = infopacket.getDailyTrackerInfo();
+                        Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
+
                         getDailyTracker(mCurrentDay);
                     }
 
                     if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                        /*TODO by gailly save to google fit or local database*/
+                        DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
+                        mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
+                        /*TODO by gailly save to google fit or local database, now I output it to logcat*/
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
+
                         mCurrentDay++;
                         if(mCurrentDay < mSavedDailyHistory.size())
                         {
@@ -115,10 +125,10 @@ public class SyncControllerImpl implements SyncController{
                     mPacketsbuffer.clear();
                 }
 			}
-			
+
 		}
 	};
-	
+
 	private OnConnectListener mConnectListener = new OnConnectListener() {
 
 		@Override

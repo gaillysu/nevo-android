@@ -21,14 +21,19 @@ public class DailyHistory {
     public int getTotalSteps() {
         return mTotalSteps;
     }
+    public void setTotalSteps(int TotalSteps) {
+         mTotalSteps = TotalSteps;
+    }
 
     public List<Integer> getHourlySteps() {
         return mHourlySteps;
+    }
+    public void setHourlySteps(List<Integer> HourlySteps) {
+        mHourlySteps = HourlySteps;
     }
 
     public Date getDate() {
         return mDate;
     }
-
 
 }

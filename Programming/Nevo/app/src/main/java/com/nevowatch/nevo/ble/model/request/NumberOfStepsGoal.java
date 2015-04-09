@@ -28,7 +28,6 @@ public class NumberOfStepsGoal implements Goal {
 
 	@Override
 	public int getValue() {
-		// TODO Auto-generated method stub
 		return mSteps;
 	}
 
