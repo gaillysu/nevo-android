@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backGroundColor">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -18,6 +19,7 @@
             android:textSize="80sp"
             android:text="@string/clock"
             android:id="@+id/clock_textView"
+            android:textColor="@color/customBlack"
             android:layout_gravity="bottom"
             android:layout_marginLeft="20dp"/>
 
@@ -26,6 +28,7 @@
             android:layout_height="20dp"
             android:layout_marginBottom="30dp"
             android:id="@+id/edit_clock_imageButton"
+            android:textColor="@color/customBlack"
             android:layout_gravity="bottom"
             android:background="@drawable/editor"
             android:layout_marginTop="50dp"/>
@@ -45,6 +48,7 @@
             android:background="@drawable/alarm_open_button_selector"
             android:layout_marginRight="25dp"
             android:text="@string/open_string"
+            android:textColor="@color/customBlack"
             android:textAllCaps="false"/>
 
         <Button
@@ -53,6 +57,7 @@
             android:id="@+id/off_mode_button"
             android:background="@drawable/alarm_close_button_selector"
             android:text="@string/close_string"
+            android:textColor="@color/customBlack"
             android:textAllCaps="false"/>
     </LinearLayout>
 </LinearLayout>
