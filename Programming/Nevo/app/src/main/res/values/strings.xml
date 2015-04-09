@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Nevo</string>
-
     <string name="title_section1">Welcome</string>
     <string name="title_section2">Goal</string>
     <string name="title_section3">Alarm</string>
@@ -30,5 +29,6 @@
     <string name="bluetoothIcon">Swipe up to open the control center and tap on the Bluetooth icon</string>
     <string name="watchBluetooth">Enable the Bluetooth on your watch</string>
     <string name="longPushLED">Push and hold the third button until blue LED blinks</string>
+    <string name="mconnect">Connect</string>
 
 </resources>

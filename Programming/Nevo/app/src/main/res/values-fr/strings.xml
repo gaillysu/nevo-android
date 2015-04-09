@@ -20,4 +20,14 @@
     <string name="close_string">Close</string>
     <string name="goal_steps">Stpes</string>
     <string name="time_picker">Set Clock Time</string>
+    <string name="nevoConnected">nevo is not connected\nEnable Bluetooth on phone</string>
+    <string name="pushHoldButton">Then push and hold 3rd button\nTo connect your watch</string>
+    <string name="tutorial">Activate my nevo</string>
+    <string name="acheter">I want a nevo!</string>
+    <string name="bluetoothEnabled">Bluetooth enabled</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="bluetoothIcon">Swipe up to open the control center and tap on the Bluetooth icon</string>
+    <string name="watchBluetooth">Enable the Bluetooth on your watch</string>
+    <string name="longPushLED">Push and hold the third button until blue LED blinks</string>
 </resources>
