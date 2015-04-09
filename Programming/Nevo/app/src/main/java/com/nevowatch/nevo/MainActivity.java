@@ -219,6 +219,8 @@ public class MainActivity extends ActionBarActivity
         switch (position+1){
             case 1:
                 tag.set("WelcomeFragment");
+                mPosition = 0;
+                mTag = "WelcomeFragment";
                 break;
             case 2:
                 tag.set("GoalFragment");
@@ -233,7 +235,7 @@ public class MainActivity extends ActionBarActivity
             default:
                 break;
         }
-        if(SaveData.getBleConnectFromPreference(getApplicationContext()) == false){
+        if(mSyncController!=null && mSyncController.isConnected() == false){
             Log.d("MainActivity", "DisConnect");
             if((position+1) == 1){
                 replaceFragment(position, tag.get());
@@ -261,6 +263,17 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showWarning() {
         showAlertDialog();
+    }
+
+    @Override
+    public void reConnect() {
+        Log.i("","******************** reconnect new Nevo ********************");
+        mSyncController.startConnect(true,this);
+    }
+
+    @Override
+    public boolean isConnected() {
+        return mSyncController.isConnected();
     }
 
     @Override
@@ -379,10 +392,19 @@ public class MainActivity extends ActionBarActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (isConnected) {
-                    Toast.makeText(MainActivity.this, "Nevo Connected!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Nevo Disconnect!", Toast.LENGTH_LONG).show();
+                //if (isConnected) {
+                   // Toast.makeText(MainActivity.this, "Nevo Connected!", Toast.LENGTH_LONG).show();
+                //} else {
+                  //  Toast.makeText(MainActivity.this, "Nevo Disconnect!", Toast.LENGTH_LONG).show();
+                //}
+                if(isConnected )
+                {
+                    replaceFragment(mPosition, mTag);
+                }
+                else
+                {
+                    if (mPosition!=0)
+                    replaceFragment(3, "ConnectAnimationFragment");
                 }
             }
         });

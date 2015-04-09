@@ -61,6 +61,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.connect_imageView:
+                mCallbacks.reConnect();
                 final Animation animRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.roatate);
                 mConnectImage.startAnimation(animRotate);
                 animRotate.setAnimationListener(new myAnimationListener());
@@ -79,10 +80,12 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if(SaveData.getBleConnectFromPreference(getActivity())){
-                mCallbacks.replaceFragment(mPostion, mTag);
+            if(mCallbacks.isConnected())
+            {
+              //DO NOTHING, mainactivity has replaced to normal screen
             }else{
-                mCallbacks.showWarning();
+              //  mCallbacks.showWarning();
+              //TODO show "Connect" button
             }
         }
 
@@ -96,5 +99,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         void onSectionAttached(int i);
         void replaceFragment(final int position, final String tag);
         void showWarning();
+        void reConnect();
+        boolean isConnected();
     }
 }
