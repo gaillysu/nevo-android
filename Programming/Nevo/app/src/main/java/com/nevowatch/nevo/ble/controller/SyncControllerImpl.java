@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Calendar;
 
 import com.nevowatch.nevo.Model.DailyHistory;
-import com.nevowatch.nevo.ble.ble.SupportedService;
+import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
 import com.nevowatch.nevo.ble.kernel.BluetoothDisabledException;
-import com.nevowatch.nevo.ble.kernel.ImazeBT;
+import com.nevowatch.nevo.ble.kernel.NevoBT;
 import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
@@ -41,7 +41,7 @@ public class SyncControllerImpl implements SyncController{
 
 	Context mContext;
 	private static final int SYNC_INTERVAL = 0*60*60*1000; //every hour , do sync when connected again
-	private ImazeBT  mImazeBT;
+	private NevoBT mNevoBT;
 	private OnSyncControllerListener mOnSyncControllerListener;
     private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
 
@@ -170,7 +170,7 @@ public class SyncControllerImpl implements SyncController{
         QueuedMainThreadHandler.getInstance().post(new Runnable(){
             @Override
             public void run() {
-                mImazeBT.sendRequest(request);
+                mNevoBT.sendRequest(request);
             }
         });
 
@@ -215,11 +215,11 @@ public class SyncControllerImpl implements SyncController{
 	{
 		mContext = context;	
 		
-		mImazeBT = ImazeBT.Factory.newInstance(context);				
-		mImazeBT.connectCallback(mConnectListener);
-		mImazeBT.addCallback(mDataReceivedListener);
-		mImazeBT.disconnectCallback(mDisconnectListener);
-		mImazeBT.exceptionCallback(mExceptionListener);				
+		mNevoBT = NevoBT.Factory.newInstance(context);
+		mNevoBT.connectCallback(mConnectListener);
+		mNevoBT.addCallback(mDataReceivedListener);
+		mNevoBT.disconnectCallback(mDisconnectListener);
+		mNevoBT.exceptionCallback(mExceptionListener);
 	}
 
 	/*package*/void setContext(Context context) {
@@ -239,13 +239,13 @@ public class SyncControllerImpl implements SyncController{
 		
 		if (forceScan)
 		{
-			mImazeBT.forgetSavedAddress();
+			mNevoBT.forgetSavedAddress();
 		}
 		
 		List<SupportedService> Servicelist = new ArrayList<SupportedService>();
 		Servicelist.add( SupportedService.nevo);
 		try {
-			mImazeBT.connect(Servicelist);
+			mNevoBT.connect(Servicelist);
 		} catch (BLENotSupportedException e) {
 			Log.d("SyncControllerImpl", "Ble not supported !");
 			e.printStackTrace();
@@ -275,7 +275,7 @@ public class SyncControllerImpl implements SyncController{
     @Override
 	public boolean isConnected() {
 		
-		return !mImazeBT.isDisconnected();
+		return !mNevoBT.isDisconnected();
 	}
 
 	

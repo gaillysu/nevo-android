@@ -7,7 +7,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import com.nevowatch.nevo.ble.ble.SupportedService;
+import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Optional;
 
@@ -44,7 +44,7 @@ import com.nevowatch.nevo.ble.util.Optional;
  *
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-public interface ImazeBT {
+public interface NevoBT {
 	
 	/**
 	 * THe logcat tag used by the SDK
@@ -61,11 +61,11 @@ public interface ImazeBT {
 	 * add "sInstance" member ,no need alloc memory every time.
 	 */
 	public class Factory{
-		private static ImazeBTImpl sInstance = null;
-		public static ImazeBT newInstance(Context context) {
+		private static NevoBTImpl sInstance = null;
+		public static NevoBT newInstance(Context context) {
 			if(null == sInstance )
 			{
-				sInstance = new ImazeBTImpl(context);
+				sInstance = new NevoBTImpl(context);
 			} else {
 				sInstance.setContext(context);
 			}

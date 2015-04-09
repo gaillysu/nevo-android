@@ -28,8 +28,8 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import com.nevowatch.nevo.ble.ble.GattAttributes;
-import com.nevowatch.nevo.ble.ble.ImazeBTService;
-import com.nevowatch.nevo.ble.ble.SupportedService;
+import com.nevowatch.nevo.ble.ble.NevoBTService;
+import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Constants;
@@ -40,7 +40,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 /**
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-/*package*/ class ImazeBTImpl implements ImazeBT {
+/*package*/ class NevoBTImpl implements NevoBT {
 	/*
 	 * Here's how it works under the hood.
 	 * ImazeBTImpl is our Kernerl.
@@ -93,7 +93,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 	 * The list of currently binded services.
 	 * Warning though, alway check they haven't stopped
 	 */
-	private ImazeBTService.LocalBinder mCurrentService;
+	private NevoBTService.LocalBinder mCurrentService;
 	
 	/**
 	 * The list of current service connection
@@ -126,7 +126,7 @@ import com.nevowatch.nevo.ble.util.Optional;
      * @throws BLENotSupportedException
      * @throws BluetoothDisabledException 
      */
-	public ImazeBTImpl(Context context){
+	public NevoBTImpl(Context context){
 		this.mContext = context;
 		
 		try {
@@ -215,7 +215,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 		if(mCurrentService!=null) {
 			mCurrentService.sendRequest(request);
 		} else {
-			 Log.w(ImazeBT.TAG, "Send failed. Service not started" );
+			 Log.w(NevoBT.TAG, "Send failed. Service not started" );
 		}
 	}
 	
@@ -456,7 +456,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 				//And it should be active at the moment
 			
 				//We check if the device is not already connected
-				boolean alreadyConnected = ImazeBTImpl.this.isAlreadyConnected(deviceAddress);
+				boolean alreadyConnected = NevoBTImpl.this.isAlreadyConnected(deviceAddress);
 
 			
 				//We will browse the advertised UUIDs to check if one of them correspond to a supported service
@@ -513,7 +513,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 		Log.v(TAG,"start bindNewService by " + deviceAddress);
 		//We will create a Service that will handle the actual Bluetooth low level job
 		Intent intent = new Intent(mContext,
-				ImazeBTService.class);
+				NevoBTService.class);
 		
 		//This object will be the bridge between this object and the Service
 		//It is used to retreive the binder and unbind the service
@@ -521,19 +521,19 @@ import com.nevowatch.nevo.ble.util.Optional;
 			
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
-				Log.v(ImazeBT.TAG, name+" Service disconnected");
+				Log.v(NevoBT.TAG, name+" Service disconnected");
 			}
 			
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
-				Log.v(ImazeBT.TAG, name+" Service connected");
+				Log.v(NevoBT.TAG, name+" Service connected");
 				
 				//If we had this service already connected, we disconnect it
 				//here comment by gaillysu, should not call disconnect()
 				//disconnect(deviceAddress);
 				
 				//This object is the bridge to get informations and control the service
-				mCurrentService = (ImazeBTService.LocalBinder) service;
+				mCurrentService = (NevoBTService.LocalBinder) service;
 				
 				//We launch a conenction to the given device
 				mCurrentService.initialize( mDataReceived, mConnect, mDisconnect, mException);
@@ -545,7 +545,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 		//We start the actual binding
 		//Note that the service will restart as long as it is binded, because we have set : Activity.BIND_AUTO_CREATE
 		mContext.bindService(intent,mCurrentServiceConnection,Activity.BIND_AUTO_CREATE);
-		Log.v(ImazeBT.TAG,"mContext.bindService");
+		Log.v(NevoBT.TAG,"mContext.bindService");
 	}
 	
 	private BluetoothAdapter initBluetoothAdapter() throws BLENotSupportedException, BluetoothDisabledException {

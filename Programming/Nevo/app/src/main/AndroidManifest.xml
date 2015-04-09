@@ -29,7 +29,7 @@
         </activity>
 
         <service
-            android:name="com.nevowatch.nevo.ble.ble.ImazeBTService"
+            android:name=".ble.ble.NevoBTService"
             android:enabled="true" />
 
         <service

@@ -27,7 +27,7 @@ import android.util.Log;
 import org.apache.commons.codec.binary.Hex;
 
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
-import com.nevowatch.nevo.ble.kernel.ImazeBT;
+import com.nevowatch.nevo.ble.kernel.NevoBT;
 import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
@@ -55,7 +55,7 @@ import java.util.UUID;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class ImazeBTService extends Service {
+public class NevoBTService extends Service {
     
     /**
      * Bluetooth adapter
@@ -114,7 +114,7 @@ public class ImazeBTService extends Service {
 		 * @param mConnect 
 		 */
 		public void initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnDisconnectListener disconnected, OnExceptionListener exception){
-			ImazeBTService.this.initialize(dataReceived, connect , disconnected, exception);
+			NevoBTService.this.initialize(dataReceived, connect , disconnected, exception);
 		}
 		
 		/**
@@ -128,21 +128,21 @@ public class ImazeBTService extends Service {
 	     * @return true if no device is currently connected
 	     */
 		public boolean isDisconnected(){
-			return ImazeBTService.this.mBluetoothGattMap.isEmpty();
+			return NevoBTService.this.mBluetoothGattMap.isEmpty();
 		}
 		
 		/**
 		 * Connect to the given device (if possible)
 		 */
 		public void connect(String address){
-			ImazeBTService.this.autoConnect(address);
+			NevoBTService.this.autoConnect(address);
 		}
 		
 		/**
 		 * Disconnects to the given device (if possible)
 		 */
 		public void disconnect(String address){
-			ImazeBTService.this.disconnect(address);
+			NevoBTService.this.disconnect(address);
 		}
 		
 		/**
@@ -159,7 +159,7 @@ public class ImazeBTService extends Service {
 	     * @return the address of the connected device (if any) or an empty Optional if there's no device currently covering this service
 	     */
 		public Optional<String> isServiceConnected(UUID uuid){
-			return ImazeBTService.this.isServiceConnected(uuid);
+			return NevoBTService.this.isServiceConnected(uuid);
 		}
 		
 	    /**
@@ -169,7 +169,7 @@ public class ImazeBTService extends Service {
 	     */
 		public boolean isOneOfThosServiceConnected(List<UUID> uuids){
 			for(UUID uuid : uuids) {
-				if(ImazeBTService.this.isServiceConnected(uuid).notEmpty()) return true;
+				if(NevoBTService.this.isServiceConnected(uuid).notEmpty()) return true;
 			}
 			
 			return false;
@@ -180,7 +180,7 @@ public class ImazeBTService extends Service {
 		 * @param deviceRequest
 		 */
 		public void sendRequest(SensorRequest deviceRequest){		
-			ImazeBTService.this.sendRequest(deviceRequest);
+			NevoBTService.this.sendRequest(deviceRequest);
 		}
 
 	}
@@ -191,7 +191,7 @@ public class ImazeBTService extends Service {
      */
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.v(ImazeBT.TAG,"ImazeBTService onBind() called");
+		Log.v(NevoBT.TAG,"ImazeBTService onBind() called");
 		return new LocalBinder();
 	}
     
@@ -204,7 +204,7 @@ public class ImazeBTService extends Service {
         // After using a given device, you should make sure that BluetoothGatt.close() is called
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
-    	Log.v(ImazeBT.TAG,"ImazeBTService onUnbind() called");
+    	Log.v(NevoBT.TAG,"ImazeBTService onUnbind() called");
         close();
         return super.onUnbind(intent);
     }
@@ -230,14 +230,14 @@ public class ImazeBTService extends Service {
 
     	BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
            if (bluetoothManager == null) {
-                Log.e(ImazeBT.TAG, "Unable to initialize BluetoothManager.");
+                Log.e(NevoBT.TAG, "Unable to initialize BluetoothManager.");
                 return false;
            }
 
  
         mBluetoothAdapter = bluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Log.e(ImazeBT.TAG, "Unable to obtain a BluetoothAdapter.");
+            Log.e(NevoBT.TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
  
@@ -255,12 +255,12 @@ public class ImazeBTService extends Service {
 		
 		//If it doesn't connect, we'll retry a bit later
 		if(!connect(address)){
-			Log.v(ImazeBT.TAG, "Reschedueling a connection");
+			Log.v(NevoBT.TAG, "Reschedueling a connection");
 			new Timer().schedule(new TimerTask() {          
 			    @Override
 			    public void run() {
 			    	//Time to retry !
-			    	Log.v(ImazeBT.TAG, "Retrying to connect");
+			    	Log.v(NevoBT.TAG, "Retrying to connect");
 			        autoConnect(address);     
 			    }
 			}, RETRY_DELAY);
@@ -281,7 +281,7 @@ public class ImazeBTService extends Service {
      */
 	private boolean connect(final String address) {
         if (mBluetoothAdapter == null) {
-            Log.w(ImazeBT.TAG, "BluetoothAdapter not initialized");
+            Log.w(NevoBT.TAG, "BluetoothAdapter not initialized");
             return false;
         }
  
@@ -293,7 +293,7 @@ public class ImazeBTService extends Service {
         }
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
-            Log.w(ImazeBT.TAG, "Device not found.  Unable to connect.");
+            Log.w(NevoBT.TAG, "Device not found.  Unable to connect.");
             return false;
         }
         
@@ -302,8 +302,8 @@ public class ImazeBTService extends Service {
         mQueuedMainThread.post(new Runnable() {;
 			@Override
 			public void run() {
-				Log.d(ImazeBT.TAG, "Connecting to Gatt : "+address);
-				device.connectGatt(ImazeBTService.this, false, mGattCallback);
+				Log.d(NevoBT.TAG, "Connecting to Gatt : "+address);
+				device.connectGatt(NevoBTService.this, false, mGattCallback);
 			}
 		});
 
@@ -319,7 +319,7 @@ public class ImazeBTService extends Service {
      */
 	private void disconnect(final String address) {
         if (mBluetoothAdapter == null) {
-            Log.w(ImazeBT.TAG, "BluetoothAdapter not initialized");
+            Log.w(NevoBT.TAG, "BluetoothAdapter not initialized");
             return;
         }
         //For some reason we have to do it on the UI thread...
@@ -329,7 +329,7 @@ public class ImazeBTService extends Service {
 			
 			@Override
 			public void run() {
-				Log.i(ImazeBT.TAG, "Disconnecting "+address);
+				Log.i(NevoBT.TAG, "Disconnecting "+address);
 				if(mBluetoothGattMap.containsKey(address)) 
 				{
 					mBluetoothGattMap.get(address).disconnect();
@@ -349,7 +349,7 @@ public class ImazeBTService extends Service {
         public void onConnectionStateChange(final BluetoothGatt gatt, int status, int newState) {
         	if(gatt == null || gatt.getDevice() == null || gatt.getDevice().getAddress() == null) {
         		//If the gatt is null, something's wrong. Let's just stop here.
-            	Log.w(ImazeBT.TAG,"mBluetoothGatt is null");
+            	Log.w(NevoBT.TAG,"mBluetoothGatt is null");
             	return;
             }
         	
@@ -360,14 +360,14 @@ public class ImazeBTService extends Service {
       		
             	mBluetoothGattMap.put(address, gatt);
             	
-                Log.i(ImazeBT.TAG, "Connected to GATT server : "+ address);
+                Log.i(NevoBT.TAG, "Connected to GATT server : "+ address);
                    
                 // Attempts to discover services after successful connection.
-                Log.v(ImazeBT.TAG, "Attempting to start service discovery");
+                Log.v(NevoBT.TAG, "Attempting to start service discovery");
                 mQueuedMainThread.post(new Runnable() {
                 	@Override
             		public void run() {
-            			Log.d(ImazeBT.TAG, "Discovering services : "+ address);
+            			Log.d(NevoBT.TAG, "Discovering services : "+ address);
             			if(gatt!=null) gatt.discoverServices();
             		}
                 });
@@ -375,7 +375,7 @@ public class ImazeBTService extends Service {
  
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             	
-                Log.e(ImazeBT.TAG, "Disconnected from GATT server : "+ address);
+                Log.e(NevoBT.TAG, "Disconnected from GATT server : "+ address);
                 
                 if(mDisconnected!=null && gatt!=null) mDisconnected.onDisconnect(gatt.getDevice().getName());
 
@@ -386,7 +386,7 @@ public class ImazeBTService extends Service {
                 return;
             } else {
             	
-            	Log.e(ImazeBT.TAG, "Unknown state for "+ address);
+            	Log.e(NevoBT.TAG, "Unknown state for "+ address);
             	//No matter what, if the device is not connected, we remove it from the list of connected devices
             	mBluetoothGattMap.remove(address);
             }
@@ -398,7 +398,7 @@ public class ImazeBTService extends Service {
         	
         	if(gatt == null || gatt.getDevice() == null || gatt.getDevice().getAddress() == null) {
         		//If the gatt is null, something's wrong. Let's just stop here.
-            	Log.w(ImazeBT.TAG,"mBluetoothGatt is null");
+            	Log.w(NevoBT.TAG,"mBluetoothGatt is null");
             	return;
             }
         	
@@ -408,21 +408,21 @@ public class ImazeBTService extends Service {
         	
         	final String address = gatt.getDevice().getAddress();
         	
-        	Log.d(ImazeBT.TAG, "Services discovered : "+address);
+        	Log.d(NevoBT.TAG, "Services discovered : "+address);
         	
         	//WARNING ! For some reasons, device.connectGatt(this, true, mGattCallback); will give us services with empty characteristics...
         	//Looks like the bluetooh layers crash, with a aclStateChangeCallback: Device is NULL  (at least on android 4.3)
         	
-        	if(getSupportedGattServices(gatt).isEmpty()) Log.w(ImazeBT.TAG, "No services discovered for : "+address);
-        	else Log.v(ImazeBT.TAG,  getSupportedGattServices(gatt).size() +  " services discovered for : "+address);
+        	if(getSupportedGattServices(gatt).isEmpty()) Log.w(NevoBT.TAG, "No services discovered for : "+address);
+        	else Log.v(NevoBT.TAG,  getSupportedGattServices(gatt).size() +  " services discovered for : "+address);
         	
         	//At least one characteristic should be chosen, or there's a problem
         	boolean characteristicChosen = false;
         	
         	for(BluetoothGattService service : getSupportedGattServices(gatt)){
         		       		      			
-            	if(service.getCharacteristics().isEmpty()) Log.w(ImazeBT.TAG, "No characteristic discovered for : "+service.getUuid());
-            	else Log.v(ImazeBT.TAG, service.getCharacteristics().size() + " characteristic discovered for : "+service.getUuid() );
+            	if(service.getCharacteristics().isEmpty()) Log.w(NevoBT.TAG, "No characteristic discovered for : "+service.getUuid());
+            	else Log.v(NevoBT.TAG, service.getCharacteristics().size() + " characteristic discovered for : "+service.getUuid() );
             	
         		//Since it takes some time to connect to a device, maybe in the mean time we've just connected to another device with similar services.
         		//Let's check if there's an address connected to one of those services
@@ -439,10 +439,10 @@ public class ImazeBTService extends Service {
     				final String uuid = characteristic.getUuid().toString();
     				
     				//Is this characteristic supported ?
-    				Log.v(ImazeBT.TAG,"Characteristic UUID:" + uuid);
+    				Log.v(NevoBT.TAG,"Characteristic UUID:" + uuid);
     				if (GattAttributes.supportedBLECharacteristic(uuid))
     				{    
-    					Log.i(ImazeBT.TAG, "Activating supported characteristic : "+address+" "+uuid);
+    					Log.i(NevoBT.TAG, "Activating supported characteristic : "+address+" "+uuid);
     					setCharacteristicNotification(gatt, characteristic, true);   
     					characteristicChosen = true;
 	
@@ -461,7 +461,7 @@ public class ImazeBTService extends Service {
             }
         	
         	if(!characteristicChosen){
-        		Log.w(ImazeBT.TAG,"No characteristic chosen, maybe the bluetooth is unstable : "+address);
+        		Log.w(NevoBT.TAG,"No characteristic chosen, maybe the bluetooth is unstable : "+address);
         		mException.onException(new BLEUnstableException());
         	}
             
@@ -482,19 +482,6 @@ public class ImazeBTService extends Service {
         public void onCharacteristicChanged(final BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
         	dataReceived(characteristic, gatt.getDevice().getAddress());
-
-        	if(characteristic.getUuid().toString().equals(GattAttributes.RUNNING_SPEED_AND_CADENCE_STATUS_CHARACTERISTIC))
-        	{
-        		final BluetoothGattService runningservice = gatt.getService(UUID.fromString(GattAttributes.RUNNING_SPEED_AND_CADENCE_SERVICE));
-        		final BluetoothGattCharacteristic  runningMeasureCharacteristic = runningservice.getCharacteristic(UUID.fromString(GattAttributes.RUNNING_SPEED_AND_CADENCE_CHARACTERISTIC));
-        		mQueuedMainThread.post(new Runnable() {
-        			@Override
-        			public void run() {
-        				ImazeBTService.this.setCharacteristicNotification(gatt, runningMeasureCharacteristic, true);
-        			}
-        		});
-			}
-
         }
 
         @Override
@@ -587,7 +574,7 @@ public class ImazeBTService extends Service {
     private void setCharacteristicNotification(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic,
                                               final boolean enabled) {
         if (mBluetoothAdapter == null || gatt == null) {
-            Log.w(ImazeBT.TAG, "BluetoothAdapter not initialized");
+            Log.w(NevoBT.TAG, "BluetoothAdapter not initialized");
             return;
         }
         mQueuedMainThread.post(new Runnable() {
@@ -661,7 +648,7 @@ public class ImazeBTService extends Service {
 		byte[][] rawDatas = deviceRequest.getRawDataEx();
 			
     	if(mBluetoothGattMap == null || mBluetoothGattMap.isEmpty())  {
-    		Log.w(ImazeBT.TAG, "Send failed. No device connected" );
+    		Log.w(NevoBT.TAG, "Send failed. No device connected" );
     		return;
     	}
     	
@@ -680,7 +667,7 @@ public class ImazeBTService extends Service {
 					{
 						  for(byte[] data : rawDatas)
 						  {
-							  Log.v(ImazeBT.TAG, "Send requestEx "+ new String(Hex.encodeHex(data)));
+							  Log.v(NevoBT.TAG, "Send requestEx "+ new String(Hex.encodeHex(data)));
 							  characteristic.setValue(data);		
 							  gatt.writeCharacteristic(characteristic);
 						  }
@@ -689,7 +676,7 @@ public class ImazeBTService extends Service {
 					{
 						if(rawData != null)
 						{
-							Log.v(ImazeBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
+							Log.v(NevoBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
 							characteristic.setValue(rawData);					
 							gatt.writeCharacteristic(characteristic);
 						}
@@ -700,7 +687,7 @@ public class ImazeBTService extends Service {
 			}
 	    }
 		
-		if(!sent) Log.w(ImazeBT.TAG, "Send failed. No device have the right service and characteristic" );
+		if(!sent) Log.w(NevoBT.TAG, "Send failed. No device have the right service and characteristic" );
 		
     }
 
