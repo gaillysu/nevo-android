@@ -5,14 +5,21 @@ package com.nevowatch.nevo.ble.notification;
  */
 import java.util.Date;
 
+
+import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.kernel.QuickBT;
 import com.nevowatch.nevo.ble.model.request.NevoRequest.NotificationType;
 import com.nevowatch.nevo.ble.model.request.SendNotificationNevoRequest;
-import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
-
+import com.nevowatch.nevo.ble.util.Constants;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Notification;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
@@ -28,7 +35,6 @@ public class NevoNotificationListener extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification arg0) {
-        Log.d(TAG,"Incoming notification");
         if(arg0 == null) return;
 
         Notification mNotification = arg0.getNotification();
@@ -37,7 +43,7 @@ public class NevoNotificationListener extends NotificationListenerService {
 
             //android 4.4.x new feature,support extras
             // Bundle extras = mNotification.extras;
-            Log.d(TAG,"Notification : "+arg0.getPackageName()+" : "+mNotification.number);
+            Log.i(TAG,"Notification : "+arg0.getPackageName()+" : "+mNotification.number);
             //incoming call or missed call
             if(arg0.getPackageName().equals("com.google.android.dialer")
                     || arg0.getPackageName().equals("com.android.phone")
@@ -85,5 +91,34 @@ public class NevoNotificationListener extends NotificationListenerService {
         bt.send(new SendNotificationNevoRequest(type, num));
     }
 
+    public static void getNotificationAccessPermission(final Context ctx) {
+        ContentResolver contentResolver = ctx.getContentResolver();
+        String enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners");
+        String packageName = ctx.getPackageName();
+
+        if (enabledNotificationListeners == null || !enabledNotificationListeners.contains(packageName))
+        {
+            // Let's ask the user to enable notifications
+            new AlertDialog.Builder(ctx).setTitle(R.string.notifAccess).setMessage(R.string.notifAccessMessage)
+                    .setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes, new AlertDialog.OnClickListener(){
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                    ctx.startActivity(intent);
+
+                }
+
+            }).show();
+
+
+        }
+        else
+        {
+            //  doSomethingThatRequiresNotificationAccessPermission();
+
+
+        }
+    }
 
 }

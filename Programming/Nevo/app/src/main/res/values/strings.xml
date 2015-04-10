@@ -33,6 +33,6 @@
     <string name="connectButton">Connect your nevo to the phone</string>
     <string name="placeConnect">Place your nevo near the phone and tap Connect</string>
     <string name="notifAccess">Notification Access</string>
-    <string name="notifAccessMessage">Do you want to enable notifications for WatchZ ?</string>
+    <string name="notifAccessMessage">Do you want to enable notifications for Nevo ?</string>
 
 </resources>
