@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.nevowatch.nevo.Function.SaveData;
@@ -20,6 +21,7 @@ import com.nevowatch.nevo.R;
 public class ConnectAnimationFragment extends Fragment implements View.OnClickListener{
 
     private ImageView mConnectImage;
+    private Button mConnectButton;
     private ConnectAnimationFragmentCallbacks mCallbacks;
     private int mPostion;
     private String mTag;
@@ -31,7 +33,9 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mTag = getArguments().getString("tag");
 
         mConnectImage = (ImageView) rootView.findViewById(R.id.connect_imageView);
-        mConnectImage.setOnClickListener(this);
+        //mConnectImage.setOnClickListener(this);
+        mConnectButton = (Button)rootView.findViewById(R.id.imageButton);
+        mConnectButton.setOnClickListener(this);
         return rootView;
     }
 
@@ -60,7 +64,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.connect_imageView:
+            case R.id.imageButton:
                 mCallbacks.reConnect();
                 final Animation animRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.roatate);
                 mConnectImage.startAnimation(animRotate);
@@ -75,11 +79,12 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationStart(Animation animation) {
-
+            mConnectButton.setVisibility(View.INVISIBLE);
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
+            mConnectButton.setVisibility(View.VISIBLE);
             if(mCallbacks.isConnected())
             {
               //DO NOTHING, mainactivity has replaced to normal screen

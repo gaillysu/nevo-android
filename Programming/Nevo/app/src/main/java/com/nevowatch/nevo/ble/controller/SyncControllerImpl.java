@@ -69,6 +69,13 @@ public class SyncControllerImpl implements SyncController{
 					QueuedMainThreadHandler.getInstance().next();
 
 					NevoPacket packet = new NevoPacket(mPacketsbuffer);
+                    //if packets invaild, discard them, and reset buffer
+                    if(!packet.isVaildPackets())
+                    {
+                        Log.e("Nevo Error","InVaild Packets Received!");
+                        mPacketsbuffer.clear();
+                        return;
+                    }
 					mOnSyncControllerListener.packetReceived(packet);
 
                     if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
