@@ -1,5 +1,6 @@
 package com.nevowatch.nevo.ble.kernel;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -9,6 +10,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -19,7 +21,9 @@ import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 
-/*package*/ class QuickBTImpl implements QuickBT {
+/*package*/
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+class QuickBTImpl implements QuickBT {
 
 	final QueuedMainThreadHandler mQueuedMainThread = QueuedMainThreadHandler.getInstance();
 	
@@ -37,7 +41,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	//This depends on your external hardware
 	int MINIMAL_CONNECTION_TIME = 1000;
 	
-	public QuickBTImpl(String address, final Context ctx) {
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    public QuickBTImpl(String address, final Context ctx) {
 
 		//If any argument is null, let's not proceed
 		if(address==null || address.equals("") || ctx==null) {
@@ -111,7 +116,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		
 		mQueuedMainThread.post( new Runnable() {
 			
-			@Override
+			@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+            @Override
 			public void run() {
 				
 				if(mBluetoothDevice == null || mContext == null || mBluetoothDevice.getAddress() == null) {
