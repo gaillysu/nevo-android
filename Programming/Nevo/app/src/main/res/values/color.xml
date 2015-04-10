@@ -5,5 +5,7 @@
     <color name="customGray">#bab9b6</color>
     <color name="customWhite">#f4f2f1</color>
     <color name="transparent">#00000000</color>
-    <color name="backGroundColor">#f4f2f1</color>
+    <color name="White">#ffffffff</color>
+    <color name="Black">#ff000000</color>
+
 </resources>
