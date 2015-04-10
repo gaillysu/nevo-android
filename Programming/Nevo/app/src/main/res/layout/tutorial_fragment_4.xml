@@ -3,4 +3,74 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:id="@+id/backButton"
+        android:textColor="@color/customOrange"
+        android:background="@color/transparent"
+        android:textAllCaps="false"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/stupe_image3"
+        android:layout_gravity="center_horizontal" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"></FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/connectButton"
+        android:id="@+id/textView5"
+        android:textSize="18sp"
+        android:textColor="@color/customBlack"
+        android:layout_gravity="center_horizontal" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="160dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rotatingImageView"
+            android:src="@drawable/rotating_round"
+            android:layout_gravity="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:id="@+id/mconnectButton"
+            android:text="@string/mconnect"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:background="@color/transparent"
+            android:textColor="@color/customBlack"/>
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:text="@string/placeConnect"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18sp"
+        android:textColor="@color/customBlack"
+        android:gravity="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:id="@+id/nextButton"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/customOrange"
+        android:background="@color/transparent"
+        android:textAllCaps="false"
+        android:textSize="20sp" />
 </LinearLayout>

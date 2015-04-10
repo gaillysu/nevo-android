@@ -30,5 +30,7 @@
     <string name="watchBluetooth">Enable the Bluetooth on your watch</string>
     <string name="longPushLED">Push and hold the third button until blue LED blinks</string>
     <string name="mconnect">Connect</string>
+    <string name="connectButton">Connect your nevo to the phone</string>
+    <string name="placeConnect">Place your nevo near the phone and tap Connect</string>
 
 </resources>
