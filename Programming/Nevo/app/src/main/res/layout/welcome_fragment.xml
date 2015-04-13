@@ -66,15 +66,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/setps_goal_button"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:text="0 / 0"
                 android:id="@+id/textView"
                 android:layout_marginTop="10dp"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"/>
         </LinearLayout>
 
 </LinearLayout>
