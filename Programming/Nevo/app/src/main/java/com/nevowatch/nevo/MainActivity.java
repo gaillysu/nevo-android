@@ -177,7 +177,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void connectionStateChanged(final boolean isConnected) {
-        runOnUiThread(new Runnable() {
+/*        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(isConnected )
@@ -190,16 +190,27 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                         replaceFragment(3, "ConnectAnimationFragment");
                 }
             }
-        });
+        });*/
     }
 
-    public void setStepGoal(final String stepGoal) {
+    public void setStepText(final String stepGoal) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
                 goalfragment.setStep(stepGoal);
                 MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(Integer.parseInt(stepGoal)));
+            }
+        });
+    }
+
+    @Override
+    public void setStepGoal(final int mode) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
+                goalfragment.lightStepGoal(mode);
             }
         });
     }

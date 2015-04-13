@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.NumberPicker;
 
+import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.R;
 
 /**
@@ -24,7 +25,12 @@ public class StepPickerView extends DialogFragment{
     private final static int NUMBER_OF_VALUES = 30;
     private final static int VALUES_INTERVAL = 1000;
     private String[] mDisplayedValues;
-    private static final String PREF_KEY_STEP_GOAL = "stepGoal";
+    private static final String PREF_KEY_STEP_TEXT = "stepText";
+    private static final String PREF_KEY_STEP_Goal = "stepGoal";
+    private static final int MODERATE = 0;
+    private static final int INTENSIVE = 1;
+    private static final int SPORTIVE = 2;
+    private static final int CUSTOM = -1;
 
     private void setDisplayedValues(){
         for(int i=0; i<NUMBER_OF_VALUES; i++)
@@ -48,8 +54,21 @@ public class StepPickerView extends DialogFragment{
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 int temp = (mNumberPicker.getValue() + 1) * VALUES_INTERVAL;
-                                mCallbacks.setStepGoal(new Integer(temp).toString());
-                                StepPickerView.saveStepGoalToPreference(getActivity(), new Integer(temp).toString());
+                                mCallbacks.setStepText(new Integer(temp).toString());
+                                if(temp == 7000){
+                                    mCallbacks.setStepGoal(MODERATE);
+                                    GoalFragment.saveGoalModeToPreference(getActivity(), MODERATE);
+                                }else if(temp == 10000){
+                                    mCallbacks.setStepGoal(INTENSIVE);
+                                    GoalFragment.saveGoalModeToPreference(getActivity(), INTENSIVE);
+                                }else if(temp == 20000){
+                                    mCallbacks.setStepGoal(SPORTIVE);
+                                    GoalFragment.saveGoalModeToPreference(getActivity(), SPORTIVE);
+                                }else {
+                                    mCallbacks.setStepGoal(CUSTOM);
+                                    GoalFragment.saveGoalModeToPreference(getActivity(), CUSTOM);
+                                }
+                                StepPickerView.saveStepTextToPreference(getActivity(), new Integer(temp).toString());
                             }
                         }
                 )
@@ -60,7 +79,7 @@ public class StepPickerView extends DialogFragment{
     @Override
     public void onResume() {
         super.onResume();
-        mNumberPicker.setValue(Integer.parseInt(StepPickerView.getStepGoalFromPreference(getActivity())) / 1000 - 1);
+        mNumberPicker.setValue(Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) / 1000 - 1);
     }
 
     @Override
@@ -80,16 +99,17 @@ public class StepPickerView extends DialogFragment{
     }
 
     public interface StepPickerFragmentCallbacks{
-        void setStepGoal(String stepGoal);
+        void setStepText(String stepGoal);
+        void setStepGoal(int mode);
     }
 
-    public static void saveStepGoalToPreference(Context context, String value) {
+    public static void saveStepTextToPreference(Context context, String value) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putString(PREF_KEY_STEP_GOAL, value).apply();
+        pref.edit().putString(PREF_KEY_STEP_TEXT, value).apply();
     }
 
-    public static String getStepGoalFromPreference(Context context) {
+    public static String getStepTextFromPreference(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getString(PREF_KEY_STEP_GOAL, "7000");
+        return pref.getString(PREF_KEY_STEP_TEXT, "7000");
     }
 }
