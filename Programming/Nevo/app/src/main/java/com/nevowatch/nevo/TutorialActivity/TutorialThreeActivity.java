@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.Tutorial;
+package com.nevowatch.nevo.TutorialActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import com.nevowatch.nevo.R;
 /**
  * Tutorial Three
  */
-public class TutorialThree extends Activity implements View.OnClickListener {
+public class TutorialThreeActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +27,10 @@ public class TutorialThree extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.t3_back_button:
-              //  startActivity(new Intent(this, TutorialTwo.class));
                 finish();
                 break;
             case R.id.t3_next_button:
-                startActivity(new Intent(this, TutorialFour.class));
+                startActivity(new Intent(this, TutorialFourActivity.class));
                 break;
             default:
                 break;

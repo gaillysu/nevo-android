@@ -19,7 +19,6 @@ import com.nevowatch.nevo.Fragment.WelcomeFragment;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.View.TimePickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
-import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
@@ -32,12 +31,6 @@ import com.nevowatch.nevo.ble.util.Optional;
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,GoalFragment.GoalFragmentCallbacks,AlarmFragment.AlarmFragmentCallbacks,WelcomeFragment.WelcomeFragmentCallbacks,TimePickerView.TimePickerFragmentCallbacks,StepPickerView.StepPickerFragmentCallbacks,ConnectAnimationFragment.ConnectAnimationFragmentCallbacks,OnSyncControllerListener {
     private static int mPosition;
     private static String mTag;
-    private static SyncController mSyncController;
-
-    public static SyncController getmSyncController() {
-        return mSyncController;
-    }
-
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -65,8 +58,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        mSyncController = SyncController.Factory.newInstance(this);
-        mSyncController.startConnect(true,this);
+       // MyApplication.getSyncController().startConnect(true, this);
     }
 
     @Override
@@ -93,17 +85,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 break;
         }
 
-        /*if(mSyncController!=null && mSyncController.isConnected() == false){
-
+        if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
             if((position+1) == 1){
                 replaceFragment(position, tag.get());
             }else{
                 replaceFragment(3, "ConnectAnimationFragment");
             }
-        }else{*/
+        }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
-      //  }
+        }
     }
 
     /**
@@ -122,7 +113,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
-                mSyncController.getStepsAndGoal();
+                MyApplication.getSyncController().getStepsAndGoal();
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
@@ -161,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 alramfragment.setClock(clockTime);
 /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
                 String[] strAlarm = clockTime.split(":");
-                mSyncController.setAlarm(Integer.parseInt(strAlarm[0]),
+                MyApplication.getSyncController().setAlarm(Integer.parseInt(strAlarm[0]),
                         Integer.parseInt(strAlarm[1]),
                         AlarmFragment.getClockStateFromPreference(getApplicationContext()));
             }
@@ -202,24 +193,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         });
     }
 
-    @Override
-    public void reConnect() {
-        Log.i("","******************** reconnect new Nevo ********************");
-        mSyncController.startConnect(true,this);
-    }
-
-    @Override
-    public boolean isConnected() {
-        return mSyncController.isConnected();
-    }
-
     public void setStepGoal(final String stepGoal) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
                 goalfragment.setStep(stepGoal);
-                mSyncController.setGoal(new NumberOfStepsGoal(Integer.parseInt(stepGoal)));
+                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(Integer.parseInt(stepGoal)));
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.Tutorial;
+package com.nevowatch.nevo.TutorialActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import com.nevowatch.nevo.R;
 /**
  * Turorial One
  */
-public class TutorialOne extends Activity implements View.OnClickListener{
+public class TutorialOneActivity extends Activity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class TutorialOne extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.activateButton:
-                startActivity(new Intent(this, TutorialTwo.class));
+                startActivity(new Intent(this, TutorialTwoActivity.class));
                 break;
             case R.id.uriButton:
                 Uri uri = Uri.parse("http://baidu.com");
