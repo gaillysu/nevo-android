@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.Tutorial;
+package com.nevowatch.nevo.TutorialActivity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -15,7 +15,7 @@ import com.nevowatch.nevo.R;
 /**
  * Tutorial Two
  */
-public class TutorialTwo extends Activity implements View.OnClickListener{
+public class TutorialTwoActivity extends Activity implements View.OnClickListener{
 
     private Button mT2NextButton;
     private TextView mBLEText;
@@ -72,7 +72,7 @@ public class TutorialTwo extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.t2_nextButton:
-                startActivity(new Intent(this, TutorialThree.class));
+                startActivity(new Intent(this, TutorialThreeActivity.class));
                 break;
             case R.id.t2_backButton:
                 finish();

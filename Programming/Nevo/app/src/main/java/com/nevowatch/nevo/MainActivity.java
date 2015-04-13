@@ -193,17 +193,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         });
     }
 
-    @Override
-    public void reConnect() {
-        Log.i("","******************** reconnect new Nevo ********************");
-        MyApplication.getSyncController().startConnect(true,this);
-    }
-
-    @Override
-    public boolean isConnected() {
-        return MyApplication.getSyncController().isConnected();
-    }
-
     public void setStepGoal(final String stepGoal) {
         runOnUiThread(new Runnable() {
             @Override

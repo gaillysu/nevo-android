@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.Tutorial;
+package com.nevowatch.nevo.TutorialActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 /**
  * TutorialFour
  */
-public class TutorialFour extends Activity implements View.OnClickListener, OnSyncControllerListener{
+public class TutorialFourActivity extends Activity implements View.OnClickListener, OnSyncControllerListener{
 
     private Button mConnectButton;
     private ImageView mConnectImg;
@@ -67,17 +67,18 @@ public class TutorialFour extends Activity implements View.OnClickListener, OnSy
         @Override
         public void onAnimationStart(Animation animation) {
             if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
-                MyApplication.getSyncController().startConnect(true, TutorialFour.this);
+                MyApplication.getSyncController().startConnect(true, TutorialFourActivity.this);
             }
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mConnectButton.setClickable(true);
             if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
                 mFinishButton.setVisibility(View.VISIBLE);
             }else {
                 mFinishButton.setVisibility(View.INVISIBLE);
+                mConnectButton.setClickable(true);
+                mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
             }
         }
 

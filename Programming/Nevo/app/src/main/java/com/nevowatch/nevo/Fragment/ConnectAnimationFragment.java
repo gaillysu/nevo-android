@@ -13,13 +13,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 /**
  * A Round Pointer Animation
  */
-public class ConnectAnimationFragment extends Fragment implements View.OnClickListener{
+public class ConnectAnimationFragment extends Fragment implements View.OnClickListener, OnSyncControllerListener{
 
     private ImageView mConnectImage;
     private Button mConnectButton;
@@ -34,8 +37,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mTag = getArguments().getString("tag");
 
         mConnectImage = (ImageView) rootView.findViewById(R.id.connect_imageView);
-        //mConnectImage.setOnClickListener(this);
-        mConnectButton = (Button)rootView.findViewById(R.id.imageButton);
+        mConnectButton = (Button)rootView.findViewById(R.id.connect_imageButton);
         mConnectButton.setOnClickListener(this);
         return rootView;
     }
@@ -65,11 +67,12 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.imageButton:
-                mCallbacks.reConnect();
+            case R.id.connect_imageButton:
                 final Animation animRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.roatate);
                 mConnectImage.startAnimation(animRotate);
                 animRotate.setAnimationListener(new myAnimationListener());
+                mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
+                mConnectButton.setClickable(false);
                 break;
             default:
                 break;
@@ -80,17 +83,19 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationStart(Animation animation) {
-            mConnectButton.setVisibility(View.INVISIBLE);
+            if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
+                MyApplication.getSyncController().startConnect(true, ConnectAnimationFragment.this);
+            }
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            mConnectButton.setVisibility(View.VISIBLE);
-            if(mCallbacks.isConnected()){
+            if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
                 mCallbacks.replaceFragment(mPostion, mTag);
-            }else{
+            }else {
                 //showAlertDialog();
-                mCallbacks.reConnect();
+                mConnectButton.setClickable(true);
+                mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
             }
         }
 
@@ -103,8 +108,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     public interface ConnectAnimationFragmentCallbacks{
         void onSectionAttached(int i);
         void replaceFragment(final int position, final String tag);
-        void reConnect();
-        boolean isConnected();
     }
 
     /**
@@ -113,5 +116,15 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     public void showAlertDialog(){
         DialogFragment newFragment = new AlertDialogView();
         newFragment.show(getActivity().getSupportFragmentManager(), "warning");
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+
     }
 }

@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".Tutorial.TutorialOne"
+            android:name=".TutorialActivity.TutorialOneActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,13 +34,13 @@
         </activity>
 
         <activity
-            android:name=".Tutorial.TutorialTwo"
+            android:name=".TutorialActivity.TutorialTwoActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Tutorial.TutorialThree"
+            android:name=".TutorialActivity.TutorialThreeActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Tutorial.TutorialFour"
+            android:name=".TutorialActivity.TutorialFourActivity"
             android:screenOrientation="portrait"/>
 
         <service

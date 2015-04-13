@@ -33,7 +33,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/imageButton"
+            android:id="@+id/connect_imageButton"
             android:text="@string/mconnect"
             android:textColor="@color/customBlack"
             android:background="@color/transparent"
