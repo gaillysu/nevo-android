@@ -71,13 +71,8 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mCallbacks.onSectionAttached(2);
-        mStepsTextView.setText(StepPickerView.getStepGoalFromPreference(getActivity()));
-
-        switch(GoalFragment.getGoalModeFromPreference(getActivity())){
+    public void lightStepGoal(int mode){
+        switch(mode){
             case MODERATE:
                 setSelectedButtonProperty(mButtonArray,mModarateButton);
                 break;
@@ -93,6 +88,15 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
             default:
                 break;
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mCallbacks.onSectionAttached(2);
+        mStepsTextView.setText(StepPickerView.getStepTextFromPreference(getActivity()));
+        lightStepGoal(GoalFragment.getGoalModeFromPreference(getActivity()));
     }
 
     @Override
@@ -108,7 +112,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     public void setStep(final String goal){
 
         mStepsTextView.setText(goal);
-        StepPickerView.saveStepGoalToPreference(getActivity(), goal);
+        StepPickerView.saveStepTextToPreference(getActivity(), goal);
     }
 
     @Override

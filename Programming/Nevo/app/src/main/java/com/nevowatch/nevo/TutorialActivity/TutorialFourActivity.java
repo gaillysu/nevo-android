@@ -36,6 +36,13 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
         mConnectImg = (ImageView) findViewById(R.id.t4_rotate_ImageView);
         mFinishButton = (Button) findViewById(R.id.t4_finish_Button);
         mFinishButton.setOnClickListener(this);
+
+        if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
+            mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
+            mConnectButton.setClickable(false);
+            mFinishButton.setVisibility(View.VISIBLE);
+            //mConnectImg.setImageResource(R.drawable.);
+        }
     }
 
     @Override

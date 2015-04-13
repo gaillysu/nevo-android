@@ -75,9 +75,9 @@ public class WelcomeFragment extends Fragment{
         mCallbacks.onSectionAttached(1);
         setHour(WelcomeFragment.getHourDegreeFromPreference(getActivity()));
         setMin(WelcomeFragment.getMinDegreeFromPreference(getActivity()));
-        double tmp = Integer.parseInt(StepPickerView.getStepGoalFromPreference(getActivity())) * 1.0;
+        double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
-        String str =  "- / " + StepPickerView.getStepGoalFromPreference(getActivity());
+        String str =  "- / " + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
         mTimer.schedule(mTimerTask, 0 ,1000);
     }
