@@ -75,7 +75,6 @@ public class TutorialTwo extends Activity implements View.OnClickListener{
                 startActivity(new Intent(this, TutorialThree.class));
                 break;
             case R.id.t2_backButton:
-              //  startActivity(new Intent(this, TutorialOne.class));
                 finish();
                 break;
             default:

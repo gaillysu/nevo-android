@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
@@ -37,6 +37,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     private static final int SPORTIVE = 2;
     private static final int CUSTOM = -1;
     private static final String PREF_KEY_STEP_MODE = "stepMode";
+    private MyApplication mApp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -125,19 +126,19 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
                 setSelectedButtonProperty(mButtonArray,mModarateButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), MODERATE);
                 setStep(new Integer(7000).toString());
-                MainActivity.getmSyncController().setGoal(new NumberOfStepsGoal(7000));
+                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(7000));
                 break;
             case R.id.intensiveButton:
                 setSelectedButtonProperty(mButtonArray,mIntensiveButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), INTENSIVE);
                 setStep(new Integer(10000).toString());
-                MainActivity.getmSyncController().setGoal(new NumberOfStepsGoal(10000));
+                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(10000));
                 break;
             case R.id.sportiveButton:
                 setSelectedButtonProperty(mButtonArray,mSportiveButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), SPORTIVE);
                 setStep(new Integer(20000).toString());
-                MainActivity.getmSyncController().setGoal(new NumberOfStepsGoal(20000));
+                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(20000));
                 break;
             default:
                 break;

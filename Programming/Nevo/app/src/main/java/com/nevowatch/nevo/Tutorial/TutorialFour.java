@@ -11,12 +11,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 /**
  * TutorialFour
  */
-public class TutorialFour extends Activity implements View.OnClickListener{
+public class TutorialFour extends Activity implements View.OnClickListener, OnSyncControllerListener{
 
     private Button mConnectButton;
     private ImageView mConnectImg;
@@ -39,7 +42,6 @@ public class TutorialFour extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.t4_back_Button:
-                //startActivity(new Intent(this, TutorialThree.class));
                 finish();
                 break;
             case R.id.t4_finish_Button:
@@ -64,32 +66,34 @@ public class TutorialFour extends Activity implements View.OnClickListener{
 
         @Override
         public void onAnimationStart(Animation animation) {
-
+            if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
+                MyApplication.getSyncController().startConnect(true, TutorialFour.this);
+            }
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
             mConnectButton.setClickable(true);
-           /* if(MainActivity.getmSyncController().isConnected()){*/
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFinishButton.setVisibility(View.VISIBLE);
-                    }
-                });
-/*            }else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mFinishButton.setVisibility(View.INVISIBLE);
-                    }
-                });
-            }*/
+            if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
+                mFinishButton.setVisibility(View.VISIBLE);
+            }else {
+                mFinishButton.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
         public void onAnimationRepeat(Animation animation) {
 
         }
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+
     }
 }

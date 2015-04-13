@@ -79,7 +79,7 @@ public class WelcomeFragment extends Fragment{
         setProgressBar((int)((0/tmp)*100));
         String str =  "- / " + StepPickerView.getStepGoalFromPreference(getActivity());
         setText(str);
-        mTimer.schedule(mTimerTask, 0 ,60000);
+        mTimer.schedule(mTimerTask, 0 ,1000);
     }
 
     @Override
