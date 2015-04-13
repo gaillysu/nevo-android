@@ -1,7 +1,10 @@
 package com.nevowatch.nevo.ble.model.packet;
 
 import com.nevowatch.nevo.Model.DailyHistory;
+import com.nevowatch.nevo.ble.util.HexUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,11 +20,58 @@ public class DailyTrackerInfoNevoPacket extends NevoPacket {
      * return Tracker history summary infomation, MAX total 7 days(include Today)
      * the actually days is saved by [DailyHistory].count
      */
-    public DailyHistory getDailyTrackerInfo(){
+    public ArrayList<DailyHistory> getDailyTrackerInfo(){
 
-        /*TODO by Gailly parse packets, here is only a blank sample*/
+        ArrayList<DailyHistory> days = new ArrayList<DailyHistory>();
 
-        return new DailyHistory(new Date(), new ArrayList<Integer>(), 0);
+        int total = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[12]});
+        int year = 0;
+        int month = 0;
+        int day = 0;
+
+        for (int i = 0; i<total; i++)
+        {
+            if(i<=3)
+            {
+                year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2+4*i],getPackets().get(0).getRawData()[3+4*i]});
+                month = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[4 + 4 * i]});
+                day   = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[5 + 4 * i]});
+            }
+            else if(i == 4)
+            {
+                year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2+4*i],getPackets().get(0).getRawData()[3+4*i]});
+                month = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[2]});
+                day   = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[3]});
+            }
+            else if(i == 5)
+            {
+                year = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[4],getPackets().get(1).getRawData()[5]});
+                month = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[6]});
+                day   = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[7]});
+            }
+            else if(i == 6)
+            {
+                year = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[8],getPackets().get(1).getRawData()[9]});
+                month = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[10]});
+                day   = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[11]});
+            }
+            //vaild year
+            if(year != 0)
+            {
+                //20150316
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+                try {
+                    Date date = format.parse(String.format("%04d%02d%02d000000",year,month,day));
+                    days.add(new DailyHistory(date, new ArrayList<Integer>(), 0));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                //    days.append(DailyHistory(TotalSteps: 0, HourlySteps: [24], Date:date))
+            }
+
+        }
+
+        return days;
 
     }
 }

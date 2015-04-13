@@ -31,6 +31,11 @@ public abstract  class NevoRequest implements  SensorRequest{
 		return UUID.fromString(GattAttributes.NEVO_OTA_CHARACTERISTIC);
 	}
 
+    @Override
+    public UUID getNotificationCharacteristicUUID() {
+        return UUID.fromString(GattAttributes.NEVO_NOTIFICATION_CHARACTERISTIC);
+    }
+
 	public enum NotificationType {
 		SMS, Email, Call,Facebook,Calendar,Wechat
 	}

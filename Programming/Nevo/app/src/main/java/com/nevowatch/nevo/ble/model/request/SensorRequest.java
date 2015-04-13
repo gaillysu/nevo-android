@@ -25,6 +25,10 @@ public interface SensorRequest {
     UUID getOTACharacteristicUUID();
 
     /**
+     * @return the target Input uuid, for sending Notification, SMS/Call/Email ,...etc
+     */
+    UUID getNotificationCharacteristicUUID();
+    /**
 	 * @return the raw data to be sent
 	 */
 	byte[] getRawData();

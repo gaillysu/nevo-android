@@ -29,6 +29,18 @@
             android:layout_gravity="center_horizontal"
             android:layout_centerInParent="true"/>
 
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/imageButton"
+            android:text="@string/mconnect"
+            android:textColor="@color/customBlack"
+            android:background="@color/transparent"
+            android:textAllCaps="false"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="200dp"
@@ -40,5 +52,6 @@
             android:id="@+id/pushConnectedText"
             android:layout_below="@+id/connect_imageView"
             android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 </LinearLayout>

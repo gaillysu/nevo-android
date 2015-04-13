@@ -36,7 +36,7 @@ import java.util.UUID;
 		mRawData = characteristic.getValue();
 		
 
-		Log.v("Nevo Received", new String(Hex.encodeHex(mRawData)));
+		Log.i("Nevo Received", new String(Hex.encodeHex(mRawData)));
 	}
 
 	/*

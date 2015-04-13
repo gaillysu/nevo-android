@@ -37,6 +37,15 @@
         <service
             android:name=".ble.ble.NevoBTService"
             android:enabled="true" />
+        <!--new feature for notification, based on API 18 -->
+        <service
+            android:name="com.nevowatch.nevo.ble.notification.NevoNotificationListener"
+            android:enabled="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
 
     </application>
 

@@ -13,11 +13,21 @@
     <string name="step_picker_title">Set Step Goal</string>
     <string name="message">Nevo watch not found, please scan devices again</string>
     <string name="warning">Warning</string>
-    <string name="modarate_string">Modarate</string>
-    <string name="intensive_string">Intensive</string>
-    <string name="sportive_string">Sportive</string>
-    <string name="open_string">Open</string>
-    <string name="close_string">Close</string>
-    <string name="goal_steps">Stpes</string>
+    <string name="modarate_string">低</string>
+    <string name="intensive_string">中</string>
+    <string name="sportive_string">高</string>
+    <string name="open_string">開</string>
+    <string name="close_string">關</string>
+    <string name="goal_steps">步</string>
     <string name="time_picker">Set Clock Time</string>
+    <string name="nevoConnected">nevo未連接\n請打開手機藍牙</string>
+    <string name="pushHoldButton">然後長按第三個按鈕3秒鐘\n連接上妳的手表</string>
+    <string name="tutorial">激活我的nevo</string>
+    <string name="acheter">購買nevo!</string>
+    <string name="bluetoothEnabled">藍牙可用</string>
+    <string name="next">下壹步</string>
+    <string name="back">後退</string>
+    <string name="bluetoothIcon">向上滑動打開控制中心並點擊藍牙圖標</string>
+    <string name="watchBluetooth">打開妳手表上的藍牙</string>
+    <string name="longPushLED">長按第三個按鈕直到藍色的LED燈亮為止</string>
 </resources>

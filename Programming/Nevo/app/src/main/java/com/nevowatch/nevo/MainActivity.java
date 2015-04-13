@@ -76,6 +76,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         switch (position+1){
             case 1:
                 tag.set("WelcomeFragment");
+                mPosition = 0;
+                mTag = "WelcomeFragment";
                 break;
             case 2:
                 tag.set("GoalFragment");
@@ -90,8 +92,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             default:
                 break;
         }
-/*        if(mSyncController!=null && mSyncController.isConnected() == false){
-            Log.d("MainActivity", "DisConnect");
+
+        /*if(mSyncController!=null && mSyncController.isConnected() == false){
+
             if((position+1) == 1){
                 replaceFragment(position, tag.get());
             }else{

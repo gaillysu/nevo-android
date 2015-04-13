@@ -30,7 +30,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/bluetoothon_state_on"
+        android:src="@drawable/bluetoothon_state_off"
         android:id="@+id/bluetoothState"
         android:layout_gravity="center_horizontal" />
 

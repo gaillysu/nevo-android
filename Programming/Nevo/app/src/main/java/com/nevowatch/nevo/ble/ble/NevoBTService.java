@@ -667,7 +667,7 @@ public class NevoBTService extends Service {
 					{
 						  for(byte[] data : rawDatas)
 						  {
-							  Log.v(NevoBT.TAG, "Send requestEx "+ new String(Hex.encodeHex(data)));
+							  Log.i(NevoBT.TAG, "Send requestEx "+ new String(Hex.encodeHex(data)));
 							  characteristic.setValue(data);		
 							  gatt.writeCharacteristic(characteristic);
 						  }
@@ -676,7 +676,7 @@ public class NevoBTService extends Service {
 					{
 						if(rawData != null)
 						{
-							Log.v(NevoBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
+							Log.i(NevoBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
 							characteristic.setValue(rawData);					
 							gatt.writeCharacteristic(characteristic);
 						}
