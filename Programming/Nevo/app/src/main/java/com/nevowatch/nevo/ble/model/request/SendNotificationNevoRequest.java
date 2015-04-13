@@ -9,9 +9,12 @@ import com.nevowatch.nevo.ble.ble.GattAttributes;
 
 public class SendNotificationNevoRequest extends NevoRequest {
 
+    public  final static  byte HEADER = 0x60;
+
     NotificationType  mType;
 
     int mNumber;
+    byte mID =0;
 
     public SendNotificationNevoRequest(NotificationType type, int num) {
         mType = type;
@@ -21,29 +24,50 @@ public class SendNotificationNevoRequest extends NevoRequest {
     }
 
     @Override
-    public UUID getCharacteristicUUID() {
+    public UUID getInputCharacteristicUUID() {
         return UUID.fromString(GattAttributes.NEVO_NOTIFICATION_CHARACTERISTIC);
     }
-
     @Override
     public byte[] getRawData() {
-        if(mType == NotificationType.Call)
-            return new byte[]{ (byte) 0x03, (byte) 0x01};
-        if(mType == NotificationType.SMS)
-            return new byte[]{ (byte) 0x09, (byte) mNumber};
-        if(mType == NotificationType.Email)
-            return new byte[]{ (byte) 0x09, (byte) mNumber};
         return null;
     }
 
     @Override
     public byte[][] getRawDataEx() {
-        return null;
+        if(mType == NotificationType.Call)
+            mID = 3;
+        if(mType == NotificationType.SMS)
+            mID = 5;
+        if(mType == NotificationType.Email)
+            mID = 1;
+        if(mType == NotificationType.Calendar)
+            mID = 7;
+        if(mType == NotificationType.Facebook)
+            mID = 10;
+        if(mType == NotificationType.Wechat)
+            mID = 11;
+
+        return new byte[][] {
+                    {0,HEADER,
+                            (byte) (mID),
+                            (byte) (mNumber),
+                            0,0,0,0,
+                            0,0,0,0,
+                            0,0,0,0,
+                            0,0,0,0
+                    },
+                    {(byte) 0xFF,HEADER,0,0,
+                            0,0,0,0,
+                            0,0,0,0,
+                            0,0,0,0,
+                            0,0,0,0
+                    }
+            };
     }
 
     @Override
     public byte getHeader() {
-        return 0;
+        return HEADER;
     }
 
 }

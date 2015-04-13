@@ -38,7 +38,7 @@ public class GattAttributes {
     public static String NEVO_CALLBACK_CHARACTERISTIC = "f0ba3021-6cac-4c99-9089-4b0a1df45002";
     public static String NEVO_INPUT_CHARACTERISTIC = "f0ba3022-6cac-4c99-9089-4b0a1df45002";
     public static String NEVO_OTA_CHARACTERISTIC = "f0ba3023-6cac-4c99-9089-4b0a1df45002";
-    public static String NEVO_NOTIFICATION_CHARACTERISTIC = "F0BA3024-6CAC-4C99-9089-4B0A1DF45002";
+    public static String NEVO_NOTIFICATION_CHARACTERISTIC = "f0ba3024-6cac-4c99-9089-4b0a1df45002";
 
     static 
     {

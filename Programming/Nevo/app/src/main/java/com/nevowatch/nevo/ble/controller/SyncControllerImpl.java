@@ -31,6 +31,7 @@ import com.nevowatch.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetCardioNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
+import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
@@ -39,6 +40,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SyncControllerImpl implements SyncController{
 
@@ -127,6 +129,8 @@ public class SyncControllerImpl implements SyncController{
                         {
                             mCurrentDay = 0;
                             syncFinished();
+                            //TODO: test Notification
+                            sendRequest(new SetNotificationNevoRequest());
                         }
                     }
 
@@ -183,7 +187,7 @@ public class SyncControllerImpl implements SyncController{
         sendRequest(new SetRtcNevoRequest());
     }
 
-    private void sendRequest(final SensorRequest request)
+    public void sendRequest(final SensorRequest request)
     {
         QueuedMainThreadHandler.getInstance().post(new Runnable(){
             @Override
@@ -269,9 +273,21 @@ public class SyncControllerImpl implements SyncController{
 		} catch (BLENotSupportedException e) {
 			Log.d("SyncControllerImpl", "Ble not supported !");
 			e.printStackTrace();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), "Ble not supported !", Toast.LENGTH_LONG).show();
+                }
+            });
 		} catch (BluetoothDisabledException e) {
 			e.printStackTrace();
-            Log.d("SyncControllerImpl", "Ble not supported !");
+            Log.d("SyncControllerImpl", "Bluetooth Off!, please open bluetooth.");
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), "Bluetooth Off!, please open bluetooth.", Toast.LENGTH_LONG).show();
+                }
+            });
 		}
 		
 	}

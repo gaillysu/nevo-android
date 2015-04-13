@@ -20,6 +20,8 @@ import java.util.UUID;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
+import org.apache.commons.codec.binary.Hex;
+
 
 /*package*/
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -36,7 +38,7 @@ class QuickBTImpl implements QuickBT {
 	//Reconfigurable values
 	UUID mServiceUuid;
 	UUID mCharacteristicUuid;
-	byte[] mValue;
+	byte[][] mValue;
 	
 	//This depends on your external hardware
 	int MINIMAL_CONNECTION_TIME = 1000;
@@ -110,9 +112,9 @@ class QuickBTImpl implements QuickBT {
         	return;
 		}
 		
-		mValue = request.getRawData();
+		mValue = request.getRawDataEx();
 		mServiceUuid = request.getServiceUUID();
-		mCharacteristicUuid = request.getCharacteristicUUID();
+		mCharacteristicUuid = request.getInputCharacteristicUUID();
 		
 		mQueuedMainThread.post( new Runnable() {
 			
@@ -209,7 +211,6 @@ class QuickBTImpl implements QuickBT {
     		}
 			
 			//Now we've found the right characteristic, we modify it, then send it to the device
-			bluetoothGattCharacteristic.setValue( mValue );
 			
 			mQueuedMainThread.next();
 			
@@ -217,9 +218,13 @@ class QuickBTImpl implements QuickBT {
 				
 				@Override
 				public void run() {
-					
-	    			gatt.writeCharacteristic(bluetoothGattCharacteristic);
-	    			
+                    for(byte[] data : mValue)
+                    {
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(data)));
+                        bluetoothGattCharacteristic.setValue(data);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
 				}
 			});
 
