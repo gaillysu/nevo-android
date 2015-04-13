@@ -6,7 +6,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
+        android:id="@+id/t3_back_button"
         android:text="@string/back"
         android:textColor="@color/customOrange"
         android:background="@color/transparent"/>
@@ -14,7 +14,6 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView3"
         android:src="@drawable/stupe_image2"
         android:layout_gravity="center_horizontal" />
 
@@ -22,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/watchBluetooth"
-        android:id="@+id/textView3"
         android:textSize="20sp"
         android:textColor="@color/customBlack"
         android:layout_gravity="center_horizontal" />
@@ -53,7 +51,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
+        android:id="@+id/t3_next_button"
         android:text="@string/next"
         android:textSize="20sp"
         android:textColor="@color/customOrange"

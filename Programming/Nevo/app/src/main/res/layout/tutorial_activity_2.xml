@@ -9,21 +9,19 @@
         android:layout_height="wrap_content"
         android:text="@string/back"
         android:textColor="@color/customOrange"
-        android:id="@+id/backButton"
+        android:id="@+id/t2_backButton"
         android:background="#00000000"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/stupe_image1"
-        android:id="@+id/imageView2"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:text="@string/bluetoothEnabled"
-        android:id="@+id/textView2"
         android:textColor="@color/customBlack"
         android:textSize="22sp"
         android:gravity="center"
@@ -50,9 +48,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/nextButton"
+        android:id="@+id/t2_nextButton"
         android:text="@string/next"
         android:textColor="@color/customOrange"
         android:background="#00000000"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"/>
 </LinearLayout>

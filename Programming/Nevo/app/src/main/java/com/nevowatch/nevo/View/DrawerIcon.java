@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.Model;
+package com.nevowatch.nevo.View;
 
 /**
  * DrawerIcon works for the icon on the NavigationDrawer

@@ -1,18 +1,22 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.TimePickerView;
 
 
 /**
@@ -22,9 +26,10 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
     private AlarmFragmentCallbacks mCallbacks;
     private TextView mClockTextView;
-    private ImageButton mImageButton;
+    private ImageView mEditClockImage;
     private Button mOnButton;
     private Button mOffButton;
+    private static final String PREF_KEY_CLOCK_STATE = "clockState";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,8 +38,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
         mClockTextView = (TextView) rootView.findViewById(R.id.clock_textView);
         mClockTextView.setOnClickListener(this);
-        mImageButton = (ImageButton) rootView.findViewById(R.id.edit_clock_imageButton);
-        mImageButton.setOnClickListener(this);
+        mEditClockImage = (ImageView) rootView.findViewById(R.id.edit_clock_imageButton);
+        mEditClockImage.setOnClickListener(this);
         mOnButton =  (Button)rootView.findViewById(R.id.on_mode_button);
         mOnButton.setOnClickListener(this);
         mOffButton =  (Button)rootView.findViewById(R.id.off_mode_button);
@@ -63,8 +68,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
     public void onResume() {
         super.onResume();
         mCallbacks.onSectionAttached(3);
-        mClockTextView.setText(SaveData.getAlarmFromPreference(getActivity()));
-        if(SaveData.getClockStateFromPreference(getActivity())){
+        mClockTextView.setText(TimePickerView.getAlarmFromPreference(getActivity()));
+        if(AlarmFragment.getClockStateFromPreference(getActivity())){
             onClick(mOnButton);
         }else{
             onClick(mOffButton);
@@ -76,23 +81,23 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.edit_clock_imageButton:
             case R.id.clock_textView:
-                mCallbacks.showTime();
+                    mClockTextView.setClickable(false);
+                    mEditClockImage.setClickable(false);
+                    showTimePickerDialog();
                 break;
             case R.id.on_mode_button:
-                mOffButton.setTextColor(0xff000000);
-                mOnButton.setTextColor(0xffffffff);
+                mOffButton.setTextColor(getResources().getColor(R.color.black));
+                mOnButton.setTextColor(getResources().getColor(R.color.white));
                 mOffButton.setSelected(false);
                 mOnButton.setSelected(true);
-                SaveData.saveClockStateToPreference(getActivity(), true);
-                mCallbacks.setClockTime(SaveData.getAlarmFromPreference(getActivity()),true);
+                AlarmFragment.saveClockStateToPreference(getActivity(), true);
                 break;
             case R.id.off_mode_button:
-                mOffButton.setTextColor(0xffffffff);
-                mOnButton.setTextColor(0xff000000);
+                mOffButton.setTextColor(getResources().getColor(R.color.white));
+                mOnButton.setTextColor(getResources().getColor(R.color.black));
                 mOffButton.setSelected(true);
                 mOnButton.setSelected(false);
-                SaveData.saveClockStateToPreference(getActivity(), false);
-                mCallbacks.setClockTime(SaveData.getAlarmFromPreference(getActivity()),false);
+                AlarmFragment.saveClockStateToPreference(getActivity(), false);
                 break;
             default:
                 break;
@@ -100,14 +105,31 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
     }
 
-    public void setClock(String time){
+    public void setClock(final String time){
         mClockTextView.setText(time);
-        SaveData.saveAlarmToPreference(getActivity(), time);
     }
 
-    public static interface  AlarmFragmentCallbacks {
+    /**
+     * Show Time in a dialog
+     * */
+    public void showTimePickerDialog() {
+        DialogFragment newFragment = new TimePickerView();
+        newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+        mClockTextView.setClickable(true);
+        mEditClockImage.setClickable(true);
+    }
+
+    public static interface AlarmFragmentCallbacks {
         void onSectionAttached(int position);
-        void showTime();
-        void setClockTime(String clockTime,boolean OnOff);
+    }
+
+    public static void saveClockStateToPreference(Context context, boolean value) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        pref.edit().putBoolean(PREF_KEY_CLOCK_STATE, value).apply();
+    }
+
+    public static Boolean getClockStateFromPreference(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getBoolean(PREF_KEY_CLOCK_STATE, false);
     }
 }

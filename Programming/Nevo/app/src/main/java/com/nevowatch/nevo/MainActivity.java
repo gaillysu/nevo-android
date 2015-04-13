@@ -1,16 +1,7 @@
 package com.nevowatch.nevo;
 
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,98 +9,33 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.Toast;
+import android.view.WindowManager;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
-import com.nevowatch.nevo.Fragment.AlertDialogFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
-import com.nevowatch.nevo.Fragment.StepPickerFragment;
-import com.nevowatch.nevo.Fragment.TimePickerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
-import com.nevowatch.nevo.Function.Optional;
-import com.nevowatch.nevo.Function.SaveData;
-import com.nevowatch.nevo.Service.GetDataService;
-import com.nevowatch.nevo.Service.MyService;
+import com.nevowatch.nevo.View.StepPickerView;
+import com.nevowatch.nevo.View.TimePickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nevowatch.nevo.ble.util.Optional;
 
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
  * */
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        GoalFragment.GoalFragmentCallbacks,
-        AlarmFragment.AlarmFragmentCallbacks,
-        WelcomeFragment.WelcomeFragmentCallbacks,
-        TimePickerFragment.TimePickerFragmentCallbacks,
-        StepPickerFragment.StepPickerFragmentCallbacks,
-        ConnectAnimationFragment.ConnectAnimationFragmentCallbacks,
-        OnSyncControllerListener {
-
-    private static final int SETCLOCKTIME = 1;
-    private static final int SETSTEPGOAL = 2;
-    private static final int SETSTEPMODE = 3;
-    private static final int SETWECLOMETIME = 4;
-    private static final String MYSERVICE = "com.nevowatch.nevo.MyService";
-
+public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,GoalFragment.GoalFragmentCallbacks,AlarmFragment.AlarmFragmentCallbacks,WelcomeFragment.WelcomeFragmentCallbacks,TimePickerView.TimePickerFragmentCallbacks,StepPickerView.StepPickerFragmentCallbacks,ConnectAnimationFragment.ConnectAnimationFragmentCallbacks,OnSyncControllerListener {
     private static int mPosition;
     private static String mTag;
-    private MyReciver mReciver;
-    private static List<Fragment> mListArray = new ArrayList<Fragment>();
-    private GetDataService mService;
-    private SyncController mSyncController;
+    private static SyncController mSyncController;
 
-    /**
-     * Interactions between Activity and Service
-     */
-    public ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mService = (GetDataService) service;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
-
-    /**
-     * BroadCast from MyService
-     */
-    private void saveDegreeToPref(Intent intent){
-        SaveData.saveHourDegreeToPreference(MainActivity.this, intent.getFloatExtra("HourDegree", 0));
-        SaveData.saveMinDegreeToPreference(MainActivity.this, intent.getFloatExtra("MinDegree", 0));
-    }
-    public class MyReciver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            WelcomeFragment fragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
-            if (intent.getAction().equals(MYSERVICE)) {
-                if(fragment != null){
-                    Message msg = new Message();
-                    msg.what = SETWECLOMETIME;
-                    Bundle bundle = new Bundle();
-                    bundle.putFloat("HourDegree", intent.getFloatExtra("HourDegree", 0));
-                    bundle.putFloat("MinDegree", intent.getFloatExtra("MinDegree", 0));
-                    msg.setData(bundle);
-                    handler.sendMessage(msg);
-                    saveDegreeToPref(intent);
-                }else{
-                    saveDegreeToPref(intent);
-                }
-            }
-        }
+    public static SyncController getmSyncController() {
+        return mSyncController;
     }
 
     /**
@@ -123,90 +49,21 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
-    /**
-     * Update UI using Handler Mechanism
-     * */
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case SETCLOCKTIME:
-                    AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag("AlarmFragment");
-                    alramfragment.setClock(msg.getData().getString("Clock"));
-                            /*when user click Alarm on/off button , or select new Alarm time, all the three cases
-                    ,need call mSyncController.setAlarm(...)*/
-
-                    String[] strAlarm = msg.getData().getString("Clock").split(":");
-                    mSyncController.setAlarm(Integer.parseInt(strAlarm[0]),
-                            Integer.parseInt(strAlarm[1]),
-                            msg.getData().getBoolean("OnOff"));
-                    break;
-                case SETSTEPGOAL:
-                case SETSTEPMODE:
-                    GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
-                    if(msg.what == SETSTEPGOAL){
-                        goalfragment.setStep(msg.getData().getString("Goal"));
-                        mSyncController.setGoal(new NumberOfStepsGoal(Integer.parseInt(msg.getData().getString("Goal"))));
-
-                    }else if(msg.what == SETSTEPMODE){
-                        switch (msg.getData().getInt("Mode")){
-                            case 0:
-                                goalfragment.setStep(new Integer(7000).toString());
-                                mSyncController.setGoal(new NumberOfStepsGoal(7000));
-                                break;
-                            case 1:
-                                goalfragment.setStep(new Integer(10000).toString());
-                                mSyncController.setGoal(new NumberOfStepsGoal(10000));
-                                break;
-                            case 2:
-                                goalfragment.setStep(new Integer(20000).toString());
-                                mSyncController.setGoal(new NumberOfStepsGoal(20000));
-                                break;
-                            default:
-                                break;
-                       }
-                    }
-                    break;
-                case SETWECLOMETIME:
-                    WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
-                    welcomefragment.setHour(msg.getData().getFloat("HourDegree"));
-                    welcomefragment.setMin(msg.getData().getFloat("MinDegree"));
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Initialize FragmentArray
-        //initFragmentArray();
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
         //disenable navigation drawer shadow
- /*       mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));*/
-
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        //Start Service
-        Intent intent = new Intent(this, MyService.class);
-        this.bindService(intent, mConnection, BIND_AUTO_CREATE);
-
-        //Initialize BroadCast
-        mReciver = new MyReciver();
-        IntentFilter intentFilter = new IntentFilter(MYSERVICE);
-        this.registerReceiver(mReciver, intentFilter);
 
         mSyncController = SyncController.Factory.newInstance(this);
         mSyncController.startConnect(true,this);
@@ -233,17 +90,17 @@ public class MainActivity extends ActionBarActivity
             default:
                 break;
         }
-        if(SaveData.getBleConnectFromPreference(getApplicationContext()) == false){
+/*        if(mSyncController!=null && mSyncController.isConnected() == false){
             Log.d("MainActivity", "DisConnect");
             if((position+1) == 1){
                 replaceFragment(position, tag.get());
             }else{
                 replaceFragment(3, "ConnectAnimationFragment");
             }
-        }else{
+        }else{*/
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
-        }
+      //  }
     }
 
     /**
@@ -253,14 +110,8 @@ public class MainActivity extends ActionBarActivity
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-        //        .replace(R.id.container, mListArray.get(position), tag)
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
-    }
-
-    @Override
-    public void showWarning() {
-        showAlertDialog();
     }
 
     @Override
@@ -281,26 +132,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public void showStep() {
-        showStepPickerDialog();
-    }
-
-    @Override
-    public void setStepMode(int mode) {
-        Message msg = new Message();
-        msg.what = SETSTEPMODE;
-        Bundle bundle = new Bundle();
-        bundle.putInt("Mode", mode);
-        msg.setData(bundle);
-        handler.sendMessage(msg);
-    }
-
-    @Override
-    public void showTime() {
-        showTimePickerDialog();
-    }
-
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -308,13 +139,9 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
@@ -323,39 +150,19 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void setClockTime(String clockTime,boolean OnOff) {
-        Message msg = new Message();
-        msg.what = SETCLOCKTIME;
-        Bundle bundle = new Bundle();
-        bundle.putString("Clock", clockTime);
-        bundle.putBoolean("OnOff", OnOff);
-        msg.setData(bundle);
-        handler.sendMessage(msg);
-    }
-
-    /**
-     * Show Time in a dialog
-     * */
-    public void showTimePickerDialog() {
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    /**
-     * Show Step Goals in a dialog
-     * */
-    public void showStepPickerDialog(){
-        DialogFragment newFragment = new StepPickerFragment();
-        newFragment.show(getSupportFragmentManager(), "stepPicker");
-    }
-
-
-    /**
-     * Pop-up window showing waring messages which means "Nevo Watch Not Found"
-     * */
-    public void showAlertDialog(){
-        DialogFragment newFragment = new AlertDialogFragment();
-        newFragment.show(getSupportFragmentManager(), "warning");
+    public void setClockTime(final String clockTime) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag("AlarmFragment");
+                alramfragment.setClock(clockTime);
+/*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
+                String[] strAlarm = clockTime.split(":");
+                mSyncController.setAlarm(Integer.parseInt(strAlarm[0]),
+                        Integer.parseInt(strAlarm[1]),
+                        AlarmFragment.getClockStateFromPreference(getApplicationContext()));
+            }
+        });
     }
 
     @Override
@@ -379,45 +186,39 @@ public class MainActivity extends ActionBarActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (isConnected) {
-                    Toast.makeText(MainActivity.this, "Nevo Connected!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Nevo Disconnect!", Toast.LENGTH_LONG).show();
+                if(isConnected )
+                {
+                    replaceFragment(mPosition, mTag);
+                }
+                else
+                {
+                    if (mPosition!=0)
+                        replaceFragment(3, "ConnectAnimationFragment");
                 }
             }
         });
     }
 
-    public void setStepGoal(String stepGoal) {
-        Message msg = new Message();
-        msg.what = SETSTEPGOAL;
-        Bundle bundle = new Bundle();
-        bundle.putString("Goal", stepGoal);
-        msg.setData(bundle);
-        handler.sendMessage(msg);
+    @Override
+    public void reConnect() {
+        Log.i("","******************** reconnect new Nevo ********************");
+        mSyncController.startConnect(true,this);
     }
 
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    @Override
+    public boolean isConnected() {
+        return mSyncController.isConnected();
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    /*Store Fragment in Array in order to improve efficiency*/
-    public static void initFragmentArray(){
-        for(int i=0; i<4; i++){
-            mListArray.add(PlaceholderFragment.newInstance(i + 1));
-        }
-        Log.d("initFragmentArray", ""+mListArray.size());
+    public void setStepGoal(final String stepGoal) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag("GoalFragment");
+                goalfragment.setStep(stepGoal);
+                mSyncController.setGoal(new NumberOfStepsGoal(Integer.parseInt(stepGoal)));
+            }
+        });
     }
 
     public static class PlaceholderFragment {
@@ -458,12 +259,4 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unbindService(mConnection);
-        this.unregisterReceiver(mReciver);
-        SaveData.saveBleConnectToPreference(getApplicationContext(), false);
-        Log.d("MainActivity", "onDestory");
-    }
 }

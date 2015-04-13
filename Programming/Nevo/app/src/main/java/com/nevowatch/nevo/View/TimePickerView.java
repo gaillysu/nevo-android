@@ -1,30 +1,33 @@
-package com.nevowatch.nevo.Fragment;
+package com.nevowatch.nevo.View;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
-import com.nevowatch.nevo.Function.Optional;
-import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.ble.util.Optional;
 
 /**
  * TimePickerFragment is a dialog fragment which shows the goal of steps from 7000 to 300000 steps.
  */
-public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerView extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
     private TimePickerFragmentCallbacks mCallbacks;
     private TimePickerDialog mTimePickerDialog;
+    private static final String PREF_KEY_ALARM = "alarm";
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String str = new String(SaveData.getAlarmFromPreference(getActivity()));
+        String str = new String(TimePickerView.getAlarmFromPreference(getActivity()));
         String tmp[] = str.split(":");
         int hour = new Integer(tmp[0]).intValue();
         int mintue = new Integer(tmp[1]).intValue();
@@ -65,10 +68,21 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
             minStr.set(new Integer(minute).toString());
         }
 
-        mCallbacks.setClockTime(hourStr.get() + ":" + minStr.get(),SaveData.getClockStateFromPreference(getActivity()));
+        mCallbacks.setClockTime(hourStr.get() + ":" + minStr.get());
+        TimePickerView.saveAlarmToPreference(getActivity(), hourStr.get() + ":" + minStr.get());
     }
 
     public static interface  TimePickerFragmentCallbacks {
-        void setClockTime(String clockTime,boolean OnOff);
+        void setClockTime(String clockTime);
+    }
+
+    public static void saveAlarmToPreference(Context context, String value) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        pref.edit().putString(PREF_KEY_ALARM, value).apply();
+    }
+
+    public static String getAlarmFromPreference(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getString(PREF_KEY_ALARM, "00:00");
     }
 }

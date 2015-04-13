@@ -1,8 +1,12 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.Function.SaveData;
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.StepPickerView;
+import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
@@ -30,6 +36,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     private static final int INTENSIVE = 1;
     private static final int SPORTIVE = 2;
     private static final int CUSTOM = -1;
+    private static final String PREF_KEY_STEP_MODE = "stepMode";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,9 +74,9 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     public void onResume() {
         super.onResume();
         mCallbacks.onSectionAttached(2);
-        mStepsTextView.setText(SaveData.getStepGoalFromPreference(getActivity()));
+        mStepsTextView.setText(StepPickerView.getStepGoalFromPreference(getActivity()));
 
-        switch(SaveData.getGoalModeFromPreference(getActivity())){
+        switch(GoalFragment.getGoalModeFromPreference(getActivity())){
             case MODERATE:
                 setSelectedButtonProperty(mButtonArray,mModarateButton);
                 break;
@@ -95,13 +102,12 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
 
     public static interface GoalFragmentCallbacks {
         void onSectionAttached(int position);
-        void showStep();
-        void setStepMode(int mode);
     }
 
-    public void setStep(String goal){
+    public void setStep(final String goal){
+
         mStepsTextView.setText(goal);
-        SaveData.saveStepGoalToPreference(getActivity(), goal);
+        StepPickerView.saveStepGoalToPreference(getActivity(), goal);
     }
 
     @Override
@@ -109,24 +115,29 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.steps_textView:
             case R.id.edit_steps_imageView:
-                mCallbacks.showStep();
-                SaveData.saveGoalModeToPreference(getActivity(), CUSTOM);
+                    mStepsTextView.setClickable(false);
+                    mEditStepsImage.setClickable(false);
+                    showStepPickerDialog();
+                GoalFragment.saveGoalModeToPreference(getActivity(), CUSTOM);
                 setSelectedButtonProperty(mButtonArray, new Button(getActivity()));
                 break;
             case R.id.modarateButton:
                 setSelectedButtonProperty(mButtonArray,mModarateButton);
-                mCallbacks.setStepMode(MODERATE);
-                SaveData.saveGoalModeToPreference(getActivity(), MODERATE);
+                GoalFragment.saveGoalModeToPreference(getActivity(), MODERATE);
+                setStep(new Integer(7000).toString());
+                MainActivity.getmSyncController().setGoal(new NumberOfStepsGoal(7000));
                 break;
             case R.id.intensiveButton:
                 setSelectedButtonProperty(mButtonArray,mIntensiveButton);
-                mCallbacks.setStepMode(INTENSIVE);
-                SaveData.saveGoalModeToPreference(getActivity(), INTENSIVE);
+                GoalFragment.saveGoalModeToPreference(getActivity(), INTENSIVE);
+                setStep(new Integer(10000).toString());
+                MainActivity.getmSyncController().setGoal(new NumberOfStepsGoal(10000));
                 break;
             case R.id.sportiveButton:
                 setSelectedButtonProperty(mButtonArray,mSportiveButton);
-                mCallbacks.setStepMode(SPORTIVE);
-                SaveData.saveGoalModeToPreference(getActivity(), SPORTIVE);
+                GoalFragment.saveGoalModeToPreference(getActivity(), SPORTIVE);
+                setStep(new Integer(20000).toString());
+                MainActivity.getmSyncController().setGoal(new NumberOfStepsGoal(20000));
                 break;
             default:
                 break;
@@ -134,18 +145,35 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    /**
+     * Show Step Goals in a dialog
+     * */
+    public void showStepPickerDialog(){
+        DialogFragment newFragment = new StepPickerView();
+        newFragment.show(getActivity().getSupportFragmentManager(), "stepPicker");
+        mStepsTextView.setClickable(true);
+        mEditStepsImage.setClickable(true);
+    }
+
     /*Highlight the selected imageView*/
     public void setSelectedButtonProperty(Button[] v,Button l){
         for (int i = 0; i <v.length; i++) {
-            v[i].setTextColor(0xff000000);
+            v[i].setTextColor(getResources().getColor(R.color.black));
             v[i].setSelected(false);
             if (l.equals(v[i])) {
-                v[i].setTextColor(0xffffffff);
+                v[i].setTextColor(getResources().getColor(R.color.white));
                 v[i].setSelected(true);
             }
         }
     }
+
+    public static void saveGoalModeToPreference(Context context, int value) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        pref.edit().putInt(PREF_KEY_STEP_MODE, value).apply();
+    }
+
+    public static int getGoalModeFromPreference(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getInt(PREF_KEY_STEP_MODE, -1);
+    }
 }
-
-
-

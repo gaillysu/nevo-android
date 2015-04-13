@@ -1,4 +1,4 @@
-package com.nevowatch.nevo.Fragment;
+package com.nevowatch.nevo.View;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,7 +12,7 @@ import com.nevowatch.nevo.R;
 /**
  * Alert Dialog prompts up for warning messages when it can not connect with Nevo Watch by BLE
  */
-public class AlertDialogFragment extends DialogFragment {
+public class AlertDialogView extends DialogFragment {
 
     @NonNull
     @Override

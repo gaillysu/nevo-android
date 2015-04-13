@@ -3,6 +3,7 @@ package com.nevowatch.nevo.Fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.nevowatch.nevo.Function.SaveData;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.AlertDialogView;
 
 /**
  * A Round Pointer Animation
@@ -79,10 +80,11 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if(SaveData.getBleConnectFromPreference(getActivity())){
+            if(mCallbacks.isConnected()){
                 mCallbacks.replaceFragment(mPostion, mTag);
             }else{
-                mCallbacks.showWarning();
+                //showAlertDialog();
+                mCallbacks.reConnect();
             }
         }
 
@@ -95,6 +97,15 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     public interface ConnectAnimationFragmentCallbacks{
         void onSectionAttached(int i);
         void replaceFragment(final int position, final String tag);
-        void showWarning();
+        void reConnect();
+        boolean isConnected();
+    }
+
+    /**
+     * Pop-up window showing waring messages which means "Nevo Watch Not Found"
+     * */
+    public void showAlertDialog(){
+        DialogFragment newFragment = new AlertDialogView();
+        newFragment.show(getActivity().getSupportFragmentManager(), "warning");
     }
 }
