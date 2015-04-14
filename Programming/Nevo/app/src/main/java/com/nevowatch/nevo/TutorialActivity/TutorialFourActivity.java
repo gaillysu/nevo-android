@@ -17,8 +17,6 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.util.Constants;
 
-import java.util.TimeZone;
-
 /**
  * TutorialFour
  */
@@ -86,6 +84,8 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
         public void onAnimationEnd(Animation animation) {
             if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
                 mFinishButton.setVisibility(View.VISIBLE);
+                mConnectImg.setImageResource(R.drawable.success);
+                mFinishButton.setVisibility(View.INVISIBLE);
             }else {
                 mFinishButton.setVisibility(View.INVISIBLE);
                 mConnectButton.setClickable(true);
