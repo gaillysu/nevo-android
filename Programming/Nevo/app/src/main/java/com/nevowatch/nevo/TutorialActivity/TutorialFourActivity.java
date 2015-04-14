@@ -15,6 +15,9 @@ import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.util.Constants;
+
+import java.util.TimeZone;
 
 /**
  * TutorialFour
@@ -56,6 +59,7 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
                 it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(it);
+                getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,false).commit();
                 break;
             case R.id.t4_connect_Button:
                 final Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.roatate);

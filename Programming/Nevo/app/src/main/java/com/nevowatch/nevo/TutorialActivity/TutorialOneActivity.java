@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * Turorial One
@@ -17,6 +19,14 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
+        {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_1);
 

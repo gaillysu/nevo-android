@@ -84,7 +84,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         @Override
         public void onAnimationStart(Animation animation) {
             if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
-                MyApplication.getSyncController().startConnect(true, ConnectAnimationFragment.this);
+                MyApplication.getSyncController().startConnect(true, (OnSyncControllerListener)getActivity());
             }
         }
 

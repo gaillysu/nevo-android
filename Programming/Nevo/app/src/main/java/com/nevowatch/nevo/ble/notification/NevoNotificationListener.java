@@ -102,9 +102,9 @@ public class NevoNotificationListener extends NotificationListenerService {
 
         lastNotification.set(new Date());
 
-         //QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
-         //bt.send(new SendNotificationNevoRequest(type, num));
-        SyncController.Factory.newInstance(this).sendRequest(new SendNotificationNevoRequest(type, num));
+        QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
+        bt.send(new SendNotificationNevoRequest(type, num));
+        //SyncController.Factory.newInstance(this).sendRequest(new SendNotificationNevoRequest(type, num));
     }
 
     public static void getNotificationAccessPermission(final Context ctx) {

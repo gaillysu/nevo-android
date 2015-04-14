@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-       // MyApplication.getSyncController().startConnect(false, this);
+        MyApplication.getSyncController().startConnect(false, this);
     }
 
     @Override
@@ -176,6 +176,20 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void connectionStateChanged(final boolean isConnected) {
+          runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(isConnected )
+                {
+                    replaceFragment(mPosition, mTag);
+                }
+                else
+                {
+                    if (mPosition!=0)
+                        replaceFragment(3, "ConnectAnimationFragment");
+                }
+            }
+        });
     }
 
     public void setStepText(final String stepGoal) {

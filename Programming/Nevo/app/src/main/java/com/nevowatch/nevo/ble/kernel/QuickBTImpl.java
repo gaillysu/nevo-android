@@ -105,9 +105,11 @@ class QuickBTImpl implements QuickBT {
         	return;
 		}
 		
-		if(request.getServiceUUID() == null || request.getCharacteristicUUID() == null || request.getRawData() == null || request.getRawData().length==0) {
+		if(request.getServiceUUID() == null || request.getInputCharacteristicUUID() == null
+                ||( (request.getRawData() == null || request.getRawData().length==0)
+                   && (request.getRawDataEx() == null || request.getRawDataEx().length==0)) ) {
         	
-        	Log.e(TAG, "Init failed, can't send.");
+        	Log.e(TAG, "request parameter error, can't send.");
         	
         	return;
 		}
