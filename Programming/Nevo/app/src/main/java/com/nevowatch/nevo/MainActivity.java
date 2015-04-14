@@ -165,7 +165,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             Log.i("MainActivity","dailySteps = " + dailySteps +",dailyGoal = " + dailyGoal );
             welcomefragment.setText(dailySteps+"/"+dailyGoal);
             welcomefragment.setProgressBar((int)(100.0*dailySteps/dailyGoal));
-
+            GoalFragment.saveGoalModeToPreference(MainActivity.this,dailyGoal);
         }
     }
 

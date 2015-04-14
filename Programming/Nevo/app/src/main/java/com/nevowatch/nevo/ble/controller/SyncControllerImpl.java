@@ -96,7 +96,14 @@ public class SyncControllerImpl implements SyncController{
                         //step4:SetCardio
                         sendRequest(new SetCardioNevoRequest());
                     }
+
                     if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //start sync Goal
+                        getStepsAndGoal();
+                        //syncActivityData();
+                    }
+                    if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //start sync data
                         syncActivityData();
@@ -223,7 +230,6 @@ public class SyncControllerImpl implements SyncController{
             Log.i("SyncControllerImpl","*** Sync started ! ***");
             getDailyTrackerInfo();
         }
-
     }
 
     /**
