@@ -11,6 +11,9 @@ import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 public class MyApplication extends Application implements OnSyncControllerListener {
 
     private static SyncController mSyncController;
+    public static final String ALARMFRAGMENT = "AlarmFragment";
+    public static final String GOALFRAGMENT = "GoalFragment";
+    public static final String WELCOMEFRAGMENT = "WelcomeFragment";
 
     @Override
     public void onCreate() {

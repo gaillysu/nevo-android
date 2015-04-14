@@ -23,7 +23,7 @@ import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
-public class GoalFragment extends Fragment implements View.OnClickListener{
+public class GoalFragment extends Fragment implements View.OnClickListener,StepPickerView.StepPickerFragmentCallbacks{
 
     private GoalFragmentCallbacks mCallbacks;
     private TextView mStepsTextView;
@@ -104,14 +104,24 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
         mCallbacks = null;
     }
 
+    @Override
+    public void setStepText(String stepGoal) {
+        setStep(stepGoal);
+    }
+
+    @Override
+    public void setStepGoal(int mode) {
+        lightStepGoal(mode);
+    }
+
     public static interface GoalFragmentCallbacks {
         void onSectionAttached(int position);
     }
 
     public void setStep(final String goal){
-
         mStepsTextView.setText(goal);
         StepPickerView.saveStepTextToPreference(getActivity(), goal);
+        MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(Integer.parseInt(goal)));
     }
 
     @Override

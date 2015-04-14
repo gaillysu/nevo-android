@@ -1,6 +1,5 @@
 package com.nevowatch.nevo.View;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -13,6 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.widget.NumberPicker;
 
 import com.nevowatch.nevo.Fragment.GoalFragment;
+import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 
 /**
@@ -26,15 +27,22 @@ public class StepPickerView extends DialogFragment{
     private final static int VALUES_INTERVAL = 1000;
     private String[] mDisplayedValues;
     private static final String PREF_KEY_STEP_TEXT = "stepText";
-    private static final String PREF_KEY_STEP_Goal = "stepGoal";
     private static final int MODERATE = 0;
     private static final int INTENSIVE = 1;
     private static final int SPORTIVE = 2;
     private static final int CUSTOM = -1;
+    private MainActivity mActivity;
 
     private void setDisplayedValues(){
         for(int i=0; i<NUMBER_OF_VALUES; i++)
             mDisplayedValues[i] = String.valueOf(VALUES_INTERVAL * (i+1));
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = (MainActivity)getActivity();
+        mCallbacks = (StepPickerFragmentCallbacks) mActivity.getFragment(MyApplication.GOALFRAGMENT);
     }
 
     @NonNull
@@ -80,16 +88,6 @@ public class StepPickerView extends DialogFragment{
     public void onResume() {
         super.onResume();
         mNumberPicker.setValue(Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) / 1000 - 1);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (StepPickerFragmentCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement StepPickerFragmentCallbacks.");
-        }
     }
 
     @Override

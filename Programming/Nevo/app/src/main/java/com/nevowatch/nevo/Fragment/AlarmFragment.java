@@ -23,7 +23,7 @@ import com.nevowatch.nevo.View.TimePickerView;
 /**
  * AlarmFragment, it works for setting alarm and turning alarm on or off.
  */
-public class AlarmFragment extends Fragment implements View.OnClickListener{
+public class AlarmFragment extends Fragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks{
 
     private AlarmFragmentCallbacks mCallbacks;
     private TextView mClockTextView;
@@ -116,6 +116,11 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
 
     public void setClock(final String time){
         mClockTextView.setText(time);
+        /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
+        String[] strAlarm = time.split(":");
+        MyApplication.getSyncController().setAlarm(Integer.parseInt(strAlarm[0]),
+                Integer.parseInt(strAlarm[1]),
+                AlarmFragment.getClockStateFromPreference(getActivity()));
     }
 
     /**
@@ -126,6 +131,11 @@ public class AlarmFragment extends Fragment implements View.OnClickListener{
         newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
         mClockTextView.setClickable(true);
         mEditClockImage.setClickable(true);
+    }
+
+    @Override
+    public void setClockTime(String clockTime) {
+        setClock(clockTime);
     }
 
     public static interface AlarmFragmentCallbacks {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -13,14 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.os.Handler;
+
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.View.StepPickerView;
 
 import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * WelcomeFragment aims to display current time and steps how many you took.

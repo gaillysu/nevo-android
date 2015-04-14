@@ -1,6 +1,5 @@
 package com.nevowatch.nevo.View;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -12,6 +11,8 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
+import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.util.Optional;
 
@@ -23,6 +24,14 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
     private TimePickerFragmentCallbacks mCallbacks;
     private TimePickerDialog mTimePickerDialog;
     private static final String PREF_KEY_ALARM = "alarm";
+    private MainActivity mActivity;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = (MainActivity)getActivity();
+        mCallbacks = (TimePickerFragmentCallbacks) mActivity.getFragment(MyApplication.ALARMFRAGMENT);
+    }
 
     @NonNull
     @Override
@@ -35,16 +44,6 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
                 DateFormat.is24HourFormat(getActivity()));
         mTimePickerDialog.setTitle(R.string.time_picker);
         return mTimePickerDialog;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (TimePickerFragmentCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement TimePickerFragmentCallbacks.");
-        }
     }
 
     @Override
