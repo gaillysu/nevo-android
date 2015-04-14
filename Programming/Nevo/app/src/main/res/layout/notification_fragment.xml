@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:textSize="20sp"
+            android:textColor="@color/customBlack"
+            android:gravity="center"
+            android:text="@string/nevoConnected"
+            android:textAllCaps="false"
+            android:id="@+id/nevoConnectedText"
+            android:layout_above="@+id/connect_imageView"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentStart="false" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/connect_imageView"
+            android:src="@drawable/rotating_round"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerInParent="true"/>
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/connect_imageButton"
+            android:text="@string/mconnect"
+            android:textColor="@color/customBlack"
+            android:background="@color/transparent"
+            android:textAllCaps="false"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:textSize="20sp"
+            android:textColor="@color/customBlack"
+            android:gravity="center"
+            android:text="@string/pushHoldButton"
+            android:textAllCaps="false"
+            android:id="@+id/pushConnectedText"
+            android:layout_below="@+id/connect_imageView"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+</LinearLayout>
