@@ -53,6 +53,20 @@ public class SyncControllerImpl implements SyncController{
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
 
+    /** The Handler of the ui thread. */
+    Handler mUiThread = new Handler(Looper.getMainLooper());
+    //send Command timeout
+    int MAX_TIMEOUT = 2000;
+    //when got timeout, then do disconnect Nevo from smartphone peer, and notify Activity layer
+    Runnable mSendCommandTimeOut = new Runnable() {
+        @Override
+        public void run() {
+            Log.e("SyncControllerImpl","send command timeout");
+            mNevoBT.disconnect(null);
+            mOnSyncControllerListener.connectionStateChanged(false);
+        }
+    };
+
 	/**
 	 * This listener is called when new data is received
 	 */
@@ -60,7 +74,7 @@ public class SyncControllerImpl implements SyncController{
 
 		@Override
 		public void onDataReceived(com.nevowatch.nevo.ble.model.packet.SensorData data) {
-
+            mUiThread.removeCallbacks(mSendCommandTimeOut);
 			//if(last Packet)
 			if (data.getType().equals(NevoRawData.TYPE))
 			{
@@ -199,6 +213,8 @@ public class SyncControllerImpl implements SyncController{
         QueuedMainThreadHandler.getInstance().post(new Runnable(){
             @Override
             public void run() {
+                mUiThread.removeCallbacks(mSendCommandTimeOut);
+                mUiThread.postDelayed(mSendCommandTimeOut,MAX_TIMEOUT);
                 mNevoBT.sendRequest(request);
             }
         });
