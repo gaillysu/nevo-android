@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Nevo</string>
-    <string name="title_section1">Welcome</string>
+    <string name="title_section1">Nevo</string>
     <string name="title_section2">Goal</string>
     <string name="title_section3">Alarm</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -10,15 +10,15 @@
     <string name="clock">00:00</string>
     <string name="ok_button">Ok</string>
     <string name="step_picker_title">Set Step Goal</string>
-    <string name="message">Nevo Not Found 404.Please try again...</string>
+    <string name="message">Nevo watch not found, please try again</string>
     <string name="warning">Warning</string>
-    <string name="modarate_string">Modarate</string>
-    <string name="intensive_string">Intensive</string>
-    <string name="sportive_string">Sportive</string>
-    <string name="open_string">Open</string>
-    <string name="close_string">Close</string>
-    <string name="goal_steps">Stpes</string>
-    <string name="time_picker">Set Clock Time</string>
+    <string name="modarate_string">Light</string>
+    <string name="intensive_string">Moderate</string>
+    <string name="sportive_string">Intensive</string>
+    <string name="open_string">On</string>
+    <string name="close_string">Off</string>
+    <string name="goal_steps">Steps</string>
+    <string name="time_picker">Set Alarm</string>
     <string name="nevoConnected">nevo is not connected\nEnable Bluetooth on phone</string>
     <string name="pushHoldButton">Then push and hold 3rd button\nTo connect your watch</string>
     <string name="tutorial">Activate my nevo</string>
@@ -27,7 +27,7 @@
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="finish">Finish</string>
-    <string name="bluetoothIcon">Swipe up to open the control center and tap on the Bluetooth icon</string>
+    <string name="bluetoothIcon">Swipe down to open the control center and tap on the Bluetooth icon</string>
     <string name="watchBluetooth">Enable the Bluetooth on your watch</string>
     <string name="longPushLED">Push and hold the third button until blue LED blinks</string>
     <string name="mconnect">Connect</string>
