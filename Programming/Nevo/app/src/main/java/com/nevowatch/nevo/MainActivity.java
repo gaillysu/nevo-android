@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-       // MyApplication.getSyncController().startConnect(true, this);
+       // MyApplication.getSyncController().startConnect(false, this);
     }
 
     @Override

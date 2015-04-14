@@ -35,6 +35,7 @@ public class WelcomeFragment extends Fragment{
     private int mCurHour, mCurMin, mTempMin = -1;
     private Timer mTimer;
     private TimerTask mTimerTask;
+    private Boolean isInitTimer = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,27 +46,29 @@ public class WelcomeFragment extends Fragment{
         mRoundProgressBar = (RoundProgressBar) rootView.findViewById(R.id.roundProgressBar);
         mTextView = (TextView) rootView.findViewById(R.id.textView);
 
+        mTimerTask = new TimerTask() {
+            @Override
+            public void run() {
+                final Calendar mCalendar = Calendar.getInstance();
+                mCurHour = mCalendar.get(Calendar.HOUR);
+                mCurMin = mCalendar.get(Calendar.MINUTE);
+                if (mCurMin != mTempMin) {
+                    setMin((float) (mCurMin * 6));
+                    setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
+                    mTempMin = mCurMin;
+                }
+            }
+        };
         return rootView;
     }
 
     private void initTimer(){
-        if(mTimer == null)  mTimer = new Timer(true);
-        if(mTimerTask == null){
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    final Calendar mCalendar = Calendar.getInstance();
-                    mCurHour = mCalendar.get(Calendar.HOUR);
-                    mCurMin = mCalendar.get(Calendar.MINUTE);
-                    if (mCurMin != mTempMin) {
-                        setMin((float) (mCurMin * 6));
-                        setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
-                        mTempMin = mCurMin;
-                    }
-                }
-            };
-        }
+        if(mTimer != null)
+            mTimer.cancel();
+
+        mTimer = new Timer(true);
         mTimer.schedule(mTimerTask, 0 ,3000);
+        isInitTimer = true;
     }
 
     @Override
@@ -81,26 +84,26 @@ public class WelcomeFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        initTimer();
         mCallbacks.onSectionAttached(1);
-        setHour(WelcomeFragment.getHourDegreeFromPreference(getActivity()));
-        setMin(WelcomeFragment.getMinDegreeFromPreference(getActivity()));
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str =  "- / " + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
-        initTimer();
+        while (true){
+            if(isInitTimer){
+                setHour(WelcomeFragment.getHourDegreeFromPreference(getActivity()));
+                setMin(WelcomeFragment.getMinDegreeFromPreference(getActivity()));
+                isInitTimer = false;
+                break;
+            }
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(mTimer != null) mTimer.cancel();
     }
 
     public void setHour(final float degree) {
