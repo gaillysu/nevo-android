@@ -48,7 +48,7 @@ public class WelcomeFragment extends Fragment{
                 mTempMin = mCurMin;
             }
             mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,1000);
+            mUiHandler.postDelayed(mTimerTask,60000);
         }
     };
 
