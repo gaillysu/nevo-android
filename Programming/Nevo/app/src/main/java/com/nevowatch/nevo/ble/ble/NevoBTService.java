@@ -339,7 +339,6 @@ public class NevoBTService extends Service {
 
     }
     
-    //TODO WARNING ! THIS CALLBACK IS NOT CALLED IF THE DEVICE'S BLUTOOTH IS TURNED OFF... (maybe a bluetooth manager can register callbacks to know that ??)
     /**
      * Implements callback methods for GATT events that the app cares about.  For example,
      * connection change and services discovered.

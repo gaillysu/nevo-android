@@ -54,15 +54,13 @@ public class GattAttributes {
     }
     
     
-    // here add COMBOSERVICE2_UDID for BSC BLE service, gaillysu
-    //TODO check with iOS version if the same
     public static boolean supportedBLEService(String uuid) {
 		if (uuid.equals(GattAttributes.NEVO_SERVICE))
 			return true;
 		return false;
 	}
     
-    //TODO check with iOS version if the same
+
     public static boolean supportedBLECharacteristic(String uuid){
 		if (uuid.equals(GattAttributes.NEVO_CALLBACK_CHARACTERISTIC))
 			return true;

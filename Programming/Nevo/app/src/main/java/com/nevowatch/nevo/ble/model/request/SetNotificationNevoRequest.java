@@ -112,8 +112,7 @@ public class SetNotificationNevoRequest extends NevoRequest {
 
 	@Override
 	public byte getHeader() {
-		// TODO Auto-generated method stub
-		return HEADER;
+			return HEADER;
 	}
 
 }
