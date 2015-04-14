@@ -1,17 +1,16 @@
 <resources>
     <string name="app_name">Nevo</string>
-
     <string name="title_section1">欢迎</string>
     <string name="title_section2">目标</string>
     <string name="title_section3">闹钟</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">打开侧滑菜单</string>
+    <string name="navigation_drawer_close">关闭侧滑菜单</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">设置</string>
     <string name="clock">00:00</string>
     <string name="ok_button">确定</string>
     <string name="step_picker_title">设置目标</string>
-    <string name="message">没有发现设备，请重试...</string>
+    <string name="message">没有发现设备,请重试...</string>
     <string name="warning">警告</string>
     <string name="modarate_string">低</string>
     <string name="intensive_string">中</string>
@@ -27,7 +26,14 @@
     <string name="bluetoothEnabled">蓝牙可用</string>
     <string name="next">下一步</string>
     <string name="back">后退</string>
-    <string name="bluetoothIcon">Swipe up to open the control center and tap on the Bluetooth icon</string>
-    <string name="watchBluetooth">Enable the Bluetooth on your watch</string>
+    <string name="finish">完成</string>
+    <string name="bluetoothIcon">向下滑动打开控制中心并点击蓝牙图标</string>
+    <string name="watchBluetooth">打开你手表上的蓝牙</string>
     <string name="longPushLED">长按第三个按钮直到蓝色的LED灯亮为止</string>
+    <string name="mconnect">连接</string>
+    <string name="connectButton">把nevo与手机相连</string>
+    <string name="placeConnect">把你的nevo放在手机旁边并点击连接</string>
+    <string name="notifAccess">打开通知</string>
+    <string name="notifAccessMessage">你想让Nevo启用你的通知么?</string>
+    <string name="nevoURL">https://www.indiegogo.com/projects/nevo-the-first-minimalist-connected-watch/</string>
 </resources>
