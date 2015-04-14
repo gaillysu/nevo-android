@@ -1,6 +1,5 @@
 package com.nevowatch.nevo;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -177,20 +176,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void connectionStateChanged(final boolean isConnected) {
-/*        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(isConnected )
-                {
-                    replaceFragment(mPosition, mTag);
-                }
-                else
-                {
-                    if (mPosition!=0)
-                        replaceFragment(3, "ConnectAnimationFragment");
-                }
-            }
-        });*/
     }
 
     public void setStepText(final String stepGoal) {
