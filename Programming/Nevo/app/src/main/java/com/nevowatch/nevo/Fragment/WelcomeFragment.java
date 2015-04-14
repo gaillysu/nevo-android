@@ -34,6 +34,7 @@ public class WelcomeFragment extends Fragment{
     private static final String PREF_USER_HOUR_DEGREE = "hour_pointer_degree";
     private static final String PREF_USER_MINUTE_DEGREE = "minute_pointer_degree";
     private int mCurHour, mCurMin, mTempMin = -1;
+
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
@@ -59,11 +60,8 @@ public class WelcomeFragment extends Fragment{
         mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
         mRoundProgressBar = (RoundProgressBar) rootView.findViewById(R.id.roundProgressBar);
         mTextView = (TextView) rootView.findViewById(R.id.textView);
-
         return rootView;
     }
-
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -79,8 +77,6 @@ public class WelcomeFragment extends Fragment{
     public void onResume() {
         super.onResume();
         mCallbacks.onSectionAttached(1);
-        setHour(WelcomeFragment.getHourDegreeFromPreference(getActivity()));
-        setMin(WelcomeFragment.getMinDegreeFromPreference(getActivity()));
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str =  "- / " + StepPickerView.getStepTextFromPreference(getActivity());
@@ -92,11 +88,6 @@ public class WelcomeFragment extends Fragment{
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     public void setHour(final float degree) {
