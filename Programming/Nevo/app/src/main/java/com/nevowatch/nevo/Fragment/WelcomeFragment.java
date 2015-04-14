@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.os.Handler;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.View.StepPickerView;
@@ -33,8 +34,22 @@ public class WelcomeFragment extends Fragment{
     private static final String PREF_USER_HOUR_DEGREE = "hour_pointer_degree";
     private static final String PREF_USER_MINUTE_DEGREE = "minute_pointer_degree";
     private int mCurHour, mCurMin, mTempMin = -1;
-    private Timer mTimer;
-    private TimerTask mTimerTask;
+    private Handler  mUiHandler = new Handler(Looper.getMainLooper());
+    private Runnable mTimerTask = new Runnable() {
+        @Override
+        public void run() {
+            final Calendar mCalendar = Calendar.getInstance();
+            mCurHour = mCalendar.get(Calendar.HOUR);
+            mCurMin = mCalendar.get(Calendar.MINUTE);
+            if (mCurMin != mTempMin) {
+                setMin((float) (mCurMin * 6));
+                setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
+                mTempMin = mCurMin;
+            }
+            mUiHandler.removeCallbacks(mTimerTask);
+            mUiHandler.postDelayed(mTimerTask,1000);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,25 +63,7 @@ public class WelcomeFragment extends Fragment{
         return rootView;
     }
 
-    private void initTimer(){
-        if(mTimer == null)  mTimer = new Timer(true);
-        if(mTimerTask == null){
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    final Calendar mCalendar = Calendar.getInstance();
-                    mCurHour = mCalendar.get(Calendar.HOUR);
-                    mCurMin = mCalendar.get(Calendar.MINUTE);
-                    if (mCurMin != mTempMin) {
-                        setMin((float) (mCurMin * 6));
-                        setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
-                        mTempMin = mCurMin;
-                    }
-                }
-            };
-        }
-        mTimer.schedule(mTimerTask, 0 ,3000);
-    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -88,7 +85,7 @@ public class WelcomeFragment extends Fragment{
         setProgressBar((int)((0/tmp)*100));
         String str =  "- / " + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
-        initTimer();
+        mUiHandler.post(mTimerTask);
     }
 
     @Override
@@ -100,11 +97,10 @@ public class WelcomeFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mTimer != null) mTimer.cancel();
     }
 
     public void setHour(final float degree) {
-        getActivity().runOnUiThread(new Runnable() {
+        mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 mHourImage.setRotation(degree);
@@ -113,7 +109,7 @@ public class WelcomeFragment extends Fragment{
     }
 
     public void setMin(final float degree) {
-        getActivity().runOnUiThread(new Runnable() {
+        mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 mMinImage.setRotation(degree);
@@ -122,7 +118,7 @@ public class WelcomeFragment extends Fragment{
     }
 
     public void setText(final String str){
-        getActivity().runOnUiThread(new Runnable() {
+        mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 mTextView.setText(str);
@@ -131,7 +127,7 @@ public class WelcomeFragment extends Fragment{
     }
 
     public void setProgressBar(final int progress){
-        getActivity().runOnUiThread(new Runnable() {
+        mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 mRoundProgressBar.setProgress(progress);
