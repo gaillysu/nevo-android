@@ -31,7 +31,7 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
                 startActivity(new Intent(this, TutorialTwoActivity.class));
                 break;
             case R.id.uriButton:
-                Uri uri = Uri.parse("http://baidu.com");
+                Uri uri = Uri.parse(getResources().getString(R.string.nevoURL));
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(it);
                 break;
