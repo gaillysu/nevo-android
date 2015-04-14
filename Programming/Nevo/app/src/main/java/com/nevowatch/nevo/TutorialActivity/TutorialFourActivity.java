@@ -85,7 +85,7 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
             if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
                 mFinishButton.setVisibility(View.VISIBLE);
                 mConnectImg.setImageResource(R.drawable.success);
-                mFinishButton.setVisibility(View.INVISIBLE);
+                mConnectButton.setVisibility(View.INVISIBLE);
             }else {
                 mFinishButton.setVisibility(View.INVISIBLE);
                 mConnectButton.setClickable(true);

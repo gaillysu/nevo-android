@@ -37,7 +37,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener{
     private static final int SPORTIVE = 2;
     private static final int CUSTOM = -1;
     private static final String PREF_KEY_STEP_MODE = "stepMode";
-    private MyApplication mApp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

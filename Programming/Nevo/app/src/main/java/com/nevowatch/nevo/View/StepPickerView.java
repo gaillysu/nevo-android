@@ -110,6 +110,6 @@ public class StepPickerView extends DialogFragment{
 
     public static String getStepTextFromPreference(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getString(PREF_KEY_STEP_TEXT, "7000");
+        return pref.getString(PREF_KEY_STEP_TEXT, "5000");
     }
 }
