@@ -77,8 +77,7 @@ public class RoundProgressBar extends View {
         mPaint.setAntiAlias(true);
         canvas.drawCircle(centre, centre, radius, mPaint);
 
-        Log.e("log", centre + "");
-
+        
         /**
          * draw mProgress
          */
