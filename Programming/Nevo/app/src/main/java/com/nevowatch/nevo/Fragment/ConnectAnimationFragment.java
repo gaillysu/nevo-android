@@ -16,6 +16,7 @@ import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
+import com.nevowatch.nevo.View.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
@@ -38,6 +39,14 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mConnectImage = (ImageView) rootView.findViewById(R.id.connect_imageView);
         mConnectButton = (Button)rootView.findViewById(R.id.connect_imageButton);
         mConnectButton.setOnClickListener(this);
+
+        View [] viewArray = new View []{
+                rootView.findViewById(R.id.nevoConnectedText),
+                rootView.findViewById(R.id.connect_imageButton),
+                rootView.findViewById(R.id.pushConnectedText)
+        };
+        FontManager.changeFonts(viewArray, getActivity());
+
         return rootView;
     }
 
