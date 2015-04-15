@@ -1,13 +1,8 @@
 package com.nevowatch.nevo.Fragment;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.FontManager;
@@ -38,8 +32,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private ImageView mHourImage, mMinImage;
     private RoundProgressBar mRoundProgressBar;
     private TextView mTextView;
-    private static final String PREF_USER_HOUR_DEGREE = "hour_pointer_degree";
-    private static final String PREF_USER_MINUTE_DEGREE = "minute_pointer_degree";
     private int mCurHour, mCurMin, mTempMin = -1;
     private int mCurrentSteps = 0;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
@@ -123,19 +115,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
                 mRoundProgressBar.setProgress(progress);
             }
         });
-    }
-
-    /**
-     * Welcome Fragment saves hour and minute pointer degree
-     * */
-    public static Float getHourDegreeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getFloat(PREF_USER_HOUR_DEGREE, 0);
-    }
-
-    public static Float getMinDegreeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getFloat(PREF_USER_MINUTE_DEGREE, 0);
     }
 
     @Override

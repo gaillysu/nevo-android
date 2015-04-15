@@ -1,5 +1,6 @@
 package com.nevowatch.nevo.View;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -36,13 +37,6 @@ public class StepPickerView extends DialogFragment{
     private void setDisplayedValues(){
         for(int i=0; i<NUMBER_OF_VALUES; i++)
             mDisplayedValues[i] = String.valueOf(VALUES_INTERVAL * (i+1));
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (MainActivity)getActivity();
-        mCallbacks = (StepPickerFragmentCallbacks) mActivity.getFragment(MyApplication.GOALFRAGMENT);
     }
 
     @NonNull
@@ -88,6 +82,13 @@ public class StepPickerView extends DialogFragment{
     public void onResume() {
         super.onResume();
         mNumberPicker.setValue(Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) / 1000 - 1);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (MainActivity)getActivity();
+        mCallbacks = (StepPickerFragmentCallbacks) mActivity.getFragment(MyApplication.GOALFRAGMENT);
     }
 
     @Override
