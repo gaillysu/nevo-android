@@ -15,17 +15,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.StepPickerView;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
-public class GoalFragment extends Fragment implements View.OnClickListener,StepPickerView.StepPickerFragmentCallbacks{
+public class GoalFragment extends Fragment implements View.OnClickListener,StepPickerView.StepPickerFragmentCallbacks,OnSyncControllerListener {
 
-    private GoalFragmentCallbacks mCallbacks;
+
     private TextView mStepsTextView;
     private ImageView mEditStepsImage;
     private Button mModarateButton;
@@ -60,16 +63,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (GoalFragmentCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement GoalFragmentCallbacks.");
-        }
-    }
-
     public void lightStepGoal(int mode){
         switch(mode){
             case MODERATE:
@@ -93,15 +86,8 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
     @Override
     public void onResume() {
         super.onResume();
-        mCallbacks.onSectionAttached(2);
         mStepsTextView.setText(StepPickerView.getStepTextFromPreference(getActivity()));
         lightStepGoal(GoalFragment.getGoalModeFromPreference(getActivity()));
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
     }
 
     @Override
@@ -114,9 +100,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
         lightStepGoal(mode);
     }
 
-    public static interface GoalFragmentCallbacks {
-        void onSectionAttached(int position);
-    }
 
     public void setStep(final String goal){
         mStepsTextView.setText(goal);
@@ -189,5 +172,14 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
     public static int getGoalModeFromPreference(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getInt(PREF_KEY_STEP_MODE, MODERATE);
+    }
+    @Override
+    public void packetReceived(NevoPacket packet) {
+
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+       ((MainActivity)getActivity()).replaceFragment(isConnected?1:3, isConnected?MyApplication.GOALFRAGMENT:MyApplication.CONNECTFRAGMENT);
     }
 }

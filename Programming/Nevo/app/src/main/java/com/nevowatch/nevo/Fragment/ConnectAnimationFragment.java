@@ -12,7 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
@@ -26,7 +26,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
     private ImageView mConnectImage;
     private Button mConnectButton;
-    private ConnectAnimationFragmentCallbacks mCallbacks;
     private int mPostion;
     private String mTag;
 
@@ -40,28 +39,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mConnectButton = (Button)rootView.findViewById(R.id.connect_imageButton);
         mConnectButton.setOnClickListener(this);
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mCallbacks.onSectionAttached(mPostion+1);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (ConnectAnimationFragmentCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement ConnectAnimationFragmentCallbacks.");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
     }
 
     @Override
@@ -91,7 +68,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         @Override
         public void onAnimationEnd(Animation animation) {
             if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
-                mCallbacks.replaceFragment(mPostion, mTag);
+            //DO NOTHING, @see function connectionStateChanged
             }else {
                 //showAlertDialog();
                 mConnectButton.setClickable(true);
@@ -103,11 +80,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         public void onAnimationRepeat(Animation animation) {
 
         }
-    }
-
-    public interface ConnectAnimationFragmentCallbacks{
-        void onSectionAttached(int i);
-        void replaceFragment(final int position, final String tag);
     }
 
     /**
@@ -125,6 +97,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-
+        if (isConnected) ((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
     }
 }

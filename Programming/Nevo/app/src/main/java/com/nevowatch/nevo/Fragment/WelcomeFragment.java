@@ -9,31 +9,37 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.View.StepPickerView;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 
 import java.util.Calendar;
 
 /**
  * WelcomeFragment aims to display current time and steps how many you took.
  */
-public class WelcomeFragment extends Fragment{
+public class WelcomeFragment extends Fragment implements OnSyncControllerListener {
 
     private ImageView mHourImage, mMinImage;
-    private WelcomeFragmentCallbacks mCallbacks;
     private RoundProgressBar mRoundProgressBar;
     private TextView mTextView;
     private static final String PREF_USER_HOUR_DEGREE = "hour_pointer_degree";
     private static final String PREF_USER_MINUTE_DEGREE = "minute_pointer_degree";
     private int mCurHour, mCurMin, mTempMin = -1;
-
+    private int mCurrentSteps = 0;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
@@ -63,30 +69,16 @@ public class WelcomeFragment extends Fragment{
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (WelcomeFragmentCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement WelcomeFragmentCallbacks.");
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        mCallbacks.onSectionAttached(1);
+        MyApplication.getSyncController().getStepsAndGoal();
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
-        String str =  "- / " + StepPickerView.getStepTextFromPreference(getActivity());
+        String str = mCurrentSteps + "/" + StepPickerView.getStepTextFromPreference(getActivity());
+        if (!MyApplication.getSyncController().isConnected())
+            str = "- /" + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
         mUiHandler.post(mTimerTask);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
     }
 
     public void setHour(final float degree) {
@@ -125,10 +117,6 @@ public class WelcomeFragment extends Fragment{
         });
     }
 
-    public static interface WelcomeFragmentCallbacks{
-        void onSectionAttached(int position);
-    }
-
     /**
      * Welcome Fragment saves hour and minute pointer degree
      * */
@@ -140,5 +128,24 @@ public class WelcomeFragment extends Fragment{
     public static Float getMinDegreeFromPreference(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getFloat(PREF_USER_MINUTE_DEGREE, 0);
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+        if((byte) GetStepsGoalNevoRequest.HEADER == packet.getHeader()) {
+            DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
+            int dailySteps = steppacket.getDailySteps();
+            int dailyGoal = steppacket.getDailyStepsGoal();
+            Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+            mCurrentSteps = dailySteps;
+            setText(dailySteps + "/" + dailyGoal);
+            setProgressBar((int) (100.0 * dailySteps / dailyGoal));
+            StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
+        }
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+        //DO NOTHING
     }
 }

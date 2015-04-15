@@ -15,17 +15,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.TimePickerView;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 
 /**
  * AlarmFragment, it works for setting alarm and turning alarm on or off.
  */
-public class AlarmFragment extends Fragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks{
+public class AlarmFragment extends Fragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks,OnSyncControllerListener {
 
-    private AlarmFragmentCallbacks mCallbacks;
+
     private TextView mClockTextView;
     private ImageView mEditClockImage;
     private Button mOnButton;
@@ -50,25 +53,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallbacks = (AlarmFragmentCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement AlarmFragmentCallbacks.");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mCallbacks = null;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        mCallbacks.onSectionAttached(3);
         mClockTextView.setText(TimePickerView.getAlarmFromPreference(getActivity()));
         if(AlarmFragment.getClockStateFromPreference(getActivity())){
             onClick(mOnButton);
@@ -138,10 +124,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         setClock(clockTime);
     }
 
-    public static interface AlarmFragmentCallbacks {
-        void onSectionAttached(int position);
-    }
-
     public static void saveClockStateToPreference(Context context, boolean value) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         pref.edit().putBoolean(PREF_KEY_CLOCK_STATE, value).apply();
@@ -150,5 +132,15 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     public static Boolean getClockStateFromPreference(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getBoolean(PREF_KEY_CLOCK_STATE, false);
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+        ((MainActivity)getActivity()).replaceFragment(isConnected?2:3, isConnected?MyApplication.ALARMFRAGMENT:MyApplication.CONNECTFRAGMENT);
     }
 }

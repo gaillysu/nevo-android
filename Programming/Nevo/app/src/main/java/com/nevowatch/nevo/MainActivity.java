@@ -9,7 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
-
+import java.util.List;
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
@@ -25,7 +25,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
  * */
-public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,GoalFragment.GoalFragmentCallbacks,AlarmFragment.AlarmFragmentCallbacks,WelcomeFragment.WelcomeFragmentCallbacks,ConnectAnimationFragment.ConnectAnimationFragmentCallbacks,OnSyncControllerListener {
+public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
     private static int mPosition;
     private static String mTag;
     /**
@@ -64,19 +64,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         Optional<String> tag = new Optional<String>(null);
         switch (position+1){
             case 1:
-                tag.set("WelcomeFragment");
+                tag.set(MyApplication.WELCOMEFRAGMENT);
                 mPosition = 0;
-                mTag = "WelcomeFragment";
+                mTag = MyApplication.WELCOMEFRAGMENT;
+                mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                tag.set("GoalFragment");
+                tag.set(MyApplication.GOALFRAGMENT);
                 mPosition = 1;
-                mTag = "GoalFragment";
+                mTag = MyApplication.GOALFRAGMENT;
+                mTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                tag.set("AlarmFragment");
+                tag.set(MyApplication.ALARMFRAGMENT);
                 mPosition = 2;
-                mTag = "AlarmFragment";
+                mTag = MyApplication.ALARMFRAGMENT;
+                mTitle = getString(R.string.title_section3);
                 break;
             default:
                 break;
@@ -86,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             if((position+1) == 1){
                 replaceFragment(position, tag.get());
             }else{
-                replaceFragment(3, "ConnectAnimationFragment");
+                replaceFragment(3, MyApplication.CONNECTFRAGMENT);
             }
         }else{
             Log.d("MainActivity", "Connect");
@@ -97,7 +100,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     /**
      * Replace fragment in the MainActivity
      * */
-    @Override
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -106,48 +108,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                MyApplication.getSyncController().getStepsAndGoal();
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
             return true;
         }
         return super.onCreateOptionsMenu(menu);
     }
 
     public Fragment getFragment(String tag){
-        if(tag.equals("AlarmFragment")){
+        if(tag.equals(MyApplication.ALARMFRAGMENT)){
             AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag(MyApplication.ALARMFRAGMENT);
             return alramfragment;
-        }else if(tag.equals("GoalFragment")){
+        }else if(tag.equals(MyApplication.GOALFRAGMENT)){
             GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag(MyApplication.GOALFRAGMENT);
             return goalfragment;
-        }else if(tag.equals("WelcomeFragment")){
+        }else if(tag.equals(MyApplication.WELCOMEFRAGMENT)){
             WelcomeFragment welcomeFragment = (WelcomeFragment) getSupportFragmentManager().findFragmentByTag(MyApplication.WELCOMEFRAGMENT);
             return welcomeFragment;
         }
@@ -155,18 +135,27 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
-
     public void packetReceived(NevoPacket packet) {
-        if((byte) GetStepsGoalNevoRequest.HEADER == packet.getHeader())
-        {
-            DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
-            WelcomeFragment welcomefragment = (WelcomeFragment)getSupportFragmentManager().findFragmentByTag("WelcomeFragment");
-            int dailySteps = steppacket.getDailySteps();
-            int dailyGoal = steppacket.getDailyStepsGoal();
-            Log.i("MainActivity","dailySteps = " + dailySteps +",dailyGoal = " + dailyGoal );
-            welcomefragment.setText(dailySteps+"/"+dailyGoal);
-            welcomefragment.setProgressBar((int)(100.0*dailySteps/dailyGoal));
-            StepPickerView.saveStepTextToPreference(MainActivity.this, ""+dailyGoal);
+
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
+        for(Fragment fragment :  fragments) {
+            if(fragment instanceof WelcomeFragment)
+            {
+                ((WelcomeFragment)fragment).packetReceived(packet);
+            }
+            else if(fragment instanceof GoalFragment)
+            {
+                ((GoalFragment)fragment).packetReceived(packet);
+            }
+            else if(fragment instanceof AlarmFragment)
+            {
+                ((AlarmFragment)fragment).packetReceived(packet);
+            }
+            else if(fragment instanceof ConnectAnimationFragment)
+            {
+                ((ConnectAnimationFragment)fragment).packetReceived(packet);
+            }
         }
     }
 
@@ -175,14 +164,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
           runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(isConnected )
-                {
-                    replaceFragment(mPosition, mTag);
-                }
-                else
-                {
-                    if (mPosition!=0)
-                        replaceFragment(3, "ConnectAnimationFragment");
+
+                List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
+                for(Fragment fragment :  fragments) {
+                    if(fragment instanceof WelcomeFragment)
+                    {
+                        ((WelcomeFragment)fragment).connectionStateChanged(isConnected);
+                    }
+                    else if(fragment instanceof GoalFragment)
+                    {
+                        ((GoalFragment)fragment).connectionStateChanged(isConnected);
+                    }
+                    else if(fragment instanceof AlarmFragment)
+                    {
+                        ((AlarmFragment)fragment).connectionStateChanged(isConnected);
+                    }
+                    else if(fragment instanceof ConnectAnimationFragment)
+                    {
+                        ((ConnectAnimationFragment)fragment).connectionStateChanged(isConnected);
+                    }
                 }
             }
         });

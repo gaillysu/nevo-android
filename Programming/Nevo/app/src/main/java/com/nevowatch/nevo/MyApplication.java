@@ -14,6 +14,7 @@ public class MyApplication extends Application implements OnSyncControllerListen
     public static final String ALARMFRAGMENT = "AlarmFragment";
     public static final String GOALFRAGMENT = "GoalFragment";
     public static final String WELCOMEFRAGMENT = "WelcomeFragment";
+    public static final String CONNECTFRAGMENT = "ConnectAnimationFragment";
 
     @Override
     public void onCreate() {
