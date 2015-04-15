@@ -44,12 +44,11 @@ public class NevoNotificationListener extends NotificationListenerService {
 
             //android 4.4.x new feature,support extras
             // Bundle exras = mNotification.extras;
-            Log.i(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
             //incoming call or missed call
             if(arg0.getPackageName().equals("com.google.android.dialer")
                     || arg0.getPackageName().equals("com.android.phone")
                     || arg0.getPackageName().equals("com.android.dialer")) {
-
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Call, 1);
             }
@@ -59,7 +58,7 @@ public class NevoNotificationListener extends NotificationListenerService {
                     || arg0.getPackageName().equals("com.android.mms")
                     || arg0.getPackageName().equals("com.sonyericsson.conversations")
                     ) {
-
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.SMS, mNotification.number);
             }
@@ -69,21 +68,25 @@ public class NevoNotificationListener extends NotificationListenerService {
                     || arg0.getPackageName().equals("com.google.android.email")
                     || arg0.getPackageName().equals("com.google.android.gm")
                     || arg0.getPackageName().equals("com.outlook.Z7")){
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Email, mNotification.number);
             }
             //calendar
             else if(arg0.getPackageName().equals("com.google.android.calendar")){
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Calendar, mNotification.number);
             }
             //facebook
             else if(arg0.getPackageName().equals("com.facebook.katana")){
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Facebook, mNotification.number);
             }
             //wechat
             else if(arg0.getPackageName().equals("com.tencent.mm")){
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Wechat, mNotification.number);
             }

@@ -100,29 +100,37 @@ public class SyncControllerImpl implements SyncController{
                         //setp2:start set user profile
                         sendRequest(new SetProfileNevoRequest());
                     }
-                    if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
+                    else if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //step3:WriteSetting
                         sendRequest(new WriteSettingNevoRequest());
                     }
-                    if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
+                    else if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //step4:SetCardio
                         sendRequest(new SetCardioNevoRequest());
                     }
 
-                    if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
+                    else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                        //start sync Goal
+                        //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)
                         getStepsAndGoal();
                         //syncActivityData();
                     }
-                    if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
+                    else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                        //start sync data
+                        //start sync notification, phone --> nevo
+                        //TODO: set Local Notification setting to Nevo, when nevo 's battery removed, the
+                        // Steps count is 0, and all notification is off, because Notification is very
+                        // important for user, so here need use local's setting sync with nevo
+                        sendRequest(new SetNotificationNevoRequest());
+                    }
+                    else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //start sync data, nevo-->phone
                         syncActivityData();
                     }
-                    if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
+                    else if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
                         mCurrentDay = 0;
@@ -131,8 +139,7 @@ public class SyncControllerImpl implements SyncController{
 
                         getDailyTracker(mCurrentDay);
                     }
-
-                    if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
+                    else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
                         mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
@@ -150,8 +157,6 @@ public class SyncControllerImpl implements SyncController{
                         {
                             mCurrentDay = 0;
                             syncFinished();
-                            //TODO: test Notification
-                            sendRequest(new SetNotificationNevoRequest());
                         }
                     }
 

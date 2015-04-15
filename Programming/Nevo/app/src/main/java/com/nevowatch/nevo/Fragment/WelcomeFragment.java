@@ -41,7 +41,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private static final String PREF_USER_HOUR_DEGREE = "hour_pointer_degree";
     private static final String PREF_USER_MINUTE_DEGREE = "minute_pointer_degree";
     private int mCurHour, mCurMin, mTempMin = -1;
-    private int mCurrentSteps = 0;
+    private static int mCurrentSteps = 0;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
