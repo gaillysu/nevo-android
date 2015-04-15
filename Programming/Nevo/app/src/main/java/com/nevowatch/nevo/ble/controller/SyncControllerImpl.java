@@ -113,12 +113,6 @@ public class SyncControllerImpl implements SyncController{
 
                     else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                        //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)
-                        getStepsAndGoal();
-                        //syncActivityData();
-                    }
-                    else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
                         //start sync notification, phone --> nevo
                         //TODO: set Local Notification setting to Nevo, when nevo 's battery removed, the
                         // Steps count is 0, and all notification is off, because Notification is very
@@ -126,6 +120,12 @@ public class SyncControllerImpl implements SyncController{
                         sendRequest(new SetNotificationNevoRequest());
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                       //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)
+                        getStepsAndGoal();
+                        //syncActivityData();
+                    }
+                    else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //start sync data, nevo-->phone
                         syncActivityData();
