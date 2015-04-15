@@ -1,6 +1,5 @@
 package com.nevowatch.nevo.Fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,7 +15,7 @@ import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
-import com.nevowatch.nevo.View.FontManager;
+import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 

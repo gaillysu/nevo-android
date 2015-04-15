@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.View.FontManager;
+import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;

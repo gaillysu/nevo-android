@@ -1,20 +1,14 @@
-package com.nevowatch.nevo.View;
+package com.nevowatch.nevo;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.R;
-
-import java.util.List;
-
 /**
- * Created by LYC on 15/4/14.
+ * Font Controller
  */
 
 public class FontManager {
