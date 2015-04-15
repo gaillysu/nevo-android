@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.View.FontManager;
+import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.util.Constants;
 
 /**

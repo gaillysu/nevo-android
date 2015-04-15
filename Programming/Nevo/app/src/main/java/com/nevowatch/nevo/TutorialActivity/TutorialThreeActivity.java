@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.View.FontManager;
+import com.nevowatch.nevo.FontManager;
 
 /**
  * Tutorial Three

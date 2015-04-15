@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.View.FontManager;
+import com.nevowatch.nevo.FontManager;
 
 /**
  * Tutorial Two
