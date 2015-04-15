@@ -74,9 +74,9 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         MyApplication.getSyncController().getStepsAndGoal();
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
-        String str = mCurrentSteps + "/" + StepPickerView.getStepTextFromPreference(getActivity());
+        String str = mCurrentSteps + " / " + StepPickerView.getStepTextFromPreference(getActivity());
         if (!MyApplication.getSyncController().isConnected())
-            str = "- /" + StepPickerView.getStepTextFromPreference(getActivity());
+            str = "- / " + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
         mUiHandler.post(mTimerTask);
     }

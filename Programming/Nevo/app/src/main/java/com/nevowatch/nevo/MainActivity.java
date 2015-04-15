@@ -9,18 +9,17 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
-import java.util.List;
+
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
-import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
-import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
-import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.nevowatch.nevo.ble.util.Optional;
+
+import java.util.List;
 
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
@@ -110,14 +109,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
+            restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+        actionBar.setIcon(R.drawable.ic_launcher);
     }
 
     public Fragment getFragment(String tag){
