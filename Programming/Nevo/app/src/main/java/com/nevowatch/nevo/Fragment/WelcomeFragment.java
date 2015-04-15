@@ -3,6 +3,7 @@ package com.nevowatch.nevo.Fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.FontManager;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
@@ -65,6 +67,12 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
         mRoundProgressBar = (RoundProgressBar) rootView.findViewById(R.id.roundProgressBar);
         mTextView = (TextView) rootView.findViewById(R.id.textView);
+
+        View [] viewArray = new View []{
+                rootView.findViewById(R.id.textView)
+        };
+        FontManager.changeFonts(viewArray,getActivity());
+
         return rootView;
     }
 

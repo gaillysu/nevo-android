@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.FontManager;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -60,6 +61,16 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
                 mIntensiveButton,
                 mSportiveButton
         };
+
+        View [] viewArray = new View []{
+                rootView.findViewById(R.id.steps_textView),
+                rootView.findViewById(R.id.goal_stepsUnit),
+                rootView.findViewById(R.id.modarateButton),
+                rootView.findViewById(R.id.intensiveButton),
+                rootView.findViewById(R.id.sportiveButton)
+        };
+        FontManager.changeFonts(viewArray,getActivity());
+
         return rootView;
     }
 

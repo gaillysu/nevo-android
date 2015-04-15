@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.FontManager;
 import com.nevowatch.nevo.View.TimePickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -48,6 +49,13 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         mOnButton.setOnClickListener(this);
         mOffButton =  (Button)rootView.findViewById(R.id.off_mode_button);
         mOffButton.setOnClickListener(this);
+
+        View [] viewArray = new View []{
+                rootView.findViewById(R.id.clock_textView),
+                rootView.findViewById(R.id.on_mode_button),
+                rootView.findViewById(R.id.off_mode_button)
+        };
+        FontManager.changeFonts(viewArray,getActivity());
 
         return rootView;
     }

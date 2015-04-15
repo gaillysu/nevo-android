@@ -23,6 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="100dp"
+        android:id="@+id/t2_bluetoothEnabled"
         android:text="@string/bluetoothEnabled"
         android:textColor="@color/customBlack"
         android:textSize="22sp"
