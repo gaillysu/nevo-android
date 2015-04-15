@@ -83,11 +83,12 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
             case R.id.t2_nextButton:
                 startActivity(new Intent(this, TutorialThreeActivity.class));
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
+                finish();
                 break;
             case R.id.t2_backButton:
                 startActivity(new Intent(this, TutorialOneActivity.class));
                 overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
-                //finish();
+                finish();
                 break;
             default:
                 break;

@@ -60,9 +60,9 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.t4_back_Button:
-                //finish();
                 startActivity(new Intent(this, TutorialThreeActivity.class));
                 overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
+                finish();
                 break;
             case R.id.t4_finish_Button:
                 Intent it = new Intent(this, MainActivity.class);
@@ -71,6 +71,7 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
                 startActivity(it);
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,false).commit();
+                finish();
                 break;
             case R.id.t4_connect_Button:
                 final Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.roatate);

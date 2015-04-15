@@ -44,11 +44,13 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
             case R.id.activateButton:
                 startActivity(new Intent(this, TutorialTwoActivity.class));
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
+                finish();
                 break;
             case R.id.uriButton:
                 Uri uri = Uri.parse(getResources().getString(R.string.nevoURL));
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(it);
+                finish();
                 break;
             default:
                 break;
