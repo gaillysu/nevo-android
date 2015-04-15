@@ -220,6 +220,7 @@ public class SyncControllerImpl implements SyncController{
             public void run() {
                 mUiThread.removeCallbacks(mSendCommandTimeOut);
                 mUiThread.postDelayed(mSendCommandTimeOut,MAX_TIMEOUT);
+                Log.i("SyncControllerImpl",request.getClass().getName());
                 mNevoBT.sendRequest(request);
             }
         });

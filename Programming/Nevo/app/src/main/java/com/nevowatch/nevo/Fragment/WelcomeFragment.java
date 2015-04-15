@@ -71,7 +71,11 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     @Override
     public void onResume() {
         super.onResume();
-        MyApplication.getSyncController().getStepsAndGoal();
+        //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
+        //when app start,syncController is connecting, send this cmd, will lead to  timeout
+        // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
+        if (MyApplication.getSyncController().isConnected())
+            MyApplication.getSyncController().getStepsAndGoal();
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str = mCurrentSteps + " / " + StepPickerView.getStepTextFromPreference(getActivity());
