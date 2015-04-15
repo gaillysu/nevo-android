@@ -3,16 +3,21 @@ package com.nevowatch.nevo.TutorialActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.util.Constants;
@@ -44,6 +49,15 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
             mFinishButton.setVisibility(View.VISIBLE);
             //mConnectImg.setImageResource(R.drawable.);
         }
+
+        View [] viewArray = new View []{
+                findViewById(R.id.t4_back_Button),
+                findViewById(R.id.t4_connectButton),
+                findViewById(R.id.t4_connect_Button),
+                findViewById(R.id.t4_placeConnect),
+                findViewById(R.id.t4_finish_Button)
+        };
+        FontManager.changeFonts(viewArray,this);
     }
 
     @Override

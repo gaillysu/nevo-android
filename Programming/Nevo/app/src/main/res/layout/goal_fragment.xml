@@ -40,6 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/goal_stepsUnit"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/goal_steps"
             android:textColor="@color/customBlack"

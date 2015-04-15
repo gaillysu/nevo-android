@@ -22,6 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="100dp"
+        android:id="@+id/t3_watchBluetooth"
         android:text="@string/watchBluetooth"
         android:textSize="18sp"
         android:textAllCaps="false"
@@ -45,6 +46,7 @@
         <TextView
             android:layout_width="275dp"
             android:layout_height="wrap_content"
+            android:id="@+id/t3_longPushLED"
             android:text="@string/longPushLED"
             android:textColor="@color/customBlack"
             android:textSize="18sp"

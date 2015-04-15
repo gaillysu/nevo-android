@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.FontManager;
 
 /**
  * Tutorial Two
@@ -37,6 +41,14 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         BLEState();
+
+        View [] viewArray = new View []{
+                findViewById(R.id.t2_backButton),
+                findViewById(R.id.t2_bluetoothEnabled),
+                findViewById(R.id.bluetoothOffText),
+                findViewById(R.id.t2_nextButton)
+        };
+        FontManager.changeFonts(viewArray,this);
     }
 
     private  void BLEState(){
