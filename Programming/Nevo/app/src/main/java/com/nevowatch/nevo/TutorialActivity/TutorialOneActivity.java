@@ -2,25 +2,15 @@ package com.nevowatch.nevo.TutorialActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.FontManager;
 import com.nevowatch.nevo.ble.util.Constants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Turorial One
@@ -53,6 +43,7 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
         switch (v.getId()){
             case R.id.activateButton:
                 startActivity(new Intent(this, TutorialTwoActivity.class));
+                overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             case R.id.uriButton:
                 Uri uri = Uri.parse(getResources().getString(R.string.nevoURL));

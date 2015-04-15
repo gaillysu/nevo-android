@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -85,9 +82,12 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
         switch (v.getId()){
             case R.id.t2_nextButton:
                 startActivity(new Intent(this, TutorialThreeActivity.class));
+                overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             case R.id.t2_backButton:
-                finish();
+                startActivity(new Intent(this, TutorialOneActivity.class));
+                overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
+                //finish();
                 break;
             default:
                 break;

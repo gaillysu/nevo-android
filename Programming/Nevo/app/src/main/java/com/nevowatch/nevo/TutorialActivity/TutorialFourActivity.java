@@ -3,16 +3,12 @@ package com.nevowatch.nevo.TutorialActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.MyApplication;
@@ -64,13 +60,16 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.t4_back_Button:
-                finish();
+                //finish();
+                startActivity(new Intent(this, TutorialThreeActivity.class));
+                overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
                 break;
             case R.id.t4_finish_Button:
                 Intent it = new Intent(this, MainActivity.class);
                 it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(it);
+                overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,false).commit();
                 break;
             case R.id.t4_connect_Button:

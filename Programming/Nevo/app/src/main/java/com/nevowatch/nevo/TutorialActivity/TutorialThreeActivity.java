@@ -3,10 +3,7 @@ package com.nevowatch.nevo.TutorialActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.nevowatch.nevo.R;
@@ -39,10 +36,13 @@ public class TutorialThreeActivity extends Activity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.t3_back_button:
-                finish();
+                //finish();
+                startActivity(new Intent(this, TutorialTwoActivity.class));
+                overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
                 break;
             case R.id.t3_next_button:
                 startActivity(new Intent(this, TutorialFourActivity.class));
+                overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             default:
                 break;
