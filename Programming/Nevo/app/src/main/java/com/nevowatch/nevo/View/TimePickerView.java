@@ -1,5 +1,6 @@
 package com.nevowatch.nevo.View;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -26,13 +27,6 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
     private static final String PREF_KEY_ALARM = "alarm";
     private MainActivity mActivity;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (MainActivity)getActivity();
-        mCallbacks = (TimePickerFragmentCallbacks) mActivity.getFragment(MyApplication.ALARMFRAGMENT);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -44,6 +38,13 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
                 DateFormat.is24HourFormat(getActivity()));
         mTimePickerDialog.setTitle(R.string.time_picker);
         return mTimePickerDialog;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (MainActivity)getActivity();
+        mCallbacks = (TimePickerFragmentCallbacks) mActivity.getFragment(MyApplication.ALARMFRAGMENT);
     }
 
     @Override
