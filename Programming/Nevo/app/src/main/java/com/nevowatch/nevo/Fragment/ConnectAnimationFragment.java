@@ -53,11 +53,11 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.connect_imageButton:
+                mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
+                mConnectButton.setClickable(false);
                 final Animation animRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.roatate);
                 mConnectImage.startAnimation(animRotate);
                 animRotate.setAnimationListener(new myAnimationListener());
-                mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
-                mConnectButton.setClickable(false);
                 break;
             default:
                 break;
@@ -75,13 +75,9 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
-            //DO NOTHING, @see function connectionStateChanged
-            }else {
-                //showAlertDialog();
+           //     showAlertDialog();
                 mConnectButton.setClickable(true);
                 mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
-            }
         }
 
         @Override
@@ -105,6 +101,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if (isConnected) ((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
+        if (isConnected)((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
     }
 }

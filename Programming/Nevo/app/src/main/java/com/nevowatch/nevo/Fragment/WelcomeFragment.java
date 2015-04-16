@@ -129,7 +129,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             int dailyGoal = steppacket.getDailyStepsGoal();
             Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mCurrentSteps = dailySteps;
-            setText(dailySteps + "/" + dailyGoal);
+            setText(dailySteps + " / " + dailyGoal);
             setProgressBar((int) (100.0 * dailySteps / dailyGoal));
             StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
         }
