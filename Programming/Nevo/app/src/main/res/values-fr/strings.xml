@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Nevo</string>
-    <string name="title_section1">Nevo</string>
+    <string name="app_name">nevo</string>
+    <string name="title_section1">nevo</string>
     <string name="title_section2">Objectif</string>
     <string name="title_section3">Alarme</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -10,7 +10,7 @@
     <string name="clock">00:00</string>
     <string name="ok_button">Ok</string>
     <string name="step_picker_title">Paramétrez votre objectif</string>
-    <string name="message">Nevo introuvable, veuillez ré-essayer.</string>
+    <string name="message">nevo introuvable, veuillez ré-essayer.</string>
     <string name="warning">Attention</string>
     <string name="modarate_string">Léger</string>
     <string name="intensive_string">Modéré</string>
@@ -34,6 +34,6 @@
     <string name="connectButton">Connectez votre nevo au smartphone</string>
     <string name="placeConnect">Placez votre nevo à côté du smartphone et appuyez sur Connecter</string>
     <string name="notifAccess">Notification Access</string>
-    <string name="notifAccessMessage">Do you want to enable notifications for Nevo ?</string>
-    <string name="nevoURL">https://www.indiegogo.com/projects/nevo-the-first-minimalist-connected-watch/</string>
+    <string name="notifAccessMessage">Do you want to enable notifications for nevo ?</string>
+    <string name="nevoURL">http://www.nevowatch.com</string>
 </resources>

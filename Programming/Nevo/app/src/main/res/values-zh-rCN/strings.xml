@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Nevo</string>
+    <string name="app_name">nevo</string>
     <string name="title_section1">欢迎</string>
     <string name="title_section2">目标</string>
     <string name="title_section3">闹钟</string>
@@ -34,6 +34,6 @@
     <string name="connectButton">把nevo与手机相连</string>
     <string name="placeConnect">把你的nevo放在手机旁边并点击连接</string>
     <string name="notifAccess">打开通知</string>
-    <string name="notifAccessMessage">你想让Nevo启用你的通知么?</string>
-    <string name="nevoURL">https://www.indiegogo.com/projects/nevo-the-first-minimalist-connected-watch/</string>
+    <string name="notifAccessMessage">你想让nevo启用你的通知么?</string>
+    <string name="nevoURL">http://www.nevowatch.com</string>
 </resources>
