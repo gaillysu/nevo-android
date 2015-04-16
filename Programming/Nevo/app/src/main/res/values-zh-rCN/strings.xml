@@ -24,6 +24,7 @@
     <string name="tutorial">激活我的nevo</string>
     <string name="acheter">购买nevo!</string>
     <string name="bluetoothEnabled">蓝牙可用</string>
+    <string name="enableBluetoothPhone">打开蓝牙</string>
     <string name="next">下一步</string>
     <string name="back">后退</string>
     <string name="finish">完成</string>

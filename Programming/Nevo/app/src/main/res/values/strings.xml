@@ -24,6 +24,7 @@
     <string name="tutorial">Activate my nevo</string>
     <string name="acheter">I want a nevo!</string>
     <string name="bluetoothEnabled">Bluetooth enabled</string>
+    <string name="enableBluetoothPhone">Turn on the Bluetooth</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="finish">Finish</string>
