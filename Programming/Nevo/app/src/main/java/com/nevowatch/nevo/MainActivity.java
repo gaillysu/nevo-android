@@ -209,28 +209,28 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         public static Fragment newInstance(int sectionNumber) {
             Optional<Fragment> fragment = new Optional<Fragment>(null);
 
-            if(sectionNumber <4) {
-                switch (sectionNumber) {
-                    case 1:
-                        fragment.set(new WelcomeFragment());
-                        break;
-                    case 2:
-                        fragment.set(new GoalFragment());
-                        break;
-                    case 3:
-                        fragment.set(new AlarmFragment());
-                        break;
-                    default:
-                        break;
-                }
-            }else if(sectionNumber == 4){
-                fragment.set(new ConnectAnimationFragment());
-                Bundle args = new Bundle();
-                args.putInt(POSTITION, mPosition);
-                args.putString(TAG, mTag);
-                args.putInt(SECTION_NUMBER, sectionNumber);
-                fragment.get().setArguments(args);
+            switch (sectionNumber) {
+                case 1:
+                    fragment.set(new WelcomeFragment());
+                    break;
+                case 2:
+                    fragment.set(new GoalFragment());
+                    break;
+                case 3:
+                    fragment.set(new AlarmFragment());
+                    break;
+                case 4:
+                    fragment.set(new ConnectAnimationFragment());
+                    Bundle args = new Bundle();
+                    args.putInt(POSTITION, mPosition);
+                    args.putString(TAG, mTag);
+                    args.putInt(SECTION_NUMBER, sectionNumber);
+                    fragment.get().setArguments(args);
+                    break;
+                default:
+                    break;
             }
+
             return fragment.get();
         }
     }
