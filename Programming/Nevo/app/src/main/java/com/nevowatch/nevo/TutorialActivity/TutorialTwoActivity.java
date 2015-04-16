@@ -20,6 +20,7 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
 
     private Button mT2NextButton;
     private TextView mBLEText;
+    private TextView mBLEStatus;
     private ImageView mBLEStateImg;
     private BluetoothAdapter mBluetoothAdapter;
     private Boolean isFinish = false;
@@ -27,14 +28,14 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_2);
         mT2NextButton = (Button) findViewById(R.id.t2_nextButton);
         mT2NextButton.setOnClickListener(this);
         findViewById(R.id.t2_backButton).setOnClickListener(this);
         mBLEText = (TextView) findViewById(R.id.bluetoothOffText);
         mBLEStateImg = (ImageView) findViewById(R.id.bluetoothState);
-
+        mBLEStatus = (TextView) findViewById(R.id.t2_bluetoothEnabled);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         BLEState();
@@ -60,6 +61,7 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
                                 mBLEStateImg.setImageResource(R.drawable.bluetoothon_state_on);
                                 mBLEText.setVisibility(View.INVISIBLE);
                                 mT2NextButton.setVisibility(View.VISIBLE);
+                                mBLEStatus.setText(R.string.bluetoothEnabled);
                             }
                         });
                     }else {
@@ -69,6 +71,7 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
                                 mBLEStateImg.setImageResource(R.drawable.bluetoothon_state_off);
                                 mBLEText.setVisibility(View.VISIBLE);
                                 mT2NextButton.setVisibility(View.INVISIBLE);
+                                mBLEStatus.setText(R.string.enableBluetoothPhone);
                             }
                         });
                     }
