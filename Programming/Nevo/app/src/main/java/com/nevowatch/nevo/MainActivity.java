@@ -124,7 +124,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-        actionBar.setIcon(R.drawable.ic_launcher);
     }
 
     public Fragment getFragment(String tag){
