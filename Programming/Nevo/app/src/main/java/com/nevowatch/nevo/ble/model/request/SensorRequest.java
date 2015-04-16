@@ -2,6 +2,9 @@ package com.nevowatch.nevo.ble.model.request;
 
 import java.util.UUID;
 
+/*
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 public interface SensorRequest {
 
 	/**

@@ -7,6 +7,7 @@ import com.nevowatch.nevo.ble.ble.GattAttributes;
 
 /**
  * Created by gaillysu on 15/4/1.
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
 public abstract  class NevoRequest implements  SensorRequest{

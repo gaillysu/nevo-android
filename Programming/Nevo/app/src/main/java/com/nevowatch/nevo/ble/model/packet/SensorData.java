@@ -8,6 +8,7 @@ import java.io.Serializable;
 /**
  * The Interface SensorData is a wrapper for different types of SensorData.
  * It is given to the callback at regular intervals and contains all the data sent by the peripheral.
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 public interface SensorData extends Serializable {
 	

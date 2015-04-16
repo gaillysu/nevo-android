@@ -1,5 +1,8 @@
 package com.nevowatch.nevo.ble.model.packet;
 
+/*
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 public abstract class NevoRawData implements SensorData {
 
 	/**

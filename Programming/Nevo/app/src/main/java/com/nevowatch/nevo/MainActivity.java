@@ -16,6 +16,7 @@ import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.util.Optional;
 
@@ -54,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        MyApplication.getSyncController().startConnect(false, this);
+        SyncController.Singleton.getInstance(this).startConnect(false, this);
     }
 
     @Override
@@ -63,32 +64,32 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         Optional<String> tag = new Optional<String>(null);
         switch (position+1){
             case 1:
-                tag.set(MyApplication.WELCOMEFRAGMENT);
+                tag.set(WelcomeFragment.WELCOMEFRAGMENT);
                 mPosition = 0;
-                mTag = MyApplication.WELCOMEFRAGMENT;
+                mTag = WelcomeFragment.WELCOMEFRAGMENT;
                 mTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                tag.set(MyApplication.GOALFRAGMENT);
+                tag.set(GoalFragment.GOALFRAGMENT);
                 mPosition = 1;
-                mTag = MyApplication.GOALFRAGMENT;
+                mTag = GoalFragment.GOALFRAGMENT;
                 mTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                tag.set(MyApplication.ALARMFRAGMENT);
+                tag.set(AlarmFragment.ALARMFRAGMENT);
                 mPosition = 2;
-                mTag = MyApplication.ALARMFRAGMENT;
+                mTag = AlarmFragment.ALARMFRAGMENT;
                 mTitle = getString(R.string.title_section3);
                 break;
             default:
                 break;
         }
 
-        if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
+        if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
             if((position+1) == 1){
                 replaceFragment(position, tag.get());
             }else{
-                replaceFragment(3, MyApplication.CONNECTFRAGMENT);
+                replaceFragment(3, ConnectAnimationFragment.CONNECTFRAGMENT);
             }
         }else{
             Log.d("MainActivity", "Connect");
@@ -128,14 +129,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     public Fragment getFragment(String tag){
-        if(tag.equals(MyApplication.ALARMFRAGMENT)){
-            AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag(MyApplication.ALARMFRAGMENT);
+        if(tag.equals(AlarmFragment.ALARMFRAGMENT)){
+            AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag(AlarmFragment.ALARMFRAGMENT);
             return alramfragment;
-        }else if(tag.equals(MyApplication.GOALFRAGMENT)){
-            GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag(MyApplication.GOALFRAGMENT);
+        }else if(tag.equals(GoalFragment.GOALFRAGMENT)){
+            GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag(GoalFragment.GOALFRAGMENT);
             return goalfragment;
-        }else if(tag.equals(MyApplication.WELCOMEFRAGMENT)){
-            WelcomeFragment welcomeFragment = (WelcomeFragment) getSupportFragmentManager().findFragmentByTag(MyApplication.WELCOMEFRAGMENT);
+        }else if(tag.equals(WelcomeFragment.WELCOMEFRAGMENT)){
+            WelcomeFragment welcomeFragment = (WelcomeFragment) getSupportFragmentManager().findFragmentByTag(WelcomeFragment.WELCOMEFRAGMENT);
             return welcomeFragment;
         }
         return null;

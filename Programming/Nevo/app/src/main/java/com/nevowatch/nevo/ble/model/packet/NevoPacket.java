@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 /**
  * Created by gaillysu on 15/4/1.
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 public class NevoPacket {
 

@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 
@@ -28,6 +28,8 @@ import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
  */
 public class GoalFragment extends Fragment implements View.OnClickListener,StepPickerView.StepPickerFragmentCallbacks,OnSyncControllerListener {
 
+
+    public static final String GOALFRAGMENT = "GoalFragment";
 
     private TextView mStepsTextView;
     private ImageView mEditStepsImage;
@@ -114,7 +116,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
     public void setStep(final String goal){
         mStepsTextView.setText(goal);
         StepPickerView.saveStepTextToPreference(getActivity(), goal);
-        MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(Integer.parseInt(goal)));
+        SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(Integer.parseInt(goal)));
     }
 
     @Override
@@ -132,19 +134,19 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
                 setSelectedButtonProperty(mButtonArray,mModarateButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), MODERATE);
                 setStep(new Integer(7000).toString());
-                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(7000));
+                SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(7000));
                 break;
             case R.id.intensiveButton:
                 setSelectedButtonProperty(mButtonArray,mIntensiveButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), INTENSIVE);
                 setStep(new Integer(10000).toString());
-                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(10000));
+                SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(10000));
                 break;
             case R.id.sportiveButton:
                 setSelectedButtonProperty(mButtonArray,mSportiveButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), SPORTIVE);
                 setStep(new Integer(20000).toString());
-                MyApplication.getSyncController().setGoal(new NumberOfStepsGoal(20000));
+                SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(20000));
                 break;
             default:
                 break;
@@ -190,6 +192,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-       ((MainActivity)getActivity()).replaceFragment(isConnected?1:3, isConnected?MyApplication.GOALFRAGMENT:MyApplication.CONNECTFRAGMENT);
+       ((MainActivity)getActivity()).replaceFragment(isConnected?1:3, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

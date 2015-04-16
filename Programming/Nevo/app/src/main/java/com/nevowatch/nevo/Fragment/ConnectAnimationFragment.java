@@ -12,17 +12,20 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 /**
  * A Round Pointer Animation
  */
 public class ConnectAnimationFragment extends Fragment implements View.OnClickListener, OnSyncControllerListener{
+
+
+    public static final String CONNECTFRAGMENT = "ConnectAnimationFragment";
 
     private ImageView mConnectImage;
     private Button mConnectButton;
@@ -68,8 +71,8 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationStart(Animation animation) {
-            if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
-                MyApplication.getSyncController().startConnect(true, (OnSyncControllerListener)getActivity());
+            if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
+                SyncController.Singleton.getInstance(getActivity()).startConnect(true, (OnSyncControllerListener)getActivity());
             }
         }
 

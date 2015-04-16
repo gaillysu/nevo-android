@@ -22,10 +22,11 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
 
-
-/*package*/
+/*
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-class QuickBTImpl implements QuickBT {
+/*package*/ class QuickBTImpl implements QuickBT {
 
 	final QueuedMainThreadHandler mQueuedMainThread = QueuedMainThreadHandler.getInstance();
 	

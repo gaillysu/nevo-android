@@ -11,10 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.util.Constants;
 
@@ -39,7 +39,7 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
         mFinishButton = (Button) findViewById(R.id.t4_finish_Button);
         mFinishButton.setOnClickListener(this);
 
-        if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
+        if(SyncController.Singleton.getInstance(this)!=null && SyncController.Singleton.getInstance(this).isConnected()){
             mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
             mConnectButton.setClickable(false);
             mFinishButton.setVisibility(View.VISIBLE);
@@ -89,14 +89,14 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
 
         @Override
         public void onAnimationStart(Animation animation) {
-            if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
-                MyApplication.getSyncController().startConnect(true, TutorialFourActivity.this);
+            if(SyncController.Singleton.getInstance(TutorialFourActivity.this)!=null && !SyncController.Singleton.getInstance(TutorialFourActivity.this).isConnected()){
+                SyncController.Singleton.getInstance(TutorialFourActivity.this).startConnect(true, TutorialFourActivity.this);
             }
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
+            if(SyncController.Singleton.getInstance(TutorialFourActivity.this)!=null && SyncController.Singleton.getInstance(TutorialFourActivity.this).isConnected()){
                 mFinishButton.setVisibility(View.VISIBLE);
                 mConnectImg.setImageResource(R.drawable.success);
                 mConnectButton.setVisibility(View.INVISIBLE);

@@ -5,6 +5,7 @@ package com.nevowatch.nevo.ble.util;
 
 /**
  * Concept stolen from Java 8, it is a convenience method to warn that this object of type T can be null
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  * @author Hugo
  *
  * @param <T>
