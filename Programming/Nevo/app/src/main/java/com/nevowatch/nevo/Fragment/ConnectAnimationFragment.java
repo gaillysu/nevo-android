@@ -12,17 +12,20 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 /**
  * A Round Pointer Animation
  */
 public class ConnectAnimationFragment extends Fragment implements View.OnClickListener, OnSyncControllerListener{
+
+
+    public static final String CONNECTFRAGMENT = "ConnectAnimationFragment";
 
     private ImageView mConnectImage;
     private Button mConnectButton;
@@ -53,11 +56,11 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.connect_imageButton:
+                mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
+                mConnectButton.setClickable(false);
                 final Animation animRotate = AnimationUtils.loadAnimation(getActivity(), R.anim.roatate);
                 mConnectImage.startAnimation(animRotate);
                 animRotate.setAnimationListener(new myAnimationListener());
-                mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
-                mConnectButton.setClickable(false);
                 break;
             default:
                 break;
@@ -68,20 +71,16 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationStart(Animation animation) {
-            if(MyApplication.getSyncController()!=null && !MyApplication.getSyncController().isConnected()){
-                MyApplication.getSyncController().startConnect(true, (OnSyncControllerListener)getActivity());
+            if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
+                SyncController.Singleton.getInstance(getActivity()).startConnect(true, (OnSyncControllerListener)getActivity());
             }
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if(MyApplication.getSyncController()!=null && MyApplication.getSyncController().isConnected()){
-            //DO NOTHING, @see function connectionStateChanged
-            }else {
-                //showAlertDialog();
+           //     showAlertDialog();
                 mConnectButton.setClickable(true);
                 mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
-            }
         }
 
         @Override
@@ -105,6 +104,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if (isConnected) ((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
+        if (isConnected)((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
     }
 }

@@ -10,12 +10,12 @@ public class SetNotificationNevoRequest extends NevoRequest {
         final static int VIB_MOTOR = 0x800000;
         final static int LED_OFF = 0x000000;
         //color LED control bit is bit16~21
-        final static int BLUE_LED   = 0x010000;
-        final static int GREEN_LED  = 0x100000;
-        final static int YELLOW_LED = 0x040000;
-        final static int RED_LED    = 0x200000;
-        final static int ORANGE_LED = 0x080000;
-        final static int LIGHTGREEN_LED = 0x020000;
+        public final static int BLUE_LED   = 0x010000;
+        public final static int GREEN_LED  = 0x100000;
+        public final static int YELLOW_LED = 0x040000;
+        public final static int RED_LED    = 0x200000;
+        public final static int ORANGE_LED = 0x080000;
+        public final static int LIGHTGREEN_LED = 0x020000;
         //white LED control bit is bit0~10
         final static int WHITE_1_LED = 0x000001;
         final static int WHITE_3_LED = 0x000004;

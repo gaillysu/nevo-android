@@ -9,7 +9,7 @@ import android.content.Context;
  * all UI activity or Fragment should use this interface,
  * Usage in  Activity or Fragment
  *
- * SyncController  sync = SyncController.Factory.newInstance(this)
+ * SyncController  sync = SyncController.Factory.getInstance(this)
  *  "this"  object should implement OnSyncControllerListener, mostly "this" object is a activity, it also is
  *  a Fragment. such as  GoalFragment
  *
@@ -25,9 +25,9 @@ import android.content.Context;
  */
 public interface SyncController {
 
-	public  class Factory{
+	public  class Singleton {
 		private static  SyncControllerImpl sInstance = null;
-		public static SyncControllerImpl newInstance(Context context) {
+		public static SyncControllerImpl getInstance(Context context) {
 			if(null == sInstance )
 			{
 				sInstance = new SyncControllerImpl(context);

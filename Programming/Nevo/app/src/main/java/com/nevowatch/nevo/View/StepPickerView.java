@@ -14,7 +14,6 @@ import android.widget.NumberPicker;
 
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 
 /**
@@ -88,7 +87,7 @@ public class StepPickerView extends DialogFragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = (MainActivity)getActivity();
-        mCallbacks = (StepPickerFragmentCallbacks) mActivity.getFragment(MyApplication.GOALFRAGMENT);
+        mCallbacks = (StepPickerFragmentCallbacks) mActivity.getFragment(GoalFragment.GOALFRAGMENT);
     }
 
     @Override

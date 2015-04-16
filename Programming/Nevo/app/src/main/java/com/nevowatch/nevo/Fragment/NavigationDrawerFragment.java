@@ -113,8 +113,6 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectItem(position);
-                getDrawerIcon();
-                setDrawerIconLight(position);
             }
         });
 
@@ -185,8 +183,17 @@ public class NavigationDrawerFragment extends Fragment {
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
+            @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, 0);
+                if(slideOffset > .55 && !isDrawerOpen){
+                    getDrawerIcon();
+                    setDrawerIconLight(mCurrentSelectedPosition);
+                    onDrawerOpened(drawerView);
+                    isDrawerOpen = true;
+                } else if(slideOffset < .45 && isDrawerOpen) {
+                    onDrawerClosed(drawerView);
+                    isDrawerOpen = false;
+                }
             }
         };
 
@@ -287,11 +294,6 @@ public class NavigationDrawerFragment extends Fragment {
             showGlobalContextActionBar();
         }
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

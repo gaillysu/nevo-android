@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.TimePickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 
@@ -28,6 +28,8 @@ import com.nevowatch.nevo.ble.model.packet.NevoPacket;
  */
 public class AlarmFragment extends Fragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks,OnSyncControllerListener {
 
+
+    public static final String ALARMFRAGMENT = "AlarmFragment";
 
     private TextView mClockTextView;
     private ImageView mEditClockImage;
@@ -86,7 +88,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
                 mOnButton.setSelected(true);
                 AlarmFragment.saveClockStateToPreference(getActivity(), true);
                 String[] strAlarm = TimePickerView.getAlarmFromPreference(getActivity()).split(":");
-                MyApplication.getSyncController().setAlarm(Integer.parseInt(strAlarm[0]),
+                SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarm[0]),
                         Integer.parseInt(strAlarm[1]),
                         true);
                 break;
@@ -97,7 +99,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
                 mOnButton.setSelected(false);
                 AlarmFragment.saveClockStateToPreference(getActivity(), false);
                 String[] strAlarmOff = TimePickerView.getAlarmFromPreference(getActivity()).split(":");
-                MyApplication.getSyncController().setAlarm(Integer.parseInt(strAlarmOff[0]),
+                SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarmOff[0]),
                         Integer.parseInt(strAlarmOff[1]),
                         false);
                 break;
@@ -111,7 +113,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         mClockTextView.setText(time);
         /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
         String[] strAlarm = time.split(":");
-        MyApplication.getSyncController().setAlarm(Integer.parseInt(strAlarm[0]),
+        SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarm[0]),
                 Integer.parseInt(strAlarm[1]),
                 AlarmFragment.getClockStateFromPreference(getActivity()));
     }
@@ -148,6 +150,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?2:3, isConnected?MyApplication.ALARMFRAGMENT:MyApplication.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?2:3, isConnected?ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

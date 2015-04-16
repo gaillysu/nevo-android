@@ -4,7 +4,9 @@ import com.nevowatch.nevo.ble.model.request.SensorRequest;
 
 import android.content.Context;
 
-
+/*
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 public interface QuickBT {
 
 	static String TAG = "iMaze Quick BT SDK";

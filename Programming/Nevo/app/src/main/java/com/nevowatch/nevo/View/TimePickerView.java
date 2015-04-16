@@ -12,8 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
+import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.util.Optional;
 
@@ -37,6 +37,7 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
         mTimePickerDialog = new TimePickerDialog(getActivity(), this, hour, mintue,
                 DateFormat.is24HourFormat(getActivity()));
         mTimePickerDialog.setTitle(R.string.time_picker);
+        mTimePickerDialog.setCanceledOnTouchOutside(false);
         return mTimePickerDialog;
     }
 
@@ -44,7 +45,7 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = (MainActivity)getActivity();
-        mCallbacks = (TimePickerFragmentCallbacks) mActivity.getFragment(MyApplication.ALARMFRAGMENT);
+        mCallbacks = (TimePickerFragmentCallbacks) mActivity.getFragment(AlarmFragment.ALARMFRAGMENT);
     }
 
     @Override

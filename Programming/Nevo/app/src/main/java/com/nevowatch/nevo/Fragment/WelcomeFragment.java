@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.MyApplication;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
@@ -28,6 +28,9 @@ import java.util.Calendar;
  * WelcomeFragment aims to display current time and steps how many you took.
  */
 public class WelcomeFragment extends Fragment implements OnSyncControllerListener {
+
+
+    public static final String WELCOMEFRAGMENT = "WelcomeFragment";
 
     private ImageView mHourImage, mMinImage;
     private RoundProgressBar mRoundProgressBar;
@@ -78,12 +81,12 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
         //when app start,syncController is connecting, send this cmd, will lead to  timeout
         // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
-        if (MyApplication.getSyncController().isConnected())
-            MyApplication.getSyncController().getStepsAndGoal();
+        if (SyncController.Singleton.getInstance(getActivity()).isConnected())
+            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str = mCurrentSteps + " / " + StepPickerView.getStepTextFromPreference(getActivity());
-        if (!MyApplication.getSyncController().isConnected())
+        if (!SyncController.Singleton.getInstance(getActivity()).isConnected())
             str = "- / " + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
         refreshTime();
@@ -141,7 +144,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             int dailyGoal = steppacket.getDailyStepsGoal();
             Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mCurrentSteps = dailySteps;
-            setText(dailySteps + "/" + dailyGoal);
+            setText(dailySteps + " / " + dailyGoal);
             setProgressBar((int) (100.0 * dailySteps / dailyGoal));
             StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
         }

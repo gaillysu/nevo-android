@@ -9,6 +9,9 @@ import java.util.Calendar;
 import com.nevowatch.nevo.ble.ble.GattAttributes;
 
 
+/*
+ * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ */
 public class HexUtils {
 
 	public static int getValueForOctet(String octet, int startIndex,
