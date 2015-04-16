@@ -30,14 +30,16 @@
                 android:layout_height="300dp"
                 android:layout_centerInParent = "true"
                 android:id="@+id/HomeClockHour"
-                android:src="@drawable/clockview_hour" />
+                android:src="@drawable/clockview_hour"
+                android:visibility="gone"/>
 
             <ImageView
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_centerInParent = "true"
                 android:id="@+id/HomeClockMinute"
-                android:src="@drawable/clockview_minute" />
+                android:src="@drawable/clockview_minute"
+                android:visibility="gone"/>
 
             <com.nevowatch.nevo.View.RoundProgressBar
                 android:id="@+id/roundProgressBar"
