@@ -37,6 +37,7 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
         mTimePickerDialog = new TimePickerDialog(getActivity(), this, hour, mintue,
                 DateFormat.is24HourFormat(getActivity()));
         mTimePickerDialog.setTitle(R.string.time_picker);
+        mTimePickerDialog.setCanceledOnTouchOutside(false);
         return mTimePickerDialog;
     }
 
