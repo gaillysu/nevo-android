@@ -81,6 +81,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTag = AlarmFragment.ALARMFRAGMENT;
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 5:
+                break;
             default:
                 break;
         }
@@ -226,6 +228,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     args.putString(TAG, mTag);
                     args.putInt(SECTION_NUMBER, sectionNumber);
                     fragment.get().setArguments(args);
+                    break;
+                case 5:
                     break;
                 default:
                     break;

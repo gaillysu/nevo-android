@@ -81,9 +81,9 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
-        String str = mCurrentSteps + " / " + StepPickerView.getStepTextFromPreference(getActivity());
+        String str = mCurrentSteps + "/" + StepPickerView.getStepTextFromPreference(getActivity());
         if (!SyncController.Singleton.getInstance(getActivity()).isConnected())
-            str = "- / " + StepPickerView.getStepTextFromPreference(getActivity());
+            str = "-/" + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
         mUiHandler.post(mTimerTask);
     }
@@ -132,7 +132,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             int dailyGoal = steppacket.getDailyStepsGoal();
             Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mCurrentSteps = dailySteps;
-            setText(dailySteps + " / " + dailyGoal);
+            setText(dailySteps + "/" + dailyGoal);
             setProgressBar((int) (100.0 * dailySteps / dailyGoal));
             StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
         }
