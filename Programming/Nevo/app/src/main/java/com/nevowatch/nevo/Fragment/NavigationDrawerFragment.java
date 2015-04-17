@@ -6,12 +6,13 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,8 +24,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.nevowatch.nevo.View.DrawerIcon;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.DrawerIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,7 +119,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         mIconList = new ArrayList<DrawerIcon>();
         initDrawerIcon(mIconList);
-        NavigationDrawerAdapter navigationDrawerAdapter = new NavigationDrawerAdapter(getActionBar().getThemedContext(), R.layout.navigation_drawer_list_item, mIconList);
+        NavigationDrawerAdapter navigationDrawerAdapter = new NavigationDrawerAdapter(getActivity(), R.layout.navigation_drawer_list_item, mIconList);
 
         mDrawerListView.setAdapter(navigationDrawerAdapter);
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -135,7 +136,7 @@ public class NavigationDrawerFragment extends Fragment {
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
@@ -152,7 +153,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),                    /* host Activity */
                 mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer_close,             /* nav drawer image to replace 'Up' caret */
+                toolbar,             /* nav drawer image to replace 'Up' caret */
                 R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
                 R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -211,6 +212,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
