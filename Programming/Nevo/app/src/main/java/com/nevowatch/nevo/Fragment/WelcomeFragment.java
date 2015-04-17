@@ -41,19 +41,22 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private Runnable mTimerTask = new Runnable() {
         @Override
         public void run() {
-            final Calendar mCalendar = Calendar.getInstance();
-            mCurHour = mCalendar.get(Calendar.HOUR);
-            mCurMin = mCalendar.get(Calendar.MINUTE);
-            if (mCurMin != mTempMin) {
-                setMin((float) (mCurMin * 6));
-                setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
-                mTempMin = mCurMin;
-            }
+            refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
             mUiHandler.postDelayed(mTimerTask,60000);
         }
     };
 
+    private void refreshTime(){
+        final Calendar mCalendar = Calendar.getInstance();
+        mCurHour = mCalendar.get(Calendar.HOUR);
+        mCurMin = mCalendar.get(Calendar.MINUTE);
+        if (mCurMin != mTempMin) {
+            setMin((float) (mCurMin * 6));
+            setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
+            mTempMin = mCurMin;
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.welcome_fragment, container, false);
@@ -67,6 +70,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
                 rootView.findViewById(R.id.textView)
         };
         FontManager.changeFonts(viewArray,getActivity());
+
 
         return rootView;
     }
@@ -85,6 +89,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         if (!SyncController.Singleton.getInstance(getActivity()).isConnected())
             str = "-/" + StepPickerView.getStepTextFromPreference(getActivity());
         setText(str);
+        refreshTime();
         mUiHandler.post(mTimerTask);
     }
 
@@ -93,6 +98,10 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             @Override
             public void run() {
                 mHourImage.setRotation(degree);
+                if (mHourImage.getVisibility()==View.GONE){
+                    mHourImage.setVisibility(View.VISIBLE);
+                }
+
             }
         });
     }
@@ -102,6 +111,9 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             @Override
             public void run() {
                 mMinImage.setRotation(degree);
+                if (mMinImage.getVisibility()==View.GONE){
+                    mMinImage.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

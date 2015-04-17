@@ -26,7 +26,7 @@ import java.util.List;
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
  * */
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
-    private static int mPosition;
+    private static int mPosition = -1;
     private static String mTag;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -62,6 +62,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Optional<String> tag = new Optional<String>(null);
+        if(position == mPosition){
+            return;
+        }
         switch (position+1){
             case 1:
                 tag.set(WelcomeFragment.WELCOMEFRAGMENT);
