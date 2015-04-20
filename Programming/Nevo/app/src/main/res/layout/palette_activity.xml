@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/redImage"
-            android:background="@drawable/color_e50012"
+            android:background="@drawable/palette_redImage_button"
             android:layout_alignTop="@+id/orangeImage"
             android:layout_alignStart="@+id/blueImageView" />
     </RelativeLayout>
