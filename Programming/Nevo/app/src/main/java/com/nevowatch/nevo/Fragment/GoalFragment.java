@@ -192,6 +192,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-       ((MainActivity)getActivity()).replaceFragment(isConnected?1:3, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+       ((MainActivity)getActivity()).replaceFragment(isConnected?1:10, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

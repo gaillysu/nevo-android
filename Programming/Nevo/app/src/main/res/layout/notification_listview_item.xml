@@ -1,47 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:android_custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:background="@color/customWhite">
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="70dp">
+    android:background="@color/customWhite"
+    android:weightSum="1">
 
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/typeIconImage"
-            android:background="@drawable/calendar_icon50"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40dp" />
+            android:layout_marginLeft="10dp" />
 
         <TextView
-            android:layout_width="150dp"
-            android:layout_height="70dp"
-            android:text="New Text"
+            android:layout_width="65sp"
+            android:layout_height="60sp"
             android:id="@+id/typeTextView"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="5dp"/>
 
         <Switch
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/typeSwitch"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="100dp"/>
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/moreImageView"
+            android:id="@+id/typeImage"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/moreitem"/>
-
-    </LinearLayout>
-
+            android:background="@drawable/moreitem"
+            android:layout_marginLeft="5dp"
+            android:onClick="redirectColorPanel"/>
 </LinearLayout>

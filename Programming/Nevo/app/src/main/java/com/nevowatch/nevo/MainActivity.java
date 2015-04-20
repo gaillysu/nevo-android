@@ -1,5 +1,6 @@
 package com.nevowatch.nevo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
@@ -17,6 +19,7 @@ import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
+import com.nevowatch.nevo.TutorialActivity.TutorialThreeActivity;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -91,22 +94,27 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTag = AlarmFragment.ALARMFRAGMENT;
                 mTitle = getString(R.string.title_section3);
                 break;
-            case 5:
+            case 4:
+                tag.set(NotificationFragment.NotificationFragment);
+                mPosition = 3;
+                mTag = NotificationFragment.NotificationFragment;
+                mTitle = getString(R.string.title_section4);
                 break;
             default:
                 break;
         }
 
         if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
-            if((position+1) == 1 ||(position+1) == 5){
+            if((position+1) == 1){
                 replaceFragment(position, tag.get());
             }else{
-                replaceFragment(3, ConnectAnimationFragment.CONNECTFRAGMENT);
+                replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
             }
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
         }
+
     }
 
     /**
@@ -152,6 +160,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             return welcomeFragment;
         }else if(tag.equals(NotificationFragment.NotificationFragment)){
             NotificationFragment notificationFragment = (NotificationFragment) getSupportFragmentManager().findFragmentByTag(NotificationFragment.NotificationFragment);
+            return notificationFragment;
         }
         return null;
     }
@@ -177,6 +186,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             else if(fragment instanceof ConnectAnimationFragment)
             {
                 ((ConnectAnimationFragment)fragment).packetReceived(packet);
+            }else if(fragment instanceof NotificationFragment){
+                ((NotificationFragment)fragment).packetReceived(packet);
             }
         }
     }
@@ -205,6 +216,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     else if(fragment instanceof ConnectAnimationFragment)
                     {
                         ((ConnectAnimationFragment)fragment).connectionStateChanged(isConnected);
+                    }else if(fragment instanceof NotificationFragment){
+                        ((NotificationFragment)fragment).connectionStateChanged(isConnected);
                     }
                 }
             }
@@ -234,6 +247,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     fragment.set(new AlarmFragment());
                     break;
                 case 4:
+                    fragment.set(new NotificationFragment());
+                    break;
+                case 11:
                     fragment.set(new ConnectAnimationFragment());
                     Bundle args = new Bundle();
                     args.putInt(POSTITION, mPosition);
@@ -241,13 +257,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     args.putInt(SECTION_NUMBER, sectionNumber);
                     fragment.get().setArguments(args);
                     break;
-                case 5:
-                    fragment.set(new NotificationFragment());
-                    break;
                 default:
                     break;
             }
-
             return fragment.get();
         }
     }
@@ -256,5 +268,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     protected void onDestroy() {
         super.onDestroy();
         mPosition = -1;
+    }
+
+    public void redirectColorPanel(View view){
+        startActivity(new Intent(this, TutorialThreeActivity.class));
     }
 }
