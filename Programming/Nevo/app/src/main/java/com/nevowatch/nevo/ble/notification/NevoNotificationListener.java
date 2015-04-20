@@ -10,8 +10,10 @@ import java.util.Date;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.kernel.QuickBT;
+import com.nevowatch.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.nevowatch.nevo.ble.model.request.NevoRequest.NotificationType;
 import com.nevowatch.nevo.ble.model.request.SendNotificationNevoRequest;
+import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.Constants;
 import android.annotation.TargetApi;
@@ -47,6 +49,7 @@ public class NevoNotificationListener extends NotificationListenerService {
             // Bundle exras = mNotification.extras;
             //incoming call or missed call
             if(arg0.getPackageName().equals("com.google.android.dialer")
+                    || arg0.getPackageName().equals("com.android.incallui")
                     || arg0.getPackageName().equals("com.android.phone")
                     || arg0.getPackageName().equals("com.android.dialer")) {
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
@@ -68,13 +71,16 @@ public class NevoNotificationListener extends NotificationListenerService {
             else if(arg0.getPackageName().equals("com.android.email")
                     || arg0.getPackageName().equals("com.google.android.email")
                     || arg0.getPackageName().equals("com.google.android.gm")
+                    || arg0.getPackageName().equals("com.kingsoft.email")
+                    || arg0.getPackageName().equals("com.tencent.androidqqmail")
                     || arg0.getPackageName().equals("com.outlook.Z7")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Email, mNotification.number);
             }
             //calendar
-            else if(arg0.getPackageName().equals("com.google.android.calendar")){
+            else if(arg0.getPackageName().equals("com.google.android.calendar")
+                    || arg0.getPackageName().equals("com.android.calendar")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 sendNotification(NotificationType.Calendar, mNotification.number);
@@ -107,8 +113,21 @@ public class NevoNotificationListener extends NotificationListenerService {
         lastNotification.set(new Date());
 
         QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
-        bt.send(new SendNotificationNevoRequest(type, num));
-        //SyncController.Factory.getInstance(this).sendRequest(new SendNotificationNevoRequest(type, num));
+        //bt.send(new SendNotificationNevoRequest(type, num));
+        //TODO : use default for test QuickBT function, when user notification setting done, should use the selected color led
+        if (type == NotificationType.Call)
+            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.YELLOW_LED,true));
+        if (type == NotificationType.SMS)
+            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.RED_LED,true));
+        if (type == NotificationType.Email)
+            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.BLUE_LED,true));
+        if (type == NotificationType.Calendar)
+            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.GREEN_LED,true));
+        if (type == NotificationType.Facebook)
+            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.LIGHTGREEN_LED,true));
+        if (type == NotificationType.Wechat)
+            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.ORANGE_LED,true));
+
     }
 
     public static void getNotificationAccessPermission(final Context ctx) {
