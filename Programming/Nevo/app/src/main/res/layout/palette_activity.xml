@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/grassGreenImage"
-            android:background="@drawable/palette_grassGreenImage_button"
+            android:background="@drawable/palette_grassgreenimage"
             android:layout_marginTop="12dp"
             android:layout_alignTop="@+id/paletteImage"
             android:layout_centerHorizontal="true" />
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/orangeImage"
-            android:background="@drawable/palette_orangeImage_button"
+            android:background="@drawable/palette_orangeimage"
             android:layout_below="@+id/grassGreenImage"
             android:layout_alignStart="@+id/paletteImage"
             android:layout_marginStart="23dp"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/yellowImage"
-            android:background="@drawable/palette_yellowImage_button"
+            android:background="@drawable/palette_yellowimage"
             android:layout_marginBottom="50dp"
             android:layout_alignBottom="@+id/paletteImage"
             android:layout_alignStart="@+id/orangeImage" />
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/greenImageView"
-            android:background="@drawable/palette_greenImageView_button"
+            android:background="@drawable/palette_greenimageview"
             android:layout_alignBottom="@+id/paletteImage"
             android:layout_alignStart="@+id/grassGreenImage"
             android:layout_marginBottom="12dp"/>
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/blueImageView"
-            android:background="@drawable/palette_blueImageView_button"
+            android:background="@drawable/palette_blueimageview"
             android:layout_marginEnd="23dp"
             android:layout_alignTop="@+id/yellowImage"
             android:layout_alignEnd="@+id/paletteImage" />
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/redImage"
-            android:background="@drawable/palette_redImage_button"
+            android:background="@drawable/palette_redimage"
             android:layout_alignTop="@+id/orangeImage"
             android:layout_alignStart="@+id/blueImageView" />
     </RelativeLayout>
