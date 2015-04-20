@@ -12,6 +12,7 @@ import android.view.ViewGroup;
  */
 public class NotificationFragment extends Fragment {
 
+    public static final String NotificationFragment = "Notification Fragment";
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);

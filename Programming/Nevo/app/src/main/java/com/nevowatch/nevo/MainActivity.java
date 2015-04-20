@@ -15,6 +15,7 @@ import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
+import com.nevowatch.nevo.Fragment.NotificationFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
@@ -97,7 +98,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
 
         if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
-            if((position+1) == 1){
+            if((position+1) == 1 ||(position+1) == 5){
                 replaceFragment(position, tag.get());
             }else{
                 replaceFragment(3, ConnectAnimationFragment.CONNECTFRAGMENT);
@@ -149,6 +150,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else if(tag.equals(WelcomeFragment.WELCOMEFRAGMENT)){
             WelcomeFragment welcomeFragment = (WelcomeFragment) getSupportFragmentManager().findFragmentByTag(WelcomeFragment.WELCOMEFRAGMENT);
             return welcomeFragment;
+        }else if(tag.equals(NotificationFragment.NotificationFragment)){
+            NotificationFragment notificationFragment = (NotificationFragment) getSupportFragmentManager().findFragmentByTag(NotificationFragment.NotificationFragment);
         }
         return null;
     }
@@ -239,6 +242,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     fragment.get().setArguments(args);
                     break;
                 case 5:
+                    fragment.set(new NotificationFragment());
                     break;
                 default:
                     break;
@@ -246,5 +250,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
             return fragment.get();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPosition = -1;
     }
 }
