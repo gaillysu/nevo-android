@@ -6,8 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -23,7 +21,7 @@ import java.util.List;
 /**
  * NotificationFragment
  */
-public class NotificationFragment extends Fragment implements OnSyncControllerListener, Switch.OnCheckedChangeListener{
+public class NotificationFragment extends Fragment implements OnSyncControllerListener{
 
     public static final String NotificationFragment = "Notification Fragment";
     private ListView mListView;
@@ -40,14 +38,14 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
         mList.add(new NotificationItem(R.drawable.calendar_icon50, "日历", R.drawable.setting));
         mList.add(new NotificationItem(R.drawable.wechat_icon50, "微信", R.drawable.setting));
     }
-
+/*
     private void getSwitchButton(){
         for (int i=0; i<mList.size(); i++){
             LinearLayout linearLayout = (LinearLayout) mListView.getChildAt(i);
             mSwitchArray[i] = (Switch)linearLayout.findViewById(R.id.typeSwitch);
             mSwitchArray[i].setOnCheckedChangeListener(this);
         }
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,14 +71,5 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
     @Override
     public void connectionStateChanged(boolean isConnected) {
         ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?NotificationFragment:ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(isChecked){
-
-        }else {
-
-        }
     }
 }
