@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,6 +32,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     public static final String CALCHOOSENCOLOR = "calchoosencolor";
     public static final String WECHATCHOOSENCOLOR = "wechatchoosencolor";
     private int choosenColor = -1;
+    private int position = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +52,8 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
         mYellow = (ImageView) findViewById(R.id.yellowImage);
         mYellow.setOnClickListener(this);
 
-        if(getIntent() != null)
-            initLayout(getIntent().getIntExtra("Position", -1));
-
-        if(savedInstanceState != null){
-            choosenColor = savedInstanceState.getInt("Position");
-            initLayout(choosenColor);
-        }
+        position = getIntent().getIntExtra("Position", -1);
+        initLayout(position);
     }
 
     private void initLayout(int position){
@@ -92,38 +87,63 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    private void saveChoosenColor(final int position, final int choosenColor){
+        switch (position){
+            case 0:
+                saveTeleChoosenColorToPreference(this, choosenColor);
+                break;
+            case 1:
+                saveEmailChoosenColorToPreference(this, choosenColor);
+                break;
+            case 2:
+                saveFaceChoosenColorToPreference(this, choosenColor);
+                break;
+            case 3:
+                saveSmsChoosenColorToPreference(this, choosenColor);
+                break;
+            case 4:
+                saveCalChoosenColorToPreference(this, choosenColor);
+                break;
+            case 5:
+                saveWechatChoosenColorToPreference(this, choosenColor);
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.blueImage:
                 choosenColor = PaletteActivity.BLUE;
                 setImageLight(choosenColor);
-                saveTeleChoosenColorToPreference(this, -1);
+                saveChoosenColor(position, choosenColor);
                 break;
             case R.id.grassGreenImage:
                 choosenColor = PaletteActivity.GRASSGREEN;
                 setImageLight(choosenColor);
-                saveEmailChoosenColorToPreference(this, -1);
+                saveChoosenColor(position, choosenColor);
                 break;
             case R.id.greenImage:
                 choosenColor = PaletteActivity.GREEN;
                 setImageLight(choosenColor);
-                saveFaceChoosenColorToPreference(this, -1);
+                saveChoosenColor(position, choosenColor);
                 break;
             case R.id.orangeImage:
                 choosenColor = PaletteActivity.ORANGE;
                 setImageLight(choosenColor);
-                saveSmsChoosenColorToPreference(this, -1);
+                saveChoosenColor(position, choosenColor);
                 break;
             case R.id.redImage:
                 choosenColor = PaletteActivity.RED;
                 setImageLight(choosenColor);
-                saveCalChoosenColorToPreference(this, -1);
+                saveChoosenColor(position, choosenColor);
                 break;
             case R.id.yellowImage:
                 choosenColor = PaletteActivity.YELLOW;
                 setImageLight(choosenColor);
-                saveWechatChoosenColorToPreference(this, -1);
+                saveChoosenColor(position, choosenColor);
                 break;
             default:
                 break;
@@ -183,12 +203,6 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putInt("Position", choosenColor);
     }
 
     public static void saveTeleChoosenColorToPreference(Context context, int value) {
