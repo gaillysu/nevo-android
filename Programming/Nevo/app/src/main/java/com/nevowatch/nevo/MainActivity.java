@@ -28,6 +28,10 @@ import java.util.List;
 
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
+ * 
+ *  /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ *  /giphy danger !
+ *
  * */
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
     private static int mPosition = -1;
