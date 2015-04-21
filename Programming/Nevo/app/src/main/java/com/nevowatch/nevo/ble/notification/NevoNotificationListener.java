@@ -11,7 +11,7 @@ import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.kernel.QuickBT;
 import com.nevowatch.nevo.ble.model.request.LedLightOnOffNevoRequest;
-import com.nevowatch.nevo.ble.model.request.NevoRequest.NotificationType;
+import com.nevowatch.nevo.Model.Notification.NotificationType;
 import com.nevowatch.nevo.ble.model.request.SendNotificationNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.util.Optional;

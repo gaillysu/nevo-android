@@ -4,6 +4,8 @@ package com.nevowatch.nevo.ble.model.request;
  * Created by gaillysu on 15/4/10.
  */
 import java.util.UUID;
+
+import com.nevowatch.nevo.Model.Notification.NotificationType;
 import com.nevowatch.nevo.ble.ble.GattAttributes;
 
 
