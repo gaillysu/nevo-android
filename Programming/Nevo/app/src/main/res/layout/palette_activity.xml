@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/customWhite">
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:background="@color/customWhite">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -69,7 +71,7 @@
             android:id="@+id/redImage"
             android:background="@drawable/palette_redimage"
             android:layout_alignTop="@+id/orangeImage"
-            android:layout_alignStart="@+id/blueImageView" />
+            android:layout_alignStart="@+id/blueImage" />
     </RelativeLayout>
 
 </LinearLayout>
