@@ -3,6 +3,7 @@
     <string name="title_section1">歡迎</string>
     <string name="title_section2">目標</string>
     <string name="title_section3">鬧鐘</string>
+    <string name="title_section4">Notification</string>
     <string name="navigation_drawer_open">打开侧滑菜单</string>
     <string name="navigation_drawer_close">关闭侧滑菜单</string>
     <string name="action_example">Example action</string>
