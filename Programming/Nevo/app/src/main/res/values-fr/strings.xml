@@ -37,4 +37,10 @@
     <string name="notifAccess">Notification Access</string>
     <string name="notifAccessMessage">Do you want to enable notifications for nevo ?</string>
     <string name="nevoURL">http://www.nevowatch.com</string>
+    <string name="call_string">Appel</string>
+    <string name="sms_string">SMS</string>
+    <string name="email_string">Email</string>
+    <string name="facebook_string">Facebook</string>
+    <string name="calendar_string">Calendrier</string>
+    <string name="wechat_string">Wechat</string>
 </resources>

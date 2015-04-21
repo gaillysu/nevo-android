@@ -37,4 +37,10 @@
     <string name="notifAccess">打开通知</string>
     <string name="notifAccessMessage">你想让nevo启用你的通知么?</string>
     <string name="nevoURL">http://www.nevowatch.com</string>
+    <string name="call_string">电话</string>
+    <string name="sms_string">短信</string>
+    <string name="email_string">邮件</string>
+    <string name="facebook_string">Facebook</string>
+    <string name="calendar_string">日历</string>
+    <string name="wechat_string">微信</string>
 </resources>

@@ -33,12 +33,12 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
 
     private void initListView(){
         mList = new ArrayList<NotificationItem>();
-        mList.add(new NotificationItem(R.drawable.call_icon50, "电话", R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.email_icon50, "邮件", R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.facebook_icon50, "Facebook", R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.sms_icon50, "短信", R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.calendar_icon50, "日历", R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.wechat_icon50, "微信", R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.call_icon50, getResources().getString(R.string.call_string), R.drawable.moreitem));
+        mList.add(new NotificationItem(R.drawable.email_icon50, getResources().getString(R.string.email_string), R.drawable.moreitem));
+        mList.add(new NotificationItem(R.drawable.facebook_icon50, getResources().getString(R.string.facebook_string), R.drawable.moreitem));
+        mList.add(new NotificationItem(R.drawable.sms_icon50, getResources().getString(R.string.sms_string), R.drawable.moreitem));
+        mList.add(new NotificationItem(R.drawable.calendar_icon50, getResources().getString(R.string.calendar_string), R.drawable.moreitem));
+        mList.add(new NotificationItem(R.drawable.wechat_icon50, getResources().getString(R.string.wechat_string), R.drawable.moreitem));
     }
 
     private void getSwitchButton(){
