@@ -19,7 +19,6 @@ import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
-import com.nevowatch.nevo.TutorialActivity.TutorialThreeActivity;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -273,6 +272,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     public void redirectColorPanel(View view){
-        startActivity(new Intent(this, TutorialThreeActivity.class));
+        int position = (int) view.getTag();
+        Intent intent = new Intent(this, PaletteActivity.class);
+        intent.putExtra("Position", position);
+        startActivity(intent);
     }
 }

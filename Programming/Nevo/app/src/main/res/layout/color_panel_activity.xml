@@ -48,7 +48,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/greenImage"
+            android:id="@+id/greenImageView"
             android:background="@drawable/palette_greenimageview"
             android:layout_alignBottom="@+id/paletteImage"
             android:layout_alignStart="@+id/grassGreenImage"
@@ -57,7 +57,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/blueImage"
+            android:id="@+id/blueImageView"
             android:background="@drawable/palette_blueimageview"
             android:layout_marginEnd="23dp"
             android:layout_alignTop="@+id/yellowImage"

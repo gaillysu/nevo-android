@@ -43,6 +43,9 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".PaletteActivity"
+            android:theme="@style/AppTheme"/>
+
         <service
             android:name=".ble.ble.NevoBTService"
             android:enabled="true" />

@@ -45,6 +45,7 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
         for (int i=0; i<mList.size(); i++){
             LinearLayout linearLayout = (LinearLayout) mListView.getChildAt(i);
             mSwitchArray[i] = (Switch)linearLayout.findViewById(R.id.typeSwitch);
+            mSwitchArray[i].setOnCheckedChangeListener(this);
         }
     }
 
@@ -61,7 +62,7 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
     @Override
     public void onResume() {
         super.onResume();
-//        getSwitchButton();
+       // getSwitchButton();
     }
 
     @Override
