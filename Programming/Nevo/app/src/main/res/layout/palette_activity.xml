@@ -22,12 +22,14 @@
             android:gravity="center"/>
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/backimage"
-            android:layout_alignBottom="@+id/typetext"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/back" />
+            android:background="@drawable/back"
+            android:layout_alignTop="@+id/typetext"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentStart="true" />
 
         <ImageView
             android:layout_width="wrap_content"
