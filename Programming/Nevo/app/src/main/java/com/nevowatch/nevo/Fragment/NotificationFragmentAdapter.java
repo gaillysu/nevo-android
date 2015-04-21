@@ -1,6 +1,7 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 
@@ -17,13 +19,15 @@ import java.util.List;
 /**
  * NotificationFragmentAdapter populates items for ListView
  */
-public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem> {
+public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem> implements View.OnClickListener {
 
     private int mListItemResourceId;
+    private Context mCtx;
 
     public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects){
         super(context, mListItemResourceId, objects);
         this.mListItemResourceId = mListItemResourceId;
+        this.mCtx = context;
     }
 
     @Override
@@ -50,8 +54,17 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem> 
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
         viewHolder.mImage.setTag(position);
+        viewHolder.mImage.setOnClickListener(this);
         viewHolder.mSwitch.setTag(position);
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int position = (int) v.getTag();
+        Intent intent = new Intent(mCtx, PaletteActivity.class);
+        intent.putExtra("Position", position);
+        mCtx.startActivity(intent);
     }
 
     class ViewHolder{
