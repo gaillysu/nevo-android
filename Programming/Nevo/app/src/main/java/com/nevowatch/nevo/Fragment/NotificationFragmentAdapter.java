@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,48 +83,44 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         switch ((int)buttonView.getTag()){
             case 0:
                 if(isChecked){
-                    saveTeleTypeToPreference(mCtx, true);
-                    Log.d("STATE0", "ON");
+                    saveTypeNFState(mCtx, TELETYPE, true);
                 }else {
-                    saveTeleTypeToPreference(mCtx, false);
-                    Log.d("STATE0", "OFF");
+                    saveTypeNFState(mCtx, TELETYPE, false);
                 }
                 break;
             case 1:
                 if(isChecked){
-                    saveEmailTypeToPreference(mCtx, true);
-                    Log.d("STATE1", "ON");
+                    saveTypeNFState(mCtx, EMAILTYPE, true);
                 }else {
-                    saveEmailTypeToPreference(mCtx, false);
-                    Log.d("STATE1", "OFF");
+                    saveTypeNFState(mCtx, EMAILTYPE, false);
                 }
                 break;
             case 2:
                 if(isChecked){
-                    saveFaceTypeToPreference(mCtx, true);
+                    saveTypeNFState(mCtx, FACETYPE, true);
                 }else {
-                    saveFaceTypeToPreference(mCtx, false);
+                    saveTypeNFState(mCtx, FACETYPE, false);
                 }
                 break;
             case 3:
                 if(isChecked){
-                    saveSmsTypeToPreference(mCtx, true);
+                    saveTypeNFState(mCtx, SMSTYPE, true);
                 }else {
-                    saveSmsTypeToPreference(mCtx, false);
+                    saveTypeNFState(mCtx, SMSTYPE, false);
                 }
                 break;
             case 4:
                 if(isChecked){
-                    saveCalTypeToPreference(mCtx, true);
+                    saveTypeNFState(mCtx, CALTYPE, true);
                 }else {
-                    saveCalTypeToPreference(mCtx, false);
+                    saveTypeNFState(mCtx, CALTYPE, false);
                 }
                 break;
             case 5:
                 if(isChecked){
-                    saveWeiChatTypeToPreference(mCtx, true);
+                    saveTypeNFState(mCtx, WEICHATTYPE, true);
                 }else {
-                    saveWeiChatTypeToPreference(mCtx, false);
+                    saveTypeNFState(mCtx, WEICHATTYPE, false);
                 }
                 break;
             default:
@@ -133,53 +128,39 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         }
     }
 
-    public static void saveTeleTypeToPreference(Context context, boolean value) {
+    public static void saveTypeNFState(Context context, String tag, boolean value){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(TELETYPE, value).apply();
+        if(tag.equals(TELETYPE)){
+            pref.edit().putBoolean(TELETYPE, value).apply();
+        }else if(tag.equals(EMAILTYPE)){
+            pref.edit().putBoolean(EMAILTYPE, value).apply();
+        }else if(tag.equals(FACETYPE)){
+            pref.edit().putBoolean(FACETYPE, value).apply();
+        }else if(tag.equals(SMSTYPE)){
+            pref.edit().putBoolean(SMSTYPE, value).apply();
+        }else if(tag.equals(CALTYPE)){
+            pref.edit().putBoolean(CALTYPE, value).apply();
+        }else if(tag.equals(WEICHATTYPE)){
+            pref.edit().putBoolean(WEICHATTYPE, value).apply();
+        }
     }
-    public static Boolean getTeleTypeFromPreference(Context context) {
+
+    public static Boolean getTypeNFState(Context context, String tag){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(TELETYPE, false);
-    }
-    public static void saveEmailTypeToPreference(Context context, boolean value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(EMAILTYPE, value).apply();
-    }
-    public static Boolean getEmailTypeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(EMAILTYPE, false);
-    }
-    public static void saveFaceTypeToPreference(Context context, boolean value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(FACETYPE, value).apply();
-    }
-    public static Boolean getFaceTypeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(FACETYPE, false);
-    }
-    public static void saveSmsTypeToPreference(Context context, boolean value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(SMSTYPE, value).apply();
-    }
-    public static Boolean getSmsTypeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(SMSTYPE, false);
-    }
-    public static void saveCalTypeToPreference(Context context, boolean value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(CALTYPE, value).apply();
-    }
-    public static Boolean getCalTypeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(CALTYPE, false);
-    }
-    public static void saveWeiChatTypeToPreference(Context context, boolean value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(WEICHATTYPE, value).apply();
-    }
-    public static Boolean getWeiChatTypeFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(WEICHATTYPE, false);
+        if(tag.equals(TELETYPE)){
+            return pref.getBoolean(TELETYPE, false);
+        }else if(tag.equals(EMAILTYPE)){
+            return pref.getBoolean(EMAILTYPE, false);
+        }else if(tag.equals(FACETYPE)){
+            return pref.getBoolean(FACETYPE, false);
+        }else if(tag.equals(SMSTYPE)){
+            return pref.getBoolean(SMSTYPE, false);
+        }else if(tag.equals(CALTYPE)){
+            return pref.getBoolean(CALTYPE, false);
+        }else if(tag.equals(WEICHATTYPE)){
+            return pref.getBoolean(WEICHATTYPE, false);
+        }
+        return false;
     }
 
     class ViewHolder{

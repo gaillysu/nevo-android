@@ -20,12 +20,13 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     private ImageView mOrange;
     private ImageView mRed;
     private ImageView mYellow;
-    public static final int BLUE = 1;
-    public static final int GRASSGREEN = 2;
-    public static final int GREEN = 3;
-    public static final int ORANGE = 4;
-    public static final int RED = 5;
-    public static final int YELLOW = 6;
+
+    public static final int BLUE_LED = 0x010000;
+    public static final int LIGHTGREEN_LED = 0x020000;
+    public static final int GREEN_LED = 0x100000;
+    public static final int ORANGE_LED = 0x080000;
+    public static final int RED_LED = 0x200000;
+    public static final int YELLOW_LED = 0x040000;
     public static final String TELECHOOSENCOLOR = "telechoosencolor";
     public static final String EMAILCHOOSENCOLOR = "emailchoosencolor";
     public static final String FACECHOOSENCOLOR = "facechoosencolor";
@@ -61,32 +62,32 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     private void initLayout(int position){
         switch (position){
             case 0:
-                mChoosenColor = getTeleChoosenColorFromPreference(this);
+                mChoosenColor = getTypeChoosenColor(this, TELECHOOSENCOLOR);
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.call_string));
                 break;
             case 1:
-                mChoosenColor = getEmailChoosenColorFromPreference(this);
+                mChoosenColor = getTypeChoosenColor(this, EMAILCHOOSENCOLOR);
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.email_string));
                 break;
             case 2:
-                mChoosenColor = getFaceChoosenColorFromPreference(this);
+                mChoosenColor = getTypeChoosenColor(this, FACECHOOSENCOLOR);
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.facebook_string));
                 break;
             case 3:
-                mChoosenColor = getSmsChoosenColorFromPreference(this);
+                mChoosenColor = getTypeChoosenColor(this, SMSCHOOSENCOLOR);
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.sms_string));
                 break;
             case 4:
-                mChoosenColor = getCalChoosenColorFromPreference(this);
+                mChoosenColor = getTypeChoosenColor(this, CALCHOOSENCOLOR);
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.calendar_string));
                 break;
             case 5:
-                mChoosenColor = getWechatChoosenColorFromPreference(this);
+                mChoosenColor = getTypeChoosenColor(this, WECHATCHOOSENCOLOR);
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.wechat_string));
                 break;
@@ -98,22 +99,22 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     private void saveChoosenColor(final int position, final int choosenColor){
         switch (position){
             case 0:
-                saveTeleChoosenColorToPreference(this, choosenColor);
+                saveTypeChoosenColor(this, TELECHOOSENCOLOR, choosenColor);
                 break;
             case 1:
-                saveEmailChoosenColorToPreference(this, choosenColor);
+                saveTypeChoosenColor(this, EMAILCHOOSENCOLOR, choosenColor);
                 break;
             case 2:
-                saveFaceChoosenColorToPreference(this, choosenColor);
+                saveTypeChoosenColor(this, FACECHOOSENCOLOR, choosenColor);
                 break;
             case 3:
-                saveSmsChoosenColorToPreference(this, choosenColor);
+                saveTypeChoosenColor(this, SMSCHOOSENCOLOR, choosenColor);
                 break;
             case 4:
-                saveCalChoosenColorToPreference(this, choosenColor);
+                saveTypeChoosenColor(this, CALCHOOSENCOLOR, choosenColor);
                 break;
             case 5:
-                saveWechatChoosenColorToPreference(this, choosenColor);
+                saveTypeChoosenColor(this, WECHATCHOOSENCOLOR, choosenColor);
                 break;
             default:
                 break;
@@ -124,32 +125,32 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.blueImage:
-                mChoosenColor = PaletteActivity.BLUE;
+                mChoosenColor = PaletteActivity.BLUE_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.grassGreenImage:
-                mChoosenColor = PaletteActivity.GRASSGREEN;
+                mChoosenColor = PaletteActivity.LIGHTGREEN_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.greenImage:
-                mChoosenColor = PaletteActivity.GREEN;
+                mChoosenColor = PaletteActivity.GREEN_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.orangeImage:
-                mChoosenColor = PaletteActivity.ORANGE;
+                mChoosenColor = PaletteActivity.ORANGE_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.redImage:
-                mChoosenColor = PaletteActivity.RED;
+                mChoosenColor = PaletteActivity.RED_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.yellowImage:
-                mChoosenColor = PaletteActivity.YELLOW;
+                mChoosenColor = PaletteActivity.YELLOW_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
                 break;
@@ -160,7 +161,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
 
     private void setImageLight(int type){
         switch (type){
-            case PaletteActivity.BLUE:
+            case PaletteActivity.BLUE_LED:
                 mBlue.setSelected(true);
                 mGrassGreen.setSelected(false);
                 mGreen.setSelected(false);
@@ -168,7 +169,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
                 mRed.setSelected(false);
                 mYellow.setSelected(false);
                 break;
-            case PaletteActivity.GRASSGREEN:
+            case PaletteActivity.LIGHTGREEN_LED:
                 mBlue.setSelected(false);
                 mGrassGreen.setSelected(true);
                 mGreen.setSelected(false);
@@ -176,7 +177,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
                 mRed.setSelected(false);
                 mYellow.setSelected(false);
                 break;
-            case PaletteActivity.GREEN:
+            case PaletteActivity.GREEN_LED:
                 mBlue.setSelected(false);
                 mGrassGreen.setSelected(false);
                 mGreen.setSelected(true);
@@ -184,7 +185,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
                 mRed.setSelected(false);
                 mYellow.setSelected(false);
                 break;
-            case PaletteActivity.ORANGE:
+            case PaletteActivity.ORANGE_LED:
                 mBlue.setSelected(false);
                 mGrassGreen.setSelected(false);
                 mGreen.setSelected(false);
@@ -192,7 +193,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
                 mRed.setSelected(false);
                 mYellow.setSelected(false);
                 break;
-            case PaletteActivity.RED:
+            case PaletteActivity.RED_LED:
                 mBlue.setSelected(false);
                 mGrassGreen.setSelected(false);
                 mGreen.setSelected(false);
@@ -200,7 +201,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
                 mRed.setSelected(true);
                 mYellow.setSelected(false);
                 break;
-            case PaletteActivity.YELLOW:
+            case PaletteActivity.YELLOW_LED:
                 mBlue.setSelected(false);
                 mGrassGreen.setSelected(false);
                 mGreen.setSelected(false);
@@ -213,61 +214,38 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    public static void saveTeleChoosenColorToPreference(Context context, int value) {
+    public static void saveTypeChoosenColor(Context context, String tag, int value){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(TELECHOOSENCOLOR, value).apply();
+        if(tag.equals(TELECHOOSENCOLOR)){
+            pref.edit().putInt(TELECHOOSENCOLOR, value).apply();
+        }else if(tag.equals(EMAILCHOOSENCOLOR)){
+            pref.edit().putInt(EMAILCHOOSENCOLOR, value).apply();
+        }else if(tag.equals(FACECHOOSENCOLOR)){
+            pref.edit().putInt(FACECHOOSENCOLOR, value).apply();
+        }else if(tag.equals(SMSCHOOSENCOLOR)){
+            pref.edit().putInt(SMSCHOOSENCOLOR, value).apply();
+        }else if(tag.equals(CALCHOOSENCOLOR)){
+            pref.edit().putInt(CALCHOOSENCOLOR, value).apply();
+        }else if(tag.equals(WECHATCHOOSENCOLOR)){
+            pref.edit().putInt(WECHATCHOOSENCOLOR, value).apply();
+        }
     }
 
-    public static int getTeleChoosenColorFromPreference(Context context) {
+    public static int getTypeChoosenColor(Context context, String tag){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(TELECHOOSENCOLOR, -1);
-    }
-
-    public static void saveEmailChoosenColorToPreference(Context context, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(EMAILCHOOSENCOLOR, value).apply();
-    }
-
-    public static int getEmailChoosenColorFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(EMAILCHOOSENCOLOR, -1);
-    }
-
-    public static void saveFaceChoosenColorToPreference(Context context, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(FACECHOOSENCOLOR, value).apply();
-    }
-
-    public static int getFaceChoosenColorFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(FACECHOOSENCOLOR, -1);
-    }
-
-    public static void saveSmsChoosenColorToPreference(Context context, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(SMSCHOOSENCOLOR, value).apply();
-    }
-
-    public static int getSmsChoosenColorFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(SMSCHOOSENCOLOR, -1);
-    }
-    public static void saveCalChoosenColorToPreference(Context context, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(CALCHOOSENCOLOR, value).apply();
-    }
-
-    public static int getCalChoosenColorFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(CALCHOOSENCOLOR, -1);
-    }
-    public static void saveWechatChoosenColorToPreference(Context context, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(WECHATCHOOSENCOLOR, value).apply();
-    }
-
-    public static int getWechatChoosenColorFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(WECHATCHOOSENCOLOR, -1);
+        if(tag.equals(TELECHOOSENCOLOR)){
+            return pref.getInt(TELECHOOSENCOLOR, -1);
+        }else if(tag.equals(EMAILCHOOSENCOLOR)){
+            return pref.getInt(EMAILCHOOSENCOLOR, -1);
+        }else if(tag.equals(FACECHOOSENCOLOR)){
+            return pref.getInt(FACECHOOSENCOLOR, -1);
+        }else if(tag.equals(SMSCHOOSENCOLOR)){
+            return pref.getInt(SMSCHOOSENCOLOR, -1);
+        }else if(tag.equals(CALCHOOSENCOLOR)){
+            return pref.getInt(CALCHOOSENCOLOR, -1);
+        }else if(tag.equals(WECHATCHOOSENCOLOR)){
+            return pref.getInt(WECHATCHOOSENCOLOR, -1);
+        }
+        return -1;
     }
 }

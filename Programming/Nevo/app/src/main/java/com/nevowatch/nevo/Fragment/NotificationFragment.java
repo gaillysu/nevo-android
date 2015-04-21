@@ -38,14 +38,6 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
         mList.add(new NotificationItem(R.drawable.calendar_icon50, getResources().getString(R.string.calendar_string), R.drawable.setting));
         mList.add(new NotificationItem(R.drawable.wechat_icon50, getResources().getString(R.string.wechat_string), R.drawable.setting));
     }
-/*
-    private void getSwitchButton(){
-        for (int i=0; i<mList.size(); i++){
-            LinearLayout linearLayout = (LinearLayout) mListView.getChildAt(i);
-            mSwitchArray[i] = (Switch)linearLayout.findViewById(R.id.typeSwitch);
-            mSwitchArray[i].setOnCheckedChangeListener(this);
-        }
-    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,12 +47,6 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
         mListView.setAdapter(mAdatper);
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-       // getSwitchButton();
     }
 
     @Override
