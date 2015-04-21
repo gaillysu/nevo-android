@@ -50,6 +50,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem> 
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
         viewHolder.mImage.setTag(position);
+        viewHolder.mSwitch.setTag(position);
         return view;
     }
 
