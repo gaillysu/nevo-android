@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     private ImageView mOrange;
     private ImageView mRed;
     private ImageView mYellow;
+    private ImageView mBack;
 
     public static final int BLUE_LED = 0x010000;
     public static final int LIGHTGREEN_LED = 0x020000;
@@ -39,9 +41,15 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.palette_activity);
 
+        initView();
+        initLayout(mPosition);
+    }
+
+    private void initView(){
         mBlue = (ImageView) findViewById(R.id.blueImage);
         mBlue.setOnClickListener(this);
         mGrassGreen = (ImageView) findViewById(R.id.grassGreenImage);
@@ -56,7 +64,8 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
         mYellow.setOnClickListener(this);
         mTitle = (TextView) findViewById(R.id.typetext);
         mPosition = getIntent().getIntExtra("Position", -1);
-        initLayout(mPosition);
+        mBack = (ImageView) findViewById(R.id.backimage);
+        mBack.setOnClickListener(this);
     }
 
     private void initLayout(int position){
@@ -153,6 +162,9 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
                 mChoosenColor = PaletteActivity.YELLOW_LED;
                 setImageLight(mChoosenColor);
                 saveChoosenColor(mPosition, mChoosenColor);
+                break;
+            case R.id.backimage:
+                finish();
                 break;
             default:
                 break;
