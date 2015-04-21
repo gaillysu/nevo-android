@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * ColorPanelActivity
@@ -31,8 +32,9 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     public static final String SMSCHOOSENCOLOR = "smschoosencolor";
     public static final String CALCHOOSENCOLOR = "calchoosencolor";
     public static final String WECHATCHOOSENCOLOR = "wechatchoosencolor";
-    private int choosenColor = -1;
-    private int position = -1;
+    private int mChoosenColor = -1;
+    private int mPosition = -1;
+    private TextView mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,36 +53,42 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
         mRed.setOnClickListener(this);
         mYellow = (ImageView) findViewById(R.id.yellowImage);
         mYellow.setOnClickListener(this);
-
-        position = getIntent().getIntExtra("Position", -1);
-        initLayout(position);
+        mTitle = (TextView) findViewById(R.id.typetext);
+        mPosition = getIntent().getIntExtra("Position", -1);
+        initLayout(mPosition);
     }
 
     private void initLayout(int position){
         switch (position){
             case 0:
-                choosenColor = getTeleChoosenColorFromPreference(this);
-                setImageLight(choosenColor);
+                mChoosenColor = getTeleChoosenColorFromPreference(this);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.call_string));
                 break;
             case 1:
-                choosenColor = getEmailChoosenColorFromPreference(this);
-                setImageLight(choosenColor);
+                mChoosenColor = getEmailChoosenColorFromPreference(this);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.email_string));
                 break;
             case 2:
-                choosenColor = getFaceChoosenColorFromPreference(this);
-                setImageLight(choosenColor);
+                mChoosenColor = getFaceChoosenColorFromPreference(this);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.facebook_string));
                 break;
             case 3:
-                choosenColor = getSmsChoosenColorFromPreference(this);
-                setImageLight(choosenColor);
+                mChoosenColor = getSmsChoosenColorFromPreference(this);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.sms_string));
                 break;
             case 4:
-                choosenColor = getCalChoosenColorFromPreference(this);
-                setImageLight(choosenColor);
+                mChoosenColor = getCalChoosenColorFromPreference(this);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.calendar_string));
                 break;
             case 5:
-                choosenColor = getWechatChoosenColorFromPreference(this);
-                setImageLight(choosenColor);
+                mChoosenColor = getWechatChoosenColorFromPreference(this);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.wechat_string));
                 break;
             default:
                 break;
@@ -116,34 +124,34 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.blueImage:
-                choosenColor = PaletteActivity.BLUE;
-                setImageLight(choosenColor);
-                saveChoosenColor(position, choosenColor);
+                mChoosenColor = PaletteActivity.BLUE;
+                setImageLight(mChoosenColor);
+                saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.grassGreenImage:
-                choosenColor = PaletteActivity.GRASSGREEN;
-                setImageLight(choosenColor);
-                saveChoosenColor(position, choosenColor);
+                mChoosenColor = PaletteActivity.GRASSGREEN;
+                setImageLight(mChoosenColor);
+                saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.greenImage:
-                choosenColor = PaletteActivity.GREEN;
-                setImageLight(choosenColor);
-                saveChoosenColor(position, choosenColor);
+                mChoosenColor = PaletteActivity.GREEN;
+                setImageLight(mChoosenColor);
+                saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.orangeImage:
-                choosenColor = PaletteActivity.ORANGE;
-                setImageLight(choosenColor);
-                saveChoosenColor(position, choosenColor);
+                mChoosenColor = PaletteActivity.ORANGE;
+                setImageLight(mChoosenColor);
+                saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.redImage:
-                choosenColor = PaletteActivity.RED;
-                setImageLight(choosenColor);
-                saveChoosenColor(position, choosenColor);
+                mChoosenColor = PaletteActivity.RED;
+                setImageLight(mChoosenColor);
+                saveChoosenColor(mPosition, mChoosenColor);
                 break;
             case R.id.yellowImage:
-                choosenColor = PaletteActivity.YELLOW;
-                setImageLight(choosenColor);
-                saveChoosenColor(position, choosenColor);
+                mChoosenColor = PaletteActivity.YELLOW;
+                setImageLight(mChoosenColor);
+                saveChoosenColor(mPosition, mChoosenColor);
                 break;
             default:
                 break;
