@@ -13,4 +13,12 @@
             <enum name="FILL" value="1"></enum>
         </attr>
     </declare-styleable> 
+    <declare-styleable name="SwitchButton">
+        <attr name="frameDrawable" format="reference|color"/>
+        <attr name="stateDrawable" format="reference|color"/>
+        <attr name="stateMaskDrawable" format="reference|color"/>
+        <attr name="sliderDrawable" format="reference|color"/>
+        <attr name="withTextInterval" format="dimension"/>
+    </declare-styleable>
+
 </resources>
