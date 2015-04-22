@@ -39,6 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/typeImage"
             android:focusable="false"
+            android:switchMinWidth="60dp"
             android:thumb="@drawable/switch_bg"
             android:track="@drawable/track_bg"/>
 
