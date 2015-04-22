@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
+
 /**
  * ColorPanelActivity
  */
@@ -23,12 +25,12 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     private ImageView mYellow;
     private ImageView mBack;
 
-    public static final int BLUE_LED = 0x010000;
-    public static final int LIGHTGREEN_LED = 0x020000;
-    public static final int GREEN_LED = 0x100000;
-    public static final int ORANGE_LED = 0x080000;
-    public static final int RED_LED = 0x200000;
-    public static final int YELLOW_LED = 0x040000;
+    public static final int BLUE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.BLUE_LED;
+    public static final int LIGHTGREEN_LED = SetNotificationNevoRequest.SetNortificationRequestValues.LIGHTGREEN_LED;
+    public static final int GREEN_LED = SetNotificationNevoRequest.SetNortificationRequestValues.GREEN_LED;
+    public static final int ORANGE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.ORANGE_LED;
+    public static final int RED_LED = SetNotificationNevoRequest.SetNortificationRequestValues.RED_LED;
+    public static final int YELLOW_LED = SetNotificationNevoRequest.SetNortificationRequestValues.YELLOW_LED;
     public static final String TELECHOOSENCOLOR = "telechoosencolor";
     public static final String EMAILCHOOSENCOLOR = "emailchoosencolor";
     public static final String FACECHOOSENCOLOR = "facechoosencolor";
