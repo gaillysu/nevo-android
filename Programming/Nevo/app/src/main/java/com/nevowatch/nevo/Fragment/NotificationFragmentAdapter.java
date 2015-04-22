@@ -1,7 +1,6 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 
@@ -24,7 +22,7 @@ import java.util.List;
  * NotificationFragmentAdapter populates items for ListView
  */
 public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
-        implements View.OnClickListener, Switch.OnCheckedChangeListener{
+        implements Switch.OnCheckedChangeListener{
 
     private int mListItemResourceId;
     private Context mCtx;
@@ -64,19 +62,9 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         viewHolder.mIcon.setImageResource(item.getmIcon());
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
-        viewHolder.mImage.setTag(position);
-        viewHolder.mImage.setOnClickListener(this);
         viewHolder.mSwitch.setTag(position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
         return view;
-    }
-
-    @Override
-    public void onClick(View v) {
-        int position = (int) v.getTag();
-        Intent intent = new Intent(mCtx, PaletteActivity.class);
-        intent.putExtra("Position", position);
-        mCtx.startActivity(intent);
     }
 
     @Override
