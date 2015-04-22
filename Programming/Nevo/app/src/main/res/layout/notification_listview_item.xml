@@ -38,7 +38,9 @@
             android:layout_gravity="center_vertical|right"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/typeImage"
-            android:focusable="false"/>
+            android:focusable="false"
+            android:thumb="@drawable/switch_bg"
+            android:track="@drawable/track_bg"/>
 
         <ImageView
             android:layout_width="30dp"

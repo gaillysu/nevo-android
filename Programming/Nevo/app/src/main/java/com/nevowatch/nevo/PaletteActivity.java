@@ -254,17 +254,17 @@ public class PaletteActivity extends Activity
     public static int getTypeChoosenColor(Context context, String tag){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         if(tag.equals(TELECHOOSENCOLOR)){
-            return pref.getInt(TELECHOOSENCOLOR, -1);
+            return pref.getInt(TELECHOOSENCOLOR, YELLOW_LED);
         }else if(tag.equals(EMAILCHOOSENCOLOR)){
-            return pref.getInt(EMAILCHOOSENCOLOR, -1);
+            return pref.getInt(EMAILCHOOSENCOLOR, BLUE_LED);
         }else if(tag.equals(FACECHOOSENCOLOR)){
-            return pref.getInt(FACECHOOSENCOLOR, -1);
+            return pref.getInt(FACECHOOSENCOLOR, LIGHTGREEN_LED);
         }else if(tag.equals(SMSCHOOSENCOLOR)){
-            return pref.getInt(SMSCHOOSENCOLOR, -1);
+            return pref.getInt(SMSCHOOSENCOLOR, RED_LED);
         }else if(tag.equals(CALCHOOSENCOLOR)){
-            return pref.getInt(CALCHOOSENCOLOR, -1);
+            return pref.getInt(CALCHOOSENCOLOR, GREEN_LED);
         }else if(tag.equals(WECHATCHOOSENCOLOR)){
-            return pref.getInt(WECHATCHOOSENCOLOR, -1);
+            return pref.getInt(WECHATCHOOSENCOLOR, ORANGE_LED);
         }
         return -1;
     }
