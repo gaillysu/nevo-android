@@ -44,7 +44,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/grassGreenImage"
-            android:background="@drawable/palette_grassgreenimage"
+            android:background="@drawable/palette_greenimageview"
             android:layout_marginTop="17dp"
             android:layout_alignTop="@+id/paletteImage"
             android:layout_centerHorizontal="true" />
@@ -72,7 +72,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/greenImage"
-            android:background="@drawable/palette_greenimageview"
+            android:background="@drawable/palette_grassgreenimage"
             android:layout_alignBottom="@+id/paletteImage"
             android:layout_alignStart="@+id/grassGreenImage"
             android:layout_marginBottom="16dp"/>
