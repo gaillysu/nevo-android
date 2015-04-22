@@ -123,7 +123,7 @@ public class NavigationDrawerFragment extends Fragment {
         NavigationDrawerAdapter navigationDrawerAdapter = new NavigationDrawerAdapter(getActivity(), R.layout.navigation_drawer_list_item, mIconList);
 
         mDrawerListView.setAdapter(navigationDrawerAdapter);
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        //mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
 

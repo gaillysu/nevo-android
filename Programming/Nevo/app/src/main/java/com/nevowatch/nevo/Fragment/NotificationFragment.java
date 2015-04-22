@@ -1,15 +1,18 @@
 package com.nevowatch.nevo.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Switch;
 
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
@@ -22,7 +25,8 @@ import java.util.List;
 /**
  * NotificationFragment
  */
-public class NotificationFragment extends Fragment implements OnSyncControllerListener{
+public class NotificationFragment extends Fragment
+        implements OnSyncControllerListener, AdapterView.OnItemClickListener{
 
     public static final String NotificationFragment = "Notification Fragment";
     private ListView mListView;
@@ -47,6 +51,7 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
         mAdatper = new NotificationFragmentAdapter(getActivity(), R.layout.notification_listview_item, mList);
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
         mListView.setAdapter(mAdatper);
+        mListView.setOnItemClickListener(this);
         return rootView;
     }
 
@@ -66,5 +71,12 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
     @Override
     public void connectionStateChanged(boolean isConnected) {
         ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?NotificationFragment:ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(getActivity(), PaletteActivity.class);
+        intent.putExtra("Position", position);
+        getActivity().startActivity(intent);
     }
 }
