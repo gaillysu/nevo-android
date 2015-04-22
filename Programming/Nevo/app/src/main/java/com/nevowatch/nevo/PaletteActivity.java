@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -27,12 +28,14 @@ public class PaletteActivity extends Activity
     private ImageView mRed;
     private ImageView mYellow;
     private ImageView mBack;
-    public static final int BLUE_LED = 0x010000;
-    public static final int LIGHTGREEN_LED = 0x020000;
-    public static final int GREEN_LED = 0x100000;
-    public static final int ORANGE_LED = 0x080000;
-    public static final int RED_LED = 0x200000;
-    public static final int YELLOW_LED = 0x040000;
+
+    public static final int BLUE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.BLUE_LED;
+    public static final int LIGHTGREEN_LED = SetNotificationNevoRequest.SetNortificationRequestValues.LIGHTGREEN_LED;
+    public static final int GREEN_LED = SetNotificationNevoRequest.SetNortificationRequestValues.GREEN_LED;
+    public static final int ORANGE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.ORANGE_LED;
+    public static final int RED_LED = SetNotificationNevoRequest.SetNortificationRequestValues.RED_LED;
+    public static final int YELLOW_LED = SetNotificationNevoRequest.SetNortificationRequestValues.YELLOW_LED;
+
     public static final String TELECHOOSENCOLOR = "telechoosencolor";
     public static final String EMAILCHOOSENCOLOR = "emailchoosencolor";
     public static final String FACECHOOSENCOLOR = "facechoosencolor";
@@ -251,17 +254,17 @@ public class PaletteActivity extends Activity
     public static int getTypeChoosenColor(Context context, String tag){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         if(tag.equals(TELECHOOSENCOLOR)){
-            return pref.getInt(TELECHOOSENCOLOR, -1);
+            return pref.getInt(TELECHOOSENCOLOR, YELLOW_LED);
         }else if(tag.equals(EMAILCHOOSENCOLOR)){
-            return pref.getInt(EMAILCHOOSENCOLOR, -1);
+            return pref.getInt(EMAILCHOOSENCOLOR, BLUE_LED);
         }else if(tag.equals(FACECHOOSENCOLOR)){
-            return pref.getInt(FACECHOOSENCOLOR, -1);
+            return pref.getInt(FACECHOOSENCOLOR, LIGHTGREEN_LED);
         }else if(tag.equals(SMSCHOOSENCOLOR)){
-            return pref.getInt(SMSCHOOSENCOLOR, -1);
+            return pref.getInt(SMSCHOOSENCOLOR, RED_LED);
         }else if(tag.equals(CALCHOOSENCOLOR)){
-            return pref.getInt(CALCHOOSENCOLOR, -1);
+            return pref.getInt(CALCHOOSENCOLOR, GREEN_LED);
         }else if(tag.equals(WECHATCHOOSENCOLOR)){
-            return pref.getInt(WECHATCHOOSENCOLOR, -1);
+            return pref.getInt(WECHATCHOOSENCOLOR, ORANGE_LED);
         }
         return -1;
     }

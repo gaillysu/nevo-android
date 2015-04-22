@@ -7,6 +7,8 @@ package com.nevowatch.nevo.ble.notification;
 import java.util.Date;
 
 
+import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
+import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.kernel.QuickBT;
@@ -54,7 +56,8 @@ public class NevoNotificationListener extends NotificationListenerService {
                     || arg0.getPackageName().equals("com.android.dialer")) {
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                sendNotification(NotificationType.Call, 1);
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.TELETYPE))
+                sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.TELECHOOSENCOLOR));
             }
 
             //native mms or hangouts
@@ -64,7 +67,8 @@ public class NevoNotificationListener extends NotificationListenerService {
                     ) {
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                sendNotification(NotificationType.SMS, mNotification.number);
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.SMSTYPE))
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.SMSCHOOSENCOLOR));
             }
 
             //email,native email or gmail client
@@ -76,26 +80,30 @@ public class NevoNotificationListener extends NotificationListenerService {
                     || arg0.getPackageName().equals("com.outlook.Z7")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                sendNotification(NotificationType.Email, mNotification.number);
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.EMAILTYPE))
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.EMAILCHOOSENCOLOR));
             }
             //calendar
             else if(arg0.getPackageName().equals("com.google.android.calendar")
                     || arg0.getPackageName().equals("com.android.calendar")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                sendNotification(NotificationType.Calendar, mNotification.number);
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.CALTYPE))
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.CALCHOOSENCOLOR));
             }
             //facebook
             else if(arg0.getPackageName().equals("com.facebook.katana")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                sendNotification(NotificationType.Facebook, mNotification.number);
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.FACETYPE))
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.FACECHOOSENCOLOR));
             }
             //wechat
             else if(arg0.getPackageName().equals("com.tencent.mm")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                sendNotification(NotificationType.Wechat, mNotification.number);
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WEICHATTYPE))
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WECHATCHOOSENCOLOR));
             }
         }
     }
@@ -105,7 +113,7 @@ public class NevoNotificationListener extends NotificationListenerService {
         //How do we remove incoming notifications from the watch ?
     }
 
-    void sendNotification(NotificationType type, int num) {
+    void sendNotificationApi(NotificationType type, int num) {
 
         //We can't accept notifications if we just received one X ms ago
         if(lastNotification.notEmpty() && new Date().getTime()-lastNotification.get().getTime() < TIME_BETWEEN_TWO_NOTIFS) return ;
@@ -113,20 +121,18 @@ public class NevoNotificationListener extends NotificationListenerService {
         lastNotification.set(new Date());
 
         QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
-        //bt.send(new SendNotificationNevoRequest(type, num));
-        //TODO : use default for test QuickBT function, when user notification setting done, should use the selected color led
-        if (type == NotificationType.Call)
-            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.YELLOW_LED,true));
-        if (type == NotificationType.SMS)
-            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.RED_LED,true));
-        if (type == NotificationType.Email)
-            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.BLUE_LED,true));
-        if (type == NotificationType.Calendar)
-            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.GREEN_LED,true));
-        if (type == NotificationType.Facebook)
-            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.LIGHTGREEN_LED,true));
-        if (type == NotificationType.Wechat)
-            bt.send(new LedLightOnOffNevoRequest(SetNotificationNevoRequest.SetNortificationRequestValues.ORANGE_LED,true));
+        bt.send(new SendNotificationNevoRequest(type, num));
+    }
+    void sendNotification(int ledcolor) {
+
+        //We can't accept notifications if we just received one X ms ago
+        if(lastNotification.notEmpty() && new Date().getTime()-lastNotification.get().getTime() < TIME_BETWEEN_TWO_NOTIFS) return ;
+
+        lastNotification.set(new Date());
+
+        QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
+
+        bt.send(new LedLightOnOffNevoRequest(ledcolor,true));
 
     }
 

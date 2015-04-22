@@ -26,12 +26,12 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     private int mListItemResourceId;
     private Context mCtx;
-    private static final String TELETYPE = "tele";
-    private static final String EMAILTYPE = "email";
-    private static final String FACETYPE = "facebook";
-    private static final String SMSTYPE = "sms";
-    private static final String CALTYPE = "calendar";
-    private static final String WEICHATTYPE = "weichat";
+    public static final String TELETYPE = "tele";
+    public static final String EMAILTYPE = "email";
+    public static final String FACETYPE = "facebook";
+    public static final String SMSTYPE = "sms";
+    public static final String CALTYPE = "calendar";
+    public static final String WEICHATTYPE = "weichat";
 
     public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects){
         super(context, mListItemResourceId, objects);
