@@ -3,8 +3,8 @@ package com.nevowatch.nevo.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +75,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     public void onClick(View v) {
         int position = (int) v.getTag();
         Intent intent = new Intent(mCtx, PaletteActivity.class);
-        Bundle bundle = new Bundle();
         intent.putExtra("Position", position);
         mCtx.startActivity(intent);
     }
@@ -86,15 +85,19 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             case 0:
                 if(isChecked){
                     saveTypeNFState(mCtx, TELETYPE, true);
+                    Log.d("SWITCH0", "ON");
                 }else {
                     saveTypeNFState(mCtx, TELETYPE, false);
+                    Log.d("SWITCH0", "OFF");
                 }
                 break;
             case 1:
                 if(isChecked){
                     saveTypeNFState(mCtx, EMAILTYPE, true);
+                    Log.d("SWITCH1", "ON");
                 }else {
                     saveTypeNFState(mCtx, EMAILTYPE, false);
+                    Log.d("SWITCH1", "OFF");
                 }
                 break;
             case 2:
