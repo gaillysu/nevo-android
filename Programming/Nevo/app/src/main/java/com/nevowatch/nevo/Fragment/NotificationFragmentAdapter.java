@@ -3,6 +3,7 @@ package com.nevowatch.nevo.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     public void onClick(View v) {
         int position = (int) v.getTag();
         Intent intent = new Intent(mCtx, PaletteActivity.class);
+        Bundle bundle = new Bundle();
         intent.putExtra("Position", position);
         mCtx.startActivity(intent);
     }

@@ -13,6 +13,7 @@ import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 import java.util.ArrayList;
@@ -47,6 +48,14 @@ public class NotificationFragment extends Fragment implements OnSyncControllerLi
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
         mListView.setAdapter(mAdatper);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
+            ((MainActivity)getActivity()).replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
+        }
     }
 
     @Override

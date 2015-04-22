@@ -11,11 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
+import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.SyncController;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 
 /**
  * ColorPanelActivity
  */
-public class PaletteActivity extends Activity implements View.OnClickListener{
+public class PaletteActivity extends Activity
+        implements View.OnClickListener, OnSyncControllerListener{
 
     private ImageView mBlue;
     private ImageView mGrassGreen;
@@ -31,6 +35,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
     public static final int ORANGE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.ORANGE_LED;
     public static final int RED_LED = SetNotificationNevoRequest.SetNortificationRequestValues.RED_LED;
     public static final int YELLOW_LED = SetNotificationNevoRequest.SetNortificationRequestValues.YELLOW_LED;
+
     public static final String TELECHOOSENCOLOR = "telechoosencolor";
     public static final String EMAILCHOOSENCOLOR = "emailchoosencolor";
     public static final String FACECHOOSENCOLOR = "facechoosencolor";
@@ -49,6 +54,7 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
 
         initView();
         initLayout(mPosition);
+        SyncController.Singleton.getInstance(this).startConnect(false, this);
     }
 
     private void initView(){
@@ -261,5 +267,17 @@ public class PaletteActivity extends Activity implements View.OnClickListener{
             return pref.getInt(WECHATCHOOSENCOLOR, -1);
         }
         return -1;
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+
+    }
+
+    @Override
+    public void connectionStateChanged(boolean isConnected) {
+        if(!isConnected){
+            finish();
+        }
     }
 }
