@@ -10,6 +10,7 @@
         android:layout_height="60dp"
         android:textSize="20sp"
         android:textColor="@color/white"
+        android:id="@+id/palette_title"
         android:text="@string/title_section4"
         android:background="@color/customBlack"
         android:gravity="center"

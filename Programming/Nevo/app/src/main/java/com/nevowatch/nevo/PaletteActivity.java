@@ -55,6 +55,12 @@ public class PaletteActivity extends Activity
         initView();
         initLayout(mPosition);
         SyncController.Singleton.getInstance(this).startConnect(false, this);
+
+        View [] viewArray = new View []{
+                findViewById(R.id.palette_title),
+                findViewById(R.id.typetext),
+        };
+        FontManager.changeFonts(viewArray,this);
     }
 
     private void initView(){
