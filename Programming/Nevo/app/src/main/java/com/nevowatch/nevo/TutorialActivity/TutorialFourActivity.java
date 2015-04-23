@@ -43,7 +43,6 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
             mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
             mConnectButton.setClickable(false);
             mFinishButton.setVisibility(View.VISIBLE);
-            //mConnectImg.setImageResource(R.drawable.);
         }
 
         View [] viewArray = new View []{

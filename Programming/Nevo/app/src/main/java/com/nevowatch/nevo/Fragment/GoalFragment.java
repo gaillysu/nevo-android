@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
