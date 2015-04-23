@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
-import com.nevowatch.nevo.View.SwitchButton;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             viewHolder = new ViewHolder();
             viewHolder.mIcon = (ImageView) view.findViewById(R.id.typeIconImage);
             viewHolder.mLabel = (TextView) view.findViewById(R.id.typeTextView);
-            viewHolder.mSwitch = (SwitchButton) view.findViewById(R.id.typeSwitch);
+            viewHolder.mSwitch = (Switch) view.findViewById(R.id.typeSwitch);
             viewHolder.mImage = (ImageView) view.findViewById(R.id.typeImage);
             view.setTag(viewHolder);
         }else{
@@ -161,7 +160,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
         ImageView mIcon;
         TextView mLabel;
-        SwitchButton mSwitch;
+        Switch mSwitch;
         ImageView mImage;
     }
 }
