@@ -66,6 +66,7 @@ public class NotificationFragment extends Fragment
         if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
             ((MainActivity)getActivity()).replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
         }
+        mAdatper.notifyDataSetChanged();
     }
 
     @Override

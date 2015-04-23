@@ -61,8 +61,35 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
         viewHolder.mSwitch.setTag(position);
+        initSwitch(viewHolder.mSwitch, position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
         return view;
+    }
+
+    private void initSwitch(Switch sw, int position){
+        switch (position){
+            case 0:
+                sw.setChecked(getTypeNFState(mCtx, TELETYPE));
+                break;
+            case 1:
+                sw.setChecked(getTypeNFState(mCtx, EMAILTYPE));
+                break;
+            case 2:
+                sw.setChecked(getTypeNFState(mCtx, FACETYPE));
+                break;
+            case 3:
+                sw.setChecked(getTypeNFState(mCtx, SMSTYPE));
+                break;
+            case 4:
+                sw.setChecked(getTypeNFState(mCtx, CALTYPE));
+                break;
+            case 5:
+                sw.setChecked(getTypeNFState(mCtx, WEICHATTYPE));
+                break;
+            default:
+                sw.setChecked(false);
+                break;
+        }
     }
 
     @Override
