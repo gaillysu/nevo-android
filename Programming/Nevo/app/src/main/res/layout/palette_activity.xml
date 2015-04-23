@@ -5,16 +5,32 @@
     android:orientation="vertical"
     android:background="@color/customWhite">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:id="@+id/palette_title"
-        android:text="@string/title_section4"
-        android:background="@color/customBlack"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:id="@+id/palette_title"
+            android:text="@string/title_section4"
+            android:background="@color/customBlack"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/backimage"
+            android:background="@drawable/back"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="37dp" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,16 +45,6 @@
             android:textColor="@color/white"
             android:background="@color/customOrange"
             android:gravity="center"/>
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/backimage"
-            android:background="@drawable/back"
-            android:layout_alignTop="@+id/typetext"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentStart="true" />
 
         <ImageView
             android:layout_width="300dp"
@@ -63,10 +69,10 @@
             android:layout_height="40dp"
             android:id="@+id/orangeImage"
             android:background="@drawable/palette_orangeimage"
-            android:layout_marginTop="17dp"
-            android:layout_marginStart="7dp"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="15dp"
             android:layout_below="@+id/grassGreenImage"
-            android:layout_toEndOf="@+id/backimage" />
+            android:layout_alignStart="@+id/paletteImage" />
 
         <ImageView
             android:layout_width="40dp"

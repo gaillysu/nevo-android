@@ -23,34 +23,39 @@
             android:layout_marginLeft="15dp" />-->
 
         <TextView
-            android:layout_width="65sp"
+            android:layout_width="95sp"
             android:layout_height="60sp"
             android:id="@+id/typeTextView"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:layout_centerVertical="true"/>
+            android:gravity="left|center"
+            android:layout_centerVertical="true"
+            android:textColor="@color/customBlack"
+            android:textSize="20sp"
+            android:layout_marginLeft="50dp"/>
 
         <Switch
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/typeSwitch"
             android:layout_gravity="center_vertical|right"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/typeImage"
+            android:layout_marginRight="20dp"
             android:focusable="false"
             android:switchMinWidth="60dp"
             android:textOn=""
             android:textOff=""
             android:thumb="@drawable/switch_bg"
-            android:track="@drawable/track_bg"/>
+            android:track="@drawable/track_bg"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/typeImage" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/typeImage"
-            android:layout_gravity="center_vertical|right"
-            android:layout_alignTop="@+id/typeSwitch"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"/>
+            android:layout_gravity="right|center"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 </LinearLayout>
