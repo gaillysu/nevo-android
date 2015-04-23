@@ -81,6 +81,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
                 if(isChecked){
                     saveTypeNFState(mCtx, EMAILTYPE, true);
                     Log.d("SWITCH1", "ON");
+                    buttonView.setEnabled(true);
                 }else {
                     saveTypeNFState(mCtx, EMAILTYPE, false);
                     Log.d("SWITCH1", "OFF");
