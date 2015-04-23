@@ -49,7 +49,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         if(convertView == null){
             view = LayoutInflater.from(getContext()).inflate(mListItemResourceId, null);
             viewHolder = new ViewHolder();
-            viewHolder.mIcon = (ImageView) view.findViewById(R.id.typeIconImage);
             viewHolder.mLabel = (TextView) view.findViewById(R.id.typeTextView);
             viewHolder.mSwitch = (Switch) view.findViewById(R.id.typeSwitch);
             viewHolder.mImage = (ImageView) view.findViewById(R.id.typeImage);
@@ -59,7 +58,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.mIcon.setImageResource(item.getmIcon());
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
         viewHolder.mSwitch.setTag(position);
@@ -158,7 +156,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     class ViewHolder{
 
-        ImageView mIcon;
         TextView mLabel;
         Switch mSwitch;
         ImageView mImage;

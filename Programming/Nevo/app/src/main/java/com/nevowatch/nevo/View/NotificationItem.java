@@ -5,18 +5,12 @@ package com.nevowatch.nevo.View;
  */
 public class NotificationItem {
 
-    private int mIcon;
     private CharSequence mLabel;
     private int mImage;
 
-    public NotificationItem(int icon, CharSequence text, int img){
-        this.mIcon = icon;
+    public NotificationItem(CharSequence text, int img){
         this.mLabel = text;
         this.mImage = img;
-    }
-
-    public int getmIcon() {
-        return mIcon;
     }
 
     public CharSequence getmLabel() {
