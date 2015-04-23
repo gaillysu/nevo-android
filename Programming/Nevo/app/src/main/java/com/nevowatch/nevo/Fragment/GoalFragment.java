@@ -183,7 +183,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
 
     public static int getGoalModeFromPreference(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(PREF_KEY_STEP_MODE, CUSTOM);
+        return pref.getInt(PREF_KEY_STEP_MODE, MODERATE);
     }
     @Override
     public void packetReceived(NevoPacket packet) {
