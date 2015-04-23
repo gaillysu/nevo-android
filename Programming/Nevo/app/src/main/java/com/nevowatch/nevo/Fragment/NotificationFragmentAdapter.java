@@ -3,7 +3,6 @@ package com.nevowatch.nevo.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.FontManager;
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 
@@ -26,6 +27,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     private int mListItemResourceId;
     private Context mCtx;
+    private View [] mViewArray;
     public static final String TELETYPE = "tele";
     public static final String EMAILTYPE = "email";
     public static final String FACETYPE = "facebook";
@@ -63,6 +65,12 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         viewHolder.mSwitch.setTag(position);
         initSwitch(viewHolder.mSwitch, position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
+
+        mViewArray = new View []{
+                viewHolder.mLabel
+        };
+        FontManager.changeFonts(mViewArray, (MainActivity) mCtx);
+
         return view;
     }
 
@@ -98,20 +106,15 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             case 0:
                 if(isChecked){
                     saveTypeNFState(mCtx, TELETYPE, true);
-                    Log.d("SWITCH0", "ON");
                 }else {
                     saveTypeNFState(mCtx, TELETYPE, false);
-                    Log.d("SWITCH0", "OFF");
                 }
                 break;
             case 1:
                 if(isChecked){
                     saveTypeNFState(mCtx, EMAILTYPE, true);
-                    Log.d("SWITCH1", "ON");
-                    buttonView.setEnabled(true);
                 }else {
                     saveTypeNFState(mCtx, EMAILTYPE, false);
-                    Log.d("SWITCH1", "OFF");
                 }
                 break;
             case 2:

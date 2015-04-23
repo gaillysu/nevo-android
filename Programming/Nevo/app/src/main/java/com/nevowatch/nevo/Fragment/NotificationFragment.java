@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
@@ -51,11 +50,6 @@ public class NotificationFragment extends Fragment
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
         mListView.setAdapter(mAdatper);
         mListView.setOnItemClickListener(this);
-
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.typeTextView),
-        };
-        FontManager.changeFonts(viewArray, getActivity());
 
         return rootView;
     }
