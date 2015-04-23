@@ -5,6 +5,16 @@
     android:orientation="vertical"
     android:background="@color/customWhite">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:text="@string/title_section4"
+        android:background="@color/customBlack"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,11 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/typetext"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:background="@color/customBlack"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:background="@color/customOrange"
             android:gravity="center"/>
 
         <ImageView

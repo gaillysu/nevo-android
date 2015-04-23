@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Switch;
 
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.PaletteActivity;
@@ -32,7 +31,6 @@ public class NotificationFragment extends Fragment
     private ListView mListView;
     private List<NotificationItem> mList;
     private NotificationFragmentAdapter mAdatper;
-    private Switch[] mSwitchArray = new Switch[]{};
 
     private void initListView(){
         mList = new ArrayList<NotificationItem>();
