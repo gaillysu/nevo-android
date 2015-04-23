@@ -40,7 +40,7 @@
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="20dp"
             android:focusable="false"
-            android:switchMinWidth="60dp"
+            android:switchMinWidth="70dp"
             android:textOn=""
             android:textOff=""
             android:thumb="@drawable/switch_bg"
