@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
+import com.nevowatch.nevo.R;
 
 /**
  * Tutorial Two
@@ -38,8 +38,6 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
         mBLEStatus = (TextView) findViewById(R.id.t2_bluetoothEnabled);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        BLEState();
-
         View [] viewArray = new View []{
                 findViewById(R.id.t2_backButton),
                 findViewById(R.id.t2_bluetoothEnabled),
@@ -47,6 +45,12 @@ public class TutorialTwoActivity extends Activity implements View.OnClickListene
                 findViewById(R.id.t2_nextButton)
         };
         FontManager.changeFonts(viewArray,this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        BLEState();
     }
 
     private  void BLEState(){

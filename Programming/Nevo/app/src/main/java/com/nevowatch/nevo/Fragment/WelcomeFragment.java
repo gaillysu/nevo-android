@@ -37,19 +37,13 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private TextView mTextView;
     private int mCurHour, mCurMin, mTempMin = -1;
     private static int mCurrentSteps = 0;
-    private static int mDailyGoal = 0;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
         public void run() {
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,6000);
-            if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
-                SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
-                setText(mCurrentSteps + "/" + mDailyGoal);
-                setProgressBar((int) (100.0 * mCurrentSteps / mDailyGoal));
-            }
+            mUiHandler.postDelayed(mTimerTask,60000);
         }
     };
 
@@ -77,6 +71,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         };
         FontManager.changeFonts(viewArray,getActivity());
 
+
         return rootView;
     }
 
@@ -86,30 +81,16 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
         //when app start,syncController is connecting, send this cmd, will lead to  timeout
         // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
-            initLayout(true);
-        }else {
-            initLayout(false);
-        }
-
-/*      double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
+        if (SyncController.Singleton.getInstance(getActivity()).isConnected())
+            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+        double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str = mCurrentSteps + "/" + StepPickerView.getStepTextFromPreference(getActivity());
         if (!SyncController.Singleton.getInstance(getActivity()).isConnected())
             str = "-/" + StepPickerView.getStepTextFromPreference(getActivity());
-        setText(str);*/
+        setText(str);
         refreshTime();
         mUiHandler.post(mTimerTask);
-    }
-
-    private void initLayout(boolean connected){
-        if(connected){
-            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
-        }else {
-            double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
-            setProgressBar((int)((0/tmp)*100));
-            setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
-        }
     }
 
     public void setHour(final float degree) {
@@ -163,7 +144,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             int dailyGoal = steppacket.getDailyStepsGoal();
             Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mCurrentSteps = dailySteps;
-            mDailyGoal = dailyGoal;
             setText(dailySteps + "/" + dailyGoal);
             setProgressBar((int) (100.0 * dailySteps / dailyGoal));
             StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
@@ -172,7 +152,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected)
-            initLayout(false);
+        //DO NOTHING
     }
 }
