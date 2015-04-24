@@ -83,12 +83,9 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         //when app start,syncController is connecting, send this cmd, will lead to  timeout
         // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
         if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
-            setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
-            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+            initLayout(true);
         }else {
-            double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
-            setProgressBar((int)((0/tmp)*100));
-            setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
+            initLayout(false);
         }
 
 /*        double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
@@ -99,6 +96,16 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         setText(str);*/
         refreshTime();
         mUiHandler.post(mTimerTask);
+    }
+
+    private void initLayout(boolean connected){
+        if(connected){
+            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+        }else {
+            double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
+            setProgressBar((int)((0/tmp)*100));
+            setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
+        }
     }
 
     public void setHour(final float degree) {
@@ -160,6 +167,10 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        //DO NOTHING
+        if(isConnected){
+            initLayout(true);
+        }else {
+            initLayout(false);
+        }
     }
 }
