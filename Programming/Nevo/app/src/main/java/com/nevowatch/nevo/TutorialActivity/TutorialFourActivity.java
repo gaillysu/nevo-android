@@ -119,6 +119,11 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-
+        if(isConnected)
+        {
+            mFinishButton.setVisibility(View.VISIBLE);
+            mConnectImg.setImageResource(R.drawable.success);
+            mConnectButton.setVisibility(View.INVISIBLE);
+        }
     }
 }
