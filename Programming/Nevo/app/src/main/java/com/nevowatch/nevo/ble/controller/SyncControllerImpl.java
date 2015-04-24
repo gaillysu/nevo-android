@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
+import com.nevowatch.nevo.ble.kernel.BLEConnectTimeoutException;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
 import com.nevowatch.nevo.ble.kernel.BluetoothDisabledException;
@@ -52,7 +53,7 @@ public class SyncControllerImpl implements SyncController{
 
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
-
+    private int mTimeOutcount = 0;
     /** The Handler of the ui thread. */
     Handler mUiThread = new Handler(Looper.getMainLooper());
     //send Command timeout
@@ -171,6 +172,7 @@ public class SyncControllerImpl implements SyncController{
 
 		@Override
 		public void onConnect(String peripheralAdress) {
+            mTimeOutcount = 0;
 			mOnSyncControllerListener.connectionStateChanged(true);
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -204,8 +206,27 @@ public class SyncControllerImpl implements SyncController{
 				
 			} else if (e instanceof BLENotSupportedException) {
 			
-			}			
-			mOnSyncControllerListener.connectionStateChanged(false);
+			}else if (e instanceof BLEUnstableException) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "Bluetooth is unstable,please reopen your bluetooth or restart your smartphone", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }else if (e instanceof BLEConnectTimeoutException) {
+                mTimeOutcount = mTimeOutcount + 1;
+                //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
+                if (mTimeOutcount >=3) {
+                    mTimeOutcount = 0;
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "Bluetooth Connect timeout,please reopen your bluetooth or restart your smartphone", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+            mOnSyncControllerListener.connectionStateChanged(false);
 		}
 	};
 

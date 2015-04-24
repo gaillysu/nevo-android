@@ -103,7 +103,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 	/**
 	 *  Stops scanning after 10 seconds.
 	 */
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 8000;
     
     /*
 	 *  here use one List to save the scaned devices's MAC address
@@ -654,18 +654,18 @@ import com.nevowatch.nevo.ble.util.Optional;
         mAutoReconnectTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
                     if (isDisconnected()) {
                         Log.w(TAG, "reconnect after........... " + mReConnectTimerPattern[mTimerIndex] / 1000 + "s");
                         mTimerIndex = (mTimerIndex + 1) % mReConnectTimerPattern.length;
+                        if(mExceptionListener!=null) mExceptionListener.onException(new BLEConnectTimeoutException());
                     }
                     else
                     {
                         mTimerIndex = 0;
                     }
-                    //check again connect status
-                    connect(servicelist);
-
+                //check again connect status
+                try {
+                    autoConnect(servicelist);
                 } catch (BLENotSupportedException e) {
                     e.printStackTrace();
                 } catch (BluetoothDisabledException e) {
@@ -677,21 +677,37 @@ import com.nevowatch.nevo.ble.util.Optional;
 	@Override
 	public void connect(List<SupportedService> servicelist)
 			throws BLENotSupportedException, BluetoothDisabledException {
+        //reset  mTimerIndex, when user press "connect" button, reset the timer pattern 's index
+        //make sure next auto reconnect can start after 10s,otherwise next auto reconnect perhaps starts after 10s,60s,120s,240s,3600s
+        mTimerIndex = 0;
+        autoConnect(servicelist);
+	}
+
+    /**
+     * it is an inline function, see@connect(List<SupportedService> servicelist),initAutoReconnectTimer(final List<SupportedService> servicelist)
+     * @param servicelist
+     * @throws BLENotSupportedException
+     * @throws BluetoothDisabledException
+     */
+    private void autoConnect(List<SupportedService> servicelist)
+            throws BLENotSupportedException, BluetoothDisabledException {
 
         initAutoReconnectTimer(servicelist);
 
-		if (!isDisconnected()) {return;}
-		
-		if(hasSavedAddress() && mCurrentService != null)
-		{
-			mCurrentService.connect(getSaveAddress());			
-		}
-		else
-		{
-			startScan(servicelist);
-		}
-		
-	}
+        if (!isDisconnected()) {return;}
+
+        if(hasSavedAddress())
+        {
+            if(mCurrentService == null)
+               bindNewService(getSaveAddress());
+            else
+               mCurrentService.connect(getSaveAddress());
+        }
+        else
+        {
+            startScan(servicelist);
+        }
+    }
 
 	private void setSaveAddress(String address)
 	{

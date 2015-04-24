@@ -357,7 +357,7 @@ public class NevoBTService extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
             	mQueuedMainThread.next();
       		
-            	mBluetoothGattMap.put(address, gatt);
+            	//mBluetoothGattMap.put(address, gatt);
             	
                 Log.i(NevoBT.TAG, "Connected to GATT server : "+ address);
                    
@@ -400,8 +400,8 @@ public class NevoBTService extends Service {
             	Log.w(NevoBT.TAG,"mBluetoothGatt is null");
             	return;
             }
-        	
-            
+
+            mBluetoothGattMap.put(gatt.getDevice().getAddress(), gatt);
             if(mConnected!=null && gatt!=null) mConnected.onConnect(gatt.getDevice().getAddress());
             
         	
