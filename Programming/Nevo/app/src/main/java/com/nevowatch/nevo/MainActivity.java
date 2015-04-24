@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
@@ -48,7 +47,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
      */
     private CharSequence mTitle;
     private Toolbar mToolbar;
-    private TextView yourTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
