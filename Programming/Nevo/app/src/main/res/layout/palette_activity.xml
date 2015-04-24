@@ -48,7 +48,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/grassGreenImage"
+            android:id="@+id/greenImage"
             android:background="@drawable/palette_greenimageview"
             android:layout_marginTop="17dp"
             android:layout_alignTop="@+id/paletteImage"
@@ -61,7 +61,7 @@
             android:background="@drawable/palette_orangeimage"
             android:layout_marginStart="33dp"
             android:layout_marginTop="15dp"
-            android:layout_below="@+id/grassGreenImage"
+            android:layout_below="@+id/greenImage"
             android:layout_alignStart="@+id/paletteImage" />
 
         <ImageView
@@ -76,10 +76,10 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/greenImage"
+            android:id="@+id/grassGreenImage"
             android:background="@drawable/palette_grassgreenimage"
             android:layout_alignBottom="@+id/paletteImage"
-            android:layout_alignStart="@+id/grassGreenImage"
+            android:layout_alignStart="@+id/greenImage"
             android:layout_marginBottom="16dp"/>
 
         <ImageView
