@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nevowatch.nevo"
-    android:versionCode="101"
-    android:versionName="1.0.0" >
+    package="com.nevowatch.nevo" >
 
     <uses-feature android:name="android.hardware.bluetooth_le"
         android:required="true"/>
