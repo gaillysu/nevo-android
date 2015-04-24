@@ -65,10 +65,20 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     public void onResume() {
         super.onResume();
         mClockTextView.setText(TimePickerView.getAlarmFromPreference(getActivity()));
-        if(AlarmFragment.getClockStateFromPreference(getActivity())){
-            onClick(mOnButton);
-        }else{
-            onClick(mOffButton);
+        lightClockState(AlarmFragment.getClockStateFromPreference(getActivity()));
+    }
+
+    private void lightClockState(boolean enable){
+        if(enable){
+            mOffButton.setTextColor(getResources().getColor(R.color.black));
+            mOnButton.setTextColor(getResources().getColor(R.color.white));
+            mOffButton.setSelected(false);
+            mOnButton.setSelected(true);
+        }else {
+            mOffButton.setTextColor(getResources().getColor(R.color.white));
+            mOnButton.setTextColor(getResources().getColor(R.color.black));
+            mOffButton.setSelected(true);
+            mOnButton.setSelected(false);
         }
     }
 
@@ -82,10 +92,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
                     showTimePickerDialog();
                 break;
             case R.id.on_mode_button:
-                mOffButton.setTextColor(getResources().getColor(R.color.black));
-                mOnButton.setTextColor(getResources().getColor(R.color.white));
-                mOffButton.setSelected(false);
-                mOnButton.setSelected(true);
+                lightClockState(true);
                 AlarmFragment.saveClockStateToPreference(getActivity(), true);
                 String[] strAlarm = TimePickerView.getAlarmFromPreference(getActivity()).split(":");
                 SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarm[0]),
@@ -93,10 +100,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
                         true);
                 break;
             case R.id.off_mode_button:
-                mOffButton.setTextColor(getResources().getColor(R.color.white));
-                mOnButton.setTextColor(getResources().getColor(R.color.black));
-                mOffButton.setSelected(true);
-                mOnButton.setSelected(false);
+                lightClockState(false);
                 AlarmFragment.saveClockStateToPreference(getActivity(), false);
                 String[] strAlarmOff = TimePickerView.getAlarmFromPreference(getActivity()).split(":");
                 SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarmOff[0]),
