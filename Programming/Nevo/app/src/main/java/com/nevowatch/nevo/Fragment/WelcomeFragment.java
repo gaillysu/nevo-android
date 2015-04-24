@@ -37,6 +37,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private TextView mTextView;
     private int mCurHour, mCurMin, mTempMin = -1;
     private static int mCurrentSteps = 0;
+    private static int mDailyGoal = 0;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
@@ -44,8 +45,11 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
             mUiHandler.postDelayed(mTimerTask,5000);
-            if (SyncController.Singleton.getInstance(getActivity()).isConnected())
+            if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
                 SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+                setText(mCurrentSteps + "/" + mDailyGoal);
+                setProgressBar((int) (100.0 * mCurrentSteps / mDailyGoal));
+            }
         }
     };
 
@@ -88,7 +92,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             initLayout(false);
         }
 
-/*        double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
+/*      double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str = mCurrentSteps + "/" + StepPickerView.getStepTextFromPreference(getActivity());
         if (!SyncController.Singleton.getInstance(getActivity()).isConnected())
@@ -159,6 +163,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             int dailyGoal = steppacket.getDailyStepsGoal();
             Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mCurrentSteps = dailySteps;
+            mDailyGoal = dailyGoal;
             setText(dailySteps + "/" + dailyGoal);
             setProgressBar((int) (100.0 * dailySteps / dailyGoal));
             StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
