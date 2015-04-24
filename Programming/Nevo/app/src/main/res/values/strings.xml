@@ -44,4 +44,8 @@
     <string name="facebook_string">Facebook</string>
     <string name="calendar_string">Calendar</string>
     <string name="wechat_string">WeChat</string>
+    <string name="ble_not_supported">Bluetooth 4.0 is not supported by this Device</string>
+    <string name="ble_deactivated">Bluetooth is currently deactivated </string>
+    <string name="ble_unstable">Your phone\'s BLE is currently unstable, this might come from a hardware problem. Please turn your phone\'s bluetooth off then on or restart your phone.</string>
+    <string name="ble_connecttimeout">Bluetooth Connect timeout more times,please reopen your bluetooth or restart your smartphone</string>
 </resources>

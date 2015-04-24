@@ -43,6 +43,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+import com.nevowatch.nevo.R;
 
 public class SyncControllerImpl implements SyncController{
 
@@ -214,7 +215,7 @@ public class SyncControllerImpl implements SyncController{
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getContext(), "Bluetooth is unstable,please reopen your bluetooth or restart your smartphone", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
                     }
                 });
             }else if (e instanceof BLEConnectTimeoutException) {
@@ -225,7 +226,7 @@ public class SyncControllerImpl implements SyncController{
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getContext(), "Bluetooth Connect timeout,please reopen your bluetooth or restart your smartphone", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.ble_connecttimeout, Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -329,7 +330,7 @@ public class SyncControllerImpl implements SyncController{
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getContext(), "Ble not supported !", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
                 }
             });
 		} catch (BluetoothDisabledException e) {
@@ -338,7 +339,7 @@ public class SyncControllerImpl implements SyncController{
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getContext(), "Bluetooth Off!, please open bluetooth.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
                 }
             });
 		}
