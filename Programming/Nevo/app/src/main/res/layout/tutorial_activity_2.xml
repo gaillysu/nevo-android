@@ -47,7 +47,7 @@
         android:padding="10dp"
         android:paddingTop="20dp"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="17sp"/>
 
     <Button
         android:layout_width="wrap_content"
