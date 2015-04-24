@@ -1,6 +1,7 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * NotificationFragmentAdapter populates items for ListView
  */
 public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
-        implements Switch.OnCheckedChangeListener{
+        implements Switch.OnCheckedChangeListener, View.OnClickListener{
 
     private int mListItemResourceId;
     private Context mCtx;
@@ -62,6 +64,8 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
+        viewHolder.mImage.setTag(position);
+        viewHolder.mImage.setOnClickListener(this);
         viewHolder.mSwitch.setTag(position);
         initSwitch(viewHolder.mSwitch, position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
@@ -183,6 +187,13 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             return pref.getBoolean(WEICHATTYPE, false);
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(mCtx, PaletteActivity.class);
+        intent.putExtra("Position", (int)v.getTag());
+        mCtx.startActivity(intent);
     }
 
     class ViewHolder{

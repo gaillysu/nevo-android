@@ -43,7 +43,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         public void run() {
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,3000);
+            mUiHandler.postDelayed(mTimerTask,5000);
             if (SyncController.Singleton.getInstance(getActivity()).isConnected())
                 SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }
@@ -167,10 +167,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if(isConnected){
-            initLayout(true);
-        }else {
+        if(!isConnected)
             initLayout(false);
-        }
     }
 }
