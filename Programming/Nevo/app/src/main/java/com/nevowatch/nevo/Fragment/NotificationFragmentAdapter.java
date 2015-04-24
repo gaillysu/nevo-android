@@ -1,9 +1,9 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.FontManager;
+import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 
@@ -22,10 +25,11 @@ import java.util.List;
  * NotificationFragmentAdapter populates items for ListView
  */
 public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
-        implements Switch.OnCheckedChangeListener{
+        implements Switch.OnCheckedChangeListener, View.OnClickListener{
 
     private int mListItemResourceId;
     private Context mCtx;
+    private View [] mViewArray;
     public static final String TELETYPE = "tele";
     public static final String EMAILTYPE = "email";
     public static final String FACETYPE = "facebook";
@@ -49,7 +53,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         if(convertView == null){
             view = LayoutInflater.from(getContext()).inflate(mListItemResourceId, null);
             viewHolder = new ViewHolder();
-            viewHolder.mIcon = (ImageView) view.findViewById(R.id.typeIconImage);
             viewHolder.mLabel = (TextView) view.findViewById(R.id.typeTextView);
             viewHolder.mSwitch = (Switch) view.findViewById(R.id.typeSwitch);
             viewHolder.mImage = (ImageView) view.findViewById(R.id.typeImage);
@@ -59,12 +62,46 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.mIcon.setImageResource(item.getmIcon());
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
+        viewHolder.mImage.setTag(position);
+        viewHolder.mImage.setOnClickListener(this);
         viewHolder.mSwitch.setTag(position);
+        initSwitch(viewHolder.mSwitch, position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
+
+        mViewArray = new View []{
+                viewHolder.mLabel
+        };
+        FontManager.changeFonts(mViewArray, (MainActivity) mCtx);
+
         return view;
+    }
+
+    private void initSwitch(Switch sw, int position){
+        switch (position){
+            case 0:
+                sw.setChecked(getTypeNFState(mCtx, TELETYPE));
+                break;
+            case 1:
+                sw.setChecked(getTypeNFState(mCtx, EMAILTYPE));
+                break;
+            case 2:
+                sw.setChecked(getTypeNFState(mCtx, FACETYPE));
+                break;
+            case 3:
+                sw.setChecked(getTypeNFState(mCtx, SMSTYPE));
+                break;
+            case 4:
+                sw.setChecked(getTypeNFState(mCtx, CALTYPE));
+                break;
+            case 5:
+                sw.setChecked(getTypeNFState(mCtx, WEICHATTYPE));
+                break;
+            default:
+                sw.setChecked(false);
+                break;
+        }
     }
 
     @Override
@@ -73,19 +110,15 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             case 0:
                 if(isChecked){
                     saveTypeNFState(mCtx, TELETYPE, true);
-                    Log.d("SWITCH0", "ON");
                 }else {
                     saveTypeNFState(mCtx, TELETYPE, false);
-                    Log.d("SWITCH0", "OFF");
                 }
                 break;
             case 1:
                 if(isChecked){
                     saveTypeNFState(mCtx, EMAILTYPE, true);
-                    Log.d("SWITCH1", "ON");
                 }else {
                     saveTypeNFState(mCtx, EMAILTYPE, false);
-                    Log.d("SWITCH1", "OFF");
                 }
                 break;
             case 2:
@@ -156,9 +189,15 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         return false;
     }
 
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(mCtx, PaletteActivity.class);
+        intent.putExtra("Position", (int)v.getTag());
+        mCtx.startActivity(intent);
+    }
+
     class ViewHolder{
 
-        ImageView mIcon;
         TextView mLabel;
         Switch mSwitch;
         ImageView mImage;

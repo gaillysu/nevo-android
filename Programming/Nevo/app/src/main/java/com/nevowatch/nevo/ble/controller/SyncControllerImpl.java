@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import com.nevowatch.nevo.GoogleFitManager;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLEConnectTimeoutException;
@@ -145,9 +146,12 @@ public class SyncControllerImpl implements SyncController{
                         DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
                         mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
                         mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-                        /*TODO by gailly save to google fit or local database, now I output it to logcat*/
+
+
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
+
+                        GoogleFitManager.getInstance().saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
 
                         mCurrentDay++;
                         if(mCurrentDay < mSavedDailyHistory.size())

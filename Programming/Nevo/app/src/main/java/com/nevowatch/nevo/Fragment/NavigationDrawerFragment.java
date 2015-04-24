@@ -219,7 +219,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void getDrawerIcon(){
         for (int i=0; i<mDrawerIconArray.length; i++){
-            LinearLayout linearLayout = (LinearLayout) mDrawerListView.getChildAt(i);
+            LinearLayout linearLayout = (LinearLayout) mDrawerListView.getChildAt(i - mDrawerListView.getFirstVisiblePosition());
             mDrawerIconImageArray[i] = (ImageView)linearLayout.findViewById(R.id.drawer_icon_imageView);
         }
     }

@@ -6,15 +6,21 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
+
+import java.lang.reflect.Field;
 
 /**
  * StepPickerFragment is a dialog fragment which shows the hour and minute of time in the whole day.
@@ -48,6 +54,7 @@ public class StepPickerView extends DialogFragment{
         mNumberPicker.setMaxValue(NUMBER_OF_VALUES - 1);
         mNumberPicker.setMinValue(0);
         mNumberPicker.setDisplayedValues(mDisplayedValues);
+        setNumberPickerTextColor(mNumberPicker, getResources().getColor(R.color.customBlack));
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.step_picker_title)
@@ -94,6 +101,35 @@ public class StepPickerView extends DialogFragment{
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
+    }
+
+    public static boolean setNumberPickerTextColor(NumberPicker numberPicker, int color)
+    {
+        final int count = numberPicker.getChildCount();
+        for(int i = 0; i < count; i++){
+            View child = numberPicker.getChildAt(i);
+            if(child instanceof EditText){
+                try{
+                    Field selectorWheelPaintField = numberPicker.getClass()
+                            .getDeclaredField("mSelectorWheelPaint");
+                    selectorWheelPaintField.setAccessible(true);
+                    ((Paint)selectorWheelPaintField.get(numberPicker)).setColor(color);
+                    ((EditText)child).setTextColor(color);
+                    numberPicker.invalidate();
+                    return true;
+                }
+                catch(NoSuchFieldException e){
+                    Log.w("setNumberPickerText", e);
+                }
+                catch(IllegalAccessException e){
+                    Log.w("setNumberPickerText", e);
+                }
+                catch(IllegalArgumentException e){
+                    Log.w("setNumberPickerText", e);
+                }
+            }
+        }
+        return false;
     }
 
     public interface StepPickerFragmentCallbacks{

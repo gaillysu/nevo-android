@@ -55,6 +55,12 @@ public class PaletteActivity extends Activity
         initView();
         initLayout(mPosition);
         SyncController.Singleton.getInstance(this).startConnect(false, this);
+
+        View [] viewArray = new View []{
+                findViewById(R.id.palette_title),
+                findViewById(R.id.typetext),
+        };
+        FontManager.changeFonts(viewArray,this);
     }
 
     private void initView(){
@@ -254,17 +260,17 @@ public class PaletteActivity extends Activity
     public static int getTypeChoosenColor(Context context, String tag){
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         if(tag.equals(TELECHOOSENCOLOR)){
-            return pref.getInt(TELECHOOSENCOLOR, YELLOW_LED);
+            return pref.getInt(TELECHOOSENCOLOR, ORANGE_LED);
         }else if(tag.equals(EMAILCHOOSENCOLOR)){
-            return pref.getInt(EMAILCHOOSENCOLOR, BLUE_LED);
+            return pref.getInt(EMAILCHOOSENCOLOR, YELLOW_LED);
         }else if(tag.equals(FACECHOOSENCOLOR)){
-            return pref.getInt(FACECHOOSENCOLOR, LIGHTGREEN_LED);
+            return pref.getInt(FACECHOOSENCOLOR, BLUE_LED);
         }else if(tag.equals(SMSCHOOSENCOLOR)){
-            return pref.getInt(SMSCHOOSENCOLOR, RED_LED);
+            return pref.getInt(SMSCHOOSENCOLOR, GREEN_LED);
         }else if(tag.equals(CALCHOOSENCOLOR)){
-            return pref.getInt(CALCHOOSENCOLOR, GREEN_LED);
+            return pref.getInt(CALCHOOSENCOLOR, RED_LED);
         }else if(tag.equals(WECHATCHOOSENCOLOR)){
-            return pref.getInt(WECHATCHOOSENCOLOR, ORANGE_LED);
+            return pref.getInt(WECHATCHOOSENCOLOR, LIGHTGREEN_LED);
         }
         return -1;
     }

@@ -6,6 +6,23 @@
     android:background="@color/customWhite">
 
     <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:id="@+id/palette_title"
+            android:text="@string/title_section4"
+            android:background="@color/customBlack"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/customWhite">
@@ -16,20 +33,8 @@
             android:id="@+id/typetext"
             android:textSize="20sp"
             android:textColor="@color/white"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:background="@color/black"
+            android:background="@color/customOrange"
             android:gravity="center"/>
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/backimage"
-            android:background="@drawable/back"
-            android:layout_alignTop="@+id/typetext"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentStart="true" />
 
         <ImageView
             android:layout_width="300dp"
@@ -43,7 +48,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/grassGreenImage"
+            android:id="@+id/greenImage"
             android:background="@drawable/palette_greenimageview"
             android:layout_marginTop="17dp"
             android:layout_alignTop="@+id/paletteImage"
@@ -54,10 +59,10 @@
             android:layout_height="40dp"
             android:id="@+id/orangeImage"
             android:background="@drawable/palette_orangeimage"
-            android:layout_marginTop="17dp"
-            android:layout_marginStart="7dp"
-            android:layout_below="@+id/grassGreenImage"
-            android:layout_toEndOf="@+id/backimage" />
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/greenImage"
+            android:layout_alignStart="@+id/paletteImage" />
 
         <ImageView
             android:layout_width="40dp"
@@ -71,10 +76,10 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/greenImage"
+            android:id="@+id/grassGreenImage"
             android:background="@drawable/palette_grassgreenimage"
             android:layout_alignBottom="@+id/paletteImage"
-            android:layout_alignStart="@+id/grassGreenImage"
+            android:layout_alignStart="@+id/greenImage"
             android:layout_marginBottom="16dp"/>
 
         <ImageView
@@ -93,6 +98,15 @@
             android:background="@drawable/palette_redimage"
             android:layout_alignTop="@+id/orangeImage"
             android:layout_alignStart="@+id/blueImage" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/backimage"
+            android:background="@drawable/back"
+            android:layout_marginLeft="10dp"
+            android:layout_alignBottom="@+id/typetext"
+            android:layout_marginBottom="5dp" />
 
     </RelativeLayout>
 
