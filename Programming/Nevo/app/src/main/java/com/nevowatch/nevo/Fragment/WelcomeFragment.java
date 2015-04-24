@@ -71,7 +71,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         };
         FontManager.changeFonts(viewArray,getActivity());
 
-
         return rootView;
     }
 

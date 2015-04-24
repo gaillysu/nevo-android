@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
@@ -47,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
      */
     private CharSequence mTitle;
     private Toolbar mToolbar;
+    private TextView yourTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +150,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-        //actionBar.setIcon(R.drawable.ic_launcher);
     }
 
     public Fragment getFragment(String tag){
