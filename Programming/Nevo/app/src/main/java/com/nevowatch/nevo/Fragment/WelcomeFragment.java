@@ -43,7 +43,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         public void run() {
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,60000);
+            mUiHandler.postDelayed(mTimerTask,3000);
             if (SyncController.Singleton.getInstance(getActivity()).isConnected())
                 SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }
@@ -82,14 +82,21 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
         //when app start,syncController is connecting, send this cmd, will lead to  timeout
         // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected())
+        if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
+            setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
             SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
-        double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
+        }else {
+            double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
+            setProgressBar((int)((0/tmp)*100));
+            setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
+        }
+
+/*        double tmp = Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())) * 1.0;
         setProgressBar((int)((0/tmp)*100));
         String str = mCurrentSteps + "/" + StepPickerView.getStepTextFromPreference(getActivity());
         if (!SyncController.Singleton.getInstance(getActivity()).isConnected())
             str = "-/" + StepPickerView.getStepTextFromPreference(getActivity());
-        setText(str);
+        setText(str);*/
         refreshTime();
         mUiHandler.post(mTimerTask);
     }
