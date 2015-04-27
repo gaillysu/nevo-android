@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     private int mListItemResourceId;
     private Context mCtx;
     private View [] mViewArray;
+    private ListView mListView;
     public static final String TELETYPE = "tele";
     public static final String EMAILTYPE = "email";
     public static final String FACETYPE = "facebook";
@@ -37,10 +40,11 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     public static final String CALTYPE = "calendar";
     public static final String WEICHATTYPE = "weichat";
 
-    public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects){
+    public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects, ListView listView){
         super(context, mListItemResourceId, objects);
         this.mListItemResourceId = mListItemResourceId;
         this.mCtx = context;
+        this.mListView = listView;
     }
 
     @Override
@@ -53,6 +57,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         if(convertView == null){
             view = LayoutInflater.from(getContext()).inflate(mListItemResourceId, null);
             viewHolder = new ViewHolder();
+            viewHolder.mIcon = (ImageView) view.findViewById(R.id.typeIconImage);
             viewHolder.mLabel = (TextView) view.findViewById(R.id.typeTextView);
             viewHolder.mSwitch = (Switch) view.findViewById(R.id.typeSwitch);
             viewHolder.mImage = (ImageView) view.findViewById(R.id.typeImage);
@@ -62,12 +67,13 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             viewHolder = (ViewHolder) view.getTag();
         }
 
+        viewHolder.mIcon.setImageResource(item.getmIcon());
         viewHolder.mLabel.setText(item.getmLabel());
         viewHolder.mImage.setImageResource(item.getmImage());
         viewHolder.mImage.setTag(position);
         viewHolder.mImage.setOnClickListener(this);
         viewHolder.mSwitch.setTag(position);
-        initSwitch(viewHolder.mSwitch, position);
+        initWidget(viewHolder, position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
 
         mViewArray = new View []{
@@ -78,75 +84,143 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         return view;
     }
 
-    private void initSwitch(Switch sw, int position){
+    private int iconResource(int choosenColor){
+        switch (choosenColor){
+            case PaletteActivity.BLUE_LED:
+                return R.drawable.blue_indicator;
+            case PaletteActivity.YELLOW_LED:
+                return R.drawable.yellow_indicator;
+            case PaletteActivity.GREEN_LED:
+                return R.drawable.green_indicator;
+            case PaletteActivity.LIGHTGREEN_LED:
+                return R.drawable.grass_green_indicator;
+            case PaletteActivity.ORANGE_LED:
+                return R.drawable.orange_indicator;
+            case PaletteActivity.RED_LED:
+                return R.drawable.red_indicator;
+            default:
+                break;
+        }
+        return 0;
+    }
+
+    private void setImg(ViewHolder viewHolder, boolean isChecked){
+        if(isChecked){
+            viewHolder.mLabel.setTextColor(mCtx.getResources().getColor(R.color.customBlack));
+            viewHolder.mIcon.setVisibility(View.VISIBLE);
+        }else {
+            viewHolder.mLabel.setTextColor(mCtx.getResources().getColor(R.color.customGray));
+            viewHolder.mIcon.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void initWidget(ViewHolder viewHolder, int position){
         switch (position){
             case 0:
-                sw.setChecked(getTypeNFState(mCtx, TELETYPE));
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, TELETYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, TELETYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.TELECHOOSENCOLOR)));
                 break;
             case 1:
-                sw.setChecked(getTypeNFState(mCtx, EMAILTYPE));
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, EMAILTYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, EMAILTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.EMAILCHOOSENCOLOR)));
                 break;
             case 2:
-                sw.setChecked(getTypeNFState(mCtx, FACETYPE));
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, FACETYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, FACETYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.FACECHOOSENCOLOR)));
                 break;
             case 3:
-                sw.setChecked(getTypeNFState(mCtx, SMSTYPE));
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, SMSTYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, SMSTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.SMSCHOOSENCOLOR)));
                 break;
             case 4:
-                sw.setChecked(getTypeNFState(mCtx, CALTYPE));
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, CALTYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, CALTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.CALCHOOSENCOLOR)));
                 break;
             case 5:
-                sw.setChecked(getTypeNFState(mCtx, WEICHATTYPE));
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, WEICHATTYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, WEICHATTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.WECHATCHOOSENCOLOR)));
                 break;
             default:
-                sw.setChecked(false);
+                viewHolder.mSwitch.setChecked(false);
                 break;
         }
     }
 
+    private void checkedImg(int pos, boolean isChecked){
+        LinearLayout linearLayout = (LinearLayout) getViewByPosition(pos, mListView);
+        TextView tv = (TextView) linearLayout.findViewById(R.id.typeTextView);
+        ImageView icon = (ImageView) linearLayout.findViewById(R.id.typeIconImage);
+        if(isChecked){
+            tv.setTextColor(mCtx.getResources().getColor(R.color.customBlack));
+            icon.setVisibility(View.VISIBLE);
+        }else {
+            tv.setTextColor(mCtx.getResources().getColor(R.color.customGray));
+            icon.setVisibility(View.INVISIBLE);
+        }
+    }
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch ((int)buttonView.getTag()){
+        int position = (int)buttonView.getTag();
+
+        switch (position){
             case 0:
                 if(isChecked){
                     saveTypeNFState(mCtx, TELETYPE, true);
+                    checkedImg(position, isChecked);
                 }else {
                     saveTypeNFState(mCtx, TELETYPE, false);
+                    checkedImg(position, isChecked);
                 }
                 break;
             case 1:
                 if(isChecked){
                     saveTypeNFState(mCtx, EMAILTYPE, true);
+                    checkedImg(position, isChecked);
                 }else {
                     saveTypeNFState(mCtx, EMAILTYPE, false);
+                    checkedImg(position, isChecked);
                 }
                 break;
             case 2:
                 if(isChecked){
                     saveTypeNFState(mCtx, FACETYPE, true);
+                    checkedImg(position, isChecked);
                 }else {
                     saveTypeNFState(mCtx, FACETYPE, false);
+                    checkedImg(position, isChecked);
                 }
                 break;
             case 3:
                 if(isChecked){
                     saveTypeNFState(mCtx, SMSTYPE, true);
+                    checkedImg(position, isChecked);
                 }else {
                     saveTypeNFState(mCtx, SMSTYPE, false);
+                    checkedImg(position, isChecked);
                 }
                 break;
             case 4:
                 if(isChecked){
                     saveTypeNFState(mCtx, CALTYPE, true);
+                    checkedImg(position, isChecked);
                 }else {
                     saveTypeNFState(mCtx, CALTYPE, false);
+                    checkedImg(position, isChecked);
                 }
                 break;
             case 5:
                 if(isChecked){
                     saveTypeNFState(mCtx, WEICHATTYPE, true);
+                    checkedImg(position, isChecked);
                 }else {
                     saveTypeNFState(mCtx, WEICHATTYPE, false);
+                    checkedImg(position, isChecked);
                 }
                 break;
             default:
@@ -197,9 +271,21 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     }
 
     class ViewHolder{
-
+        ImageView mIcon;
         TextView mLabel;
         Switch mSwitch;
         ImageView mImage;
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 }

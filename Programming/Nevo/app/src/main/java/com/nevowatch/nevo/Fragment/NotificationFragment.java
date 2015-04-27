@@ -31,20 +31,20 @@ public class NotificationFragment extends Fragment
 
     private void initListView(){
         mList = new ArrayList<NotificationItem>();
-        mList.add(new NotificationItem(getResources().getString(R.string.call_string), R.drawable.setting));
-        mList.add(new NotificationItem(getResources().getString(R.string.email_string), R.drawable.setting));
-        mList.add(new NotificationItem(getResources().getString(R.string.facebook_string), R.drawable.setting));
-        mList.add(new NotificationItem(getResources().getString(R.string.sms_string), R.drawable.setting));
-        mList.add(new NotificationItem(getResources().getString(R.string.calendar_string), R.drawable.setting));
-        mList.add(new NotificationItem(getResources().getString(R.string.wechat_string), R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.orange_indicator, getResources().getString(R.string.call_string), R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.yellow_indicator, getResources().getString(R.string.email_string), R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.blue_indicator, getResources().getString(R.string.facebook_string), R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.green_indicator, getResources().getString(R.string.sms_string), R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.red_indicator, getResources().getString(R.string.calendar_string), R.drawable.setting));
+        mList.add(new NotificationItem(R.drawable.grass_green_indicator, getResources().getString(R.string.wechat_string), R.drawable.setting));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
         initListView();
-        mAdatper = new NotificationFragmentAdapter(getActivity(), R.layout.notification_listview_item, mList);
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
+        mAdatper = new NotificationFragmentAdapter(getActivity(), R.layout.notification_listview_item, mList, mListView);
         mListView.setAdapter(mAdatper);
       //  mListView.setOnItemClickListener(this);
 
