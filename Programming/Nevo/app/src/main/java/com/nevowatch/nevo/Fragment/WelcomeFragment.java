@@ -97,7 +97,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private void initLayout(boolean connected){
         if(connected){
             setText(getCurStepFromPreference(getActivity()) + "/" + StepPickerView.getStepTextFromPreference(getActivity()));
-            setProgressBar((getCurStepFromPreference(getActivity()) / Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity())))*100);
+            setProgressBar((int)(100.0*getCurStepFromPreference(getActivity()) / Integer.parseInt(StepPickerView.getStepTextFromPreference(getActivity()))));
             SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }else {
             setText("-/" + StepPickerView.getStepTextFromPreference(getActivity()));
