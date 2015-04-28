@@ -14,6 +14,7 @@ import com.nevowatch.nevo.View.NotificationItem;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.notification.NevoNotificationListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class NotificationFragment extends Fragment
             ((MainActivity)getActivity()).replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
         }
         mAdatper.notifyDataSetChanged();
+        NevoNotificationListener.getNotificationAccessPermission(getActivity());
     }
 
     @Override

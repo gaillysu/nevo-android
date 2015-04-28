@@ -20,7 +20,6 @@ import com.nevowatch.nevo.Fragment.WelcomeFragment;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
-import com.nevowatch.nevo.ble.notification.NevoNotificationListener;
 import com.nevowatch.nevo.ble.util.Optional;
 
 import java.util.List;
@@ -68,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
 
         SyncController.Singleton.getInstance(this).startConnect(false, this);
-        NevoNotificationListener.getNotificationAccessPermission(this);
+       // NevoNotificationListener.getNotificationAccessPermission(this);
     }
 
     @Override
