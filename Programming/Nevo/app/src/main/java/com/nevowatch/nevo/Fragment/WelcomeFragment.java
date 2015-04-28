@@ -46,9 +46,8 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         public void run() {
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,5000);
-            if (SyncController.Singleton.getInstance(getActivity()).isConnected())
-                SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+            mUiHandler.postDelayed(mTimerTask,10000);
+            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }
     };
 
@@ -176,5 +175,11 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     public void connectionStateChanged(boolean isConnected) {
         if(!isConnected)
             initLayout(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mUiHandler.removeCallbacks(mTimerTask);
     }
 }
