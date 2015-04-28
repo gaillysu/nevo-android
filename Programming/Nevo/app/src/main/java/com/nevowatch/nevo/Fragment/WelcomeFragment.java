@@ -47,7 +47,8 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
             mUiHandler.postDelayed(mTimerTask,10000);
-            SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+            if (SyncController.Singleton.getInstance(getActivity()).isConnected())
+                SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }
     };
 
