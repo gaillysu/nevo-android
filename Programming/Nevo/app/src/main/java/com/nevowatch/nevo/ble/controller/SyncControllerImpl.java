@@ -65,8 +65,8 @@ public class SyncControllerImpl implements SyncController{
         @Override
         public void run() {
             Log.e("SyncControllerImpl","send command timeout");
-            mNevoBT.disconnect(null);
-            mOnSyncControllerListener.connectionStateChanged(false);
+            if(mNevoBT.isDisconnected())
+                mOnSyncControllerListener.connectionStateChanged(false);
         }
     };
 
@@ -301,7 +301,8 @@ public class SyncControllerImpl implements SyncController{
 	}
 
 	/*package*/void setContext(Context context) {
-		mContext = context;		
+        if(context!=null)
+		    mContext = context;
 	}
 
 	@Override

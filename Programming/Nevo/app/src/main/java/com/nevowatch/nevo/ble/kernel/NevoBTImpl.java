@@ -544,7 +544,7 @@ import com.nevowatch.nevo.ble.util.Optional;
 
 		//We start the actual binding
 		//Note that the service will restart as long as it is binded, because we have set : Activity.BIND_AUTO_CREATE
-		mContext.bindService(intent,mCurrentServiceConnection,Activity.BIND_AUTO_CREATE);
+		mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection,Activity.BIND_AUTO_CREATE);
 		Log.v(NevoBT.TAG,"mContext.bindService");
 	}
 	
