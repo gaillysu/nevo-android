@@ -125,6 +125,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
+               // .addToBackStack(null)
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commit();
     }

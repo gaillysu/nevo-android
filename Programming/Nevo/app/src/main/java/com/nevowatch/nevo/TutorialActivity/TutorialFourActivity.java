@@ -21,11 +21,13 @@ import com.nevowatch.nevo.ble.util.Constants;
 /**
  * TutorialFour
  */
-public class TutorialFourActivity extends Activity implements View.OnClickListener, OnSyncControllerListener{
+public class TutorialFourActivity extends Activity
+        implements View.OnClickListener, OnSyncControllerListener{
 
     private Button mConnectButton;
     private ImageView mConnectImg;
     private Button mFinishButton;
+    private Animation animRotate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,9 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
         mFinishButton.setOnClickListener(this);
 
         if(SyncController.Singleton.getInstance(this)!=null && SyncController.Singleton.getInstance(this).isConnected()){
-            mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
-            mConnectButton.setClickable(false);
+            mConnectButton.setVisibility(View.INVISIBLE);
             mFinishButton.setVisibility(View.VISIBLE);
+            mConnectImg.setImageResource(R.drawable.success);
         }
 
         View [] viewArray = new View []{
@@ -73,7 +75,7 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
                 finish();
                 break;
             case R.id.t4_connect_Button:
-                final Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.roatate);
+                animRotate = AnimationUtils.loadAnimation(this, R.anim.roatate);
                 mConnectImg.startAnimation(animRotate);
                 animRotate.setAnimationListener(new myAnimationListener());
                 mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
@@ -95,15 +97,8 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            if(SyncController.Singleton.getInstance(TutorialFourActivity.this)!=null && SyncController.Singleton.getInstance(TutorialFourActivity.this).isConnected()){
-                mFinishButton.setVisibility(View.VISIBLE);
-                mConnectImg.setImageResource(R.drawable.success);
-                mConnectButton.setVisibility(View.INVISIBLE);
-            }else {
-                mFinishButton.setVisibility(View.INVISIBLE);
-                mConnectButton.setClickable(true);
-                mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
-            }
+            mConnectButton.setClickable(true);
+            mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
         }
 
         @Override
@@ -119,6 +114,12 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        
+        if(isConnected){
+            mConnectImg.clearAnimation();
+            mFinishButton.setVisibility(View.VISIBLE);
+            mConnectButton.setVisibility(View.INVISIBLE);
+            mConnectButton.setClickable(false);
+            mConnectImg.setImageResource(R.drawable.success);
+        }
     }
 }
