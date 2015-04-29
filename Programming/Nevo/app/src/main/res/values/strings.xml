@@ -47,5 +47,6 @@
     <string name="ble_not_supported">Bluetooth 4.0 is not supported by this Device</string>
     <string name="ble_deactivated">Bluetooth is currently deactivated </string>
     <string name="ble_unstable">Your phone\'s BLE is currently unstable, this might come from a hardware problem. Please turn your phone\'s bluetooth off then on or restart your phone.</string>
-    <string name="ble_connecttimeout">Bluetooth Connect timeout more times,please reopen your bluetooth or restart your smartphone</string>
+    <string name="ble_connecttimeout">Please check your nevo,let its bluetooth on by press the bottom hard key 2s, make the blue led light blink. Or check your phone\'s bluetooth, some smartphone\'s bluetooth is unstable, please turn it off then on or restart your phone.</string>
+    <string name="ble_timeout_title">Bluetooth connect timeout</string>
 </resources>

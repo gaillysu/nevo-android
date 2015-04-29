@@ -38,7 +38,11 @@ import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 
+import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -221,12 +225,31 @@ public class SyncControllerImpl implements SyncController{
             }else if (e instanceof BLEConnectTimeoutException) {
                 mTimeOutcount = mTimeOutcount + 1;
                 //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
-                if (mTimeOutcount >=3) {
-                    mTimeOutcount = 0;
+                if (mTimeOutcount == 3) {
+
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getContext(), R.string.ble_connecttimeout, Toast.LENGTH_LONG).show();
+                            new AlertDialog.Builder(getContext(),AlertDialog.THEME_HOLO_LIGHT)
+                                    .setTitle(R.string.ble_timeout_title)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setMessage(R.string.ble_connecttimeout)
+                                    .setPositiveButton("Bluetooth",new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            mTimeOutcount = 0;
+                                            Intent intent = new Intent("android.intent.action.View");
+                                            intent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings"));
+                                            getContext().startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            mTimeOutcount = 0;
+                                        }
+                                    })
+                                    .show();
                         }
                     });
                 }
