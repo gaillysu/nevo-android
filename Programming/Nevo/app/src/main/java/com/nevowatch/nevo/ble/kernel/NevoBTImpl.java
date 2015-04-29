@@ -167,7 +167,6 @@ import com.nevowatch.nevo.ble.util.Optional;
 	@Override
 	synchronized public void startScan(List<SupportedService> servicelist) throws BLENotSupportedException, BluetoothDisabledException{
 		
-		mSupportServicelist = servicelist;
 		//We check if bluetooth is enabled and/or if the device isn't ble capable
 		try {
 			initBluetoothAdapter();
@@ -399,6 +398,10 @@ import com.nevowatch.nevo.ble.util.Optional;
 				@Override
 				public void run() {
 					try{
+                        // if get disconnect from connected, after 10s, do reconnect
+                        // if always disconnect, do reconnect follow the connect pattern array[10s,10s,10s,60s...]
+                        mTimerIndex = 0;
+                        initAutoReconnectTimer(mSupportServicelist);
 						//Then call the disconnect callback
 						if(mDisconnectListener!=null) mDisconnectListener.onDisconnect(peripheralAdress);
 					} catch (Throwable t){
@@ -680,6 +683,7 @@ import com.nevowatch.nevo.ble.util.Optional;
         //reset  mTimerIndex, when user press "connect" button, reset the timer pattern 's index
         //make sure next auto reconnect can start after 10s,otherwise next auto reconnect perhaps starts after 10s,60s,120s,240s,3600s
         mTimerIndex = 0;
+        mSupportServicelist = servicelist;
         autoConnect(servicelist);
 	}
 
