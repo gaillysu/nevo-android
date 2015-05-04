@@ -32,12 +32,12 @@ public class NotificationFragment extends Fragment
 
     private void initListView(){
         mList = new ArrayList<NotificationItem>();
-        mList.add(new NotificationItem(R.drawable.orange_indicator, getResources().getString(R.string.call_string), R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.yellow_indicator, getResources().getString(R.string.email_string), R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.blue_indicator, getResources().getString(R.string.facebook_string), R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.green_indicator, getResources().getString(R.string.sms_string), R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.red_indicator, getResources().getString(R.string.calendar_string), R.drawable.setting));
-        mList.add(new NotificationItem(R.drawable.grass_green_indicator, getResources().getString(R.string.wechat_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.orange_indicator), getResources().getString(R.string.call_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.yellow_indicator), getResources().getString(R.string.email_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.blue_indicator), getResources().getString(R.string.facebook_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.green_indicator), getResources().getString(R.string.sms_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.red_indicator), getResources().getString(R.string.calendar_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.grass_green_indicator), getResources().getString(R.string.wechat_string), R.drawable.setting));
     }
 
     @Override
@@ -70,6 +70,24 @@ public class NotificationFragment extends Fragment
     @Override
     public void connectionStateChanged(boolean isConnected) {
         ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?NotificationFragment:ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+
+    private int getDefaultColor(int defColor){
+        switch (defColor){
+            case R.drawable.orange_indicator:
+                return R.drawable.orange_indicator;
+            case R.drawable.yellow_indicator:
+                return R.drawable.yellow_indicator;
+            case R.drawable.grass_green_indicator:
+                return R.drawable.grass_green_indicator;
+            case R.drawable.green_indicator:
+                return R.drawable.green_indicator;
+            case R.drawable.red_indicator:
+                return R.drawable.red_indicator;
+            default:
+                break;
+        }
+        return 0;
     }
 /*
     @Override
