@@ -17,7 +17,9 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
+import com.nevowatch.nevo.ble.notification.NotificationCallback;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
@@ -34,6 +36,7 @@ import org.apache.commons.codec.binary.Hex;
 	boolean mInitSuccessful = false;
 	BluetoothDevice mBluetoothDevice;
 	Context mContext;
+    NotificationCallback  mNotificationCallback = null;
 	
 	
 	//Reconfigurable values
@@ -47,11 +50,13 @@ import org.apache.commons.codec.binary.Hex;
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public QuickBTImpl(String address, final Context ctx) {
 
+        if(ctx instanceof NotificationCallback) mNotificationCallback =(NotificationCallback)ctx;
+
 		//If any argument is null, let's not proceed
 		if(address==null || address.equals("") || ctx==null) {
 			
 			Log.e(TAG,"An argument is null");
-			
+            mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_notification_message);
 			return;
 		}
 		
@@ -147,7 +152,12 @@ import org.apache.commons.codec.binary.Hex;
     	public void onConnectionStateChange(final android.bluetooth.BluetoothGatt gatt, int status, int newState) {
     		
     		Log.d(TAG,"Connection changed");
-    		
+            //if status!=0, Gatt Service has got error(133,257), so need user reopen phone's bluetooth
+            //or here use code reopen bluetooth?
+            if(status !=0) {
+                mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_connecttimeout);
+            }
+
     		if(newState != BluetoothProfile.STATE_CONNECTED) {
     			
     			Log.d(TAG,"Not connected, newState:" + newState + ",status:" + status);

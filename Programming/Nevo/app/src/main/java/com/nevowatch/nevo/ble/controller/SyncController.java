@@ -70,5 +70,7 @@ public interface SyncController {
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
      */
     public void getStepsAndGoal();
+
+    public void showMessage(int titleID, int msgID);
 	
 }
