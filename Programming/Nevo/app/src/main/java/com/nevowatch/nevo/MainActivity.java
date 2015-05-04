@@ -107,16 +107,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
 
         if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
-            if((position+1) == 1){
-                replaceFragment(position, tag.get());
-            }else{
-                replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
-            }
+            replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
         }
-
     }
 
     /**

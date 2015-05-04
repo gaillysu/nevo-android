@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.RoundProgressBar;
@@ -176,6 +177,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     public void connectionStateChanged(boolean isConnected) {
         if(!isConnected)
             initLayout(false);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?0:10, isConnected?WelcomeFragment.WELCOMEFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 
     @Override
