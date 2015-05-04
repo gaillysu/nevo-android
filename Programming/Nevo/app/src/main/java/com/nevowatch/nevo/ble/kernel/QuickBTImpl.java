@@ -45,7 +45,8 @@ import org.apache.commons.codec.binary.Hex;
 	byte[][] mValue;
 	
 	//This depends on your external hardware
-	int MINIMAL_CONNECTION_TIME = 1000;
+    //light led pattern [2s on,1s off,1.8s on,off]
+	int MINIMAL_CONNECTION_TIME = 5000;
 	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public QuickBTImpl(String address, final Context ctx) {
@@ -241,6 +242,64 @@ import org.apache.commons.codec.binary.Hex;
 				}
 			});
 
+            mQueuedMainThread.postDelayed( new Runnable() {
+
+                @Override
+                public void run() {
+                    for(byte[] data : mValue)
+                    {
+                        byte [] closedata = new byte[]{data[0],data[1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(closedata)));
+                        bluetoothGattCharacteristic.setValue(closedata);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
+                }
+            },2000);
+
+            mQueuedMainThread.postDelayed( new Runnable() {
+
+                @Override
+                public void run() {
+                    for(byte[] data : mValue)
+                    {
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(data)));
+                        bluetoothGattCharacteristic.setValue(data);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
+                }
+            },3000);
+
+            mQueuedMainThread.postDelayed( new Runnable() {
+
+                @Override
+                public void run() {
+                    for(byte[] data : mValue)
+                    {
+                        byte [] closedata = new byte[]{data[0],data[1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(closedata)));
+                        bluetoothGattCharacteristic.setValue(closedata);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
+                }
+            },4800);
+
+            //For some reason we have to do it on the UI thread...
+            //But we don't do it in the Queued Handler, because we can't reliabily mQueuedMainThread.next(); on disconnect
+            //Because a disconnection can come from a lot of things
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    Log.d(TAG, "Disconnecting");
+
+                    gatt.disconnect();
+                    gatt.close();
+                }
+            },MINIMAL_CONNECTION_TIME);
+
     	};
     	
     	@Override
@@ -257,20 +316,7 @@ import org.apache.commons.codec.binary.Hex;
     		
     		//The characteristic have been modified, let's simply disconnect
     		mQueuedMainThread.next();
-    		
-            //For some reason we have to do it on the UI thread...
-            //But we don't do it in the Queued Handler, because we can't reliabily mQueuedMainThread.next(); on disconnect
-            //Because a disconnection can come from a lot of things
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-    			
-    			@Override
-    			public void run() {
-    				Log.d(TAG, "Disconnecting");
 
-    				gatt.disconnect();
-    				gatt.close(); 
-    			}
-    		},MINIMAL_CONNECTION_TIME);
     		
     	};
     	
