@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         fragmentManager.beginTransaction()
                // .addToBackStack(null)
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override
