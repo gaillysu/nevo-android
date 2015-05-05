@@ -61,6 +61,11 @@ public class SyncControllerImpl implements SyncController{
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
     private boolean mPopupShowing = false;
+    //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
+    //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
+    //so before sync finished, disable setGoal/setAlarm/getGoalSteps
+    //make sure  the whole received packets
+    private boolean mIsSendRequestLocked = true;
 
     /** The Handler of the ui thread. */
     Handler mUiThread = new Handler(Looper.getMainLooper());
@@ -131,7 +136,7 @@ public class SyncControllerImpl implements SyncController{
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                        //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)
-                        getStepsAndGoal();
+                        syncStepandGoal();
                         //syncActivityData();
                     }
                     else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
@@ -169,6 +174,7 @@ public class SyncControllerImpl implements SyncController{
                         {
                             mCurrentDay = 0;
                             syncFinished();
+                            mIsSendRequestLocked = false;
                         }
                     }
 
@@ -185,6 +191,7 @@ public class SyncControllerImpl implements SyncController{
 		public void onConnect(String peripheralAdress) {
             mTimeOutcount = 0;
 			mOnSyncControllerListener.connectionStateChanged(true);
+            mIsSendRequestLocked = true;
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -242,6 +249,14 @@ public class SyncControllerImpl implements SyncController{
 
     public void sendRequest(final SensorRequest request)
     {
+        if(mIsSendRequestLocked &&
+                (request instanceof GetStepsGoalNevoRequest
+                 || request instanceof SetGoalNevoRequest
+                 || request instanceof SetAlarmNevoRequest))
+        {
+            Log.w("SyncControllerImpl",request.getClass().getName() + " cancel sent by lock");
+            return;
+        }
         QueuedMainThreadHandler.getInstance().post(new Runnable(){
             @Override
             public void run() {
@@ -264,6 +279,20 @@ public class SyncControllerImpl implements SyncController{
         sendRequest(new ReadDailyTrackerNevoRequest(trackerno));
     }
 
+    void syncStepandGoal() {
+        final SensorRequest request = new GetStepsGoalNevoRequest();
+        QueuedMainThreadHandler.getInstance().post(new Runnable() {
+            @Override
+            public void run() {
+                mUiThread.removeCallbacks(mSendCommandTimeOut);
+                mUiThread.postDelayed(mSendCommandTimeOut, MAX_TIMEOUT);
+                Log.i("SyncControllerImpl", request.getClass().getName());
+                mNevoBT.sendRequest(request);
+            }
+        });
+    }
+
+
     /**
      This function will syncrhonise activity data with the watch.
      It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
@@ -279,6 +308,10 @@ public class SyncControllerImpl implements SyncController{
             Log.i("SyncControllerImpl","*** Sync started ! ***");
             getDailyTrackerInfo();
         }
+        else
+        {
+            mIsSendRequestLocked = false;
+        }
     }
 
     /**
@@ -289,7 +322,6 @@ public class SyncControllerImpl implements SyncController{
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
     }
-		
 	public SyncControllerImpl(Context context)
 	{
 		mContext = context;	
