@@ -39,6 +39,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     public static final String SMSTYPE = "sms";
     public static final String CALTYPE = "calendar";
     public static final String WEICHATTYPE = "weichat";
+    public static final String WHATSTYPE = "whatsapp";
 
     public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects, ListView listView){
         super(context, mListItemResourceId, objects);
@@ -146,6 +147,11 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
                 setImg(viewHolder, getTypeNFState(mCtx, WEICHATTYPE));
                 viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.WECHATCHOOSENCOLOR)));
                 break;
+            case 6:
+                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, WHATSTYPE));
+                setImg(viewHolder, getTypeNFState(mCtx, WHATSTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
+                break;
             default:
                 viewHolder.mSwitch.setChecked(false);
                 break;
@@ -223,6 +229,15 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
                     checkedImg(position, isChecked);
                 }
                 break;
+            case 6:
+                if(isChecked){
+                    saveTypeNFState(mCtx, WHATSTYPE, true);
+                    checkedImg(position, isChecked);
+                }else {
+                    saveTypeNFState(mCtx, WHATSTYPE, false);
+                    checkedImg(position, isChecked);
+                }
+                break;
             default:
                 break;
         }
@@ -242,6 +257,8 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             pref.edit().putBoolean(CALTYPE, value).apply();
         }else if(tag.equals(WEICHATTYPE)){
             pref.edit().putBoolean(WEICHATTYPE, value).apply();
+        }else if(tag.equals(WHATSTYPE)){
+            pref.edit().putBoolean(WHATSTYPE, value).apply();
         }
     }
 
@@ -259,6 +276,8 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             return pref.getBoolean(CALTYPE, false);
         }else if(tag.equals(WEICHATTYPE)){
             return pref.getBoolean(WEICHATTYPE, false);
+        }else if(tag.equals(WHATSTYPE)){
+            return pref.getBoolean(WHATSTYPE, false);
         }
         return false;
     }

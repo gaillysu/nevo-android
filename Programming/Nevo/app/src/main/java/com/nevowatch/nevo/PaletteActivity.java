@@ -42,6 +42,7 @@ public class PaletteActivity extends Activity
     public static final String SMSCHOOSENCOLOR = "smschoosencolor";
     public static final String CALCHOOSENCOLOR = "calchoosencolor";
     public static final String WECHATCHOOSENCOLOR = "wechatchoosencolor";
+    public static final String WHATSAPPCHOOSENCOLOR = "whatsappchoosencolor";
     private int mChoosenColor = -1;
     private int mPosition = -1;
     private TextView mTitle;
@@ -114,6 +115,11 @@ public class PaletteActivity extends Activity
                 setImageLight(mChoosenColor);
                 mTitle.setText(getResources().getString(R.string.wechat_string));
                 break;
+            case 6:
+                mChoosenColor = getTypeChoosenColor(this, WHATSAPPCHOOSENCOLOR);
+                setImageLight(mChoosenColor);
+                mTitle.setText(getResources().getString(R.string.whatsapp_string));
+                break;
             default:
                 break;
         }
@@ -138,6 +144,9 @@ public class PaletteActivity extends Activity
                 break;
             case 5:
                 saveTypeChoosenColor(this, WECHATCHOOSENCOLOR, choosenColor);
+                break;
+            case 6:
+                saveTypeChoosenColor(this, WHATSAPPCHOOSENCOLOR, choosenColor);
                 break;
             default:
                 break;
@@ -254,6 +263,8 @@ public class PaletteActivity extends Activity
             pref.edit().putInt(CALCHOOSENCOLOR, value).apply();
         }else if(tag.equals(WECHATCHOOSENCOLOR)){
             pref.edit().putInt(WECHATCHOOSENCOLOR, value).apply();
+        }else if(tag.equals(WHATSAPPCHOOSENCOLOR)){
+            pref.edit().putInt(WHATSAPPCHOOSENCOLOR, value).apply();
         }
     }
 
@@ -271,6 +282,8 @@ public class PaletteActivity extends Activity
             return pref.getInt(CALCHOOSENCOLOR, RED_LED);
         }else if(tag.equals(WECHATCHOOSENCOLOR)){
             return pref.getInt(WECHATCHOOSENCOLOR, LIGHTGREEN_LED);
+        }else if(tag.equals(WHATSAPPCHOOSENCOLOR)){
+            return pref.getInt(WHATSAPPCHOOSENCOLOR, LIGHTGREEN_LED);
         }
         return -1;
     }

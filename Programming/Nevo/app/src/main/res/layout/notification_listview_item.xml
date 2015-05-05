@@ -9,9 +9,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_height="match_parent">
 
      <ImageView
         android:layout_width="6dp"
@@ -23,8 +21,8 @@
         android:layout_marginLeft="20dp" />
 
         <TextView
-            android:layout_width="95sp"
-            android:layout_height="60sp"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
             android:id="@+id/typeTextView"
             android:layout_gravity="center_vertical"
             android:gravity="left|center"

@@ -17,8 +17,7 @@
             android:id="@+id/palette_title"
             android:text="@string/title_section4"
             android:background="@color/customBlack"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal" />
+            android:gravity="center" />
 
     </RelativeLayout>
 

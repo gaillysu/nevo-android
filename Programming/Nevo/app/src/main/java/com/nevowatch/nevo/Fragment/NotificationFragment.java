@@ -38,6 +38,7 @@ public class NotificationFragment extends Fragment
         mList.add(new NotificationItem(getDefaultColor(R.drawable.green_indicator), getResources().getString(R.string.sms_string), R.drawable.setting));
         mList.add(new NotificationItem(getDefaultColor(R.drawable.red_indicator), getResources().getString(R.string.calendar_string), R.drawable.setting));
         mList.add(new NotificationItem(getDefaultColor(R.drawable.grass_green_indicator), getResources().getString(R.string.wechat_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(R.drawable.grass_green_indicator), getResources().getString(R.string.whatsapp_string), R.drawable.setting));
     }
 
     @Override
