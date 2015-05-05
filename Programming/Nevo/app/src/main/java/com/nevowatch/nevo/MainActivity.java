@@ -98,9 +98,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTitle = getString(R.string.title_section3);
                 break;
             case 4:
-                tag.set(NotificationFragment.NotificationFragment);
+                tag.set(NotificationFragment.NOTIFICATIONFRAGMENT);
                 mPosition = 3;
-                mTag = NotificationFragment.NotificationFragment;
+                mTag = NotificationFragment.NOTIFICATIONFRAGMENT;
                 mTitle = getString(R.string.title_section4);
                 break;
             default:
@@ -156,8 +156,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else if(tag.equals(WelcomeFragment.WELCOMEFRAGMENT)){
             WelcomeFragment welcomeFragment = (WelcomeFragment) getSupportFragmentManager().findFragmentByTag(WelcomeFragment.WELCOMEFRAGMENT);
             return welcomeFragment;
-        }else if(tag.equals(NotificationFragment.NotificationFragment)){
-            NotificationFragment notificationFragment = (NotificationFragment) getSupportFragmentManager().findFragmentByTag(NotificationFragment.NotificationFragment);
+        }else if(tag.equals(NotificationFragment.NOTIFICATIONFRAGMENT)){
+            NotificationFragment notificationFragment = (NotificationFragment) getSupportFragmentManager().findFragmentByTag(NotificationFragment.NOTIFICATIONFRAGMENT);
             return notificationFragment;
         }
         return null;

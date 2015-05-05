@@ -25,7 +25,7 @@ import java.util.List;
 public class NotificationFragment extends Fragment
         implements OnSyncControllerListener/*, AdapterView.OnItemClickListener*/{
 
-    public static final String NotificationFragment = "Notification Fragment";
+    public static final String NOTIFICATIONFRAGMENT = "NotificationFragment";
     private ListView mListView;
     private List<NotificationItem> mList;
     private NotificationFragmentAdapter mAdatper;
@@ -70,7 +70,7 @@ public class NotificationFragment extends Fragment
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?NotificationFragment:ConnectAnimationFragment.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?3:10, isConnected?NotificationFragment.NOTIFICATIONFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 
     private int getDefaultColor(int defColor){

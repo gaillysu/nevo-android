@@ -154,6 +154,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?AlarmFragment.ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }
