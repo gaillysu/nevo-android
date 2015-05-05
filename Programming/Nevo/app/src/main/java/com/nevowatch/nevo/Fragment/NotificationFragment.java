@@ -42,6 +42,12 @@ public class NotificationFragment extends Fragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        NevoNotificationListener.getNotificationAccessPermission(getActivity());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
         initListView();
@@ -60,7 +66,6 @@ public class NotificationFragment extends Fragment
             ((MainActivity)getActivity()).replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
         }
         mAdatper.notifyDataSetChanged();
-        NevoNotificationListener.getNotificationAccessPermission(getActivity());
     }
 
     @Override
