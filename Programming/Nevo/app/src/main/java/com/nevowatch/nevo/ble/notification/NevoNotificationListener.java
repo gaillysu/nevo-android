@@ -31,7 +31,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 @TargetApi(18)
-public class NevoNotificationListener extends NotificationListenerService {
+public class NevoNotificationListener extends NotificationListenerService implements NotificationCallback{
 
     static Optional<Date> lastNotification = new Optional<Date>();
 
@@ -166,4 +166,8 @@ public class NevoNotificationListener extends NotificationListenerService {
         }
     }
 
+    @Override
+    public void process(int titleID, int msgID) {
+        SyncController.Singleton.getInstance(null).showMessage(titleID,msgID);
+    }
 }

@@ -52,7 +52,7 @@ import com.nevowatch.nevo.R;
 public class SyncControllerImpl implements SyncController{
 
 	Context mContext;
-	private static final int SYNC_INTERVAL = 1*60*60*1000; //every hour , do sync when connected again
+	private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
 	private NevoBT mNevoBT;
 	private OnSyncControllerListener mOnSyncControllerListener;
     private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
@@ -60,6 +60,8 @@ public class SyncControllerImpl implements SyncController{
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
+    private boolean mPopupShowing = false;
+
     /** The Handler of the ui thread. */
     Handler mUiThread = new Handler(Looper.getMainLooper());
     //send Command timeout
@@ -225,33 +227,9 @@ public class SyncControllerImpl implements SyncController{
             }else if (e instanceof BLEConnectTimeoutException) {
                 mTimeOutcount = mTimeOutcount + 1;
                 //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
-                if (mTimeOutcount == 3) {
-
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new AlertDialog.Builder(getContext(),AlertDialog.THEME_HOLO_LIGHT)
-                                    .setTitle(R.string.ble_timeout_title)
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .setMessage(R.string.ble_connecttimeout)
-                                    .setPositiveButton("Bluetooth",new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            mTimeOutcount = 0;
-                                            Intent intent = new Intent("android.intent.action.View");
-                                            intent.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings"));
-                                            getContext().startActivity(intent);
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            mTimeOutcount = 0;
-                                        }
-                                    })
-                                    .show();
-                        }
-                    });
+                if (mTimeOutcount  == 3) {
+                    mTimeOutcount = 0;
+                    showMessage(R.string.ble_timeout_title,R.string.ble_connecttimeout);
                 }
             }
             mOnSyncControllerListener.connectionStateChanged(false);
@@ -392,5 +370,38 @@ public class SyncControllerImpl implements SyncController{
 		return !mNevoBT.isDisconnected();
 	}
 
-	
+    @Override
+    public void showMessage(final int titleID, final int msgID) {
+
+        if(mPopupShowing) return;
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT)
+                    .setPositiveButton("Bluetooth", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mPopupShowing = false;
+                            Intent intent = new Intent("android.intent.action.View");
+                            intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings"));
+                            getContext().startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mPopupShowing = false;
+                        }
+                    })
+                    .setCancelable(false)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(titleID)
+                    .setMessage(msgID)
+                    .show();
+                    mPopupShowing = true;
+            }
+        });
+
+    }
 }

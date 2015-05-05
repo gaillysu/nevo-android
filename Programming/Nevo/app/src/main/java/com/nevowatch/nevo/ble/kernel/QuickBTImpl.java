@@ -17,7 +17,9 @@ import android.util.Log;
 
 import java.util.UUID;
 
+import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
+import com.nevowatch.nevo.ble.notification.NotificationCallback;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
@@ -34,6 +36,7 @@ import org.apache.commons.codec.binary.Hex;
 	boolean mInitSuccessful = false;
 	BluetoothDevice mBluetoothDevice;
 	Context mContext;
+    NotificationCallback  mNotificationCallback = null;
 	
 	
 	//Reconfigurable values
@@ -42,16 +45,19 @@ import org.apache.commons.codec.binary.Hex;
 	byte[][] mValue;
 	
 	//This depends on your external hardware
-	int MINIMAL_CONNECTION_TIME = 1000;
+    //light led pattern [2s on,1s off,1.8s on,off]
+	int MINIMAL_CONNECTION_TIME = 5000;
 	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public QuickBTImpl(String address, final Context ctx) {
+
+        if(ctx instanceof NotificationCallback) mNotificationCallback =(NotificationCallback)ctx;
 
 		//If any argument is null, let's not proceed
 		if(address==null || address.equals("") || ctx==null) {
 			
 			Log.e(TAG,"An argument is null");
-			
+            mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_notification_message);
 			return;
 		}
 		
@@ -147,7 +153,12 @@ import org.apache.commons.codec.binary.Hex;
     	public void onConnectionStateChange(final android.bluetooth.BluetoothGatt gatt, int status, int newState) {
     		
     		Log.d(TAG,"Connection changed");
-    		
+            //if status!=0, Gatt Service has got error(133,257), so need user reopen phone's bluetooth
+            //or here use code reopen bluetooth?
+            if(status !=0) {
+                mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_connecttimeout);
+            }
+
     		if(newState != BluetoothProfile.STATE_CONNECTED) {
     			
     			Log.d(TAG,"Not connected, newState:" + newState + ",status:" + status);
@@ -231,6 +242,64 @@ import org.apache.commons.codec.binary.Hex;
 				}
 			});
 
+            mQueuedMainThread.postDelayed( new Runnable() {
+
+                @Override
+                public void run() {
+                    for(byte[] data : mValue)
+                    {
+                        byte [] closedata = new byte[]{data[0],data[1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(closedata)));
+                        bluetoothGattCharacteristic.setValue(closedata);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
+                }
+            },2000);
+
+            mQueuedMainThread.postDelayed( new Runnable() {
+
+                @Override
+                public void run() {
+                    for(byte[] data : mValue)
+                    {
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(data)));
+                        bluetoothGattCharacteristic.setValue(data);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
+                }
+            },3000);
+
+            mQueuedMainThread.postDelayed( new Runnable() {
+
+                @Override
+                public void run() {
+                    for(byte[] data : mValue)
+                    {
+                        byte [] closedata = new byte[]{data[0],data[1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+                        Log.e(TAG, "Send notification request: "+ new String(Hex.encodeHex(closedata)));
+                        bluetoothGattCharacteristic.setValue(closedata);
+                        gatt.writeCharacteristic(bluetoothGattCharacteristic);
+
+                    }
+                }
+            },4800);
+
+            //For some reason we have to do it on the UI thread...
+            //But we don't do it in the Queued Handler, because we can't reliabily mQueuedMainThread.next(); on disconnect
+            //Because a disconnection can come from a lot of things
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    Log.d(TAG, "Disconnecting");
+
+                    gatt.disconnect();
+                    gatt.close();
+                }
+            },MINIMAL_CONNECTION_TIME);
+
     	};
     	
     	@Override
@@ -247,20 +316,7 @@ import org.apache.commons.codec.binary.Hex;
     		
     		//The characteristic have been modified, let's simply disconnect
     		mQueuedMainThread.next();
-    		
-            //For some reason we have to do it on the UI thread...
-            //But we don't do it in the Queued Handler, because we can't reliabily mQueuedMainThread.next(); on disconnect
-            //Because a disconnection can come from a lot of things
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-    			
-    			@Override
-    			public void run() {
-    				Log.d(TAG, "Disconnecting");
 
-    				gatt.disconnect();
-    				gatt.close(); 
-    			}
-    		},MINIMAL_CONNECTION_TIME);
     		
     	};
     	
