@@ -35,6 +35,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
     private static int mPosition = -1;
     private static String mTag;
+    private Boolean mIsVisible = true;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -191,6 +192,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void connectionStateChanged(final boolean isConnected) {
+          if(!mIsVisible) return;
+
           runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -259,6 +262,25 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             }
             return fragment.get();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!mIsVisible){
+            if(SyncController.Singleton.getInstance(this).isConnected()){
+                replaceFragment(mPosition, mTag);
+            }else {
+                replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
+            }
+        }
+        mIsVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsVisible = false;
     }
 
     @Override
