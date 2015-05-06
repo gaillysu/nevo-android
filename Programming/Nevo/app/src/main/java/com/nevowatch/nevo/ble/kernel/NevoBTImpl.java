@@ -34,6 +34,7 @@ import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
+import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -706,6 +707,9 @@ import com.nevowatch.nevo.ble.util.Optional;
         initAutoReconnectTimer(servicelist);
 
         if (!isDisconnected()) {return;}
+
+        //clear Queue before every connect
+        QueuedMainThreadHandler.getInstance().clear();
 
         if(hasSavedAddress())
         {
