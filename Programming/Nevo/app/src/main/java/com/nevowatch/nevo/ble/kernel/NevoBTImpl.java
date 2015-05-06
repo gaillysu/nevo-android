@@ -398,12 +398,19 @@ import com.nevowatch.nevo.ble.util.Optional;
 				@Override
 				public void run() {
 					try{
-                        // if get disconnect from connected, after 10s, do reconnect
-                        // if always disconnect, do reconnect follow the connect pattern array[10s,10s,10s,60s...]
-                        mTimerIndex = 0;
-                        initAutoReconnectTimer(mSupportServicelist);
 						//Then call the disconnect callback
-						if(mDisconnectListener!=null) mDisconnectListener.onDisconnect(peripheralAdress);
+                        //when connected, get disconnect by the same device
+                        // (if the disconnet comes from the 2nd nevo,no need forward to top layer "syncController")
+                        //when connecting, get disconnect
+						if(mDisconnectListener!=null
+                                && (peripheralAdress.equals(getSaveAddress()) || getSaveAddress().equals("")))
+                        {
+                            // if get disconnect from connected, after 10s, do reconnect
+                            // if always disconnect, do reconnect follow the connect pattern array[10s,10s,10s,60s...]
+                            mTimerIndex = 0;
+                            initAutoReconnectTimer(mSupportServicelist);
+                            mDisconnectListener.onDisconnect(peripheralAdress);
+                        }
 					} catch (Throwable t){
 						t.printStackTrace();
 					}

@@ -135,12 +135,14 @@ public class SyncControllerImpl implements SyncController{
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
+                    /*
                        //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)
                         syncStepandGoal();
                         //syncActivityData();
                     }
                     else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
+                    */
                         //start sync data, nevo-->phone
                         syncActivityData();
                     }
@@ -192,6 +194,7 @@ public class SyncControllerImpl implements SyncController{
             mTimeOutcount = 0;
 			mOnSyncControllerListener.connectionStateChanged(true);
             mIsSendRequestLocked = true;
+            mPacketsbuffer.clear();
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override

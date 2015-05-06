@@ -376,7 +376,7 @@ public class NevoBTService extends Service {
             	
                 Log.e(NevoBT.TAG, "Disconnected from GATT server : "+ address);
                 
-                if(mDisconnected!=null && gatt!=null) mDisconnected.onDisconnect(gatt.getDevice().getName());
+                if(mDisconnected!=null && gatt!=null) mDisconnected.onDisconnect(address);
 
                 //close this server for next reconnect!!!
                 if(gatt!=null) {gatt.disconnect();gatt.close();}
@@ -401,10 +401,6 @@ public class NevoBTService extends Service {
             	return;
             }
 
-            mBluetoothGattMap.put(gatt.getDevice().getAddress(), gatt);
-            if(mConnected!=null && gatt!=null) mConnected.onConnect(gatt.getDevice().getAddress());
-            
-        	
         	final String address = gatt.getDevice().getAddress();
         	
         	Log.d(NevoBT.TAG, "Services discovered : "+address);
@@ -428,6 +424,7 @@ public class NevoBTService extends Service {
         		Optional<String> device = isServiceConnected(service.getUuid());
         		//If yes, maybe it's this device address. If not, then we shouldn't connect this device, let's disconnect.
         		if(device.notEmpty()&&!device.get().equals(address)) {
+                    Log.w(NevoBT.TAG, "disconnect the second BLE device (same service UUID,eg:  the 2nd. nevo): "+address);
         			disconnect(address);
         			return;
         		}
@@ -463,7 +460,12 @@ public class NevoBTService extends Service {
         		Log.w(NevoBT.TAG,"No characteristic chosen, maybe the bluetooth is unstable : "+address);
         		mException.onException(new BLEUnstableException());
         	}
-            
+            else
+            {
+                //here only connect one nevo, the first nevo by scan to find out
+                mBluetoothGattMap.put(gatt.getDevice().getAddress(), gatt);
+                if(mConnected!=null && gatt!=null) mConnected.onConnect(gatt.getDevice().getAddress());
+            }
         	
         }
  
