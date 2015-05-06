@@ -30,7 +30,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
 
     public static final String ALARMFRAGMENT = "AlarmFragment";
-
+    public static final int ALARMPOSITION = 2;
     private TextView mClockTextView;
     private ImageView mEditClockImage;
     private Button mOnButton;
@@ -154,6 +154,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?2:10, isConnected?AlarmFragment.ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?AlarmFragment.ALARMPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?AlarmFragment.ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

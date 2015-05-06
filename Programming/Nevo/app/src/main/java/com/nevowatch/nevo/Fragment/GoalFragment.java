@@ -30,7 +30,7 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
 
 
     public static final String GOALFRAGMENT = "GoalFragment";
-
+    public static final int GOALPOSITION = 1;
     private TextView mStepsTextView;
     private ImageView mEditStepsImage;
     private Button mModarateButton;
@@ -192,6 +192,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-       ((MainActivity)getActivity()).replaceFragment(isConnected?1:10, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+       ((MainActivity)getActivity()).replaceFragment(isConnected?GoalFragment.GOALPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

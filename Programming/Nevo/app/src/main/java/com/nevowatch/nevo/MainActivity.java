@@ -79,27 +79,27 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             return;
         }
         switch (position+1){
-            case 1:
+            case WelcomeFragment.WELPOSITION+1:
                 tag.set(WelcomeFragment.WELCOMEFRAGMENT);
-                mPosition = 0;
+                mPosition = WelcomeFragment.WELPOSITION;
                 mTag = WelcomeFragment.WELCOMEFRAGMENT;
                 mTitle = getString(R.string.title_section1);
                 break;
-            case 2:
+            case GoalFragment.GOALPOSITION+1:
                 tag.set(GoalFragment.GOALFRAGMENT);
-                mPosition = 1;
+                mPosition = GoalFragment.GOALPOSITION;
                 mTag = GoalFragment.GOALFRAGMENT;
                 mTitle = getString(R.string.title_section2);
                 break;
-            case 3:
+            case AlarmFragment.ALARMPOSITION+1:
                 tag.set(AlarmFragment.ALARMFRAGMENT);
-                mPosition = 2;
+                mPosition = AlarmFragment.ALARMPOSITION;
                 mTag = AlarmFragment.ALARMFRAGMENT;
                 mTitle = getString(R.string.title_section3);
                 break;
-            case 4:
+            case NotificationFragment.NOTIPOSITION+1:
                 tag.set(NotificationFragment.NOTIFICATIONFRAGMENT);
-                mPosition = 3;
+                mPosition = NotificationFragment.NOTIPOSITION;
                 mTag = NotificationFragment.NOTIFICATIONFRAGMENT;
                 mTitle = getString(R.string.title_section4);
                 break;
@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
 
         if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
-            replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
+            replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
@@ -237,19 +237,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             Optional<Fragment> fragment = new Optional<Fragment>(null);
 
             switch (sectionNumber) {
-                case 1:
+                case WelcomeFragment.WELPOSITION+1:
                     fragment.set(new WelcomeFragment());
                     break;
-                case 2:
+                case GoalFragment.GOALPOSITION+1:
                     fragment.set(new GoalFragment());
                     break;
-                case 3:
+                case AlarmFragment.ALARMPOSITION+1:
                     fragment.set(new AlarmFragment());
                     break;
-                case 4:
+                case NotificationFragment.NOTIPOSITION+1:
                     fragment.set(new NotificationFragment());
                     break;
-                case 11:
+                case ConnectAnimationFragment.CONNECTPOSITION+1:
                     fragment.set(new ConnectAnimationFragment());
                     Bundle args = new Bundle();
                     args.putInt(POSTITION, mPosition);
@@ -271,7 +271,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             if(SyncController.Singleton.getInstance(this).isConnected()){
                 replaceFragment(mPosition, mTag);
             }else {
-                replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
+                replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
             }
         }
         mIsVisible = true;

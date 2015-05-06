@@ -26,7 +26,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
 
     public static final String CONNECTFRAGMENT = "ConnectAnimationFragment";
-
+    public static final int CONNECTPOSITION = 10;
     private ImageView mConnectImage;
     private Button mConnectButton;
     private int mPostion;

@@ -35,8 +35,8 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
 
 
     public static final String WELCOMEFRAGMENT = "WelcomeFragment";
+    public static final int WELPOSITION = 0;
     private static final String PREF_CUR_STEP = "currentStep";
-
     private ImageView mHourImage, mMinImage;
     private RoundProgressBar mRoundProgressBar;
     private TextView mTextView;
@@ -177,7 +177,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     public void connectionStateChanged(boolean isConnected) {
         if(!isConnected)
             initLayout(false);
-        ((MainActivity)getActivity()).replaceFragment(isConnected?0:10, isConnected?WelcomeFragment.WELCOMEFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?WelcomeFragment.WELPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?WelcomeFragment.WELCOMEFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 
     @Override
