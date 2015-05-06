@@ -72,5 +72,7 @@ public interface SyncController {
     public void getStepsAndGoal();
 
     public void showMessage(int titleID, int msgID);
+
+    public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser);
 	
 }

@@ -105,6 +105,14 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WEICHATTYPE))
                     sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WECHATCHOOSENCOLOR));
             }
+            //whatsapp
+            else if(arg0.getPackageName().equals("com.whatsapp")){
+                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+                //BLE keep-connect service will process this message
+                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WHATSTYPE))
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WHATSAPPCHOOSENCOLOR));
+            }
+
         }
     }
 

@@ -254,7 +254,7 @@ public class SyncControllerImpl implements SyncController{
                  || request instanceof SetGoalNevoRequest
                  || request instanceof SetAlarmNevoRequest))
         {
-            Log.w("SyncControllerImpl",request.getClass().getName() + " cancel sent by lock");
+            Log.w("SyncControllerImpl", request.getClass().getName() + " cancel sent by lock");
             return;
         }
         QueuedMainThreadHandler.getInstance().post(new Runnable(){
@@ -346,8 +346,8 @@ public class SyncControllerImpl implements SyncController{
 	@Override
 	public void startConnect(boolean forceScan,
 			OnSyncControllerListener listenser) {
-		
-		mOnSyncControllerListener = listenser;
+
+        setSyncControllerListenser(listenser);
 		
 		if (forceScan)
 		{
@@ -435,5 +435,10 @@ public class SyncControllerImpl implements SyncController{
             }
         });
 
+    }
+
+    @Override
+    public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
+        mOnSyncControllerListener = syncControllerListenser;
     }
 }
