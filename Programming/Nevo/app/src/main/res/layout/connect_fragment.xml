@@ -26,7 +26,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/connect_imageView"
             android:src="@drawable/rotating_round"
+            android:background="@drawable/rotating_round_bg"
             android:layout_gravity="center_horizontal"
+            android:rotation="45"
             android:layout_centerInParent="true"/>
 
         <Button

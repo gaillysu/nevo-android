@@ -38,6 +38,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/t4_rotate_ImageView"
             android:src="@drawable/rotating_round"
+            android:background="@drawable/rotating_round_bg"
+            android:rotation="45"
             android:layout_gravity="center" />
 
         <Button

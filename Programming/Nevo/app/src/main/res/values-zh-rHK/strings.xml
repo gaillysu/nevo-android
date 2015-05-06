@@ -44,9 +44,15 @@
     <string name="facebook_string">Facebook</string>
     <string name="calendar_string">日歷</string>
     <string name="wechat_string">微信</string>
-    <string name="ble_not_supported">Bluetooth 4.0 is not supported by this Device</string>
-    <string name="ble_deactivated">Bluetooth is currently deactivated </string>
-    <string name="ble_unstable">Your phone\'s BLE is currently unstable, this might come from a hardware problem. Please turn your phone\'s bluetooth off then on or restart your phone.</string>
-    <string name="ble_connecttimeout">Please check your nevo,let its bluetooth on by press the bottom hard key 2s, make the blue led light blink. Or check your phone\'s bluetooth, some smartphone\'s bluetooth is unstable, please turn it off then on or restart your phone.</string>
-    <string name="ble_timeout_title">Bluetooth connect timeout</string>
+    <string name="whatsapp_string">WhatsApp</string>
+    <string name="ble_not_supported">設備不支持藍牙4.0</string>
+    <string name="ble_deactivated">藍牙沒有打開</string>
+    <string name="ble_unstable">手機藍牙連接不穩定,可能是硬件問題。請先關閉再打開藍牙或者重啟手機</string>
+   <string name="ble_connecttimeout">解決方案1:長按nevo手錶的底部按鈕直到藍燈一閃一閃,再點擊警告框中的"Cancel"按鈕,最後點擊應用中的“Connect”按鈕,進行重連.\n
+        解決方案2:長按nevo手錶的底部按鈕直到藍燈一閃一閃,再點擊警告框中的"Bluetooth"按鈕,進入"藍牙"設置界面先關閉再打開藍牙,然後按系統返回鍵回到nevo應用,最後點擊應用中的“Connect”按鈕,進行重連.\n
+        溫馨提示:長按nevo手錶的底部按鈕,藍燈亮一下--打開手錶藍牙; 藍燈亮兩下--關閉手錶藍牙; 藍燈一閃一閃--藍牙連接中.</string>
+    <string name="ble_timeout_title">藍牙連接超時</string>
+    <string name="ble_notification_title">通知</string>
+    <string name="ble_notification_message">Nevo未綁定,請先連接Nevo再綁定它</string>
+
 </resources>

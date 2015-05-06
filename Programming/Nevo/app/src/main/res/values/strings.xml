@@ -45,11 +45,13 @@
     <string name="calendar_string">Calendar</string>
     <string name="wechat_string">WeChat</string>
     <string name="whatsapp_string">WhatsApp</string>
-    <string name="ble_not_supported">Bluetooth 4.0 is not supported by this Device</string>
-    <string name="ble_deactivated">Bluetooth is currently deactivated </string>
-    <string name="ble_unstable">Your phone\'s BLE is currently unstable, this might come from a hardware problem. Please turn your phone\'s bluetooth off then on or restart your phone.</string>
-    <string name="ble_connecttimeout">reconnect by pressing and holding bottom button until blue LED flashes. If problem persists, turn OFF then ON Bluetooth in phone settings.</string>
-    <string name="ble_timeout_title">Bluetooth connect timeout</string>
+    <string name="ble_not_supported">Phone does not support Bluetooth 4.0</string>
+    <string name="ble_deactivated">Bluetooth now OFF, please turn ON Bluetooth in phone settings.</string>
+    <string name="ble_unstable">Bluetooth connection is unstable, please turn Bluetooth OFF then ON in phone settings.</string>
+    <string name="ble_connecttimeout">&#160;&#160;&#160;Solution 1: Press and hold bottom button until blue LED flashes, then tap "cancel" button on pop-up. Now tap "Connect" button to reconnect.\n
+        &#160;&#160;Solution 2: Press and hold bottom button until blue LED flashes, then tap "Bluetooth" button on pop-up. Then, turn Bluetooth OFF then ON in the phone settings. Next, press "Back" button to return to nevo app and tap "Connect" to reconnect.\n
+        &#160;&#160;Tips: The Blue LED can indicate three conditions: When LED flashes once, nevo Bluetooth is ON; When LED flashes twice, nevo Bluetooth is OFF; When LED flashes continuous, nevo is attempting to connect with phone</string>
+    <string name="ble_timeout_title">Bluetooth connection timeout</string>
     <string name="ble_notification_title">Notification</string>
-    <string name="ble_notification_message">no Nevo bound,please firstly connect one Nevo and bind it</string>
+    <string name="ble_notification_message">No Nevo paired, please first connect nevo and pair</string>
 </resources>

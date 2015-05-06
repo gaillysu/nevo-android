@@ -120,6 +120,7 @@ public class TutorialFourActivity extends Activity
             mConnectButton.setVisibility(View.INVISIBLE);
             mConnectButton.setClickable(false);
             mConnectImg.setImageResource(R.drawable.success);
+            mConnectImg.setBackgroundResource(R.color.transparent);
         }
     }
 }
