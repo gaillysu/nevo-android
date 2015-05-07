@@ -10,10 +10,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 
 /**
  * ColorPanelActivity
@@ -55,7 +55,6 @@ public class PaletteActivity extends Activity
 
         initView();
         initLayout(mPosition);
-        SyncController.Singleton.getInstance(this).startConnect(false, this);
 
         View [] viewArray = new View []{
                 findViewById(R.id.palette_title),
@@ -286,6 +285,12 @@ public class PaletteActivity extends Activity
             return pref.getInt(WHATSAPPCHOOSENCOLOR, LIGHTGREEN_LED);
         }
         return -1;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
     }
 
     @Override
