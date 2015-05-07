@@ -165,6 +165,6 @@ public interface NevoBT {
     before call it, do nothing
     */
 	void restoreSavedAddress();
-	
-	
+
+    String getSaveAddress();
 }

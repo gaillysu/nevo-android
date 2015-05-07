@@ -35,22 +35,31 @@ import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.util.Constants;
+import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.nevowatch.nevo.R;
 
 public class SyncControllerImpl implements SyncController{
-
+    private final static String TAG = "SyncControllerImpl";
 	Context mContext;
 	private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
 	private NevoBT mNevoBT;
@@ -67,6 +76,8 @@ public class SyncControllerImpl implements SyncController{
     //make sure  the whole received packets
     private boolean mIsSendRequestLocked = true;
 
+    private SensorRequest mCurrentrequest;
+
     /** The Handler of the ui thread. */
     Handler mUiThread = new Handler(Looper.getMainLooper());
     //send Command timeout
@@ -75,9 +86,18 @@ public class SyncControllerImpl implements SyncController{
     Runnable mSendCommandTimeOut = new Runnable() {
         @Override
         public void run() {
-            Log.e("SyncControllerImpl","send command timeout");
+            Log.e("SyncControllerImpl","send command timeout:" + mCurrentrequest.getClass().getName());
             if(mNevoBT.isDisconnected())
                 mOnSyncControllerListener.connectionStateChanged(false);
+            else
+            {
+                if(!(mCurrentrequest instanceof ReadDailyTrackerNevoRequest))
+                {
+                    mNevoBT.disconnect(new Optional<String>(mNevoBT.getSaveAddress()));
+                    showMessage(R.string.ble_command_timeout_title,R.string.ble_connecttimeout);
+                }
+            }
+
         }
     };
 
@@ -266,6 +286,7 @@ public class SyncControllerImpl implements SyncController{
                 mUiThread.removeCallbacks(mSendCommandTimeOut);
                 mUiThread.postDelayed(mSendCommandTimeOut,MAX_TIMEOUT);
                 Log.i("SyncControllerImpl",request.getClass().getName());
+                mCurrentrequest = request;
                 mNevoBT.sendRequest(request);
             }
         });
@@ -325,7 +346,7 @@ public class SyncControllerImpl implements SyncController{
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
     }
-	public SyncControllerImpl(Context context)
+    /*package*/SyncControllerImpl(Context context)
 	{
 		mContext = context;	
 		
@@ -334,6 +355,9 @@ public class SyncControllerImpl implements SyncController{
 		mNevoBT.addCallback(mDataReceivedListener);
 		mNevoBT.disconnectCallback(mDisconnectListener);
 		mNevoBT.exceptionCallback(mExceptionListener);
+
+        Intent intent = new Intent(mContext,LocalService.class);
+        mContext.bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
 	}
 
 	/*package*/void setContext(Context context) {
@@ -407,41 +431,93 @@ public class SyncControllerImpl implements SyncController{
 
     @Override
     public void showMessage(final int titleID, final int msgID) {
-
-        if(mPopupShowing) return;
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(getContext(), AlertDialog.THEME_HOLO_LIGHT)
-                    .setPositiveButton("Bluetooth", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mPopupShowing = false;
-                            Intent intent = new Intent("android.intent.action.View");
-                            intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings"));
-                            getContext().startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            mPopupShowing = false;
-                        }
-                    })
-                    .setCancelable(false)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle(titleID)
-                    .setMessage(msgID)
-                    .show();
-                    mPopupShowing = true;
-            }
-        });
-
+        if(mLocalService!=null) mLocalService.PopupMessage(titleID,msgID);
     }
 
     @Override
     public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
         mOnSyncControllerListener = syncControllerListenser;
+    }
+
+    //below code added to popup a dialog whenever nevo app runs background or foreground
+    private LocalService.LocalBinder mLocalService = null;
+    private ServiceConnection mCurrentServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.v(TAG, name+" Service disconnected");
+            mLocalService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.v(TAG, name+" Service connected");
+            mLocalService = (LocalService.LocalBinder)service;
+        }
+    };
+
+    /*inner class , static type, @link:http://stackoverflow.com/questions/10305261/broadcastreceiver-cant-instantiate-class-no-empty-constructor */
+    static public class LocalService extends Service
+    {
+        private AlertDialog mAlertDialog = null;
+
+        @Override
+        public IBinder onBind(Intent intent) {
+            return new LocalBinder();
+        }
+
+        @Override
+        public boolean onUnbind(Intent intent) {
+            return super.onUnbind(intent);
+        }
+
+        private void PopupMessage(final int titleID, final int msgID)
+        {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if(mAlertDialog !=null && mAlertDialog.isShowing())
+                    {
+                        //mAlertDialog.dismiss();
+                        //mAlertDialog =null;
+                        return;
+                    }
+                    AlertDialog.Builder ab = new AlertDialog.Builder(LocalService.this, AlertDialog.THEME_HOLO_LIGHT)
+                            .setPositiveButton("Bluetooth", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent("android.intent.action.View");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings"));
+                                    LocalService.this.startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            })
+                            .setCancelable(false)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle(titleID)
+                            .setMessage(msgID);
+
+                    mAlertDialog = ab.create();
+                    mAlertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                    mAlertDialog.setCanceledOnTouchOutside(false);
+                    mAlertDialog.setCancelable(false);
+                    mAlertDialog.show();
+                }
+            });
+        }
+
+        public class LocalBinder extends Binder {
+
+            public void PopupMessage(int titleID, int msgID)
+            {
+                LocalService.this.PopupMessage(titleID, msgID);
+            }
+        }
     }
 }

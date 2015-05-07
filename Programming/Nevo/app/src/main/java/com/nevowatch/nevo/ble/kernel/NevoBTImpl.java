@@ -728,7 +728,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	{
 		mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, address).commit();
 	}
-	private String getSaveAddress()
+    @Override
+	public String getSaveAddress()
 	{
 		return mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "");
 	}

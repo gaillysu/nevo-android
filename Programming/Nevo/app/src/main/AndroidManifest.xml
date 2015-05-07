@@ -7,7 +7,7 @@
         android:required="true"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -48,6 +48,9 @@
 
         <service
             android:name=".ble.ble.NevoBTService"
+            android:enabled="true" />
+        <service
+            android:name=".ble.controller.SyncControllerImpl$LocalService"
             android:enabled="true" />
         <!--new feature for notification, based on API 18 -->
         <service
