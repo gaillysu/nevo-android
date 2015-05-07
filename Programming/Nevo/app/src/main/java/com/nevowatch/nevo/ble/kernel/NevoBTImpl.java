@@ -34,6 +34,7 @@ import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
+import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -398,12 +399,19 @@ import com.nevowatch.nevo.ble.util.Optional;
 				@Override
 				public void run() {
 					try{
-                        // if get disconnect from connected, after 10s, do reconnect
-                        // if always disconnect, do reconnect follow the connect pattern array[10s,10s,10s,60s...]
-                        mTimerIndex = 0;
-                        initAutoReconnectTimer(mSupportServicelist);
 						//Then call the disconnect callback
-						if(mDisconnectListener!=null) mDisconnectListener.onDisconnect(peripheralAdress);
+                        //when connected, get disconnect by the same device
+                        // (if the disconnet comes from the 2nd nevo,no need forward to top layer "syncController")
+                        //when connecting, get disconnect
+						if(mDisconnectListener!=null
+                                && (peripheralAdress.equals(getSaveAddress()) || getSaveAddress().equals("")))
+                        {
+                            // if get disconnect from connected, after 10s, do reconnect
+                            // if always disconnect, do reconnect follow the connect pattern array[10s,10s,10s,60s...]
+                            mTimerIndex = 0;
+                            initAutoReconnectTimer(mSupportServicelist);
+                            mDisconnectListener.onDisconnect(peripheralAdress);
+                        }
 					} catch (Throwable t){
 						t.printStackTrace();
 					}
@@ -699,6 +707,9 @@ import com.nevowatch.nevo.ble.util.Optional;
         initAutoReconnectTimer(servicelist);
 
         if (!isDisconnected()) {return;}
+
+        //clear Queue before every connect
+        QueuedMainThreadHandler.getInstance().clear();
 
         if(hasSavedAddress())
         {
