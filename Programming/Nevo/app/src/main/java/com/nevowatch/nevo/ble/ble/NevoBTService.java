@@ -303,7 +303,7 @@ public class NevoBTService extends Service {
 			@Override
 			public void run() {
 				Log.d(NevoBT.TAG, "Connecting to Gatt : "+address);
-				device.connectGatt(NevoBTService.this, true, mGattCallback);
+				device.connectGatt(NevoBTService.this, false, mGattCallback);
 			}
 		});
 
@@ -379,7 +379,7 @@ public class NevoBTService extends Service {
                 if(mDisconnected!=null && gatt!=null) mDisconnected.onDisconnect(address);
 
                 //close this server for next reconnect!!!
-                if(gatt!=null) {gatt.disconnect();gatt.close();}
+                if(gatt!=null) {gatt.close();}
                 mBluetoothGattMap.remove(address);
                 //we don't know why the Gatt server disconnected, so no need again connect, for example: BLE devices power off or go away               
                 return;
