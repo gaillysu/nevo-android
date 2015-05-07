@@ -140,7 +140,7 @@ import org.apache.commons.codec.binary.Hex;
 				
 				Log.d(TAG,"Connecting... "+mBluetoothDevice.getAddress());
 				
-				mBluetoothDevice.connectGatt(mContext, true, mGattCallback);
+				mBluetoothDevice.connectGatt(mContext, false, mGattCallback);
 			}
 			
 		});
@@ -166,8 +166,7 @@ import org.apache.commons.codec.binary.Hex;
     			//only call gatt.disconnect() not enough, must call gatt.close() for release Ble link in low level.
     			if(newState == BluetoothProfile.STATE_DISCONNECTED)
     			{
-                    gatt.disconnect();
-    				gatt.close();    			
+                	gatt.close();
     			}
     			return ;
     		}
