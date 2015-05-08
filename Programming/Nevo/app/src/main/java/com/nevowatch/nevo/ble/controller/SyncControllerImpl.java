@@ -69,7 +69,7 @@ public class SyncControllerImpl implements SyncController{
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
-    private boolean mPopupShowing = false;
+    private boolean mVisible = true;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -91,11 +91,8 @@ public class SyncControllerImpl implements SyncController{
                 mOnSyncControllerListener.connectionStateChanged(false);
             else
             {
-                if(!(mCurrentrequest instanceof ReadDailyTrackerNevoRequest))
-                {
-                    mNevoBT.disconnect(new Optional<String>(mNevoBT.getSaveAddress()));
-                    showMessage(R.string.ble_command_timeout_title,R.string.ble_connecttimeout);
-                }
+                mNevoBT.disconnect(new Optional<String>(mNevoBT.getSaveAddress()));
+                showMessage(R.string.ble_command_timeout_title,R.string.ble_connecttimeout);
             }
 
         }
@@ -433,7 +430,7 @@ public class SyncControllerImpl implements SyncController{
 
     @Override
     public void showMessage(final int titleID, final int msgID) {
-        if(mLocalService!=null) mLocalService.PopupMessage(titleID,msgID);
+        if(mLocalService!=null && getVisible()) mLocalService.PopupMessage(titleID,msgID);
     }
 
     @Override
@@ -449,6 +446,16 @@ public class SyncControllerImpl implements SyncController{
     @Override
     public String getSoftwareVersion() {
         return mNevoBT.getSoftwareVersion();
+    }
+
+    @Override
+    public void setVisible(boolean isVisible) {
+        mVisible = isVisible;
+    }
+
+    @Override
+    public boolean getVisible() {
+        return mVisible;
     }
 
     //below code added to popup a dialog whenever nevo app runs background or foreground

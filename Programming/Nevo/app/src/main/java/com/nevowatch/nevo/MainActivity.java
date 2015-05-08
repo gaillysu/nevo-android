@@ -268,6 +268,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     protected void onResume() {
         super.onResume();
         SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
+        SyncController.Singleton.getInstance(this).setVisible(true);
         if(!mIsVisible){
             if(SyncController.Singleton.getInstance(this).isConnected()){
                 replaceFragment(mPosition, mTag);
@@ -281,6 +282,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     protected void onPause() {
         super.onPause();
+        SyncController.Singleton.getInstance(this).setVisible(false);
         mIsVisible = false;
     }
 

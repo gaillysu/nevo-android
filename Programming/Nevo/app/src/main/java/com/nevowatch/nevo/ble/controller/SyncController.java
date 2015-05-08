@@ -77,5 +77,10 @@ public interface SyncController {
 
     public String getFirmwareVersion();
     public String getSoftwareVersion();
-	
+
+    /**
+     * when mainActivity goes to background, set true, otherwise set false
+     */
+	public void setVisible(boolean isVisible);
+    public boolean getVisible();
 }
