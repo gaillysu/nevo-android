@@ -29,6 +29,9 @@ public class GattAttributes {
     private static HashMap<String, String> attributes = new HashMap<String, String>();
     
     public static String DEVICEINFO_UDID 	= "0000180a-0000-1000-8000-00805f9b34fb";
+    public static String DEVICEINFO_FIRMWARE_VERSION 	= "00002a26-0000-1000-8000-00805f9b34fb";
+    public static String DEVICEINFO_SOFTWARE_VERSION 	= "00002a28-0000-1000-8000-00805f9b34fb";
+
     // Client Characteristic
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
     //Nevo communicaiton service

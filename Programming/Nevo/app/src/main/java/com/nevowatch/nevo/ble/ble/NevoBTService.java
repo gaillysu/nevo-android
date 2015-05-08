@@ -25,6 +25,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.binary.StringUtils;
 
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
 import com.nevowatch.nevo.ble.kernel.NevoBT;
@@ -101,6 +102,9 @@ public class NevoBTService extends Service {
      * Try to reconnect every 3 secs
      */
     private static final int RETRY_DELAY = 3000;
+
+    private  String mFirmwareVersion = null;
+    private  String mSoftwareVersion = null;
 	
 	/**
 	 * This binder is the bridge between the ImazeBTImpl and this Service
@@ -182,6 +186,24 @@ public class NevoBTService extends Service {
 		public void sendRequest(SensorRequest deviceRequest){		
 			NevoBTService.this.sendRequest(deviceRequest);
 		}
+
+        /**
+         *
+         * @return BLE firmware version
+        */
+        public String getFirmwareVersion()
+        {
+            return NevoBTService.this.getFirmwareVersion();
+        }
+
+        /**
+         *
+         * @return MCU software version
+         */
+        public String getSoftwareVersion()
+        {
+            return NevoBTService.this.getSoftwareVersion();
+        }
 
 	}
 
@@ -433,7 +455,22 @@ public class NevoBTService extends Service {
             	for(final BluetoothGattCharacteristic characteristic : service.getCharacteristics()){
                		
     				final String uuid = characteristic.getUuid().toString();
-    				
+                    //read firmware/software version
+    				if(service.getUuid().toString().equals(GattAttributes.DEVICEINFO_UDID))
+                    {
+                        if(characteristic.getUuid().toString().equals(GattAttributes.DEVICEINFO_FIRMWARE_VERSION)
+                           || characteristic.getUuid().toString().equals(GattAttributes.DEVICEINFO_SOFTWARE_VERSION))
+                        {
+                            mQueuedMainThread.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.v(NevoBT.TAG,"start read version: " + uuid);
+                                    gatt.readCharacteristic(characteristic);
+                                }
+                            });
+                        }
+                    }
+
     				//Is this characteristic supported ?
     				Log.v(NevoBT.TAG,"Characteristic UUID:" + uuid);
     				if (GattAttributes.supportedBLECharacteristic(uuid))
@@ -475,6 +512,14 @@ public class NevoBTService extends Service {
                                          int status) {
         	mQueuedMainThread.next();
             if (status == BluetoothGatt.GATT_SUCCESS) {
+                if (UUID.fromString(GattAttributes.DEVICEINFO_FIRMWARE_VERSION).equals(characteristic.getUuid())){
+                    mFirmwareVersion = StringUtils.newStringUsAscii(characteristic.getValue());
+                    Log.i(NevoBT.TAG,"FIRMWARE VERSION **************** "+mFirmwareVersion);
+                }
+                else if (UUID.fromString(GattAttributes.DEVICEINFO_SOFTWARE_VERSION).equals(characteristic.getUuid())){
+                    mSoftwareVersion = StringUtils.newStringUsAscii(characteristic.getValue());
+                    Log.i(NevoBT.TAG,"SOFTWARE VERSION **************** "+mSoftwareVersion);
+                }
             	dataReceived(characteristic, gatt.getDevice().getAddress());
             }
         }
@@ -690,6 +735,24 @@ public class NevoBTService extends Service {
 		
 		if(!sent) Log.w(NevoBT.TAG, "Send failed. No device have the right service and characteristic" );
 		
+    }
+
+    /**
+     *
+     * @return BLE firmware version
+     */
+    private String getFirmwareVersion()
+    {
+        return mFirmwareVersion;
+    }
+
+    /**
+     *
+     * @return MCU software version
+     */
+    private String getSoftwareVersion()
+    {
+        return mSoftwareVersion;
     }
 
 }

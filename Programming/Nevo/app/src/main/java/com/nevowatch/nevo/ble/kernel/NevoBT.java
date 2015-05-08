@@ -167,4 +167,6 @@ public interface NevoBT {
 	void restoreSavedAddress();
 
     String getSaveAddress();
+    String getFirmwareVersion();
+    String getSoftwareVersion();
 }

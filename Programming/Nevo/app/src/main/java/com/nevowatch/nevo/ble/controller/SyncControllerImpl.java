@@ -125,6 +125,8 @@ public class SyncControllerImpl implements SyncController{
                     {
                         Log.e("Nevo Error","InVaild Packets Received!");
                         mPacketsbuffer.clear();
+                        //disconnect and auto reconnect
+                        mNevoBT.disconnect(new Optional<String>(mNevoBT.getSaveAddress()));
                         return;
                     }
 					mOnSyncControllerListener.packetReceived(packet);
@@ -437,6 +439,16 @@ public class SyncControllerImpl implements SyncController{
     @Override
     public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
         mOnSyncControllerListener = syncControllerListenser;
+    }
+
+    @Override
+    public String getFirmwareVersion() {
+        return mNevoBT.getFirmwareVersion();
+    }
+
+    @Override
+    public String getSoftwareVersion() {
+        return mNevoBT.getSoftwareVersion();
     }
 
     //below code added to popup a dialog whenever nevo app runs background or foreground

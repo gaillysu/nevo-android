@@ -733,8 +733,18 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	{
 		return mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "");
 	}
-	
-	@Override
+
+    @Override
+    public String getFirmwareVersion() {
+        return (mCurrentService!=null)?mCurrentService.getFirmwareVersion():null;
+    }
+
+    @Override
+    public String getSoftwareVersion() {
+        return (mCurrentService!=null)?mCurrentService.getSoftwareVersion():null;
+    }
+
+    @Override
 	public boolean hasSavedAddress() {
 		if(!mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "").equals(""))
 		{			

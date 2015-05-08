@@ -74,5 +74,8 @@ public interface SyncController {
     public void showMessage(int titleID, int msgID);
 
     public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser);
+
+    public String getFirmwareVersion();
+    public String getSoftwareVersion();
 	
 }
