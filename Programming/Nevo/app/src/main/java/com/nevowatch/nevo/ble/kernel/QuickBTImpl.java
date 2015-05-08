@@ -20,6 +20,7 @@ import java.util.UUID;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.notification.NotificationCallback;
+import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
@@ -47,8 +48,19 @@ import org.apache.commons.codec.binary.Hex;
 	//This depends on your external hardware
     //light led pattern [2s on,1s off,1.8s on,off]
 	int MINIMAL_CONNECTION_TIME = 5000;
-	
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    //set MAX connecting time
+    int MAX_CONNECTING_TIME = 3000;
+    Handler mUiThread = new Handler(Looper.getMainLooper());
+    //when time out, popup message
+    Runnable mSendCommandTimeOut = new Runnable() {
+        @Override
+        public void run() {
+            mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_connecttimeout);
+        }
+    };
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public QuickBTImpl(String address, final Context ctx) {
 
         if(ctx instanceof NotificationCallback) mNotificationCallback =(NotificationCallback)ctx;
@@ -124,7 +136,9 @@ import org.apache.commons.codec.binary.Hex;
 		mValue = request.getRawDataEx();
 		mServiceUuid = request.getServiceUUID();
 		mCharacteristicUuid = request.getInputCharacteristicUUID();
-		
+
+        //set timeout message event
+        mUiThread.postDelayed(mSendCommandTimeOut,MAX_CONNECTING_TIME);
 		mQueuedMainThread.post( new Runnable() {
 			
 			@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -155,9 +169,9 @@ import org.apache.commons.codec.binary.Hex;
     		Log.d(TAG,"Connection changed");
             //if status!=0, Gatt Service has got error(133,257), so need user reopen phone's bluetooth
             //or here use code reopen bluetooth?
-            if(status !=0) {
-                mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_connecttimeout);
-            }
+            //if(status !=0) {
+              //  mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_connecttimeout);
+            //}
 
     		if(newState != BluetoothProfile.STATE_CONNECTED) {
     			
@@ -223,7 +237,8 @@ import org.apache.commons.codec.binary.Hex;
     			
     			return;
     		}
-			
+            //remove timeout message
+            mUiThread.removeCallbacks(mSendCommandTimeOut);
 			//Now we've found the right characteristic, we modify it, then send it to the device
 			
 			mQueuedMainThread.next();
