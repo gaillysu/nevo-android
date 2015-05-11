@@ -709,7 +709,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
         if (!isDisconnected()) {return;}
 
         //clear Queue before every connect
-        QueuedMainThreadHandler.getInstance().clear();
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).clear();
 
         if(hasSavedAddress())
         {

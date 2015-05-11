@@ -7,12 +7,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
  * The Class QueuedMainThreadHandler, is a handler that will ensure that only one command will be run at a time.
  * And that they will be run on the UI thread.
+ * There are different types of queues that are independants
  * When you do mQueuedMainThreadHandler.run(aHandler); it will wait until :
  * a- mQueuedMainThreadHandler.next() is called
  * or
@@ -20,8 +23,13 @@ import java.util.concurrent.BlockingQueue;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 public class QueuedMainThreadHandler {
+
+    public enum QueueType {
+        NevoBT, SyncController
+    }
+
 	/*Classic singleton class*/
-	private static QueuedMainThreadHandler mInstance = null;
+	private static Map<QueueType,QueuedMainThreadHandler> mInstances = new HashMap<>();
 	
 	/**
 	 * Classic singleton
@@ -35,11 +43,11 @@ public class QueuedMainThreadHandler {
 	 *
 	 * @return single instance of QueuedMainThreadHandler
 	 */
-	public static QueuedMainThreadHandler getInstance() {
-	   if(mInstance == null) {
-		   mInstance = new QueuedMainThreadHandler();
+	public static QueuedMainThreadHandler getInstance(QueueType type) {
+	   if(mInstances.get(type) == null) {
+           mInstances.put(type , new QueuedMainThreadHandler());
 	   }
-	   return mInstance;
+	   return mInstances.get(type);
 	}
 	/*End - Classic singleton class*/
 	   

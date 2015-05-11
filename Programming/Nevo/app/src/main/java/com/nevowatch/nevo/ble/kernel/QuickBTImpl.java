@@ -30,7 +30,7 @@ import org.apache.commons.codec.binary.Hex;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 /*package*/ class QuickBTImpl implements QuickBT {
 
-	final QueuedMainThreadHandler mQueuedMainThread = QueuedMainThreadHandler.getInstance();
+	final QueuedMainThreadHandler mQueuedMainThread = QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT);
 	
 	//Initialised values
 	boolean mInitSuccessful = false;

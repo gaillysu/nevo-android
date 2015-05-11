@@ -74,7 +74,6 @@ public class SyncControllerImpl implements SyncController{
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
-    private boolean mIsSendRequestLocked = true;
 
     private SensorRequest mCurrentrequest;
 
@@ -114,7 +113,7 @@ public class SyncControllerImpl implements SyncController{
 
 				if((byte)0xFF == nevoData.getRawData()[0])
 				{
-					QueuedMainThreadHandler.getInstance().next();
+					QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
 
 					NevoPacket packet = new NevoPacket(mPacketsbuffer);
                     //if packets invaild, discard them, and reset buffer
@@ -195,7 +194,6 @@ public class SyncControllerImpl implements SyncController{
                         {
                             mCurrentDay = 0;
                             syncFinished();
-                            mIsSendRequestLocked = false;
                         }
                     }
 
@@ -212,7 +210,6 @@ public class SyncControllerImpl implements SyncController{
 		public void onConnect(String peripheralAdress) {
             mTimeOutcount = 0;
 			mOnSyncControllerListener.connectionStateChanged(true);
-            mIsSendRequestLocked = true;
             mPacketsbuffer.clear();
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -271,15 +268,14 @@ public class SyncControllerImpl implements SyncController{
 
     public void sendRequest(final SensorRequest request)
     {
-        if(mIsSendRequestLocked &&
-                (request instanceof GetStepsGoalNevoRequest
+        if(        (request instanceof GetStepsGoalNevoRequest
                  || request instanceof SetGoalNevoRequest
                  || request instanceof SetAlarmNevoRequest))
         {
             Log.w("SyncControllerImpl", request.getClass().getName() + " cancel sent by lock");
             return;
         }
-        QueuedMainThreadHandler.getInstance().post(new Runnable(){
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
             @Override
             public void run() {
                 mUiThread.removeCallbacks(mSendCommandTimeOut);
@@ -304,7 +300,7 @@ public class SyncControllerImpl implements SyncController{
 
     void syncStepandGoal() {
         final SensorRequest request = new GetStepsGoalNevoRequest();
-        QueuedMainThreadHandler.getInstance().post(new Runnable() {
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
             @Override
             public void run() {
                 mUiThread.removeCallbacks(mSendCommandTimeOut);
@@ -330,10 +326,6 @@ public class SyncControllerImpl implements SyncController{
             //We haven't synched for a while, let's sync now !
             Log.i("SyncControllerImpl","*** Sync started ! ***");
             getDailyTrackerInfo();
-        }
-        else
-        {
-            mIsSendRequestLocked = false;
         }
     }
 

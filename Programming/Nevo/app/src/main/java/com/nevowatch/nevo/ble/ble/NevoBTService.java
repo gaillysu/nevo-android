@@ -248,7 +248,7 @@ public class NevoBTService extends Service {
     	
     	mException = exception;
     	
-    	mQueuedMainThread = QueuedMainThreadHandler.getInstance();
+    	mQueuedMainThread = QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT);
 
     	BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
            if (bluetoothManager == null) {
