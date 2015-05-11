@@ -6,7 +6,7 @@ package com.nevowatch.nevo.Model;
 public class Notification {
 
     public enum NotificationType {
-        SMS, Email, Call,Facebook,Calendar,Wechat
+        SMS, Email, Call,Facebook,Calendar,Wechat, Whatsapp
     }
 
     NotificationType mType;

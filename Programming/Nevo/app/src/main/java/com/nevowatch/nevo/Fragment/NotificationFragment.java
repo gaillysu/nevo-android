@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.Model.Notification.NotificationType;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.NotificationItem;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
@@ -33,13 +34,13 @@ public class NotificationFragment extends Fragment
 
     private void initListView(){
         mList = new ArrayList<NotificationItem>();
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.orange_indicator), getResources().getString(R.string.call_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.yellow_indicator), getResources().getString(R.string.email_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.blue_indicator), getResources().getString(R.string.facebook_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.green_indicator), getResources().getString(R.string.sms_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.red_indicator), getResources().getString(R.string.calendar_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.grass_green_indicator), getResources().getString(R.string.wechat_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(R.drawable.grass_green_indicator), getResources().getString(R.string.whatsapp_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.Call), getResources().getString(R.string.call_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.Email), getResources().getString(R.string.email_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.Facebook), getResources().getString(R.string.facebook_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.SMS), getResources().getString(R.string.sms_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.Calendar), getResources().getString(R.string.calendar_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.Wechat), getResources().getString(R.string.wechat_string), R.drawable.setting));
+        mList.add(new NotificationItem(getDefaultColor(NotificationType.Whatsapp), getResources().getString(R.string.whatsapp_string), R.drawable.setting));
     }
 
     @Override
@@ -79,21 +80,21 @@ public class NotificationFragment extends Fragment
         ((MainActivity)getActivity()).replaceFragment(isConnected?NotificationFragment.NOTIPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?NotificationFragment.NOTIFICATIONFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 
-    private int getDefaultColor(int defColor){
-        switch (defColor){
-            case R.drawable.orange_indicator:
-                return R.drawable.orange_indicator;
-            case R.drawable.yellow_indicator:
-                return R.drawable.yellow_indicator;
-            case R.drawable.grass_green_indicator:
-                return R.drawable.grass_green_indicator;
-            case R.drawable.green_indicator:
-                return R.drawable.green_indicator;
-            case R.drawable.red_indicator:
-                return R.drawable.red_indicator;
-            default:
-                break;
-        }
+    private int getDefaultColor(NotificationType type){
+        if(type == NotificationType.Call)
+            return R.drawable.orange_indicator;
+        if(type == NotificationType.Email)
+            return R.drawable.yellow_indicator;
+        if(type == NotificationType.Facebook)
+            return R.drawable.blue_indicator;
+        if(type == NotificationType.SMS)
+            return R.drawable.green_indicator;
+        if(type == NotificationType.Calendar)
+            return R.drawable.red_indicator;
+        if(type == NotificationType.Wechat)
+            return R.drawable.grass_green_indicator;
+        if(type == NotificationType.Whatsapp)
+            return R.drawable.grass_green_indicator;
         return 0;
     }
 /*
