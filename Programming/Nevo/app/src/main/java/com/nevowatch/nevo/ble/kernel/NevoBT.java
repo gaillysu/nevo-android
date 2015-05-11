@@ -166,7 +166,21 @@ public interface NevoBT {
     */
 	void restoreSavedAddress();
 
+    /**
+     * return the connected Nevo MAC address, @link: syncController
+     * it is a bound address for app
+     */
     String getSaveAddress();
+
+    /**
+     *
+     * @return the nevo 's firmware version, it means the BLE firware version
+     */
     String getFirmwareVersion();
+
+    /**
+     *
+     * @return the nevo's software version, it means the MCU firmware version
+     */
     String getSoftwareVersion();
 }

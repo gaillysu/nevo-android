@@ -17,7 +17,6 @@ import android.util.Log;
 
 import java.util.UUID;
 
-import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.notification.NotificationCallback;
 import com.nevowatch.nevo.ble.util.Optional;
@@ -37,7 +36,7 @@ import org.apache.commons.codec.binary.Hex;
 	boolean mInitSuccessful = false;
 	BluetoothDevice mBluetoothDevice;
 	Context mContext;
-    NotificationCallback  mNotificationCallback = null;
+    Optional<NotificationCallback>  mNotificationCallback = null;
 	
 	
 	//Reconfigurable values
@@ -55,7 +54,7 @@ import org.apache.commons.codec.binary.Hex;
     Runnable mSendCommandTimeOut = new Runnable() {
         @Override
         public void run() {
-            mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_connecttimeout);
+            mNotificationCallback.get().onErrorDetected(new QuickBTSendTimeoutException());
         }
     };
 
@@ -63,13 +62,14 @@ import org.apache.commons.codec.binary.Hex;
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public QuickBTImpl(String address, final Context ctx) {
 
-        if(ctx instanceof NotificationCallback) mNotificationCallback =(NotificationCallback)ctx;
+        if(ctx instanceof NotificationCallback) mNotificationCallback = new Optional<NotificationCallback>((NotificationCallback)ctx);
+        else mNotificationCallback = new Optional<NotificationCallback>();
 
 		//If any argument is null, let's not proceed
 		if(address==null || address.equals("") || ctx==null) {
 			
 			Log.e(TAG,"An argument is null");
-            mNotificationCallback.process(R.string.ble_notification_title,R.string.ble_notification_message);
+            mNotificationCallback.get().onErrorDetected(new QuickBTUnBindNevoException());
 			return;
 		}
 		

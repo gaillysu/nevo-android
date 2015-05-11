@@ -6,8 +6,7 @@ package com.nevowatch.nevo.ble.notification;
 public interface NotificationCallback {
     /**
      *
-     * @param titleID : String ID of title
-     * @param msgID : String ID of message
+     * @param e : Exception when got error, link@QuickBTUnBindNevoException,QuickBTSendTimeoutException
      */
-    void process(int titleID, int msgID);
+    void onErrorDetected(Exception e);
 }

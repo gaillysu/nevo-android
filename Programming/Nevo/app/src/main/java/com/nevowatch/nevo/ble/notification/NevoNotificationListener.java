@@ -12,10 +12,11 @@ import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.kernel.QuickBT;
+import com.nevowatch.nevo.ble.kernel.QuickBTSendTimeoutException;
+import com.nevowatch.nevo.ble.kernel.QuickBTUnBindNevoException;
 import com.nevowatch.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.nevowatch.nevo.Model.Notification.NotificationType;
 import com.nevowatch.nevo.ble.model.request.SendNotificationNevoRequest;
-import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.Constants;
 import android.annotation.TargetApi;
@@ -175,7 +176,19 @@ public class NevoNotificationListener extends NotificationListenerService implem
     }
 
     @Override
-    public void process(int titleID, int msgID) {
+    public void onErrorDetected(Exception e) {
+        int titleID = R.string.ble_notification_title;
+        int msgID = 0;
+        if (e instanceof QuickBTUnBindNevoException)
+            msgID = R.string.ble_notification_message;
+        else if  (e instanceof QuickBTSendTimeoutException)
+            msgID = R.string.ble_connecttimeout;
+        else
+        {
+            //unknown exception, discard it
+            return;
+        }
+
         SyncController.Singleton.getInstance(null).showMessage(titleID,msgID);
     }
 }
