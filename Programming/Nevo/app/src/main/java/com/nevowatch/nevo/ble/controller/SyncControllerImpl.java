@@ -268,13 +268,6 @@ public class SyncControllerImpl implements SyncController{
 
     public void sendRequest(final SensorRequest request)
     {
-        if(        (request instanceof GetStepsGoalNevoRequest
-                 || request instanceof SetGoalNevoRequest
-                 || request instanceof SetAlarmNevoRequest))
-        {
-            Log.w("SyncControllerImpl", request.getClass().getName() + " cancel sent by lock");
-            return;
-        }
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
             @Override
             public void run() {
