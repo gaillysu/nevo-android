@@ -341,7 +341,7 @@ public class SyncControllerImpl implements SyncController{
 		mNevoBT.exceptionCallback(mExceptionListener);
 
         Intent intent = new Intent(mContext,LocalService.class);
-        mContext.bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
+        mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
 	}
 
 	/*package*/void setContext(Context context) {
