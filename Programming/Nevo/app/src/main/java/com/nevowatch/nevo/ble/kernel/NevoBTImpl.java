@@ -120,7 +120,12 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
     private String saveAddress;
 	private Timer mAutoReconnectTimer = null;
     private int  mTimerIndex = 0;
-    private final static int[] mReConnectTimerPattern = new int[]{10000,10000,10000,60000,120000,240000,3600000};
+    private final static int[] mReConnectTimerPattern = new int[]{10000,10000,10000,
+            30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,/*5min*/
+            60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
+            120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
+            240000,3600000};
+
     /**
      * Simple constructor
      * @param context
@@ -161,12 +166,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		mCallbacks.remove(callback);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.ImazeBT#startScan(java.util.UUID)
-	 */
-	@Override
-	synchronized public void startScan(List<SupportedService> servicelist) throws BLENotSupportedException, BluetoothDisabledException{
+
+	synchronized void startScan(List<SupportedService> servicelist) throws BLENotSupportedException, BluetoothDisabledException{
 		
 		//We check if bluetooth is enabled and/or if the device isn't ble capable
 		try {
@@ -667,7 +668,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
             public void run() {
                     if (isDisconnected()) {
                         Log.w(TAG, "reconnect after........... " + mReConnectTimerPattern[mTimerIndex] / 1000 + "s");
-                        mTimerIndex = (mTimerIndex + 1) % mReConnectTimerPattern.length;
+                        mTimerIndex = mTimerIndex + 1;
+                        if(mTimerIndex >= mReConnectTimerPattern.length) mTimerIndex = mTimerIndex -1;
                         if(mExceptionListener!=null) mExceptionListener.onException(new BLEConnectTimeoutException());
                     }
                     else

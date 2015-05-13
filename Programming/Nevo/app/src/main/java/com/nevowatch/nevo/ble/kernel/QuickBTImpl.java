@@ -54,7 +54,7 @@ import org.apache.commons.codec.binary.Hex;
     Runnable mSendCommandTimeOut = new Runnable() {
         @Override
         public void run() {
-            mNotificationCallback.get().onErrorDetected(new QuickBTSendTimeoutException());
+            if(mNotificationCallback.notEmpty()) mNotificationCallback.get().onErrorDetected(new QuickBTSendTimeoutException());
         }
     };
 
@@ -69,7 +69,7 @@ import org.apache.commons.codec.binary.Hex;
 		if(address==null || address.equals("") || ctx==null) {
 			
 			Log.e(TAG,"An argument is null");
-            mNotificationCallback.get().onErrorDetected(new QuickBTUnBindNevoException());
+            if(mNotificationCallback.notEmpty()) mNotificationCallback.get().onErrorDetected(new QuickBTUnBindNevoException());
 			return;
 		}
 		
