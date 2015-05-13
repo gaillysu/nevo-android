@@ -88,15 +88,6 @@ public interface NevoBT {
 	void removeCallback(OnDataReceivedListener callback);
 	
 	/**
-	 * Start scanning for nearby devices supporting the given services, it should connect automatically to the first device encountered.
-	 * The scan will stop after 10 seconds
-	 * @param servicelist, the list of services we are looking for
-	 * @throws BLENotSupportedException
-	 * @throws BluetoothDisabledException
-	 */
-	void startScan(List<SupportedService> servicelist) throws BLENotSupportedException, BluetoothDisabledException;
-	
-	/**
 	 * Send request. Sends a write request to all the devices that supports the right service and characteristic.
 	 * @param the request to be sent
 	 */
