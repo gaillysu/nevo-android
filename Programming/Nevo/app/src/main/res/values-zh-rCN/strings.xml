@@ -48,9 +48,7 @@
     <string name="ble_not_supported">设备不支持蓝牙4.0</string>
     <string name="ble_deactivated">蓝牙未开启</string>
     <string name="ble_unstable">手机蓝牙连接不稳定,可能是硬件问题。请先关闭再打开蓝牙或者重启手机</string>
-    <string name="ble_connecttimeout">解决方案1:长按nevo手表的底部按钮直到蓝灯一闪一闪,再点击警告框中的"Cancel"按钮,最后点击应用中的“Connect”按钮,进行重连.\n
-        解决方案2:长按nevo手表的底部按钮直到蓝灯一闪一闪,再点击警告框中的"Bluetooth"按钮,进入"蓝牙"设置界面先关闭再打开蓝牙,然后按系统返回键回到nevo应用,最后点击应用中的“Connect”按钮,进行重连.\n
-        温馨提示:长按nevo手表的底部按钮,蓝灯亮一下--打开手表蓝牙; 蓝灯亮两下--关闭手表蓝牙; 蓝灯一闪一闪--蓝牙连接中.</string>
+    <string name="ble_connecttimeout">如果网络可用,请按"Help"获得解决方案</string>
     <string name="ble_timeout_title">蓝牙连接超时</string>
     <string name="ble_notification_title">通知</string>
     <string name="ble_notification_message">Nevo未绑定,请先连接Nevo再绑定它</string>

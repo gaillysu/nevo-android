@@ -1,12 +1,26 @@
 package com.nevowatch.nevo.ble.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.net.Uri;
+import android.os.Binder;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
+
 import com.nevowatch.nevo.GoogleFitManager;
 import com.nevowatch.nevo.Model.DailyHistory;
+import com.nevowatch.nevo.Model.Goal;
+import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLEConnectTimeoutException;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
@@ -17,46 +31,30 @@ import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
-import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
+import com.nevowatch.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
-import com.nevowatch.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
-import com.nevowatch.nevo.Model.Goal;
+import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
+import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.model.request.SetAlarmNevoRequest;
+import com.nevowatch.nevo.ble.model.request.SetCardioNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetGoalNevoRequest;
+import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetProfileNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetRtcNevoRequest;
 import com.nevowatch.nevo.ble.model.request.WriteSettingNevoRequest;
-import com.nevowatch.nevo.ble.model.request.SetCardioNevoRequest;
-import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
-import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Binder;
-import android.os.Build;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.util.Log;
-import android.view.WindowManager;
-import android.widget.Toast;
-import com.nevowatch.nevo.R;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 public class SyncControllerImpl implements SyncController{
     private final static String TAG = "SyncControllerImpl";
@@ -487,13 +485,17 @@ public class SyncControllerImpl implements SyncController{
                         return;
                     }
                     AlertDialog.Builder ab = new AlertDialog.Builder(LocalService.this, AlertDialog.THEME_HOLO_LIGHT)
-                            .setPositiveButton("Bluetooth", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Help", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent("android.intent.action.View");
+                                    /*Intent intent = new Intent("android.intent.action.View");
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings"));
-                                    LocalService.this.startActivity(intent);
+                                    LocalService.this.startActivity(intent);*/
+                                    Uri uri = Uri.parse("https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android");
+                                    Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                                    it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(it);
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
