@@ -41,6 +41,18 @@
             android:name=".TutorialActivity.TutorialFourActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TutorialActivity.TutorialFiveActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TutorialActivity.TutorialTipsOneActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".TutorialActivity.TutorialTipsTwoActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".PaletteActivity"
             android:theme="@style/AppTheme"

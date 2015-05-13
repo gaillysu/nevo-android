@@ -5,54 +5,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
 
-import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
-import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
-import com.nevowatch.nevo.ble.controller.SyncController;
-import com.nevowatch.nevo.ble.model.packet.NevoPacket;
-import com.nevowatch.nevo.ble.util.Constants;
 
 /**
- * TutorialFour
+ * Tutorial Three
  */
-public class TutorialFourActivity extends Activity
-        implements View.OnClickListener, OnSyncControllerListener{
-
-    private Button mConnectButton;
-    private ImageView mConnectImg;
-    private Button mFinishButton;
-    private Animation animRotate;
+public class TutorialFourActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_4);
-        findViewById(R.id.t4_back_Button).setOnClickListener(this);
-        mConnectButton = (Button) findViewById(R.id.t4_connect_Button);
-        mConnectButton.setOnClickListener(this);
-        mConnectImg = (ImageView) findViewById(R.id.t4_rotate_ImageView);
-        mFinishButton = (Button) findViewById(R.id.t4_finish_Button);
-        mFinishButton.setOnClickListener(this);
 
-        if(SyncController.Singleton.getInstance(this)!=null && SyncController.Singleton.getInstance(this).isConnected()){
-            mConnectButton.setVisibility(View.INVISIBLE);
-            mFinishButton.setVisibility(View.VISIBLE);
-            mConnectImg.setImageResource(R.drawable.success);
-        }
+        findViewById(R.id.t3_back_button).setOnClickListener(this);
+        findViewById(R.id.t3_next_button).setOnClickListener(this);
 
         View [] viewArray = new View []{
-                findViewById(R.id.t4_back_Button),
-                findViewById(R.id.t4_connectButton),
-                findViewById(R.id.t4_connect_Button),
-                findViewById(R.id.t4_placeConnect),
-                findViewById(R.id.t4_finish_Button)
+                findViewById(R.id.t3_back_button),
+                findViewById(R.id.t3_watchBluetooth),
+                findViewById(R.id.t3_longPushLED),
+                findViewById(R.id.t3_next_button)
         };
         FontManager.changeFonts(viewArray,this);
     }
@@ -60,67 +35,18 @@ public class TutorialFourActivity extends Activity
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.t4_back_Button:
+            case R.id.t3_back_button:
                 startActivity(new Intent(this, TutorialThreeActivity.class));
                 overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
                 finish();
                 break;
-            case R.id.t4_finish_Button:
-                Intent it = new Intent(this, MainActivity.class);
-                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(it);
+            case R.id.t3_next_button:
+                startActivity(new Intent(this, TutorialFiveActivity.class));
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
-                getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,false).commit();
                 finish();
-                break;
-            case R.id.t4_connect_Button:
-                animRotate = AnimationUtils.loadAnimation(this, R.anim.roatate);
-                mConnectImg.startAnimation(animRotate);
-                animRotate.setAnimationListener(new myAnimationListener());
-                mConnectButton.setTextColor(getResources().getColor(R.color.customGray));
-                mConnectButton.setClickable(false);
                 break;
             default:
                 break;
-        }
-    }
-
-    public class myAnimationListener implements Animation.AnimationListener{
-
-        @Override
-        public void onAnimationStart(Animation animation) {
-            if(SyncController.Singleton.getInstance(TutorialFourActivity.this)!=null && !SyncController.Singleton.getInstance(TutorialFourActivity.this).isConnected()){
-                SyncController.Singleton.getInstance(TutorialFourActivity.this).startConnect(true, TutorialFourActivity.this);
-            }
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            mConnectButton.setClickable(true);
-            mConnectButton.setTextColor(getResources().getColor(R.color.customBlack));
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
-    }
-
-    @Override
-    public void packetReceived(NevoPacket packet) {
-
-    }
-
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(isConnected){
-            mConnectImg.clearAnimation();
-            mFinishButton.setVisibility(View.VISIBLE);
-            mConnectButton.setVisibility(View.INVISIBLE);
-            mConnectButton.setClickable(false);
-            mConnectImg.setImageResource(R.drawable.success);
-            mConnectImg.setBackgroundResource(R.color.transparent);
         }
     }
 }

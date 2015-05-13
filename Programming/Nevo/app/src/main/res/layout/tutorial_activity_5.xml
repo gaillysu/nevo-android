@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        android:id="@+id/t4_back_Button"
+        android:textColor="@color/customOrange"
+        android:background="@color/transparent"
+        android:textAllCaps="false"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:src="@drawable/stupe_image4"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:id="@+id/t4_connectButton"
+        android:text="@string/connectButton"
+        android:textSize="18sp"
+        android:textColor="@color/customBlack"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="150dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/t4_rotate_ImageView"
+            android:src="@drawable/rotating_round"
+            android:background="@drawable/rotating_round_bg"
+            android:rotation="45"
+            android:layout_gravity="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/t4_connect_Button"
+            android:text="@string/mconnect"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:background="@color/transparent"
+            android:textColor="@color/customBlack"/>
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:id="@+id/t4_placeConnect"
+        android:text="@string/placeConnect"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18sp"
+        android:padding="20dp"
+        android:textColor="@color/customBlack"
+        android:gravity="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/finish"
+        android:id="@+id/t4_finish_Button"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/customOrange"
+        android:background="@color/transparent"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:visibility="invisible"/>
+</LinearLayout>

@@ -1,110 +1,49 @@
 package com.nevowatch.nevo.TutorialActivity;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.R;
 
 /**
- * Tutorial Two
+ * TutorialTwoActivity
  */
-public class TutorialTwoActivity extends Activity implements View.OnClickListener{
-
-    private Button mT2NextButton;
-    private TextView mBLEText;
-    private TextView mBLEStatus;
-    private ImageView mBLEStateImg;
-    private BluetoothAdapter mBluetoothAdapter;
-    private Boolean isFinish = false;
+public class TutorialTwoActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_2);
-        mT2NextButton = (Button) findViewById(R.id.t2_nextButton);
-        mT2NextButton.setOnClickListener(this);
-        findViewById(R.id.t2_backButton).setOnClickListener(this);
-        mBLEText = (TextView) findViewById(R.id.bluetoothOffText);
-        mBLEStateImg = (ImageView) findViewById(R.id.bluetoothState);
-        mBLEStatus = (TextView) findViewById(R.id.t2_bluetoothEnabled);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        View [] viewArray = new View []{
-                findViewById(R.id.t2_backButton),
-                findViewById(R.id.t2_bluetoothEnabled),
-                findViewById(R.id.bluetoothOffText),
-                findViewById(R.id.t2_nextButton)
-        };
-        FontManager.changeFonts(viewArray,this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        BLEState();
-    }
-
-    private  void BLEState(){
-        new Thread(new Runnable() {
+        findViewById(R.id.t1_back_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                while (!isFinish){
-                    if(mBluetoothAdapter.isEnabled()){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBLEStateImg.setImageResource(R.drawable.bluetoothon_state_on);
-                                mBLEText.setVisibility(View.INVISIBLE);
-                                mT2NextButton.setVisibility(View.VISIBLE);
-                                mBLEStatus.setText(R.string.bluetoothEnabled);
-                            }
-                        });
-                    }else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBLEStateImg.setImageResource(R.drawable.bluetoothon_state_off);
-                                mBLEText.setVisibility(View.VISIBLE);
-                                mT2NextButton.setVisibility(View.INVISIBLE);
-                                mBLEStatus.setText(R.string.enableBluetoothPhone);
-                            }
-                        });
-                    }
-                }
-            }
-        }).start();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.t2_nextButton:
-                startActivity(new Intent(this, TutorialThreeActivity.class));
-                overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
-                finish();
-                break;
-            case R.id.t2_backButton:
-                startActivity(new Intent(this, TutorialOneActivity.class));
+            public void onClick(View v) {
+                startActivity(new Intent(TutorialTwoActivity.this, TutorialOneActivity.class));
                 overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
                 finish();
-                break;
-            default:
-                break;
-        }
-    }
+            }
+        });
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isFinish = true;
+        findViewById(R.id.t1_next_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TutorialTwoActivity.this, TutorialThreeActivity.class));
+                overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
+                finish();
+            }
+        });
+
+        View [] viewArray = new View []{
+                findViewById(R.id.t1_next_button),
+                findViewById(R.id.t1_title),
+                findViewById(R.id.t1_message),
+                findViewById(R.id.t1_back_button)
+        };
+        FontManager.changeFonts(viewArray, this);
     }
 }

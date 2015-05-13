@@ -48,7 +48,7 @@
     <string name="ble_not_supported">设备不支持蓝牙4.0</string>
     <string name="ble_deactivated">蓝牙未开启</string>
     <string name="ble_unstable">手机蓝牙连接不稳定,可能是硬件问题。请先关闭再打开蓝牙或者重启手机</string>
-    <string name="ble_connecttimeout">如果网络可用,请按"Help"获得解决方案</string>
+    <string name="ble_connecttimeout">如果网络可用,请按“帮助"获得解决方案</string>
     <string name="ble_connecttimeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
     <string name="ble_connection_timeout_title">蓝牙连接超时</string>
     <string name="ble_connection_timeout_cancel">取消</string>
@@ -56,4 +56,6 @@
     <string name="ble_notification_title">通知</string>
     <string name="ble_notification_message">Nevo未绑定,请先连接Nevo再绑定它</string>
     <string name="ble_command_timeout_title">蓝牙通讯超时</string>
+    <string name="tutorial_one_title">设置手表时间</string>
+    <string name="tutorial_one_message">拔出并旋转手表中间的按钮以设置nevo的时间，nevo的时间需与手机的时间一致。</string>
 </resources>
