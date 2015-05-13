@@ -92,7 +92,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             initLayout(false);
         }
         refreshTime();
-        mUiHandler.post(mTimerTask);
+        mUiHandler.postDelayed(mTimerTask,10000);
     }
 
     private void initLayout(boolean connected){

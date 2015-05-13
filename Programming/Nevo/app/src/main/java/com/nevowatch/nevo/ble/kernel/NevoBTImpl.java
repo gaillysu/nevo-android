@@ -487,6 +487,18 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 					
 					Log.d(TAG, "Device "+deviceAddress+" found to support service : "+GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).get(0));
 					
+                     if(hasSavedAddress())
+                     {
+                         if(!deviceAddress.equals(getSaveAddress()))
+                         {
+                             // no found the saved nevo when auto scan, perhaps the nevo power  off
+                             // perhaps need a new callback function to tell syncController and popup alert message "user need Open nevo's BT"
+                             // now prompt the alert message is caused by 3 connection timeouts
+                             Log.e(TAG, "the found Device does not match with the bound device :"+getSaveAddress());
+                             return;
+                         }
+                     }
+
 					//If yes, let's bind this device !
 					if(mCurrentService == null)
 						bindNewService(deviceAddress);
@@ -713,17 +725,10 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
         //clear Queue before every connect
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).clear();
 
-        if(hasSavedAddress())
-        {
-            if(mCurrentService == null)
-               bindNewService(getSaveAddress());
-            else
-               mCurrentService.connect(getSaveAddress());
-        }
-        else
-        {
-            startScan(servicelist);
-        }
+        //every connect, start new scan,it can solve mostly connection issue, include reopen phone's BT
+        //I think startScan perhaps can reset all bluetooth resource in the HAL
+        startScan(servicelist);
+
     }
 
 	private void setSaveAddress(String address)
