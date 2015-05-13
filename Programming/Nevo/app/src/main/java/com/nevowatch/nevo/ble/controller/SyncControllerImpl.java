@@ -253,7 +253,7 @@ public class SyncControllerImpl implements SyncController{
                 //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
                 if (mTimeOutcount  == 3) {
                     mTimeOutcount = 0;
-                    showMessage(R.string.ble_timeout_title,R.string.ble_connecttimeout);
+                    showMessage(R.string.ble_connection_timeout_title,R.string.ble_connecttimeout);
                 }
             }
             mOnSyncControllerListener.connectionStateChanged(false);
