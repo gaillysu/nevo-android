@@ -49,9 +49,11 @@
     <string name="ble_deactivated">藍牙沒有打開</string>
     <string name="ble_unstable">手機藍牙連接不穩定,可能是硬件問題。請先關閉再打開藍牙或者重啟手機</string>
     <string name="ble_connecttimeout">如果網絡可用,請按"Help"獲得解決方案</string>
-    <string name="ble_connecttimeout_url">"https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android"</string>
+    <string name="ble_connecttimeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
     <string name="ble_connection_timeout_title">藍牙連接超時</string>
+    <string name="ble_connection_timeout_cancel">取消</string>
+    <string name="ble_connection_timeout_help">幫助</string>
     <string name="ble_notification_title">通知</string>
     <string name="ble_notification_message">Nevo未綁定,請先連接Nevo再綁定它</string>
-
+    <string name="ble_command_timeout_title">藍牙通訊超時</string>
 </resources>

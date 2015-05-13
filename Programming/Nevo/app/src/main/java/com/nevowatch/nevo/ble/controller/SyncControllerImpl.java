@@ -485,7 +485,7 @@ public class SyncControllerImpl implements SyncController{
                         return;
                     }
                     AlertDialog.Builder ab = new AlertDialog.Builder(LocalService.this, AlertDialog.THEME_HOLO_LIGHT)
-                            .setPositiveButton("Help", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getResources().getString(R.string.ble_connection_timeout_help), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Uri uri = Uri.parse(getResources().getString(R.string.ble_connecttimeout_url));
@@ -495,7 +495,7 @@ public class SyncControllerImpl implements SyncController{
 
                                 }
                             })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getResources().getString(R.string.ble_connection_timeout_cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 
