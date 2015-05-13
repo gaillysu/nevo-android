@@ -49,6 +49,7 @@
     <string name="ble_deactivated">Bluetooth now OFF, please turn ON Bluetooth in phone settings.</string>
     <string name="ble_unstable">Bluetooth connection is unstable, please turn Bluetooth OFF then ON in phone settings.</string>
     <string name="ble_connecttimeout">If connected to the internet, press Help button for solutions</string>
+    <string name="ble_connecttimeout_url">"https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android"</string>
     <string name="ble_notification_title">Notification</string>
     <string name="ble_notification_message">No Nevo paired, please first connect nevo and pair</string>
     <string name="ble_command_timeout_title">Bluetooth communication timeout</string>

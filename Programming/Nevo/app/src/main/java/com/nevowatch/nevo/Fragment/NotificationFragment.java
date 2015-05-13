@@ -24,7 +24,7 @@ import java.util.List;
  * NotificationFragment
  */
 public class NotificationFragment extends Fragment
-        implements OnSyncControllerListener/*, AdapterView.OnItemClickListener*/{
+        implements OnSyncControllerListener{
 
     public static final String NOTIFICATIONFRAGMENT = "NotificationFragment";
     public static final int NOTIPOSITION = 3;
@@ -56,7 +56,6 @@ public class NotificationFragment extends Fragment
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
         mAdatper = new NotificationFragmentAdapter(getActivity(), R.layout.notification_listview_item, mList, mListView);
         mListView.setAdapter(mAdatper);
-      //  mListView.setOnItemClickListener(this);
 
         return rootView;
     }
@@ -65,7 +64,7 @@ public class NotificationFragment extends Fragment
     public void onResume() {
         super.onResume();
         if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
-            ((MainActivity)getActivity()).replaceFragment(10, ConnectAnimationFragment.CONNECTFRAGMENT);
+            ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
         }
         mAdatper.notifyDataSetChanged();
     }
@@ -97,11 +96,4 @@ public class NotificationFragment extends Fragment
             return R.drawable.grass_green_indicator;
         return 0;
     }
-/*
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), PaletteActivity.class);
-        intent.putExtra("Position", position);
-        getActivity().startActivity(intent);
-    }*/
 }

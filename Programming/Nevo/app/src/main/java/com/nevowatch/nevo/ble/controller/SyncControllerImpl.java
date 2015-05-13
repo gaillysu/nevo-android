@@ -488,14 +488,11 @@ public class SyncControllerImpl implements SyncController{
                             .setPositiveButton("Help", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    /*Intent intent = new Intent("android.intent.action.View");
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings"));
-                                    LocalService.this.startActivity(intent);*/
-                                    Uri uri = Uri.parse("https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android");
+                                    Uri uri = Uri.parse(getResources().getString(R.string.ble_connecttimeout_url));
                                     Intent it = new Intent(Intent.ACTION_VIEW, uri);
                                     it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(it);
+
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
