@@ -21,7 +21,7 @@
     <string name="goal_steps">Steps</string>
     <string name="time_picker">Set Alarm</string>
     <string name="nevoConnected">nevo is not connected\nEnable Bluetooth on phone</string>
-    <string name="pushHoldButton">Then push and hold 3rd button\nTo connect your watch</string>
+    <string name="pushHoldButton">Then push and hold 3rd button\nto connect your watch</string>
     <string name="tutorial">Activate my nevo</string>
     <string name="acheter">I want a nevo!</string>
     <string name="bluetoothEnabled">Bluetooth enabled</string>
@@ -54,7 +54,7 @@
     <string name="ble_connection_timeout_cancel">Cancel</string>
     <string name="ble_connection_timeout_help">Help</string>
     <string name="ble_notification_title">Notification</string>
-    <string name="ble_notification_message">No Nevo paired, please first connect nevo and pair</string>
+    <string name="ble_notification_message">No nevo paired, please first connect nevo and pair</string>
     <string name="ble_command_timeout_title">Bluetooth communication timeout</string>
     <string name="tutorial_one_title">Set the Time on your watch</string>
     <string name="tutorial_one_message">Pull the crown out and turn to set nevo time. Match the nevo time to the time on phone</string>
