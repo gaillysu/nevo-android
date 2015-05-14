@@ -24,7 +24,7 @@
         android:layout_height="100dp"
         android:id="@+id/t3_watchBluetooth"
         android:text="@string/watchBluetooth"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textAllCaps="false"
         android:textColor="@color/customBlack"
         android:gravity="center"
@@ -65,7 +65,7 @@
         android:textAllCaps="false"
         android:textColor="@color/customOrange"
         android:background="@color/transparent"
-        android:paddingTop="30dp"
+        android:paddingTop="10dp"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />

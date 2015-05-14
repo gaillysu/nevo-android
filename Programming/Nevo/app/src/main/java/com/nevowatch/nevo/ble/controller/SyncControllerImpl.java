@@ -67,7 +67,7 @@ public class SyncControllerImpl implements SyncController{
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
-    private boolean mVisible = true;
+    private boolean mVisible = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps

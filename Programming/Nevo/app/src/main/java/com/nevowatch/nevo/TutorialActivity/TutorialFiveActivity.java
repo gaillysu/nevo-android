@@ -10,13 +10,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.nevowatch.nevo.MainActivity;
-import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
+import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
-import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * TutorialFour
@@ -26,7 +24,7 @@ public class TutorialFiveActivity extends Activity
 
     private Button mConnectButton;
     private ImageView mConnectImg;
-    private Button mFinishButton;
+    private Button mNextButton;
     private Animation animRotate;
 
     @Override
@@ -38,13 +36,14 @@ public class TutorialFiveActivity extends Activity
         mConnectButton = (Button) findViewById(R.id.t4_connect_Button);
         mConnectButton.setOnClickListener(this);
         mConnectImg = (ImageView) findViewById(R.id.t4_rotate_ImageView);
-        mFinishButton = (Button) findViewById(R.id.t4_finish_Button);
-        mFinishButton.setOnClickListener(this);
+        mNextButton = (Button) findViewById(R.id.t4_next_Button);
+        mNextButton.setOnClickListener(this);
 
         if(SyncController.Singleton.getInstance(this)!=null && SyncController.Singleton.getInstance(this).isConnected()){
             mConnectButton.setVisibility(View.INVISIBLE);
-            mFinishButton.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
             mConnectImg.setImageResource(R.drawable.success);
+            mConnectImg.setBackgroundResource(R.color.transparent);
         }
 
         View [] viewArray = new View []{
@@ -52,7 +51,7 @@ public class TutorialFiveActivity extends Activity
                 findViewById(R.id.t4_connectButton),
                 findViewById(R.id.t4_connect_Button),
                 findViewById(R.id.t4_placeConnect),
-                findViewById(R.id.t4_finish_Button)
+                findViewById(R.id.t4_next_Button)
         };
         FontManager.changeFonts(viewArray,this);
     }
@@ -65,13 +64,9 @@ public class TutorialFiveActivity extends Activity
                 overridePendingTransition(R.anim.back_enter, R.anim.back_exit);
                 finish();
                 break;
-            case R.id.t4_finish_Button:
-                Intent it = new Intent(this, MainActivity.class);
-                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(it);
+            case R.id.t4_next_Button:
+                startActivity(new Intent(TutorialFiveActivity.this, TutorialTipsOneActivity.class));
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
-                getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,false).commit();
                 finish();
                 break;
             case R.id.t4_connect_Button:
@@ -116,7 +111,7 @@ public class TutorialFiveActivity extends Activity
     public void connectionStateChanged(boolean isConnected) {
         if(isConnected){
             mConnectImg.clearAnimation();
-            mFinishButton.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
             mConnectButton.setVisibility(View.INVISIBLE);
             mConnectButton.setClickable(false);
             mConnectImg.setImageResource(R.drawable.success);

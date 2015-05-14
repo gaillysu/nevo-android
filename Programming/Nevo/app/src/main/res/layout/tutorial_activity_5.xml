@@ -11,7 +11,7 @@
         android:textColor="@color/customOrange"
         android:background="@color/transparent"
         android:textAllCaps="false"
-        android:textSize="20sp" />
+        android:textSize="22sp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
         android:layout_height="100dp"
         android:id="@+id/t4_connectButton"
         android:text="@string/connectButton"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:textColor="@color/customBlack"
         android:gravity="center"
         android:layout_gravity="center_horizontal" />
@@ -68,12 +68,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/finish"
-        android:id="@+id/t4_finish_Button"
+        android:text="@string/next"
+        android:id="@+id/t4_next_Button"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/customOrange"
         android:background="@color/transparent"
         android:textAllCaps="false"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:visibility="invisible"/>
 </LinearLayout>

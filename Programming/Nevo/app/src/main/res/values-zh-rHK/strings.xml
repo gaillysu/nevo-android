@@ -58,4 +58,8 @@
     <string name="ble_command_timeout_title">藍牙通訊超時</string>
     <string name="tutorial_one_title">設置手錶時間</string>
     <string name="tutorial_one_message">拔出並旋轉手錶中間的按鈕以設置nevo的時間，nevo的時間需與手機的時間一致。</string>
+    <string name="tutorial_tips_one_tilte">超出藍芽連接範圍</string>
+    <string name="tutorial_tips_one_message">當手機遠離手錶超過30s，為了省電，藍芽連接自動斷開。當藍芽連接斷開，你將收不到任何通知。</string>
+    <string name="tutorial_two_title">藍芽重連</string>
+    <string name="tutorial_two_message">通過持續按住nevo的第三個按鈕3秒，藍芽重新連接以接收通知。</string>
 </resources>

@@ -54,8 +54,12 @@
     <string name="ble_connection_timeout_cancel">Cancel</string>
     <string name="ble_connection_timeout_help">Help</string>
     <string name="ble_notification_title">Notification</string>
-    <string name="ble_notification_message">No nevo paired, please first connect nevo and pair</string>
+    <string name="ble_notification_message">No Nevo paired, please first connect nevo and pair</string>
     <string name="ble_command_timeout_title">Bluetooth communication timeout</string>
     <string name="tutorial_one_title">Set the Time on your watch</string>
     <string name="tutorial_one_message">Pull the crown out and turn to set nevo time. Match the nevo time to the time on phone</string>
+    <string name="tutorial_tips_one_tilte">Bluetooth disconnection \n when separated</string>
+    <string name="tutorial_tips_one_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 30 seconds. You will not receive notifications on nevo when disconnected.</string>
+    <string name="tutorial_two_title">Bluetooth reconnection</string>
+    <string name="tutorial_two_message">Reconnect Bluetooth to receive notifications again by pressing and holding the 3rd button for 3 seconds.</string>
 </resources>
