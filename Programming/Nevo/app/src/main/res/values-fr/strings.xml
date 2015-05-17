@@ -20,8 +20,8 @@
     <string name="close_string">Off</string>
     <string name="goal_steps">Pas</string>
     <string name="time_picker">Paramétrez votre alarme</string>
-    <string name="nevoConnected">Votre nevo n\’est pas connectée\nActivez le Bluetooth sur votre Smartphone</string>
-    <string name="pushHoldButton">Appuyez ensuite sur le 3ème bouton\nPour connecter votre montre</string>
+    <string name="nevoConnected">Votre nevo n\'est pas connectée\nActivez le Bluetooth sur votre Smartphone</string>
+    <string name="pushHoldButton">Appuyez ensuite sur le 3ème bouton\npour connecter votre montre</string>
     <string name="tutorial">Activer ma nevo</string>
     <string name="acheter">Je veux une nevo!</string>
     <string name="bluetoothEnabled">Bluetooth activé</string>
