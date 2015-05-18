@@ -339,12 +339,16 @@ import java.util.TimeZone;
         } else if (e instanceof BLENotSupportedException) {
 
         }else if (e instanceof BLEUnstableException) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
-                }
-            });
+            try {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Throwable t) {
+
+            }
         }else if (e instanceof BLEConnectTimeoutException) {
             mTimeOutcount = mTimeOutcount + 1;
             //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone

@@ -5,12 +5,16 @@ package com.nevowatch.nevo.ble.notification;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
 import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.ble.controller.ConnectionController;
 import com.nevowatch.nevo.ble.controller.SyncController;
+import com.nevowatch.nevo.ble.kernel.NevoBT;
 import com.nevowatch.nevo.ble.kernel.QuickBT;
 import com.nevowatch.nevo.ble.kernel.QuickBTSendTimeoutException;
 import com.nevowatch.nevo.ble.kernel.QuickBTUnBindNevoException;
@@ -30,6 +34,8 @@ import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+
+import org.apache.commons.codec.binary.Hex;
 
 @TargetApi(18)
 public class NevoNotificationListener extends NotificationListenerService implements NotificationCallback{
@@ -64,6 +70,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
             //native mms or hangouts
             else if(arg0.getPackageName().equals("com.google.android.talk")
                     || arg0.getPackageName().equals("com.android.mms")
+                    || arg0.getPackageName().equals("com.google.android.apps.messaging")
                     || arg0.getPackageName().equals("com.sonyericsson.conversations")
                     ) {
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
@@ -114,6 +121,10 @@ public class NevoNotificationListener extends NotificationListenerService implem
                     sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WHATSAPPCHOOSENCOLOR));
             }
 
+            else {
+                Log.v(TAG, "Unknown Notification : "+arg0.getPackageName());
+            }
+
         }
     }
 
@@ -122,26 +133,27 @@ public class NevoNotificationListener extends NotificationListenerService implem
         //How do we remove incoming notifications from the watch ?
     }
 
-    void sendNotificationApi(NotificationType type, int num) {
+    void sendNotification(final int ledcolor) {
 
         //We can't accept notifications if we just received one X ms ago
         if(lastNotification.notEmpty() && new Date().getTime()-lastNotification.get().getTime() < TIME_BETWEEN_TWO_NOTIFS) return ;
 
         lastNotification.set(new Date());
 
-        QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
-        bt.send(new SendNotificationNevoRequest(type, num));
-    }
-    void sendNotification(int ledcolor) {
+        ConnectionController.Singleton.getInstance(this).connect();
 
-        //We can't accept notifications if we just received one X ms ago
-        if(lastNotification.notEmpty() && new Date().getTime()-lastNotification.get().getTime() < TIME_BETWEEN_TWO_NOTIFS) return ;
+        ConnectionController.Singleton.getInstance(this)
+                .sendRequest(new LedLightOnOffNevoRequest(ledcolor, true));
 
-        lastNotification.set(new Date());
+        Timer autoReconnectTimer = new Timer();
+        autoReconnectTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ConnectionController.Singleton.getInstance(NevoNotificationListener.this)
+                        .sendRequest(new LedLightOnOffNevoRequest(ledcolor, false));
+            }
+        }, 2000 );
 
-        QuickBT bt = QuickBT.Factory.newInstance(getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, ""), this);
-
-        bt.send(new LedLightOnOffNevoRequest(ledcolor,true));
 
     }
 
