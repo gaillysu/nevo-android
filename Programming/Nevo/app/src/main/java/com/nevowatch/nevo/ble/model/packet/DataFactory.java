@@ -25,6 +25,8 @@ public class DataFactory {
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
          if (UUID.fromString(GattAttributes.NEVO_CALLBACK_CHARACTERISTIC).equals(characteristic.getUuid())){
             data = new NevoRawDataImpl(characteristic, address);
+        } else if (UUID.fromString(GattAttributes.DEVICEINFO_FIRMWARE_VERSION).equals(characteristic.getUuid())){
+            data = new NevoFirmwareData(characteristic, address);
         }
         else{ // unknown type
         	data = new SensorData(){

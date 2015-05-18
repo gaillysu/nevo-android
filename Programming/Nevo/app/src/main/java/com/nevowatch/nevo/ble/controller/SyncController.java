@@ -27,7 +27,7 @@ public interface SyncController {
 
 	public  class Singleton {
 		private static  SyncControllerImpl sInstance = null;
-		public static SyncControllerImpl getInstance(Context context) {
+		public static SyncController getInstance(Context context) {
 			if(null == sInstance )
 			{
 				sInstance = new SyncControllerImpl(context);
@@ -82,5 +82,5 @@ public interface SyncController {
      * when mainActivity goes to background, set true, otherwise set false
      */
 	public void setVisible(boolean isVisible);
-    public boolean getVisible();
+
 }

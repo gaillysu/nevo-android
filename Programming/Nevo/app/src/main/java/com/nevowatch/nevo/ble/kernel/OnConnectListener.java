@@ -13,8 +13,7 @@ package com.nevowatch.nevo.ble.kernel;
 public interface OnConnectListener {
 	
 	/**
-	 * This function is called everythime a device is connected.
-	 * @param peripheral
+	 * This function is called everythime a device is connected or disconnected
 	 */
-	public void onConnect(String peripheralAdress);
+    public void onConnectionStateChanged(boolean connected, String address);
 }
