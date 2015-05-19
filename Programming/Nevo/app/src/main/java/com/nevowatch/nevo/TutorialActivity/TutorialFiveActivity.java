@@ -46,6 +46,9 @@ public class TutorialFiveActivity extends Activity
             mConnectImg.setBackgroundResource(R.color.transparent);
         }
 
+        if(SyncController.Singleton.getInstance(this)!=null)
+            SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
+
         View [] viewArray = new View []{
                 findViewById(R.id.t4_back_Button),
                 findViewById(R.id.t4_connectButton),
