@@ -8,13 +8,14 @@ import android.content.Context;
 import java.util.List;
 
 import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
+import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Optional;
 
 
 
 /**
- * The Interface ImazeBT is the core manager for the bluetooth interface.
+ * The Interface NevoBT is the core manager for the bluetooth interface. (deepest layer)
  * In order to connect to a bluetooth device, we should instantiate it, then add a OnDataReceivedListener.
  * The OnDataReceivedListener will handle all the callbacks coming from the peripherals.
  * 
@@ -49,7 +50,7 @@ public interface NevoBT {
 	/**
 	 * THe logcat tag used by the SDK
 	 */
-	public static String TAG = "iMaze BT SDK";
+	public static String TAG = "Nevo BT SDK";
 	
 	/**
 	 * We don't want outside classes to link to the kernel directly, hence this Builder inner class
@@ -60,9 +61,9 @@ public interface NevoBT {
 	 * rename calss "Builder" to "Factory" ,such as AOSP naming rule
 	 * add "sInstance" member ,no need alloc memory every time.
 	 */
-	public class Factory{
+	public class Singleton {
 		private static NevoBTImpl sInstance = null;
-		public static NevoBT newInstance(Context context) {
+		public static NevoBT getInstance(Context context) {
 			if(null == sInstance )
 			{
 				sInstance = new NevoBTImpl(context);
@@ -72,96 +73,31 @@ public interface NevoBT {
 			return sInstance;
 		}
 	}
-	
+
 	/**
-	 * Adds a DataReiver callback. all the registered callbacks will be called every time the peripheral sends data.
-	 *
-	 * @param callback the callback
-	 */
-	void addCallback(OnDataReceivedListener callback);
-	
-	/**
-	 * Removes a DataReiver callback. This callback won't be called anymore
-	 *
-	 * @param callback the callback
-	 */
-	void removeCallback(OnDataReceivedListener callback);
-	
-	/**
+     * Start scanning for nearby devices supporting the given services, it should connect automatically to the first device encountered.
+     * The scan will stop after 10 seconds
+     * @param servicelist, the list of services we are looking for
+     * @throws BLENotSupportedException
+     * @throws BluetoothDisabledException
+     */
+    void startScan(List<SupportedService> servicelist, Optional<String> preferredAddress);
+
+    /**
+     * WARNING ! You should disconnect(Empty Optional) before stopping the parent activity
+     */
+    void disconnect();
+
+    /**
 	 * Send request. Sends a write request to all the devices that supports the right service and characteristic.
-	 * @param the request to be sent
 	 */
 	void sendRequest(SensorRequest request);
-	
-	/**
-	 * Disconnect to the given peripheral
-	 * If empty Optional, it will disconnect all peripherals
-	 * WARNING ! You should disconnect(Empty Optional) before stopping the parent activity
-	 * @param peripheral
-	 */
-	void disconnect(Optional<String> peripheralAdress);
+
 
 	/**
-	 * This callback will be called when a device is connected
-	 * Note that this information isn't reliable and some call might not occur properly
-	 * @param callback
+	 * Delegate will be notified of connection change, exceptions and data received events
 	 */
-	void connectCallback(OnConnectListener callback);
-	
-	/**
-	 * This callback will be called when a device is disconnected
-	 * Note that this information isn't reliable, in some cases it won't be called
-	 * @param callback
-	 */
-	void disconnectCallback(OnDisconnectListener callback);
-	
-	/**
-	 * This callback will be called when an exception is raised
-	 * @param callback
-	 */
-	void exceptionCallback(OnExceptionListener callback);
-	
-	
-	/**
-	 * @return true if there's not a single device currently connected
-	 */
-	boolean isDisconnected();
-	
-	/**
-	 * @param The service we are enquiering
-	 * @return the MAC address of the device connected that supports this service. If the given service have no associated device currently, it returns an empty Optional
-	 */
-	Optional<String> getAddressByServiceType(SupportedService which);
-
-    /**
-    Tries to connect to a Nevo
-    Myabe it will scan for nearby nevo, maybe it will simply connect to a known nevo
-    */
-	void connect(List<SupportedService> servicelist)throws BLENotSupportedException, BluetoothDisabledException;
-	
-    /**
-    Checks if there is a preffered device.
-    If the answer is yes, then we will systematically connect to this device.
-    If it is no, then we will scan for a new device
-    */
-	boolean hasSavedAddress();
-    /**
-    Forgets the currently saved address.
-    Next time connect is called, we will have to scan for nearby devices
-    */
-	void forgetSavedAddress();
-    /**
-    restore the saved address. BLE OTA use it
-    Usage:forgetSavedAddress()/restoreSavedAddress(), if not call forgetSavedAddress()
-    before call it, do nothing
-    */
-	void restoreSavedAddress();
-
-    /**
-     * return the connected Nevo MAC address, @link: syncController
-     * it is a bound address for app
-     */
-    String getSaveAddress();
+	void setDelegate(Delegate d);
 
     /**
      *
@@ -174,4 +110,13 @@ public interface NevoBT {
      * @return the nevo's software version, it means the MCU firmware version
      */
     String getSoftwareVersion();
+
+    /**
+     * Pings the currently connected device (if any) to check it is actually connected
+     */
+    void ping();
+
+    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener{
+
+    }
 }

@@ -23,8 +23,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import com.nevowatch.nevo.ble.ble.GattAttributes;
@@ -32,7 +30,6 @@ import com.nevowatch.nevo.ble.ble.NevoBTService;
 import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
-import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
@@ -73,33 +70,18 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	/**
 	 * The list of callbacks to call when the data is updated
 	 */
-	private List<OnDataReceivedListener> mCallbacks = new ArrayList<OnDataReceivedListener>();
-	
-	/**
-	 * The callback to call when a device is connected
-	 */
-	private OnConnectListener mConnectListener;
-	
-	/**
-	 * The callback to call when a device is disconnected
-	 */
-	private OnDisconnectListener mDisconnectListener;
-	
-	/**
-	 * The callback to call when an unrecoverable exception is raised
-	 */
-	private OnExceptionListener mExceptionListener;
+	private Optional<NevoBT.Delegate> mDelegate = new Optional<NevoBT.Delegate>();
 	
 	/**
 	 * The list of currently binded services.
 	 * Warning though, alway check they haven't stopped
 	 */
-	private NevoBTService.LocalBinder mCurrentService;
+	private Optional<NevoBTService.LocalBinder> mCurrentService = new Optional<NevoBTService.LocalBinder>();
 	
 	/**
 	 * The list of current service connection
 	 */
-	private ServiceConnection mCurrentServiceConnection;
+	private Optional<ServiceConnection> mCurrentServiceConnection = new Optional<ServiceConnection>();
 	
 	/**
 	 *  Stops scanning after 10 seconds.
@@ -107,24 +89,21 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
     private static final long SCAN_PERIOD = 8000;
     
     /*
-	 *  here use one List to save the scaned devices's MAC address
+	 *  here use one List to save the scanned devices's MAC address
+	 *  This is only to prevent multi-connections (a recurent bug on Nexus 5)
 	 */
     private List<String> mPreviousAddress  = new ArrayList<String>();
+
+    /**
+     * If we want to connect to a particular address, here's the place to say it
+     */
+    private Optional<String> mPreferredAddress = new Optional<String>();
 	
 	/*
 	 * save the supported BLE service,avoid connect the same service with the same model BLE device
 	 * more sensors, such as heart rate/ power/ combo,  for every model sensor ,only one device can connect
 	 */
     private List<SupportedService> mSupportServicelist = new ArrayList<SupportedService>();
-	
-    private String saveAddress;
-	private Timer mAutoReconnectTimer = null;
-    private int  mTimerIndex = 0;
-    private final static int[] mReConnectTimerPattern = new int[]{10000,10000,10000,
-            30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,/*5min*/
-            60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
-            120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
-            240000,3600000};
 
     /**
      * Simple constructor
@@ -138,47 +117,38 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		try {
 			initBluetoothAdapter();
 		} catch (BLENotSupportedException e) {
-			if(mExceptionListener!=null) mExceptionListener.onException(e);
+			if(mDelegate.notEmpty()) mDelegate.get().onException(e);
 		} catch (BluetoothDisabledException e) {
-			if(mExceptionListener!=null) mExceptionListener.onException(e);
+            if(mDelegate.notEmpty()) mDelegate.get().onException(e);
 		}
 	}
-	
-	/*
-	 * Functions coming from the interface
-	 */
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.ImazeBT#addCallback(fr.imaze.sdk.OnDataReceivedListener)
-	 */
+
+    /**
+     *
+     * @param delegate
+     */
 	@Override
-	public void addCallback(OnDataReceivedListener callback) {
-		mCallbacks.add(callback);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.ImazeBT#removeCallback(fr.imaze.sdk.OnDataReceivedListener)
-	 */
-	@Override
-	public void removeCallback(OnDataReceivedListener callback) {
-		mCallbacks.remove(callback);
+	public void setDelegate(Delegate delegate) {
+		mDelegate.set(delegate);
 	}
 
+    @Override
+	public synchronized void startScan(final List<SupportedService> servicelist, final Optional<String> preferredAddress) {
 
-	synchronized void startScan(List<SupportedService> servicelist) throws BLENotSupportedException, BluetoothDisabledException{
-		
+        //If we're already conected to this address, no need to go any further
+        if (preferredAddress.notEmpty() && isAlreadyConnected(preferredAddress.get()) ) {return;}
+
+        //Ok, so we're not connected to this address. If we're connected to another one, we should disconnect
+        if (!isDisconnected()) disconnect();
+
 		//We check if bluetooth is enabled and/or if the device isn't ble capable
 		try {
 			initBluetoothAdapter();
-		} catch (BLENotSupportedException e) {
-			if(mExceptionListener!=null) mExceptionListener.onException(e);
-			throw e;
-		} catch (BluetoothDisabledException e) {
-			if(mExceptionListener!=null) mExceptionListener.onException(e);
-			throw e;
-		}
+        } catch (BLENotSupportedException e) {
+            if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+        } catch (BluetoothDisabledException e) {
+            if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+        }
 
 		
         //For some reason we have to do it on the UI thread...
@@ -190,6 +160,13 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 				 * firstly remove all saved devices
 				 */
 				mPreviousAddress.clear();
+
+                mPreferredAddress = preferredAddress;
+                mSupportServicelist = servicelist;
+
+                //clear Queue before every connect
+                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).clear();
+
 				//We start a scan
 				if(mBluetoothAdapter!=null) mBluetoothAdapter.startLeScan(mLeScanCallback);
 				
@@ -207,37 +184,99 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 	}
 
+    /**
+     *  Device scan callback.This callback is called for all devices founds by the scanner
+     */
+    private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
+
+        /*
+         * (non-Javadoc)
+         * @see android.bluetooth.BluetoothAdapter.LeScanCallback#onLeScan(android.bluetooth.BluetoothDevice, int, byte[])
+         */
+        @Override
+        public void onLeScan(final BluetoothDevice device, int rssi,
+                             byte[] scanRecord) {
+            final String deviceAddress = device.getAddress();
+
+            if(mPreviousAddress.contains(deviceAddress)){
+                //We are in a case, Due to this issue : http://stackoverflow.com/questions/19502853/android-4-3-ble-filtering-behaviour-of-startlescan
+                //Where the callback has been called twice for the same address
+                //We should not do anything
+            } else {
+                //For each alloweds service, we should have one and only one device.
+                //And it should be active at the moment
+
+                //If we're already connected to this address, no need to pursue
+                if(NevoBTImpl.this.isAlreadyConnected(deviceAddress)) return;
+
+                //If we have a preferred address and it's not this one, let's not connect
+                if(mPreferredAddress.notEmpty() && !mPreferredAddress.get().equals(deviceAddress) ) return;
+
+
+                //We will browse the advertised UUIDs to check if one of them correspond to a supported service
+                List<UUID> advertisedUUIDs = parseUUIDs(scanRecord);
+                for(UUID u : advertisedUUIDs){
+                    Log.v(TAG, deviceAddress+" advertises "+u.toString());
+                }
+                //The address shouldn't be previously connected, no other device should support this service and it should be an allowed service (for this scan at least)
+                //Also if a pairing is known to be needed, It should have already been paired : !GattAttributes.shouldPairBeforeUse(advertisedUUIDs) || (GattAttributes.shouldPairBeforeUse(advertisedUUIDs) && device.getBondState()==BluetoothDevice.BOND_BONDED)
+                // Either : No need to pair before use Or : (Need to pair before use and we are actually paired)
+                if ((mCurrentService.isEmpty() || !mCurrentService.get().isOneOfThosServiceConnected(advertisedUUIDs))
+                        && !GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).isEmpty()
+					 )
+                {
+
+                    Log.d(TAG, "Device "+deviceAddress+" found to support service : "+GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).get(0));
+
+                    //If yes, let's bind this device !
+                    if(mCurrentService.isEmpty())
+                        bindNewService(deviceAddress);
+                    else
+                    {
+                        mCurrentService.get().connect(deviceAddress);
+                    }
+
+                }
+            }
+            if(!mPreviousAddress.contains(deviceAddress))
+            {
+                mPreviousAddress.add(deviceAddress);
+            }
+        }
+    };
+
 	/*
 	 * (non-Javadoc)
 	 * @see fr.imaze.sdk.kernel.ImazeBT#sendRequest(fr.imaze.sdk.model.request.SensorRequest, fr.imaze.sdk.ble.SupportedService)
 	 */
 	@Override
 	public void sendRequest(SensorRequest request) {
-		if(mCurrentService!=null) {
-			mCurrentService.sendRequest(request);
+		if(mCurrentService.notEmpty()) {
+			mCurrentService.get().sendRequest(request);
 		} else {
 			 Log.w(NevoBT.TAG, "Send failed. Service not started" );
 		}
 	}
+
+    @Override
+    public void ping() {
+        if(mCurrentService.notEmpty()) {
+            mCurrentService.get().ping();
+        } else {
+            Log.w(NevoBT.TAG, "Ping failed. Service not started" );
+        }
+    }
 	
 	/*
 	 * (non-Javadoc)
 	 * @see fr.imaze.sdk.ImazeBT#disconnect(java.lang.String)
 	 */
 	@Override
-	public void disconnect(Optional<String> peripheralAdress) {
-		//Two cases :
-		if(peripheralAdress!=null&&peripheralAdress.notEmpty()){
-			//Either the adress is not null, then we disconnect this adress only
-			if(mCurrentService!=null
-				&& mCurrentService.isConnected(peripheralAdress.get()) )
-			{
-				mCurrentService.disconnect(peripheralAdress.get());
-			}
-		} else {
-			killService();
-			if(mBluetoothAdapter!=null) mBluetoothAdapter.stopLeScan(mLeScanCallback);
-		}
+	public void disconnect() {
+        //Let's kill the connection in the most violent way possible.
+
+        killService();
+        if(mBluetoothAdapter!=null) mBluetoothAdapter.stopLeScan(mLeScanCallback);
 		
 		
 	}
@@ -248,54 +287,13 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	 */
 	public  boolean isDisconnected()
 	{
-		if(mCurrentService == null)  return true;
+		if(mCurrentService.isEmpty())  return true;
 		
-		if(mCurrentService.isDisconnected()) return true;
+		if(mCurrentService.get().isDisconnected()) return true;
 		
 		return false;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.kernel.ImazeBT#getAddressByServiceType(fr.imaze.sdk.ble.SupportedService)
-	 */
-	public Optional<String> getAddressByServiceType(SupportedService which)
-	{
-		if(mCurrentService==null) return new Optional<String>();
-		
-		String uuid = GattAttributes.TransferSupportedService2UUID(which);		
-		UUID uuidd = UUID.fromString(uuid);
-		
-		return mCurrentService.isServiceConnected(uuidd);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.ImazeBT#disconnectCallback(fr.imaze.sdk.OnDisconnectListener)
-	 */
-	@Override
-	public void connectCallback(OnConnectListener callback) {
-		mConnectListener = callback;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.ImazeBT#disconnectCallback(fr.imaze.sdk.OnDisconnectListener)
-	 */
-	@Override
-	public void disconnectCallback(OnDisconnectListener callback) {
-		mDisconnectListener = callback;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see fr.imaze.sdk.kernel.ImazeBT#exceptionCallback(fr.imaze.sdk.kernel.OnExceptionListener)
-	 */
-	@Override
-	public void exceptionCallback(OnExceptionListener callback) {
-		mExceptionListener = callback;
-		
-	}
+
 	
 	/*
 	 * END of the Functions coming from the interface
@@ -317,15 +315,15 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		//Discovery should be canceled if we really want to kill the service
 		initBluetoothAdapter().cancelDiscovery();
 			
-		if(mCurrentServiceConnection!=null) {
-			mContext.unbindService(mCurrentServiceConnection);
-			mCurrentServiceConnection=null;
+		if(mCurrentServiceConnection.notEmpty()) {
+			mContext.unbindService(mCurrentServiceConnection.get());
+			mCurrentServiceConnection.set(null);
 		}
 			
 		//Or it is null, so we disconnect all of them
-		if(mCurrentService!=null) {
-			mCurrentService.destroy();
-			mCurrentService=null;
+		if(mCurrentService.notEmpty()) {
+			mCurrentService.get().destroy();
+			mCurrentService.set(null);
 		}
 
 		
@@ -335,194 +333,13 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		
 	}
 	
-	/**
-	 * This listener is called when new data is received
-	 */
-	private OnDataReceivedListener mDataReceived = new OnDataReceivedListener() {
-		
-		@Override
-		public void onDataReceived(final SensorData data) {
-			//Callback are usually called on the main thread
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				
-				@Override
-				public void run() {
-					//Data just arrived, we send it to all the appropriate callbacks
-					for(OnDataReceivedListener callback : mCallbacks){
-						try{
-							callback.onDataReceived(data);
-						} catch (Throwable t){
-							t.printStackTrace();
-						}
-					}
-					
-				}
-			});
-		}
-	};
-	
-	/**
-	 * This listener is called when the device is connected
-	 */
-	private OnConnectListener mConnect = new OnConnectListener() {
-		
-		@Override
-		public void onConnect(final String peripheralAdress) {
-			//A device just disconnected, let's call the callbacks
-			//Callback are usually called on the main thread
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				
-				@Override
-				public void run() {
-					try{
-						//Then call the disconnect callback
-						setSaveAddress(peripheralAdress);
-						if(mConnectListener!=null) mConnectListener.onConnect(peripheralAdress);
-					} catch (Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});
-		}
-	};
-	
-	/**
-	 * This listener is called when the device is disconnected
-	 */
-	private OnDisconnectListener mDisconnect = new OnDisconnectListener() {
-		
-		@Override
-		public void onDisconnect(final String peripheralAdress) {
-			//A device just disconnected, let's call the callbacks
-			//Callback are usually called on the main thread
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				
-				@Override
-				public void run() {
-					try{
-						//Then call the disconnect callback
-                        //when connected, get disconnect by the same device
-                        // (if the disconnet comes from the 2nd nevo,no need forward to top layer "syncController")
-                        //when connecting, get disconnect
-						if(mDisconnectListener!=null
-                                && (peripheralAdress.equals(getSaveAddress()) || getSaveAddress().equals("")))
-                        {
-                            // if get disconnect from connected, after 10s, do reconnect
-                            // if always disconnect, do reconnect follow the connect pattern array[10s,10s,10s,60s...]
-                            mTimerIndex = 0;
-                            initAutoReconnectTimer(mSupportServicelist);
-                            mDisconnectListener.onDisconnect(peripheralAdress);
-                        }
-					} catch (Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});
-		}
-	};
-	
-	/**
-	 * This listener is called when an unrecoverable exception is raised
-	 */
-	private OnExceptionListener mException = new OnExceptionListener() {
-		
-		@Override
-		public void onException(final Exception e) {
-			//An exception have been raised, let's call the callbacks
-			//Callback are usually called on the main thread
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				
-				@Override
-				public void run() {
-					try{
-						//Then call the disconnect callback
-						if(mExceptionListener!=null) mExceptionListener.onException(e);
-					} catch (Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});
-		}
-	};
-
-	/**
-	 *  Device scan callback.This callback is called for all devices founds by the scanner
-	 */
-	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
-		
-		/*
-		 * (non-Javadoc)
-		 * @see android.bluetooth.BluetoothAdapter.LeScanCallback#onLeScan(android.bluetooth.BluetoothDevice, int, byte[])
-		 */
-		@Override
-		public void onLeScan(final BluetoothDevice device, int rssi,
-				byte[] scanRecord) {
-			final String deviceAddress = device.getAddress();
-
-			if(mPreviousAddress.contains(deviceAddress)){				
-				//We are in a case, Due to this issue : http://stackoverflow.com/questions/19502853/android-4-3-ble-filtering-behaviour-of-startlescan
-				//Where the callback has been called twice for the same address
-				//We should not do anything
-			} else {
-				//For each alloweds service, we should have one and only one device.
-				//And it should be active at the moment
-			
-				//We check if the device is not already connected
-				boolean alreadyConnected = NevoBTImpl.this.isAlreadyConnected(deviceAddress);
-
-			
-				//We will browse the advertised UUIDs to check if one of them correspond to a supported service
-				List<UUID> advertisedUUIDs = parseUUIDs(scanRecord);
-				for(UUID u : advertisedUUIDs){
-					Log.v(TAG, deviceAddress+" advertises "+u.toString());
-				}
-				//The address shouldn't be previously connected, no other device should support this service and it should be an allowed service (for this scan at least)
-				//Also if a pairing is known to be needed, It should have already been paired : !GattAttributes.shouldPairBeforeUse(advertisedUUIDs) || (GattAttributes.shouldPairBeforeUse(advertisedUUIDs) && device.getBondState()==BluetoothDevice.BOND_BONDED)
-				// Either : No need to pair before use Or : (Need to pair before use and we are actually paired)
-				if (!alreadyConnected 
-						&& (mCurrentService==null || !mCurrentService.isOneOfThosServiceConnected(advertisedUUIDs))
-						&& !GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).isEmpty() 
-					 /* && ( !GattAttributes.shouldPairBeforeUse(advertisedUUIDs) || (GattAttributes.shouldPairBeforeUse(advertisedUUIDs) && device.getBondState()==BluetoothDevice.BOND_BONDED) )*/ )
-				   {		
-					
-					Log.d(TAG, "Device "+deviceAddress+" found to support service : "+GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).get(0));
-					
-                     if(hasSavedAddress())
-                     {
-                         if(!deviceAddress.equals(getSaveAddress()))
-                         {
-                             // no found the saved nevo when auto scan, perhaps the nevo power  off
-                             // perhaps need a new callback function to tell syncController and popup alert message "user need Open nevo's BT"
-                             // now prompt the alert message is caused by 3 connection timeouts
-                             Log.e(TAG, "the found Device does not match with the bound device :"+getSaveAddress());
-                             return;
-                         }
-                     }
-
-					//If yes, let's bind this device !
-					if(mCurrentService == null)
-						bindNewService(deviceAddress);
-					else
-					{	
-						mCurrentService.connect(deviceAddress);
-					}
-					
-				}
-			}
-			if(!mPreviousAddress.contains(deviceAddress))	
-			{
-				mPreviousAddress.add(deviceAddress);
-			}
-		}
-	};
-	
 	private boolean isAlreadyConnected(String deviceAddress) {
 		//If current service isn't null
-		return (mCurrentService!=null
+		return (mCurrentService.notEmpty()
 			//And it is still binded
-			&& mCurrentService.pingBinder()
+			&& mCurrentService.get().pingBinder()
 			//And the device is still connected
-			&& mCurrentService.isConnected(deviceAddress)
+			&& mCurrentService.get().isConnected(deviceAddress)
 			//And the given device address is not null
 			&& deviceAddress!=null
 			); 
@@ -541,7 +358,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		
 		//This object will be the bridge between this object and the Service
 		//It is used to retreive the binder and unbind the service
-		mCurrentServiceConnection = new ServiceConnection() {
+		mCurrentServiceConnection = new Optional<ServiceConnection>( new ServiceConnection() {
 			
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
@@ -555,20 +372,26 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 				//If we had this service already connected, we disconnect it
 				//here comment by gaillysu, should not call disconnect()
 				//disconnect(deviceAddress);
-				
+
+                if(mDelegate.isEmpty()) {
+
+                    Log.e(NevoBT.TAG, "Impossible to connect service ! No delegate");
+                    return;
+                }
+
 				//This object is the bridge to get informations and control the service
-				mCurrentService = (NevoBTService.LocalBinder) service;
+				mCurrentService = new Optional<NevoBTService.LocalBinder> ( (NevoBTService.LocalBinder) service );
 				
 				//We launch a conenction to the given device
-				mCurrentService.initialize( mDataReceived, mConnect, mDisconnect, mException);
+				mCurrentService.get().initialize(mDelegate.get(),mDelegate.get(),mDelegate.get());
 				//now connect this device
-				mCurrentService.connect(deviceAddress);
+				mCurrentService.get().connect(deviceAddress);
 			}
-		};
+		} );
 
 		//We start the actual binding
 		//Note that the service will restart as long as it is binded, because we have set : Activity.BIND_AUTO_CREATE
-		mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection,Activity.BIND_AUTO_CREATE);
+		mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection.get(),Activity.BIND_AUTO_CREATE);
 		Log.v(NevoBT.TAG,"mContext.bindService");
 	}
 	
@@ -604,177 +427,79 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	/*package*/ void setContext(Context ctx){
 		this.mContext = ctx;
 	}
-	
-	/*
-	 * Util Functions
-	 */
-	
-	/**
-	 * This function will help us uncrypt the advertise Data and turn them into readable UUIDs
-	 * @param advertisedData
-	 * @return a list of UUIDs
-	 */
-	private List<UUID> parseUUIDs(final byte[] advertisedData) {
-	    List<UUID> uuids = new ArrayList<UUID>();
-
-	    int offset = 0;
-	    while (offset < (advertisedData.length - 2)) {
-	        int len = advertisedData[offset++];
-	        if (len == 0)
-	            break;
-
-	        int type = advertisedData[offset++];
-	        switch (type) {
-	        case 0x02: // Partial list of 16-bit UUIDs
-	        case 0x03: // Complete list of 16-bit UUIDs
-	            while (len > 1) {
-	                int uuid16 = advertisedData[offset++];
-	                uuid16 += (advertisedData[offset++] << 8);
-	                len -= 2;
-	                uuids.add(UUID.fromString(String.format(
-	                        "%08x-0000-1000-8000-00805f9b34fb", uuid16)));
-	            }
-	            break;
-	        case 0x06:// Partial list of 128-bit UUIDs
-	        case 0x07:// Complete list of 128-bit UUIDs
-	            // Loop through the advertised 128-bit UUID's.
-	            while (len >= 16) {
-	                try {
-	                    // Wrap the advertised bits and order them.
-	                    ByteBuffer buffer = ByteBuffer.wrap(advertisedData,
-	                            offset++, 16).order(ByteOrder.LITTLE_ENDIAN);
-	                    long mostSignificantBit = buffer.getLong();
-	                    long leastSignificantBit = buffer.getLong();
-	                    uuids.add(new UUID(leastSignificantBit,
-	                            mostSignificantBit));
-	                } catch (IndexOutOfBoundsException e) {
-	                    // Defensive programming.
-	                    Log.e(TAG, e.toString());
-	                    continue;
-	                } finally {
-	                    // Move the offset to read the next uuid.
-	                    offset += 15;
-	                    len -= 16;
-	                }
-	            }
-	            break;
-	        default:
-	            offset += (len - 1);
-	            break;
-	        }
-	    }
-
-	    return uuids;
-	}
-
-    private void initAutoReconnectTimer(final List<SupportedService> servicelist)
-    {
-        if(mAutoReconnectTimer!=null)
-        {
-            mAutoReconnectTimer.cancel();
-            mAutoReconnectTimer = null;
-        }
-        mAutoReconnectTimer = new Timer();
-        mAutoReconnectTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                    if (isDisconnected()) {
-                        Log.w(TAG, "reconnect after........... " + mReConnectTimerPattern[mTimerIndex] / 1000 + "s");
-                        mTimerIndex = mTimerIndex + 1;
-                        if(mTimerIndex >= mReConnectTimerPattern.length) mTimerIndex = mTimerIndex -1;
-                        if(mExceptionListener!=null) mExceptionListener.onException(new BLEConnectTimeoutException());
-                    }
-                    else
-                    {
-                        mTimerIndex = 0;
-                    }
-                //check again connect status
-                try {
-                    autoConnect(servicelist);
-                } catch (BLENotSupportedException e) {
-                    e.printStackTrace();
-                } catch (BluetoothDisabledException e) {
-                    e.printStackTrace();
-                }
-            }
-        },mReConnectTimerPattern[mTimerIndex]);
-    }
-	@Override
-	public void connect(List<SupportedService> servicelist)
-			throws BLENotSupportedException, BluetoothDisabledException {
-        //reset  mTimerIndex, when user press "connect" button, reset the timer pattern 's index
-        //make sure next auto reconnect can start after 10s,otherwise next auto reconnect perhaps starts after 10s,60s,120s,240s,3600s
-        mTimerIndex = 0;
-        mSupportServicelist = servicelist;
-        autoConnect(servicelist);
-	}
-
-    /**
-     * it is an inline function, see@connect(List<SupportedService> servicelist),initAutoReconnectTimer(final List<SupportedService> servicelist)
-     * @param servicelist
-     * @throws BLENotSupportedException
-     * @throws BluetoothDisabledException
-     */
-    private void autoConnect(List<SupportedService> servicelist)
-            throws BLENotSupportedException, BluetoothDisabledException {
-
-        initAutoReconnectTimer(servicelist);
-
-        if (!isDisconnected()) {return;}
-
-        //clear Queue before every connect
-        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).clear();
-
-        //every connect, start new scan,it can solve mostly connection issue, include reopen phone's BT
-        //I think startScan perhaps can reset all bluetooth resource in the HAL
-        startScan(servicelist);
-
-    }
-
-	private void setSaveAddress(String address)
-	{
-		mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, address).commit();
-	}
-    @Override
-	public String getSaveAddress()
-	{
-		return mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "");
-	}
 
     @Override
     public String getFirmwareVersion() {
-        return (mCurrentService!=null)?mCurrentService.getFirmwareVersion():null;
+        return (mCurrentService.notEmpty())?mCurrentService.get().getFirmwareVersion():null;
     }
 
     @Override
     public String getSoftwareVersion() {
-        return (mCurrentService!=null)?mCurrentService.getSoftwareVersion():null;
+        return (mCurrentService.notEmpty())?mCurrentService.get().getSoftwareVersion():null;
     }
 
-    @Override
-	public boolean hasSavedAddress() {
-		if(!mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.SAVE_MAC_ADDRESS, "").equals(""))
-		{			
-			return true;
-		}
-		return false;
-	}
 
-	@Override
-	public void forgetSavedAddress() {	
-		if(hasSavedAddress())
-		{
-			saveAddress = getSaveAddress();
-		}
-		mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, "").commit();
-	}
+    /*
+	 * Util Functions
+	 */
 
-	@Override
-	public void restoreSavedAddress() {
-		if(!saveAddress.equals(""))
-			mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.SAVE_MAC_ADDRESS, saveAddress).commit();
-		
-	}
+    /**
+     * This function will help us uncrypt the advertise Data and turn them into readable UUIDs
+     * @param advertisedData
+     * @return a list of UUIDs
+     */
+    private List<UUID> parseUUIDs(final byte[] advertisedData) {
+        List<UUID> uuids = new ArrayList<UUID>();
+
+        int offset = 0;
+        while (offset < (advertisedData.length - 2)) {
+            int len = advertisedData[offset++];
+            if (len == 0)
+                break;
+
+            int type = advertisedData[offset++];
+            switch (type) {
+                case 0x02: // Partial list of 16-bit UUIDs
+                case 0x03: // Complete list of 16-bit UUIDs
+                    while (len > 1) {
+                        int uuid16 = advertisedData[offset++];
+                        uuid16 += (advertisedData[offset++] << 8);
+                        len -= 2;
+                        uuids.add(UUID.fromString(String.format(
+                                "%08x-0000-1000-8000-00805f9b34fb", uuid16)));
+                    }
+                    break;
+                case 0x06:// Partial list of 128-bit UUIDs
+                case 0x07:// Complete list of 128-bit UUIDs
+                    // Loop through the advertised 128-bit UUID's.
+                    while (len >= 16) {
+                        try {
+                            // Wrap the advertised bits and order them.
+                            ByteBuffer buffer = ByteBuffer.wrap(advertisedData,
+                                    offset++, 16).order(ByteOrder.LITTLE_ENDIAN);
+                            long mostSignificantBit = buffer.getLong();
+                            long leastSignificantBit = buffer.getLong();
+                            uuids.add(new UUID(leastSignificantBit,
+                                    mostSignificantBit));
+                        } catch (IndexOutOfBoundsException e) {
+                            // Defensive programming.
+                            Log.e(TAG, e.toString());
+                            continue;
+                        } finally {
+                            // Move the offset to read the next uuid.
+                            offset += 15;
+                            len -= 16;
+                        }
+                    }
+                    break;
+                default:
+                    offset += (len - 1);
+                    break;
+            }
+        }
+
+        return uuids;
+    }
 
 	
 	/*

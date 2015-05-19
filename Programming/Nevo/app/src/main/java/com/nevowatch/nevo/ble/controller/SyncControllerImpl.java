@@ -21,20 +21,15 @@ import com.nevowatch.nevo.GoogleFitManager;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.Model.Goal;
 import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.ble.ble.GattAttributes.SupportedService;
 import com.nevowatch.nevo.ble.kernel.BLEConnectTimeoutException;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
 import com.nevowatch.nevo.ble.kernel.BluetoothDisabledException;
-import com.nevowatch.nevo.ble.kernel.NevoBT;
-import com.nevowatch.nevo.ble.kernel.OnConnectListener;
-import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
-import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
-import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
 import com.nevowatch.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
+import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
@@ -53,56 +48,84 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
-public class SyncControllerImpl implements SyncController{
+/*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
     private final static String TAG = "SyncControllerImpl";
+
 	Context mContext;
+
 	private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
-	private NevoBT mNevoBT;
-	private OnSyncControllerListener mOnSyncControllerListener;
+
+	private ConnectionController mConnectionController;
+
+	private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
+
     private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
 
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
-    private boolean mVisible = false;
+
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
 
-    private SensorRequest mCurrentrequest;
+    /*package*/SyncControllerImpl(Context context)
+    {
+        mContext = context;
 
-    /** The Handler of the ui thread. */
-    Handler mUiThread = new Handler(Looper.getMainLooper());
-    //send Command timeout
-    int MAX_TIMEOUT = 2000;
-    //when got timeout, then do disconnect Nevo from smartphone peer, and notify Activity layer
-    Runnable mSendCommandTimeOut = new Runnable() {
-        @Override
-        public void run() {
-            Log.e("SyncControllerImpl","send command timeout:" + mCurrentrequest.getClass().getName());
-            if(mNevoBT.isDisconnected())
-                mOnSyncControllerListener.connectionStateChanged(false);
-            else
-            {
-                mNevoBT.disconnect(new Optional<String>(mNevoBT.getSaveAddress()));
-                showMessage(R.string.ble_command_timeout_title,R.string.ble_connecttimeout);
-            }
+        mConnectionController = ConnectionController.Singleton.getInstance(context);
 
+        mConnectionController.setDelegate(this);
+
+        Intent intent = new Intent(mContext,LocalService.class);
+        mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
+    }
+
+    /*package*/void setContext(Context context) {
+        if(context!=null)
+            mContext = context;
+    }
+
+
+    @Override
+    public void startConnect(boolean forceScan,
+                             OnSyncControllerListener listenser) {
+
+        setSyncControllerListenser(listenser);
+
+        if (forceScan)
+        {
+            mConnectionController.forgetSavedAddress();
         }
-    };
+
+        mConnectionController.connect();
+
+    }
+
+    //Each packets should go through this function. It will ensure that they are properly queued and sent in order.
+    private void sendRequest(final SensorRequest request)
+    {
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
+            @Override
+            public void run() {
+
+                Log.i("SyncControllerImpl",request.getClass().getName());
+
+                mConnectionController.sendRequest(request);
+            }
+        });
+
+    }
 
 	/**
 	 * This listener is called when new data is received
 	 */
-	private OnDataReceivedListener mDataReceivedListener = new OnDataReceivedListener() {
+    @Override
+    public void onDataReceived(SensorData data) {
 
-		@Override
-		public void onDataReceived(com.nevowatch.nevo.ble.model.packet.SensorData data) {
-            mUiThread.removeCallbacks(mSendCommandTimeOut);
 			//if(last Packet)
 			if (data.getType().equals(NevoRawData.TYPE))
 			{
@@ -119,11 +142,10 @@ public class SyncControllerImpl implements SyncController{
                     {
                         Log.e("Nevo Error","InVaild Packets Received!");
                         mPacketsbuffer.clear();
-                        //disconnect and auto reconnect
-                        mNevoBT.disconnect(new Optional<String>(mNevoBT.getSaveAddress()));
+
                         return;
                     }
-					mOnSyncControllerListener.packetReceived(packet);
+					if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
 
                     if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
@@ -199,15 +221,15 @@ public class SyncControllerImpl implements SyncController{
                 }
 			}
 
-		}
-	};
+	}
 
-	private OnConnectListener mConnectListener = new OnConnectListener() {
+    @Override
+    public void onConnectionStateChanged(boolean isConnected, String address) {
 
-		@Override
-		public void onConnect(String peripheralAdress) {
+        if(isConnected) {
+
             mTimeOutcount = 0;
-			mOnSyncControllerListener.connectionStateChanged(true);
+            if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(true);
             mPacketsbuffer.clear();
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -217,103 +239,25 @@ public class SyncControllerImpl implements SyncController{
                 }
             },4000);
 
-		}		
-	};
-	private OnDisconnectListener mDisconnectListener = new OnDisconnectListener() {
-		
-		@Override
-		public void onDisconnect(String peripheralAdress) {	
-			mOnSyncControllerListener.connectionStateChanged(false);
-			}
-	};
-	
+        } else {
 
-	private OnExceptionListener mExceptionListener = new OnExceptionListener() {
-		
-		@Override
-		public void onException(Exception e) {
-			/*
-			 * Standard exception callback
-			 */
-			if(e instanceof BLEUnstableException) {
-				
-			} else if (e instanceof BluetoothDisabledException) {
-				
-			} else if (e instanceof BLENotSupportedException) {
-			
-			}else if (e instanceof BLEUnstableException) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
-                    }
-                });
-            }else if (e instanceof BLEConnectTimeoutException) {
-                mTimeOutcount = mTimeOutcount + 1;
-                //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
-                if (mTimeOutcount  == 3) {
-                    mTimeOutcount = 0;
-                    showMessage(R.string.ble_connection_timeout_title,R.string.ble_connecttimeout);
-                }
-            }
-            mOnSyncControllerListener.connectionStateChanged(false);
-		}
-	};
+            if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
 
-    private void setRtc() {
-        sendRequest(new SetRtcNevoRequest());
-    }
+        }
 
-    public void sendRequest(final SensorRequest request)
-    {
-        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
-            @Override
-            public void run() {
-                mUiThread.removeCallbacks(mSendCommandTimeOut);
-                mUiThread.postDelayed(mSendCommandTimeOut,MAX_TIMEOUT);
-                Log.i("SyncControllerImpl",request.getClass().getName());
-                mCurrentrequest = request;
-                mNevoBT.sendRequest(request);
-            }
-        });
-
-    }
-
-    void  getDailyTrackerInfo()
-    {
-        sendRequest(new ReadDailyTrackerInfoNevoRequest());
-    }
-
-    void  getDailyTracker(int trackerno)
-    {
-        sendRequest(new ReadDailyTrackerNevoRequest(trackerno));
-    }
-
-    void syncStepandGoal() {
-        final SensorRequest request = new GetStepsGoalNevoRequest();
-        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
-            @Override
-            public void run() {
-                mUiThread.removeCallbacks(mSendCommandTimeOut);
-                mUiThread.postDelayed(mSendCommandTimeOut, MAX_TIMEOUT);
-                Log.i("SyncControllerImpl", request.getClass().getName());
-                mNevoBT.sendRequest(request);
-            }
-        });
-    }
-
+	}
 
     /**
      This function will syncrhonise activity data with the watch.
      It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
      The watch should be emptied after all data have been saved.
      */
-    void syncActivityData() {
+    private void syncActivityData() {
 
         long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
         String lasttimezone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
         if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
-           || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
+                || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
             //We haven't synched for a while, let's sync now !
             Log.i("SyncControllerImpl","*** Sync started ! ***");
             getDailyTrackerInfo();
@@ -323,126 +267,119 @@ public class SyncControllerImpl implements SyncController{
     /**
      When the sync process is finished, le't refresh the date of sync
      */
-    void syncFinished() {
+    private void syncFinished() {
         Log.i("SyncControllerImpl","*** Sync finished ***");
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
     }
-    /*package*/SyncControllerImpl(Context context)
-	{
-		mContext = context;	
-		
-		mNevoBT = NevoBT.Factory.newInstance(context);
-		mNevoBT.connectCallback(mConnectListener);
-		mNevoBT.addCallback(mDataReceivedListener);
-		mNevoBT.disconnectCallback(mDisconnectListener);
-		mNevoBT.exceptionCallback(mExceptionListener);
 
-        Intent intent = new Intent(mContext,LocalService.class);
-        mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
-	}
+    private void setRtc() {
+        sendRequest(new SetRtcNevoRequest());
+    }
 
-	/*package*/void setContext(Context context) {
-        if(context!=null)
-		    mContext = context;
-	}
+    private void  getDailyTrackerInfo()
+    {
+        sendRequest(new ReadDailyTrackerInfoNevoRequest());
+    }
 
-	@Override
-	public Context getContext() {		
-		return mContext;
-	}
-
-	@Override
-	public void startConnect(boolean forceScan,
-			OnSyncControllerListener listenser) {
-
-        setSyncControllerListenser(listenser);
-		
-		if (forceScan)
-		{
-			mNevoBT.forgetSavedAddress();
-		}
-		
-		List<SupportedService> Servicelist = new ArrayList<SupportedService>();
-		Servicelist.add( SupportedService.nevo);
-		try {
-			mNevoBT.connect(Servicelist);
-		} catch (BLENotSupportedException e) {
-			Log.d("SyncControllerImpl", "Ble not supported !");
-			e.printStackTrace();
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
-                }
-            });
-		} catch (BluetoothDisabledException e) {
-			e.printStackTrace();
-            Log.d("SyncControllerImpl", "Bluetooth Off!, please open bluetooth.");
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
-                }
-            });
-		}
-		
-	}
-
-	@Override
-	public void setGoal(Goal goal) {
-		sendRequest(new SetGoalNevoRequest(goal));
-	}
+    private void  getDailyTracker(int trackerno)
+    {
+        sendRequest(new ReadDailyTrackerNevoRequest(trackerno));
+    }
 
     @Override
-	public void setAlarm(int hour, int minute, boolean enable) {
-		sendRequest(new SetAlarmNevoRequest(hour,minute,enable));	
-	}
+    public void setGoal(Goal goal) {
+        sendRequest(new SetGoalNevoRequest(goal));
+    }
+
+    @Override
+    public void setAlarm(int hour, int minute, boolean enable) {
+        sendRequest(new SetAlarmNevoRequest(hour, minute, enable));
+    }
 
     @Override
     public void getStepsAndGoal() {
         sendRequest(new GetStepsGoalNevoRequest());
     }
 
-
-    @Override
-	public boolean isConnected() {
-		
-		return !mNevoBT.isDisconnected();
+	@Override
+	public Context getContext() {		
+		return mContext;
 	}
 
     @Override
-    public void showMessage(final int titleID, final int msgID) {
-        if(mLocalService!=null && getVisible()) mLocalService.PopupMessage(titleID,msgID);
+    public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
+        mOnSyncControllerListener.set(syncControllerListenser);
     }
 
     @Override
-    public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
-        mOnSyncControllerListener = syncControllerListenser;
+    public boolean isConnected() {
+        return mConnectionController.isConnected();
     }
 
     @Override
     public String getFirmwareVersion() {
-        return mNevoBT.getFirmwareVersion();
+        return mConnectionController.getFirmwareVersion();
     }
 
     @Override
     public String getSoftwareVersion() {
-        return mNevoBT.getSoftwareVersion();
+        return mConnectionController.getSoftwareVersion();
     }
+
+    @Override
+    public void onException(Exception e) {
+			/*
+			 * Standard exception callback
+			 */
+        if(e instanceof BLEUnstableException) {
+
+        } else if (e instanceof BluetoothDisabledException) {
+
+        } else if (e instanceof BLENotSupportedException) {
+
+        }else if (e instanceof BLEUnstableException) {
+            try {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Throwable t) {
+
+            }
+        }else if (e instanceof BLEConnectTimeoutException) {
+            mTimeOutcount = mTimeOutcount + 1;
+            //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
+            if (mTimeOutcount  == 3) {
+                mTimeOutcount = 0;
+                showMessage(R.string.ble_connection_timeout_title, R.string.ble_connecttimeout);
+            }
+        }
+        if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
+    }
+
+
+    /**
+     * ============The following block is used only to have a safe context in order to display a popup============
+     */
+
+    @Override
+    public void showMessage(final int titleID, final int msgID) {
+        if(mLocalService!=null && mVisible) mLocalService.PopupMessage(titleID,msgID);
+    }
+
+    private boolean mVisible = false;
 
     @Override
     public void setVisible(boolean isVisible) {
         mVisible = isVisible;
     }
 
-    @Override
-    public boolean getVisible() {
-        return mVisible;
-    }
-
     //below code added to popup a dialog whenever nevo app runs background or foreground
     private LocalService.LocalBinder mLocalService = null;
+
     private ServiceConnection mCurrentServiceConnection = new ServiceConnection() {
 
         @Override

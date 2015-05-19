@@ -20,8 +20,8 @@
     <string name="close_string">Off</string>
     <string name="goal_steps">Pas</string>
     <string name="time_picker">Paramétrez votre alarme</string>
-    <string name="nevoConnected">Votre nevo n\’est pas connectée\nActivez le Bluetooth sur votre Smartphone</string>
-    <string name="pushHoldButton">Appuyez ensuite sur le 3ème bouton\nPour connecter votre montre</string>
+    <string name="nevoConnected">Votre nevo n\'est pas connectée\nActivez le Bluetooth sur votre Smartphone</string>
+    <string name="pushHoldButton">Appuyez ensuite sur le 3ème bouton\npour connecter votre montre\nSi le problème persiste, veuillez consulter nevowatch.com\/blehelp</string>
     <string name="tutorial">Activer ma nevo</string>
     <string name="acheter">Je veux une nevo!</string>
     <string name="bluetoothEnabled">Bluetooth activé</string>
@@ -59,7 +59,7 @@
     <string name="tutorial_one_title">Set the Time on your watch</string>
     <string name="tutorial_one_message">Pull the crown out and turn to set nevo time. Match the nevo time to the time on phone</string>
     <string name="tutorial_tips_one_tilte">Bluetooth disconnection \n when separated</string>
-    <string name="tutorial_tips_one_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 30 seconds. You will not receive notifications on nevo when disconnected.</string>
+    <string name="tutorial_tips_one_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes. You will not receive notifications on nevo when disconnected.</string>
     <string name="tutorial_tips_two_title">Bluetooth reconnection</string>
     <string name="tutorial_tips_two_message">Reconnect Bluetooth to receive notifications again by pressing and holding the 3rd button for 3 seconds.</string>
 </resources>

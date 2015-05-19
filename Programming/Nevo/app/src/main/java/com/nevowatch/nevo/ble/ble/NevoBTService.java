@@ -31,7 +31,6 @@ import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
 import com.nevowatch.nevo.ble.kernel.NevoBT;
 import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
-import com.nevowatch.nevo.ble.kernel.OnDisconnectListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
 import com.nevowatch.nevo.ble.model.packet.DataFactory;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
@@ -89,11 +88,6 @@ public class NevoBTService extends Service {
     private OnConnectListener mConnected;
     
     /**
-     * Call this listener when we are disconnected
-     */
-    private OnDisconnectListener mDisconnected;
-    
-    /**
      * Call this listener when an unrecoverabe exception is raised
      */
     private OnExceptionListener mException;
@@ -115,10 +109,9 @@ public class NevoBTService extends Service {
 		
 		/**
 		 * Sets all the required callbacks
-		 * @param mConnect 
 		 */
-		public void initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnDisconnectListener disconnected, OnExceptionListener exception){
-			NevoBTService.this.initialize(dataReceived, connect , disconnected, exception);
+		public void initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnExceptionListener exception){
+			NevoBTService.this.initialize(dataReceived, connect, exception);
 		}
 		
 		/**
@@ -159,7 +152,6 @@ public class NevoBTService extends Service {
 
 	    /**
 	     * Checks if a device already covers the given service.
-	     * @param service the service that we are looking up. We'll try to see if a connected device provides this service.
 	     * @return the address of the connected device (if any) or an empty Optional if there's no device currently covering this service
 	     */
 		public Optional<String> isServiceConnected(UUID uuid){
@@ -168,7 +160,6 @@ public class NevoBTService extends Service {
 		
 	    /**
 	     * Checks if a device already covers on of the given services
-	     * @param service the service that we are looking up. We'll try to see if a connected device provides this service.
 	     * @return the address of the connected device (if any) or an empty Optional if there's no device currently covering this service
 	     */
 		public boolean isOneOfThosServiceConnected(List<UUID> uuids){
@@ -205,6 +196,11 @@ public class NevoBTService extends Service {
             return NevoBTService.this.getSoftwareVersion();
         }
 
+        /**
+         * Pings the currently attached device (if any) in order to check if it is connected
+         */
+        public void ping() { NevoBTService.this.ping(); }
+
 	}
 
 	/*
@@ -233,18 +229,15 @@ public class NevoBTService extends Service {
  
 	/**
 	 * Initializes a reference to the local Bluetooth adapter.
-	 * @param disconnected - called when a device is disconnected 
 	 * @param dataReceived - called when data is received
 	 * @param connect - called when a device connects
 	 * @param exception - called when an unrecoverable exception occurs
 	 */
-	private boolean initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnDisconnectListener disconnected, OnExceptionListener exception) {
+	private boolean initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnExceptionListener exception) {
     	
     	mDataReceived = dataReceived;
     	
     	mConnected = connect;
-    	
-    	mDisconnected = disconnected;
     	
     	mException = exception;
     	
@@ -398,7 +391,7 @@ public class NevoBTService extends Service {
             	
                 Log.e(NevoBT.TAG, "Disconnected from GATT server : "+ address);
                 
-                if(mDisconnected!=null && gatt!=null) mDisconnected.onDisconnect(address);
+                if(mConnected!=null && gatt!=null) mConnected.onConnectionStateChanged(false,address);
 
                 //close this server for next reconnect!!!
                 if(gatt!=null) {gatt.close();}
@@ -501,7 +494,7 @@ public class NevoBTService extends Service {
             {
                 //here only connect one nevo, the first nevo by scan to find out
                 mBluetoothGattMap.put(gatt.getDevice().getAddress(), gatt);
-                if(mConnected!=null && gatt!=null) mConnected.onConnect(gatt.getDevice().getAddress());
+                if(mConnected!=null && gatt!=null) mConnected.onConnectionStateChanged(true,gatt.getDevice().getAddress());
             }
         	
         }
@@ -588,28 +581,28 @@ public class NevoBTService extends Service {
      * @param characteristic The characteristic to read from.
      */
     //Not used, but kept for possible later use
-    /*private void readCharacteristic(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
+    private void readCharacteristic(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || gatt == null) {
-            Log.w(ImazeBT.TAG, "BluetoothAdapter not initialized");
+            Log.w(NevoBT.TAG, "BluetoothAdapter not initialized");
             return;
         }
         int charaProp = characteristic.getProperties();   
         
-        Log.v(ImazeBT.TAG, "characteristic.getProperties() is: " + charaProp);
+        Log.v(NevoBT.TAG, "characteristic.getProperties() is: " + charaProp);
         
 		if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ)== BluetoothGattCharacteristic.PROPERTY_READ)
 		{	
             mQueuedMainThread.post(new Runnable() {
     			@Override
     			public void run() {
-    				 Log.v(ImazeBT.TAG, "Reading characteristic");
+    				 Log.v(NevoBT.TAG, "Reading characteristic");
     				if(gatt!=null) gatt.readCharacteristic(characteristic);
     			}
             });
 		}
 		
 
-    }*/
+    }
  
     /**
      * Enables or disables notification on a give characteristic.
@@ -735,6 +728,42 @@ public class NevoBTService extends Service {
 		
 		if(!sent) Log.w(NevoBT.TAG, "Send failed. No device have the right service and characteristic" );
 		
+    }
+
+    /**
+     * This function will send a read request to the device in order to see if it is still active
+     * @return
+     */
+    private void ping()
+    {
+
+        UUID serviceUUID = UUID.fromString(GattAttributes.DEVICEINFO_UDID);
+        UUID characteristicUUID = UUID.fromString(GattAttributes.DEVICEINFO_FIRMWARE_VERSION);
+
+        if(mBluetoothGattMap == null || mBluetoothGattMap.isEmpty())  {
+            Log.w(NevoBT.TAG, "Get failed. No device connected" );
+            return;
+        }
+
+        boolean sent = false;
+
+        for(BluetoothGatt gatt : mBluetoothGattMap.values())
+        {
+            //For each connected device, we'll see if they have the right service
+            BluetoothGattService service = gatt.getService(serviceUUID);
+
+            if(service!=null) {
+                BluetoothGattCharacteristic characteristic = service.getCharacteristic(characteristicUUID);
+                if(characteristic!=null) {
+                    //Now we've found the right characteristic, we modify it, then send it to the device
+                    readCharacteristic(gatt,characteristic);
+
+                    sent=true;
+                }
+            }
+        }
+
+        if(!sent) Log.w(NevoBT.TAG, "Get failed. No device have the right service and characteristic" );
     }
 
     /**
