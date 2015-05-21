@@ -22,7 +22,7 @@ public class SetRtcNevoRequest extends NevoRequest {
 		int Day = c.get(Calendar.DAY_OF_MONTH);
 		int Hour = c.get(Calendar.HOUR_OF_DAY);
 		int Minute = c.get(Calendar.MINUTE);
-		
+        int Second = c.get(Calendar.SECOND);
 		return new byte[][] {
 				   {0,HEADER,
 					(byte) (Year&0xFF),
@@ -31,7 +31,8 @@ public class SetRtcNevoRequest extends NevoRequest {
 					(byte) (Day&0xFF),
 					(byte) (Hour&0xFF),
 					(byte) (Minute&0xFF),
-					0,0,0,0,
+                    (byte) (Second&0xFF),
+					0,0,0,
 					0,0,0,0,
 					0,0,0,0
 					},
