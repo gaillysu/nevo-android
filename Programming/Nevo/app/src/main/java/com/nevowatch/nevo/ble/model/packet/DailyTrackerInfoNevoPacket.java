@@ -55,8 +55,8 @@ public class DailyTrackerInfoNevoPacket extends NevoPacket {
                 month = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[10]});
                 day   = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[11]});
             }
-            //vaild year
-            if(year != 0)
+            //vaild year,month, day
+            if((year>1970 && year<2050)  && (month>=1 && month<=12) && (day>=1 && day<=31) )
             {
                 //20150316
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");

@@ -190,8 +190,8 @@ import java.util.TimeZone;
                         mCurrentDay = 0;
                         mSavedDailyHistory = infopacket.getDailyTrackerInfo();
                         Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
-
-                        getDailyTracker(mCurrentDay);
+                        if(mSavedDailyHistory.size()>0)
+                            getDailyTracker(mCurrentDay);
                     }
                     else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
