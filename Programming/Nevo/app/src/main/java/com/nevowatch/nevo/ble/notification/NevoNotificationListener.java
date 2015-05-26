@@ -4,25 +4,7 @@ package com.nevowatch.nevo.ble.notification;
  * Created by gaillysu on 15/4/10.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
-
-import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
-import com.nevowatch.nevo.PaletteActivity;
-import com.nevowatch.nevo.R;
-import com.nevowatch.nevo.ble.controller.ConnectionController;
-import com.nevowatch.nevo.ble.controller.SyncController;
-import com.nevowatch.nevo.ble.kernel.NevoBT;
-import com.nevowatch.nevo.ble.kernel.QuickBT;
-import com.nevowatch.nevo.ble.kernel.QuickBTSendTimeoutException;
-import com.nevowatch.nevo.ble.kernel.QuickBTUnBindNevoException;
-import com.nevowatch.nevo.ble.model.request.LedLightOnOffNevoRequest;
-import com.nevowatch.nevo.Model.Notification.NotificationType;
-import com.nevowatch.nevo.ble.model.request.SendNotificationNevoRequest;
-import com.nevowatch.nevo.ble.util.Optional;
-import com.nevowatch.nevo.ble.util.Constants;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -33,9 +15,23 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import org.apache.commons.codec.binary.Hex;
+import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
+import com.nevowatch.nevo.PaletteActivity;
+import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.ble.controller.ConnectionController;
+import com.nevowatch.nevo.ble.controller.SyncController;
+import com.nevowatch.nevo.ble.kernel.QuickBTSendTimeoutException;
+import com.nevowatch.nevo.ble.kernel.QuickBTUnBindNevoException;
+import com.nevowatch.nevo.ble.model.request.LedLightOnOffNevoRequest;
+import com.nevowatch.nevo.ble.util.Optional;
+
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @TargetApi(18)
 public class NevoNotificationListener extends NotificationListenerService implements NotificationCallback{
@@ -46,6 +42,32 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
     final String TAG = NevoNotificationListener.class.getName();
 
+    private TelephonyManager mTm;
+
+    private CallStateListener mListener;
+
+    class CallStateListener extends PhoneStateListener {
+
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            //super.onCallStateChanged(state, incomingNumber);
+            switch (state){
+                case TelephonyManager.CALL_STATE_RINGING:
+                    if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE))
+                        sendNotification(PaletteActivity.getTypeChoosenColor(NevoNotificationListener.this,PaletteActivity.TELECHOOSENCOLOR));
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mTm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        mListener = new CallStateListener();
+        mTm.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
+    }
+
     @Override
     public void onNotificationPosted(StatusBarNotification arg0) {
         if(arg0 == null) return;
@@ -54,7 +76,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
         if (mNotification != null) {
 
-            //android 4.4.x new feature,support extras
+            /*//android 4.4.x new feature,support extras
             // Bundle exras = mNotification.extras;
             //incoming call or missed call
             if(arg0.getPackageName().equals("com.google.android.dialer")
@@ -68,7 +90,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
             }
 
             //native mms or hangouts
-            else if(arg0.getPackageName().equals("com.google.android.talk")
+            else*/ if(arg0.getPackageName().equals("com.google.android.talk")
                     || arg0.getPackageName().equals("com.android.mms")
                     || arg0.getPackageName().equals("com.google.android.apps.messaging")
                     || arg0.getPackageName().equals("com.sonyericsson.conversations")
