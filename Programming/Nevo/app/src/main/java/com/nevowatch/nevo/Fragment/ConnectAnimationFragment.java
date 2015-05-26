@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.AlertDialogView;
-import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -31,6 +33,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     private Button mConnectButton;
     private int mPostion;
     private String mTag;
+    private Button mForgetButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,10 +45,15 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mConnectButton = (Button)rootView.findViewById(R.id.connect_imageButton);
         mConnectButton.setOnClickListener(this);
 
+        mForgetButton = (Button) rootView.findViewById(R.id.forget_device_button);
+        mForgetButton.setOnClickListener(this);
+        mForgetButton.setVisibility(View.VISIBLE);
+
         View [] viewArray = new View []{
                 rootView.findViewById(R.id.nevoConnectedText),
                 rootView.findViewById(R.id.connect_imageButton),
-                rootView.findViewById(R.id.pushConnectedText)
+                rootView.findViewById(R.id.pushConnectedText),
+                rootView.findViewById(R.id.forget_device_button)
         };
         FontManager.changeFonts(viewArray, getActivity());
 
@@ -62,6 +70,10 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
                 mConnectImage.startAnimation(animRotate);
                 animRotate.setAnimationListener(new myAnimationListener());
                 break;
+            case R.id.forget_device_button:
+                SyncController.Singleton.getInstance(getActivity()).forgetDevice();
+                Log.d("ConnectAnimationFragemt", "Forget Device Address");
+                break;
             default:
                 break;
         }
@@ -72,7 +84,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         @Override
         public void onAnimationStart(Animation animation) {
             if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
-                SyncController.Singleton.getInstance(getActivity()).startConnect(true, (OnSyncControllerListener)getActivity());
+                SyncController.Singleton.getInstance(getActivity()).startConnect(false, (OnSyncControllerListener)getActivity());
             }
         }
 

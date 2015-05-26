@@ -62,4 +62,5 @@
     <string name="tutorial_tips_one_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes. You will not receive notifications on nevo when disconnected.</string>
     <string name="tutorial_tips_two_title">Bluetooth reconnection</string>
     <string name="tutorial_tips_two_message">Reconnect Bluetooth to receive notifications again by pressing and holding the 3rd button for 3 seconds.</string>
+    <string name="forget_device">Forget this nevo</string>
 </resources>

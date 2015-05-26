@@ -55,5 +55,18 @@
             android:layout_below="@+id/connect_imageView"
             android:layout_centerHorizontal="true" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:textColor="@color/customOrange"
+            android:background="@drawable/forget_device_button_selector"
+            android:text="@string/forget_device"
+            android:id="@+id/forget_device_button"
+            android:layout_alignBottom="@+id/pushConnectedText"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"/>
+
     </RelativeLayout>
 </LinearLayout>
