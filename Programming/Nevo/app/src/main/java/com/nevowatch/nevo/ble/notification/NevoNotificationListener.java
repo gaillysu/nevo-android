@@ -46,11 +46,11 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
     private CallStateListener mListener;
 
+    // listen incoming call and then send led command to nevo watch
     class CallStateListener extends PhoneStateListener {
 
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-            //super.onCallStateChanged(state, incomingNumber);
             switch (state){
                 case TelephonyManager.CALL_STATE_RINGING:
                     if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE))
@@ -63,6 +63,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
     @Override
     public void onCreate() {
         super.onCreate();
+        //init PhoneStateListener
         mTm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         mListener = new CallStateListener();
         mTm.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -75,22 +76,8 @@ public class NevoNotificationListener extends NotificationListenerService implem
         Notification mNotification = arg0.getNotification();
 
         if (mNotification != null) {
-
-            /*//android 4.4.x new feature,support extras
-            // Bundle exras = mNotification.extras;
-            //incoming call or missed call
-            if(arg0.getPackageName().equals("com.google.android.dialer")
-                    || arg0.getPackageName().equals("com.android.incallui")
-                    || arg0.getPackageName().equals("com.android.phone")
-                    || arg0.getPackageName().equals("com.android.dialer")) {
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
-                //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.TELETYPE))
-                sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.TELECHOOSENCOLOR));
-            }
-
-            //native mms or hangouts
-            else*/ if(arg0.getPackageName().equals("com.google.android.talk")
+            //sms
+            if(arg0.getPackageName().equals("com.google.android.talk")
                     || arg0.getPackageName().equals("com.android.mms")
                     || arg0.getPackageName().equals("com.google.android.apps.messaging")
                     || arg0.getPackageName().equals("com.sonyericsson.conversations")
@@ -224,5 +211,12 @@ public class NevoNotificationListener extends NotificationListenerService implem
         }
 
         SyncController.Singleton.getInstance(null).showMessage(titleID,msgID);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //unregister PhoneStateListener
+        mTm.listen(mListener, PhoneStateListener.LISTEN_NONE);
     }
 }
