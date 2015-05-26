@@ -326,6 +326,8 @@ import java.util.TimeZone;
     public String getSoftwareVersion() {
         return mConnectionController.getSoftwareVersion();
     }
+    @Override
+    public void forgetDevice() { mConnectionController.forgetSavedAddress();}
 
     @Override
     public void onException(Exception e) {

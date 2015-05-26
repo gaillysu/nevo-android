@@ -83,4 +83,9 @@ public interface SyncController {
      */
 	public void setVisible(boolean isVisible);
 
+    /**
+     * forget saved Nevo device
+     */
+    public void forgetDevice();
+
 }
