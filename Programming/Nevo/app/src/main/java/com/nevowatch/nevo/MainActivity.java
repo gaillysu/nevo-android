@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.nevowatch.nevo.Fragment.AlarmFragment;
@@ -68,7 +69,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
 
         SyncController.Singleton.getInstance(this).startConnect(false, this);
-       // NevoNotificationListener.getNotificationAccessPermission(this);
     }
 
     @Override
@@ -133,10 +133,25 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
+            if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
+                menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
             restoreActionBar();
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.firmware_version:
+                if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
+                    item.setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void restoreActionBar() {
