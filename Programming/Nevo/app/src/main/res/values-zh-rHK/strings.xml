@@ -21,7 +21,7 @@
     <string name="goal_steps">步</string>
     <string name="time_picker">設置時間</string>
     <string name="nevoConnected">nevo未連接\n請打開手機藍牙</string>
-    <string name="pushHoldButton">然後長按第三個按鈕3秒鐘\n連接上妳的手表\n如果仍有问题，请访问 nevowatch.com\/blehelp</string>
+    <string name="pushHoldButton">然後長按第三個按鈕3秒鐘\n連接上妳的手表\n如果仍有问题，请访问</string>
     <string name="tutorial">激活我的nevo</string>
     <string name="acheter">購買nevo!</string>
     <string name="bluetoothEnabled">藍牙可用</string>

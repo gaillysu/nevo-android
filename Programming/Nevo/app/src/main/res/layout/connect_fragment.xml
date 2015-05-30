@@ -29,7 +29,8 @@
             android:background="@drawable/rotating_round_bg"
             android:layout_gravity="center_horizontal"
             android:rotation="45"
-            android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="30dp"/>
 
         <Button
             android:layout_width="100dp"
@@ -41,11 +42,11 @@
             android:background="@color/transparent"
             android:textAllCaps="false"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/customBlack"
             android:gravity="center"
@@ -54,6 +55,15 @@
             android:id="@+id/pushConnectedText"
             android:layout_below="@+id/connect_imageView"
             android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:id="@+id/link_textView"
+            android:layout_below="@+id/pushConnectedText"
+            android:layout_centerHorizontal="true"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -64,9 +74,9 @@
             android:background="@drawable/forget_device_button_selector"
             android:text="@string/forget_device"
             android:id="@+id/forget_device_button"
-            android:layout_alignBottom="@+id/pushConnectedText"
-            android:layout_centerHorizontal="true"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:layout_below="@+id/link_textView"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </LinearLayout>

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
@@ -34,6 +37,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     private int mPostion;
     private String mTag;
     private Button mForgetButton;
+    private TextView mHyperLink;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,6 +52,10 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mForgetButton = (Button) rootView.findViewById(R.id.forget_device_button);
         mForgetButton.setOnClickListener(this);
         mForgetButton.setVisibility(View.VISIBLE);
+
+        mHyperLink = (TextView) rootView.findViewById(R.id.link_textView);
+        mHyperLink.setText( Html.fromHtml("<a href=\"http://nevowatch.com/blehelp\">Nevo Support</a>"));
+        mHyperLink.setMovementMethod(LinkMovementMethod.getInstance());
 
         View [] viewArray = new View []{
                 rootView.findViewById(R.id.nevoConnectedText),

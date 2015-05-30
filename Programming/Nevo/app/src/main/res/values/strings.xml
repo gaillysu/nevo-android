@@ -21,7 +21,7 @@
     <string name="goal_steps">Steps</string>
     <string name="time_picker">Set Alarm</string>
     <string name="nevoConnected">nevo is not connected\nEnable Bluetooth on phone</string>
-    <string name="pushHoldButton">Then push and hold 3rd button\nto connect your watch\nIf the problem persists, please visit nevowatch.com\/blehelp</string>
+    <string name="pushHoldButton">Then push and hold 3rd button\nto connect your watch\nIf the problem persists, please visit</string>
     <string name="tutorial">Activate my nevo</string>
     <string name="acheter">I want a nevo!</string>
     <string name="bluetoothEnabled">Bluetooth enabled</string>
