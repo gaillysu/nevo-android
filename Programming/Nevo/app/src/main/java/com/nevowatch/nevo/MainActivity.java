@@ -17,6 +17,7 @@ import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragment;
+import com.nevowatch.nevo.Fragment.OTAFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
@@ -103,6 +104,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTag = NotificationFragment.NOTIFICATIONFRAGMENT;
                 mTitle = getString(R.string.title_section4);
                 break;
+            case OTAFragment.OTAPOSITION+1:
+                tag.set(OTAFragment.OTAFRAGMENT);
+                mPosition = OTAFragment.OTAPOSITION;
+                mTag = OTAFragment.OTAFRAGMENT;
+                mTitle = getString(R.string.title_section5);
+                break;
             default:
                 break;
         }
@@ -174,6 +181,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else if(tag.equals(NotificationFragment.NOTIFICATIONFRAGMENT)){
             NotificationFragment notificationFragment = (NotificationFragment) getSupportFragmentManager().findFragmentByTag(NotificationFragment.NOTIFICATIONFRAGMENT);
             return notificationFragment;
+        }else if(tag.equals(OTAFragment.OTAFRAGMENT)){
+            OTAFragment otaFragment = (OTAFragment) getSupportFragmentManager().findFragmentByTag(OTAFragment.OTAFRAGMENT);
+            return otaFragment;
         }
         return null;
     }
@@ -201,6 +211,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 ((ConnectAnimationFragment)fragment).packetReceived(packet);
             }else if(fragment instanceof NotificationFragment){
                 ((NotificationFragment)fragment).packetReceived(packet);
+            }else if(fragment instanceof OTAFragment){
+                ((OTAFragment)fragment).packetReceived(packet);
             }
         }
     }
@@ -233,6 +245,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                         ((ConnectAnimationFragment)fragment).connectionStateChanged(isConnected);
                     }else if(fragment instanceof NotificationFragment){
                         ((NotificationFragment)fragment).connectionStateChanged(isConnected);
+                    }else if(fragment instanceof OTAFragment){
+                        ((OTAFragment)fragment).connectionStateChanged(isConnected);
                     }
                 }
             }
@@ -263,6 +277,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     break;
                 case NotificationFragment.NOTIPOSITION+1:
                     fragment.set(new NotificationFragment());
+                    break;
+                case OTAFragment.OTAPOSITION+1:
+                    fragment.set(new OTAFragment());
                     break;
                 case ConnectAnimationFragment.CONNECTPOSITION+1:
                     fragment.set(new ConnectAnimationFragment());

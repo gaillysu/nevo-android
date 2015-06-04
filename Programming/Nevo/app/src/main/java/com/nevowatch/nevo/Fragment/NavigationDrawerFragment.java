@@ -70,7 +70,8 @@ public class NavigationDrawerFragment extends Fragment {
             new DrawerIcon(R.drawable.icon_home_button_selected),
             new DrawerIcon(R.drawable.icon_goal_button_selected),
             new DrawerIcon(R.drawable.icon_alarm_button_selected),
-            new DrawerIcon(R.drawable.icon_notification_button_selected)
+            new DrawerIcon(R.drawable.icon_notification_button_selected),
+            new DrawerIcon(R.drawable.icon_ota_button_selected)
     };
     private ImageView mDrawerIconImageArray[] = new ImageView[mDrawerIconArray.length];
 
@@ -232,24 +233,35 @@ public class NavigationDrawerFragment extends Fragment {
                 mDrawerIconImageArray[1].setSelected(false);
                 mDrawerIconImageArray[2].setSelected(false);
                 mDrawerIconImageArray[3].setSelected(false);
+                mDrawerIconImageArray[4].setSelected(false);
                 break;
             case 1:
                 mDrawerIconImageArray[0].setSelected(false);
                 mDrawerIconImageArray[1].setSelected(true);
                 mDrawerIconImageArray[2].setSelected(false);
                 mDrawerIconImageArray[3].setSelected(false);
+                mDrawerIconImageArray[4].setSelected(false);
                 break;
             case 2:
                 mDrawerIconImageArray[0].setSelected(false);
                 mDrawerIconImageArray[1].setSelected(false);
                 mDrawerIconImageArray[2].setSelected(true);
                 mDrawerIconImageArray[3].setSelected(false);
+                mDrawerIconImageArray[4].setSelected(false);
                 break;
             case 3:
                 mDrawerIconImageArray[0].setSelected(false);
                 mDrawerIconImageArray[1].setSelected(false);
                 mDrawerIconImageArray[2].setSelected(false);
                 mDrawerIconImageArray[3].setSelected(true);
+                mDrawerIconImageArray[4].setSelected(false);
+                break;
+            case 4:
+                mDrawerIconImageArray[0].setSelected(false);
+                mDrawerIconImageArray[1].setSelected(false);
+                mDrawerIconImageArray[2].setSelected(false);
+                mDrawerIconImageArray[3].setSelected(false);
+                mDrawerIconImageArray[4].setSelected(true);
                 break;
             default:
                 break;
