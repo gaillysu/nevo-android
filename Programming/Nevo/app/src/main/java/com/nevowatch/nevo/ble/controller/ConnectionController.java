@@ -7,6 +7,7 @@ import com.nevowatch.nevo.ble.kernel.NevoBT;
 import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
+import com.nevowatch.nevo.ble.kernel.OnFirmwareVersionListener;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.NevoRequest;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
@@ -69,7 +70,7 @@ public interface ConnectionController {
     public String getSoftwareVersion();
 
 
-    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener {
+    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener ,OnFirmwareVersionListener{
 
     }
 

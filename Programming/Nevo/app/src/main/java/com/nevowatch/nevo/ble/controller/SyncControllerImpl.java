@@ -334,12 +334,28 @@ import java.util.TimeZone;
 			/*
 			 * Standard exception callback
 			 */
-        if(e instanceof BLEUnstableException) {
+        if (e instanceof BluetoothDisabledException) {
+            try {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Throwable t) {
 
-        } else if (e instanceof BluetoothDisabledException) {
-
+            }
         } else if (e instanceof BLENotSupportedException) {
+            try {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
+                    }
+                });
+            } catch (Throwable t) {
 
+            }
         }else if (e instanceof BLEUnstableException) {
             try {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -396,6 +412,11 @@ import java.util.TimeZone;
             mLocalService = (LocalService.LocalBinder)service;
         }
     };
+
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
+    }
 
     /*inner class , static type, @link:http://stackoverflow.com/questions/10305261/broadcastreceiver-cant-instantiate-class-no-empty-constructor */
     static public class LocalService extends Service
