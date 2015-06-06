@@ -47,6 +47,14 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
     Optional<ConnectionController.Delegate> mDelegate = new Optional<>();
     Context mContext;
 
+    /**
+     this parameter saved old BLE 's  address, when doing BLE OTA, the address has been changed to another one
+     so, after finisned BLE ota, must restore it to normal 's address
+     */
+    private String mSavedAddress = "";
+    private boolean isOTAmode = false;
+
+
     /*package*/ ConnectionControllerImpl(Context ctx){
         mContext = ctx;
         NevoBT.Singleton.getInstance(mContext).setDelegate(this);
@@ -165,8 +173,10 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
     }
     @Override
-    public void setDelegate(Delegate delegate) {
+    public ConnectionController.Delegate setDelegate(Delegate delegate) {
+        ConnectionController.Delegate old_deledgate = mDelegate.notEmpty()?mDelegate.get():null;
         mDelegate.set(delegate);
+        return old_deledgate;
     }
 
     public void setContext(Context context) {
@@ -180,9 +190,12 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
     @Override
     public void forgetSavedAddress() {
+        //save it for OTA using
+        mSavedAddress = getSaveAddress();
         setSaveAddress("");
     }
 
+    @Override
     public boolean hasSavedAddress() {
         if(!getSaveAddress().equals(""))
         {
@@ -211,5 +224,42 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
         return NevoBT.Singleton.getInstance(mContext).getSoftwareVersion();
     }
 
+    @Override
+    public void setOTAMode(boolean otaMode, boolean disConnect) {
 
+        //No need to change the mode if we are already in OTA Mode
+        if (getOTAMode() == otaMode ) return;
+
+        if (disConnect)
+        {
+            //cancel reconnect timer, make sure OTA can do connect by OTAcontroller;
+            mAutoReconnectTimer.cancel();
+            mCheckConnectionTimer.cancel();
+            NevoBT.Singleton.getInstance(mContext).disconnect();
+        }
+    }
+
+    @Override
+    public boolean getOTAMode() {
+        return isOTAmode;
+    }
+
+    @Override
+    public void restoreSavedAddress() {
+        if(!mSavedAddress.equals(""))
+        {
+            setSaveAddress(mSavedAddress);
+        }
+    }
+
+
+    @Override
+    public void firmwareVersionReceived(final Constants.DfuFirmwareTypes whichfirmware, final String version) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if(mDelegate.notEmpty()) mDelegate.get().firmwareVersionReceived(whichfirmware,version);
+            }
+        });
+    }
 }

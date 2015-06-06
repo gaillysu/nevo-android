@@ -415,7 +415,7 @@ import java.util.TimeZone;
 
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
+        //TODO popup alert FW update message
     }
 
     /*inner class , static type, @link:http://stackoverflow.com/questions/10305261/broadcastreceiver-cant-instantiate-class-no-empty-constructor */

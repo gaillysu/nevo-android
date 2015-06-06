@@ -116,7 +116,7 @@ public interface NevoBT {
      */
     void ping();
 
-    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener{
+    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener,OnFirmwareVersionListener{
 
     }
 }

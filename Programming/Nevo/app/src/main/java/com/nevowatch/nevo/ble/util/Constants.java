@@ -24,6 +24,13 @@ public class Constants {
             this.requestedCode = requestedCode;
             this.responseStatus = responseStatus;
         }
+        public byte getresponseCode(){return responseCode;}
+        public byte getrequestedCode(){return requestedCode;}
+        public byte getresponseStatus(){return responseStatus;}
+
+        public void setresponseCode(byte responseCode){this.responseCode=responseCode;}
+        public void setrequestedCode(byte requestedCode){this.requestedCode=requestedCode;}
+        public void setresponseStatus(byte responseStatus){this.responseStatus=responseStatus;}
     }
 
     public enum  enumFileExtension{
