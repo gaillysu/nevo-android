@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.Model.Notification.NotificationType;
 import com.nevowatch.nevo.R;
@@ -70,6 +71,14 @@ public class OTAFragment extends Fragment
 
         mWarningButton = (ImageView) rootView.findViewById(R.id.warningButton);
         mReButton.setOnClickListener(this);
+
+        View [] viewArray = new View []{
+                rootView.findViewById(R.id.mcuVersionLabel),
+                rootView.findViewById(R.id.bleVersionLabel),
+                rootView.findViewById(R.id.progressValue),
+                rootView.findViewById(R.id.reUpgradebutton)
+        };
+        FontManager.changeFonts(viewArray, getActivity());
 
         return rootView;
     }

@@ -64,4 +64,7 @@
     <string name="tutorial_tips_two_title">Bluetooth reconnection</string>
     <string name="tutorial_tips_two_message">Reconnect Bluetooth to receive notifications again by pressing and holding the 3rd button for 3 seconds.</string>
     <string name="forget_device">Forget this nevo</string>
+    <string name="mcu_version">MCU Version</string>
+    <string name="ble_version">Ble Version</string>
+    <string name="re_upgrade">RE-Upgrade</string>
 </resources>

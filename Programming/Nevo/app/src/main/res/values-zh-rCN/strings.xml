@@ -64,4 +64,7 @@
     <string name="tutorial_tips_two_title">蓝牙重连</string>
     <string name="tutorial_tips_two_message">通过持续按住nevo的第三个按钮三秒，蓝牙重新连接以接受通知。</string>
     <string name="forget_device">忽略此设备</string>
+    <string name="mcu_version">MCU Version</string>
+    <string name="ble_version">Ble Version</string>
+    <string name="re_upgrade">RE-Upgrade</string>
 </resources>
