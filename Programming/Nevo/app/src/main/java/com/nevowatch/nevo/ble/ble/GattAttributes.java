@@ -23,6 +23,7 @@ public class GattAttributes {
 
     public enum SupportedService {
         nevo,
+        nevo_ota,
         allService
     }
 
@@ -70,7 +71,9 @@ public class GattAttributes {
     
 
     public static boolean supportedBLECharacteristic(String uuid){
-		if (uuid.equals(GattAttributes.NEVO_CALLBACK_CHARACTERISTIC))
+		if (uuid.equals(GattAttributes.NEVO_CALLBACK_CHARACTERISTIC)
+           || uuid.equals(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)
+           || uuid.equals(GattAttributes.NEVO_OTA_CHARACTERISTIC))
 			return true;
 		return false;
     }
@@ -95,6 +98,8 @@ public class GattAttributes {
     {
         if(uuid.equals(GattAttributes.NEVO_SERVICE))
             return new Optional<SupportedService>(SupportedService.nevo);
+        if(uuid.equals(GattAttributes.NEVO_OTA_SERVICE))
+            return new Optional<SupportedService>(SupportedService.nevo_ota);
        return new Optional<SupportedService>();
     }
     

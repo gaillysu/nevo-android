@@ -14,6 +14,8 @@ public class NevoFirmwareData implements SensorData {
 
     String mAddress;
 
+    UUID mUuid;
+
     byte[] mRawData;
 
     /** The TYPE of data, the getType function should return this value. */
@@ -22,6 +24,8 @@ public class NevoFirmwareData implements SensorData {
     public NevoFirmwareData(BluetoothGattCharacteristic characteristic, String address) {
 
         mAddress = address;
+
+        mUuid = characteristic.getUuid();
 
         mRawData = characteristic.getValue();
 
@@ -41,5 +45,13 @@ public class NevoFirmwareData implements SensorData {
     @Override
     public String getType() {
         return TYPE;
+    }
+
+    public byte[] getRawData() {
+        return mRawData;
+    }
+
+    public UUID getUuid() {
+        return mUuid;
     }
 }

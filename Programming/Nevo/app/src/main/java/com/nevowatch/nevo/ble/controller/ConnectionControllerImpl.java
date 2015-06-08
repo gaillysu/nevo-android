@@ -101,8 +101,16 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
         List<GattAttributes.SupportedService> servicelist = new ArrayList<GattAttributes.SupportedService>();
 
-        servicelist.add( GattAttributes.SupportedService.nevo);
-
+        if(getOTAMode())
+        {
+            //when go to OTA mode, MAC address will be changed to new one, so here must forget the old noe
+            //and scan the device which DFU service is opened (@see: GattAttributes.NEVO_OTA_SERVICE)
+            forgetSavedAddress();
+            servicelist.add(GattAttributes.SupportedService.nevo_ota);
+        }
+        else {
+            servicelist.add(GattAttributes.SupportedService.nevo);
+        }
         Optional<String> preferredAddress = new Optional<String>();
 
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
@@ -229,7 +237,7 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
         //No need to change the mode if we are already in OTA Mode
         if (getOTAMode() == otaMode ) return;
-
+        isOTAmode = otaMode;
         if (disConnect)
         {
             //cancel reconnect timer, make sure OTA can do connect by OTAcontroller;

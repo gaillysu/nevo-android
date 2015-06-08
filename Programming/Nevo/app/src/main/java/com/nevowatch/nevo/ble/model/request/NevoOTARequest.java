@@ -10,7 +10,7 @@ import java.util.UUID;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public abstract  class NevoOTARequest implements  SensorRequest{
+public abstract  class NevoOTARequest extends NevoRequest {
 
 	@Override
 	public UUID getServiceUUID() {

@@ -10,7 +10,7 @@ import java.util.UUID;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public  class NevoOTAControlRequest extends  NevoOTARequest{
+public  class NevoOTAControlRequest extends NevoOTARequest {
 
     //save different control values, such  as cancel/reset/start...
     private byte[] mControlValues;
@@ -23,16 +23,6 @@ public  class NevoOTAControlRequest extends  NevoOTARequest{
     public UUID getInputCharacteristicUUID() {
         //for controll request, the input char. is the call back char.
         return UUID.fromString(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC);
-    }
-
-    @Override
-    public UUID getOTACharacteristicUUID() {
-        return UUID.fromString(GattAttributes.NEVO_OTA_CHARACTERISTIC);
-    }
-
-    @Override
-    public UUID getNotificationCharacteristicUUID() {
-        return UUID.fromString(GattAttributes.NEVO_NOTIFICATION_CHARACTERISTIC);
     }
 
     @Override

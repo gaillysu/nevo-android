@@ -1,16 +1,12 @@
 package com.nevowatch.nevo.ble.model.request;
 
-import com.nevowatch.nevo.ble.ble.GattAttributes;
-
-import java.util.UUID;
-
 
 /**
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public  class NevoOTAPacketFileSizeRequest extends  NevoOTARequest{
+public  class NevoOTAPacketFileSizeRequest extends NevoMCU_OTARequest {
 
     private int mFilelen;
 
@@ -18,16 +14,6 @@ public  class NevoOTAPacketFileSizeRequest extends  NevoOTARequest{
     {
         mFilelen = filelen;
     }
-    @Override
-    public UUID getOTACharacteristicUUID() {
-        return UUID.fromString(GattAttributes.NEVO_OTA_CHARACTERISTIC);
-    }
-
-    @Override
-    public UUID getNotificationCharacteristicUUID() {
-        return UUID.fromString(GattAttributes.NEVO_NOTIFICATION_CHARACTERISTIC);
-    }
-
     @Override
     public byte[] getRawData() {
         //little endian mode

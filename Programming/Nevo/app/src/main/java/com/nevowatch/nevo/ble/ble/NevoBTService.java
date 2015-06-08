@@ -32,9 +32,11 @@ import com.nevowatch.nevo.ble.kernel.NevoBT;
 import com.nevowatch.nevo.ble.kernel.OnConnectListener;
 import com.nevowatch.nevo.ble.kernel.OnDataReceivedListener;
 import com.nevowatch.nevo.ble.kernel.OnExceptionListener;
+import com.nevowatch.nevo.ble.kernel.OnFirmwareVersionListener;
 import com.nevowatch.nevo.ble.model.packet.DataFactory;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
+import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
@@ -91,7 +93,13 @@ public class NevoBTService extends Service {
      * Call this listener when an unrecoverabe exception is raised
      */
     private OnExceptionListener mException;
-    
+
+    /**
+     * call this listenser when read FW done
+     * used for: 1--- alert update message in syncController
+     *           2--- when OTA finished, refresh the new FW version to screen view
+     */
+    private OnFirmwareVersionListener mFirmware;
     /**
      * Try to reconnect every 3 secs
      */
@@ -110,8 +118,8 @@ public class NevoBTService extends Service {
 		/**
 		 * Sets all the required callbacks
 		 */
-		public void initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnExceptionListener exception){
-			NevoBTService.this.initialize(dataReceived, connect, exception);
+		public void initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnExceptionListener exception, OnFirmwareVersionListener firmware){
+			NevoBTService.this.initialize(dataReceived, connect, exception ,firmware);
 		}
 		
 		/**
@@ -233,13 +241,15 @@ public class NevoBTService extends Service {
 	 * @param connect - called when a device connects
 	 * @param exception - called when an unrecoverable exception occurs
 	 */
-	private boolean initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnExceptionListener exception) {
+	private boolean initialize(OnDataReceivedListener dataReceived, OnConnectListener connect, OnExceptionListener exception,OnFirmwareVersionListener firmware) {
     	
     	mDataReceived = dataReceived;
     	
     	mConnected = connect;
     	
     	mException = exception;
+
+        mFirmware = firmware;
     	
     	mQueuedMainThread = QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT);
 
@@ -508,12 +518,13 @@ public class NevoBTService extends Service {
                 if (UUID.fromString(GattAttributes.DEVICEINFO_FIRMWARE_VERSION).equals(characteristic.getUuid())){
                     mFirmwareVersion = StringUtils.newStringUsAscii(characteristic.getValue());
                     Log.i(NevoBT.TAG,"FIRMWARE VERSION **************** "+mFirmwareVersion);
+                    mFirmware.firmwareVersionReceived(Constants.DfuFirmwareTypes.APPLICATION,mFirmwareVersion);
                 }
                 else if (UUID.fromString(GattAttributes.DEVICEINFO_SOFTWARE_VERSION).equals(characteristic.getUuid())){
                     mSoftwareVersion = StringUtils.newStringUsAscii(characteristic.getValue());
                     Log.i(NevoBT.TAG,"SOFTWARE VERSION **************** "+mSoftwareVersion);
+                    mFirmware.firmwareVersionReceived(Constants.DfuFirmwareTypes.SOFTDEVICE,mSoftwareVersion);
                 }
-            	dataReceived(characteristic, gatt.getDevice().getAddress());
             }
         }
  
@@ -716,8 +727,15 @@ public class NevoBTService extends Service {
 						if(rawData != null)
 						{
 							Log.i(NevoBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
-							characteristic.setValue(rawData);					
-							gatt.writeCharacteristic(characteristic);
+							characteristic.setValue(rawData);
+                            if(characteristicUUID.equals(UUID.fromString(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)))
+                            {
+                                //enable response for write ota control command
+                                characteristic.setWriteType(BluetoothGattCharacteristic.PROPERTY_WRITE);
+                                gatt.writeCharacteristic(characteristic);
+                            }
+                            else
+							    gatt.writeCharacteristic(characteristic);
 						}
 					}
 					

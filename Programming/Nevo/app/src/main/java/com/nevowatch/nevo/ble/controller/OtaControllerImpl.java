@@ -1,16 +1,19 @@
 package com.nevowatch.nevo.ble.controller;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
-import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.ble.ble.GattAttributes;
+import com.nevowatch.nevo.ble.model.packet.NevoFirmwareData;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
-import com.nevowatch.nevo.ble.model.request.NevoOTAPacketFileSizeRequest;
+import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAStartRequest;
+import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAPacketRequest;
+import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAChecksumRequest;
 import com.nevowatch.nevo.ble.util.Constants.DfuOperationStatus;
 import com.nevowatch.nevo.ble.util.Constants.enumPacketOption;
 import com.nevowatch.nevo.ble.util.Constants.DFUControllerState;
@@ -19,16 +22,18 @@ import com.nevowatch.nevo.ble.util.Constants.DFUResponse;
 import com.nevowatch.nevo.ble.util.Constants.DfuOperations;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.IntelHex2BinConverter;
+import com.nevowatch.nevo.ble.model.request.NevoOTAStartRequest;
 import com.nevowatch.nevo.ble.model.request.NevoOTAPacketRequest;
 import com.nevowatch.nevo.ble.model.request.NevoOTAControlRequest;
+import com.nevowatch.nevo.ble.model.request.NevoOTAPacketFileSizeRequest;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 
 public class OtaControllerImpl implements OtaController,ConnectionController.Delegate {
@@ -40,7 +45,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     private ConnectionController mConnectionController;
 
     private DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.APPLICATION ;
-    private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
+    private ArrayList<NevoFirmwareData> mPacketsbuffer = new ArrayList<NevoFirmwareData>();
 
     private int uploadTimeInSeconds = 0;
     private String firmwareFile ;
@@ -348,10 +353,10 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         dfuResponse.setrequestedCode(data[1]);
         dfuResponse.setresponseStatus(data[2]);
     }
-    void processDFUResponse(byte[] data)
+    void processDFUResponse(NevoFirmwareData data)
     {
         Log.i(TAG,"processDFUResponse");
-        setDFUResponseStruct(data);
+        setDFUResponseStruct(data.getRawData());
 
         if (dfuResponse.getresponseCode() == DfuOperations.RESPONSE_CODE.rawValue()) {
             processRequestedCode();
@@ -416,8 +421,9 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         openFile(filename);
         //enable it done after doing discover service
         //[dfuRequests enableNotification];
-
-        mConnectionController.setOTAMode(true,true);
+        //the really OTA mode is the APPLICATION type (Ble OTA)
+        //the MCU ota is not a OTA mode (you can think it as a normal mode)
+        mConnectionController.setOTAMode(dfuFirmwareType == DfuFirmwareTypes.APPLICATION ,true);
 
     }
 
@@ -496,22 +502,133 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     //start ConnectionController.Delegate interface
     @Override
     public void onConnectionStateChanged(boolean connected, String address) {
-        //TODO OTA
+        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().connectionStateChanged(connected);
+        //only BLE OTA run below code
+        if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION )
+        {
+            if (connected)
+            {
+                if (state == DFUControllerState.SEND_RECONNECT)
+                {
+                    state = DFUControllerState.SEND_START_COMMAND;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.sendRequest(new NevoOTAStartRequest());
+                        }
+                    },1000);
+                }
+
+                else if (state == DFUControllerState.DISCOVERING)
+                {
+                    state = DFUControllerState.SEND_FIRMWARE_DATA;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue(),(byte)DfuFirmwareTypes.APPLICATION.rawValue()}));
+                        mConnectionController.sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize));
+                        }
+                    },1000);
+
+                }
+
+            }
+            else
+            {
+                if (state == DFUControllerState.IDLE)
+                {
+                    state = DFUControllerState.SEND_RECONNECT;
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.connect();
+                        }
+                    },1000);
+                }
+                //by BLE peer disconnect when normal mode to ota mode
+                else if (state == DFUControllerState.SEND_START_COMMAND)
+                {
+                    state = DFUControllerState.DISCOVERING;
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG,"***********again set OTA mode,forget it firstly,and scan DFU service*******");
+                            //when switch to DFU mode, the MAC address has changed to another one
+                            mConnectionController.forgetSavedAddress();
+                            mConnectionController.connect();
+                        }
+                    },1000);
+                }
+            }
+        }
+        //only MCU OTA run below code
+        else
+        {
+            if(connected)
+            {
+                if (state == DFUControllerState.SEND_RECONNECT)
+                {
+                    state = DFUControllerState.SEND_START_COMMAND;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
+                        }
+                    },1000);
+                }
+
+            }
+            else
+            {
+                if (state == DFUControllerState.IDLE)
+                {
+                    state = DFUControllerState.SEND_RECONNECT;
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.connect();
+                        }
+                    },1000);
+                }
+
+
+            }
+        }
+
     }
 
     @Override
     public void onDataReceived(SensorData data) {
-        //TODO OTA
+        if (data.getType().equals(NevoFirmwareData.TYPE))
+        {
+            if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION
+                    && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)))
+            {
+                processDFUResponse((NevoFirmwareData) data);
+            }
+            else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE
+                    && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(GattAttributes.NEVO_OTA_CHARACTERISTIC)))
+            {
+                MCU_processDFUResponse((NevoFirmwareData) data);
+            }
+        }
     }
 
     @Override
     public void onException(Exception e) {
-        //TODO OTA
+        //the exception got happened when do connection NEVO
+        Log.i(TAG," ********* onException ********* " + e);
+        mTimeoutTimer.cancel();
+        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(e.getMessage());
+
     }
 
     @Override
     public void firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version) {
-        //TODO refresh OTA screen when OTA finished!
+    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().firmwareVersionReceived(whichfirmware,version);
     }
     //end ConnectionController.Delegate interface
 
@@ -552,25 +669,20 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     }
     void MCU_sendFirmwareChunk()
     {
-        /*
-        NSLog("sendFirmwareData");
+        Log.i(TAG,"sendFirmwareData");
 
-        for var i:Int = 0; i < notificationPacketInterval && firmwareDataBytesSent < binFileSize; i++
+        for (int i = 0; i < notificationPacketInterval && firmwareDataBytesSent < binFileSize; i++)
         {
-            var length = DFUCONTROLLER_MAX_PACKET_SIZE;
-            var pagePacket : NSData;
+            int length = DFUCONTROLLER_MAX_PACKET_SIZE;
+            byte[] pagePacket;
             if( i == 0)
-            {
-                //LSB format
-                var pagehead :[UInt8] = [
-                00,0x71,
-                        UInt8(curpage & 0xFF),
-                        UInt8((curpage>>8) & 0xFF),
-                        UInt8(totalpage & 0xFF),
-                        UInt8((totalpage>>8) & 0xFF),
-                        00,00,00,00,00,00,00,00,00,00,00,00,00,00]
-
-                pagePacket = NSData(bytes: pagehead, length: pagehead.count)
+            {   //LSB format
+                pagePacket = new byte[] {00,(byte)0x71,
+                        (byte)(curpage & 0xFF),
+                        (byte)((curpage>>8) & 0xFF),
+                        (byte)(totalpage & 0xFF),
+                        (byte)((totalpage>>8) & 0xFF),
+                    00,00,00,00,00,00,00,00,00,00,00,00,00,00};
             }
             else
             {
@@ -583,120 +695,111 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                     length = DFUCONTROLLER_PAGE_SIZE%DFUCONTROLLER_MAX_PACKET_SIZE;
                 }
 
-                var currentRange:NSRange = NSMakeRange(self.firmwareDataBytesSent, length)
+                 byte[] currentData = new byte[length];
+                 System.arraycopy(binFileData,firmwareDataBytesSent,currentData,0,length);
 
-                var currentData:NSData =  binFileData!.subdataWithRange(currentRange)
+                //20 bytes, last packet of the page, remains 8 bytes,fill 0
+                byte [] fulldata = new byte[] {0,(byte)0x71,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-                var fulldata:NSMutableData = NSMutableData()
-
-                if i == self.notificationPacketInterval - 1
+                if (i == notificationPacketInterval - 1)
                 {
-                    fulldata.appendBytes([0xFF,0x71] as [UInt8], length: 2)
+                    fulldata[0] = (byte) 0xFF;
                 }
                 else
                 {
-                    fulldata.appendBytes([UInt8(i),0x71] as [UInt8], length: 2)
+                    fulldata[0] = (byte) i;
                 }
+                System.arraycopy(currentData,0,fulldata,2,length);
 
-                fulldata.appendData(currentData)
-
-                //last packet of the page, remains 8 bytes,fill 0
-                if(i == (notificationPacketInterval - 1))
-                {
-                    fulldata.appendBytes([0,0,0,0,0,0,0,0] as [UInt8], length: 8)
-                }
-                pagePacket = fulldata
+                pagePacket = fulldata;
 
                 firmwareDataBytesSent += length;
             }
 
-            mConnectionController?.sendRequest(Mcu_OnePacketRequest(packetdata: pagePacket ))
+            mConnectionController.sendRequest(new NevoMCU_OTAPacketRequest(pagePacket));
 
         }
         if(curpage < totalpage)
         {
-            progress = 100.0*Double(firmwareDataBytesSent) / Double(binFileSize);
-            mDelegate?.onTransferPercentage(Int(progress))
-            NSLog("didWriteDataPacket");
+            progress = 100.0*(firmwareDataBytesSent) / (binFileSize);
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
+            Log.i(TAG,"didWriteDataPacket");
 
             if (state == DFUControllerState.SEND_FIRMWARE_DATA)
             {
-                curpage++
-                state = DFUControllerState.WAIT_RECEIPT
+                curpage++;
+                state = DFUControllerState.WAIT_RECEIPT;
             }
 
         }
         else
         {
             state = DFUControllerState.FINISHED;
-            progress = 100.0
-            mDelegate?.onTransferPercentage(Int(progress))
-            mConnectionController?.sendRequest(Mcu_CheckSumPacketRequest(totalpage: totalpage, checksum: checksum))
-            NSLog("sendEndPacket, totalpage =\(totalpage), checksum = \(checksum), checksum-Lowbyte = \(checksum&0xFF)")
-            mTimeoutTimer?.invalidate()
-            return
+            progress = 100.0;
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
+            mConnectionController.sendRequest(new NevoMCU_OTAChecksumRequest(totalpage, checksum));
+            Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
+            mTimeoutTimer.cancel();
+            return;
         }
-        NSLog("Sent \(self.firmwareDataBytesSent) bytes, pageno: \(curpage).")
-        */
-    }
-    void MCU_processDFUResponse(NevoRawData rawData)
-    {
-        /*
-        NSLog("didReceiveReceipt")
-        mPacketsbuffer.append(packet.getRawData())
-        var databyte:[UInt8] = NSData2Bytes(packet.getRawData())
+        Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: "+ (curpage));
 
+    }
+    void MCU_processDFUResponse(NevoFirmwareData rawData)
+    {
+        Log.i(TAG,"didReceiveReceipt");
+        mPacketsbuffer.add(rawData);
+        byte []databyte = rawData.getRawData();
         if(databyte[0] == 0xFF)
         {
             if( databyte[1] == 0x70)
             {
                 //first Packet  as header get successful response!
-                progress = Double(firmwareDataBytesSent) / Double(binFileSize)
-                self.state = DFUControllerState.SEND_FIRMWARE_DATA
-
+                progress = 1.0*firmwareDataBytesSent / binFileSize;
+                state = DFUControllerState.SEND_FIRMWARE_DATA;
             }
-            if( databyte[1] == 0x71 && self.state == DFUControllerState.FINISHED)
+            if( databyte[1] == 0x71 && state == DFUControllerState.FINISHED)
             {
-                var databyte1:[UInt8] = NSData2Bytes(mPacketsbuffer[0])
+                byte []databyte1 = mPacketsbuffer.get(0).getRawData();
 
                 if(databyte1[1] == 0x71
                         && databyte1[2] == 0xFF
                         && databyte1[3] == 0xFF
                         )
                 {
-                    var TotalPageLo:UInt8 = UInt8(totalpage & 0xFF)
-                    var TotalPageHi:UInt8 = UInt8((totalpage>>8) & 0xFF)
+                    byte TotalPageLo = (byte) (totalpage & 0xFF);
+                    byte TotalPageHi = (byte) ((totalpage>>8) & 0xFF);
 
                     if (databyte1[4] == TotalPageLo
                             && databyte1[5] == TotalPageHi)
                     {
                         //Check sum match ,OTA over.
-                        NSLog("Checksum match ,OTA get success!");
-                        mDelegate?.onSuccessfulFileTranferred()
+                        Log.i(TAG,"Checksum match ,OTA get success!");
+                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
                     }
                     else
                     {
-                        NSLog("Checksum error ,OTA get failure!");
-                        mDelegate?.onError(NSString(string:"Checksum error ,OTA get failure!"))
+                        Log.i(TAG,"Checksum error ,OTA get failure!");
+                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError("Checksum error ,OTA get failure!");
                     }
                     //reset to idle
-                    self.state = DFUControllerState.IDLE
+                    state = DFUControllerState.IDLE;
                 }
             }
 
-            mPacketsbuffer = []
+            mPacketsbuffer.clear();
 
-            if (self.state == DFUControllerState.SEND_FIRMWARE_DATA)
+            if (state == DFUControllerState.SEND_FIRMWARE_DATA)
             {
-                MCU_sendFirmwareChunk()
+                MCU_sendFirmwareChunk();
             }
-            else if(self.state == DFUControllerState.WAIT_RECEIPT)
+            else if(state == DFUControllerState.WAIT_RECEIPT)
             {
-                self.state = DFUControllerState.SEND_FIRMWARE_DATA;
-                MCU_sendFirmwareChunk()
+                state = DFUControllerState.SEND_FIRMWARE_DATA;
+                MCU_sendFirmwareChunk();
             }
         }
-        */
+
     }
 
     //end MCU OTA

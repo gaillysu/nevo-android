@@ -383,7 +383,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 				mCurrentService = new Optional<NevoBTService.LocalBinder> ( (NevoBTService.LocalBinder) service );
 				
 				//We launch a conenction to the given device
-				mCurrentService.get().initialize(mDelegate.get(),mDelegate.get(),mDelegate.get());
+				mCurrentService.get().initialize(mDelegate.get(),mDelegate.get(),mDelegate.get(),mDelegate.get());
 				//now connect this device
 				mCurrentService.get().connect(deviceAddress);
 			}

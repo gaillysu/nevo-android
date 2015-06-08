@@ -2,14 +2,14 @@ package com.nevowatch.nevo.ble.model.request;
 
 
 /**
- * Created by gaillysu on 15/4/1.
+ * Created by gaillysu on 15/6/8.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public  class NevoOTAPacketRequest extends NevoMCU_OTARequest {
+public  class NevoMCU_OTAPacketRequest extends  NevoMCU_OTARequest{
 
     private byte[] mPacket;
-    public NevoOTAPacketRequest(byte[] packet)
+    public NevoMCU_OTAPacketRequest(byte[] packet)
     {
         mPacket = packet;
     }
