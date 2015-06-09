@@ -234,10 +234,9 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
     @Override
     public void setOTAMode(boolean otaMode, boolean disConnect) {
-
         //No need to change the mode if we are already in OTA Mode
-        if (getOTAMode() == otaMode ) return;
-        isOTAmode = otaMode;
+        if (getOTAMode() != otaMode )
+            isOTAmode = otaMode;
         if (disConnect)
         {
             //cancel reconnect timer, make sure OTA can do connect by OTAcontroller;

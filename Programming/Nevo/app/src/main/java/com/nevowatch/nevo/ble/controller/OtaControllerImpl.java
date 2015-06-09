@@ -60,7 +60,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     private int writingPacketNumber = 0;
 
     /** check the OTA is doing or stop */
-    private Timer mTimeoutTimer;
+    private Timer mTimeoutTimer = null;
     private static final int MAX_TIME = 20000;
     private double lastprogress = 0.0;
     //added for MCU OTA
@@ -116,15 +116,16 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         InputStream is;
         String filetype;
         try {
-            is = mContext.getAssets().open(filename);
-            filetype = filename.substring(filename.length() - 3);
 
+            filetype = filename.substring(filename.length() - 3);
             Log.i(TAG,"selected file "+ filename+",extension is " + filetype);
 
             if (filetype.equals("hex"))
             {
                 byte[] buffer = new byte[16];
                 int len =-1;
+                is = mContext.getAssets().open(filename);
+
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 while( -1 != (len = is.read(buffer)))
                 {
@@ -140,6 +141,8 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                     String errorMessage = "Error on openning file\n Message: file is empty or not exist";
                     if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
                 }
+                bos.close();;
+                is.close();
             }
             else
             {
@@ -152,7 +155,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     }
     void convertHexFileToBin()
     {
-        binFileData = IntelHex2BinConverter.convert(hexFileData.toString().getBytes());
+        binFileData = IntelHex2BinConverter.convert(hexFileData);
         binFileSize = binFileData.length;
         Log.i(TAG,"HexFileSize: "+ hexFileSize  + " and BinFileSize: "+binFileSize);
 
@@ -402,7 +405,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                 {
                     Log.w(TAG,"* * * OTA timeout * * *");
                     String errorMessage = "Timeout,please try again";
-                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+                    //if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
 
                 }
                 else
@@ -423,7 +426,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         //[dfuRequests enableNotification];
         //the really OTA mode is the APPLICATION type (Ble OTA)
         //the MCU ota is not a OTA mode (you can think it as a normal mode)
-        mConnectionController.setOTAMode(dfuFirmwareType == DfuFirmwareTypes.APPLICATION ,true);
+        mConnectionController.setOTAMode(false ,true);
 
     }
 
@@ -472,7 +475,8 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
      */
     @Override
     public void reset(boolean switch2SyncController) {
-        mTimeoutTimer.cancel();
+
+        if(mTimeoutTimer!=null) mTimeoutTimer.cancel();
         //reset it to INIT status !!!IMPORTANT!!!
         state = DFUControllerState.INIT;
 
@@ -554,8 +558,9 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Log.i(TAG,"***********again set OTA mode,forget it firstly,and scan DFU service*******");
+                            Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
                             //when switch to DFU mode, the MAC address has changed to another one
+                            mConnectionController.setOTAMode(true ,false);
                             mConnectionController.forgetSavedAddress();
                             mConnectionController.connect();
                         }
@@ -571,13 +576,13 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
                     state = DFUControllerState.SEND_START_COMMAND;
-
+                    //waiting 2s for NEVO_OTA_CHARACTERISTIC set notify true is done.
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
                         }
-                    },1000);
+                    },2000);
                 }
 
             }
@@ -593,7 +598,6 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                         }
                     },1000);
                 }
-
 
             }
         }
@@ -660,8 +664,8 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
 
             Log.i(TAG,"Set firmware with size:"+ binFileData.length + "notificationPacketInterval:"+notificationPacketInterval + ", totalpage: "+totalpage + ",Checksum: "+ checksum);
 
-
             bos.close();
+            is.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -750,21 +754,21 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         Log.i(TAG,"didReceiveReceipt");
         mPacketsbuffer.add(rawData);
         byte []databyte = rawData.getRawData();
-        if(databyte[0] == 0xFF)
+        if(databyte[0] == (byte)0xFF)
         {
-            if( databyte[1] == 0x70)
+            if( databyte[1] == (byte)0x70)
             {
                 //first Packet  as header get successful response!
                 progress = 1.0*firmwareDataBytesSent / binFileSize;
                 state = DFUControllerState.SEND_FIRMWARE_DATA;
             }
-            if( databyte[1] == 0x71 && state == DFUControllerState.FINISHED)
+            if( databyte[1] == (byte)0x71 && state == DFUControllerState.FINISHED)
             {
                 byte []databyte1 = mPacketsbuffer.get(0).getRawData();
 
-                if(databyte1[1] == 0x71
-                        && databyte1[2] == 0xFF
-                        && databyte1[3] == 0xFF
+                if(databyte1[1] == (byte)0x71
+                        && databyte1[2] == (byte)0xFF
+                        && databyte1[3] == (byte)0xFF
                         )
                 {
                     byte TotalPageLo = (byte) (totalpage & 0xFF);

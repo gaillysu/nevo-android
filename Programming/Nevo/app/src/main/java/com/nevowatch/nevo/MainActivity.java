@@ -212,7 +212,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             }else if(fragment instanceof NotificationFragment){
                 ((NotificationFragment)fragment).packetReceived(packet);
             }else if(fragment instanceof OTAFragment){
-                ((OTAFragment)fragment).packetReceived(packet);
+               // ((OTAFragment)fragment).packetReceived(packet);
             }
         }
     }

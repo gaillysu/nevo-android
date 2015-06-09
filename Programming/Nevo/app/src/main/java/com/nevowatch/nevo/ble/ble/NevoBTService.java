@@ -567,8 +567,8 @@ public class NevoBTService extends Service {
          * perhapse unbindService and LocalBinder.destroy() both call it
          */
         if(mBluetoothGattMap!=null &&mBluetoothGattMap.isEmpty() == false)
-        {
-        for(BluetoothGatt b : mBluetoothGattMap.values()) b.close();
+        { //use disconnect() replace close(),disconnect() will invoke callback function, but close can't
+        for(BluetoothGatt b : mBluetoothGattMap.values()) b.disconnect();
         mBluetoothGattMap.clear();        
         }
     }

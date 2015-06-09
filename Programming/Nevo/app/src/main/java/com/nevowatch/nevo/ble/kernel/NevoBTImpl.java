@@ -316,7 +316,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		initBluetoothAdapter().cancelDiscovery();
 			
 		if(mCurrentServiceConnection.notEmpty()) {
-			mContext.unbindService(mCurrentServiceConnection.get());
+			mContext.getApplicationContext().unbindService(mCurrentServiceConnection.get());
 			mCurrentServiceConnection.set(null);
 		}
 			
