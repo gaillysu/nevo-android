@@ -263,6 +263,7 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
     @Override
     public void firmwareVersionReceived(final Constants.DfuFirmwareTypes whichfirmware, final String version) {
+        currentlyConnected(true);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
