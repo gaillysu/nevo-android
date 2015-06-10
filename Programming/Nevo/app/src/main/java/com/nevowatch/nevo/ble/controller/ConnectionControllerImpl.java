@@ -198,8 +198,8 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
 
     @Override
     public void forgetSavedAddress() {
-        //save it for OTA using
-        mSavedAddress = getSaveAddress();
+        //save it for OTA using, add if() for avoid many times invoke "forgetSavedAddress"
+        if(!getSaveAddress().equals(""))  mSavedAddress = getSaveAddress();
         setSaveAddress("");
     }
 

@@ -65,7 +65,9 @@ public class OTAFragment extends Fragment
 
     private void initListView(){
 
-        if(!mNevoOtaController.isConnected()) return;
+        if(!mNevoOtaController.isConnected()
+                || mNevoOtaController.getSoftwareVersion() == null
+                || mNevoOtaController.getFirmwareVersion() == null) return;
 
         String[]files;
         int  currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
@@ -74,7 +76,7 @@ public class OTAFragment extends Fragment
             files = getActivity().getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".bin")&& currentSoftwareVersion < buildinSoftwareVersion)
+                if(file.contains(".bin")&& currentSoftwareVersion <= buildinSoftwareVersion)
                 {
                     firmwareURLs.add("firmware/"+file);
                     break;
@@ -89,7 +91,7 @@ public class OTAFragment extends Fragment
             files = getActivity().getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".hex")&& currentFirmwareVersion < buildinFirmwareVersion)
+                if(file.contains(".hex")&& currentFirmwareVersion <= buildinFirmwareVersion)
                 {
                     firmwareURLs.add("firmware/"+file);
                     break;
@@ -287,7 +289,11 @@ public class OTAFragment extends Fragment
     //upload button function
     private void uploadPressed()
     {
-        if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 ) return;
+        if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
+        {
+            //check firmwareURLs is null, should hide the button
+            return;
+        }
         selectedFileURL = firmwareURLs.get(currentIndex);
 
         if (selectedFileURL.contains(".bin"))

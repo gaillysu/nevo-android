@@ -14,6 +14,7 @@ import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAStartRequest;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAPacketRequest;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAChecksumRequest;
+import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Constants.DfuOperationStatus;
 import com.nevowatch.nevo.ble.util.Constants.enumPacketOption;
 import com.nevowatch.nevo.ble.util.Constants.DFUControllerState;
@@ -26,6 +27,8 @@ import com.nevowatch.nevo.ble.model.request.NevoOTAStartRequest;
 import com.nevowatch.nevo.ble.model.request.NevoOTAPacketRequest;
 import com.nevowatch.nevo.ble.model.request.NevoOTAControlRequest;
 import com.nevowatch.nevo.ble.model.request.NevoOTAPacketFileSizeRequest;
+import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
+
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
@@ -187,9 +190,9 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
             System.arraycopy(binFileData,writingPacketNumber*enumPacketOption.PACKET_SIZE.rawValue(),nextPacketData,0,bytesInLastPacket);
 
             Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
-            Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
+           //Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
-            mConnectionController.sendRequest(new NevoOTAPacketRequest(nextPacketData));
+            sendRequest(new NevoOTAPacketRequest(nextPacketData));
             progress = 100.0;
             percentage = (int)(progress);
             Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
@@ -204,9 +207,9 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         System.arraycopy(binFileData,writingPacketNumber*enumPacketOption.PACKET_SIZE.rawValue(),nextPacketData,0,enumPacketOption.PACKET_SIZE.rawValue());
 
         Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
-        Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
+       // Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
-        mConnectionController.sendRequest(new NevoOTAPacketRequest(nextPacketData));
+        sendRequest(new NevoOTAPacketRequest(nextPacketData));
         progress = 100.0*writingPacketNumber * enumPacketOption.PACKET_SIZE.rawValue() / binFileSize;
         percentage = (int)progress;
 
@@ -218,28 +221,49 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     }
 
     }
+
+    //here use QueueType.NevoBT, BT service use it
+    private void sendRequest(final SensorRequest request)
+    {
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).post(new Runnable(){
+            @Override
+            public void run() {
+                mConnectionController.sendRequest(request);
+            }
+        });
+    }
+
     void startSendingFile()
     {
         Log.i(TAG,"DFUOperationsdetails enablePacketNotification");
-        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
+
+        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
                                                                               ,(byte)enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
                                                                               ,0}));
-        Log.i(TAG, "DFUOperationsdetails receiveFirmwareImage");
-        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
-        writeNextPacket();
+        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
+
+        //wait 20ms
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                writeNextPacket();
+            }
+        },20);
+
+
         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUStarted();
 
     }
     void resetSystem()
     {
         Log.i(TAG,"DFUOperationsDetails resetSystem");
-        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.RESET_SYSTEM.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.RESET_SYSTEM.rawValue()}));
     }
 
     void validateFirmware()
     {
         Log.i(TAG,"DFUOperationsDetails validateFirmware");
-        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
     }
     void activateAndReset()
     {
@@ -269,20 +293,20 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     {
         Log.i(TAG,"processsRequestedCode");
 
-        if (dfuResponse.getresponseCode() == DfuOperations.START_DFU_REQUEST.rawValue()){
+        if (dfuResponse.getrequestedCode() == DfuOperations.START_DFU_REQUEST.rawValue()){
             Log.i(TAG, "Requested code is StartDFU now processing response status");
             processStartDFUResponseStatus();
         }
-        if (dfuResponse.getresponseCode() == DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()) {
+        else if (dfuResponse.getrequestedCode() == DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()) {
             Log.i(TAG, "Requested code is Receive Firmware Image now processing response status");
             processReceiveFirmwareResponseStatus();
         }
-        if (dfuResponse.getresponseCode() == DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()) {
+        else if (dfuResponse.getrequestedCode() == DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()) {
             Log.i(TAG, "Requested code is Validate Firmware now processing response status");
             processValidateFirmwareResponseStatus();
         }
         else
-            Log.i(TAG,"invalid Requested code in DFU Response " + dfuResponse.getresponseCode());
+            Log.i(TAG,"invalid Requested code in DFU Response " + dfuResponse.getrequestedCode());
 
     }
     void processStartDFUResponseStatus()
@@ -346,7 +370,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     }
     void setDFUResponseStruct(byte[] data)
     {
-        Log.e(TAG,"received Packet Response:" + new String(Hex.encodeHex(data)));
+        Log.w(TAG, "received Packet Response:" + new String(Hex.encodeHex(data)));
         if(data.length<3)
         {
             Log.e(TAG, "received Packet Response invaild");
@@ -374,8 +398,8 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         if (dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
         {
             openFile(firmwareFile);
-            mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
-            mConnectionController.sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize));
+            sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue()}));
+            sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,true));
         }
         else
         {
@@ -405,7 +429,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                 {
                     Log.w(TAG,"* * * OTA timeout * * *");
                     String errorMessage = "Timeout,please try again";
-                    //if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
 
                 }
                 else
@@ -531,10 +555,10 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue(),(byte)DfuFirmwareTypes.APPLICATION.rawValue()}));
-                        mConnectionController.sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize));
+                            sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue(),(byte)DfuFirmwareTypes.APPLICATION.rawValue()}));
+                            sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,false));
                         }
-                    },1000);
+                    },2000);
 
                 }
 
@@ -799,6 +823,11 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
             }
             else if(state == DFUControllerState.WAIT_RECEIPT)
             {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 state = DFUControllerState.SEND_FIRMWARE_DATA;
                 MCU_sendFirmwareChunk();
             }

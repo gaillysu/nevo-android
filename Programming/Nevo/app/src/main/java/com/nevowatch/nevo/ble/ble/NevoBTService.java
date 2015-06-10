@@ -731,11 +731,13 @@ public class NevoBTService extends Service {
                             if(characteristicUUID.equals(UUID.fromString(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)))
                             {
                                 //enable response for write ota control command
-                                characteristic.setWriteType(BluetoothGattCharacteristic.PROPERTY_WRITE);
+                                //characteristic.setWriteType(BluetoothGattCharacteristic.PROPERTY_WRITE);
                                 gatt.writeCharacteristic(characteristic);
                             }
                             else
-							    gatt.writeCharacteristic(characteristic);
+                            {
+                                gatt.writeCharacteristic(characteristic);
+                            }
 						}
 					}
 					

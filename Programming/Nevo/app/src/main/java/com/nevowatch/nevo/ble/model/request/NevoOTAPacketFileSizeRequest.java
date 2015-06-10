@@ -6,16 +6,24 @@ package com.nevowatch.nevo.ble.model.request;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public  class NevoOTAPacketFileSizeRequest extends NevoMCU_OTARequest {
+public  class NevoOTAPacketFileSizeRequest extends NevoOTARequest {
 
     private int mFilelen;
-
-    public NevoOTAPacketFileSizeRequest(int filelen)
+    private boolean mIsOld;
+    public NevoOTAPacketFileSizeRequest(int filelen,boolean isOld)
     {
         mFilelen = filelen;
+        mIsOld = isOld;
     }
     @Override
     public byte[] getRawData() {
+        if(mIsOld)
+        {
+            return new byte[]{(byte)(mFilelen & 0xFF),
+                    (byte)((mFilelen>>8)&0xFF),
+                    (byte)((mFilelen>>16)&0xFF),
+                    (byte)((mFilelen>>24)&0xFF)};
+        }
         //little endian mode
         byte[] mPacket = new byte[]{0,0,0,0,0,0,0,0,
                 (byte)(mFilelen & 0xFF),

@@ -44,9 +44,9 @@ public class GattAttributes {
     public static String NEVO_OTA_CHARACTERISTIC = "f0ba3023-6cac-4c99-9089-4b0a1df45002";
     public static String NEVO_NOTIFICATION_CHARACTERISTIC = "f0ba3024-6cac-4c99-9089-4b0a1df45002";
 
-    public static String NEVO_OTA_SERVICE = "00001530-1212-EFDE-1523-785FEABCD123";
-    public static String NEVO_OTA_CONTROL_CHARACTERISTIC = "00001532-1212-EFDE-1523-785FEABCD123";
-    public static String NEVO_OTA_CALLBACK_CHARACTERISTIC = "00001531-1212-EFDE-1523-785FEABCD123";
+    public static String NEVO_OTA_SERVICE = "00001530-1212-efde-1523-785feabcd123";
+    public static String NEVO_OTA_CONTROL_CHARACTERISTIC = "00001532-1212-efde-1523-785feabcd123";
+    public static String NEVO_OTA_CALLBACK_CHARACTERISTIC = "00001531-1212-efde-1523-785feabcd123";
 
 
     static 

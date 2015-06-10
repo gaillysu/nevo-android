@@ -30,7 +30,7 @@ public class NevoFirmwareData implements SensorData {
         mRawData = characteristic.getValue();
 
 
-        Log.i("Nevo Received", new String(Hex.encodeHex(mRawData)));
+        Log.i("Nevo Received", mUuid.toString() + " : " + new String(Hex.encodeHex(mRawData)));
     }
 
     @Override

@@ -6,7 +6,7 @@ package com.nevowatch.nevo.ble.model.request;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public  class NevoOTAPacketRequest extends NevoMCU_OTARequest {
+public  class NevoOTAPacketRequest extends NevoOTARequest {
 
     private byte[] mPacket;
     public NevoOTAPacketRequest(byte[] packet)
