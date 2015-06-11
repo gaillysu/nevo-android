@@ -1,6 +1,8 @@
 package com.nevowatch.nevo.Fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,17 +59,21 @@ public class OTAFragment extends Fragment
     DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     String selectedFileURL;
     //save the build-in firmware version, it should be the latest FW version
-    int buildinSoftwareVersion = 16;
-    int buildinFirmwareVersion= 30;
+    int buildinSoftwareVersion = 17;
+    int buildinFirmwareVersion= 31;
     ArrayList<String> firmwareURLs = new ArrayList<String>();
     int currentIndex = 0;
     OtaController mNevoOtaController ;
-
+    //save the attached Activity, should be MainActivity, when doing OTA, user perhaps switch other fragment
+    //but the OTA should be continue on background. when user come back, the progress should be showing
+    Context mContext;
     private void initListView(){
 
         if(!mNevoOtaController.isConnected()
                 || mNevoOtaController.getSoftwareVersion() == null
                 || mNevoOtaController.getFirmwareVersion() == null) return;
+
+        firmwareURLs.clear();
 
         String[]files;
         int  currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
@@ -76,7 +82,7 @@ public class OTAFragment extends Fragment
             files = getActivity().getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".bin")&& currentSoftwareVersion <= buildinSoftwareVersion)
+                if(file.contains(".bin")&& currentSoftwareVersion < buildinSoftwareVersion)
                 {
                     firmwareURLs.add("firmware/"+file);
                     break;
@@ -88,10 +94,10 @@ public class OTAFragment extends Fragment
         }
 
         try {
-            files = getActivity().getAssets().list("firmware");
+            files = mContext.getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".hex")&& currentFirmwareVersion <= buildinFirmwareVersion)
+                if(file.contains(".hex")&& currentFirmwareVersion < buildinFirmwareVersion)
                 {
                     firmwareURLs.add("firmware/"+file);
                     break;
@@ -109,6 +115,7 @@ public class OTAFragment extends Fragment
         mNevoOtaController = OtaController.Singleton.getInstance(getActivity());
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
+        mContext = getActivity();
     }
 
     @Override
@@ -151,7 +158,7 @@ public class OTAFragment extends Fragment
         super.onDestroyView();
         if(!isTransferring)
         {
-            mNevoOtaController.reset(true);
+           // mNevoOtaController.reset(true);
         }
     }
 
@@ -179,7 +186,9 @@ public class OTAFragment extends Fragment
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if(!isTransferring) ((MainActivity)getActivity()).replaceFragment(isConnected?OTAFragment.OTAPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?OTAFragment.OTAFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+        if(!isTransferring && mContext instanceof MainActivity ) {
+            ((MainActivity) mContext).replaceFragment(isConnected ? OTAFragment.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAFragment.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
+        }
     }
 
     @Override
@@ -190,7 +199,7 @@ public class OTAFragment extends Fragment
     @Override
     public void onDFUCancelled() {
         Log.i(TAG,"onDFUCancelled");
-        getActivity().runOnUiThread(new Runnable() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 initValue();
@@ -201,7 +210,7 @@ public class OTAFragment extends Fragment
 
     @Override
     public void onTransferPercentage(final int percent) {
-        getActivity().runOnUiThread(new Runnable() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 setOTAProgressBar(percent);
@@ -211,7 +220,7 @@ public class OTAFragment extends Fragment
 
     @Override
     public void onSuccessfulFileTranferred() {
-        getActivity().runOnUiThread(new Runnable() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
@@ -219,12 +228,12 @@ public class OTAFragment extends Fragment
                 currentIndex = currentIndex + 1;
                 if (currentIndex == firmwareURLs.size())
                 {
-                    String message = getActivity().getString(R.string.UpdateSuccess1);
+                    String message = ((Activity)mContext).getString(R.string.UpdateSuccess1);
                     if (enumFirmwareType == DfuFirmwareTypes.APPLICATION)
                     {
-                        message = getActivity().getString(R.string.UpdateSuccess2);
+                        message = ((Activity)mContext).getString(R.string.UpdateSuccess2);
                     }
-                    new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_LIGHT)
+                    new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
                             .setTitle(R.string.FirmwareUpgrade)
                             .setMessage(message)
                             .setNegativeButton("OK",null).show();
@@ -247,7 +256,7 @@ public class OTAFragment extends Fragment
 
     @Override
     public void onError(final String error) {
-        getActivity().runOnUiThread(new Runnable() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 initValue();
@@ -260,11 +269,12 @@ public class OTAFragment extends Fragment
     @Override
     public void firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version) {
 
-        getActivity().runOnUiThread(new Runnable() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mMCUVersionTextView.setText(getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
                 mBleVersionTextView.setText(getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
+                initListView();
             }
         });
     }
@@ -292,6 +302,10 @@ public class OTAFragment extends Fragment
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
+            new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
+                    .setTitle(R.string.FirmwareUpgrade)
+                    .setMessage("pelease wait for reading firmware version")
+                    .setNegativeButton("OK",null).show();
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);

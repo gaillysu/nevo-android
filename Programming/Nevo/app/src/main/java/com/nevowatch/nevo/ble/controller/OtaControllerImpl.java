@@ -744,7 +744,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                 firmwareDataBytesSent += length;
             }
 
-            mConnectionController.sendRequest(new NevoMCU_OTAPacketRequest(pagePacket));
+            sendRequest(new NevoMCU_OTAPacketRequest(pagePacket));
 
         }
         if(curpage < totalpage)
@@ -765,7 +765,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
             state = DFUControllerState.FINISHED;
             progress = 100.0;
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
-            mConnectionController.sendRequest(new NevoMCU_OTAChecksumRequest(totalpage, checksum));
+            sendRequest(new NevoMCU_OTAChecksumRequest(totalpage, checksum));
             Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
             mTimeoutTimer.cancel();
             return;
@@ -823,11 +823,6 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
             }
             else if(state == DFUControllerState.WAIT_RECEIPT)
             {
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 state = DFUControllerState.SEND_FIRMWARE_DATA;
                 MCU_sendFirmwareChunk();
             }

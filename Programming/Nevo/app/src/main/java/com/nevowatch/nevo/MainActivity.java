@@ -135,6 +135,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        /*
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
@@ -144,7 +145,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
             restoreActionBar();
             return true;
-        }
+        }*/
         return super.onCreateOptionsMenu(menu);
     }
 
