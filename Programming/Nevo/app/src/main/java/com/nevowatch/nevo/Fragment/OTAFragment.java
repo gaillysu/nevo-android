@@ -78,6 +78,9 @@ public class OTAFragment extends Fragment
     private AlertDialog mAlertDialog = null;
     private void initListView(boolean forceUpdate,boolean popupMessage){
 
+        firmwareURLs.clear();
+        currentIndex = 0;
+
         if(mNevoOtaController.getSoftwareVersion() == null
                 || mNevoOtaController.getFirmwareVersion() == null)
         {
@@ -87,9 +90,6 @@ public class OTAFragment extends Fragment
                     .setNegativeButton("OK",null).show();
             return;
         }
-
-        firmwareURLs.clear();
-        currentIndex = 0;
 
         String[]files;
         int  currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
@@ -361,7 +361,6 @@ public class OTAFragment extends Fragment
             public void run() {
                 mMCUVersionTextView.setText(mContext.getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
                 mBleVersionTextView.setText(mContext.getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
-                initListView(false,false);
             }
         });
     }
