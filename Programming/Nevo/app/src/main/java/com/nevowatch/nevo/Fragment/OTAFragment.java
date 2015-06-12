@@ -66,8 +66,8 @@ public class OTAFragment extends Fragment
     DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     String selectedFileURL;
     //save the build-in firmware version, it should be the latest FW version
-    int buildinSoftwareVersion = 16;
-    int buildinFirmwareVersion= 30;
+    int buildinSoftwareVersion = 0;
+    int buildinFirmwareVersion= 0;
     ArrayList<String> firmwareURLs = new ArrayList<String>();
     int currentIndex = 0;
     OtaController mNevoOtaController ;
@@ -98,10 +98,18 @@ public class OTAFragment extends Fragment
             files = mContext.getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".bin")&& (currentSoftwareVersion < buildinSoftwareVersion || forceUpdate))
+                if(file.contains(".bin"))
                 {
-                    firmwareURLs.add("firmware/"+file);
-                    break;
+                    int start  = file.toLowerCase().indexOf("_v");
+                    int end = file.toLowerCase().indexOf(".bin");
+                    String vString = file.substring(start+2,end);
+                    if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
+
+                    if(currentSoftwareVersion < buildinSoftwareVersion || forceUpdate)
+                    {
+                        firmwareURLs.add("firmware/" + file);
+                        break;
+                    }
                 }
             }
 
@@ -113,10 +121,16 @@ public class OTAFragment extends Fragment
             files = mContext.getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".hex")&& (currentFirmwareVersion < buildinFirmwareVersion || forceUpdate))
+                if(file.contains(".hex"))
                 {
-                    firmwareURLs.add("firmware/"+file);
-                    break;
+                    int start  = file.toLowerCase().indexOf("_v");
+                    int end = file.toLowerCase().indexOf(".hex");
+                    String vString = file.substring(start+2,end);
+                    if(vString != null) buildinFirmwareVersion = Integer.parseInt(vString);
+                    if(currentFirmwareVersion < buildinFirmwareVersion || forceUpdate) {
+                        firmwareURLs.add("firmware/" + file);
+                        break;
+                    }
                 }
             }
 

@@ -1,5 +1,11 @@
 package com.nevowatch.nevo.ble.model.request;
 
+import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
+import com.nevowatch.nevo.Model.Notification;
+import com.nevowatch.nevo.PaletteActivity;
+
+import java.util.ArrayList;
+
 public class SetNotificationNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x02;
     public static class SetNortificationRequestValues {
@@ -43,6 +49,43 @@ public class SetNotificationNevoRequest extends NevoRequest {
     private byte wechat_vib_number = 0;
     private int wechat_led_pattern = 0;
 
+    private byte whatsapp_vib_number = 0;
+    private int whatsapp_led_pattern = 0;
+
+    public SetNotificationNevoRequest(ArrayList<Notification> list)
+    {
+        for(Notification notification:list) {
+            if( notification.getType()== Notification.NotificationType.Call) {
+                call_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                call_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+            if( notification.getType()== Notification.NotificationType.SMS) {
+                sms_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                sms_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+            if( notification.getType()== Notification.NotificationType.Email) {
+                email_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                email_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+            if( notification.getType()== Notification.NotificationType.Facebook) {
+                facebook_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                facebook_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+            if( notification.getType()== Notification.NotificationType.Calendar) {
+                calendar_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                calendar_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+            if( notification.getType()== Notification.NotificationType.Wechat) {
+                wechat_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                wechat_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+            if( notification.getType()== Notification.NotificationType.Whatsapp) {
+                whatsapp_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+                whatsapp_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
+            }
+        }
+    }
+
     @Override
 	public byte[] getRawData() {
 
@@ -51,24 +94,6 @@ public class SetNotificationNevoRequest extends NevoRequest {
 
 	@Override
 	public byte[][] getRawDataEx() {
-        call_vib_number = SetNortificationRequestValues.VIBRATION_ON;
-        call_led_pattern = SetNortificationRequestValues.VIB_MOTOR | SetNortificationRequestValues.ORANGE_LED;
-
-        sms_vib_number = SetNortificationRequestValues.VIBRATION_ON;
-        sms_led_pattern = SetNortificationRequestValues.VIB_MOTOR | SetNortificationRequestValues.GREEN_LED;
-
-        email_vib_number = SetNortificationRequestValues.VIBRATION_ON;
-        email_led_pattern = SetNortificationRequestValues.VIB_MOTOR | SetNortificationRequestValues.YELLOW_LED;
-
-        facebook_vib_number = SetNortificationRequestValues.VIBRATION_ON;
-        facebook_led_pattern = SetNortificationRequestValues.VIB_MOTOR | SetNortificationRequestValues.BLUE_LED;
-
-        calendar_vib_number = SetNortificationRequestValues.VIBRATION_ON;
-        calendar_led_pattern = SetNortificationRequestValues.VIB_MOTOR | SetNortificationRequestValues.RED_LED;
-
-        wechat_vib_number = SetNortificationRequestValues.VIBRATION_ON;
-        wechat_led_pattern = SetNortificationRequestValues.VIB_MOTOR | SetNortificationRequestValues.LIGHTGREEN_LED;
-
         return new byte[][] {
                 {0,HEADER,
                         (byte)(call_vib_number&0xFF),
@@ -102,7 +127,10 @@ public class SetNotificationNevoRequest extends NevoRequest {
                         (byte)(wechat_led_pattern&0xFF),
                         (byte)((wechat_led_pattern>>8)&0xFF),
                         (byte)((wechat_led_pattern>>16)&0xFF),
-                        0,0,0,0,
+                        (byte)(whatsapp_vib_number&0xFF),
+                        (byte)(whatsapp_led_pattern&0xFF),
+                        (byte)((whatsapp_led_pattern>>8)&0xFF),
+                        (byte)((whatsapp_led_pattern>>16)&0xFF),
                         0,0,0,0,
                         0,0,0,0
                 }

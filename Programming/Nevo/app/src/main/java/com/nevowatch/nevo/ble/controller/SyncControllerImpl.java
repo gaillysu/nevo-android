@@ -17,10 +17,15 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.nevowatch.nevo.Fragment.AlarmFragment;
+import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
 import com.nevowatch.nevo.GoogleFitManager;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.Model.Goal;
+import com.nevowatch.nevo.Model.Notification;
+import com.nevowatch.nevo.PaletteActivity;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.View.TimePickerView;
 import com.nevowatch.nevo.ble.kernel.BLEConnectTimeoutException;
 import com.nevowatch.nevo.ble.kernel.BLENotSupportedException;
 import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
@@ -167,12 +172,46 @@ import java.util.TimeZone;
                     else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //start sync notification, phone --> nevo
-                        //TODO: set Local Notification setting to Nevo, when nevo 's battery removed, the
+                        // set Local Notification setting to Nevo, when nevo 's battery removed, the
                         // Steps count is 0, and all notification is off, because Notification is very
                         // important for user, so here need use local's setting sync with nevo
-                        sendRequest(new SetNotificationNevoRequest());
+                        ArrayList<Notification> list = new ArrayList<Notification>();
+
+                        list.add(new Notification(Notification.NotificationType.Call
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.TELETYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.TELECHOOSENCOLOR)));
+                        list.add(new Notification(Notification.NotificationType.SMS
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.SMSTYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.SMSCHOOSENCOLOR)));
+                        list.add(new Notification(Notification.NotificationType.Email
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.EMAILTYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.EMAILCHOOSENCOLOR)));
+                        list.add(new Notification(Notification.NotificationType.Facebook
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.FACETYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.FACECHOOSENCOLOR)));
+                        list.add(new Notification(Notification.NotificationType.Calendar
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.CALTYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.CALCHOOSENCOLOR)));
+                        list.add(new Notification(Notification.NotificationType.Wechat
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WEICHATTYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.WECHATCHOOSENCOLOR)));
+                        list.add(new Notification(Notification.NotificationType.Whatsapp
+                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WHATSTYPE)
+                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
+
+                        sendRequest(new SetNotificationNevoRequest(list));
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        //start sync alarm, phone --> nevo
+                        //sendRequest(new SetAlarmNevoRequest());
+                        String[] strAlarm = TimePickerView.getAlarmFromPreference(mContext).split(":");
+                        Boolean onOff = AlarmFragment.getClockStateFromPreference(mContext);
+                        setAlarm(Integer.parseInt(strAlarm[0]),
+                                Integer.parseInt(strAlarm[1]),
+                                onOff);
+                    }
+                    else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                     /*
                        //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)

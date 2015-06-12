@@ -40,6 +40,8 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
     final static int TIME_BETWEEN_TWO_NOTIFS = 5000;
 
+    final static int LIGHTTIMES = 3;
+
     final String TAG = NevoNotificationListener.class.getName();
 
     private TelephonyManager mTm;
@@ -142,6 +144,25 @@ public class NevoNotificationListener extends NotificationListenerService implem
         //How do we remove incoming notifications from the watch ?
     }
 
+    /**
+     *
+     * @param count :the flash times, total light on times,should double it, means light on/off follow:1.2s on,0.5s off,1.2s on,0.5s off,1.2s on, then off by Nevo self
+     * @param ledcolor: which led light on
+     */
+    private void showNotification(final int count,final int ledcolor)
+    {
+        if(count == 0) return;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ConnectionController.Singleton.getInstance(NevoNotificationListener.this)
+                        .sendRequest(new LedLightOnOffNevoRequest(count%2==0?ledcolor:0, count%2==0?true:false));
+                showNotification(count-1,ledcolor);
+            }
+        },count%2==0?(count==LIGHTTIMES*2?0:500):1200); //first time should do right now, here have 0ms
+    }
     void sendNotification(final int ledcolor) {
 
         //We can't accept notifications if we just received one X ms ago
@@ -151,19 +172,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
         ConnectionController.Singleton.getInstance(this).connect();
 
-        ConnectionController.Singleton.getInstance(this)
-                .sendRequest(new LedLightOnOffNevoRequest(ledcolor, true));
-
-        Timer autoReconnectTimer = new Timer();
-        autoReconnectTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                ConnectionController.Singleton.getInstance(NevoNotificationListener.this)
-                        .sendRequest(new LedLightOnOffNevoRequest(ledcolor, false));
-            }
-        }, 2000 );
-
-
+        showNotification(LIGHTTIMES*2,ledcolor);
     }
 
     public static void getNotificationAccessPermission(final Context ctx) {
