@@ -20,8 +20,10 @@ import com.nevowatch.nevo.Fragment.NotificationFragment;
 import com.nevowatch.nevo.Fragment.OTAFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.OtaController;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 
 import java.util.List;
@@ -119,6 +121,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
+            if(position !=OTAFragment.OTAPOSITION && OtaController.Singleton.getInstance(this).getState() == Constants.DFUControllerState.INIT)
+            {
+                OtaController.Singleton.getInstance(this).switch2SyncController();
+            }
         }
     }
 
@@ -135,17 +141,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /*
+
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
-                menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
+           // getMenuInflater().inflate(R.menu.main, menu);
+           // if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
+           //     menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
             restoreActionBar();
             return true;
-        }*/
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

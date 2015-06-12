@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 
 import com.nevowatch.nevo.ble.ble.GattAttributes;
 import com.nevowatch.nevo.ble.model.packet.NevoFirmwareData;
+import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAStartRequest;
@@ -49,6 +50,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
 
     private DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.APPLICATION ;
     private ArrayList<NevoFirmwareData> mPacketsbuffer = new ArrayList<NevoFirmwareData>();
+    private ArrayList<NevoRawData> mNevoPacketsbuffer = new ArrayList<NevoRawData>();
 
     private int uploadTimeInSeconds = 0;
     private String firmwareFile ;
@@ -94,7 +96,6 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     private int totalpage = 0;
     private int checksum = 0;
     //end added
-
 
     /*package*/OtaControllerImpl(Context context)
     {
@@ -198,7 +199,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
             Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage(percentage);
             writingPacketNumber++;
-            mTimeoutTimer.cancel();
+            if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
             Log.i(TAG,"DFUOperations: onAllPacketsTransfered");
             break;
 
@@ -419,6 +420,12 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
      */
     public void performDFUOnFile(String filename , DfuFirmwareTypes firmwareType)
     {
+        if(!isConnected()) {
+            Log.e(TAG,"no connected Nevo,can't do OTA");
+            state = DFUControllerState.INIT;
+            return;
+        }
+        mPacketsbuffer.clear();
         lastprogress = 0.0;
         progress = 0.0;
         mTimeoutTimer = new Timer();
@@ -441,17 +448,18 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         },MAX_TIME,MAX_TIME);
 
         mConnectionController.setDelegate(this);
-        state = DFUControllerState.IDLE;
         dfuFirmwareType = firmwareType;
         firmwareFile = filename;
         //Hex to bin and read it to buffer
         openFile(filename);
-        //enable it done after doing discover service
-        //[dfuRequests enableNotification];
-        //the really OTA mode is the APPLICATION type (Ble OTA)
-        //the MCU ota is not a OTA mode (you can think it as a normal mode)
-        mConnectionController.setOTAMode(false ,true);
 
+        mConnectionController.setOTAMode(true ,false);
+        //by pass mode for doing OTA
+        state = DFUControllerState.SEND_START_COMMAND;
+        if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
+            mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
+        if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+            mConnectionController.sendRequest(new NevoOTAStartRequest());
     }
 
     /**
@@ -486,6 +494,21 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         return mConnectionController.isConnected();
     }
 
+    @Override
+    public DFUControllerState getState()
+    {
+        return state;
+    }
+    @Override
+    public void setState(DFUControllerState state)
+    {
+        this.state = state;
+    }
+    @Override
+    public  void switch2SyncController()
+    {
+        mConnectionController.setDelegate(mOldDelegate);
+    }
     /**
      reset to normal mode "NevoProfile"
      parameter: switch2SyncController: true/false
@@ -500,7 +523,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     @Override
     public void reset(boolean switch2SyncController) {
 
-        if(mTimeoutTimer!=null) mTimeoutTimer.cancel();
+        if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
         //reset it to INIT status !!!IMPORTANT!!!
         state = DFUControllerState.INIT;
 
@@ -512,8 +535,9 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         {
             mConnectionController.setDelegate(mOldDelegate);
         }
+        //disconnect and reconnect for reading new version
         mConnectionController.setOTAMode(false, true);
-        mConnectionController.connect();
+
     }
 
     @Override
@@ -536,47 +560,23 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
         {
             if (connected)
             {
-                if (state == DFUControllerState.SEND_RECONNECT)
-                {
-                    state = DFUControllerState.SEND_START_COMMAND;
-
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mConnectionController.sendRequest(new NevoOTAStartRequest());
-                        }
-                    },1000);
-                }
-
-                else if (state == DFUControllerState.DISCOVERING)
+                if (state == DFUControllerState.DISCOVERING)
                 {
                     state = DFUControllerState.SEND_FIRMWARE_DATA;
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue(),(byte)DfuFirmwareTypes.APPLICATION.rawValue()}));
+                            sendRequest(new NevoOTAControlRequest(new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
                             sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,false));
                         }
                     },2000);
-
                 }
-
             }
             else
             {
-                if (state == DFUControllerState.IDLE)
-                {
-                    state = DFUControllerState.SEND_RECONNECT;
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mConnectionController.connect();
-                        }
-                    },1000);
-                }
                 //by BLE peer disconnect when normal mode to ota mode
-                else if (state == DFUControllerState.SEND_START_COMMAND)
+                if (state == DFUControllerState.SEND_START_COMMAND)
                 {
                     state = DFUControllerState.DISCOVERING;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -584,7 +584,6 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                         public void run() {
                             Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
                             //when switch to DFU mode, the MAC address has changed to another one
-                            mConnectionController.setOTAMode(true ,false);
                             mConnectionController.forgetSavedAddress();
                             mConnectionController.connect();
                         }
@@ -592,44 +591,12 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                 }
             }
         }
-        //only MCU OTA run below code
-        else
-        {
-            if(connected)
-            {
-                if (state == DFUControllerState.SEND_RECONNECT)
-                {
-                    state = DFUControllerState.SEND_START_COMMAND;
-                    //waiting 2s for NEVO_OTA_CHARACTERISTIC set notify true is done.
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
-                        }
-                    },2000);
-                }
-
-            }
-            else
-            {
-                if (state == DFUControllerState.IDLE)
-                {
-                    state = DFUControllerState.SEND_RECONNECT;
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mConnectionController.connect();
-                        }
-                    },1000);
-                }
-
-            }
-        }
 
     }
 
     @Override
     public void onDataReceived(SensorData data) {
+
         if (data.getType().equals(NevoFirmwareData.TYPE))
         {
             if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION
@@ -643,13 +610,25 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
                 MCU_processDFUResponse((NevoFirmwareData) data);
             }
         }
+        else if (data.getType().equals(NevoRawData.TYPE))
+        {
+            final NevoRawData nevoData = (NevoRawData) data;
+            mNevoPacketsbuffer.add(nevoData);
+            if((byte)0xFF == nevoData.getRawData()[0])
+            {
+                NevoPacket packet = new NevoPacket(mNevoPacketsbuffer);
+                if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().packetReceived(packet);
+
+                mNevoPacketsbuffer.clear();
+            }
+        }
     }
 
     @Override
     public void onException(Exception e) {
         //the exception got happened when do connection NEVO
         Log.i(TAG," ********* onException ********* " + e);
-        mTimeoutTimer.cancel();
+        if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(e.getMessage());
 
     }
@@ -767,7 +746,7 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
             sendRequest(new NevoMCU_OTAChecksumRequest(totalpage, checksum));
             Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
-            mTimeoutTimer.cancel();
+            if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
             return;
         }
         Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: "+ (curpage));

@@ -60,6 +60,14 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
         NevoBT.Singleton.getInstance(mContext).setDelegate(this);
 
         //This timer will check if there's a conenction at regular intervals
+        startCheckConnectionTimer();
+
+        //This timer will retry to connect at given intervals
+        restartAutoReconnectTimer();
+    }
+
+    private void startCheckConnectionTimer()
+    {
         mCheckConnectionTimer = new Timer();
         mCheckConnectionTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -69,10 +77,6 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
                 if(new Date().getTime() - mLastPacket.getTime() > CHECK_CONNECTION_INTERVAL * 1.5) currentlyConnected(false);
             }
         }, CHECK_CONNECTION_INTERVAL, CHECK_CONNECTION_INTERVAL);
-
-
-        //This timer will retry to connect at given intervals
-        restartAutoReconnectTimer();
     }
 
     private void restartAutoReconnectTimer() {
@@ -237,13 +241,27 @@ public class ConnectionControllerImpl implements ConnectionController, NevoBT.De
         //No need to change the mode if we are already in OTA Mode
         if (getOTAMode() != otaMode )
             isOTAmode = otaMode;
+
         if (disConnect)
         {
-            //cancel reconnect timer, make sure OTA can do connect by OTAcontroller;
-            mAutoReconnectTimer.cancel();
-            mCheckConnectionTimer.cancel();
             NevoBT.Singleton.getInstance(mContext).disconnect();
         }
+
+        if(otaMode)
+        {
+            //cancel reconnect timer, make sure OTA can do connect by OTAcontroller;
+            if(mAutoReconnectTimer!=null) {mAutoReconnectTimer.cancel();mAutoReconnectTimer=null;}
+            if(mCheckConnectionTimer!=null) {mCheckConnectionTimer.cancel();mCheckConnectionTimer=null;}
+        }
+        else
+        {
+            //restart timer and ping Timer
+            mTimerIndex = 0; //after 1s ,do connect
+            restartAutoReconnectTimer();
+            mLastPacket = new Date(); //from now, waiting 6s to do checking
+            startCheckConnectionTimer();
+        }
+
     }
 
     @Override

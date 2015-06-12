@@ -30,6 +30,7 @@ import com.nevowatch.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
+import com.nevowatch.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
@@ -300,6 +301,12 @@ import java.util.TimeZone;
     @Override
     public void getStepsAndGoal() {
         sendRequest(new GetStepsGoalNevoRequest());
+    }
+
+    @Override
+    public void getBatteryLevel()
+    {
+        sendRequest(new GetBatteryLevelNevoRequest());
     }
 
 	@Override

@@ -29,6 +29,11 @@ public class NevoPacket {
     {
         return new DailyStepsNevoPacket(mPackets);
     }
+    public BatteryLevelNevoPacket newBatteryLevelNevoPacket()
+    {
+        return new BatteryLevelNevoPacket(mPackets);
+    }
+
     public byte getHeader()
     {
         return mPackets.get(0).getRawData()[1];

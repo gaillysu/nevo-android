@@ -416,7 +416,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		if (mBluetoothAdapter == null) {
 			throw new BLENotSupportedException(); 
 		}
-		
+		if(mBluetoothAdapter.isDiscovering()) mBluetoothAdapter.cancelDiscovery();
 		return mBluetoothAdapter;
 	}
 	

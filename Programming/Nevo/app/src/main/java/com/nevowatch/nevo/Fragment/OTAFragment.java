@@ -27,7 +27,10 @@ import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.ble.controller.OnNevoOtaControllerListener;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
+import com.nevowatch.nevo.ble.model.packet.BatteryLevelNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.model.request.GetBatteryLevelNevoRequest;
+import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.nevowatch.nevo.ble.model.request.NevoOTAStartRequest;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 import com.nevowatch.nevo.ble.notification.NevoNotificationListener;
@@ -35,10 +38,14 @@ import com.nevowatch.nevo.ble.notification.NevoNotificationListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Constants.DfuFirmwareTypes;
 import com.nevowatch.nevo.ble.controller.OtaController;
+import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
+
 /**
  * NotificationFragment
  */
@@ -59,30 +66,39 @@ public class OTAFragment extends Fragment
     DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     String selectedFileURL;
     //save the build-in firmware version, it should be the latest FW version
-    int buildinSoftwareVersion = 17;
-    int buildinFirmwareVersion= 31;
+    int buildinSoftwareVersion = 16;
+    int buildinFirmwareVersion= 30;
     ArrayList<String> firmwareURLs = new ArrayList<String>();
     int currentIndex = 0;
     OtaController mNevoOtaController ;
     //save the attached Activity, should be MainActivity, when doing OTA, user perhaps switch other fragment
     //but the OTA should be continue on background. when user come back, the progress should be showing
     Context mContext;
-    private void initListView(){
+    private AlertDialog mAlertDialog = null;
+    private void initListView(boolean forceUpdate,boolean popupMessage){
 
         if(!mNevoOtaController.isConnected()
                 || mNevoOtaController.getSoftwareVersion() == null
-                || mNevoOtaController.getFirmwareVersion() == null) return;
+                || mNevoOtaController.getFirmwareVersion() == null)
+        {
+            new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
+                    .setTitle(R.string.FirmwareUpgrade)
+                    .setMessage("Reading firmware version,please wait...")
+                    .setNegativeButton("OK",null).show();
+            return;
+        }
 
         firmwareURLs.clear();
+        currentIndex = 0;
 
         String[]files;
         int  currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
         int  currentFirmwareVersion = Integer.parseInt(mNevoOtaController.getFirmwareVersion());
         try {
-            files = getActivity().getAssets().list("firmware");
+            files = mContext.getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".bin")&& currentSoftwareVersion < buildinSoftwareVersion)
+                if(file.contains(".bin")&& (currentSoftwareVersion < buildinSoftwareVersion || forceUpdate))
                 {
                     firmwareURLs.add("firmware/"+file);
                     break;
@@ -97,7 +113,7 @@ public class OTAFragment extends Fragment
             files = mContext.getAssets().list("firmware");
             for(String file:files)
             {
-                if(file.contains(".hex")&& currentFirmwareVersion < buildinFirmwareVersion)
+                if(file.contains(".hex")&& (currentFirmwareVersion < buildinFirmwareVersion || forceUpdate))
                 {
                     firmwareURLs.add("firmware/"+file);
                     break;
@@ -107,6 +123,37 @@ public class OTAFragment extends Fragment
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if(firmwareURLs.size()>0)
+        {
+            String versionInfo = mContext.getString(R.string.currentFWversion)
+                                + "("+ currentFirmwareVersion +","+ currentSoftwareVersion+"),"
+                                + mContext.getString(R.string.latestFWversion)
+                                + "("+ buildinFirmwareVersion +","+ buildinSoftwareVersion+")";
+
+            if(!(mAlertDialog !=null && mAlertDialog.isShowing()) && popupMessage) {
+                //mAlertDialog.dismiss();
+                //mAlertDialog =null;
+                AlertDialog.Builder ab = new AlertDialog.Builder(((Activity) mContext), AlertDialog.THEME_HOLO_LIGHT)
+                        .setTitle(R.string.FirmwareUpgrade)
+                        .setMessage(versionInfo)
+                        .setPositiveButton(android.R.string.cancel, null)
+                        .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                uploadPressed();
+                            }
+                        }).setCancelable(false);
+
+                mAlertDialog = ab.create();
+                mAlertDialog.show();
+            }
+        }
+        else
+        {
+            mOTAProgressValueTextView.setText(mContext.getString(R.string.latestversion));
+        }
+
     }
 
     @Override
@@ -143,31 +190,22 @@ public class OTAFragment extends Fragment
                 rootView.findViewById(R.id.reUpgradebutton)
         };
         FontManager.changeFonts(viewArray, getActivity());
-
+        mOTAProgressValueTextView.setTextSize(30.0f);
         mMCUVersionTextView.setText(getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
         mBleVersionTextView.setText(getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
 
-        initListView();
+        initListView(false,true);
         initValue();
 
         return rootView;
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if(!isTransferring)
-        {
-           // mNevoOtaController.reset(true);
-        }
-    }
-
-    @Override
     public void onClick(View v){
         switch (v.getId()){
             case R.id.reUpgradebutton:
-                currentIndex = 0;
-                uploadPressed();
+                initListView(true,true);
+                //uploadPressed();
                 break;
             case R.id.warningButton:
 
@@ -182,11 +220,36 @@ public class OTAFragment extends Fragment
         if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
             ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
         }
+        else
+        {
+            if(SyncController.Singleton.getInstance(getActivity())!=null
+                    && SyncController.Singleton.getInstance(getActivity()).isConnected()
+                    && mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
+            {
+                SyncController.Singleton.getInstance(getActivity()).getBatteryLevel();
+            }
+        }
     }
+    @Override
+    public void packetReceived(NevoPacket packet)
+    {
+        if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader())
+        {
+            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
 
+            final byte value = packet.newBatteryLevelNevoPacket().getBatteryLevel();
+            Log.e(TAG,"Battery level:"+value);//0,1,2
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    //show value or IOCN
+                }
+            });
+        }
+    }
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if(!isTransferring && mContext instanceof MainActivity ) {
+        if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT && mContext instanceof MainActivity ) {
             ((MainActivity) mContext).replaceFragment(isConnected ? OTAFragment.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAFragment.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
         }
     }
@@ -243,12 +306,22 @@ public class OTAFragment extends Fragment
                 }
                 else
                 {
+                    //check MCU OK,first reset and wait 5s do BLE OTA
+                    mNevoOtaController.reset(false);
+
+                    mOTAProgressValueTextView.setText(mContext.getString(R.string.waiting));
+                    refreshTimeCount(15);
+                    //set new state and hide rebutton
+                    mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
+                    mReButton.setVisibility(View.INVISIBLE);
+
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            //wait reconnect OK
                             uploadPressed();
                         }
-                    },1000);
+                    },5000);
                 }
             }
         });
@@ -272,9 +345,9 @@ public class OTAFragment extends Fragment
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mMCUVersionTextView.setText(getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
-                mBleVersionTextView.setText(getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
-                initListView();
+                mMCUVersionTextView.setText(mContext.getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
+                mBleVersionTextView.setText(mContext.getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
+                initListView(false,false);
             }
         });
     }
@@ -304,11 +377,12 @@ public class OTAFragment extends Fragment
             //check firmwareURLs is null, should hide the button
             new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle(R.string.FirmwareUpgrade)
-                    .setMessage("pelease wait for reading firmware version")
+                    .setMessage("Reading firmware version,please wait...")
                     .setNegativeButton("OK",null).show();
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);
+        mOTAProgressValueTextView.setText(mContext.getString(R.string.waiting));
 
         if (selectedFileURL.contains(".bin"))
         {
@@ -317,16 +391,34 @@ public class OTAFragment extends Fragment
         if (selectedFileURL.contains(".hex"))
         {
             enumFirmwareType = DfuFirmwareTypes.APPLICATION;
+            refreshTimeCount(10);
         }
-
         mOTAProgressBar.setProgress(0);
-        mOTAProgressValueTextView.setText(R.string.waiting);
         isTransferring = true;
         //when doing OTA, disable Cancel/Back button, enable them by callback function invoke initValue()/checkConnection()
         //nevoOtaView.backButton.enabled = false
         mReButton.setVisibility(View.INVISIBLE); //The process of OTA hide this control
         mNevoOtaController.performDFUOnFile(selectedFileURL, enumFirmwareType);
 
+    }
+
+    private void refreshTimeCount(final int count)
+    {
+        if(count == 0) return;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mOTAProgressValueTextView.setText(mContext.getString(R.string.waiting) + count);
+                    }
+                });
+                refreshTimeCount(count-1);
+            }
+        },1000);
     }
 
 }

@@ -77,6 +77,10 @@ public interface SyncController {
 
     public String getFirmwareVersion();
     public String getSoftwareVersion();
+    /**
+     get battery level
+    */
+    public void getBatteryLevel();
 
     /**
      * when mainActivity goes to background, set true, otherwise set false

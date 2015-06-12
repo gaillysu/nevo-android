@@ -57,6 +57,15 @@ public interface OtaController {
     Boolean isConnected();
 
     /**
+     * get/set state
+     */
+    DFUControllerState getState();
+
+    void setState(DFUControllerState state);
+
+    void switch2SyncController();
+
+    /**
      * when OTA done successful or failure, reset it to normal mode
      * switch2SyncController: true / false ,which controller will be in charge of connectionController：
      * syncController or otaController

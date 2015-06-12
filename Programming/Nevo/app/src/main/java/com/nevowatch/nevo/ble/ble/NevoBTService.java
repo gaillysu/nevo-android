@@ -40,6 +40,7 @@ import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -363,7 +364,27 @@ public class NevoBTService extends Service {
 		});
 
     }
-    
+
+    /**
+     * Clears the device cache. After uploading new firmware the DFU target will have other services than before.
+     *
+     * @param gatt
+     *            the GATT device to be refreshed
+     */
+    private void refreshDeviceCache(final BluetoothGatt gatt) {
+		/*
+		 * There is a refresh() method in BluetoothGatt class but for now it's hidden. We will call it using reflections.
+		 */
+        try {
+            final Method refresh = gatt.getClass().getMethod("refresh");
+            if (refresh != null) {
+                final boolean success = (Boolean) refresh.invoke(gatt);
+                Log.i(NevoBT.TAG,"Refreshing result: " + success);
+            }
+        } catch (Exception e) {
+            Log.i(NevoBT.TAG,"An exception occured while refreshing device", e);
+        }
+    }
     /**
      * Implements callback methods for GATT events that the app cares about.  For example,
      * connection change and services discovered.
@@ -404,7 +425,7 @@ public class NevoBTService extends Service {
                 if(mConnected!=null && gatt!=null) mConnected.onConnectionStateChanged(false,address);
 
                 //close this server for next reconnect!!!
-                if(gatt!=null) {gatt.close();}
+                if(gatt!=null) {refreshDeviceCache(gatt);gatt.close();}
                 mBluetoothGattMap.remove(address);
                 //we don't know why the Gatt server disconnected, so no need again connect, for example: BLE devices power off or go away               
                 return;
