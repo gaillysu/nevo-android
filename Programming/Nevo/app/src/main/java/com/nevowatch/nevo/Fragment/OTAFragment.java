@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
@@ -77,8 +78,7 @@ public class OTAFragment extends Fragment
     private AlertDialog mAlertDialog = null;
     private void initListView(boolean forceUpdate,boolean popupMessage){
 
-        if(!mNevoOtaController.isConnected()
-                || mNevoOtaController.getSoftwareVersion() == null
+        if(mNevoOtaController.getSoftwareVersion() == null
                 || mNevoOtaController.getFirmwareVersion() == null)
         {
             new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
@@ -218,8 +218,8 @@ public class OTAFragment extends Fragment
     public void onClick(View v){
         switch (v.getId()){
             case R.id.reUpgradebutton:
-                initListView(true,true);
-                //uploadPressed();
+                initListView(true,false);
+                uploadPressed();
                 break;
             case R.id.warningButton:
 
@@ -389,10 +389,7 @@ public class OTAFragment extends Fragment
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
-            new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle(R.string.FirmwareUpgrade)
-                    .setMessage("Reading firmware version,please wait...")
-                    .setNegativeButton("OK",null).show();
+            Toast.makeText(mContext, "Reading firmware version,please wait...", Toast.LENGTH_LONG).show();
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
@@ -421,8 +422,9 @@ public class OtaControllerImpl implements OtaController,ConnectionController.Del
     public void performDFUOnFile(String filename , DfuFirmwareTypes firmwareType)
     {
         if(!isConnected()) {
-            Log.e(TAG,"no connected Nevo,can't do OTA");
+            Log.e(TAG,"no Nevo connected,can't do OTA");
             state = DFUControllerState.INIT;
+            Toast.makeText(mContext,"no Nevo connected,can't do OTA",Toast.LENGTH_LONG).show();
             return;
         }
         mPacketsbuffer.clear();
