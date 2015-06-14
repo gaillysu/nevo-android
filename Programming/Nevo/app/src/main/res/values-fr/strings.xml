@@ -64,7 +64,17 @@
     <string name="tutorial_tips_two_title">Bluetooth reconnection</string>
     <string name="tutorial_tips_two_message">Reconnect Bluetooth to receive notifications again by pressing and holding the 3rd button for 3 seconds.</string>
     <string name="forget_device">Forget this nevo</string>
-    <string name="mcu_version">MCU Version</string>
-    <string name="ble_version">Ble Version</string>
+    <string name="mcu_version">MCU Version:</string>
+    <string name="ble_version">Ble Version:</string>
     <string name="re_upgrade">RE-Upgrade</string>
+    <string name="FirmwareUpgrade">Firmware Upgrade</string>
+    <string name="waiting">Please waiting...</string>
+    <string name="Version">Version:</string>
+    <string name="otahelp">Do not interrupt the OTA firmware process. Let the process complete before using the app!\nIn case of accidental interruption, try again. If it doesn\'t work, remove nevo battery for 30 secs and reinstall.</string>
+    <string name="latestversion">Your watch is up to date</string>
+    <string name="FirmwareAlertMessage">Your watch\’s software is not up to date. Do you want to update it now ?</string>
+    <string name="UpdateSuccess1">Update Successful</string>
+    <string name="UpdateSuccess2">Update Successful,please turn your nevo\'s Bluetooth on.</string>
+    <string name="currentFWversion">Your nevo is not up to date :</string>
+    <string name="latestFWversion"> Do you want to upgrade it to the latest version ? :</string>
 </resources>
