@@ -347,6 +347,8 @@ public class OTAFragment extends Fragment
             public void run() {
                 mMCUVersionTextView.setText(mContext.getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
                 mBleVersionTextView.setText(mContext.getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
+                //when OTA finish done,reset the upload list again and show the lastest Version message
+                initListView(false,false);
             }
         });
     }
