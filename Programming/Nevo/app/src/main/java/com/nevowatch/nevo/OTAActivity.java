@@ -188,6 +188,8 @@ public class OTAActivity extends Activity
     }
 
     private void initView(){
+        mContext = this;
+
         mOTAProgressBar = (RoundProgressBar)findViewById(R.id.otaProgressBar);
 
         mMCUVersionTextView = (TextView)findViewById(R.id.mcuVersionLabel);
@@ -208,14 +210,13 @@ public class OTAActivity extends Activity
         mTitleTextView = (TextView)findViewById(R.id.titleTextView);
         mTitleTextView.setOnClickListener(this);
 
-        mOTAProgressValueTextView.setTextSize(30.0f);
-        //mMCUVersionTextView.setText(getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
-        //mBleVersionTextView.setText(getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
         mNevoOtaController = OtaController.Singleton.getInstance(this);
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
-        mContext = this;
 
+        mOTAProgressValueTextView.setTextSize(30.0f);
+        mMCUVersionTextView.setText(getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
+        mBleVersionTextView.setText(getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
         /*
         * Hide Status Bar
          */
