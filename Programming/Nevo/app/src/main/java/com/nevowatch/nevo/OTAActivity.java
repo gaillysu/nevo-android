@@ -215,8 +215,13 @@ public class OTAActivity extends Activity
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
         mContext = this;
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        /*
+        * Hide Status Bar
+         */
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
+
     @Override
     public void onClick(View v){
         switch (v.getId()){
