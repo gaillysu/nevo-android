@@ -92,4 +92,9 @@ public interface SyncController {
      */
     public void forgetDevice();
 
+    /**
+     * find Nevo device, when got found out, light on all color LED
+     */
+    public void findDevice();
+
 }

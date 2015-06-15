@@ -37,6 +37,7 @@ import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
+import com.nevowatch.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.nevowatch.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
@@ -346,6 +347,18 @@ import java.util.TimeZone;
     public void getBatteryLevel()
     {
         sendRequest(new GetBatteryLevelNevoRequest());
+    }
+
+    /**
+     @ledpattern, define Led light pattern, 0 means off all led, 0xFFFFFF means light on all led( include color and white)
+     0x7FF means light on all white led (bit0~bit10), 0x3F0000 means light on all color led (bit16~bit21)
+     other value, light on the related led
+     @motorOnOff, vibrator true or flase
+     */
+    @Override
+    public void findDevice()
+    {
+        sendRequest(new LedLightOnOffNevoRequest(0x3F0000,false));
     }
 
 	@Override

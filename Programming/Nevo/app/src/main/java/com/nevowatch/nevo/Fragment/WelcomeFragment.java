@@ -41,6 +41,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private RoundProgressBar mRoundProgressBar;
     private TextView mTextView;
     private int mCurHour, mCurMin, mTempMin = -1;
+    private long mLastTapTime = 0;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
@@ -71,7 +72,19 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
         mRoundProgressBar = (RoundProgressBar) rootView.findViewById(R.id.roundProgressBar);
         mTextView = (TextView) rootView.findViewById(R.id.textView);
-
+        rootView.findViewById(R.id.clock_imageView).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //double click clock within 2s, light on nevo all color LED
+                if((System.currentTimeMillis()- mLastTapTime)>2000)
+                    mLastTapTime = System.currentTimeMillis();
+                else {
+                    if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
+                        SyncController.Singleton.getInstance(getActivity()).findDevice();
+                    }
+                }
+            }
+        });
         View [] viewArray = new View []{
                 rootView.findViewById(R.id.textView)
         };
