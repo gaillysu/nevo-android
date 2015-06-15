@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="330dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView2" />
+
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="280dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/nevo580" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="My nevo"
+            android:id="@+id/mynevoTextView"
+            android:textSize="25sp"
+            android:textColor="@color/customBlack"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="220dp"
+            android:layout_height="2dp"
+            android:id="@+id/textView3"
+            android:background="@color/customOrange"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageView2"
+                android:background="@drawable/batteryicon1"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/batteryTextView"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:text="95%"
+                android:id="@+id/batteryTextView"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/warning"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/pdateuTextView"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:text="Latest Update\non"
+                android:id="@+id/pdateuTextView"
+                android:textSize="18sp"
+                android:gravity="center|left"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="70dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Upgrade"
+                android:textAllCaps="false"
+                android:textColor="@color/customWhite"
+                android:background="@drawable/round_button"
+                android:id="@+id/mynevo_push_ota"
+                android:layout_gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
