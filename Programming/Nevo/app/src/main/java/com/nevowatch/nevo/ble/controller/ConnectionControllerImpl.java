@@ -26,7 +26,7 @@ import java.util.TimerTask;
 /**
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-public class ConnectionControllerImpl implements ConnectionController, NevoBT.Delegate {
+/*package*/ class ConnectionControllerImpl implements ConnectionController, NevoBT.Delegate {
 
     private Timer mAutoReconnectTimer;
     private int  mTimerIndex = 0;

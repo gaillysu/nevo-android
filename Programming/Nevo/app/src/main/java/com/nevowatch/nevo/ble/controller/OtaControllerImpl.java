@@ -41,7 +41,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 
-public class OtaControllerImpl implements OtaController,ConnectionController.Delegate {
+/*package*/ class OtaControllerImpl implements OtaController,ConnectionController.Delegate {
     private final static String TAG = "OtaControllerImpl";
 
     Context mContext;
