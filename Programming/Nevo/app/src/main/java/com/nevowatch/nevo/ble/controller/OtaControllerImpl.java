@@ -438,8 +438,22 @@ import java.util.UUID;
                 {
                     Log.w(TAG,"* * * OTA timeout * * *");
                     String errorMessage = "Timeout,please try again";
-                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
-
+                   if (state == DFUControllerState.SEND_START_COMMAND && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+                   {
+                       Log.w(TAG,"* * * call SamsungS4Patch function * * *");
+                       SamsungS4Patch();
+                   }
+                   /* //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
+                   else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+                   {
+                       Log.w(TAG,"* * * again call connect function for search DFU * * *");
+                       mConnectionController.connect();
+                   }*/
+                    else
+                   {
+                       Log.w(TAG,"* * * call OTA timeout function * * *");
+                       if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+                   }
                 }
                 else
                 {
@@ -464,6 +478,11 @@ import java.util.UUID;
             mConnectionController.sendRequest(new NevoOTAStartRequest());
     }
 
+    public void SamsungS4Patch()
+    {
+        //app make a disconnect to nevo
+        mConnectionController.setOTAMode(true, true);
+    }
     /**
      * cancel OTA
      */

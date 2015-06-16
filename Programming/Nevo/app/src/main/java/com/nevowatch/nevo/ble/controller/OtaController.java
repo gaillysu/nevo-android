@@ -83,4 +83,11 @@ public interface OtaController {
      * @return MCU FW version
      */
     String getSoftwareVersion();
+
+    /**
+     * patch for samsung S4 Ble OTA, send start ble OTA cmd 0x72, can't get disconnect after 7s
+     * so here add this patch function do it
+     * this patch will make a disconnect to nevo (normal OTA should be get disconnect from nevo )
+     */
+    void SamsungS4Patch();
 }

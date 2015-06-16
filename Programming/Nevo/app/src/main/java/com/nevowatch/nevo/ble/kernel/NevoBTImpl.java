@@ -105,6 +105,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	 */
     private List<SupportedService> mSupportServicelist = new ArrayList<SupportedService>();
 
+    private boolean isScanning = false;
+
     /**
      * Simple constructor
      * @param context
@@ -134,7 +136,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
     @Override
 	public synchronized void startScan(final List<SupportedService> servicelist, final Optional<String> preferredAddress) {
-
+        if(isScanning) {Log.i(TAG,"Scanning......return ******");return;}
         //If we're already conected to this address, no need to go any further
         if (preferredAddress.notEmpty() && isAlreadyConnected(preferredAddress.get()) ) {return;}
 
@@ -168,7 +170,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).clear();
 
 				//We start a scan
-				if(mBluetoothAdapter!=null) mBluetoothAdapter.startLeScan(mLeScanCallback);
+				if(mBluetoothAdapter!=null) {isScanning = true;mBluetoothAdapter.startLeScan(mLeScanCallback);}
 				
 		        // Stops scanning after a pre-defined scan period.
 		        new Handler().postDelayed(new Runnable() {
@@ -176,6 +178,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 		            public void run() {
 		            	if(mBluetoothAdapter!=null) mBluetoothAdapter.stopLeScan(mLeScanCallback);
 		            	Log.v(TAG,"stopLeScan");
+                        isScanning = false;
 		            }
 		        }, SCAN_PERIOD);
 				
