@@ -58,12 +58,22 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:id="@+id/imageView2"
+                android:id="@+id/batteryBackground"
                 android:background="@drawable/batteryicon1"
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
                 android:layout_toStartOf="@+id/batteryTextView"
                 android:layout_marginEnd="20dp" />
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/batteryImage"
+                android:src="@drawable/nevo_battery"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/batteryTextView"
+                android:layout_marginEnd="20dp"/>
 
             <TextView
                 android:layout_width="120dp"

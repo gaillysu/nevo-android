@@ -36,6 +36,8 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     public static final int MYNEVOPOSITION = 4;
     private Context mCtx;
     private Button mynevo_pushOTAButton;
+    private ImageView mNevoBatteryImage;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -44,6 +46,12 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         mynevo_pushOTAButton = (Button) rootView.findViewById(R.id.mynevo_push_ota);
         mynevo_pushOTAButton.setOnClickListener(this);
 
+        mNevoBatteryImage = (ImageView) rootView.findViewById(R.id.batteryImage);
+
+        /*
+        * my nevo 电量显示设置
+        * */
+        mNevoBatteryImage.getDrawable().setLevel(0);
         return rootView;
     }
 
