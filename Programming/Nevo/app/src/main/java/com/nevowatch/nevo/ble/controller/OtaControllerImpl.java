@@ -791,8 +791,6 @@ import java.util.UUID;
                         Log.i(TAG,"Checksum error ,OTA get failure!");
                         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError("Checksum error ,OTA get failure!");
                     }
-                    //reset to idle
-                    state = DFUControllerState.IDLE;
                 }
             }
 
