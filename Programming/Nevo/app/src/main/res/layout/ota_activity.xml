@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="2/2"
-            android:id="@+id/textView6"
+            android:id="@+id/textFirmwareTotal"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:text="@string/otahelp"
             android:textSize="15sp"
-            android:id="@+id/textView4"
+            android:id="@+id/textInfomation"
             android:layout_gravity="center_horizontal"
             android:gravity="center"/>
 

@@ -61,6 +61,8 @@ public class OTAActivity extends Activity
     private Button mReButton;
     private ImageView mBackImage;
     private TextView mTitleTextView;
+    private TextView mFirmwareTotal;
+    private TextView mOtaInfomation;
 
     static DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     //save the build-in firmware version, it should be the latest FW version
@@ -168,6 +170,13 @@ public class OTAActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ota_activity);
+
+        mContext = this;
+
+        mNevoOtaController = OtaController.Singleton.getInstance(this);
+        mNevoOtaController.setConnectControllerDelegate2Self();
+        mNevoOtaController.setOnNevoOtaControllerListener(this);
+
         initView();
 
         View [] viewArray = new View []{
@@ -177,13 +186,11 @@ public class OTAActivity extends Activity
         };
         FontManager.changeFonts(viewArray, this);
 
-
         initListView(false,true);
         initValue();
     }
 
     private void initView(){
-        mContext = this;
 
         mOTAProgressBar = (RoundProgressBar)findViewById(R.id.otaProgressBar);
 
@@ -196,14 +203,25 @@ public class OTAActivity extends Activity
         mTitleTextView = (TextView)findViewById(R.id.titleTextView);
         mTitleTextView.setOnClickListener(this);
 
-        mNevoOtaController = OtaController.Singleton.getInstance(this);
-        mNevoOtaController.setConnectControllerDelegate2Self();
-        mNevoOtaController.setOnNevoOtaControllerListener(this);
-
+        mFirmwareTotal = (TextView)findViewById(R.id.textFirmwareTotal);
+        mOtaInfomation = (TextView)findViewById(R.id.textInfomation);
+        mFirmwareTotal.setText("");
         /*
         * Hide Status Bar
          */
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        /*always light on screen */
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
+        {
+            mNevoOtaController.switch2SyncController();
+        }
     }
 
     @Override
@@ -225,29 +243,19 @@ public class OTAActivity extends Activity
     public void onResume() {
         super.onResume();
         if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
-
+            //DO NOTHING
         }
     }
 
     @Override
     public void packetReceived(NevoPacket packet)
     {
-        if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader())
-        {
-            final byte value = packet.newBatteryLevelNevoPacket().getBatteryLevel();
-            Log.e(TAG,"Battery level:"+value);//0,1,2
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    //show value or IOCN
-                }
-            });
-        }
+        //DO NOTHING
     }
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT && mContext instanceof MainActivity ) {
-            //((MainActivity) mContext).replaceFragment(isConnected ? OTAActivity.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAActivity.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
+        if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
+           // ((MainActivity) mContext).replaceFragment(isConnected ? OTAActivity.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAActivity.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
         }
     }
 
@@ -274,6 +282,7 @@ public class OTAActivity extends Activity
             @Override
             public void run() {
                 setOTAProgressBar(percent);
+                mFirmwareTotal.setText((currentIndex+1)+"/"+firmwareURLs.size()+" ," + percent + "%");
             }
         });
     }
@@ -308,7 +317,7 @@ public class OTAActivity extends Activity
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
                     initValue();
 
-                    refreshTimeCount(15);
+                    refreshTimeCount(25,false);
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
@@ -360,7 +369,6 @@ public class OTAActivity extends Activity
        // nevoOtaView.backButton.enabled = true
         if (mNevoOtaController.getState() == Constants.DFUControllerState.INIT) {
             mReButton.setVisibility(View.VISIBLE);
-            mReButton.setEnabled(mNevoOtaController.isConnected());
         }
         else
         {
@@ -378,7 +386,14 @@ public class OTAActivity extends Activity
             Toast.makeText(mContext, "Reading firmware version,please wait...", Toast.LENGTH_LONG).show();
             return;
         }
+        if(!mNevoOtaController.isConnected()) {
+            Log.e(TAG,"no Nevo connected,can't do OTA");
+            mNevoOtaController.setState(Constants.DFUControllerState.INIT);
+            Toast.makeText(mContext,"no Nevo connected,can't do OTA",Toast.LENGTH_LONG).show();
+            return;
+        }
         selectedFileURL = firmwareURLs.get(currentIndex);
+        refreshTimeCount(20,true);
 
         if (selectedFileURL.contains(".bin"))
         {
@@ -387,7 +402,6 @@ public class OTAActivity extends Activity
         if (selectedFileURL.contains(".hex"))
         {
             enumFirmwareType = DfuFirmwareTypes.APPLICATION;
-            refreshTimeCount(10);
         }
         mOTAProgressBar.setProgress(0);
         //when doing OTA, disable Cancel/Back button, enable them by callback function invoke initValue()/checkConnection()
@@ -397,9 +411,31 @@ public class OTAActivity extends Activity
 
     }
 
-    private void refreshTimeCount(final int count)
+    private void refreshTimeCount(final int count,final boolean checkStatus)
     {
-        if(count == 0) return;
+        if(count == 0 )
+        {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mOtaInfomation.setText(mContext.getString(R.string.otahelp));
+                }
+            });
+            return;
+        }
+
+        if(checkStatus && mNevoOtaController.getState() != Constants.DFUControllerState.INIT
+                && mNevoOtaController.getState() != Constants.DFUControllerState.SEND_START_COMMAND
+                && mNevoOtaController.getState() != Constants.DFUControllerState.SEND_RECONNECT)
+        {
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mOtaInfomation.setText(mContext.getString(R.string.otahelp));
+                }
+            });
+            return;
+        }
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -408,10 +444,10 @@ public class OTAActivity extends Activity
                 ((Activity)mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
+                        mOtaInfomation.setText(mContext.getString(R.string.waiting)+ count);
                     }
                 });
-                refreshTimeCount(count-1);
+                refreshTimeCount(count-1,checkStatus);
             }
         },1000);
     }

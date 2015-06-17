@@ -1,7 +1,9 @@
 package com.nevowatch.nevo.Fragment;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -42,6 +44,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private TextView mTextView;
     private int mCurHour, mCurMin, mTempMin = -1;
     private long mLastTapTime = 0;
+    private ImageView mClockView;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
@@ -72,11 +75,12 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
         mRoundProgressBar = (RoundProgressBar) rootView.findViewById(R.id.roundProgressBar);
         mTextView = (TextView) rootView.findViewById(R.id.textView);
-        rootView.findViewById(R.id.clock_imageView).setOnClickListener(new View.OnClickListener() {
+        mClockView = (ImageView)rootView.findViewById(R.id.clock_imageView);
+        mClockView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //double click clock within 2s, light on nevo all color LED
-                if((System.currentTimeMillis()- mLastTapTime)>2000)
+                if ((System.currentTimeMillis() - mLastTapTime) > 2000)
                     mLastTapTime = System.currentTimeMillis();
                 else {
                     if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
@@ -172,6 +176,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         return pref.getInt(PREF_CUR_STEP, 0);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void packetReceived(NevoPacket packet) {
         if((byte) GetStepsGoalNevoRequest.HEADER == packet.getHeader()) {
@@ -183,6 +188,23 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             setText(dailySteps + "/" + dailyGoal);
             setProgressBar((int) (100.0 * dailySteps / dailyGoal));
             StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
+        }
+        //double click get response within 2s, blink clock image once
+        //use 2s, get rid of notification's response
+        else if((byte)0xF0 == packet.getHeader() && (System.currentTimeMillis() - mLastTapTime) < 2000)
+        {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mClockView.setImageDrawable(getActivity().getDrawable(R.drawable.clockview600_color));
+                    mUiHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mClockView.setImageDrawable(getActivity().getDrawable(R.drawable.clockview600));
+                        }
+                    }, 2000);
+                }
+            });
         }
     }
 
