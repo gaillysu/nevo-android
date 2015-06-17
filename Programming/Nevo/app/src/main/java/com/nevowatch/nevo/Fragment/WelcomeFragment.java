@@ -196,11 +196,11 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mClockView.setImageDrawable(getActivity().getDrawable(R.drawable.clockview600_color));
+                    mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
                     mUiHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mClockView.setImageDrawable(getActivity().getDrawable(R.drawable.clockview600));
+                            mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
                         }
                     }, 2000);
                 }

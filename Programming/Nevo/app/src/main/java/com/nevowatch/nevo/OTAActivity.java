@@ -379,17 +379,18 @@ public class OTAActivity extends Activity
     //upload button function
     private void uploadPressed()
     {
+        if(!mNevoOtaController.isConnected()) {
+            Log.e(TAG,"no Nevo connected,can't do OTA");
+            mNevoOtaController.setState(Constants.DFUControllerState.INIT);
+            Toast.makeText(mContext,"no Nevo connected,can't do OTA",Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String selectedFileURL;
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
             Toast.makeText(mContext, "Reading firmware version,please wait...", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if(!mNevoOtaController.isConnected()) {
-            Log.e(TAG,"no Nevo connected,can't do OTA");
-            mNevoOtaController.setState(Constants.DFUControllerState.INIT);
-            Toast.makeText(mContext,"no Nevo connected,can't do OTA",Toast.LENGTH_LONG).show();
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);
