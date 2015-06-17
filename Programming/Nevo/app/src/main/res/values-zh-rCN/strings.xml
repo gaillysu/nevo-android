@@ -66,10 +66,11 @@
     <string name="forget_device">忽略此设备</string>
     <string name="mcu_version">MCU Version:</string>
     <string name="ble_version">Ble Version:</string>
-    <string name="re_upgrade">重新升级</string>
+    <string name="re_upgrade">Try again</string>
     <string name="FirmwareUpgrade">固件升级</string>
     <string name="waiting">请稍等...</string>
     <string name="Version">版本:</string>
+    <string name="attention">注意!</string>
     <string name="otahelp">请不要中断OTA升级.使用应用前,\n请先确认升级已完成.\n如果意外中断,请重新升级,\n有时需要重新安装电池或等待数分钟,\n确保升级完成.</string>
     <string name="latestversion">你已是最新版本!</string>
     <string name="FirmwareAlertMessage">您的手表固件不是最新版本,您确认升级固件吗?</string>
