@@ -62,7 +62,7 @@
                 android:background="@drawable/batteryicon1"
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/batteryTextView"
+                android:layout_toStartOf="@+id/batteryValueTextView"
                 android:layout_marginEnd="20dp" />
 
             <ImageView
@@ -72,14 +72,14 @@
                 android:src="@drawable/nevo_battery"
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/batteryTextView"
+                android:layout_toStartOf="@+id/batteryValueTextView"
                 android:layout_marginEnd="20dp"/>
 
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:text="95%"
-                android:id="@+id/batteryTextView"
+                android:id="@+id/batteryValueTextView"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="18sp"
@@ -96,14 +96,14 @@
                 android:layout_height="40dp"
                 android:src="@drawable/warning"
                 android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/pdateuTextView"
+                android:layout_toStartOf="@+id/updateuTextView"
                 android:layout_marginEnd="20dp" />
 
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="50dp"
                 android:text="Latest Update\non"
-                android:id="@+id/pdateuTextView"
+                android:id="@+id/updateuTextView"
                 android:textSize="18sp"
                 android:gravity="center|left"
                 android:layout_centerVertical="true"

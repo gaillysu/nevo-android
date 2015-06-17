@@ -37,7 +37,9 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     private Context mCtx;
     private Button mynevo_pushOTAButton;
     private ImageView mNevoBatteryImage;
-
+    private TextView mNameTextView;
+    private TextView mUpdateuTextView;
+    private TextView mBatteryValueTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,12 +49,37 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         mynevo_pushOTAButton.setOnClickListener(this);
 
         mNevoBatteryImage = (ImageView) rootView.findViewById(R.id.batteryImage);
-
         /*
         * my nevo 电量显示设置
         * */
         mNevoBatteryImage.getDrawable().setLevel(0);
+
+        mNameTextView = (TextView) rootView.findViewById(R.id.mynevoTextView);
+
+        mUpdateuTextView = (TextView) rootView.findViewById(R.id.updateuTextView);
+
+        mBatteryValueTextView = (TextView) rootView.findViewById(R.id.batteryValueTextView);
+        setBatteryValueText(1);
+        View [] viewArray = new View []{
+                rootView.findViewById(R.id.mynevoTextView),
+                rootView.findViewById(R.id.updateuTextView),
+                rootView.findViewById(R.id.batteryValueTextView)
+        };
+        FontManager.changeFonts(viewArray, getActivity());
         return rootView;
+    }
+
+    /*
+    * 显示nevo电池电量值函数
+    * */
+    public void setBatteryValueText(int batteryValue) {
+        if (batteryValue == 0){
+            mBatteryValueTextView.setText(">10%");
+        }else if (batteryValue == 1){
+            mBatteryValueTextView.setText("<50%");
+        }else if (batteryValue == 2){
+            mBatteryValueTextView.setText("100%");
+        }
     }
 
     @Override
