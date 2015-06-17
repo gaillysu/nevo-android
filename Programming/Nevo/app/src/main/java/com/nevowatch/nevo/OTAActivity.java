@@ -58,11 +58,7 @@ public class OTAActivity extends Activity
     public static final int OTAPOSITION = 4;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private RoundProgressBar mOTAProgressBar;
-    private TextView mMCUVersionTextView;
-    private TextView mBleVersionTextView;
-    private TextView mOTAProgressValueTextView;
     private Button mReButton;
-    private ImageView mWarningButton;
     private ImageView mBackImage;
     private TextView mTitleTextView;
 
@@ -163,7 +159,7 @@ public class OTAActivity extends Activity
         }
         else
         {
-            mOTAProgressValueTextView.setText(mContext.getString(R.string.latestversion));
+            //mOTAProgressValueTextView.setText(mContext.getString(R.string.latestversion));
         }
 
     }
@@ -177,7 +173,6 @@ public class OTAActivity extends Activity
         View [] viewArray = new View []{
                 findViewById(R.id.mcuVersionLabel),
                 findViewById(R.id.bleVersionLabel),
-                findViewById(R.id.progressValue),
                 findViewById(R.id.reUpgradebutton)
         };
         FontManager.changeFonts(viewArray, this);
@@ -192,17 +187,8 @@ public class OTAActivity extends Activity
 
         mOTAProgressBar = (RoundProgressBar)findViewById(R.id.otaProgressBar);
 
-        mMCUVersionTextView = (TextView)findViewById(R.id.mcuVersionLabel);
-
-        mBleVersionTextView = (TextView)findViewById(R.id.bleVersionLabel);
-
-        mOTAProgressValueTextView = (TextView)findViewById(R.id.progressValue);
-
         mReButton = (Button)findViewById(R.id.reUpgradebutton);
         mReButton.setOnClickListener(this);
-
-        mWarningButton = (ImageView)findViewById(R.id.warningButton);
-        mWarningButton.setOnClickListener(this);
 
         mBackImage = (ImageView)findViewById(R.id.backImage);
         mBackImage.setOnClickListener(this);
@@ -214,9 +200,6 @@ public class OTAActivity extends Activity
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
 
-        mOTAProgressValueTextView.setTextSize(30.0f);
-        mMCUVersionTextView.setText(getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
-        mBleVersionTextView.setText(getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
         /*
         * Hide Status Bar
          */
@@ -230,10 +213,6 @@ public class OTAActivity extends Activity
                 initListView(true,false);
                 uploadPressed();
                 break;
-            case R.id.warningButton:
-                Toast.makeText(mContext,R.string.otahelp,Toast.LENGTH_LONG).show();
-                break;
-
             case R.id.backImage:
                 finish();
                 break;
@@ -316,9 +295,8 @@ public class OTAActivity extends Activity
                     new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
                             .setTitle(R.string.FirmwareUpgrade)
                             .setMessage(message)
-                            .setNegativeButton("OK",null).show();
+                            .setNegativeButton("OK", null).show();
                     //show success text or image
-                    mOTAProgressValueTextView.setText(R.string.UpdateSuccess1);
                     mNevoOtaController.reset(false);
                     initValue();
                 }
@@ -330,7 +308,6 @@ public class OTAActivity extends Activity
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
                     initValue();
 
-                    mOTAProgressValueTextView.setText(mContext.getString(R.string.waiting));
                     refreshTimeCount(15);
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -350,7 +327,6 @@ public class OTAActivity extends Activity
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mOTAProgressValueTextView.setText(error);
                 mNevoOtaController.reset(false);
                 initValue();
             }
@@ -363,8 +339,8 @@ public class OTAActivity extends Activity
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mMCUVersionTextView.setText(mContext.getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
-                mBleVersionTextView.setText(mContext.getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
+                //mMCUVersionTextView.setText(mContext.getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
+                //mBleVersionTextView.setText(mContext.getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
                 //when OTA finish done,reset the upload list again and show the lastest Version message
                 initListView(false,false);
             }
@@ -376,7 +352,6 @@ public class OTAActivity extends Activity
     */
     public void setOTAProgressBar(final int progress){
         mOTAProgressBar.setProgress(progress);
-        mOTAProgressValueTextView.setText(progress+"%");
     }
 
     //init data function
@@ -404,7 +379,6 @@ public class OTAActivity extends Activity
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);
-        mOTAProgressValueTextView.setText(mContext.getString(R.string.waiting));
 
         if (selectedFileURL.contains(".bin"))
         {
@@ -434,7 +408,7 @@ public class OTAActivity extends Activity
                 ((Activity)mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mOTAProgressValueTextView.setText(mContext.getString(R.string.waiting) + count);
+
                     }
                 });
                 refreshTimeCount(count-1);

@@ -66,10 +66,11 @@
     <string name="forget_device">忽略此設備</string>
     <string name="mcu_version">MCU Version:</string>
     <string name="ble_version">Ble Version:</string>
-    <string name="re_upgrade">重新升級</string>
+    <string name="re_upgrade">Try again</string>
     <string name="FirmwareUpgrade">固件升級</string>
     <string name="waiting">請稍等...</string>
     <string name="Version">版本:</string>
+    <string name="attention">注意!</string>
     <string name="otahelp">Do not interrupt the OTA firmware process. Let the process complete before using the app!\nIn case of accidental interruption, try again. If it doesn\'t work, remove nevo battery for 30 secs and reinstall.</string>
     <string name="latestversion">您已是最新版本!</string>
     <string name="FirmwareAlertMessage">您的手表固件不是最新版本,您确认升级固件吗?</string>
