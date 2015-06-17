@@ -45,6 +45,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     private int mCurHour, mCurMin, mTempMin = -1;
     private long mLastTapTime = 0;
     private ImageView mClockView;
+    private static boolean mIsVisible;
     private Handler  mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable mTimerTask = new Runnable() {
         @Override
@@ -70,7 +71,7 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.welcome_fragment, container, false);
-
+        mIsVisible = true;
         mHourImage = (ImageView) rootView.findViewById(R.id.HomeClockHour);
         mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
         mRoundProgressBar = (RoundProgressBar) rootView.findViewById(R.id.roundProgressBar);
@@ -196,11 +197,12 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
-                    mUiHandler.postDelayed(new Runnable() {
+                    if(mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
+                            //perhaps 2s later, the fragment got destory!!!!
+                            if (mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
                         }
                     }, 2000);
                 }
@@ -219,5 +221,11 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     public void onPause() {
         super.onPause();
         mUiHandler.removeCallbacks(mTimerTask);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mIsVisible = false;
     }
 }
