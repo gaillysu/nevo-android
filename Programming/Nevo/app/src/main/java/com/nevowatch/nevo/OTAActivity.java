@@ -317,7 +317,7 @@ public class OTAActivity extends Activity
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
                     initValue();
 
-                    refreshTimeCount(25,false);
+                    refreshTimeCount(5,false);
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
