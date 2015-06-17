@@ -438,7 +438,9 @@ import java.util.UUID;
                 {
                     Log.w(TAG,"* * * OTA timeout * * *");
                     String errorMessage = "Timeout,please try again";
-                   if (state == DFUControllerState.SEND_START_COMMAND && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+                   if (state == DFUControllerState.SEND_START_COMMAND
+                           && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
+                           && isConnected())
                    {
                        Log.w(TAG,"* * * call SamsungS4Patch function * * *");
                        SamsungS4Patch();
