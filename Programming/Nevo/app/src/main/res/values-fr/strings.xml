@@ -75,7 +75,7 @@
     <string name="latestversion">Your watch is up to date</string>
     <string name="FirmwareAlertMessage">Your watch\’s software is not up to date. Do you want to update it now ?</string>
     <string name="UpdateSuccess1">Update Successful</string>
-    <string name="UpdateSuccess2">Update Successful,please turn your nevo\'s Bluetooth on.</string>
+    <string name="UpdateSuccess2">Update Successful.\nplease turn your nevo\'s Bluetooth on and restart your app. Double click the home clock,if watch LED light on and home clock flash once,it is fine. otherwise please reconnect again.</string>
     <string name="currentFWversion">Your nevo is not up to date :</string>
     <string name="latestFWversion"> Do you want to upgrade it to the latest version ? :</string>
 </resources>

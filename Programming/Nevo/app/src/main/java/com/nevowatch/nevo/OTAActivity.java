@@ -220,7 +220,7 @@ public class OTAActivity extends Activity
         super.onDestroy();
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
         {
-            mNevoOtaController.switch2SyncController();
+            mNevoOtaController.reset(true);
         }
     }
 
@@ -304,7 +304,12 @@ public class OTAActivity extends Activity
                     new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
                             .setTitle(R.string.FirmwareUpgrade)
                             .setMessage(message)
-                            .setNegativeButton("OK", null).show();
+                            .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    OTAActivity.this.finish();
+                                }
+                            }).show();
                     //show success text or image
                     mNevoOtaController.reset(false);
                     initValue();

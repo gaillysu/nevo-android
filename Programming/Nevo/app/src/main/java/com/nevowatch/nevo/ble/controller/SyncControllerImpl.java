@@ -303,6 +303,12 @@ import java.util.TimeZone;
             Log.i("SyncControllerImpl","*** Sync started ! ***");
             getDailyTrackerInfo();
         }
+        else
+        {
+            //here sync StepandGoal for good user experience
+            Log.i("SyncControllerImpl","*** Sync step count and goal ***");
+            getStepsAndGoal();
+        }
     }
 
     /**

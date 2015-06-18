@@ -126,6 +126,6 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?GoalFragment.GOALPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected?MyNevoFragment.MYNEVOPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?MyNevoFragment.MYNEVOFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

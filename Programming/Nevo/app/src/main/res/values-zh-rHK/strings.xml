@@ -66,7 +66,7 @@
     <string name="forget_device">忽略此設備</string>
     <string name="mcu_version">MCU Version:</string>
     <string name="ble_version">Ble Version:</string>
-    <string name="re_upgrade">Try again</string>
+    <string name="re_upgrade">重新升級</string>
     <string name="FirmwareUpgrade">固件升級</string>
     <string name="waiting">請稍等...</string>
     <string name="Version">版本:</string>
@@ -75,7 +75,7 @@
     <string name="latestversion">您已是最新版本!</string>
     <string name="FirmwareAlertMessage">您的手表固件不是最新版本,您确认升级固件吗?</string>
     <string name="UpdateSuccess1">升級成功</string>
-    <string name="UpdateSuccess2">升級成功,請打開手錶藍牙.</string>
+    <string name="UpdateSuccess2">升級成功.\n請打開手錶藍牙並重啟應用。双击主界面的錶盤,手錶彩色燈亮並且錶盤同時顯示彩色,工作正常。否者請重新連接手錶。</string>
     <string name="currentFWversion">手錶當前固件版本:</string>
     <string name="latestFWversion">您確認升級新的固件版本</string>
 </resources>
