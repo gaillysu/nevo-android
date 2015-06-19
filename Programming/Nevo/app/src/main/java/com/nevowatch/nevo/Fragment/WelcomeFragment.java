@@ -27,6 +27,7 @@ import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.GetStepsGoalNevoRequest;
+import com.nevowatch.nevo.ble.util.Constants;
 
 import java.util.Calendar;
 
@@ -215,6 +216,10 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         if(!isConnected)
             initLayout(false);
         ((MainActivity)getActivity()).replaceFragment(isConnected?WelcomeFragment.WELPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?WelcomeFragment.WELCOMEFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
     }
 
     @Override

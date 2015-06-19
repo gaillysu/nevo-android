@@ -23,6 +23,7 @@ import com.nevowatch.nevo.View.AlertDialogView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * A Round Pointer Animation
@@ -125,5 +126,9 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
     @Override
     public void connectionStateChanged(boolean isConnected) {
         if (isConnected)((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
     }
 }

@@ -14,6 +14,7 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
+import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * ColorPanelActivity
@@ -303,5 +304,9 @@ public class PaletteActivity extends Activity
         if(!isConnected){
             finish();
         }
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
     }
 }

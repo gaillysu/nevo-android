@@ -24,10 +24,12 @@ import com.nevowatch.nevo.OTAActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.View.StepPickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.OtaController;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
+import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
@@ -44,7 +46,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     private TextView mNameTextView;
     private TextView mUpdateuTextView;
     private TextView mBatteryValueTextView;
-
+    private TextView mVersionInfoTextView;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mynevo_fragment, container, false);
@@ -56,6 +58,17 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         mNameTextView = (TextView) rootView.findViewById(R.id.mynevoTextView);
         mUpdateuTextView = (TextView) rootView.findViewById(R.id.updateuTextView);
         mBatteryValueTextView = (TextView) rootView.findViewById(R.id.batteryValueTextView);
+        mUpdateuTextView.setText(getString(R.string.lastestSyncDate) + " " + getActivity().getSharedPreferences(OtaController.PREF_NAME, 0).getString(OtaController.SYNCDATE, ""));
+
+        mVersionInfoTextView = (TextView) rootView.findViewById(R.id.textVersionInfo);
+
+        mVersionInfoTextView.setText(getString(R.string.mcu_version)
+                                    + SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion()
+                                    + " , "
+                                    + getString(R.string.ble_version)
+                                    + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
+                                    );
+        //show MCU/BLE version
 
         /*
         * my nevo 电量显示设置,初始值 2
@@ -127,5 +140,21 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     @Override
     public void connectionStateChanged(boolean isConnected) {
         ((MainActivity)getActivity()).replaceFragment(isConnected?MyNevoFragment.MYNEVOPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?MyNevoFragment.MYNEVOFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mVersionInfoTextView.setText(getString(R.string.mcu_version)
+                                + SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion()
+                                + " , "
+                                + getString(R.string.ble_version)
+                                + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
+                );
+            }
+        });
+
     }
 }

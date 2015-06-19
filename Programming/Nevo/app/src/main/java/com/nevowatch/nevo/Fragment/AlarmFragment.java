@@ -21,6 +21,7 @@ import com.nevowatch.nevo.View.TimePickerView;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.util.Constants;
 
 
 /**
@@ -155,5 +156,9 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     @Override
     public void connectionStateChanged(boolean isConnected) {
         ((MainActivity)getActivity()).replaceFragment(isConnected?AlarmFragment.ALARMPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?AlarmFragment.ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
     }
 }

@@ -39,7 +39,9 @@ import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
 import com.nevowatch.nevo.ble.notification.NevoNotificationListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -312,7 +314,7 @@ public class OTAActivity extends Activity
                     new AlertDialog.Builder(((Activity)mContext),AlertDialog.THEME_HOLO_LIGHT)
                             .setTitle(R.string.FirmwareUpgrade)
                             .setMessage(message)
-                            .setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.ok_button, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     OTAActivity.this.finish();
@@ -321,6 +323,11 @@ public class OTAActivity extends Activity
                     //show success text or image
                     mNevoOtaController.reset(false);
                     initValue();
+                    //save date
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                    String strDate = format.format(Calendar.getInstance().getTimeInMillis());
+                    getSharedPreferences(OtaController.PREF_NAME, Context.MODE_PRIVATE).edit().putString(OtaController.SYNCDATE, strDate).commit();
+
                 }
                 else
                 {
@@ -361,6 +368,7 @@ public class OTAActivity extends Activity
                     mOtaInfomation.setText(mContext.getString(R.string.update_error_openfile));
                 else
                     mOtaInfomation.setText(mContext.getString(R.string.update_error_other));
+                Toast.makeText(mContext,mOtaInfomation.getText(),Toast.LENGTH_LONG).show();
             }
         });
     }

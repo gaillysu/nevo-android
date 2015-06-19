@@ -22,6 +22,7 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.request.NumberOfStepsGoal;
+import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
@@ -193,5 +194,9 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
     @Override
     public void connectionStateChanged(boolean isConnected) {
        ((MainActivity)getActivity()).replaceFragment(isConnected?GoalFragment.GOALPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
     }
 }

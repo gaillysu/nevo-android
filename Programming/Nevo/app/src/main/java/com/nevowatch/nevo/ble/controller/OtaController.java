@@ -102,4 +102,7 @@ public interface OtaController {
         EXCEPTION,
         CHECKSUMERROR
     }
+
+    public static String PREF_NAME = "nevoPrefs";
+    public static String SYNCDATE = "nevoSyncdate";
 }

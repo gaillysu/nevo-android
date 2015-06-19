@@ -15,6 +15,7 @@ import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
+import com.nevowatch.nevo.ble.util.Constants;
 
 /**
  * TutorialFour
@@ -120,5 +121,9 @@ public class TutorialFiveActivity extends Activity
             mConnectImg.setImageResource(R.drawable.success);
             mConnectImg.setBackgroundResource(R.color.transparent);
         }
+    }
+    @Override
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+
     }
 }

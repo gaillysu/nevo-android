@@ -78,6 +78,7 @@
     <string name="UpdateSuccess2">升級成功.\n請打開手錶藍牙並重啟應用。双击主界面的錶盤,手錶彩色燈亮並且錶盤同時顯示彩色,工作正常。否者請重新連接手錶。</string>
     <string name="currentFWversion">手錶當前固件版本:</string>
     <string name="latestFWversion">您確認升級新的固件版本</string>
+    <string name="lastestSyncDate">上壹次升級時間\n</string>
     <string name="update_error_timeout">升級超時.</string>
     <string name="update_error_noconnect">請先連接Nevo.</string>
     <string name="update_error_openfile">打開固件文件錯誤.</string>

@@ -260,6 +260,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         });
     }
 
+    @Override
+    public void firmwareVersionReceived(final Constants.DfuFirmwareTypes whichfirmware, final String version) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<Fragment> fragments = getSupportFragmentManager().getFragments();
+
+                for(Fragment fragment :  fragments) {
+                    if(fragment instanceof MyNevoFragment){
+                        ((MyNevoFragment)fragment).firmwareVersionReceived(whichfirmware,version);
+                    }
+                }
+            }
+        });
+    }
+
     public static class PlaceholderFragment {
         private static final String POSTITION = "position";
         private static final String TAG = "tag";
