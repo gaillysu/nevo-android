@@ -70,12 +70,17 @@
     <string name="FirmwareUpgrade">固件升級</string>
     <string name="waiting">請稍等...</string>
     <string name="Version">版本:</string>
-    <string name="attention">注意!</string>
-    <string name="otahelp">Do not interrupt the OTA firmware process. Let the process complete before using the app!\nIn case of accidental interruption, try again. If it doesn\'t work, remove nevo battery for 30 secs and reinstall.</string>
+    <string name="attention">註意!</string>
+    <string name="otahelp">請不要中斷OTA升級.使用應用前,\n請先確認升級已完成.\n如果意外中斷,請重新升級,\n有時需要重新安裝電池或等待數分鐘,\n確保升級完成.</string>
     <string name="latestversion">您已是最新版本!</string>
     <string name="FirmwareAlertMessage">您的手表固件不是最新版本,您确认升级固件吗?</string>
     <string name="UpdateSuccess1">升級成功</string>
     <string name="UpdateSuccess2">升級成功.\n請打開手錶藍牙並重啟應用。双击主界面的錶盤,手錶彩色燈亮並且錶盤同時顯示彩色,工作正常。否者請重新連接手錶。</string>
     <string name="currentFWversion">手錶當前固件版本:</string>
     <string name="latestFWversion">您確認升級新的固件版本</string>
+    <string name="update_error_timeout">升級超時.</string>
+    <string name="update_error_noconnect">請先連接Nevo.</string>
+    <string name="update_error_openfile">打開固件文件錯誤.</string>
+    <string name="update_error_checksum">校驗和錯誤.</string>
+    <string name="update_error_other">升級異常錯誤.</string>
 </resources>

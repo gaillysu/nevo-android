@@ -78,4 +78,9 @@
     <string name="UpdateSuccess2">升级成功.\n请打开手表蓝牙并重启应用。双击主界面的表盘,手表彩色灯亮并且表盘同时显示彩色,工作正常。否者请重新连接手表。</string>
     <string name="currentFWversion">手表当前固件版本:</string>
     <string name="latestFWversion">您确认升级新的固件吗? :</string>
+    <string name="update_error_timeout">升级超时.</string>
+    <string name="update_error_noconnect">请先连接Nevo.</string>
+    <string name="update_error_openfile">打开固件文件错误.</string>
+    <string name="update_error_checksum">校验和错误.</string>
+    <string name="update_error_other">升级异常错误.</string>
 </resources>

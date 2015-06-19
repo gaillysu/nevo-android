@@ -90,4 +90,16 @@ public interface OtaController {
      * this patch will make a disconnect to nevo (normal OTA should be get disconnect from nevo )
      */
     void SamsungS4Patch();
+
+
+    public enum ERRORCODE {
+        NOCONNECTION,
+        TIMEOUT,
+        STARTDFUERROR,
+        OPENFILEERROR,
+        INVALIDRESPONSE,
+        NOSUPPORTOLDDFU,
+        EXCEPTION,
+        CHECKSUMERROR
+    }
 }

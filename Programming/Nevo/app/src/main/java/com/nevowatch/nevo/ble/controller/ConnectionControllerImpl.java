@@ -28,13 +28,19 @@ import java.util.TimerTask;
  */
 /*package*/ class ConnectionControllerImpl implements ConnectionController, NevoBT.Delegate {
 
-    private Timer mAutoReconnectTimer;
+    private Timer mAutoReconnectTimer = null;
     private int  mTimerIndex = 0;
+    //when disconnect nevo more than 2min, nevo BT will power off, if app scan it follow current pattern
+    //perhaps it is no useful,so app start scanning every 10s that is a good idea
+    //so I fix the pattern as this {1000,10000}
+
     private final static int[] mReConnectTimerPattern = new int[]{1000, 10000,10000,10000,
             30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,/*5min*/
             60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
             120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
             240000,3600000};
+
+    //private final static int[] mReConnectTimerPattern = new int[]{1000,10000};
 
     //This boolean is the only reliable way to know if we are connected or not
     private boolean mIsConnected = false;
@@ -42,7 +48,7 @@ import java.util.TimerTask;
     //Every 2 seconds we will ping the device.
     //If there's no response, we are disconnected
     private int CHECK_CONNECTION_INTERVAL = 6000;
-    private Timer mCheckConnectionTimer;
+    private Timer mCheckConnectionTimer = null;
     private Date mLastPacket = new Date();
     Optional<ConnectionController.Delegate> mDelegate = new Optional<>();
     Context mContext;
@@ -68,6 +74,8 @@ import java.util.TimerTask;
 
     private void startCheckConnectionTimer()
     {
+        //first stop the timer thread!
+        if(mCheckConnectionTimer!=null)mCheckConnectionTimer.cancel();
         mCheckConnectionTimer = new Timer();
         mCheckConnectionTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -80,6 +88,8 @@ import java.util.TimerTask;
     }
 
     private void restartAutoReconnectTimer() {
+        //first stop the timer thread!
+        if(mAutoReconnectTimer!=null)mAutoReconnectTimer.cancel();
         mAutoReconnectTimer = new Timer();
         mAutoReconnectTimer.schedule(new TimerTask() {
             @Override
@@ -87,6 +97,11 @@ import java.util.TimerTask;
                 if(mIsConnected) {
                     //Yes, we're connected ! Let's retry in 1 sec.
                     mTimerIndex = 0;
+
+                    // !!!need start new Timer every 1s???, perhaps run long time,
+                    // the app will become very slowly. it is better that use 10s timer,
+                    // here should set mTimerIndex 1, means every 10s to check connection status
+                    //mTimerIndex = 1;
                 } else {
                     //Ouch we're not connected, we have to try to connect, let's increment the timer index
                     mTimerIndex++;

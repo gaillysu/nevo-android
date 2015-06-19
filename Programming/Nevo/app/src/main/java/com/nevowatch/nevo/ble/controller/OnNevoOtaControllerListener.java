@@ -15,7 +15,7 @@ public interface OnNevoOtaControllerListener {
     void onDFUCancelled();
     void onTransferPercentage(int percent);
     void onSuccessfulFileTranferred();
-    void onError(String error);
+    void onError(OtaController.ERRORCODE errorcode);
     /**
      Call when finished OTA, will reconnect nevo and read firmware, refresh the firmware  to screen view
      @parameter whichfirmware, firmware type

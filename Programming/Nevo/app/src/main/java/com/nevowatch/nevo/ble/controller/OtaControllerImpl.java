@@ -144,9 +144,9 @@ import java.util.UUID;
                 else {
                     Log.w(TAG,"Error: file is empty!");
                     String errorMessage = "Error on openning file\n Message: file is empty or not exist";
-                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.OPENFILEERROR);
                 }
-                bos.close();;
+                bos.close();
                 is.close();
             }
             else
@@ -327,7 +327,7 @@ import java.util.UUID;
 
         else {
                 Log.i(TAG,errorMessage);
-                if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+                if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.STARTDFUERROR);
                 resetSystem();
         }
 
@@ -342,7 +342,7 @@ import java.util.UUID;
         else {
             Log.i(TAG,"Firmware Image failed, Error Status:" + responseErrorMessage(dfuResponse.getresponseStatus()));
             String errorMessage = "Error on Receive Firmware Image\n Message:" + responseErrorMessage(dfuResponse.getresponseStatus());
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.INVALIDRESPONSE);
             resetSystem();
         }
 
@@ -358,7 +358,7 @@ import java.util.UUID;
         else {
             Log.i(TAG,"Firmware validate failed, Error Status: "+ responseErrorMessage(dfuResponse.getresponseStatus()));
             String errorMessage = "Error on Validate Firmware Request\n Message: " + responseErrorMessage(dfuResponse.getresponseStatus());
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.INVALIDRESPONSE);
             resetSystem();
         }
 
@@ -406,7 +406,7 @@ import java.util.UUID;
         else
         {
             String errorMessage = "Old DFU only supports Application upload";
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.NOSUPPORTOLDDFU);
             resetSystem();
         }
 
@@ -422,9 +422,11 @@ import java.util.UUID;
     public void performDFUOnFile(String filename , DfuFirmwareTypes firmwareType)
     {
         if(!isConnected()) {
-            Log.e(TAG,"no Nevo connected,can't do OTA");
+            String errorMessage = "no Nevo connected,can't do OTA";
+            Log.e(TAG,errorMessage);
             state = DFUControllerState.INIT;
-            Toast.makeText(mContext,"no Nevo connected,can't do OTA",Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext,errorMessage,Toast.LENGTH_LONG).show();
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.NOCONNECTION);
             return;
         }
         mPacketsbuffer.clear();
@@ -434,7 +436,7 @@ import java.util.UUID;
         mTimeoutTimer.schedule(new TimerTask(){
             @Override
             public void run() {
-                if (lastprogress == progress  && progress != 100.0)
+                if (lastprogress == progress) //when no change happened, timeout
                 {
                     Log.w(TAG,"* * * OTA timeout * * *");
                     String errorMessage = "Timeout,please try again";
@@ -454,7 +456,7 @@ import java.util.UUID;
                     else
                    {
                        Log.w(TAG,"* * * call OTA timeout function * * *");
-                       if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(errorMessage);
+                       if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.TIMEOUT);
                    }
                 }
                 else
@@ -652,7 +654,7 @@ import java.util.UUID;
         //the exception got happened when do connection NEVO
         Log.i(TAG," ********* onException ********* " + e);
         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(e.getMessage());
+        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
 
     }
 
@@ -810,7 +812,7 @@ import java.util.UUID;
                     else
                     {
                         Log.i(TAG,"Checksum error ,OTA get failure!");
-                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError("Checksum error ,OTA get failure!");
+                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.CHECKSUMERROR);
                     }
                 }
             }

@@ -28,6 +28,7 @@ import com.nevowatch.nevo.View.NotificationItem;
 import com.nevowatch.nevo.View.RoundProgressBar;
 import com.nevowatch.nevo.ble.controller.OnNevoOtaControllerListener;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
+import com.nevowatch.nevo.ble.controller.OtaController;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.BatteryLevelNevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -64,13 +65,16 @@ public class OTAActivity extends Activity
     private TextView mFirmwareTotal;
     private TextView mOtaInfomation;
 
-    static DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     //save the build-in firmware version, it should be the latest FW version
     int buildinSoftwareVersion = 0;
     int buildinFirmwareVersion= 0;
+    //TODO these static variable should be moved to mNevoOtaController due to mNevoOtaController is a singleton class
+    private static DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     private static ArrayList<String> firmwareURLs = new ArrayList<String>();
     private static int currentIndex = 0;
+
     OtaController mNevoOtaController ;
+    private boolean mUpdateSuccess = false;
     //save the attached Activity, should be MainActivity, when doing OTA, user perhaps switch other fragment
     //but the OTA should be continue on background. when user come back, the progress should be showing
     Context mContext;
@@ -220,7 +224,10 @@ public class OTAActivity extends Activity
         super.onDestroy();
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
         {
-            mNevoOtaController.reset(true);
+            if(mUpdateSuccess)
+               mNevoOtaController.reset(true);
+            else
+               mNevoOtaController.switch2SyncController();
         }
     }
 
@@ -296,6 +303,7 @@ public class OTAActivity extends Activity
                 currentIndex = currentIndex + 1;
                 if (currentIndex == firmwareURLs.size())
                 {
+                    mUpdateSuccess = true;
                     String message = ((Activity)mContext).getString(R.string.UpdateSuccess1);
                     if (enumFirmwareType == DfuFirmwareTypes.APPLICATION)
                     {
@@ -337,12 +345,22 @@ public class OTAActivity extends Activity
     }
 
     @Override
-    public void onError(final String error) {
+    public void onError(final OtaController.ERRORCODE errorcode) {
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mNevoOtaController.reset(false);
                 initValue();
+                if(errorcode == OtaController.ERRORCODE.TIMEOUT)
+                  mOtaInfomation.setText(mContext.getString(R.string.update_error_timeout));
+                else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
+                    mOtaInfomation.setText(mContext.getString(R.string.update_error_noconnect));
+                else if(errorcode == OtaController.ERRORCODE.CHECKSUMERROR)
+                    mOtaInfomation.setText(mContext.getString(R.string.update_error_checksum));
+                else if(errorcode == OtaController.ERRORCODE.OPENFILEERROR)
+                    mOtaInfomation.setText(mContext.getString(R.string.update_error_openfile));
+                else
+                    mOtaInfomation.setText(mContext.getString(R.string.update_error_other));
             }
         });
     }
@@ -374,10 +392,12 @@ public class OTAActivity extends Activity
        // nevoOtaView.backButton.enabled = true
         if (mNevoOtaController.getState() == Constants.DFUControllerState.INIT) {
             mReButton.setVisibility(View.VISIBLE);
+            mBackImage.setVisibility(View.VISIBLE);
         }
         else
         {
             mReButton.setVisibility(View.INVISIBLE);
+            mBackImage.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -395,7 +415,7 @@ public class OTAActivity extends Activity
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
-            Toast.makeText(mContext, "Reading firmware version,please wait...", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "Checking firmware version,please wait...", Toast.LENGTH_LONG).show();
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);
@@ -413,6 +433,7 @@ public class OTAActivity extends Activity
         //when doing OTA, disable Cancel/Back button, enable them by callback function invoke initValue()/checkConnection()
         //nevoOtaView.backButton.enabled = false
         mReButton.setVisibility(View.INVISIBLE); //The process of OTA hide this control
+        mBackImage.setVisibility(View.INVISIBLE);
         mNevoOtaController.performDFUOnFile(selectedFileURL, enumFirmwareType);
 
     }

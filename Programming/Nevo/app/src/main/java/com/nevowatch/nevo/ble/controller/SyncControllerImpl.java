@@ -281,9 +281,8 @@ import java.util.TimeZone;
             },4000);
 
         } else {
-
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
-
+            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
         }
 
 	}
