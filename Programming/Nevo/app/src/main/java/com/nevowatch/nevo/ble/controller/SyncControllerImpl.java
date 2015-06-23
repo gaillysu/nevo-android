@@ -3,10 +3,13 @@ package com.nevowatch.nevo.ble.controller;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Binder;
@@ -486,6 +489,42 @@ import java.util.TimeZone;
     static public class LocalService extends Service
     {
         private AlertDialog mAlertDialog = null;
+        BroadcastReceiver myReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(Intent.ACTION_SCREEN_ON))
+                {
+                    Log.i("LocalService","Screen On");
+                    //Toast.makeText(context,"ScreenOn",Toast.LENGTH_LONG).show();
+                    if(!ConnectionController.Singleton.getInstance(context).isConnected())
+                    {
+                        ConnectionController.Singleton.getInstance(context).newScan();
+                    }
+                }
+                else if(intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED))
+                {
+                    Log.i("LocalService","Low level BT connected");
+                    //Toast.makeText(context,"low level BT Connected",Toast.LENGTH_LONG).show();
+                    if(!ConnectionController.Singleton.getInstance(context).isConnected())
+                    {
+                        ConnectionController.Singleton.getInstance(context).newScan();
+                    }
+                }
+            }
+        };
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            registerReceiver(myReceiver,new IntentFilter(Intent.ACTION_SCREEN_ON));
+            registerReceiver(myReceiver,new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            unregisterReceiver(myReceiver);
+        }
 
         @Override
         public IBinder onBind(Intent intent) {

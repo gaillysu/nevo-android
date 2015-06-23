@@ -5,7 +5,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
-
+import android.app.NotificationManager;
+import android.app.Notification;
+import android.content.Intent;
+import android.app.PendingIntent;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.ble.GattAttributes;
 import com.nevowatch.nevo.ble.kernel.BLEConnectTimeoutException;
@@ -16,6 +19,7 @@ import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
+import com.nevowatch.nevo.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,13 +38,18 @@ import java.util.TimerTask;
     //perhaps it is no useful,so app start scanning every 10s that is a good idea
     //so I fix the pattern as this {1000,10000}
 
-    private final static int[] mReConnectTimerPattern = new int[]{1000, 10000,10000,10000,
-            30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,/*5min*/
-            60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
-            120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
-            240000,3600000};
+    //private final static int[] mReConnectTimerPattern = new int[]{1000, 10000,10000,10000,
+    //        30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,/*5min*/
+    //        60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
+    //        120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
+    //        240000,3600000};
 
-    //private final static int[] mReConnectTimerPattern = new int[]{1000,10000};
+    private final static int[] mReConnectTimerPattern = new int[]{1000,
+            10000,10000,10000,10000,10000,10000, /*1min*/
+            10000,10000,10000,10000,10000,10000, /*1min*/
+            10000,10000,10000,10000,10000,10000, /*1min*/
+            0x7FFFFFFF/*not triggered timer*/
+            };
 
     //This boolean is the only reliable way to know if we are connected or not
     private boolean mIsConnected = false;
@@ -169,6 +178,8 @@ import java.util.TimerTask;
         if(!address.equals("") && connected == true) setSaveAddress(address);
 
         currentlyConnected(connected);
+
+        sendNotification(connected);
 
     }
 
@@ -302,5 +313,33 @@ import java.util.TimerTask;
                 if(mDelegate.notEmpty()) mDelegate.get().firmwareVersionReceived(whichfirmware,version);
             }
         });
+    }
+    @Override
+    public void newScan()
+    {
+       //restart timer and ping Timer
+       mTimerIndex = 0; //after 1s ,do connect
+       restartAutoReconnectTimer();
+       mLastPacket = new Date(); //from now, waiting 6s to do checking
+       startCheckConnectionTimer();
+    }
+
+    /**
+     * how to check the Nevo always keep connection , invoke the function when  connection changed.
+     * @param connected
+     */
+    private void sendNotification(boolean connected)
+    {
+        NotificationManager nftm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        int icon = R.drawable.ic_launcher;
+        String  title = connected? "connected Nevo":"disconnect Nevo";
+        String  content = connected?"your Nevo has got connected":"your Nevo has got disconnect";
+
+        long when = System.currentTimeMillis();
+        Notification notification = new Notification(icon, title, when);
+        //notification.defaults = Notification.DEFAULT_VIBRATE;
+        notification.setLatestEventInfo(mContext, title,content, null);
+        //use hardcode message ID
+        nftm.notify(connected?1:2, notification);
     }
 }

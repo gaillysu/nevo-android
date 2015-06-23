@@ -97,7 +97,15 @@ public interface ConnectionController {
      */
     public boolean hasSavedAddress();
 
-
+    /**
+     * when Nevo got disconnect, sometimes need right now connect
+     * such as:
+     * 1:screenOn (user press power/home key)
+     * 2:nevo got paired by system setting (user press nevo A key)
+     * 3:received Notification ---now has called connect(), means connect it once
+     * newScan() will invoked when above case happen
+     */
+    public void newScan();
 
     interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener ,OnFirmwareVersionListener{
 
