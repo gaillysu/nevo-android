@@ -65,17 +65,17 @@
     <string name="tutorial_tips_two_message">Reconnect Bluetooth to receive notifications again by pressing and holding the 3rd button for 3 seconds.</string>
     <string name="forget_device">Forget this nevo</string>
     <string name="FirmwareUpgrade">Firmware Upgrade</string>
-    <string name="waiting">Please waiting...</string>
+    <string name="waiting">Please wait...</string>
     <string name="Version">Version:</string>
     <string name="attention">Attention!</string>
     <string name="mcu_version">MCU Version:</string>
-    <string name="ble_version">Ble Version:</string>
+    <string name="ble_version">BLE Version:</string>
     <string name="re_upgrade">Try again</string>
     <string name="otahelp">Do not interrupt the OTA firmware process. Let the process complete before using the app!\nIn case of accidental interruption, try again. If it doesn\'t work, remove nevo battery for 30 secs and reinstall.</string>
-    <string name="latestversion">Your watch is up to date</string>
-    <string name="FirmwareAlertMessage">Your watch\’s software is not up to date. Do you want to update it now ?</string>
+    <string name="latestversion">Your nevo is up to date</string>
+    <string name="FirmwareAlertMessage">Your nevo\’s software is not up to date. Do you want to update it now ?</string>
     <string name="UpdateSuccess1">Update Successful</string>
-    <string name="UpdateSuccess2">Update Successful.\nplease turn your nevo\'s Bluetooth on and restart your app. Double click the home clock,if watch LED light on and home clock flash once,it is fine. otherwise please reconnect again.</string>
+    <string name="UpdateSuccess2">Update Successful</string>
     <string name="currentFWversion">Your nevo is not up to date :</string>
     <string name="latestFWversion"> Do you want to upgrade it to the latest version ? :</string>
     <string name="lastestSyncDate">Latest Update\non</string>
@@ -83,7 +83,7 @@
     <string name="update_error_noconnect">No nevo connected.</string>
     <string name="update_error_openfile">Open Firmware file error.</string>
     <string name="update_error_checksum">Checksum error.</string>
-    <string name="update_error_other">Update got exception.</string>
-    <string name="connect_error_no_nevo_do_ota">no Nevo connected,can't do OTA</string>
-    <string name="checking_firmware">Checking firmware version,please wait...</string>
+    <string name="update_error_other">Update has exception.</string>
+    <string name="connect_error_no_nevo_do_ota">No nevo connected, can\'t perform OTA update</string>
+    <string name="checking_firmware">Checking firmware version, please wait...</string>
 </resources>
