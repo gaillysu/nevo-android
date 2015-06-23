@@ -86,4 +86,7 @@
     <string name="update_error_other">Update has exception.</string>
     <string name="connect_error_no_nevo_do_ota">No nevo connected, can\'t perform OTA update</string>
     <string name="checking_firmware">Checking firmware version, please wait...</string>
+    <string name="latest_update_on">Latest Update\non</string>
+    <string name="my_nevo">My nevo</string>
+
 </resources>

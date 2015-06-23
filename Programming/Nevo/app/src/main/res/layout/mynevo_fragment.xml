@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="My nevo"
+            android:text="@string/my_nevo"
             android:id="@+id/mynevoTextView"
             android:textSize="25sp"
             android:textColor="@color/customBlack"
@@ -102,7 +102,7 @@
             <TextView
                 android:layout_width="120dp"
                 android:layout_height="50dp"
-                android:text="Latest Update\non"
+                android:text="@string/latest_update_on"
                 android:id="@+id/updateuTextView"
                 android:textSize="16sp"
                 android:gravity="center|left"

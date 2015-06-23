@@ -86,4 +86,7 @@
     <string name="update_error_other">Erreur de mise à jour.</string>
     <string name="connect_error_no_nevo_do_ota">Pas de nevo connectée, impossible de mettre a jour</string>
     <string name="checking_firmware">Vérification de la version du firmware...</string>
+    <string name="latest_update_on">Dernière mise à jour\nle</string>
+    <string name="my_nevo">Ma nevo</string>
+
 </resources>
