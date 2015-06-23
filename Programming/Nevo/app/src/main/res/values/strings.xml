@@ -84,6 +84,6 @@
     <string name="update_error_openfile">Open Firmware file error.</string>
     <string name="update_error_checksum">Checksum error.</string>
     <string name="update_error_other">Update got exception.</string>
-    <string name="connect_error_no_nevo_do_ota">no Nevo connected,can't do OTA</string>
+    <string name="connect_error_no_nevo_do_ota">no Nevo connected,can\'t do OTA</string>
     <string name="checking_firmware">Checking firmware version,please wait...</string>
 </resources>
