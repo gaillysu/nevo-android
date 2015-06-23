@@ -415,7 +415,7 @@ public class OTAActivity extends Activity
         if(!mNevoOtaController.isConnected()) {
             Log.e(TAG,"no Nevo connected,can't do OTA");
             mNevoOtaController.setState(Constants.DFUControllerState.INIT);
-            Toast.makeText(mContext,"no Nevo connected,can't do OTA",Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext,R.string.connect_error_no_nevo_do_ota,Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -423,7 +423,7 @@ public class OTAActivity extends Activity
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
-            Toast.makeText(mContext, "Checking firmware version,please wait...", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.checking_firmware, Toast.LENGTH_LONG).show();
             return;
         }
         selectedFileURL = firmwareURLs.get(currentIndex);

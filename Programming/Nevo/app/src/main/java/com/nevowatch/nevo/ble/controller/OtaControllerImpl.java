@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
+import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.ble.GattAttributes;
 import com.nevowatch.nevo.ble.model.packet.NevoFirmwareData;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
@@ -422,7 +423,7 @@ import java.util.UUID;
     public void performDFUOnFile(String filename , DfuFirmwareTypes firmwareType)
     {
         if(!isConnected()) {
-            String errorMessage = "no Nevo connected,can't do OTA";
+            String errorMessage = mContext.getString(R.string.connect_error_no_nevo_do_ota);
             Log.e(TAG,errorMessage);
             state = DFUControllerState.INIT;
             Toast.makeText(mContext,errorMessage,Toast.LENGTH_LONG).show();

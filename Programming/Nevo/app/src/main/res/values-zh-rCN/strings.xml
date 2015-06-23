@@ -84,4 +84,6 @@
     <string name="update_error_openfile">打开固件文件错误.</string>
     <string name="update_error_checksum">校验和错误.</string>
     <string name="update_error_other">升级异常错误.</string>
+    <string name="connect_error_no_nevo_do_ota">Nevo没有连接，不能升级</string>
+    <string name="checking_firmware">正在检查版本号,请稍等</string>
 </resources>
