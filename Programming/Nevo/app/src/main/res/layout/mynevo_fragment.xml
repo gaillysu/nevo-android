@@ -104,7 +104,7 @@
                 android:layout_height="50dp"
                 android:text="Latest Update\non"
                 android:id="@+id/updateuTextView"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:gravity="center|left"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true" />
