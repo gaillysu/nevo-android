@@ -77,6 +77,7 @@ public class OTAActivity extends Activity
 
     OtaController mNevoOtaController ;
     private boolean mUpdateSuccess = false;
+    private String  errorMsg="";
     //save the attached Activity, should be MainActivity, when doing OTA, user perhaps switch other fragment
     //but the OTA should be continue on background. when user come back, the progress should be showing
     Context mContext;
@@ -167,7 +168,7 @@ public class OTAActivity extends Activity
         }
         else
         {
-            //mOTAProgressValueTextView.setText(mContext.getString(R.string.latestversion));
+            mFirmwareTotal.setText(mContext.getString(R.string.latestversion));
         }
 
     }
@@ -342,7 +343,7 @@ public class OTAActivity extends Activity
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
                     initValue();
 
-                    mOtaInfomation.setText(mContext.getString(R.string.waiting));
+                    mFirmwareTotal.setText(mContext.getString(R.string.waiting));
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
@@ -365,10 +366,8 @@ public class OTAActivity extends Activity
             public void run() {
                 mNevoOtaController.reset(false);
                 initValue();
-                mOtaInfomation.setText(mContext.getString(R.string.otahelp));
                 if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
 
-                String errorMsg;
                 if(errorcode == OtaController.ERRORCODE.TIMEOUT)
                     errorMsg = mContext.getString(R.string.update_error_timeout);
                 else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
@@ -384,6 +383,8 @@ public class OTAActivity extends Activity
                 else
                     errorMsg = mContext.getString(R.string.update_error_other);
 
+                Log.e(TAG,errorMsg);
+                mFirmwareTotal.setText(errorMsg);
                 Toast.makeText(mContext,errorMsg,Toast.LENGTH_LONG).show();
             }
         });
@@ -398,7 +399,7 @@ public class OTAActivity extends Activity
                 //mMCUVersionTextView.setText(mContext.getString(R.string.mcu_version) + mNevoOtaController.getSoftwareVersion());
                 //mBleVersionTextView.setText(mContext.getString(R.string.ble_version) + mNevoOtaController.getFirmwareVersion());
                 //when OTA finish done,reset the upload list again and show the lastest Version message
-                initListView(false,false);
+                //initListView(false,false);
             }
         });
     }
@@ -430,6 +431,7 @@ public class OTAActivity extends Activity
     {
         //reset false here
         mUpdateSuccess = false;
+        errorMsg="";
         if(!mNevoOtaController.isConnected())
         {
              Log.e(TAG,mContext.getString(R.string.connect_error_no_nevo_do_ota));
@@ -470,7 +472,8 @@ public class OTAActivity extends Activity
             ((Activity)mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mOtaInfomation.setText(mContext.getString(R.string.otahelp));
+                    //timeout or get exception, show it on screen
+                    mFirmwareTotal.setText(errorMsg);
                 }
             });
             return;
@@ -483,7 +486,8 @@ public class OTAActivity extends Activity
             ((Activity)mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mOtaInfomation.setText(mContext.getString(R.string.otahelp));
+                    //status got changed,return
+                    mFirmwareTotal.setText("");
                 }
             });
             return;
@@ -496,7 +500,7 @@ public class OTAActivity extends Activity
                 ((Activity)mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mOtaInfomation.setText(mContext.getString(R.string.waiting)+ count);
+                        mFirmwareTotal.setText(mContext.getString(R.string.waiting)+ count);
                     }
                 });
                 refreshTimeCount(count-1,checkStatus);
