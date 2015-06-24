@@ -101,7 +101,8 @@ public interface OtaController {
         NOSUPPORTOLDDFU,
         EXCEPTION,
         CHECKSUMERROR,
-        NODFUSERVICE
+        NODFUSERVICE,
+        NOFINISHREADVERSION
     }
 
     public static String PREF_NAME = "nevoPrefs";

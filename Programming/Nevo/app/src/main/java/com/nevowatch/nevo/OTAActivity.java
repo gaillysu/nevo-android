@@ -365,21 +365,26 @@ public class OTAActivity extends Activity
             public void run() {
                 mNevoOtaController.reset(false);
                 initValue();
+                mOtaInfomation.setText(mContext.getString(R.string.otahelp));
+                if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
+
+                String errorMsg;
                 if(errorcode == OtaController.ERRORCODE.TIMEOUT)
-                  mOtaInfomation.setText(mContext.getString(R.string.update_error_timeout));
+                    errorMsg = mContext.getString(R.string.update_error_timeout);
                 else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
-                    mOtaInfomation.setText(mContext.getString(R.string.update_error_noconnect));
+                    errorMsg = mContext.getString(R.string.update_error_noconnect);
                 else if(errorcode == OtaController.ERRORCODE.CHECKSUMERROR)
-                    mOtaInfomation.setText(mContext.getString(R.string.update_error_checksum));
+                    errorMsg = mContext.getString(R.string.update_error_checksum);
                 else if(errorcode == OtaController.ERRORCODE.OPENFILEERROR)
-                    mOtaInfomation.setText(mContext.getString(R.string.update_error_openfile));
+                    errorMsg = mContext.getString(R.string.update_error_openfile);
                 else if (errorcode == OtaController.ERRORCODE.NODFUSERVICE)
-                    mOtaInfomation.setText(mContext.getString(R.string.update_error_timeout));
-                else {
-                    if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
-                    mOtaInfomation.setText(mContext.getString(R.string.update_error_other));
-                }
-                Toast.makeText(mContext,mOtaInfomation.getText(),Toast.LENGTH_LONG).show();
+                    errorMsg = mContext.getString(R.string.update_error_nofounDFUservice);
+                else if (errorcode == OtaController.ERRORCODE.NOFINISHREADVERSION)
+                    errorMsg = mContext.getString(R.string.checking_firmware);
+                else
+                    errorMsg = mContext.getString(R.string.update_error_other);
+
+                Toast.makeText(mContext,errorMsg,Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -423,16 +428,24 @@ public class OTAActivity extends Activity
     //upload button function
     private void uploadPressed()
     {
-        String selectedFileURL;
+        //reset false here
+        mUpdateSuccess = false;
+        if(!mNevoOtaController.isConnected())
+        {
+             Log.e(TAG,mContext.getString(R.string.connect_error_no_nevo_do_ota));
+             onError(OtaController.ERRORCODE.NOCONNECTION);
+             return;
+        }
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
-            Toast.makeText(mContext, R.string.checking_firmware, Toast.LENGTH_LONG).show();
+            Log.e(TAG,mContext.getString(R.string.checking_firmware));
+            onError(OtaController.ERRORCODE.NOFINISHREADVERSION);
             return;
         }
-        selectedFileURL = firmwareURLs.get(currentIndex);
-        refreshTimeCount(20,true);
 
+        String selectedFileURL = firmwareURLs.get(currentIndex);
+        refreshTimeCount(20,true);
         if (selectedFileURL.contains(".bin"))
         {
             enumFirmwareType = DfuFirmwareTypes.SOFTDEVICE;

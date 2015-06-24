@@ -772,7 +772,6 @@ import java.util.UUID;
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
             sendRequest(new NevoMCU_OTAChecksumRequest(totalpage, checksum));
             Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
-            if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
             return;
         }
         Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: "+ (curpage));
@@ -808,11 +807,13 @@ import java.util.UUID;
                     {
                         //Check sum match ,OTA over.
                         Log.i(TAG,"Checksum match ,OTA get success!");
+                        if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
                         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
                     }
                     else
                     {
                         Log.i(TAG,"Checksum error ,OTA get failure!");
+                        if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
                         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.CHECKSUMERROR);
                     }
                 }
