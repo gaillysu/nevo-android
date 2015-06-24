@@ -118,6 +118,7 @@ import java.util.TimeZone;
     //Each packets should go through this function. It will ensure that they are properly queued and sent in order.
     private void sendRequest(final SensorRequest request)
     {
+        if(mConnectionController.getOTAMode()) return;
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
             @Override
             public void run() {

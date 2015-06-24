@@ -448,13 +448,13 @@ import java.util.UUID;
                        Log.w(TAG,"* * * call SamsungS4Patch function * * *");
                        SamsungS4Patch();
                    }
-                   /* //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
+                   //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
                    else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
                    {
-                       Log.w(TAG,"* * * again call connect function for search DFU * * *");
-                       mConnectionController.connect();
-                   }*/
-                    else
+                       Log.w(TAG,"* * * call OTA timeout function for no found DFU service * * *");
+                       if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.NODFUSERVICE);
+                   }
+                   else
                    {
                        Log.w(TAG,"* * * call OTA timeout function * * *");
                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.TIMEOUT);

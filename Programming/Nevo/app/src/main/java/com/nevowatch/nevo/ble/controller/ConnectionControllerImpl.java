@@ -317,6 +317,7 @@ import java.util.TimerTask;
     @Override
     public void newScan()
     {
+        if(getOTAMode()) return;
        //restart timer and ping Timer
        mTimerIndex = 0; //after 1s ,do connect
        restartAutoReconnectTimer();

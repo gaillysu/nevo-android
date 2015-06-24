@@ -170,6 +170,9 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
         lastNotification.set(new Date());
 
+        //when OTA doing,discard the notification
+        if(ConnectionController.Singleton.getInstance(this).getOTAMode()) return;
+
         ConnectionController.Singleton.getInstance(this).connect();
 
         showNotification(LIGHTTIMES*2,ledcolor);

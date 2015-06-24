@@ -266,6 +266,11 @@ public class OTAActivity extends Activity
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
            // ((MainActivity) mContext).replaceFragment(isConnected ? OTAActivity.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAActivity.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
         }
+        if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RECONNECT && isConnected)
+        {
+            uploadPressed();
+        }
+
     }
 
     @Override
@@ -331,21 +336,23 @@ public class OTAActivity extends Activity
                 }
                 else
                 {
-                    //check MCU OK,first reset and wait 5s do BLE OTA
+                    //check MCU OK,first reset and wait 10s do BLE OTA
                     mNevoOtaController.reset(false);
                     //set new state and hide rebutton
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
                     initValue();
 
-                    refreshTimeCount(5,false);
+                    mOtaInfomation.setText(mContext.getString(R.string.waiting));
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            //wait reconnect OK
-                            uploadPressed();
+                            if(!mNevoOtaController.isConnected() && mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RECONNECT)
+                            {
+                                onError(OtaController.ERRORCODE.TIMEOUT);
+                            }
                         }
-                    },5000);
+                    },10000);
                 }
             }
         });
@@ -366,8 +373,12 @@ public class OTAActivity extends Activity
                     mOtaInfomation.setText(mContext.getString(R.string.update_error_checksum));
                 else if(errorcode == OtaController.ERRORCODE.OPENFILEERROR)
                     mOtaInfomation.setText(mContext.getString(R.string.update_error_openfile));
-                else
+                else if (errorcode == OtaController.ERRORCODE.NODFUSERVICE)
+                    mOtaInfomation.setText(mContext.getString(R.string.update_error_timeout));
+                else {
+                    if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
                     mOtaInfomation.setText(mContext.getString(R.string.update_error_other));
+                }
                 Toast.makeText(mContext,mOtaInfomation.getText(),Toast.LENGTH_LONG).show();
             }
         });
@@ -412,13 +423,6 @@ public class OTAActivity extends Activity
     //upload button function
     private void uploadPressed()
     {
-        if(!mNevoOtaController.isConnected()) {
-            Log.e(TAG,"no Nevo connected,can't do OTA");
-            mNevoOtaController.setState(Constants.DFUControllerState.INIT);
-            Toast.makeText(mContext,R.string.connect_error_no_nevo_do_ota,Toast.LENGTH_LONG).show();
-            return;
-        }
-
         String selectedFileURL;
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {

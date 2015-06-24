@@ -100,7 +100,8 @@ public interface OtaController {
         INVALIDRESPONSE,
         NOSUPPORTOLDDFU,
         EXCEPTION,
-        CHECKSUMERROR
+        CHECKSUMERROR,
+        NODFUSERVICE
     }
 
     public static String PREF_NAME = "nevoPrefs";
