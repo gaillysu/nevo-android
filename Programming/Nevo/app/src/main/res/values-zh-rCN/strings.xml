@@ -64,8 +64,8 @@
     <string name="tutorial_tips_two_title">蓝牙重连</string>
     <string name="tutorial_tips_two_message">通过持续按住nevo的第三个按钮三秒，蓝牙重新连接以接受通知。</string>
     <string name="forget_device">忽略此设备</string>
-    <string name="mcu_version">MCU Version:</string>
-    <string name="ble_version">Ble Version:</string>
+    <string name="mcu_version">MCU 版本:</string>
+    <string name="ble_version">Ble 版本:</string>
     <string name="re_upgrade">重新升级</string>
     <string name="FirmwareUpgrade">固件升级</string>
     <string name="waiting">请稍等...</string>
@@ -86,4 +86,6 @@
     <string name="update_error_other">升级异常错误.</string>
     <string name="connect_error_no_nevo_do_ota">Nevo没有连接，不能升级</string>
     <string name="checking_firmware">正在检查版本号,请稍等</string>
+    <string name="latest_update_on">最近更新</string>
+    <string name="my_nevo">我的nevo</string>
 </resources>

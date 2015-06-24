@@ -331,7 +331,8 @@ import java.util.TimerTask;
      */
     private void sendNotification(boolean connected)
     {
-        NotificationManager nftm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+       // Sorry, this feature isn't ready for prime time, I won't publish it
+       /* NotificationManager nftm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         int icon = R.drawable.ic_launcher;
         String  title = connected? "connected Nevo":"disconnect Nevo";
         String  content = connected?"your Nevo has got connected":"your Nevo has got disconnect";
@@ -342,5 +343,6 @@ import java.util.TimerTask;
         notification.setLatestEventInfo(mContext, title,content, null);
         //use hardcode message ID
         nftm.notify(connected?1:2, notification);
+        */
     }
 }
