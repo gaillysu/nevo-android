@@ -715,7 +715,7 @@ public class NevoBTService extends Service {
     private void sendRequest(SensorRequest deviceRequest) {
 		UUID serviceUUID = deviceRequest.getServiceUUID();
 		UUID characteristicUUID = deviceRequest.getInputCharacteristicUUID();
-		byte[] rawData = deviceRequest.getRawData();
+		final byte[] rawData = deviceRequest.getRawData();
 		byte[][] rawDatas = deviceRequest.getRawDataEx();
 			
     	if(mBluetoothGattMap == null || mBluetoothGattMap.isEmpty())  {
@@ -725,31 +725,43 @@ public class NevoBTService extends Service {
     	
     	boolean sent = false;
 		
-		for(BluetoothGatt gatt : mBluetoothGattMap.values())
+		for(final BluetoothGatt gatt : mBluetoothGattMap.values())
 	    {
 			//For each connected device, we'll see if they have the right service
 			BluetoothGattService service = gatt.getService(serviceUUID);
 			
 			if(service!=null) {
-				BluetoothGattCharacteristic characteristic = service.getCharacteristic(characteristicUUID);
+				final BluetoothGattCharacteristic characteristic = service.getCharacteristic(characteristicUUID);
 				if(characteristic!=null) {
 					//Now we've found the right characteristic, we modify it, then send it to the device
 					if(rawDatas != null)
 					{
-						  for(byte[] data : rawDatas)
+						  for(final byte[] data : rawDatas)
 						  {
-							  Log.i(NevoBT.TAG, "Send requestEx "+ new String(Hex.encodeHex(data)));
-							  characteristic.setValue(data);		
-							  gatt.writeCharacteristic(characteristic);
+                              //make sure every packet is sent one by one with the low level Queue: QueueType.NevoBT
+                              mQueuedMainThread.post(new Runnable() {
+                                  @Override
+                                  public void run() {
+                                      Log.i(NevoBT.TAG, "Send requestEx "+ new String(Hex.encodeHex(data)));
+                                      characteristic.setValue(data);
+                                      gatt.writeCharacteristic(characteristic);
+                                  }
+                              });
 						  }
 					}
 					else
 					{
 						if(rawData != null)
 						{
-							Log.i(NevoBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
-							characteristic.setValue(rawData);
-                            gatt.writeCharacteristic(characteristic);
+                            //make sure every packet is sent one by one with the low level Queue: QueueType.NevoBT
+                            mQueuedMainThread.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i(NevoBT.TAG, "Send request "+ new String(Hex.encodeHex(rawData)));
+                                    characteristic.setValue(rawData);
+                                    gatt.writeCharacteristic(characteristic);
+                                }
+                            });
 						}
 					}
 					

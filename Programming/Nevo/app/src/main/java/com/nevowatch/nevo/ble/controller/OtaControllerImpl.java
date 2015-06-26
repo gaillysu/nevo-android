@@ -16,6 +16,7 @@ import com.nevowatch.nevo.ble.model.packet.NevoRawData;
 import com.nevowatch.nevo.ble.model.packet.SensorData;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAStartRequest;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAPacketRequest;
+import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAPageRequest;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAChecksumRequest;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
 import com.nevowatch.nevo.ble.util.Constants.DfuOperationStatus;
@@ -225,15 +226,22 @@ import java.util.UUID;
 
     }
 
-    //here use QueueType.NevoBT, BT service use it
+    //OtaController and syncController Queue is used for these packets[00...FF]
+    //they are the high level Queue
+
+    //BLE OTA use the lower Queue: QueueType.NevoBT, pls see @NevoBTService.sendRequest
+    //due to BLE OTA packets is not the regular packets which start with 00,FF
     private void sendRequest(final SensorRequest request)
     {
-        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).post(new Runnable(){
+        if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).post(new Runnable(){
             @Override
             public void run() {
                 mConnectionController.sendRequest(request);
             }
         });
+        else
+        mConnectionController.sendRequest(request);
     }
 
     void startSendingFile()
@@ -271,7 +279,7 @@ import java.util.UUID;
     void activateAndReset()
     {
         Log.i(TAG,"DFUOperationsDetails activateAndReset");
-        mConnectionController.sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
     }
     String responseErrorMessage(byte errorCode)
     {
@@ -339,6 +347,10 @@ import java.util.UUID;
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"successfully received notification for whole File transfer");
             validateFirmware();
+            //why call "activateAndReset" here, due to Ble validate Firmware done, will Close nevo BT
+            //before nevo BT closed, we must send Reset cmd 0x05 to nevo,that let nevo service get change from DFU to normal
+            //if no received before BT closed, nevo will keep DFU mode and the name also keep as "Nevo_DFU"
+            activateAndReset();
         }
         else {
             Log.i(TAG,"Firmware Image failed, Error Status:" + responseErrorMessage(dfuResponse.getresponseStatus()));
@@ -633,19 +645,8 @@ import java.util.UUID;
             else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE
                     && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(GattAttributes.NEVO_OTA_CHARACTERISTIC)))
             {
+                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).next();
                 MCU_processDFUResponse((NevoFirmwareData) data);
-            }
-        }
-        else if (data.getType().equals(NevoRawData.TYPE))
-        {
-            final NevoRawData nevoData = (NevoRawData) data;
-            mNevoPacketsbuffer.add(nevoData);
-            if((byte)0xFF == nevoData.getRawData()[0])
-            {
-                NevoPacket packet = new NevoPacket(mNevoPacketsbuffer);
-                if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().packetReceived(packet);
-
-                mNevoPacketsbuffer.clear();
             }
         }
     }
@@ -703,7 +704,7 @@ import java.util.UUID;
     void MCU_sendFirmwareChunk()
     {
         Log.i(TAG,"sendFirmwareData");
-
+        NevoMCU_OTAPageRequest Onepage = new NevoMCU_OTAPageRequest();
         for (int i = 0; i < notificationPacketInterval && firmwareDataBytesSent < binFileSize; i++)
         {
             int length = DFUCONTROLLER_MAX_PACKET_SIZE;
@@ -748,12 +749,11 @@ import java.util.UUID;
 
                 firmwareDataBytesSent += length;
             }
-
-            sendRequest(new NevoMCU_OTAPacketRequest(pagePacket));
-
+            Onepage.addPacket(new NevoMCU_OTAPacketRequest(pagePacket));
         }
         if(curpage < totalpage)
         {
+            sendRequest(Onepage);
             progress = 100.0*(firmwareDataBytesSent) / (binFileSize);
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
             Log.i(TAG,"didWriteDataPacket");
