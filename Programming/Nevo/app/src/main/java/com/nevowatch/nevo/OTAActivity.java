@@ -325,7 +325,7 @@ public class OTAActivity extends Activity
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     OTAActivity.this.finish();
                                 }
-                            }).show();
+                            }).setCancelable(false).show();
                     //show success text or image
                     mNevoOtaController.reset(false);
                     initValue();
