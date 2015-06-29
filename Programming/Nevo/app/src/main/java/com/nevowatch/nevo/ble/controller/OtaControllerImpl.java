@@ -69,7 +69,7 @@ import java.util.UUID;
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
-    private static final int MAX_TIME = 20000;
+    private static final int MAX_TIME = 30000;
     private double lastprogress = 0.0;
     //added for MCU OTA
 
