@@ -1,6 +1,8 @@
 package com.nevowatch.nevo;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -40,6 +42,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     private static int mPosition = -1;
     private static String mTag;
     private Boolean mIsVisible = true;
+    private GoogleFitManager mGfManager;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -72,8 +75,37 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
 
         SyncController.Singleton.getInstance(this).startConnect(false, this);
+		
+        mGfManager = GoogleFitManager.getInstance(MainActivity.this, this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("GoogleFitManager", "Connecting...");
+        mGfManager.getmClient().connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGfManager.getmClient().isConnected()) {
+            mGfManager.getmClient().disconnect();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mGfManager.dealActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        mGfManager.dealSaveInstanceState(outState);
+    }
+	
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
