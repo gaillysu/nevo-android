@@ -16,6 +16,8 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.PowerManager;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -585,6 +587,27 @@ import java.util.TimeZone;
             {
                 LocalService.this.PopupMessage(titleID, msgID);
             }
+        }
+        //when nevo paired cellphone, got connected/disconnection, will invoke "findCellPhone"
+        //start vibrate
+        //light screen on
+        //play music ???
+        private void findCellPhone(boolean connected)
+        {
+            if(!connected) return;
+
+            Vibrator vibrator = (Vibrator) LocalService.this.getSystemService(Context.VIBRATOR_SERVICE);
+            long[] pattern = {1,2000,1000,2000,1000,2000,1000,2000};
+            if(vibrator.hasVibrator()) vibrator.cancel();
+            vibrator.vibrate(pattern,1);
+
+            PowerManager pm = (PowerManager) LocalService.this.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP
+                    | PowerManager.SCREEN_BRIGHT_WAKE_LOCK,"bright");
+            wl.acquire();
+            wl.release();
+
+            //play build-in music  in asserts path
         }
     }
 }
