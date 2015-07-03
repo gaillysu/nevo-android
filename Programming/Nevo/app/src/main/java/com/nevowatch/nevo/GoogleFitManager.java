@@ -290,6 +290,7 @@ public class GoogleFitManager implements GoogleFit{
             if (!insertStatus.isSuccess()) {
                 Log.i(TAG, "There was a problem inserting the session: " +
                         insertStatus.getStatusMessage());
+                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
                 return null;
             }
 
