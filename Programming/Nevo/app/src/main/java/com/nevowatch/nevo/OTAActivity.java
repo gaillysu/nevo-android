@@ -235,6 +235,12 @@ public class OTAActivity extends Activity
     }
 
     @Override
+    public void onBackPressed() {
+        if(mNevoOtaController.getState() != Constants.DFUControllerState.INIT) return;
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v){
         switch (v.getId()){
             case R.id.reUpgradebutton:
