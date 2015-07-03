@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
@@ -14,14 +15,16 @@
         android:background="@color/transparent"/>
 
     <ImageView
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
-        android:layout_height="90dp"
+        android:layout_height="wrap_content"
         android:src="@drawable/stupe_image1"
         android:layout_gravity="center_horizontal" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:id="@+id/t1_title"
         android:text="@string/tutorial_one_title"
         android:textSize="22sp"
@@ -30,20 +33,20 @@
         android:gravity="center"
         android:layout_gravity="center_horizontal" />
 
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="220dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/tutorial_two_pic"
             android:paddingLeft="-10dp"
             android:layout_gravity="left|center_vertical" />
 
         <TextView
-            android:layout_width="275dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/t1_message"
             android:text="@string/tutorial_one_message"
@@ -55,7 +58,7 @@
             android:layout_below="@+id/longPushImage"
             android:layout_alignParentEnd="false"
             android:layout_gravity="right|center_vertical" />
-    </FrameLayout>
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
@@ -66,9 +69,8 @@
         android:textAllCaps="false"
         android:textColor="@color/customOrange"
         android:background="@color/transparent"
-        android:paddingTop="30dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:paddingTop="10dp"
+        android:gravity="center|bottom"
+        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
