@@ -248,7 +248,7 @@ import java.util.TimeZone;
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
 
-//                        GoogleFitManager.getInstance().saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+                        GoogleFitManager.getInstance(null,null).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
 
                         mCurrentDay++;
                         if(mCurrentDay < mSavedDailyHistory.size())

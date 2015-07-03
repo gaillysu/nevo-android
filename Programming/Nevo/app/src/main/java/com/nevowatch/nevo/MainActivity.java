@@ -77,21 +77,21 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         SyncController.Singleton.getInstance(this).startConnect(false, this);
 		
         mGfManager = GoogleFitManager.getInstance(MainActivity.this, this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         Log.i("GoogleFitManager", "Connecting...");
         mGfManager.getmClient().connect();
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        if (mGfManager.getmClient().isConnected()) {
-            mGfManager.getmClient().disconnect();
-        }
+        //if (mGfManager.getmClient().isConnected()) {
+        //    mGfManager.getmClient().disconnect();
+        //}
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.NevoGFT.GFDataPoint;
 import com.nevowatch.nevo.NevoGFT.GFSteps;
 import com.nevowatch.nevo.NevoGFT.GoogleFit;
+import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -110,15 +111,23 @@ public class GoogleFitManager implements GoogleFit{
         outState.putBoolean(AUTH_PENDING, authInProgress);
     }
 
-    public void saveDailyHistory(DailyHistory dailyHistory){
-        Date historyDate = dailyHistory.getDate();
+    public void saveDailyHistory(final DailyHistory dailyHistory){
+        final Date historyDate = dailyHistory.getDate();
 
         //TODO by Hugo, I should check that there's no doublons between daily and hourly data
         //saveDailyDataPoint( historyDate , dailyHistory.getTotalSteps() );
 
         for(int i=0; i<dailyHistory.getHourlySteps().size(); i++) {
-
-            saveHourlyDataPoint(historyDate, i, dailyHistory.getHourlySteps().get(i) );
+            if(dailyHistory.getHourlySteps().get(i)>0) {
+                    final int index = i;
+                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG, historyDate.toString() + ",hour:"+index + ",steps:"+ dailyHistory.getHourlySteps().get(index));
+                            saveHourlyDataPoint(historyDate, index, dailyHistory.getHourlySteps().get(index));
+                        }
+                    });
+            }
         }
 
     }
@@ -288,6 +297,7 @@ public class GoogleFitManager implements GoogleFit{
             Log.i(TAG, "Session insert was successful!");
             // [END insert_session]
 
+            /*
             // Begin by creating the query.
             SessionReadRequest readRequest = readFitnessSession();
 
@@ -312,7 +322,8 @@ public class GoogleFitManager implements GoogleFit{
                 }
             }
             // [END read_session]
-
+            */
+            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
             return null;
         }
     }
