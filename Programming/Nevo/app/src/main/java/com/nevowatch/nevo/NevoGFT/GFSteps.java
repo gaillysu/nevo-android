@@ -7,8 +7,11 @@ import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
+import com.google.android.gms.fitness.request.DataDeleteRequest;
 import com.google.android.gms.fitness.request.SessionInsertRequest;
+import com.google.android.gms.fitness.request.SessionReadRequest;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -77,6 +80,41 @@ public class GFSteps implements GFDataPoint{
 
     @Override
     public boolean isUpdate() {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        Calendar calBeginning = Calendar.getInstance();
+        calBeginning.setTime(mStartDate);
+        if(c.get(Calendar.YEAR) == calBeginning.get(Calendar.YEAR)
+                && c.get(Calendar.MONTH) == calBeginning.get(Calendar.MONTH)
+                && c.get(Calendar.DAY_OF_MONTH) == calBeginning.get(Calendar.DAY_OF_MONTH)
+                && c.get(Calendar.HOUR_OF_DAY) == calBeginning.get(Calendar.HOUR_OF_DAY))
+        {
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public SessionReadRequest toSessionReadRequest() {
+        long startTime = mStartDate.getTime();
+        long endTime = mEndDate.getTime();
+        SessionReadRequest readRequest = new SessionReadRequest.Builder()
+                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                .read(DataType.TYPE_STEP_COUNT_DELTA)
+//                .setSessionName(SAMPLE_SESSION_NAME)
+                .build();
+        return readRequest;
+    }
+
+    @Override
+    public DataDeleteRequest toSessionDeleteRequest() {
+        long startTime = mStartDate.getTime();
+        long endTime = mEndDate.getTime();
+        DataDeleteRequest request = new DataDeleteRequest.Builder()
+                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                .deleteAllSessions() // Or specify a particular session here
+                .build();
+        return request;
     }
 }

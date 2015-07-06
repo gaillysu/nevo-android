@@ -189,7 +189,13 @@ public class GoogleFitManager implements GoogleFit{
 
     @Override
     public boolean isPresent(GFDataPoint dataPoint) {
-        return false;
+        SessionReadRequest readRequest = dataPoint.toSessionReadRequest();
+        SessionReadResult sessionReadResult =
+                Fitness.SessionsApi.readSession(mClient, readRequest)
+                        .await(1, TimeUnit.MINUTES);
+
+        // Get a list of the sessions that match the criteria to check the result.
+        return sessionReadResult.getSessions().size()>0;
     }
 
     /**
@@ -273,8 +279,50 @@ public class GoogleFitManager implements GoogleFit{
      */
     private class InsertAndVerifySessionTask extends AsyncTask<GFDataPoint, Void, Void> {
         protected Void doInBackground(GFDataPoint... params) {
+            //if has present, no save it or update it
+            final GFDataPoint final_dataPoint = params[0];
+            if(isPresent(params[0]))
+            {
+                if(!params[0].isUpdate()) {
+                    Log.i(TAG, "Session has exist,no save it again");
+                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
+                    return null;
+                }
+                // first delete it and insert new one record
+                DataDeleteRequest request = params[0].toSessionDeleteRequest();
+                // Invoke the History API with the Google API client object and the delete request and
+                // specify a callback that will check the result.
+                Fitness.HistoryApi.deleteData(mClient, request)
+                        .setResultCallback(new ResultCallback<com.google.android.gms.common.api.Status>() {
+                            @Override
+                            public void onResult(com.google.android.gms.common.api.Status status) {
+                                if (status.isSuccess()) {
+                                    Log.i(TAG, "Successfully delete current hourly session");
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            insertOneSession(final_dataPoint);
+                                        }
+                                    }).start();
+                                } else {
+                                    // The deletion will fail if the requesting app tries to delete data
+                                    // that it did not insert.
+                                    Log.i(TAG, "Failed to delete current hourly session");
+                                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
+                                }
+                            }
+                        });
+            }
             //First, create a new session and an insertion request.
-            SessionInsertRequest insertRequest = params[0].toSessionInsertRequest();
+            else
+                insertOneSession(params[0]);
+            return null;
+        }
+    }
+
+    private void insertOneSession(GFDataPoint dataPoint)
+    {
+            SessionInsertRequest insertRequest = dataPoint.toSessionInsertRequest();
 
             // [START insert_session]
             // Then, invoke the Sessions API to insert the session and await the result,
@@ -291,44 +339,14 @@ public class GoogleFitManager implements GoogleFit{
                 Log.i(TAG, "There was a problem inserting the session: " +
                         insertStatus.getStatusMessage());
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
-                return null;
+                return ;
             }
 
             // At this point, the session has been inserted and can be read.
             Log.i(TAG, "Session insert was successful!");
             // [END insert_session]
-
-            /*
-            // Begin by creating the query.
-            SessionReadRequest readRequest = readFitnessSession();
-
-            // [START read_session]
-            // Invoke the Sessions API to fetch the session with the query and wait for the result
-            // of the read request.
-            SessionReadResult sessionReadResult =
-                    Fitness.SessionsApi.readSession(mClient, readRequest)
-                            .await(1, TimeUnit.MINUTES);
-
-            // Get a list of the sessions that match the criteria to check the result.
-            Log.i(TAG, "Session read was successful. Number of returned sessions is: "
-                    + sessionReadResult.getSessions().size());
-            for (Session session : sessionReadResult.getSessions()) {
-                // Process the session
-                dumpSession(session);
-
-                // Process the data sets for this session
-                List<DataSet> dataSets = sessionReadResult.getDataSet(session);
-                for (DataSet dataSet : dataSets) {
-                    dumpDataSet(dataSet);
-                }
-            }
-            // [END read_session]
-            */
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
-            return null;
-        }
     }
-
     public long clearMillis2second(long millis){
         millis = millis/1000*1000;
         return millis;
