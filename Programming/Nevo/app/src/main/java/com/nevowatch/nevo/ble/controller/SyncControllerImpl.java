@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
 import com.nevowatch.nevo.GoogleFitManager;
+import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.Model.Goal;
 import com.nevowatch.nevo.Model.Notification;
@@ -249,8 +250,8 @@ import java.util.TimeZone;
 
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
-
-                        GoogleFitManager.getInstance(null,null).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+                        //discard tutorial activity, only MainActivity can save data to Google git
+                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
 
                         mCurrentDay++;
                         if(mCurrentDay < mSavedDailyHistory.size())

@@ -71,14 +71,22 @@ public class GoogleFitManager implements GoogleFit{
 
     private static GoogleFitManager sInstance = null;
     public static GoogleFitManager getInstance(Context context, Activity activity) {
-        if(null == sInstance && context!=null && activity!=null)
+        if(null == sInstance)
         {
-            sInstance = new GoogleFitManager();
-            sInstance.setmContext(context);
-            sInstance.setmActivity(activity);
+            sInstance = new GoogleFitManager(context, activity);
             sInstance.buildFitnessClient();
         }
+        else
+        {
+            sInstance.setmContext(context);
+            sInstance.setmActivity(activity);
+        }
         return sInstance;
+    }
+    /*package*/ GoogleFitManager(Context context, Activity activity)
+    {
+        this.mContext = context;
+        this.mActivity = activity;
     }
 
     public GoogleApiClient getmClient() {
@@ -112,6 +120,11 @@ public class GoogleFitManager implements GoogleFit{
     }
 
     public void saveDailyHistory(final DailyHistory dailyHistory){
+        if(mClient == null || !mClient.isConnected())
+        {
+            Log.w(TAG, mClient == null ? "connect Client is null" : "no connect to Google Play Service");
+            return;
+        }
         final Date historyDate = dailyHistory.getDate();
 
         //TODO by Hugo, I should check that there's no doublons between daily and hourly data

@@ -83,6 +83,7 @@ import java.util.TimerTask;
 
     private void startCheckConnectionTimer()
     {
+        /* //sorry I remove these code, due to on Samsung smartphone, readCharacteristic will lead to BT got disconnect about perhaps 5min,10min,30min,... BT protocol stack will auto maintain the connection, no need  use the heartbeat  packets
         //first stop the timer thread!
         if(mCheckConnectionTimer!=null)mCheckConnectionTimer.cancel();
         mCheckConnectionTimer = new Timer();
@@ -94,6 +95,7 @@ import java.util.TimerTask;
                 if(new Date().getTime() - mLastPacket.getTime() > CHECK_CONNECTION_INTERVAL * 1.5) currentlyConnected(false);
             }
         }, CHECK_CONNECTION_INTERVAL, CHECK_CONNECTION_INTERVAL);
+        */
     }
 
     private void restartAutoReconnectTimer() {
