@@ -95,16 +95,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         final List<PackageInfo> appList  = pm.getInstalledPackages(0);
         for (PackageInfo app:appList)
         {
-            if(app.packageName.equals(google_services_framework) && app.versionName.contains("4."))
+            if(app.packageName.equals(google_services_framework))
             {
+                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gsf = true;
             }
             else if(app.packageName.equals(google_play_services) && app.versionName.contains("7."))
             {
+                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gps = true;
             }
             else if(app.packageName.equals(google_fitness) && app.versionName.contains("1.5"))
             {
+                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gf = true;
             }
         }
