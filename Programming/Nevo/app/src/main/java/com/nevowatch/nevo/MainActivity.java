@@ -1,6 +1,11 @@
 package com.nevowatch.nevo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
@@ -77,8 +82,47 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         SyncController.Singleton.getInstance(this).startConnect(false, this);
 		
         mGfManager = GoogleFitManager.getInstance(MainActivity.this, this);
-        Log.i("GoogleFitManager", "Connecting...");
-        mGfManager.getmClient().connect();
+
+        final String google_services_framework ="com.google.android.gsf";
+        final String google_play_services ="com.google.android.gms";
+        final String google_fitness ="com.google.android.apps.fitness";
+
+        final PackageManager pm = getPackageManager();
+        boolean isInstalled_gsf = false;
+        boolean isInstalled_gps = false;
+        boolean isInstalled_gf = false;
+
+        final List<PackageInfo> appList  = pm.getInstalledPackages(0);
+        for (PackageInfo app:appList)
+        {
+            if(app.packageName.equals(google_services_framework) && app.versionName.contains("4."))
+            {
+                isInstalled_gsf = true;
+            }
+            else if(app.packageName.equals(google_play_services) && app.versionName.contains("7."))
+            {
+                isInstalled_gps = true;
+            }
+            else if(app.packageName.equals(google_fitness) && app.versionName.contains("1.5"))
+            {
+                isInstalled_gf = true;
+            }
+        }
+        if(isInstalled_gsf && isInstalled_gps && isInstalled_gf) {
+            Log.i("GoogleFitManager", "Connecting...");
+            mGfManager.getmClient().connect();
+        }
+        else
+        {
+            //some android ROM image has removed the alertDialog feature
+            //SyncController.Singleton.getInstance(this).setVisible(true);
+            //SyncController.Singleton.getInstance(this).showMessage(R.string.install_google_app_title,R.string.install_google_app_content);
+            new AlertDialog.Builder(MainActivity.this,AlertDialog.THEME_HOLO_LIGHT)
+                    .setTitle(R.string.install_google_app_title)
+                    .setMessage(R.string.install_google_app_content)
+                    .setNegativeButton(R.string.ok_button,null)
+                    .show();
+        }
     }
 
     @Override

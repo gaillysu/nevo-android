@@ -93,4 +93,6 @@
     <string name="notification_connect_content">your Nevo has got connected</string>
     <string name="notification_disconnect_title">Nevo disconnect</string>
     <string name="notification_disconnect_content">your Nevo has got disconnect</string>
+    <string name="install_google_app_title">Need Google Service</string>
+    <string name="install_google_app_content">\t\t\t\tNevo application is running on Google Service,Please install Google Service framework v4.x, Google Play Service v7.x, Google fit v1.5x, you can find out them in Google Play market. you need have a Google account, Google fit will save and show your daily activity data.</string>
 </resources>
