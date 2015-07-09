@@ -86,11 +86,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         final String google_services_framework ="com.google.android.gsf";
         final String google_play_services ="com.google.android.gms";
         final String google_fitness ="com.google.android.apps.fitness";
+        final String google_account = "com.google.android.gsf.login";
 
         final PackageManager pm = getPackageManager();
         boolean isInstalled_gsf = false;
         boolean isInstalled_gps = false;
         boolean isInstalled_gf = false;
+        boolean isInstalled_gam = false;
 
         final List<PackageInfo> appList  = pm.getInstalledPackages(0);
         for (PackageInfo app:appList)
@@ -110,20 +112,34 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gf = true;
             }
+            else if(app.packageName.equals(google_account))
+            {
+                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+                isInstalled_gam = true;
+            }
         }
-        if(isInstalled_gsf && isInstalled_gps && isInstalled_gf) {
+        if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
             Log.i("GoogleFitManager", "Connecting...");
             mGfManager.getmClient().connect();
         }
         else
         {
-            //some android ROM image has removed the alertDialog feature
+            //some android ROM image has disable the alertDialog feature, such as xiaomi
             //SyncController.Singleton.getInstance(this).setVisible(true);
             //SyncController.Singleton.getInstance(this).showMessage(R.string.install_google_app_title,R.string.install_google_app_content);
             new AlertDialog.Builder(MainActivity.this,AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle(R.string.install_google_app_title)
                     .setMessage(R.string.install_google_app_content)
-                    .setNegativeButton(R.string.ok_button,null)
+                    .setPositiveButton(android.R.string.cancel,null)
+                    .setNegativeButton(R.string.ok_button,new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Uri uri = Uri.parse("http://www.pgyer.com/gadl");
+                            Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(it);
+                        }
+                    })
                     .show();
         }
     }

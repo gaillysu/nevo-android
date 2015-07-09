@@ -94,5 +94,5 @@
     <string name="notification_disconnect_title">Nevo 已斷開</string>
     <string name="notification_disconnect_content">您的手表已斷開連接手機</string>
     <string name="install_google_app_title">请先安装谷歌服务</string>
-    <string name="install_google_app_content">\t\t\t\tNevo应用运行需要谷歌服务, 请您安装谷歌服务框架v4.x版本, 谷歌Play服务v7.x版本, Google健康v1.5x版本, 您可以在谷歌应用市场上搜索这些应用。使用前需要VPN连接网络并注册一个谷歌账户。您的详细运动数据将在记录显示在谷歌健康应用内。</string>
+    <string name="install_google_app_content">\t\t\t\tNevo应用的运动历史数据需要用到\"谷歌健康\"应用来显示, 请您首先下载谷歌应用商店，并在商店搜索谷歌健康应用Google fit。使用前需要VPN连接网络并注册一个谷歌账户。您的详细运动数据将在记录显示在谷歌健康应用内。</string>
 </resources>
