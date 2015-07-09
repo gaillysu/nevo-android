@@ -31,7 +31,8 @@ public class SetRtcNevoRequest extends NevoRequest {
 					(byte) (Day&0xFF),
 					(byte) (Hour&0xFF),
 					(byte) (Minute&0xFF),
-					0,0,0,0,
+                    (byte) (Second&0xFF),       
+					0,0,0,
 					0,0,0,0,
 					0,0,0,0
 					},
