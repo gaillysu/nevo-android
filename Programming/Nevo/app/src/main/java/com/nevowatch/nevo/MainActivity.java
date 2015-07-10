@@ -48,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     private static String mTag;
     private Boolean mIsVisible = true;
     private GoogleFitManager mGfManager;
+    private boolean mHasGoogleFit = false;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -119,8 +120,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             }
         }
         if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
-            Log.i("GoogleFitManager", "Connecting...");
-            mGfManager.getmClient().connect();
+            mHasGoogleFit = true;
         }
         else
         {
@@ -147,14 +147,25 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     protected void onStart() {
         super.onStart();
+        if(mHasGoogleFit) {
+            //NOTICE: connect Google Service under VPN network for chinese user
+            if(mGfManager.getmClient().isConnecting())
+            {
+                Log.i("GoogleFitManager", "call disconnect()... for connecting sataus.");
+                mGfManager.getmClient().disconnect();
+            }
+            if(!mGfManager.getmClient().isConnected())
+            {
+                Log.i("GoogleFitManager", "call connect()... for disconnect sataus.");
+                mGfManager.getmClient().connect();
+            }
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        //if (mGfManager.getmClient().isConnected()) {
-        //    mGfManager.getmClient().disconnect();
-        //}
+        //when Mainactivity goto background or get killed, please keep Google Fit connection alive. don't disconnect it here
     }
 
     @Override
