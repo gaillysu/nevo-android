@@ -144,7 +144,9 @@ import java.util.TimerTask;
         Optional<String> preferredAddress = new Optional<String>();
 
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
-
+        //BEFORE EVERY CONNECT, NEED I DO PAIR DEVICE??? WHEN OTA DONE, FIRSTLY CONNECTED NEVO, ALWAYS CAN'T GET RESPONSE WITHOUT PAIR NEVO
+        //http://stackoverflow.com/questions/21398766/android-ble-connection-time-interval
+        //if(hasSavedAddress()) doPairDevice()
         NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
 
     }
