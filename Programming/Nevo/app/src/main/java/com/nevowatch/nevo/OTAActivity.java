@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -82,6 +84,10 @@ public class OTAActivity extends Activity
     //but the OTA should be continue on background. when user come back, the progress should be showing
     Context mContext;
     private static AlertDialog mAlertDialog = null;
+
+    //for good user experience, add Animation when waiting...
+    private Animation mAnimation = null;
+
     private void initListView(boolean forceUpdate,boolean popupMessage){
 
         if(mNevoOtaController.getSoftwareVersion() == null
@@ -275,6 +281,7 @@ public class OTAActivity extends Activity
         }
         if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RECONNECT && isConnected)
         {
+            bLinkWaitingMessage(0);
             uploadPressed();
         }
 
@@ -350,13 +357,14 @@ public class OTAActivity extends Activity
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RECONNECT);
                     initValue();
 
-                    mFirmwareTotal.setText(mContext.getString(R.string.waiting));
+                    bLinkWaitingMessage(10);
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if(!mNevoOtaController.isConnected() && mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RECONNECT)
                             {
+                                bLinkWaitingMessage(0);
                                 onError(OtaController.ERRORCODE.TIMEOUT);
                             }
                         }
@@ -454,7 +462,7 @@ public class OTAActivity extends Activity
         }
 
         String selectedFileURL = firmwareURLs.get(currentIndex);
-        refreshTimeCount(20,true);
+        refreshTimeCount(30,true);
         if (selectedFileURL.contains(".bin"))
         {
             enumFirmwareType = DfuFirmwareTypes.SOFTDEVICE;
@@ -494,7 +502,13 @@ public class OTAActivity extends Activity
                 @Override
                 public void run() {
                     //status got changed,return
-                    mFirmwareTotal.setText("");
+                    //for MCU OTA,no delay time, right now return.
+                    if(enumFirmwareType == DfuFirmwareTypes.SOFTDEVICE) {
+                        mFirmwareTotal.setText((currentIndex+1)+"/"+firmwareURLs.size()+" ," + 0 + "%");
+                        return;
+                    }
+                    //for BLE OTA, need wait more about 3s, I blink the message to user for good experience
+                    bLinkWaitingMessage(3);
                 }
             });
             return;
@@ -513,6 +527,20 @@ public class OTAActivity extends Activity
                 refreshTimeCount(count-1,checkStatus);
             }
         },1000);
+    }
+    private void bLinkWaitingMessage(int count)
+    {
+        if(count==0 && mAnimation!=null ){
+            mAnimation.cancel();
+            mAnimation=null;
+            return;
+        }
+        mFirmwareTotal.setText(mContext.getString(R.string.waiting));
+        mAnimation = new AlphaAnimation(0.0f,1.0f);
+        mAnimation.setDuration(1000);
+        mAnimation.setRepeatMode(Animation.REVERSE);
+        mAnimation.setRepeatCount(count);
+        mFirmwareTotal.startAnimation(mAnimation);
     }
 
 }
