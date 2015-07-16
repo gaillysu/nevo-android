@@ -107,6 +107,14 @@ public interface ConnectionController {
      */
     public void newScan();
 
+    /**
+     * when nevo is unpaired with phone, send command can't get response packets
+     * such as: user firstly run app, or finished OTA, the two case need pair nevo before connect it
+     * otherwise, can't get response packets, such as get step count...
+     */
+    public void doPairDevice();
+    public void doUnPairDevice();
+
     interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener ,OnFirmwareVersionListener{
 
     }

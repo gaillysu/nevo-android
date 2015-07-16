@@ -91,6 +91,10 @@ public interface OtaController {
      */
     void SamsungS4Patch();
 
+    /**
+     * when BLE OTA done, need unpair Nevo (forget it)
+     */
+    void forGetDevice();
 
     public enum ERRORCODE {
         NOCONNECTION,

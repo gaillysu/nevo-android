@@ -339,7 +339,8 @@ public class OTAActivity extends Activity
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                     String strDate = format.format(Calendar.getInstance().getTimeInMillis());
                     getSharedPreferences(OtaController.PREF_NAME, Context.MODE_PRIVATE).edit().putString(OtaController.SYNCDATE, strDate).commit();
-
+                    //BLE OTA done, unPair nevo, due to the pair infomation has got destory in the smartphone side.
+                    if (enumFirmwareType == DfuFirmwareTypes.APPLICATION) mNevoOtaController.forGetDevice();
                 }
                 else
                 {

@@ -587,6 +587,13 @@ import java.util.UUID;
     public String getSoftwareVersion() {
         return mConnectionController.getSoftwareVersion();
     }
+
+    @Override
+    public void forGetDevice()
+    {
+        //BLE OTA need repair NEVO, so here forget this nevo when OTA done.
+        mConnectionController.doUnPairDevice();
+    }
     //end public function
 
     //start ConnectionController.Delegate interface

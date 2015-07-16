@@ -1,5 +1,7 @@
 package com.nevowatch.nevo.ble.controller;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -21,6 +23,7 @@ import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.MainActivity;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -144,9 +147,6 @@ import java.util.TimerTask;
         Optional<String> preferredAddress = new Optional<String>();
 
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
-        //BEFORE EVERY CONNECT, NEED I DO PAIR DEVICE??? WHEN OTA DONE, FIRSTLY CONNECTED NEVO, ALWAYS CAN'T GET RESPONSE WITHOUT PAIR NEVO
-        //http://stackoverflow.com/questions/21398766/android-ble-connection-time-interval
-        //if(hasSavedAddress()) doPairDevice()
         NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
 
     }
@@ -179,7 +179,18 @@ import java.util.TimerTask;
     @Override
     public void onConnectionStateChanged(final boolean connected, final String address) {
 
-        if(!address.equals("") && connected == true) setSaveAddress(address);
+        if(!address.equals("") && connected == true)
+        {
+            //firstly connected this nevo: such as: first run app, forget this nevo
+            boolean firstConnected = !hasSavedAddress();
+            setSaveAddress(address);
+
+            //http://stackoverflow.com/questions/21398766/android-ble-connection-time-interval
+            //fix a bug:when BLE OTA done,need repair nevo, if not, must twice connect nevo that nevo can work fine, here use code do repair working or twice connection
+            //call doPairDevice() after every connected, if call it within connect() before startScan() invoke,
+            //some smartphone will popup message ,this message comes from Android OS, such as samsung...
+            if((firstConnected || needPair())&& !getOTAMode()) doPairDevice();
+        }
 
         currentlyConnected(connected);
 
@@ -348,4 +359,94 @@ import java.util.TimerTask;
         nftm.notify(connected?1:2, notification);
 
     }
+
+    @Override
+    public void doPairDevice()
+    {
+        if(!hasSavedAddress()) return;
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) return;
+
+        BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
+        int state = device.getBondState();
+        Log.i(NevoBT.TAG,"doPairDevice(),current bind state: " + state);
+        if(state != BluetoothDevice.BOND_BONDED)
+        {
+            boolean ret = false;
+            try {
+                ret =  createBond(BluetoothDevice.class,device);
+                state = device.getBondState();
+                Log.i(NevoBT.TAG, "bind state: " + state +",createBond() return:" + ret);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public void doUnPairDevice()
+    {
+        if(!hasSavedAddress()) return;
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) return;
+
+        BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
+        int state = device.getBondState();
+        Log.i(NevoBT.TAG,"doUnPairDevice(),current bind state: " + state);
+        if(state == BluetoothDevice.BOND_BONDED)
+        {
+            boolean ret = false;
+            try {
+                ret = removeBond(BluetoothDevice.class,device);
+                state = device.getBondState();
+                Log.i(NevoBT.TAG, "bind state: " + state + ",removeBond() return:" + ret);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else if(state == BluetoothDevice.BOND_BONDING)
+        {
+            boolean ret = false;
+            try {
+                ret = cancelBondProcess(BluetoothDevice.class,device);
+                state = device.getBondState();
+                Log.i(NevoBT.TAG, "bind state: " + state + ",cancelBondProcess() return:" + ret);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    private boolean createBond(Class btClass, BluetoothDevice btDevice)
+            throws Exception {
+        Method createBondMethod = btClass.getMethod("createBond");
+        Boolean returnValue = (Boolean) createBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
+    }
+    private boolean removeBond(Class btClass, BluetoothDevice btDevice)
+            throws Exception {
+        Method removeBondMethod = btClass.getMethod("removeBond");
+        Boolean returnValue = (Boolean) removeBondMethod.invoke(btDevice);
+        return returnValue.booleanValue();
+    }
+    private boolean cancelBondProcess(Class btClass,
+                                      BluetoothDevice device)
+            throws Exception {
+        Method createBondMethod = btClass.getMethod("cancelBondProcess");
+        Boolean returnValue = (Boolean) createBondMethod.invoke(device);
+        return returnValue.booleanValue();
+    }
+    private boolean needPair()
+    {
+        if(getOTAMode()) return false;
+        if(!hasSavedAddress()) return false;
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) return false;
+
+        BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
+        int state = device.getBondState();
+        Log.i(NevoBT.TAG,"needPair(),current bind state: " + state);
+        if(state != BluetoothDevice.BOND_BONDED) return true;
+        return false;
+    }
+
 }
