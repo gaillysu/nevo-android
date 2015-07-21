@@ -278,11 +278,11 @@ import java.util.TimeZone;
 
             mTimeOutcount = 0;
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(true);
-            mPacketsbuffer.clear();
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    mPacketsbuffer.clear();
                     setRtc();
                 }
             },4000);
@@ -290,6 +290,7 @@ import java.util.TimeZone;
         } else {
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
+            mPacketsbuffer.clear();
         }
 
 	}
