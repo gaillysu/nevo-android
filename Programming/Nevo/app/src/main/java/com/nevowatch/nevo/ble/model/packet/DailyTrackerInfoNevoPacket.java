@@ -62,7 +62,7 @@ public class DailyTrackerInfoNevoPacket extends NevoPacket {
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
                 try {
                     Date date = format.parse(String.format("%04d%02d%02d000000",year,month,day));
-                    days.add(new DailyHistory(date, new ArrayList<Integer>(), 0));
+                    days.add(new DailyHistory(date));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

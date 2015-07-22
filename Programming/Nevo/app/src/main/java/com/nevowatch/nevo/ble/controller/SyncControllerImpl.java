@@ -249,10 +249,41 @@ import java.util.TimeZone;
                         DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
                         mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
                         mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-
-
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
+
+                        mSavedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
+
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
+
+                        mSavedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
+
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + mSavedDailyHistory.get(mCurrentDay).getTotalWakeTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
+
+                        mSavedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
+
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + mSavedDailyHistory.get(mCurrentDay).getTotalLightTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
+
+
+                        mSavedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
+
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+
+                        mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
+                        mSavedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
+
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getTotalDist());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getTotalCalories());
+
+
                         //discard tutorial activity, only MainActivity can save data to Google git
                         if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
 
