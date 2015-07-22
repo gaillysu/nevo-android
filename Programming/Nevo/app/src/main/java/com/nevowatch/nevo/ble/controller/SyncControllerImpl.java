@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
@@ -79,6 +81,7 @@ import java.util.TimeZone;
     private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
+    private long mLastPressAkey = 0;
 
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
@@ -263,6 +266,18 @@ import java.util.TimeZone;
                             mCurrentDay = 0;
                             syncFinished();
                         }
+                    }
+                    else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x01 == packet.getPackets().get(0).getRawData()[2])
+                    {
+                       long currentTime = System.currentTimeMillis();
+                       if(currentTime - mLastPressAkey <3000)
+                       {
+                           if(mLocalService!=null) mLocalService.findCellPhone();
+                       }
+                       else
+                       {
+                           mLastPressAkey = currentTime;
+                       }
                     }
 
                     mPacketsbuffer.clear();
@@ -589,19 +604,24 @@ import java.util.TimeZone;
             {
                 LocalService.this.PopupMessage(titleID, msgID);
             }
+            public void findCellPhone()
+            {
+                LocalService.this.findCellPhone();
+            }
         }
-        //when nevo paired cellphone, got connected/disconnection, will invoke "findCellPhone"
+        //when nevo paired cellphone, press twice A key, will invoke "findCellPhone"
         //start vibrate
         //light screen on
         //play music ???
-        private void findCellPhone(boolean connected)
+        private void findCellPhone()
         {
-            if(!connected) return;
-
             Vibrator vibrator = (Vibrator) LocalService.this.getSystemService(Context.VIBRATOR_SERVICE);
-            long[] pattern = {1,2000,1000,2000,1000,2000,1000,2000};
-            if(vibrator.hasVibrator()) vibrator.cancel();
-            vibrator.vibrate(pattern,1);
+            long[] pattern = {1,2000,1000,2000,1000,2000,1000};
+            if(vibrator.hasVibrator())
+            {
+                vibrator.cancel();
+            }
+            vibrator.vibrate(pattern,-1);
 
             PowerManager pm = (PowerManager) LocalService.this.getSystemService(Context.POWER_SERVICE);
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP
@@ -609,7 +629,21 @@ import java.util.TimeZone;
             wl.acquire();
             wl.release();
 
-            //play build-in music  in asserts path
+            //play build-in music  in Raw
+            PlayFromRawFile();
+        }
+        private  void PlayFromRawFile()
+        {
+            MediaPlayer play = MediaPlayer.create(this, com.nevowatch.nevo.R.raw.music);
+            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume , 0);
+            if(play.isPlaying())
+            {
+                play.stop();
+            }
+            play.start();
         }
     }
 }
