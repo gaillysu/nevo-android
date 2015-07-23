@@ -220,7 +220,7 @@ public class DailyTrackerNevoPacket extends NevoPacket {
         //get every hour SleepTime:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3;
+            int packetno = HEADERLENGTH+i*3+1;
             int offset = 18;
             hourlySleepTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
