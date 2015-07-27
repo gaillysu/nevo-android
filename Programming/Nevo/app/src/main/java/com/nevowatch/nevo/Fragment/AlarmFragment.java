@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.Model.Alarm;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.View.TimePickerView;
@@ -22,6 +23,8 @@ import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.SyncController;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.util.Constants;
+
+import java.util.ArrayList;
 
 
 /**
@@ -37,7 +40,9 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     private Button mOnButton;
     private Button mOffButton;
     private static final String PREF_KEY_CLOCK_STATE = "clockState";
-
+    private static final String PREF_KEY_CLOCK_STATE2 = "clockState2";
+    private static final String PREF_KEY_CLOCK_STATE3 = "clockState3";
+    private int mCurrentIndex = 0; //Alarm index, values: 0,1,2
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -65,8 +70,9 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     @Override
     public void onResume() {
         super.onResume();
-        mClockTextView.setText(TimePickerView.getAlarmFromPreference(getActivity()));
-        lightClockState(AlarmFragment.getClockStateFromPreference(getActivity()));
+        //TODO ,fixed to 3 alarm TextView
+        mClockTextView.setText(TimePickerView.getAlarmFromPreference(0,getActivity()));
+        lightClockState(AlarmFragment.getClockStateFromPreference(0,getActivity()));
     }
 
     private void lightClockState(boolean enable){
@@ -90,23 +96,17 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
             case R.id.clock_textView:
                     mClockTextView.setClickable(false);
                     mEditClockImage.setClickable(false);
-                    showTimePickerDialog();
+                    showTimePickerDialog(mCurrentIndex);
                 break;
             case R.id.on_mode_button:
                 lightClockState(true);
-                AlarmFragment.saveClockStateToPreference(getActivity(), true);
-                String[] strAlarm = TimePickerView.getAlarmFromPreference(getActivity()).split(":");
-                SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarm[0]),
-                        Integer.parseInt(strAlarm[1]),
-                        true);
+                AlarmFragment.saveClockStateToPreference(mCurrentIndex,getActivity(), true);
+                setAlarm();
                 break;
             case R.id.off_mode_button:
                 lightClockState(false);
-                AlarmFragment.saveClockStateToPreference(getActivity(), false);
-                String[] strAlarmOff = TimePickerView.getAlarmFromPreference(getActivity()).split(":");
-                SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarmOff[0]),
-                        Integer.parseInt(strAlarmOff[1]),
-                        false);
+                AlarmFragment.saveClockStateToPreference(mCurrentIndex,getActivity(), false);
+                setAlarm();
                 break;
             default:
                 break;
@@ -114,38 +114,61 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
     }
 
-    public void setClock(final String time){
+    private void setAlarm()
+    {
+        ArrayList<Alarm> list = new ArrayList<Alarm>();
+
+        String[] strAlarm = TimePickerView.getAlarmFromPreference(0,getActivity()).split(":");
+        Boolean onOff = AlarmFragment.getClockStateFromPreference(0,getActivity());
+        list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
+        strAlarm = TimePickerView.getAlarmFromPreference(1,getActivity()).split(":");
+        onOff = AlarmFragment.getClockStateFromPreference(1,getActivity());
+        list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
+        strAlarm = TimePickerView.getAlarmFromPreference(2,getActivity()).split(":");
+        onOff = AlarmFragment.getClockStateFromPreference(2,getActivity());
+        list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
+
+        SyncController.Singleton.getInstance(getActivity()).setAlarm(list);
+    }
+    public void setClock(int index,final String time){
+        //TODO: fixed to 3 Clock view,index means which one alarm
         mClockTextView.setText(time);
         /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
-        String[] strAlarm = time.split(":");
-        SyncController.Singleton.getInstance(getActivity()).setAlarm(Integer.parseInt(strAlarm[0]),
-                Integer.parseInt(strAlarm[1]),
-                AlarmFragment.getClockStateFromPreference(getActivity()));
+        setAlarm();
     }
 
     /**
      * Show Time in a dialog
      * */
-    public void showTimePickerDialog() {
+    public void showTimePickerDialog(int index) {
         DialogFragment newFragment = new TimePickerView();
+        Bundle bundle = new Bundle();
+        bundle.putInt("AlarmIndex", index);
+        newFragment.setArguments(bundle);
+        //mCurrentIndex
         newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
         mClockTextView.setClickable(true);
         mEditClockImage.setClickable(true);
     }
 
     @Override
-    public void setClockTime(String clockTime) {
-        setClock(clockTime);
+    public void setClockTime(int index,String clockTime) {
+        setClock(index,clockTime);
     }
 
-    public static void saveClockStateToPreference(Context context, boolean value) {
+    public static void saveClockStateToPreference(int index,Context context, boolean value) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putBoolean(PREF_KEY_CLOCK_STATE, value).apply();
+        if(index == 0) pref.edit().putBoolean(PREF_KEY_CLOCK_STATE, value).apply();
+        if(index == 1) pref.edit().putBoolean(PREF_KEY_CLOCK_STATE2, value).apply();
+        if(index == 2) pref.edit().putBoolean(PREF_KEY_CLOCK_STATE3, value).apply();
     }
 
-    public static Boolean getClockStateFromPreference(Context context) {
+    public static Boolean getClockStateFromPreference(int index,Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getBoolean(PREF_KEY_CLOCK_STATE, false);
+        if(index == 0) return pref.getBoolean(PREF_KEY_CLOCK_STATE, false);
+        if(index == 1) return pref.getBoolean(PREF_KEY_CLOCK_STATE2, false);
+        if(index == 2) return pref.getBoolean(PREF_KEY_CLOCK_STATE3, false);
+        return false;
     }
 
     @Override

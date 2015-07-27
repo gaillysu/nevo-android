@@ -1,8 +1,11 @@
 package com.nevowatch.nevo.ble.controller;
 
+import com.nevowatch.nevo.Model.Alarm;
 import com.nevowatch.nevo.Model.Goal;
 
 import android.content.Context;
+
+import java.util.ArrayList;
 
 /**
  * this class define some functions for communication with Nevo,
@@ -65,7 +68,7 @@ public interface SyncController {
           minute:0~59
           enable : true or false
      */
-	public void setAlarm(int hour,int minute,boolean enable);
+	public void setAlarm(ArrayList<Alarm> list);
     /*
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
      */

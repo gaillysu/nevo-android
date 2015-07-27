@@ -28,6 +28,7 @@ import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
 import com.nevowatch.nevo.GoogleFitManager;
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.Model.Alarm;
 import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.Model.Goal;
 import com.nevowatch.nevo.Model.Notification;
@@ -216,13 +217,22 @@ import java.util.TimeZone;
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
+                        ArrayList<Alarm> list = new ArrayList<Alarm>();
+
                         //start sync alarm, phone --> nevo
                         //sendRequest(new SetAlarmNevoRequest());
-                        String[] strAlarm = TimePickerView.getAlarmFromPreference(mContext).split(":");
-                        Boolean onOff = AlarmFragment.getClockStateFromPreference(mContext);
-                        setAlarm(Integer.parseInt(strAlarm[0]),
-                                Integer.parseInt(strAlarm[1]),
-                                onOff);
+                        String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
+                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0,mContext);
+                        list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
+
+                        strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");
+                        onOff = AlarmFragment.getClockStateFromPreference(1,mContext);
+                        list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
+
+                        strAlarm = TimePickerView.getAlarmFromPreference(2,mContext).split(":");
+                        onOff = AlarmFragment.getClockStateFromPreference(2,mContext);
+                        list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
+                        setAlarm(list);
                     }
                     else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
@@ -411,8 +421,8 @@ import java.util.TimeZone;
     }
 
     @Override
-    public void setAlarm(int hour, int minute, boolean enable) {
-        sendRequest(new SetAlarmNevoRequest(hour, minute, enable));
+    public void setAlarm(ArrayList<Alarm> list) {
+        sendRequest(new SetAlarmNevoRequest(list));
     }
 
     @Override

@@ -25,12 +25,16 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
     private TimePickerFragmentCallbacks mCallbacks;
     private TimePickerDialog mTimePickerDialog;
     private static final String PREF_KEY_ALARM = "alarm";
+    private static final String PREF_KEY_ALARM2 = "alarm2";
+    private static final String PREF_KEY_ALARM3 = "alarm3";
     private MainActivity mActivity;
+    private int mAlarmIndex;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String str = new String(TimePickerView.getAlarmFromPreference(getActivity()));
+        mAlarmIndex = getArguments().getInt("AlarmIndex",0);
+        String str = new String(TimePickerView.getAlarmFromPreference(mAlarmIndex,getActivity()));
         String tmp[] = str.split(":");
         int hour = new Integer(tmp[0]).intValue();
         int mintue = new Integer(tmp[1]).intValue();
@@ -68,22 +72,26 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
         }else {
             minStr.set(new Integer(minute).toString());
         }
-
-        mCallbacks.setClockTime(hourStr.get() + ":" + minStr.get());
-        TimePickerView.saveAlarmToPreference(getActivity(), hourStr.get() + ":" + minStr.get());
+        TimePickerView.saveAlarmToPreference(mAlarmIndex,getActivity(), hourStr.get() + ":" + minStr.get());
+        mCallbacks.setClockTime(mAlarmIndex,hourStr.get() + ":" + minStr.get());
     }
 
     public static interface  TimePickerFragmentCallbacks {
-        void setClockTime(String clockTime);
+        void setClockTime(int index,String clockTime);
     }
 
-    public static void saveAlarmToPreference(Context context, String value) {
+    public static void saveAlarmToPreference(int index,Context context, String value) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putString(PREF_KEY_ALARM, value).apply();
+        if(index == 0) pref.edit().putString(PREF_KEY_ALARM, value).apply();
+        if(index == 1) pref.edit().putString(PREF_KEY_ALARM2, value).apply();
+        if(index == 2) pref.edit().putString(PREF_KEY_ALARM3, value).apply();
     }
 
-    public static String getAlarmFromPreference(Context context) {
+    public static String getAlarmFromPreference(int index,Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getString(PREF_KEY_ALARM, "00:00");
+        if(index == 0)  return pref.getString(PREF_KEY_ALARM, "00:00");
+        if(index == 1)  return pref.getString(PREF_KEY_ALARM2, "00:00");
+        if(index == 2)  return pref.getString(PREF_KEY_ALARM3, "00:00");
+        else return "00:00";
     }
 }
