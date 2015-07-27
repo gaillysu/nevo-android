@@ -316,6 +316,8 @@ import java.util.TimeZone;
                         if(currentTime - mLastPressAkey < 500)
                         {
                             if(mLocalService!=null) mLocalService.findCellPhone();
+                            //let all color LED light on, means that find CellPhone is successful.
+                            sendRequest(new TestModeNevoRequest(0x3F0000,false));
                         }
                     }
                     else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
