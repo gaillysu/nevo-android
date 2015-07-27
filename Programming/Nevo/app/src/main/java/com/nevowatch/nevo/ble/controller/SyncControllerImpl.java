@@ -55,6 +55,7 @@ import com.nevowatch.nevo.ble.model.request.SetGoalNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetProfileNevoRequest;
 import com.nevowatch.nevo.ble.model.request.SetRtcNevoRequest;
+import com.nevowatch.nevo.ble.model.request.TestModeNevoRequest;
 import com.nevowatch.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
@@ -82,6 +83,7 @@ import java.util.TimeZone;
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
     private long mLastPressAkey = 0;
+    private boolean mEnableTestMode = false;
 
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
@@ -298,17 +300,31 @@ import java.util.TimeZone;
                             syncFinished();
                         }
                     }
-                    else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x01 == packet.getPackets().get(0).getRawData()[2])
+                    //press B key once--- down and up within 500ms
+                    else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
                     {
                        long currentTime = System.currentTimeMillis();
-                       if(currentTime - mLastPressAkey <3000)
-                       {
-                           if(mLocalService!=null) mLocalService.findCellPhone();
-                       }
-                       else
+                       //remove repeat press B key down within 6s
+                       if(currentTime - mLastPressAkey > 6000)
                        {
                            mLastPressAkey = currentTime;
                        }
+                    }
+                    else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x00 == packet.getPackets().get(0).getRawData()[2])
+                    {
+                        long currentTime = System.currentTimeMillis();
+                        if(currentTime - mLastPressAkey < 500)
+                        {
+                            if(mLocalService!=null) mLocalService.findCellPhone();
+                        }
+                    }
+                    else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
+                    {
+                        if (!mEnableTestMode)
+                        {
+                            mEnableTestMode = true;
+                            sendRequest(new TestModeNevoRequest(0,false));
+                        }
                     }
 
                     mPacketsbuffer.clear();
@@ -321,7 +337,7 @@ import java.util.TimeZone;
     public void onConnectionStateChanged(boolean isConnected, String address) {
 
         if(isConnected) {
-
+            mEnableTestMode = false;
             mTimeOutcount = 0;
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(true);
             //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
@@ -665,7 +681,8 @@ import java.util.TimeZone;
         }
         private  void PlayFromRawFile()
         {
-            MediaPlayer play = MediaPlayer.create(this, com.nevowatch.nevo.R.raw.music);
+            final MediaPlayer play = MediaPlayer.create(this, com.nevowatch.nevo.R.raw.music);
+            final long currentTime = System.currentTimeMillis();
             play.setAudioStreamType(AudioManager.STREAM_MUSIC);
             AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -674,6 +691,16 @@ import java.util.TimeZone;
             {
                 play.stop();
             }
+            play.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    //music duration is 2s, repeat 3 times
+                    if (System.currentTimeMillis() - currentTime < 6000)
+                    {
+                        play.start();
+                    }
+                }
+            });
             play.start();
         }
     }
