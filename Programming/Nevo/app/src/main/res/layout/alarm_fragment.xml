@@ -10,18 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="120dp">
+        android:layout_marginTop="70dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="80sp"
+            android:textSize="50sp"
             android:text="@string/clock"
             android:id="@+id/clock_textView"
             android:textColor="@color/customBlack"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="20dp"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"/>
 
         <ImageView
             android:layout_width="20dp"
@@ -33,31 +32,122 @@
             android:background="@drawable/editor"
             android:layout_marginTop="50dp"/>
 
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/on_mode_button"
+            android:background="@drawable/alarm_open_button_selector"
+            android:layout_marginLeft="10dp"
+            android:text="@string/open_string"
+            android:textColor="@color/customBlack"
+            android:textAllCaps="false"/>
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/off_mode_button"
+            android:background="@drawable/alarm_close_button_selector"
+            android:text="@string/close_string"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/customBlack"
+            android:textAllCaps="false"/>
+
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50sp"
+            android:text="@string/clock"
+            android:id="@+id/clock_textView2"
+            android:textColor="@color/customBlack"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="30dp"
+            android:id="@+id/imageView4"
+            android:textColor="@color/customBlack"
+            android:layout_gravity="bottom"
+            android:background="@drawable/editor"
+            android:layout_marginTop="50dp" />
 
         <Button
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/on_mode_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/on_mode_button2"
             android:background="@drawable/alarm_open_button_selector"
-            android:layout_marginRight="25dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/open_string"
             android:textColor="@color/customBlack"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false" />
 
         <Button
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/off_mode_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/off_mode_button2"
             android:background="@drawable/alarm_close_button_selector"
             android:text="@string/close_string"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/customBlack"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false" />
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50sp"
+            android:text="@string/clock"
+            android:id="@+id/clock_textView3"
+            android:textColor="@color/customBlack"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="30dp"
+            android:id="@+id/imageView5"
+            android:textColor="@color/customBlack"
+            android:layout_gravity="bottom"
+            android:background="@drawable/editor"
+            android:layout_marginTop="50dp" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/on_mode_button3"
+            android:background="@drawable/alarm_open_button_selector"
+            android:layout_marginLeft="10dp"
+            android:text="@string/open_string"
+            android:textColor="@color/customBlack"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/off_mode_button3"
+            android:background="@drawable/alarm_close_button_selector"
+            android:text="@string/close_string"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/customBlack"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
 </LinearLayout>

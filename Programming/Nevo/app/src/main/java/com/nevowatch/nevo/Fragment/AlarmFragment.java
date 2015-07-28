@@ -60,7 +60,13 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         View [] viewArray = new View []{
                 rootView.findViewById(R.id.clock_textView),
                 rootView.findViewById(R.id.on_mode_button),
-                rootView.findViewById(R.id.off_mode_button)
+                rootView.findViewById(R.id.off_mode_button),
+                rootView.findViewById(R.id.clock_textView2),
+                rootView.findViewById(R.id.on_mode_button2),
+                rootView.findViewById(R.id.off_mode_button2),
+                rootView.findViewById(R.id.clock_textView3),
+                rootView.findViewById(R.id.on_mode_button3),
+                rootView.findViewById(R.id.off_mode_button3)
         };
         FontManager.changeFonts(viewArray,getActivity());
 
