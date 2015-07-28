@@ -39,10 +39,20 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     private ImageView mEditClockImage;
     private Button mOnButton;
     private Button mOffButton;
+
+    private TextView mClockTextView2;
+    private ImageView mEditClockImage2;
+    private Button mOnButton2;
+    private Button mOffButton2;
+
+    private TextView mClockTextView3;
+    private ImageView mEditClockImage3;
+    private Button mOnButton3;
+    private Button mOffButton3;
+
     private static final String PREF_KEY_CLOCK_STATE = "clockState";
     private static final String PREF_KEY_CLOCK_STATE2 = "clockState2";
     private static final String PREF_KEY_CLOCK_STATE3 = "clockState3";
-    private int mCurrentIndex = 0; //Alarm index, values: 0,1,2
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -56,6 +66,25 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         mOnButton.setOnClickListener(this);
         mOffButton =  (Button)rootView.findViewById(R.id.off_mode_button);
         mOffButton.setOnClickListener(this);
+
+        mClockTextView2 = (TextView) rootView.findViewById(R.id.clock_textView2);
+        mClockTextView2.setOnClickListener(this);
+        mEditClockImage2 = (ImageView) rootView.findViewById(R.id.edit_clock_imageButton2);
+        mEditClockImage2.setOnClickListener(this);
+        mOnButton2 =  (Button)rootView.findViewById(R.id.on_mode_button2);
+        mOnButton2.setOnClickListener(this);
+        mOffButton2 =  (Button)rootView.findViewById(R.id.off_mode_button2);
+        mOffButton2.setOnClickListener(this);
+
+        mClockTextView3 = (TextView) rootView.findViewById(R.id.clock_textView3);
+        mClockTextView3.setOnClickListener(this);
+        mEditClockImage3 = (ImageView) rootView.findViewById(R.id.edit_clock_imageButton3);
+        mEditClockImage3.setOnClickListener(this);
+        mOnButton3 =  (Button)rootView.findViewById(R.id.on_mode_button3);
+        mOnButton3.setOnClickListener(this);
+        mOffButton3 =  (Button)rootView.findViewById(R.id.off_mode_button3);
+        mOffButton3.setOnClickListener(this);
+
 
         View [] viewArray = new View []{
                 rootView.findViewById(R.id.clock_textView),
@@ -76,22 +105,53 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     @Override
     public void onResume() {
         super.onResume();
-        //TODO ,fixed to 3 alarm TextView
         mClockTextView.setText(TimePickerView.getAlarmFromPreference(0,getActivity()));
-        lightClockState(AlarmFragment.getClockStateFromPreference(0,getActivity()));
+        lightClockState(0,AlarmFragment.getClockStateFromPreference(0,getActivity()));
+        mClockTextView2.setText(TimePickerView.getAlarmFromPreference(1,getActivity()));
+        lightClockState(1,AlarmFragment.getClockStateFromPreference(1,getActivity()));
+        mClockTextView3.setText(TimePickerView.getAlarmFromPreference(2,getActivity()));
+        lightClockState(2,AlarmFragment.getClockStateFromPreference(2,getActivity()));
     }
 
-    private void lightClockState(boolean enable){
+    private void lightClockState(int index,boolean enable){
         if(enable){
-            mOffButton.setTextColor(getResources().getColor(R.color.black));
-            mOnButton.setTextColor(getResources().getColor(R.color.white));
-            mOffButton.setSelected(false);
-            mOnButton.setSelected(true);
+            if(index == 0) {
+                mOffButton.setTextColor(getResources().getColor(R.color.black));
+                mOnButton.setTextColor(getResources().getColor(R.color.white));
+                mOffButton.setSelected(false);
+                mOnButton.setSelected(true);
+            }
+            if(index == 1) {
+                mOffButton2.setTextColor(getResources().getColor(R.color.black));
+                mOnButton2.setTextColor(getResources().getColor(R.color.white));
+                mOffButton2.setSelected(false);
+                mOnButton2.setSelected(true);
+            }
+            if(index == 2) {
+                mOffButton3.setTextColor(getResources().getColor(R.color.black));
+                mOnButton3.setTextColor(getResources().getColor(R.color.white));
+                mOffButton3.setSelected(false);
+                mOnButton3.setSelected(true);
+            }
         }else {
-            mOffButton.setTextColor(getResources().getColor(R.color.white));
-            mOnButton.setTextColor(getResources().getColor(R.color.black));
-            mOffButton.setSelected(true);
-            mOnButton.setSelected(false);
+            if(index == 0) {
+                mOffButton.setTextColor(getResources().getColor(R.color.white));
+                mOnButton.setTextColor(getResources().getColor(R.color.black));
+                mOffButton.setSelected(true);
+                mOnButton.setSelected(false);
+            }
+            if(index == 1) {
+                mOffButton2.setTextColor(getResources().getColor(R.color.white));
+                mOnButton2.setTextColor(getResources().getColor(R.color.black));
+                mOffButton2.setSelected(true);
+                mOnButton2.setSelected(false);
+            }
+            if(index == 2) {
+                mOffButton3.setTextColor(getResources().getColor(R.color.white));
+                mOnButton3.setTextColor(getResources().getColor(R.color.black));
+                mOffButton3.setSelected(true);
+                mOnButton3.setSelected(false);
+            }
         }
     }
 
@@ -102,16 +162,48 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
             case R.id.clock_textView:
                     mClockTextView.setClickable(false);
                     mEditClockImage.setClickable(false);
-                    showTimePickerDialog(mCurrentIndex);
+                    showTimePickerDialog(0);
                 break;
             case R.id.on_mode_button:
-                lightClockState(true);
-                AlarmFragment.saveClockStateToPreference(mCurrentIndex,getActivity(), true);
+                lightClockState(0,true);
+                AlarmFragment.saveClockStateToPreference(0,getActivity(), true);
                 setAlarm();
                 break;
             case R.id.off_mode_button:
-                lightClockState(false);
-                AlarmFragment.saveClockStateToPreference(mCurrentIndex,getActivity(), false);
+                lightClockState(0,false);
+                AlarmFragment.saveClockStateToPreference(0,getActivity(), false);
+                setAlarm();
+                break;
+            case R.id.edit_clock_imageButton2:
+            case R.id.clock_textView2:
+                mClockTextView2.setClickable(false);
+                mEditClockImage2.setClickable(false);
+                showTimePickerDialog(1);
+                break;
+            case R.id.on_mode_button2:
+                lightClockState(1,true);
+                AlarmFragment.saveClockStateToPreference(1,getActivity(), true);
+                setAlarm();
+                break;
+            case R.id.off_mode_button2:
+                lightClockState(1,false);
+                AlarmFragment.saveClockStateToPreference(1,getActivity(), false);
+                setAlarm();
+                break;
+            case R.id.edit_clock_imageButton3:
+            case R.id.clock_textView3:
+                mClockTextView3.setClickable(false);
+                mEditClockImage3.setClickable(false);
+                showTimePickerDialog(2);
+                break;
+            case R.id.on_mode_button3:
+                lightClockState(2,true);
+                AlarmFragment.saveClockStateToPreference(2,getActivity(), true);
+                setAlarm();
+                break;
+            case R.id.off_mode_button3:
+                lightClockState(2,false);
+                AlarmFragment.saveClockStateToPreference(2,getActivity(), false);
                 setAlarm();
                 break;
             default:
@@ -137,8 +229,9 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         SyncController.Singleton.getInstance(getActivity()).setAlarm(list);
     }
     public void setClock(int index,final String time){
-        //TODO: fixed to 3 Clock view,index means which one alarm
-        mClockTextView.setText(time);
+        if(index == 0) mClockTextView.setText(time);
+        if(index == 1) mClockTextView2.setText(time);
+        if(index == 2) mClockTextView3.setText(time);
         /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
         setAlarm();
     }

@@ -1,8 +1,10 @@
 package com.nevowatch.nevo.Fragment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -193,7 +195,8 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
         }
         //double click get response within 2s, blink clock image once
         //use 2s, get rid of notification's response
-        else if((byte)0xF0 == packet.getHeader() && (System.currentTimeMillis() - mLastTapTime) < 2000)
+        else if(((byte)0xF0 == packet.getHeader() && (System.currentTimeMillis() - mLastTapTime) < 2000)
+                || ((byte)0xF1 == packet.getHeader() && (byte)0x02 == packet.getPackets().get(0).getRawData()[2]))
         {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -203,9 +206,9 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
                         @Override
                         public void run() {
                             //perhaps 2s later, the fragment got destory!!!!
-                            if (mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
+                            if (mIsVisible && getActivity()!=null) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
                         }
-                    }, 2000);
+                    }, 3000);
                 }
             });
         }
