@@ -47,6 +47,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     private TextView mUpdateuTextView;
     private TextView mBatteryValueTextView;
     private TextView mVersionInfoTextView;
+    private TextView mAppVersionInfoTextView;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mynevo_fragment, container, false);
@@ -68,6 +69,14 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
                                     + getString(R.string.ble_version)
                                     + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
                                     );
+        mAppVersionInfoTextView = (TextView) rootView.findViewById(R.id.appVersionInfo);
+        String version = null;
+        try {
+            version = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        mAppVersionInfoTextView.setText(getString(R.string.app_version)+version);
         //show MCU/BLE version
 
         /*
@@ -139,7 +148,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?MyNevoFragment.MYNEVOPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?MyNevoFragment.MYNEVOFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+        ((MainActivity)getActivity()).replaceFragment(isConnected ? MyNevoFragment.MYNEVOPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? MyNevoFragment.MYNEVOFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
     }
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {

@@ -11,10 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="330dp">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="30dp"
-            android:id="@+id/textVersionInfo" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/textVersionInfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/appVersionInfo"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right" />
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="250dp"
@@ -22,6 +34,7 @@
             android:id="@+id/imageView"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/nevo580" />
+
     </LinearLayout>
 
     <LinearLayout
