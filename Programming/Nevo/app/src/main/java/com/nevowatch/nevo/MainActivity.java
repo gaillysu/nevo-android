@@ -134,7 +134,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     .setNegativeButton(R.string.ok_button,new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Uri uri = Uri.parse("http://www.pgyer.com/gadl");
+                            String able= getResources().getConfiguration().locale.getCountry();
+                            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.fitness&hl="+able);
                             Intent it = new Intent(Intent.ACTION_VIEW, uri);
                             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(it);
