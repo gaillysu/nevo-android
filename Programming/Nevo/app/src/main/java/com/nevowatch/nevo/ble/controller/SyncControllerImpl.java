@@ -15,6 +15,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -24,9 +25,12 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.j256.ormlite.field.types.LongType;
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragmentAdapter;
 import com.nevowatch.nevo.GoogleFitManager;
+import com.nevowatch.nevo.History.database.DatabaseHelper;
+import com.nevowatch.nevo.History.database.IDailyHistory;
 import com.nevowatch.nevo.MainActivity;
 import com.nevowatch.nevo.Model.Alarm;
 import com.nevowatch.nevo.Model.DailyHistory;
@@ -62,9 +66,20 @@ import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 
 /*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
@@ -85,7 +100,7 @@ import java.util.TimeZone;
     private int mTimeOutcount = 0;
     private long mLastPressAkey = 0;
     private boolean mEnableTestMode = false;
-
+    private boolean mSyncAllFlag = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -253,12 +268,18 @@ import java.util.TimeZone;
                         mCurrentDay = 0;
                         mSavedDailyHistory = infopacket.getDailyTrackerInfo();
                         Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
-                        if(mSavedDailyHistory.size()>0)
+                        if(mSavedDailyHistory.size()>0) {
+                            mSyncAllFlag = true;
                             getDailyTracker(mCurrentDay);
+                        }
                     }
                     else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
+
+                        if(mSavedDailyHistory.isEmpty()) {
+                            mSavedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
+                        }
                         mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
                         mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
@@ -290,23 +311,38 @@ import java.util.TimeZone;
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
 
                         mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
                         mSavedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
 
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getTotalDist());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getHourlyDist().toString());
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getTotalCalories());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getHourlyCalories().toString());
 
+                        //save it to local database
+                        try {
+                                IDailyHistory history = new IDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+                                DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
+                                Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                        } catch (SQLException e) {
+                                e.printStackTrace();
+                                Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
+                        }
 
                         //discard tutorial activity, only MainActivity can save data to Google git
                         if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
 
                         mCurrentDay++;
-                        if(mCurrentDay < mSavedDailyHistory.size())
+                        if(mCurrentDay < mSavedDailyHistory.size() && mSyncAllFlag)
                         {
                             getDailyTracker(mCurrentDay);
                         }
                         else
                         {
+                            mSyncAllFlag = false;
                             mCurrentDay = 0;
+                            DatabaseHelper.outPutDatabase(mContext);
                             syncFinished();
                         }
                     }
@@ -382,7 +418,7 @@ import java.util.TimeZone;
                 || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
             //We haven't synched for a while, let's sync now !
             Log.i("SyncControllerImpl","*** Sync started ! ***");
-            getDailyTrackerInfo();
+            getDailyTrackerInfo(true);
         }
         else
         {
@@ -399,15 +435,19 @@ import java.util.TimeZone;
         Log.i("SyncControllerImpl","*** Sync finished ***");
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
+        //tell history to refresh
     }
 
     private void setRtc() {
         sendRequest(new SetRtcNevoRequest());
     }
 
-    private void  getDailyTrackerInfo()
+    @Override
+    public void  getDailyTrackerInfo(boolean syncAll)
     {
-        sendRequest(new ReadDailyTrackerInfoNevoRequest());
+        mCurrentDay = 0;
+        if(syncAll) sendRequest(new ReadDailyTrackerInfoNevoRequest());
+        else getDailyTracker(0);
     }
 
     private void  getDailyTracker(int trackerno)
@@ -448,7 +488,7 @@ import java.util.TimeZone;
         sendRequest(new LedLightOnOffNevoRequest(0x3F0000,false));
     }
 
-	@Override
+    @Override
 	public Context getContext() {		
 		return mContext;
 	}
@@ -531,7 +571,7 @@ import java.util.TimeZone;
 
     @Override
     public void showMessage(final int titleID, final int msgID) {
-        if(mLocalService!=null && mVisible) mLocalService.PopupMessage(titleID,msgID);
+        if(mLocalService!=null && mVisible) mLocalService.PopupMessage(titleID, msgID);
     }
 
     private boolean mVisible = false;

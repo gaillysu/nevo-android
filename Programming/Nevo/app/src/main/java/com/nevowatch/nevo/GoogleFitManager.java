@@ -208,6 +208,26 @@ public class GoogleFitManager implements GoogleFit{
                         .await(1, TimeUnit.MINUTES);
 
         // Get a list of the sessions that match the criteria to check the result.
+        for (Session session : sessionReadResult.getSessions()) {
+            // Process the session
+           // dumpSession(session);
+            // Process the data sets for this session
+            List<DataSet> dataSets = sessionReadResult.getDataSet(session);
+            for (DataSet dataSet : dataSets) {
+             //   dumpDataSet(dataSet);
+                for (DataPoint dp : dataSet.getDataPoints()) {
+                    for(Field field : dp.getDataType().getFields())
+                    {
+                        //Log.i(TAG, "\tField: " + field.getName() + " Value: " + dp.getValue(field));
+                        if(field.getName().equals("steps")) {
+                            int value = Integer.parseInt(""+dp.getValue(field));
+                            dataPoint.saveValue(value);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return sessionReadResult.getSessions().size()>0;
     }
 
@@ -354,7 +374,32 @@ public class GoogleFitManager implements GoogleFit{
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
                 return ;
             }
+             /*
+            // Begin by creating the query.
+            SessionReadRequest readRequest = readFitnessSession();
 
+            // [START read_session]
+            // Invoke the Sessions API to fetch the session with the query and wait for the result
+            // of the read request.
+            SessionReadResult sessionReadResult =
+                    Fitness.SessionsApi.readSession(mClient, readRequest)
+                            .await(1, TimeUnit.MINUTES);
+
+            // Get a list of the sessions that match the criteria to check the result.
+            Log.i(TAG, "Session read was successful. Number of returned sessions is: "
+                    + sessionReadResult.getSessions().size());
+            for (Session session : sessionReadResult.getSessions()) {
+                // Process the session
+                dumpSession(session);
+
+                // Process the data sets for this session
+                List<DataSet> dataSets = sessionReadResult.getDataSet(session);
+                for (DataSet dataSet : dataSets) {
+                    dumpDataSet(dataSet);
+                }
+            }
+            // [END read_session]
+            */
             // At this point, the session has been inserted and can be read.
             Log.i(TAG, "Session insert was successful!");
             // [END insert_session]

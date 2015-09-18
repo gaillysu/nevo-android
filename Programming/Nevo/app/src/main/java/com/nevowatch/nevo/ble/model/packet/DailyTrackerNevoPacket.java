@@ -1,8 +1,14 @@
 package com.nevowatch.nevo.ble.model.packet;
 
+import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.ble.util.HexUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -11,6 +17,37 @@ import java.util.List;
 public class DailyTrackerNevoPacket extends NevoPacket {
     public DailyTrackerNevoPacket(ArrayList<NevoRawData> packets) {
         super(packets);
+    }
+
+    /**
+     return which date, default is today
+     */
+    public Date getDate()
+    {
+        int year = 0;
+        int month = 0;
+        int day = 0;
+
+        year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2],getPackets().get(0).getRawData()[3]});
+        month = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[4]});
+        day   = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[5]});
+
+        Calendar calBeginning = new GregorianCalendar();
+        calBeginning.setTime(new Date());
+        calBeginning.set(Calendar.HOUR_OF_DAY, 0);
+        calBeginning.set(Calendar.MINUTE, 0);
+        calBeginning.set(Calendar.SECOND, 0);
+        calBeginning.set(Calendar.MILLISECOND, 0);
+
+        Date date = calBeginning.getTime();
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        try {
+            date = format.parse(String.format("%04d%02d%02d000000",year,month,day));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     /**
