@@ -342,7 +342,7 @@ import java.util.TimeZone;
                         {
                             mSyncAllFlag = false;
                             mCurrentDay = 0;
-                            DatabaseHelper.outPutDatabase(mContext);
+                            //DatabaseHelper.outPutDatabase(mContext);
                             syncFinished();
                         }
                     }
