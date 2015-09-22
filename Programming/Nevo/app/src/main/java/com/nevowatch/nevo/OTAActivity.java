@@ -84,6 +84,8 @@ public class OTAActivity extends Activity
     //but the OTA should be continue on background. when user come back, the progress should be showing
     Context mContext;
     private static AlertDialog mAlertDialog = null;
+    //press A/B and install battery mode.
+    private boolean bHelpMode = false;
 
     //for good user experience, add Animation when waiting...
     private Animation mAnimation = null;
@@ -94,37 +96,20 @@ public class OTAActivity extends Activity
                 || mNevoOtaController.getFirmwareVersion() == null
                 || mNevoOtaController.getState() != Constants.DFUControllerState.INIT)
         {
-            return;
+            if(!bHelpMode) return;
         }
 
         firmwareURLs.clear();
         currentIndex = 0;
 
         String[]files;
-        int  currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
-        int  currentFirmwareVersion = Integer.parseInt(mNevoOtaController.getFirmwareVersion());
-        try {
-            files = mContext.getAssets().list("firmware");
-            for(String file:files)
-            {
-                if(file.contains(".bin"))
-                {
-                    int start  = file.toLowerCase().indexOf("_v");
-                    int end = file.toLowerCase().indexOf(".bin");
-                    String vString = file.substring(start+2,end);
-                    if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
+        int  currentSoftwareVersion = 0;
+        int  currentFirmwareVersion = 0;
 
-                    if(currentSoftwareVersion < buildinSoftwareVersion || forceUpdate)
-                    {
-                        firmwareURLs.add("firmware/" + file);
-                        break;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if(mNevoOtaController.getSoftwareVersion() != null)
+            currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
+        if(mNevoOtaController.getFirmwareVersion() != null)
+            currentFirmwareVersion = Integer.parseInt(mNevoOtaController.getFirmwareVersion());
 
         try {
             files = mContext.getAssets().list("firmware");
@@ -146,6 +131,33 @@ public class OTAActivity extends Activity
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            files = mContext.getAssets().list("firmware");
+            for(String file:files)
+            {
+                if(file.contains(".bin"))
+                {
+                    int start  = file.toLowerCase().indexOf("_v");
+                    int end = file.toLowerCase().indexOf(".bin");
+                    String vString = file.substring(start+2,end);
+                    if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
+
+                    if(currentSoftwareVersion < buildinSoftwareVersion || forceUpdate)
+                    {
+                        if(currentSoftwareVersion == 0 && !bHelpMode)
+                            firmwareURLs.add(0,"firmware/" + file);
+                        else
+                            firmwareURLs.add("firmware/" + file);
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         if(firmwareURLs.size()>0)
         {
@@ -185,8 +197,8 @@ public class OTAActivity extends Activity
         setContentView(R.layout.ota_activity);
 
         mContext = this;
-
-        mNevoOtaController = OtaController.Singleton.getInstance(this);
+        bHelpMode = getIntent().getStringExtra("from").equals("tutorial");
+        mNevoOtaController = OtaController.Singleton.getInstance(this,bHelpMode);
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
 
@@ -199,8 +211,14 @@ public class OTAActivity extends Activity
         };
         FontManager.changeFonts(viewArray, this);
 
-        initListView(false,true);
-        initValue();
+        if(bHelpMode)
+        {
+            initListView(true, false);
+        }
+        else {
+            initListView(false, true);
+            initValue();
+        }
     }
 
     private void initView(){
@@ -250,7 +268,8 @@ public class OTAActivity extends Activity
     public void onClick(View v){
         switch (v.getId()){
             case R.id.reUpgradebutton:
-                initListView(true,false);
+                if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
+                    initListView(true,false);
                 uploadPressed();
                 break;
             case R.id.backImage:
@@ -279,10 +298,11 @@ public class OTAActivity extends Activity
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
            // ((MainActivity) mContext).replaceFragment(isConnected ? OTAActivity.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAActivity.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
         }
-        if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RECONNECT && isConnected)
+        if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET && isConnected)
         {
-            bLinkWaitingMessage(0);
-            uploadPressed();
+            //bLinkWaitingMessage(0);
+            //uploadPressed();
+            mReButton.setVisibility(View.VISIBLE);
         }
 
     }
@@ -351,6 +371,8 @@ public class OTAActivity extends Activity
                 }
                 else
                 {
+                    //removed for first do MCU ota,then do BLE ota
+                    /**
                     //check MCU OK,first reset and wait 10s do BLE OTA
                     mNevoOtaController.reset(false);
                     //set new state and hide rebutton
@@ -369,6 +391,27 @@ public class OTAActivity extends Activity
                             }
                         }
                     },10000);
+                    */
+
+                        mNevoOtaController.reset(false);
+                        mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
+                        initValue();
+
+                        mReButton.setText("Continue");
+
+                        String msgInfo = "Ble upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the Mcu button, or there will be a timeout phenomenon";
+
+                        if (enumFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
+                            msgInfo = "Mcu upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the button, or there will be a timeout phenomenon";
+
+                        new AlertDialog.Builder(((Activity) mContext), AlertDialog.THEME_HOLO_LIGHT)
+                                .setTitle(R.string.FirmwareUpgrade)
+                                .setMessage(msgInfo)
+                                .setPositiveButton(android.R.string.ok, null)
+                                .setCancelable(false).show();
+
+
+
                 }
             }
         });
@@ -379,6 +422,7 @@ public class OTAActivity extends Activity
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET) return;
                 mNevoOtaController.reset(false);
                 initValue();
                 if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
@@ -431,7 +475,7 @@ public class OTAActivity extends Activity
     {
        // nevoOtaView.backButton.enabled = true
         if (mNevoOtaController.getState() == Constants.DFUControllerState.INIT) {
-            mReButton.setVisibility(View.VISIBLE);
+            mReButton.setVisibility(View.INVISIBLE);
             mBackImage.setVisibility(View.VISIBLE);
         }
         else

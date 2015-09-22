@@ -473,7 +473,10 @@ import java.util.TimeZone;
         return mConnectionController.getSoftwareVersion();
     }
     @Override
-    public void forgetDevice() { mConnectionController.forgetSavedAddress();}
+    public void forgetDevice() {
+        mConnectionController.forgetSavedAddress();
+        getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
+    }
 
     @Override
     public void onException(Exception e) {

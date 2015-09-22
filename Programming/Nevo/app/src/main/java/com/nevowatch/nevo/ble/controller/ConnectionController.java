@@ -44,6 +44,12 @@ public interface ConnectionController {
     public void connect();
 
     /**
+     * used for OTA reconnect
+     * @param
+     */
+    public void reconnect();
+
+    /**
      Checks if there's a device currently connected
      */
     public boolean isConnected();

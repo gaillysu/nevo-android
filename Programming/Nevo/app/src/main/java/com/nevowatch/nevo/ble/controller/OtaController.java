@@ -17,10 +17,10 @@ public interface OtaController {
      */
     public  class Singleton {
         private static  OtaControllerImpl sInstance = null;
-        public static OtaController getInstance(Context context) {
+        public static OtaController getInstance(Context context,boolean helpmode) {
             if(null == sInstance )
             {
-                sInstance = new OtaControllerImpl(context);
+                sInstance = new OtaControllerImpl(context,helpmode);
             } else {
                 sInstance.setContext(context);
             }

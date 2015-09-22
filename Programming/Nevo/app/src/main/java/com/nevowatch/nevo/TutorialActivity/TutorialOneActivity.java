@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.nevowatch.nevo.MainActivity;
+import com.nevowatch.nevo.OTAActivity;
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.ble.util.Constants;
@@ -36,6 +37,16 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
 
         View [] viewArray = new View []{findViewById(R.id.activateButton),findViewById(R.id.uriButton)};
         FontManager.changeFonts(viewArray,this);
+
+        findViewById(R.id.imagewatch).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(TutorialOneActivity.this, OTAActivity.class);
+                intent.putExtra("from","tutorial");
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     @Override

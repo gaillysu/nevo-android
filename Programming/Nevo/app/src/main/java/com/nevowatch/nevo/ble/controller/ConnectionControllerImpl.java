@@ -151,6 +151,15 @@ import java.util.TimerTask;
 
     }
 
+    @Override
+    public void reconnect()
+    {
+        List<GattAttributes.SupportedService> servicelist = new ArrayList<GattAttributes.SupportedService>();
+        servicelist.add(GattAttributes.SupportedService.nevo);
+        Optional<String> preferredAddress = new Optional<String>();
+        if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
+        NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
+    }
 
     @Override
     public void sendRequest(SensorRequest request) {

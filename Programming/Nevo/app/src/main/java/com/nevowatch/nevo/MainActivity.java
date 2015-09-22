@@ -217,9 +217,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
-            if(position !=OTAActivity.OTAPOSITION && OtaController.Singleton.getInstance(this).getState() == Constants.DFUControllerState.INIT)
+            if(position !=OTAActivity.OTAPOSITION && OtaController.Singleton.getInstance(this,false).getState() == Constants.DFUControllerState.INIT)
             {
-                OtaController.Singleton.getInstance(this).switch2SyncController();
+                OtaController.Singleton.getInstance(this,false).switch2SyncController();
             }
         }
     }

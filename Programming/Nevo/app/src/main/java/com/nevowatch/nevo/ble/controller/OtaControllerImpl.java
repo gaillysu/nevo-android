@@ -98,16 +98,19 @@ import java.util.UUID;
     private int curpage = 0;
     private int totalpage = 0;
     private int checksum = 0;
+    private boolean bHelpMode = false;
     //end added
 
-    /*package*/OtaControllerImpl(Context context)
+    /*package*/OtaControllerImpl(Context context,boolean helpmode)
     {
         mContext = context;
 
         mConnectionController = ConnectionController.Singleton.getInstance(context);
 
         mOldDelegate = mConnectionController.setDelegate(this);
-
+        //help mode by press A/B key and install battery
+        bHelpMode = helpmode;
+        if(bHelpMode) mConnectionController.setOTAMode(true,true);
         mConnectionController.connect();
 
     }
@@ -486,13 +489,28 @@ import java.util.UUID;
         //Hex to bin and read it to buffer
         openFile(filename);
 
-        mConnectionController.setOTAMode(true ,false);
         //by pass mode for doing OTA
-        state = DFUControllerState.SEND_START_COMMAND;
+        /**
+        mConnectionController.setOTAMode(true ,false);
+        //state = DFUControllerState.SEND_START_COMMAND;
         if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
             mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
         if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
             mConnectionController.sendRequest(new NevoOTAStartRequest());
+         */
+        //help mode for doing OTA
+        if(bHelpMode && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+        {
+            state = DFUControllerState.SEND_FIRMWARE_DATA;
+            sendRequest(new NevoOTAControlRequest(new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
+            sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,false));
+        }
+        //pair mode for doing OTA
+        else
+        {
+            state = DFUControllerState.IDLE;
+            mConnectionController.setOTAMode(true, true);
+        }
     }
 
     public void SamsungS4Patch()
@@ -573,6 +591,12 @@ import java.util.UUID;
         {
             mConnectionController.setDelegate(mOldDelegate);
         }
+        if(bHelpMode)
+        {
+            bHelpMode = false;
+            mConnectionController.forgetSavedAddress();
+        }
+
         //disconnect and reconnect for reading new version
         mConnectionController.setOTAMode(false, true);
 
@@ -605,7 +629,18 @@ import java.util.UUID;
         {
             if (connected)
             {
-                if (state == DFUControllerState.DISCOVERING)
+                if (state == DFUControllerState.SEND_RECONNECT)
+                {
+                    state = DFUControllerState.SEND_START_COMMAND;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.sendRequest(new NevoOTAStartRequest());
+                        }
+                    },1000);
+                }
+                else if (state == DFUControllerState.DISCOVERING)
                 {
                     state = DFUControllerState.SEND_FIRMWARE_DATA;
 
@@ -620,8 +655,20 @@ import java.util.UUID;
             }
             else
             {
+                if (state == DFUControllerState.IDLE)
+                {
+                    state = DFUControllerState.SEND_RECONNECT;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.reconnect();
+                        }
+                    },1000);
+                }
+
                 //by BLE peer disconnect when normal mode to ota mode
-                if (state == DFUControllerState.SEND_START_COMMAND)
+                else if (state == DFUControllerState.SEND_START_COMMAND)
                 {
                     state = DFUControllerState.DISCOVERING;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -631,6 +678,38 @@ import java.util.UUID;
                             //when switch to DFU mode, the MAC address has changed to another one
                             mConnectionController.forgetSavedAddress();
                             mConnectionController.connect();
+                        }
+                    },1000);
+                }
+            }
+        }
+        //only MCU OTA run below code
+        else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE )
+        {
+            if (connected)
+            {
+                if (state == DFUControllerState.SEND_RECONNECT)
+                {
+                    state = DFUControllerState.SEND_START_COMMAND;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
+                        }
+                    },1000);
+                }
+            }
+            else
+            {
+                if (state == DFUControllerState.IDLE)
+                {
+                    state = DFUControllerState.SEND_RECONNECT;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mConnectionController.reconnect();
                         }
                     },1000);
                 }
