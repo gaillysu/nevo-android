@@ -278,6 +278,7 @@ import java.util.TimeZone;
                         DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
 
                         if(mSavedDailyHistory.isEmpty()) {
+                            mCurrentDay = 0;
                             mSavedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
                         }
                         mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
@@ -445,9 +446,8 @@ import java.util.TimeZone;
     @Override
     public void  getDailyTrackerInfo(boolean syncAll)
     {
-        mCurrentDay = 0;
         if(syncAll) sendRequest(new ReadDailyTrackerInfoNevoRequest());
-        else getDailyTracker(0);
+        else if(!mSyncAllFlag)getDailyTracker(0);
     }
 
     private void  getDailyTracker(int trackerno)
