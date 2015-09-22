@@ -21,6 +21,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.table.TableUtils;
 import com.nevowatch.nevo.R;
+import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,16 +95,35 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * @param dailyhistory
      * @throws SQLException
      */
-    public void SaveDailyHistory(IDailyHistory dailyhistory) throws SQLException {
+    public void SaveDailyHistory(final IDailyHistory dailyhistory) throws SQLException {
 
-        List <IDailyHistory> list = getDailyHistoryDao().queryBuilder().orderBy("created", true).where().eq("created",dailyhistory.getCreated()).query();
-        if(list!=null && list.size()>0) {
-            dailyhistory.setTrainingID(list.get(0).getTrainingID());
-            getDailyHistoryDao().update(dailyhistory);
-        }
-        else {
-            getDailyHistoryDao().create(dailyhistory);
-        }
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.LocalDatabase).post(new Runnable() {
+            @Override
+            public void run() {
+
+                List <IDailyHistory> list = null;
+                try {
+                    list = getDailyHistoryDao().queryBuilder().orderBy("created", true).where().eq("created",dailyhistory.getCreated()).query();
+
+                    if(list!=null && list.size()>0) {
+                        dailyhistory.setTrainingID(list.get(0).getTrainingID());
+                        getDailyHistoryDao().update(dailyhistory);
+                    }
+                    else {
+                        getDailyHistoryDao().create(dailyhistory);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    try {
+                        throw e;
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+                }finally {
+                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.LocalDatabase).next();
+                }
+            }
+        });
     }
 
     public static void outPutDatabase(Context context)
