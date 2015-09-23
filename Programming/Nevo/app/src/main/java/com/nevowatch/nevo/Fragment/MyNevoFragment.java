@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nevowatch.nevo.FontManager;
 import com.nevowatch.nevo.MainActivity;
@@ -49,6 +50,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     private TextView mBatteryValueTextView;
     private TextView mVersionInfoTextView;
     private TextView mAppVersionInfoTextView;
+    private int mBatteryValue = -1;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mynevo_fragment, container, false);
@@ -121,6 +123,11 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     public void onClick(View v){
         switch (v.getId()){
             case R.id.mynevo_push_ota:
+                if(mBatteryValue == 0)
+                {
+                    Toast.makeText(mCtx,R.string.update_error_lowbattery,Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Intent intent = new Intent(mCtx, OTAActivity.class);
                 mCtx.startActivity(intent);
                 break;
@@ -137,6 +144,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         {
             final byte value = packet.newBatteryLevelNevoPacket().getBatteryLevel();
             Log.i(TAG, "Battery level:" + value);//0,1,2
+            mBatteryValue = value;
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

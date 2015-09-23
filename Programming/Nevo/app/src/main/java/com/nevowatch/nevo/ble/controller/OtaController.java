@@ -26,6 +26,13 @@ public interface OtaController {
             }
             return sInstance;
         }
+        public static void destroy() {
+            if(null != sInstance )
+            {
+                sInstance.destroy();
+                sInstance = null;
+            }
+        }
     }
 
     /**

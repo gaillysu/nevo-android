@@ -28,6 +28,13 @@ public interface ConnectionController {
             }
             return sInstance;
         }
+        public static void destroy() {
+            if(null != sInstance )
+            {
+                sInstance.destroy();
+                sInstance = null;
+            }
+        }
     }
 
     /**
@@ -48,6 +55,7 @@ public interface ConnectionController {
      * @param
      */
     public void reconnect();
+
 
     /**
      Checks if there's a device currently connected

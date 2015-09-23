@@ -127,6 +127,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             //some android ROM image has disable the alertDialog feature, such as xiaomi
             //SyncController.Singleton.getInstance(this).setVisible(true);
             //SyncController.Singleton.getInstance(this).showMessage(R.string.install_google_app_title,R.string.install_google_app_content);
+            /**
             new AlertDialog.Builder(MainActivity.this,AlertDialog.THEME_HOLO_LIGHT)
                     .setTitle(R.string.install_google_app_title)
                     .setMessage(R.string.install_google_app_content)
@@ -142,6 +143,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                         }
                     })
                     .show();
+             */
         }
     }
 

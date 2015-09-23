@@ -69,7 +69,7 @@ import java.util.UUID;
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
-    private static final int MAX_TIME = 30000;
+    public static int MAX_TIME = 35000;
     private double lastprogress = 0.0;
     //added for MCU OTA
 
@@ -454,7 +454,8 @@ import java.util.UUID;
             public void run() {
                 if (lastprogress == progress) //when no change happened, timeout
                 {
-                    Log.w(TAG,"* * * OTA timeout * * *");
+                    if(MAX_TIME<60000) MAX_TIME = MAX_TIME + 5000;
+                    Log.w(TAG,"* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() );
                     String errorMessage = "Timeout,please try again";
                    if (state == DFUControllerState.SEND_START_COMMAND
                            && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
@@ -565,6 +566,11 @@ import java.util.UUID;
     {
         mConnectionController.setDelegate(mOldDelegate);
     }
+
+    /*package*/ void destroy()
+    {
+        ConnectionController.Singleton.destroy();
+    }
     /**
      reset to normal mode "NevoProfile"
      parameter: switch2SyncController: true/false
@@ -650,7 +656,7 @@ import java.util.UUID;
                             sendRequest(new NevoOTAControlRequest(new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
                             sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,false));
                         }
-                    },2000);
+                    },1000);
                 }
             }
             else

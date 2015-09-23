@@ -161,6 +161,11 @@ import java.util.TimerTask;
         NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
     }
 
+   /*package*/ void destroy()
+    {
+        NevoBT.Singleton.getInstance(mContext).disconnect();
+    }
+
     @Override
     public void sendRequest(SensorRequest request) {
         NevoBT.Singleton.getInstance(mContext).sendRequest(request);

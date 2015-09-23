@@ -79,6 +79,7 @@
     <string name="currentFWversion">Votre nevo n\'est pas à jour :</string>
     <string name="latestFWversion"> Voulez-vous installer la dernière version ? :</string>
     <string name="lastestSyncDate">Dernière mise à jour\nle</string>
+    <string name="update_error_lowbattery">Low battery for update.</string>
     <string name="update_error_timeout">Update time out.</string>
     <string name="update_error_noconnect">Pas de nevo connectée.</string>
     <string name="update_error_openfile">Open Firmware file error.</string>

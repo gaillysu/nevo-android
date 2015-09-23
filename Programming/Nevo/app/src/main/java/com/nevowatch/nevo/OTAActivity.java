@@ -197,7 +197,7 @@ public class OTAActivity extends Activity
         setContentView(R.layout.ota_activity);
 
         mContext = this;
-        bHelpMode = getIntent().getStringExtra("from").equals("tutorial");
+        bHelpMode = getIntent().getStringExtra("from") == null ? false: getIntent().getStringExtra("from").equals("tutorial");
         mNevoOtaController = OtaController.Singleton.getInstance(this,bHelpMode);
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
@@ -214,6 +214,7 @@ public class OTAActivity extends Activity
         if(bHelpMode)
         {
             initListView(true, false);
+            mReButton.setVisibility(View.INVISIBLE);
         }
         else {
             initListView(false, true);
@@ -249,6 +250,11 @@ public class OTAActivity extends Activity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(bHelpMode)
+        {
+            OtaController.Singleton.destroy();
+            return;
+        }
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
         {
             if(mUpdateSuccess)
@@ -268,8 +274,6 @@ public class OTAActivity extends Activity
     public void onClick(View v){
         switch (v.getId()){
             case R.id.reUpgradebutton:
-                if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
-                    initListView(true,false);
                 uploadPressed();
                 break;
             case R.id.backImage:
@@ -283,9 +287,6 @@ public class OTAActivity extends Activity
     @Override
     public void onResume() {
         super.onResume();
-        if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
-            //DO NOTHING
-        }
     }
 
     @Override
@@ -296,9 +297,15 @@ public class OTAActivity extends Activity
     @Override
     public void connectionStateChanged(boolean isConnected) {
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
-           // ((MainActivity) mContext).replaceFragment(isConnected ? OTAActivity.OTAPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? OTAActivity.OTAFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
+            if(errorMsg !="" && isConnected && !bHelpMode)
+            {
+                mReButton.setText(R.string.re_upgrade);
+                mReButton.setVisibility(View.VISIBLE);
+            }
         }
-        if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET && isConnected)
+        if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET
+                || (mNevoOtaController.getState() == Constants.DFUControllerState.INIT && bHelpMode))
+                && isConnected)
         {
             //bLinkWaitingMessage(0);
             //uploadPressed();
