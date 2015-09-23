@@ -172,7 +172,7 @@ public class OTAActivity extends Activity
                 AlertDialog.Builder ab = new AlertDialog.Builder(((Activity) mContext), AlertDialog.THEME_HOLO_LIGHT)
                         .setTitle(R.string.FirmwareUpgrade)
                         .setMessage(versionInfo)
-                        .setPositiveButton(android.R.string.cancel, null)
+                        //.setPositiveButton(android.R.string.cancel, null)
                         .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
