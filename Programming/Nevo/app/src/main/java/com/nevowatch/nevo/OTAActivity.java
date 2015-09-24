@@ -172,7 +172,7 @@ public class OTAActivity extends Activity
                 AlertDialog.Builder ab = new AlertDialog.Builder(((Activity) mContext), AlertDialog.THEME_HOLO_LIGHT)
                         .setTitle(R.string.FirmwareUpgrade)
                         .setMessage(versionInfo)
-                        //.setPositiveButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.cancel, null)
                         .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -399,7 +399,8 @@ public class OTAActivity extends Activity
                         }
                     },10000);
                     */
-
+                        //unpair this watch, when reconnect it, repair it again, otherwiase, it will lead the cmd can't get response.
+                        if (enumFirmwareType == DfuFirmwareTypes.APPLICATION) mNevoOtaController.forGetDevice();
                         mNevoOtaController.reset(false);
                         mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
                         initValue();
