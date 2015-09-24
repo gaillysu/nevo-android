@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,13 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.nevowatch.nevo.Fragment.AlarmFragment;
 import com.nevowatch.nevo.Fragment.ConnectAnimationFragment;
 import com.nevowatch.nevo.Fragment.GoalFragment;
+import com.nevowatch.nevo.Fragment.HistoryFragment;
 import com.nevowatch.nevo.Fragment.NavigationDrawerFragment;
 import com.nevowatch.nevo.Fragment.NotificationFragment;
 import com.nevowatch.nevo.Fragment.MyNevoFragment;
 import com.nevowatch.nevo.Fragment.WelcomeFragment;
+import com.nevowatch.nevo.History.database.DatabaseHelper;
 import com.nevowatch.nevo.ble.controller.OnSyncControllerListener;
 import com.nevowatch.nevo.ble.controller.OtaController;
 import com.nevowatch.nevo.ble.controller.SyncController;
@@ -33,6 +37,13 @@ import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Optional;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 
@@ -102,12 +113,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gsf = true;
             }
-            else if(app.packageName.equals(google_play_services) && app.versionName.contains("7."))
+            else if(app.packageName.equals(google_play_services) /*&& app.versionName.contains("7.")*/)
             {
                 Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gps = true;
             }
-            else if(app.packageName.equals(google_fitness) && app.versionName.contains("1.5"))
+            else if(app.packageName.equals(google_fitness) /*&& app.versionName.contains("1.5")*/)
             {
                 Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
                 isInstalled_gf = true;
@@ -210,6 +221,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTag = MyNevoFragment.MYNEVOFRAGMENT;
                 mTitle = getString(R.string.title_section5);
                 break;
+            case HistoryFragment.HISTORYPOSITION+1:
+                tag.set(HistoryFragment.HISTORYFRAGMENT);
+                mPosition = HistoryFragment.HISTORYPOSITION;
+                mTag = HistoryFragment.HISTORYFRAGMENT;
+                mTitle = getString(R.string.title_section6);
+                break;
             default:
                 break;
         }
@@ -289,6 +306,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else if(tag.equals(MyNevoFragment.MYNEVOFRAGMENT)){
             MyNevoFragment mynevoFragment = (MyNevoFragment) getSupportFragmentManager().findFragmentByTag(MyNevoFragment.MYNEVOFRAGMENT);
             return mynevoFragment;
+        }else if(tag.equals(HistoryFragment.HISTORYFRAGMENT)){
+            HistoryFragment historyFragment = (HistoryFragment) getSupportFragmentManager().findFragmentByTag(HistoryFragment.HISTORYFRAGMENT);
+            return historyFragment;
         }
         return null;
     }
@@ -318,6 +338,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 ((NotificationFragment)fragment).packetReceived(packet);
             }else if(fragment instanceof MyNevoFragment){
                 ((MyNevoFragment)fragment).packetReceived(packet);
+            }else if(fragment instanceof HistoryFragment){
+                ((HistoryFragment)fragment).packetReceived(packet);
             }
         }
     }
@@ -352,6 +374,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                         ((NotificationFragment)fragment).connectionStateChanged(isConnected);
                     }else if(fragment instanceof MyNevoFragment){
                         ((MyNevoFragment)fragment).connectionStateChanged(isConnected);
+                    }else if(fragment instanceof HistoryFragment){
+                        ((HistoryFragment)fragment).connectionStateChanged(isConnected);
                     }
                 }
             }
@@ -401,6 +425,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     break;
                 case MyNevoFragment.MYNEVOPOSITION+1:
                     fragment.set(new MyNevoFragment());
+                    break;
+                case HistoryFragment.HISTORYPOSITION+1:
+                    fragment.set(new HistoryFragment());
                     break;
                 case ConnectAnimationFragment.CONNECTPOSITION+1:
                     fragment.set(new ConnectAnimationFragment());

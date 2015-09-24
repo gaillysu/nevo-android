@@ -23,6 +23,8 @@ public class GFSteps implements GFDataPoint{
     private Date mEndDate;
     private int mSteps;
 
+    private int mGoogleFitValue;
+
     public GFSteps(Date startDate, Date endDate, int steps){
         mStartDate = startDate;
         mEndDate = endDate;
@@ -80,6 +82,9 @@ public class GFSteps implements GFDataPoint{
 
     @Override
     public boolean isUpdate() {
+        //if present in Google and value got changed, update it!!!
+        if(mGoogleFitValue !=mSteps && mSteps>0 && mGoogleFitValue>0) return true;
+        /**
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         Calendar calBeginning = Calendar.getInstance();
@@ -90,7 +95,7 @@ public class GFSteps implements GFDataPoint{
                 && c.get(Calendar.HOUR_OF_DAY) == calBeginning.get(Calendar.HOUR_OF_DAY))
         {
             return true;
-        }
+        }*/
         return false;
     }
 
@@ -116,5 +121,10 @@ public class GFSteps implements GFDataPoint{
                 .deleteAllSessions() // Or specify a particular session here
                 .build();
         return request;
+    }
+
+    @Override
+    public void saveValue(int value) {
+        mGoogleFitValue = value;
     }
 }

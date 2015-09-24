@@ -1,11 +1,14 @@
 package com.nevowatch.nevo.ble.controller;
 
+import com.nevowatch.nevo.History.database.IDailyHistory;
 import com.nevowatch.nevo.Model.Alarm;
+import com.nevowatch.nevo.Model.DailyHistory;
 import com.nevowatch.nevo.Model.Goal;
 
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * this class define some functions for communication with Nevo,
@@ -99,5 +102,11 @@ public interface SyncController {
      * find Nevo device, when got found out, light on all color LED
      */
     public void findDevice();
+
+    /**
+     * start sync history
+     * @param syncAll :true--sync all records, MAX 7 days, false-- only sync current day record
+     */
+    public void  getDailyTrackerInfo(boolean syncAll);
 
 }

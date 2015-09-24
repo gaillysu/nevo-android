@@ -34,4 +34,10 @@ public interface GFDataPoint{
      * delete session request
      */
     public DataDeleteRequest toSessionDeleteRequest();
+
+    /**
+     * save google fit value
+     * @param value :read it from google fit
+     */
+    public void saveValue(int value);
 }
