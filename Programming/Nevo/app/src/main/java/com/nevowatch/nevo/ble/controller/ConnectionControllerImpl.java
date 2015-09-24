@@ -46,8 +46,8 @@ import java.util.TimerTask;
     //        60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
     //        120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
     //        240000,3600000};
-
-    private final static int[] mReConnectTimerPattern = new int[]{1000,
+    //fixed by Gailly, from 1s to 1.5s, disconnect watch, defer 1.5s and reconnect it, it will easily get connected.
+    private final static int[] mReConnectTimerPattern = new int[]{1500,
             10000,10000,10000,10000,10000,10000, /*1min*/
             10000,10000,10000,10000,10000,10000, /*1min*/
             10000,10000,10000,10000,10000,10000, /*1min*/

@@ -258,6 +258,8 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 			mCurrentService.get().sendRequest(request);
 		} else {
 			 Log.w(NevoBT.TAG, "Send failed. Service not started" );
+             ////fixed by Gailly,rebind service if empty, perhaps kill service and right now reconnect watch, but the service doesn't get ready
+             if(mPreferredAddress.notEmpty()) bindNewService(mPreferredAddress.get());
 		}
 	}
 

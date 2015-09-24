@@ -409,13 +409,14 @@ public class NevoBTService extends Service {
                    
                 // Attempts to discover services after successful connection.
                 Log.v(NevoBT.TAG, "Attempting to start service discovery");
-                mQueuedMainThread.post(new Runnable() {
+                //fixed by Gailly, add 200ms defer to do discover services, let all services get ready
+                mQueuedMainThread.postDelayed(new Runnable() {
                 	@Override
             		public void run() {
             			Log.d(NevoBT.TAG, "Discovering services : "+ address);
             			if(gatt!=null) gatt.discoverServices();
             		}
-                });
+                },200);
                 return;
  
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
