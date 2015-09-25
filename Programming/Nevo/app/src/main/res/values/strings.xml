@@ -30,6 +30,7 @@
     <string name="enableBluetoothPhone">Turn on the Bluetooth</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="continue_button">Continue</string>
     <string name="finish">Finish</string>
     <string name="bluetoothIcon">Swipe down to open the control center and tap on the Bluetooth icon</string>
     <string name="watchBluetooth">Enable Bluetooth on your watch</string>
@@ -97,5 +98,10 @@
     <string name="notification_disconnect_content">your Nevo has got disconnect</string>
     <string name="install_google_app_title">Need Google Service</string>
     <string name="install_google_app_content">\t\t\t\tNevo application is running on Google Service,Please install Google Service framework v4.x, Google Play Service v7.x, Google fit v1.5x, you can find out them in Google Play market. you need have a Google account, Google fit will save and show your daily activity data.</string>
+
+    <!-- Success messages of OTA-->
+    <string name="update_ble_success_message">Ble upgrade completed, reconnect the watch to the phone by pressing and holding the third button on the watch. Make sure that the watch is paired so it won\'t interrupt the upgrade procedure. Once it\'s connected you can continue to upgrade the Mcu by clicking on continue.</string>
+    <string name="update_mcu_success_message">Mcu upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the button, or there will be a timeout phenomenon</string>
+
     <string name="app_version">app Version:</string>
 </resources>

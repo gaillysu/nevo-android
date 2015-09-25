@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:text="Daily"
-            android:background="@drawable/outline_textview"
+            android:background="@android:color/transparent"
             />
 
         <TextView
@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
             android:text="Weekly"
             />
         <TextView
@@ -34,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
+            android:background="@android:color/transparent"
             android:text="Monthly"
             />
 

@@ -2,6 +2,7 @@ package com.nevowatch.nevo.Fragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -584,6 +585,7 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
         mLayoutGraphContent = (LinearLayout) rootView.findViewById(R.id.layoutGraphContent);
         mHScrollView = (HorizontalScrollView) rootView.findViewById(R.id.scrollView1);
         mDailyTextView = (TextView)rootView.findViewById(R.id.btnDaily);
+        mDailyTextView.setTypeface(null, Typeface.BOLD);
         mWeeklyTextView = (TextView)rootView.findViewById(R.id.btnWeekly);
         mMonthlyTextView = (TextView)rootView.findViewById(R.id.btnMonthly);
 
@@ -591,9 +593,9 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
             @Override
             public void onClick(View view) {
                 mViewMode = VIEWMODE.Daily;
-                mDailyTextView.setBackgroundResource(R.drawable.outline_textview);
-                mWeeklyTextView.setBackgroundColor(Color.TRANSPARENT);
-                mMonthlyTextView.setBackgroundColor(Color.TRANSPARENT);
+                mDailyTextView.setTypeface(null, Typeface.BOLD);
+                mWeeklyTextView.setTypeface(null, Typeface.NORMAL);
+                mMonthlyTextView.setTypeface(null, Typeface.NORMAL);
                 mCurrentDate = new Date();
                 resetGridCalendar();
                 showGraph();
@@ -603,9 +605,9 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
             @Override
             public void onClick(View view) {
                 mViewMode = VIEWMODE.Weekly;
-                mWeeklyTextView.setBackgroundResource(R.drawable.outline_textview);
-                mDailyTextView.setBackgroundColor(Color.TRANSPARENT);
-                mMonthlyTextView.setBackgroundColor(Color.TRANSPARENT);
+                mDailyTextView.setTypeface(null, Typeface.NORMAL);
+                mWeeklyTextView.setTypeface(null, Typeface.BOLD);
+                mMonthlyTextView.setTypeface(null, Typeface.NORMAL);
                 mCurrentDate = new Date();
                 resetGridCalendar();
                 showGraph();
@@ -615,9 +617,9 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
             @Override
             public void onClick(View view) {
                 mViewMode = VIEWMODE.Monthly;
-                mMonthlyTextView.setBackgroundResource(R.drawable.outline_textview);
-                mDailyTextView.setBackgroundColor(Color.TRANSPARENT);
-                mWeeklyTextView.setBackgroundColor(Color.TRANSPARENT);
+                mDailyTextView.setTypeface(null, Typeface.NORMAL);
+                mWeeklyTextView.setTypeface(null, Typeface.NORMAL);
+                mMonthlyTextView.setTypeface(null, Typeface.BOLD);
                 mCurrentDate = new Date();
                 resetGridCalendar();
                 showGraph();
@@ -786,7 +788,6 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
                 },1000);
             }
         }
-
     }
 
     @Override
