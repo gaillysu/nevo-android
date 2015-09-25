@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 
 import com.nevowatch.nevo.R;
 import com.nevowatch.nevo.ble.ble.GattAttributes;
+import com.nevowatch.nevo.ble.kernel.BLEUnstableException;
 import com.nevowatch.nevo.ble.model.packet.NevoFirmwareData;
 import com.nevowatch.nevo.ble.model.packet.NevoPacket;
 import com.nevowatch.nevo.ble.model.packet.NevoRawData;
@@ -19,6 +20,7 @@ import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAPacketRequest;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAPageRequest;
 import com.nevowatch.nevo.ble.model.request.NevoMCU_OTAChecksumRequest;
 import com.nevowatch.nevo.ble.model.request.SensorRequest;
+import com.nevowatch.nevo.ble.util.Constants;
 import com.nevowatch.nevo.ble.util.Constants.DfuOperationStatus;
 import com.nevowatch.nevo.ble.util.Constants.enumPacketOption;
 import com.nevowatch.nevo.ble.util.Constants.DFUControllerState;
@@ -510,7 +512,7 @@ import java.util.UUID;
         else
         {
             state = DFUControllerState.IDLE;
-            mConnectionController.setOTAMode(true, true);
+            mConnectionController.setOTAMode(false, true);
         }
     }
 
@@ -683,6 +685,7 @@ import java.util.UUID;
                             Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
                             //when switch to DFU mode, the MAC address has changed to another one
                             mConnectionController.forgetSavedAddress();
+                            mConnectionController.setOTAMode(true,false);
                             mConnectionController.connect();
                         }
                     },1000);
@@ -746,8 +749,13 @@ import java.util.UUID;
     @Override
     public void onException(Exception e) {
         //the exception got happened when do connection NEVO
-        Log.i(TAG," ********* onException ********* " + e);
+        Log.e(TAG," ********* onException ********* " + e);
         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
+        if(e instanceof BLEUnstableException)
+        {
+            Log.e(TAG,"happen " + e + ",due to DFU mode to normal mode, perhaps BLE is not stable,again auto reconnect it after 10s");
+            return;
+        }
         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
 
     }

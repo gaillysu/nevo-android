@@ -301,7 +301,8 @@ import java.util.TimerTask;
         {
             NevoBT.Singleton.getInstance(mContext).disconnect();
         }
-
+        //whennever OTA mode true or false, keep the auto reconnect timer always on
+        /**
         if(otaMode)
         {
             //cancel reconnect timer, make sure OTA can do connect by OTAcontroller;
@@ -309,6 +310,7 @@ import java.util.TimerTask;
             if(mCheckConnectionTimer!=null) {mCheckConnectionTimer.cancel();mCheckConnectionTimer=null;}
         }
         else
+        */
         {
             //restart timer and ping Timer
             mTimerIndex = 0; //after 1s ,do connect
