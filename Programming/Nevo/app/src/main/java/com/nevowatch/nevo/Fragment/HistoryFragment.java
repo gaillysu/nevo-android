@@ -332,7 +332,8 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
                 final GeoBar barSleep = new GeoBar(mCtx);
                 final GeoBar barStep = new GeoBar(mCtx);
                 final RelativeLayout sleepView = (RelativeLayout) LayoutInflater.from(mCtx).inflate(R.layout.layout_sleepanalysis,null);
-                final PinChart  pinchart = new PinChart(mCtx);
+                //final PinChart  pinchart = new PinChart(mCtx);
+                final RelativeLayout stepView = (RelativeLayout) LayoutInflater.from(mCtx).inflate(R.layout.layout_dailysteps_result,null);
 
                 if(k==0) {
                     barSleep.initData(GeoBar.DATASOURCETYPE.SleepTime, wake, light, deep);
@@ -360,11 +361,20 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
                     l32.setBackgroundResource(android.R.color.holo_blue_light);
                     l32.addView(barStep);
 
-                    pinchart.initData(PinChart.RESULTTYPE.Activity,percent,(int)currentStep);
-                    pinchart.setLayoutParams(new LinearLayout.LayoutParams(
-                            LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-                    pinchart.setVisibility(View.GONE);
-                    l32.addView(pinchart);
+                    //pinchart.initData(PinChart.RESULTTYPE.Activity,percent,(int)currentStep);
+                    //pinchart.setLayoutParams(new LinearLayout.LayoutParams(
+                    //        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                    //pinchart.setVisibility(View.GONE);
+                    //l32.addView(pinchart);
+
+                    //check No data
+                    float total = 0;
+                    for(float f:percent) total +=f;
+                    RoundProgressBar stepRoundProgressBar = (RoundProgressBar)stepView.findViewById(R.id.roundProgressBar);
+                    stepRoundProgressBar.setProgressWithValue((int)(currentStep*100.0/goalStepCount),total==0?-1:(int)currentStep);
+                    stepView.setVisibility(View.GONE);
+                    l32.addView(stepView);
+
                 }
 
             l3.setOnTouchListener(new OnTouchListener() {
@@ -382,18 +392,22 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
                             barSleep.setVisibility(View.GONE);
                             barStep.setVisibility(View.GONE);
                             sleepView.setVisibility(View.VISIBLE);
-                            pinchart.setVisibility(View.VISIBLE);
+                            //pinchart.setVisibility(View.VISIBLE);
+                            stepView.setVisibility(View.VISIBLE);
                             sleepView.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_enter));
-                            pinchart.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_enter));
+                            //pinchart.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_enter));
+                            stepView.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_enter));
                         }
                         else
                         {
                             sleepView.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_exit));
-                            pinchart.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_exit));
+                            //pinchart.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_exit));
+                            stepView.startAnimation(AnimationUtils.loadAnimation(mCtx,R.anim.anim_exit));
                             barSleep.setVisibility(View.VISIBLE);
                             barStep.setVisibility(View.VISIBLE);
                             sleepView.setVisibility(View.GONE);
-                            pinchart.setVisibility(View.GONE);
+                            //pinchart.setVisibility(View.GONE);
+                            stepView.setVisibility(View.GONE);
                         }
                     }
                 });

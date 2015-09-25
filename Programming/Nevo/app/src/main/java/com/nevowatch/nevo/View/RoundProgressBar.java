@@ -25,6 +25,7 @@ public class RoundProgressBar extends View {
     private float mRoundWidth;
     private int mMax;
     private int mProgress;
+    private int mValue;
     private boolean mTextIsDisplayable;
     private int mStyle;
 
@@ -51,8 +52,8 @@ public class RoundProgressBar extends View {
         //get custom attributes
         mRoundColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundColor, Color.RED);
         mRoundProgressColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundProgressColor, Color.GREEN);
-        mTextColor = mTypedArray.getColor(R.styleable.RoundProgressBar_textColor, Color.GREEN);
-        mTextSize = mTypedArray.getDimension(R.styleable.RoundProgressBar_textSize, 15);
+        mTextColor = mTypedArray.getColor(R.styleable.RoundProgressBar_textColor, Color.BLUE);
+        mTextSize = mTypedArray.getDimension(R.styleable.RoundProgressBar_textSize, 60);
         mRoundWidth = mTypedArray.getDimension(R.styleable.RoundProgressBar_roundWidth, 5);
         mMax = mTypedArray.getInteger(R.styleable.RoundProgressBar_max, 100);
         mTextIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
@@ -69,13 +70,13 @@ public class RoundProgressBar extends View {
         /**
          * draw outside circle
          */
-        int centre = getWidth()/2;
-        int radius = (int) (centre - mRoundWidth /2);
+        //int centre = getWidth()/2;
+        int radius = (int) (Math.min(getWidth()/2,getHeight()/2) - mRoundWidth/2);//(int) (centre - mRoundWidth /2);
         mPaint.setColor(mRoundColor);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mRoundWidth);
         mPaint.setAntiAlias(true);
-        canvas.drawCircle(centre, centre, radius, mPaint);
+        canvas.drawCircle(getWidth()/2, getHeight()/2, radius, mPaint);
 
         
         /**
@@ -88,14 +89,22 @@ public class RoundProgressBar extends View {
         int percent = (int)(((float) mProgress / (float) mMax) * 100);
         float textWidth = mPaint.measureText(percent + "%");
 
-        if(mTextIsDisplayable && percent != 0 && mStyle == STROKE){
-            canvas.drawText(percent + "%", centre - textWidth / 2, centre + mTextSize /2, mPaint);
+        if(mTextIsDisplayable && mStyle == STROKE){
+            if(mValue<0) {
+                textWidth = mPaint.measureText("----");
+                canvas.drawText("----", getWidth() / 2 - textWidth / 2, getHeight() / 2 + mTextSize / 2 + 60, mPaint);
+            }
+            else {
+                String s = percent + "%" + ", "+mValue;
+                textWidth = mPaint.measureText(s);
+                canvas.drawText(s, getWidth() / 2 - textWidth / 2, getHeight() / 2 + mTextSize / 2 + 60, mPaint);
+            }
         }
 
         mPaint.setStrokeWidth(mRoundWidth);
         mPaint.setColor(mRoundProgressColor);
-        RectF oval = new RectF(centre - radius, centre - radius, centre
-                + radius, centre + radius);
+        RectF oval = new RectF(getWidth()/2 - radius, getHeight()/2 - radius, getWidth()/2
+                + radius, getHeight()/2 + radius);
         switch (mStyle) {
             case STROKE:{
                 mPaint.setStyle(Paint.Style.STROKE);
@@ -128,6 +137,21 @@ public class RoundProgressBar extends View {
         }
         if(progress <= mMax){
             this.mProgress = progress;
+            postInvalidate();
+        }
+
+    }
+
+    public synchronized void setProgressWithValue(int progress,int value) {
+        if(progress < 0){
+            throw new IllegalArgumentException("mProgress not less than 0");
+        }
+        if(progress > mMax){
+            progress = mMax;
+        }
+        if(progress <= mMax){
+            this.mProgress = progress;
+            this.mValue = value;
             postInvalidate();
         }
 

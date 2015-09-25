@@ -430,7 +430,6 @@ public class OTAActivity extends Activity
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET) return;
                 mNevoOtaController.reset(false);
                 initValue();
                 if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
