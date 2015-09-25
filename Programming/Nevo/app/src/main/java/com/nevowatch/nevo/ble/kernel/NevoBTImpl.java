@@ -279,7 +279,7 @@ import com.nevowatch.nevo.ble.util.QueuedMainThreadHandler;
 	@Override
 	public void disconnect() {
         //Let's kill the connection in the most violent way possible.
-
+        isScanning = false;
         killService();
         if(mBluetoothAdapter!=null) mBluetoothAdapter.stopLeScan(mLeScanCallback);
 		

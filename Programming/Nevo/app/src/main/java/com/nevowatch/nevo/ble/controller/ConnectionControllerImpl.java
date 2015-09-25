@@ -147,6 +147,7 @@ import java.util.TimerTask;
         Optional<String> preferredAddress = new Optional<String>();
 
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
+        Log.w(NevoBT.TAG,"servicelist:"+servicelist.get(0) + ",address:"+ (preferredAddress.isEmpty()?"null":preferredAddress.get()));
         NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
 
     }

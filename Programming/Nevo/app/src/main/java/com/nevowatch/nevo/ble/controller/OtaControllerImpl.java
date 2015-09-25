@@ -679,13 +679,14 @@ import java.util.UUID;
                 else if (state == DFUControllerState.SEND_START_COMMAND)
                 {
                     state = DFUControllerState.DISCOVERING;
+                    mConnectionController.setOTAMode(true,true);
+
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
                             //when switch to DFU mode, the MAC address has changed to another one
                             mConnectionController.forgetSavedAddress();
-                            mConnectionController.setOTAMode(true,false);
                             mConnectionController.connect();
                         }
                     },1000);
@@ -749,9 +750,9 @@ import java.util.UUID;
     @Override
     public void onException(Exception e) {
         //the exception got happened when do connection NEVO
-        Log.e(TAG," ********* onException ********* " + e);
+        Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-        if(e instanceof BLEUnstableException)
+        if(e instanceof BLEUnstableException && getState()!= DFUControllerState.DISCOVERING)
         {
             Log.e(TAG,"happen " + e + ",due to DFU mode to normal mode, perhaps BLE is not stable,again auto reconnect it after 10s");
             return;
