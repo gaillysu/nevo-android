@@ -12,6 +12,7 @@ import android.R.integer;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -235,15 +236,13 @@ public class DateAdapter extends BaseAdapter {
         tvCalendar.setTextSize(14.0f);
         if (clickTemp == position) {
             tvCalendar.setSelected(true);
-            tvCalendar.setTextColor(Color.WHITE);
             String ss = dayNumber[position]+"/"+getCurrentMonth(position);
             if(ss.length()==5) tvCalendar.setTextSize(10.0f);
             tvCalendar.setText(ss);
-            tvCalendar.setBackgroundResource(R.drawable.circle_message);
+            tvCalendar.setTypeface(null, Typeface.BOLD);
         } else {
             tvCalendar.setSelected(false);
-            tvCalendar.setTextColor(Color.BLACK);
-            tvCalendar.setBackgroundColor(Color.TRANSPARENT);
+            tvCalendar.setTypeface(null, Typeface.NORMAL);
         }
         return convertView;
     }
