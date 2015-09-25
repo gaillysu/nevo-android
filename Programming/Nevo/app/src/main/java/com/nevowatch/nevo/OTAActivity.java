@@ -337,7 +337,7 @@ public class OTAActivity extends Activity
             @Override
             public void run() {
                 setOTAProgressBar(percent);
-                mFirmwareTotal.setText((currentIndex+1)+"/"+firmwareURLs.size()+" ," + percent + "%");
+                mFirmwareTotal.setText((currentIndex + 1) + "/" + firmwareURLs.size() + " ," + percent + "%");
             }
         });
     }
@@ -400,18 +400,21 @@ public class OTAActivity extends Activity
                     },10000);
                     */
                         //unpair this watch, when reconnect it, repair it again, otherwiase, it will lead the cmd can't get response.
-                        if (enumFirmwareType == DfuFirmwareTypes.APPLICATION) mNevoOtaController.forGetDevice();
+                        if (enumFirmwareType == DfuFirmwareTypes.APPLICATION){
+                            mNevoOtaController.forGetDevice();
+                        }
                         mNevoOtaController.reset(false);
                         mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
                         initValue();
 
-                        mReButton.setText("Continue");
+                        mReButton.setText(getString(R.string.continue_button));
 
-                        String msgInfo = "Ble upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the Mcu button, or there will be a timeout phenomenon";
+                        String msgInfo = getString(R.string.update_ble_success_message);
 
-                        if (enumFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
-                            msgInfo = "Mcu upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the button, or there will be a timeout phenomenon";
-
+                        if (enumFirmwareType == DfuFirmwareTypes.SOFTDEVICE) {
+                            msgInfo = getString(R.string.update_mcu_success_message);
+                            // Does this still occur?
+                        }
                         new AlertDialog.Builder(((Activity) mContext), AlertDialog.THEME_HOLO_LIGHT)
                                 .setTitle(R.string.FirmwareUpgrade)
                                 .setMessage(msgInfo)
