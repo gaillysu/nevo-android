@@ -13,7 +13,7 @@ import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
 import com.medcorp.nevo.Fragment.AlarmFragment;
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Optional;
 

@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:layout_above="@+id/activateButton" />
 
-        <Button
+        <com.medcorp.nevo.View.CustomFontView.RalewayButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tutorial"
@@ -31,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="88dp"/>
 
-        <Button
+        <com.medcorp.nevo.View.CustomFontView.RalewayButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/acheter"

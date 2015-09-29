@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.Model.Notification.NotificationType;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.NotificationItem;

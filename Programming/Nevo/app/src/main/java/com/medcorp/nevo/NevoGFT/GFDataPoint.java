@@ -12,28 +12,28 @@ public interface GFDataPoint{
      GFDataPoint should be mapable to a DataSet
      It's the only prerequisite
      */
-    public DataSet toDataSet();
+    public DataSet getDataSet();
 
     /**
      * sometime we should use write with the sessionRequest to insert data
      * @return
      */
-    public SessionInsertRequest toSessionInsertRequest();
+    public SessionInsertRequest getSessionInsertRequest();
 
     /**
      if a GFDataPoint has present in database, when its value changed, perhaps need update it.
      */
-    public boolean isUpdate();
+    public boolean isUpToDate();
 
     /**
      * read session request
      */
-    public SessionReadRequest toSessionReadRequest();
+    public SessionReadRequest getSessionReadRequest();
 
     /**
      * delete session request
      */
-    public DataDeleteRequest toSessionDeleteRequest();
+    public DataDeleteRequest getDataDeleteRequest();
 
     /**
      * save google fit value

@@ -24,17 +24,17 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.Activity.PaletteActivity;
 import com.medcorp.nevo.Fragment.AlarmFragment;
 import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.GoogleFitManager;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.MainActivity;
 import com.medcorp.nevo.Model.Alarm;
 import com.medcorp.nevo.Model.DailyHistory;
 import com.medcorp.nevo.Model.Goal;
 import com.medcorp.nevo.Model.Notification;
-import com.medcorp.nevo.PaletteActivity;
+import com.medcorp.nevo.NevoGFT.GoogleFitManager;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.TimePickerView;
 import com.medcorp.nevo.ble.kernel.BLEConnectTimeoutException;
@@ -68,6 +68,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 /*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
@@ -449,7 +450,7 @@ import java.util.TimeZone;
     }
 
     @Override
-    public void setAlarm(ArrayList<Alarm> list) {
+    public void setAlarm(List<Alarm> list) {
         sendRequest(new SetAlarmNevoRequest(list));
     }
 

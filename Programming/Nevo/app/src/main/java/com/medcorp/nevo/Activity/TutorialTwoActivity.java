@@ -1,4 +1,4 @@
-package com.medcorp.nevo.TutorialActivity;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.FontManager;
 import com.medcorp.nevo.R;
 
 /**
@@ -38,12 +37,5 @@ public class TutorialTwoActivity extends Activity {
             }
         });
 
-        View [] viewArray = new View []{
-                findViewById(R.id.t1_next_button),
-                findViewById(R.id.t1_title),
-                findViewById(R.id.t1_message),
-                findViewById(R.id.t1_back_button)
-        };
-        FontManager.changeFonts(viewArray, this);
     }
 }

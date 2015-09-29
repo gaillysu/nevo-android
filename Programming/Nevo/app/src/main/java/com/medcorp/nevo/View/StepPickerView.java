@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 
 import com.medcorp.nevo.Fragment.GoalFragment;
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.R;
 
 import java.lang.reflect.Field;

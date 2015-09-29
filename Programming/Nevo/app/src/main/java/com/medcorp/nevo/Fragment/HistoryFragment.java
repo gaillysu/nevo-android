@@ -33,7 +33,7 @@ import com.medcorp.nevo.History.DateAdapter;
 import com.medcorp.nevo.History.SpecialCalendar;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.Model.DailyHistory;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.GeoBar;

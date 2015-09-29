@@ -18,23 +18,19 @@ import java.util.concurrent.TimeUnit;
  * Created by evan on 2015/6/30 0030.
  */
 public class GFSteps implements GFDataPoint{
-    private Date mStartDate;
-    private Date mEndDate;
-    private int mSteps;
-
-    private int mGoogleFitValue;
+    private long startTime;
+    private long endTime;
+    private int steps;
+    private int googleFitValue;
 
     public GFSteps(Date startDate, Date endDate, int steps){
-        mStartDate = startDate;
-        mEndDate = endDate;
-        mSteps = steps;
+        this.startTime= startDate.getTime();
+        this.endTime = endDate.getTime();
+        this.steps = steps;
     }
 
     @Override
-    public DataSet toDataSet() {
-        long startTime = mStartDate.getTime();
-        long endTime = mEndDate.getTime();
-
+    public DataSet getDataSet() {
         // Create a data source
         DataSource dataSource = new DataSource.Builder()
 //                .setAppPackageName(mContext.getPackageName())
@@ -48,18 +44,15 @@ public class GFSteps implements GFDataPoint{
 
         DataPoint firstRunSpeed = dataSet.createDataPoint();
         firstRunSpeed.setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-        firstRunSpeed.getValue(Field.FIELD_STEPS).setInt(mSteps);
+        firstRunSpeed.getValue(Field.FIELD_STEPS).setInt(steps);
         dataSet.add(firstRunSpeed);
 
         return dataSet;
     }
 
     @Override
-    public SessionInsertRequest toSessionInsertRequest() {
-        long startTime = mStartDate.getTime();
-        long endTime = mEndDate.getTime();
-
-        DataSet dataSet = toDataSet();
+    public SessionInsertRequest getSessionInsertRequest() {
+        DataSet dataSet = getDataSet();
         // [START build_insert_session_request]
         // Create a session with metadata about the activity.
         Session session = new Session.Builder()
@@ -71,7 +64,6 @@ public class GFSteps implements GFDataPoint{
                 .setEndTime(endTime, TimeUnit.MILLISECONDS)
                 .build();
 
-        // Build a session insert request
         SessionInsertRequest insertRequest = new SessionInsertRequest.Builder()
                 .setSession(session)
                 .addDataSet(dataSet)
@@ -80,28 +72,28 @@ public class GFSteps implements GFDataPoint{
     }
 
     @Override
-    public boolean isUpdate() {
+    public boolean isUpToDate() {
         //if present in Google and value got changed, update it!!!
-        if(mGoogleFitValue !=mSteps && mSteps>0 && mGoogleFitValue>0) return true;
-        /**
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        Calendar calBeginning = Calendar.getInstance();
-        calBeginning.setTime(mStartDate);
-        if(c.get(Calendar.YEAR) == calBeginning.get(Calendar.YEAR)
-                && c.get(Calendar.MONTH) == calBeginning.get(Calendar.MONTH)
-                && c.get(Calendar.DAY_OF_MONTH) == calBeginning.get(Calendar.DAY_OF_MONTH)
-                && c.get(Calendar.HOUR_OF_DAY) == calBeginning.get(Calendar.HOUR_OF_DAY))
-        {
+        if(googleFitValue !=steps && steps>0 && googleFitValue >0){
             return true;
-        }*/
+        }
+        /**
+         Calendar c = Calendar.getInstance();
+         c.setTime(new Date());
+         Calendar calBeginning = Calendar.getInstance();
+         calBeginning.setTime(startDate);
+         if(c.get(Calendar.YEAR) == calBeginning.get(Calendar.YEAR)
+         && c.get(Calendar.MONTH) == calBeginning.get(Calendar.MONTH)
+         && c.get(Calendar.DAY_OF_MONTH) == calBeginning.get(Calendar.DAY_OF_MONTH)
+         && c.get(Calendar.HOUR_OF_DAY) == calBeginning.get(Calendar.HOUR_OF_DAY))
+         {
+         return true;
+         }*/
         return false;
     }
 
     @Override
-    public SessionReadRequest toSessionReadRequest() {
-        long startTime = mStartDate.getTime();
-        long endTime = mEndDate.getTime();
+    public SessionReadRequest getSessionReadRequest() {
         SessionReadRequest readRequest = new SessionReadRequest.Builder()
                 .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
                 .read(DataType.TYPE_STEP_COUNT_DELTA)
@@ -111,9 +103,7 @@ public class GFSteps implements GFDataPoint{
     }
 
     @Override
-    public DataDeleteRequest toSessionDeleteRequest() {
-        long startTime = mStartDate.getTime();
-        long endTime = mEndDate.getTime();
+    public DataDeleteRequest getDataDeleteRequest() {
         DataDeleteRequest request = new DataDeleteRequest.Builder()
                 .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
                 .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
@@ -124,6 +114,6 @@ public class GFSteps implements GFDataPoint{
 
     @Override
     public void saveValue(int value) {
-        mGoogleFitValue = value;
+        googleFitValue = value;
     }
 }

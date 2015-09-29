@@ -14,8 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.Model.Alarm;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.TimePickerView;
@@ -25,6 +24,7 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -84,21 +84,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         mOnButton3.setOnClickListener(this);
         mOffButton3 =  (Button)rootView.findViewById(R.id.off_mode_button3);
         mOffButton3.setOnClickListener(this);
-
-
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.clock_textView),
-                rootView.findViewById(R.id.on_mode_button),
-                rootView.findViewById(R.id.off_mode_button),
-                rootView.findViewById(R.id.clock_textView2),
-                rootView.findViewById(R.id.on_mode_button2),
-                rootView.findViewById(R.id.off_mode_button2),
-                rootView.findViewById(R.id.clock_textView3),
-                rootView.findViewById(R.id.on_mode_button3),
-                rootView.findViewById(R.id.off_mode_button3)
-        };
-        FontManager.changeFonts(viewArray,getActivity());
-
         return rootView;
     }
 
@@ -214,7 +199,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
     private void setAlarm()
     {
-        ArrayList<Alarm> list = new ArrayList<Alarm>();
+        List<Alarm> list = new ArrayList<Alarm>();
 
         String[] strAlarm = TimePickerView.getAlarmFromPreference(0,getActivity()).split(":");
         Boolean onOff = AlarmFragment.getClockStateFromPreference(0,getActivity());
@@ -229,9 +214,18 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
         SyncController.Singleton.getInstance(getActivity()).setAlarm(list);
     }
     public void setClock(int index,final String time){
-        if(index == 0) mClockTextView.setText(time);
-        if(index == 1) mClockTextView2.setText(time);
-        if(index == 2) mClockTextView3.setText(time);
+        switch (index){
+            case 0:
+                mClockTextView.setText(time);
+                break;
+            case 1:
+                mClockTextView2.setText(time);
+                break;
+            case 2:
+                mClockTextView3.setText(time);
+                break;
+
+        }
         /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
         setAlarm();
     }

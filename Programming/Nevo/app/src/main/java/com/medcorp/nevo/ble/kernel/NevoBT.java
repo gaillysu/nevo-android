@@ -5,11 +5,11 @@ package com.medcorp.nevo.ble.kernel;
 
 import android.content.Context;
 
-import java.util.List;
-
 import com.medcorp.nevo.ble.ble.GattAttributes.SupportedService;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Optional;
+
+import java.util.List;
 
 
 
@@ -115,7 +115,7 @@ public interface NevoBT {
      */
     void ping();
 
-    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener,OnFirmwareVersionListener{
+        interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener,OnFirmwareVersionListener{
 
     }
 }

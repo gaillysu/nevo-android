@@ -5,7 +5,7 @@
     android:background="@color/customWhite"
     android:orientation="vertical">
 
-    <Button
+    <com.medcorp.nevo.View.CustomFontView.RalewayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back"
@@ -15,7 +15,7 @@
         android:id="@+id/t1_tips_backButton"
         android:background="#00000000"/>
 
-    <TextView
+    <com.medcorp.nevo.View.CustomFontView.RalewayTextView
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 
-    <TextView
+    <com.medcorp.nevo.View.CustomFontView.RalewayTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tutorial_tips_one_message"
@@ -64,7 +64,7 @@
         android:textSize="18sp"
         android:layout_marginBottom="10dp"/>
 
-    <Button
+    <com.medcorp.nevo.View.CustomFontView.RalewayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/t1_tips_nextButton"

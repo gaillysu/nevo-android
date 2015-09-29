@@ -16,8 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.AlertDialogView;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
@@ -57,15 +56,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         mHyperLink = (TextView) rootView.findViewById(R.id.link_textView);
         mHyperLink.setText( Html.fromHtml("<a href=\"http://nevowatch.com/blehelp\">Nevo Support</a>"));
         mHyperLink.setMovementMethod(LinkMovementMethod.getInstance());
-
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.nevoConnectedText),
-                rootView.findViewById(R.id.connect_imageButton),
-                rootView.findViewById(R.id.pushConnectedText),
-                rootView.findViewById(R.id.forget_device_button)
-        };
-        FontManager.changeFonts(viewArray, getActivity());
-
         return rootView;
     }
 

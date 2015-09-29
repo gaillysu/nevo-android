@@ -1,4 +1,4 @@
-package com.medcorp.nevo.TutorialActivity;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.medcorp.nevo.FontManager;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
@@ -47,17 +46,9 @@ public class TutorialFiveActivity extends Activity
             mConnectImg.setBackgroundResource(R.color.transparent);
         }
 
-        if(SyncController.Singleton.getInstance(this)!=null)
+        if(SyncController.Singleton.getInstance(this)!=null) {
             SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
-
-        View [] viewArray = new View []{
-                findViewById(R.id.t4_back_Button),
-                findViewById(R.id.t4_connectButton),
-                findViewById(R.id.t4_connect_Button),
-                findViewById(R.id.t4_placeConnect),
-                findViewById(R.id.t4_next_Button)
-        };
-        FontManager.changeFonts(viewArray,this);
+        }
     }
 
     @Override

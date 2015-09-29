@@ -1,4 +1,4 @@
-package com.medcorp.nevo.TutorialActivity;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.OTAActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Constants;
 
@@ -29,14 +26,12 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
             return;
         }
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_1);
 
         findViewById(R.id.activateButton).setOnClickListener(this);
-        findViewById(R.id.uriButton).setOnClickListener(this);
 
-        View [] viewArray = new View []{findViewById(R.id.activateButton),findViewById(R.id.uriButton)};
-        FontManager.changeFonts(viewArray,this);
+        findViewById(R.id.uriButton).setOnClickListener(this);
 
         findViewById(R.id.imagewatch).setOnLongClickListener(new View.OnLongClickListener() {
             @Override

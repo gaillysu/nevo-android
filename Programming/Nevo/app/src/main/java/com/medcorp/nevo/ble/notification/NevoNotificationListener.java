@@ -20,7 +20,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.PaletteActivity;
+import com.medcorp.nevo.Activity.PaletteActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.ConnectionController;
 import com.medcorp.nevo.ble.controller.SyncController;

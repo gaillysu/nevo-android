@@ -1,4 +1,4 @@
-package com.medcorp.nevo;
+package com.medcorp.nevo.NevoGFT;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,9 +22,6 @@ import com.google.android.gms.fitness.request.SessionInsertRequest;
 import com.google.android.gms.fitness.request.SessionReadRequest;
 import com.google.android.gms.fitness.result.SessionReadResult;
 import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.NevoGFT.GFDataPoint;
-import com.medcorp.nevo.NevoGFT.GFSteps;
-import com.medcorp.nevo.NevoGFT.GoogleFit;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 
 import java.text.SimpleDateFormat;
@@ -49,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  gftManager.saveHourlyDataPoint(new Date(), 8, 1000);
  }
  */
-public class GoogleFitManager implements GoogleFit{
+public class GoogleFitManager implements IGoogleFit {
 
     public static final String TAG = "GoogleFitManager";
     public static final String SAMPLE_SESSION_NAME = "Afternoon run";
@@ -64,40 +61,42 @@ public class GoogleFitManager implements GoogleFit{
     private static final String AUTH_PENDING = "auth_state_pending";
     private boolean authInProgress = false;
 
-    private GoogleApiClient mClient = null;
-    private Context mContext = null;
-    private Activity mActivity = null;
+    private GoogleApiClient client = null;
+    private Context context = null;
+    private Activity activity = null;
 
-    private static GoogleFitManager sInstance = null;
+    private static GoogleFitManager instance = null;
+
     public static GoogleFitManager getInstance(Context context, Activity activity) {
-        if(null == sInstance)
+        if(null == instance)
         {
-            sInstance = new GoogleFitManager(context, activity);
-            sInstance.buildFitnessClient();
+            instance = new GoogleFitManager(context, activity);
+            instance.buildFitnessClient();
         }
         else
         {
-            sInstance.setmContext(context);
-            sInstance.setmActivity(activity);
+            instance.setContext(context);
+            instance.setActivity(activity);
         }
-        return sInstance;
+        return instance;
     }
     /*package*/ GoogleFitManager(Context context, Activity activity)
     {
-        this.mContext = context;
-        this.mActivity = activity;
+        this.context = context;
+        this.activity = activity;
     }
 
-    public GoogleApiClient getmClient() {
-        return mClient;
+    @Override
+    public GoogleApiClient getclient() {
+        return client;
     }
 
-    public void setmContext(Context context){
-        mContext = context;
+    public void setContext(Context context){
+        this.context = context;
     }
 
-    public void setmActivity(Activity activity){
-        mActivity = activity;
+    public void setActivity(Activity activity){
+        this.activity = activity;
     }
 
     public void dealActivityResult(int requestCode, int resultCode, Intent data){
@@ -106,8 +105,8 @@ public class GoogleFitManager implements GoogleFit{
             authInProgress = false;
             if (resultCode == Activity.RESULT_OK) {
                 // Make sure the app is not already connected or attempting to connect
-                if (!mClient.isConnecting() && !mClient.isConnected()) {
-                    mClient.connect();
+                if (!client.isConnecting() && !client.isConnected()) {
+                    client.connect();
                 }
             }
         }
@@ -119,9 +118,9 @@ public class GoogleFitManager implements GoogleFit{
     }
 
     public void saveDailyHistory(final DailyHistory dailyHistory){
-        if(mClient == null || !mClient.isConnected())
+        if(client == null || !client.isConnected())
         {
-            Log.w(TAG, mClient == null ? "connect Client is null" : "no connect to Google Play Service");
+            Log.w(TAG, client == null ? "connect Client is null" : "no connect to Google Play Service");
             return;
         }
         final Date historyDate = dailyHistory.getDate();
@@ -131,14 +130,14 @@ public class GoogleFitManager implements GoogleFit{
 
         for(int i=0; i<dailyHistory.getHourlySteps().size(); i++) {
             if(dailyHistory.getHourlySteps().get(i)>0) {
-                    final int index = i;
-                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i(TAG, historyDate.toString() + ",hour:"+index + ",steps:"+ dailyHistory.getHourlySteps().get(index));
-                            saveHourlyDataPoint(historyDate, index, dailyHistory.getHourlySteps().get(index));
-                        }
-                    });
+                final int index = i;
+                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i(TAG, historyDate.toString() + ",hour:"+index + ",steps:"+ dailyHistory.getHourlySteps().get(index));
+                        saveHourlyDataPoint(historyDate, index, dailyHistory.getHourlySteps().get(index));
+                    }
+                });
             }
         }
 
@@ -162,7 +161,7 @@ public class GoogleFitManager implements GoogleFit{
         Date night = calNight.getTime();
 
         GFSteps gfSteps = new GFSteps(morning, night, steps);
-        writeDataPoint(gfSteps);
+        save(gfSteps);
     }
 
     public void saveHourlyDataPoint(Date date, int hour,int steps ) {
@@ -183,7 +182,7 @@ public class GoogleFitManager implements GoogleFit{
         Date night = calEnd.getTime();
 
         GFSteps gfSteps = new GFSteps(morning, night, steps);
-        writeDataPoint(gfSteps);
+        save(gfSteps);
     }
 
 
@@ -193,27 +192,27 @@ public class GoogleFitManager implements GoogleFit{
     }
 
     @Override
-    public void writeDataPoint(GFDataPoint dataPoint) {
-        if(mClient.isConnected()){
+    public void save(GFDataPoint dataPoint) {
+        if(client.isConnected()){
             new InsertAndVerifySessionTask().execute(dataPoint);
         }
     }
 
     @Override
-    public boolean isPresent(GFDataPoint dataPoint) {
-        SessionReadRequest readRequest = dataPoint.toSessionReadRequest();
+    public boolean contains(GFDataPoint dataPoint) {
+        SessionReadRequest readRequest = dataPoint.getSessionReadRequest();
         SessionReadResult sessionReadResult =
-                Fitness.SessionsApi.readSession(mClient, readRequest)
+                Fitness.SessionsApi.readSession(client, readRequest)
                         .await(1, TimeUnit.MINUTES);
 
         // Get a list of the sessions that match the criteria to check the result.
         for (Session session : sessionReadResult.getSessions()) {
             // Process the session
-           // dumpSession(session);
+            // dumpSession(session);
             // Process the data sets for this session
             List<DataSet> dataSets = sessionReadResult.getDataSet(session);
             for (DataSet dataSet : dataSets) {
-             //   dumpDataSet(dataSet);
+                //   dumpDataSet(dataSet);
                 for (DataPoint dp : dataSet.getDataPoints()) {
                     for(Field field : dp.getDataType().getFields())
                     {
@@ -240,7 +239,7 @@ public class GoogleFitManager implements GoogleFit{
      */
     private void buildFitnessClient() {
         // Create the Google API Client
-        mClient = new GoogleApiClient.Builder(mContext)
+        client = new GoogleApiClient.Builder(context)
                 .addApi(Fitness.HISTORY_API)
                 .addApi(Fitness.SESSIONS_API)
                 .addApi(Fitness.RECORDING_API)
@@ -277,7 +276,7 @@ public class GoogleFitManager implements GoogleFit{
                                 if (!result.hasResolution()) {
                                     // Show the localized error dialog
                                     GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(),
-                                            mActivity, 0).show();
+                                            activity, 0).show();
                                     return;
                                 }
                                 // The failure has a resolution. Resolve it.
@@ -287,7 +286,7 @@ public class GoogleFitManager implements GoogleFit{
                                     try {
                                         Log.i(TAG, "Attempting to resolve failed connection");
                                         authInProgress = true;
-                                        result.startResolutionForResult(mActivity,
+                                        result.startResolutionForResult(activity,
                                                 REQUEST_OAUTH);
                                     } catch (IntentSender.SendIntentException e) {
                                         Log.e(TAG,
@@ -313,18 +312,18 @@ public class GoogleFitManager implements GoogleFit{
         protected Void doInBackground(GFDataPoint... params) {
             //if has present, no save it or update it
             final GFDataPoint final_dataPoint = params[0];
-            if(isPresent(params[0]))
+            if(contains(params[0]))
             {
-                if(!params[0].isUpdate()) {
+                if(!params[0].isUpToDate()) {
                     Log.i(TAG, "Session has exist,no save it again");
                     QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
                     return null;
                 }
                 // first delete it and insert new one record
-                DataDeleteRequest request = params[0].toSessionDeleteRequest();
+                DataDeleteRequest request = params[0].getDataDeleteRequest();
                 // Invoke the History API with the Google API client object and the delete request and
                 // specify a callback that will check the result.
-                Fitness.HistoryApi.deleteData(mClient, request)
+                Fitness.HistoryApi.deleteData(client, request)
                         .setResultCallback(new ResultCallback<com.google.android.gms.common.api.Status>() {
                             @Override
                             public void onResult(com.google.android.gms.common.api.Status status) {
@@ -354,25 +353,25 @@ public class GoogleFitManager implements GoogleFit{
 
     private void insertOneSession(GFDataPoint dataPoint)
     {
-            SessionInsertRequest insertRequest = dataPoint.toSessionInsertRequest();
+        SessionInsertRequest insertRequest = dataPoint.getSessionInsertRequest();
 
-            // [START insert_session]
-            // Then, invoke the Sessions API to insert the session and await the result,
-            // which is possible here because of the AsyncTask. Always include a timeout when
-            // calling await() to avoid hanging that can occur from the service being shutdown
-            // because of low memory or other conditions.
-            Log.i(TAG, "Inserting the session in the History API");
-            com.google.android.gms.common.api.Status insertStatus =
-                    Fitness.SessionsApi.insertSession(mClient, insertRequest)
-                            .await(1, TimeUnit.MINUTES);
+        // [START insert_session]
+        // Then, invoke the Sessions API to insert the session and await the result,
+        // which is possible here because of the AsyncTask. Always include a timeout when
+        // calling await() to avoid hanging that can occur from the service being shutdown
+        // because of low memory or other conditions.
+        Log.i(TAG, "Inserting the session in the History API");
+        com.google.android.gms.common.api.Status insertStatus =
+                Fitness.SessionsApi.insertSession(client, insertRequest)
+                        .await(1, TimeUnit.MINUTES);
 
-            // Before querying the session, check to see if the insertion succeeded.
-            if (!insertStatus.isSuccess()) {
-                Log.i(TAG, "There was a problem inserting the session: " +
-                        insertStatus.getStatusMessage());
-                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
-                return ;
-            }
+        // Before querying the session, check to see if the insertion succeeded.
+        if (!insertStatus.isSuccess()) {
+            Log.i(TAG, "There was a problem inserting the session: " +
+                    insertStatus.getStatusMessage());
+            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
+            return ;
+        }
              /*
             // Begin by creating the query.
             SessionReadRequest readRequest = readFitnessSession();
@@ -381,7 +380,7 @@ public class GoogleFitManager implements GoogleFit{
             // Invoke the Sessions API to fetch the session with the query and wait for the result
             // of the read request.
             SessionReadResult sessionReadResult =
-                    Fitness.SessionsApi.readSession(mClient, readRequest)
+                    Fitness.SessionsApi.readSession(client, readRequest)
                             .await(1, TimeUnit.MINUTES);
 
             // Get a list of the sessions that match the criteria to check the result.
@@ -399,10 +398,10 @@ public class GoogleFitManager implements GoogleFit{
             }
             // [END read_session]
             */
-            // At this point, the session has been inserted and can be read.
-            Log.i(TAG, "Session insert was successful!");
-            // [END insert_session]
-            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
+        // At this point, the session has been inserted and can be read.
+        Log.i(TAG, "Session insert was successful!");
+        // [END insert_session]
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.GoogleFit).next();
     }
     public long clearMillis2second(long millis){
         millis = millis/1000*1000;
@@ -442,7 +441,7 @@ public class GoogleFitManager implements GoogleFit{
 //
 //        // Create a data source
 //        DataSource dataSource = new DataSource.Builder()
-//                .setAppPackageName(mContext.getPackageName())
+//                .setAppPackageName(context.getPackageName())
 //                .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
 //                .setName(SAMPLE_SESSION_NAME + "- steps")
 //                .setType(DataSource.TYPE_RAW)
@@ -551,7 +550,7 @@ public class GoogleFitManager implements GoogleFit{
 
         // Invoke the History API with the Google API client object and the delete request and
         // specify a callback that will check the result.
-        Fitness.HistoryApi.deleteData(mClient, request)
+        Fitness.HistoryApi.deleteData(client, request)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {

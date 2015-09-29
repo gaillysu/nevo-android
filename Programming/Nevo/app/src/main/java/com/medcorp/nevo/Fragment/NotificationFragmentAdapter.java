@@ -15,10 +15,9 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.PaletteActivity;
+import com.medcorp.nevo.Activity.PaletteActivity;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.View.CustomFontView.RalewayTextView;
 import com.medcorp.nevo.View.NotificationItem;
 
 import java.util.List;
@@ -59,7 +58,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             view = LayoutInflater.from(getContext()).inflate(mListItemResourceId, null);
             viewHolder = new ViewHolder();
             viewHolder.mIcon = (ImageView) view.findViewById(R.id.typeIconImage);
-            viewHolder.mLabel = (TextView) view.findViewById(R.id.typeTextView);
+            viewHolder.mLabel = (RalewayTextView) view.findViewById(R.id.typeTextView);
             viewHolder.mSwitch = (Switch) view.findViewById(R.id.typeSwitch);
             viewHolder.mImage = (ImageView) view.findViewById(R.id.typeImage);
             view.setTag(viewHolder);
@@ -76,12 +75,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         viewHolder.mSwitch.setTag(position);
         initWidget(viewHolder, position);
         viewHolder.mSwitch.setOnCheckedChangeListener(this);
-
-        mViewArray = new View []{
-                viewHolder.mLabel
-        };
-        FontManager.changeFonts(mViewArray, (MainActivity) mCtx);
-
         return view;
     }
 
@@ -291,7 +284,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     class ViewHolder{
         ImageView mIcon;
-        TextView mLabel;
+        RalewayTextView mLabel;
         Switch mSwitch;
         ImageView mImage;
     }

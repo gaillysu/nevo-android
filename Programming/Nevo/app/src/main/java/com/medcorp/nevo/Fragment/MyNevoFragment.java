@@ -17,9 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.OTAActivity;
+import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.Activity.OTAActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;
@@ -81,12 +80,6 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         * my nevo 电量显示设置,初始值 2
         * */
         setBatteryValueText(2);
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.mynevoTextView),
-                rootView.findViewById(R.id.updateuTextView),
-                rootView.findViewById(R.id.batteryValueTextView)
-        };
-        FontManager.changeFonts(viewArray, getActivity());
         return rootView;
     }
 

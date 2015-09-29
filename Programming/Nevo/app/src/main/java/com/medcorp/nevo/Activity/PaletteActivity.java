@@ -1,4 +1,4 @@
-package com.medcorp.nevo;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
@@ -56,12 +57,6 @@ public class PaletteActivity extends Activity
 
         initView();
         initLayout(mPosition);
-
-        View [] viewArray = new View []{
-                findViewById(R.id.palette_title),
-                findViewById(R.id.typetext),
-        };
-        FontManager.changeFonts(viewArray,this);
     }
 
     private void initView(){

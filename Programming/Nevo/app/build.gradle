@@ -35,4 +35,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.0.0'
     compile files('libs/ormlite-android-4.47.jar')
     compile files('libs/ormlite-core-4.47.jar')
+    compile 'com.jakewharton:butterknife:7.0.1'
 }

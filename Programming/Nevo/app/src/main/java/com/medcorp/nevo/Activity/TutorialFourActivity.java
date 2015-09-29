@@ -1,4 +1,4 @@
-package com.medcorp.nevo.TutorialActivity;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.FontManager;
 import com.medcorp.nevo.R;
 
 /**
@@ -22,14 +21,6 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
 
         findViewById(R.id.t3_back_button).setOnClickListener(this);
         findViewById(R.id.t3_next_button).setOnClickListener(this);
-
-        View [] viewArray = new View []{
-                findViewById(R.id.t3_back_button),
-                findViewById(R.id.t3_watchBluetooth),
-                findViewById(R.id.t3_longPushLED),
-                findViewById(R.id.t3_next_button)
-        };
-        FontManager.changeFonts(viewArray,this);
     }
 
     @Override

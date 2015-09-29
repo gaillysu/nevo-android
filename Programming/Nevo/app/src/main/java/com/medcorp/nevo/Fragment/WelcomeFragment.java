@@ -17,8 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.RoundProgressBar;
 import com.medcorp.nevo.View.StepPickerView;
@@ -91,11 +90,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
                 }
             }
         });
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.textView)
-        };
-        FontManager.changeFonts(viewArray,getActivity());
-
         return rootView;
     }
 

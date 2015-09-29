@@ -1,4 +1,4 @@
-package com.medcorp.nevo;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.RoundProgressBar;
 import com.medcorp.nevo.ble.controller.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;
@@ -181,13 +182,6 @@ public class OTAActivity extends Activity
         mNevoOtaController.setOnNevoOtaControllerListener(this);
 
         initView();
-
-        View [] viewArray = new View []{
-                findViewById(R.id.mcuVersionLabel),
-                findViewById(R.id.bleVersionLabel),
-                findViewById(R.id.reUpgradebutton)
-        };
-        FontManager.changeFonts(viewArray, this);
 
         if(bHelpMode)
         {

@@ -1,4 +1,4 @@
-package com.medcorp.nevo;
+package com.medcorp.nevo.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -24,6 +24,9 @@ import com.medcorp.nevo.Fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.Fragment.NotificationFragment;
 import com.medcorp.nevo.Fragment.MyNevoFragment;
 import com.medcorp.nevo.Fragment.WelcomeFragment;
+import com.medcorp.nevo.NevoGFT.GoogleFitManager;
+import com.medcorp.nevo.NevoGFT.IGoogleFit;
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.SyncController;
@@ -36,27 +39,27 @@ import java.util.List;
 
 /**
  * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
- * 
+ *
  *  /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  *  /giphy danger !
  *
  * */
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
-    private static int mPosition = -1;
-    private static String mTag;
-    private Boolean mIsVisible = true;
-    private GoogleFitManager mGfManager;
+    private static int position = -1;
+    private static String tag;
+    private Boolean isVisible = true;
+    private IGoogleFit googleFitManager;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private DrawerLayout mDrawerLayout;
+    private NavigationDrawerFragment navigationDrawerFragment;
+    private DrawerLayout drawerLayout;
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
-    private Toolbar mToolbar;
+    private CharSequence title;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +67,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         //disenable navigation drawer shadow
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
+        navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        title = getTitle();
         // Set a toolbar which will replace the action bar.
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
+        navigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+                (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
         SyncController.Singleton.getInstance(this).startConnect(false, this);
-		
-        mGfManager = GoogleFitManager.getInstance(MainActivity.this, this);
+
+        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
 
         final String google_services_framework ="com.google.android.gsf";
         final String google_play_services ="com.google.android.gms";
@@ -118,7 +121,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
         if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
             Log.i("GoogleFitManager", "Connecting...");
-            mGfManager.getmClient().connect();
+//            googleFitManager.getClient().connect();
         }
         else
         {
@@ -126,21 +129,21 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             //SyncController.Singleton.getInstance(this).setVisible(true);
             //SyncController.Singleton.getInstance(this).showMessage(R.string.install_google_app_title,R.string.install_google_app_content);
             /**
-            new AlertDialog.Builder(MainActivity.this,AlertDialog.THEME_HOLO_LIGHT)
-                    .setTitle(R.string.install_google_app_title)
-                    .setMessage(R.string.install_google_app_content)
-                    .setPositiveButton(android.R.string.cancel,null)
-                    .setNegativeButton(R.string.ok_button,new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            String able= getResources().getConfiguration().locale.getCountry();
-                            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.fitness&hl="+able);
-                            Intent it = new Intent(Intent.ACTION_VIEW, uri);
-                            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(it);
-                        }
-                    })
-                    .show();
+             new AlertDialog.Builder(MainActivity.this,AlertDialog.THEME_HOLO_LIGHT)
+             .setTitle(R.string.install_google_app_title)
+             .setMessage(R.string.install_google_app_content)
+             .setPositiveButton(android.R.string.cancel,null)
+             .setNegativeButton(R.string.ok_button,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            String able= getResources().getConfiguration().locale.getCountry();
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.fitness&hl="+able);
+            Intent it = new Intent(Intent.ACTION_VIEW, uri);
+            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(it);
+            }
+            })
+             .show();
              */
         }
     }
@@ -153,66 +156,66 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     protected void onStop() {
         super.onStop();
-        //if (mGfManager.getmClient().isConnected()) {
-        //    mGfManager.getmClient().disconnect();
+        //if (googleFitManager.getClient().isConnected()) {
+//            googleFitManager.getClient().disconnect();
         //}
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mGfManager.dealActivityResult(requestCode, resultCode, data);
+//        googleFitManager.dealActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        mGfManager.dealSaveInstanceState(outState);
+//        googleFitManager.dealSaveInstanceState(outState);
     }
-	
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Optional<String> tag = new Optional<String>(null);
-        if(position == mPosition){
+        if(position == MainActivity.position){
             return;
         }
         switch (position+1){
             case WelcomeFragment.WELPOSITION+1:
                 tag.set(WelcomeFragment.WELCOMEFRAGMENT);
-                mPosition = WelcomeFragment.WELPOSITION;
-                mTag = WelcomeFragment.WELCOMEFRAGMENT;
-                mTitle = getString(R.string.title_section1);
+                MainActivity.position = WelcomeFragment.WELPOSITION;
+                MainActivity.tag = WelcomeFragment.WELCOMEFRAGMENT;
+                title = getString(R.string.title_section1);
                 break;
             case GoalFragment.GOALPOSITION+1:
                 tag.set(GoalFragment.GOALFRAGMENT);
-                mPosition = GoalFragment.GOALPOSITION;
-                mTag = GoalFragment.GOALFRAGMENT;
-                mTitle = getString(R.string.title_section2);
+                MainActivity.position = GoalFragment.GOALPOSITION;
+                MainActivity.tag = GoalFragment.GOALFRAGMENT;
+                title = getString(R.string.title_section2);
                 break;
             case AlarmFragment.ALARMPOSITION+1:
                 tag.set(AlarmFragment.ALARMFRAGMENT);
-                mPosition = AlarmFragment.ALARMPOSITION;
-                mTag = AlarmFragment.ALARMFRAGMENT;
-                mTitle = getString(R.string.title_section3);
+                MainActivity.position = AlarmFragment.ALARMPOSITION;
+                MainActivity.tag = AlarmFragment.ALARMFRAGMENT;
+                title = getString(R.string.title_section3);
                 break;
             case NotificationFragment.NOTIPOSITION+1:
                 tag.set(NotificationFragment.NOTIFICATIONFRAGMENT);
-                mPosition = NotificationFragment.NOTIPOSITION;
-                mTag = NotificationFragment.NOTIFICATIONFRAGMENT;
-                mTitle = getString(R.string.title_section4);
+                MainActivity.position = NotificationFragment.NOTIPOSITION;
+                MainActivity.tag = NotificationFragment.NOTIFICATIONFRAGMENT;
+                title = getString(R.string.title_section4);
                 break;
             case MyNevoFragment.MYNEVOPOSITION+1:
                 tag.set(MyNevoFragment.MYNEVOFRAGMENT);
-                mPosition = MyNevoFragment.MYNEVOPOSITION;
-                mTag = MyNevoFragment.MYNEVOFRAGMENT;
-                mTitle = getString(R.string.title_section5);
+                MainActivity.position = MyNevoFragment.MYNEVOPOSITION;
+                MainActivity.tag = MyNevoFragment.MYNEVOFRAGMENT;
+                title = getString(R.string.title_section5);
                 break;
             case HistoryFragment.HISTORYPOSITION+1:
                 tag.set(HistoryFragment.HISTORYFRAGMENT);
-                mPosition = HistoryFragment.HISTORYPOSITION;
-                mTag = HistoryFragment.HISTORYFRAGMENT;
-                mTitle = getString(R.string.title_section6);
+                MainActivity.position = HistoryFragment.HISTORYPOSITION;
+                MainActivity.tag = HistoryFragment.HISTORYFRAGMENT;
+                title = getString(R.string.title_section6);
                 break;
             default:
                 break;
@@ -236,7 +239,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public void replaceFragment(final int position, final String tag){
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-               // .addToBackStack(null)
+                // .addToBackStack(null)
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commitAllowingStateLoss();
     }
@@ -244,13 +247,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!navigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-           // getMenuInflater().inflate(R.menu.main, menu);
-           // if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
-           //     menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
+            // getMenuInflater().inflate(R.menu.main, menu);
+            // if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
+            //     menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
             restoreActionBar();
             return true;
         }
@@ -274,7 +277,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(title);
     }
 
     public Fragment getFragment(String tag){
@@ -333,9 +336,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void connectionStateChanged(final boolean isConnected) {
-          if(!mIsVisible) return;
+        if(!isVisible) return;
 
-          runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
@@ -419,8 +422,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 case ConnectAnimationFragment.CONNECTPOSITION+1:
                     fragment.set(new ConnectAnimationFragment());
                     Bundle args = new Bundle();
-                    args.putInt(POSTITION, mPosition);
-                    args.putString(TAG, mTag);
+                    args.putInt(POSTITION, position);
+                    args.putString(TAG, tag);
                     args.putInt(SECTION_NUMBER, sectionNumber);
                     fragment.get().setArguments(args);
                     break;
@@ -436,26 +439,26 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         super.onResume();
         SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
         SyncController.Singleton.getInstance(this).setVisible(true);
-        if(!mIsVisible){
+        if(!isVisible){
             if(SyncController.Singleton.getInstance(this).isConnected()){
-                replaceFragment(mPosition, mTag);
+                replaceFragment(position, tag);
             }else {
                 replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
             }
         }
-        mIsVisible = true;
+        isVisible = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         SyncController.Singleton.getInstance(this).setVisible(false);
-        mIsVisible = false;
+        isVisible = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPosition = -1;
+        position = -1;
     }
 }

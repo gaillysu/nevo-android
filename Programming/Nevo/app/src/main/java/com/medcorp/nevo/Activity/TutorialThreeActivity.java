@@ -1,4 +1,4 @@
-package com.medcorp.nevo.TutorialActivity;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
 import com.medcorp.nevo.R;
 
 /**
@@ -37,14 +36,6 @@ public class TutorialThreeActivity extends Activity implements View.OnClickListe
         mBLEStateImg = (ImageView) findViewById(R.id.bluetoothState);
         mBLEStatus = (TextView) findViewById(R.id.t2_bluetoothEnabled);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        View [] viewArray = new View []{
-                findViewById(R.id.t2_backButton),
-                findViewById(R.id.t2_bluetoothEnabled),
-                findViewById(R.id.bluetoothOffText),
-                findViewById(R.id.t2_nextButton)
-        };
-        FontManager.changeFonts(viewArray,this);
     }
 
     @Override
