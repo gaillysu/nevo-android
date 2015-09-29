@@ -41,7 +41,7 @@
                 android:src="@drawable/clockview_minute"
                 android:visibility="gone"/>
 
-            <com.medcorp.nevo.View.RoundProgressBar
+            <com.medcorp.nevo.view.RoundProgressBar
                 android:id="@+id/roundProgressBar"
                 android:layout_width="315dp"
                 android:layout_height="315dp"
@@ -71,7 +71,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center_horizontal"/>
 
-            <com.medcorp.nevo.View.CustomFontView.RalewayTextView
+            <com.medcorp.nevo.view.customfontview.RalewayTextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="0 / 0"

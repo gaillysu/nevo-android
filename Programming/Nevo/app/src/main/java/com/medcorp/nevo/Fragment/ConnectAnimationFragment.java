@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,9 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.AlertDialogView;
+import com.medcorp.nevo.view.AlertDialogView;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;

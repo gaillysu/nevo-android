@@ -6,8 +6,8 @@ package com.medcorp.nevo.ble.kernel;
 import android.content.Context;
 
 import com.medcorp.nevo.ble.ble.GattAttributes.SupportedService;
-import com.medcorp.nevo.ble.Exception.BLENotSupportedException;
-import com.medcorp.nevo.ble.Exception.BluetoothDisabledException;
+import com.medcorp.nevo.ble.exception.BLENotSupportedException;
+import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
 import com.medcorp.nevo.ble.listener.OnConnectListener;
 import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
 import com.medcorp.nevo.ble.listener.OnExceptionListener;

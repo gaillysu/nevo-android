@@ -24,7 +24,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
-import com.medcorp.nevo.ble.Exception.BLEUnstableException;
+import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.kernel.NevoBT;
 import com.medcorp.nevo.ble.listener.OnConnectListener;
 import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
@@ -796,7 +796,6 @@ public class NevoBTService extends Service {
 	private String getFirmwareVersion()
 	{
 		return firmwareVersion;
-
 	}
 
 	private String getSoftwareVersion()

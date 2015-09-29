@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.medcorp.nevo.Activity.MainActivity;
-import com.medcorp.nevo.Model.Notification.NotificationType;
+import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.model.Notification.NotificationType;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.NotificationItem;
+import com.medcorp.nevo.view.NotificationItem;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.NevoGFT;
+package com.medcorp.nevo.googlefit;
 
 import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.data.DataPoint;

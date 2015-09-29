@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.Exception.BLEUnstableException;
+import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.ble.GattAttributes;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoFirmwareData;

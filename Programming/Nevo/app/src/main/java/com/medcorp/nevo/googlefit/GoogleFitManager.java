@@ -1,4 +1,4 @@
-package com.medcorp.nevo.NevoGFT;
+package com.medcorp.nevo.googlefit;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +21,7 @@ import com.google.android.gms.fitness.request.DataDeleteRequest;
 import com.google.android.gms.fitness.request.SessionInsertRequest;
 import com.google.android.gms.fitness.request.SessionReadRequest;
 import com.google.android.gms.fitness.result.SessionReadResult;
-import com.medcorp.nevo.Model.DailyHistory;
+import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 
 import java.text.SimpleDateFormat;

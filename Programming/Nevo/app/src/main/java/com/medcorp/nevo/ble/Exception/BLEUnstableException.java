@@ -1,4 +1,4 @@
-package com.medcorp.nevo.ble.Exception;
+package com.medcorp.nevo.ble.exception;
 
 /**
  * BLE is unstable, the user should restart the bluetooth layer and/or his phone.

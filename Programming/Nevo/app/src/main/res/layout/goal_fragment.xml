@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayTextView
+        <com.medcorp.nevo.view.customfontview.RalewayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="80sp"
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayTextView
+        <com.medcorp.nevo.view.customfontview.RalewayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goal_stepsUnit"
@@ -47,7 +47,7 @@
             android:textAllCaps="false"
             android:layout_gravity="center_horizontal"/>
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_marginTop="30dp"
@@ -59,7 +59,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected7000" />
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:text="@string/intensive_string"
@@ -70,7 +70,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/goal_button_xml_selected10000" />
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:text="@string/sportive_string"

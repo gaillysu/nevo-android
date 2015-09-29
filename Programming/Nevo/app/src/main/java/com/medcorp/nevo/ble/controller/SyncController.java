@@ -2,8 +2,9 @@ package com.medcorp.nevo.ble.controller;
 
 import android.content.Context;
 
-import com.medcorp.nevo.Model.Alarm;
-import com.medcorp.nevo.Model.Goal;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.model.Goal;
 
 import java.util.List;
 

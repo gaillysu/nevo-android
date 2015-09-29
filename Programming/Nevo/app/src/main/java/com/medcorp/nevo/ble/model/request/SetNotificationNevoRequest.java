@@ -1,7 +1,6 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.Model.Notification;
+import com.medcorp.nevo.model.Notification;
 
 import java.util.ArrayList;
 

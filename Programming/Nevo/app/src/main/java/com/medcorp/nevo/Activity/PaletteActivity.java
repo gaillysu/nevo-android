@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
@@ -21,7 +21,7 @@ import com.medcorp.nevo.ble.util.Constants;
  * ColorPanelActivity
  */
 public class PaletteActivity extends Activity
-        implements View.OnClickListener, OnSyncControllerListener{
+        implements View.OnClickListener, OnSyncControllerListener {
 
     private ImageView mBlue;
     private ImageView mGrassGreen;

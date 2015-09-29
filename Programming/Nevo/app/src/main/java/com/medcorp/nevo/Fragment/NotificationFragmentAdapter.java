@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,10 +15,10 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.medcorp.nevo.Activity.PaletteActivity;
+import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.CustomFontView.RalewayTextView;
-import com.medcorp.nevo.View.NotificationItem;
+import com.medcorp.nevo.view.customfontview.RalewayTextView;
+import com.medcorp.nevo.view.NotificationItem;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.Model.DailyHistory;
+import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.ble.util.HexUtils;
 
 import java.text.ParseException;

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -16,16 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.Fragment.AlarmFragment;
-import com.medcorp.nevo.Fragment.ConnectAnimationFragment;
-import com.medcorp.nevo.Fragment.GoalFragment;
-import com.medcorp.nevo.Fragment.HistoryFragment;
-import com.medcorp.nevo.Fragment.NavigationDrawerFragment;
-import com.medcorp.nevo.Fragment.NotificationFragment;
-import com.medcorp.nevo.Fragment.MyNevoFragment;
-import com.medcorp.nevo.Fragment.WelcomeFragment;
-import com.medcorp.nevo.NevoGFT.GoogleFitManager;
-import com.medcorp.nevo.NevoGFT.IGoogleFit;
+import com.medcorp.nevo.fragment.AlarmFragment;
+import com.medcorp.nevo.fragment.ConnectAnimationFragment;
+import com.medcorp.nevo.fragment.GoalFragment;
+import com.medcorp.nevo.fragment.HistoryFragment;
+import com.medcorp.nevo.fragment.NavigationDrawerFragment;
+import com.medcorp.nevo.fragment.NotificationFragment;
+import com.medcorp.nevo.fragment.MyNevoFragment;
+import com.medcorp.nevo.fragment.WelcomeFragment;
+import com.medcorp.nevo.googlefit.GoogleFitManager;
+import com.medcorp.nevo.googlefit.IGoogleFit;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.app.Activity;
 import android.content.Intent;

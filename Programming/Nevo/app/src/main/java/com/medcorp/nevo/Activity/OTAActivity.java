@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.RoundProgressBar;
+import com.medcorp.nevo.view.RoundProgressBar;
 import com.medcorp.nevo.ble.controller.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;

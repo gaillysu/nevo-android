@@ -1,4 +1,4 @@
-package com.medcorp.nevo.NevoGFT;
+package com.medcorp.nevo.googlefit;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 

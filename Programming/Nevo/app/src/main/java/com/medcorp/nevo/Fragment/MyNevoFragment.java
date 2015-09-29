@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.nevo.Activity.MainActivity;
-import com.medcorp.nevo.Activity.OTAActivity;
+import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.activity.OTAActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;

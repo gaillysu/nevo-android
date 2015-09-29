@@ -1,4 +1,4 @@
-package com.medcorp.nevo.History;
+package com.medcorp.nevo.history;
 
 import java.util.Calendar;
 

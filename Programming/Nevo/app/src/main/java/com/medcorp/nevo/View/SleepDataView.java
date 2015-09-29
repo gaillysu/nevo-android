@@ -1,4 +1,4 @@
-package com.medcorp.nevo.View;
+package com.medcorp.nevo.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.medcorp.nevo.History.database.DatabaseHelper;
+import com.medcorp.nevo.history.database.DatabaseHelper;
 import com.medcorp.nevo.R;
 
 import org.json.JSONException;

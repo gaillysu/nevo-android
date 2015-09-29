@@ -1,7 +1,7 @@
 /*
  * COPYRIGHT (C) 2014 MED Enterprises LTD. All Rights Reserved.
  */
-package com.medcorp.nevo.ble.Exception;
+package com.medcorp.nevo.ble.exception;
 
 public class BluetoothDisabledException extends Exception {
 

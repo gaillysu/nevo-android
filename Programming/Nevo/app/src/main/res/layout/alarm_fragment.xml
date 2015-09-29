@@ -12,7 +12,7 @@
         android:gravity="center"
         android:layout_marginTop="70dp">
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayTextView
+        <com.medcorp.nevo.view.customfontview.RalewayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="50sp"
@@ -32,7 +32,7 @@
             android:background="@drawable/editor"
             android:layout_marginTop="50dp"/>
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/on_mode_button"
@@ -42,7 +42,7 @@
             android:textColor="@color/customBlack"
             android:textAllCaps="false"/>
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/off_mode_button"
@@ -61,7 +61,7 @@
         android:gravity="center"
         android:layout_marginTop="10dp" >
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayTextView
+        <com.medcorp.nevo.view.customfontview.RalewayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="50sp"
@@ -81,7 +81,7 @@
             android:background="@drawable/editor"
             android:layout_marginTop="50dp" />
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/on_mode_button2"
@@ -91,7 +91,7 @@
             android:textColor="@color/customBlack"
             android:textAllCaps="false" />
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/off_mode_button2"
@@ -109,7 +109,7 @@
         android:gravity="center"
         android:layout_marginTop="10dp" >
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayTextView
+        <com.medcorp.nevo.view.customfontview.RalewayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="50sp"
@@ -129,7 +129,7 @@
             android:background="@drawable/editor"
             android:layout_marginTop="50dp" />
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/on_mode_button3"
@@ -139,7 +139,7 @@
             android:textColor="@color/customBlack"
             android:textAllCaps="false" />
 
-        <com.medcorp.nevo.View.CustomFontView.RalewayButton
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/off_mode_button3"

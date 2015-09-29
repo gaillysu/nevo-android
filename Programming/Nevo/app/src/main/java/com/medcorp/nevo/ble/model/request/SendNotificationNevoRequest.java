@@ -5,7 +5,7 @@ package com.medcorp.nevo.ble.model.request;
  */
 import java.util.UUID;
 
-import com.medcorp.nevo.Model.Notification.NotificationType;
+import com.medcorp.nevo.model.Notification.NotificationType;
 import com.medcorp.nevo.ble.ble.GattAttributes;
 
 

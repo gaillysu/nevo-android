@@ -1,4 +1,4 @@
-package com.medcorp.nevo.View;
+package com.medcorp.nevo.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

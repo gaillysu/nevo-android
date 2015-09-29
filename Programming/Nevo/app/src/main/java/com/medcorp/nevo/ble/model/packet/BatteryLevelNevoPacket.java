@@ -1,7 +1,5 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.Model.DailyHistory;
-
 import java.util.ArrayList;
 
 /**

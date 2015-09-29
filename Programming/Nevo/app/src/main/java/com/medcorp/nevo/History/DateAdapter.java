@@ -1,4 +1,4 @@
-package com.medcorp.nevo.History;
+package com.medcorp.nevo.history;
 
 
 import android.content.Context;

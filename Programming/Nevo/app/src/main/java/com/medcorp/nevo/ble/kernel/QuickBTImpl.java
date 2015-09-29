@@ -15,8 +15,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.medcorp.nevo.ble.Exception.QuickBTSendTimeoutException;
-import com.medcorp.nevo.ble.Exception.QuickBTUnBindNevoException;
+import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
+import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.notification.NotificationCallback;
 import com.medcorp.nevo.ble.util.Optional;

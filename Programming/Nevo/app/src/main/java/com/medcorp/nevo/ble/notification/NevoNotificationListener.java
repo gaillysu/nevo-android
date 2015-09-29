@@ -19,13 +19,13 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.Activity.PaletteActivity;
+import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
+import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.ConnectionController;
 import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.Exception.QuickBTSendTimeoutException;
-import com.medcorp.nevo.ble.Exception.QuickBTUnBindNevoException;
+import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
+import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.nevo.ble.util.Optional;
 
