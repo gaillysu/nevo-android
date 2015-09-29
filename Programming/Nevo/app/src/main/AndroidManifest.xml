@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nevowatch.nevo"
+    package="com.medcorp.nevo"
     android:installLocation="preferExternal">
 
     <uses-feature android:name="android.hardware.bluetooth_le"
@@ -74,7 +74,7 @@
             android:enabled="true" />
         <!--new feature for notification, based on API 18 -->
         <service
-            android:name="com.nevowatch.nevo.ble.notification.NevoNotificationListener"
+            android:name=".ble.notification.NevoNotificationListener"
             android:enabled="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
             <intent-filter>
