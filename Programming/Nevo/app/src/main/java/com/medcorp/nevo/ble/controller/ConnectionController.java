@@ -2,10 +2,10 @@ package com.medcorp.nevo.ble.controller;
 
 import android.content.Context;
 
-import com.medcorp.nevo.ble.kernel.OnConnectListener;
-import com.medcorp.nevo.ble.kernel.OnDataReceivedListener;
-import com.medcorp.nevo.ble.kernel.OnExceptionListener;
-import com.medcorp.nevo.ble.kernel.OnFirmwareVersionListener;
+import com.medcorp.nevo.ble.listener.OnConnectListener;
+import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
+import com.medcorp.nevo.ble.listener.OnExceptionListener;
+import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 
 /**
@@ -122,8 +122,8 @@ public interface ConnectionController {
      * such as: user firstly run app, or finished OTA, the two case need pair nevo before connect it
      * otherwise, can't get response packets, such as get step count...
      */
-    public void doPairDevice();
-    public void doUnPairDevice();
+    public void pairDevice();
+    public void unPairDevice();
 
     interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener ,OnFirmwareVersionListener{
 

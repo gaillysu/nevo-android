@@ -7,8 +7,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.ble.Exception.BLEUnstableException;
 import com.medcorp.nevo.ble.ble.GattAttributes;
-import com.medcorp.nevo.ble.kernel.BLEUnstableException;
+import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoFirmwareData;
 import com.medcorp.nevo.ble.model.packet.NevoRawData;
 import com.medcorp.nevo.ble.model.packet.SensorData;
@@ -620,7 +621,7 @@ import java.util.UUID;
     public void forGetDevice()
     {
         //BLE OTA need repair NEVO, so here forget this nevo when OTA done.
-        mConnectionController.doUnPairDevice();
+        mConnectionController.unPairDevice();
     }
     //end public function
 

@@ -15,14 +15,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.UUID;
-
+import com.medcorp.nevo.ble.Exception.QuickBTSendTimeoutException;
+import com.medcorp.nevo.ble.Exception.QuickBTUnBindNevoException;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.notification.NotificationCallback;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
+
+import java.util.UUID;
 
 /*
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\

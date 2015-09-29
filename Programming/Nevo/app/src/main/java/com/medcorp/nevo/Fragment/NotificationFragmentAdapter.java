@@ -28,10 +28,9 @@ import java.util.List;
 public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         implements Switch.OnCheckedChangeListener, View.OnClickListener{
 
-    private int mListItemResourceId;
-    private Context mCtx;
-    private View [] mViewArray;
-    private ListView mListView;
+    private int listItemResourceId;
+    private Context context;
+    private ListView listView;
     public static final String TELETYPE = "tele";
     public static final String EMAILTYPE = "email";
     public static final String FACETYPE = "facebook";
@@ -42,9 +41,9 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects, ListView listView){
         super(context, mListItemResourceId, objects);
-        this.mListItemResourceId = mListItemResourceId;
-        this.mCtx = context;
-        this.mListView = listView;
+        this.listItemResourceId = mListItemResourceId;
+        this.context = context;
+        this.listView = listView;
     }
 
     @Override
@@ -55,7 +54,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         ViewHolder viewHolder;
 
         if(convertView == null){
-            view = LayoutInflater.from(getContext()).inflate(mListItemResourceId, null);
+            view = LayoutInflater.from(getContext()).inflate(listItemResourceId, null);
             viewHolder = new ViewHolder();
             viewHolder.mIcon = (ImageView) view.findViewById(R.id.typeIconImage);
             viewHolder.mLabel = (RalewayTextView) view.findViewById(R.id.typeTextView);
@@ -100,10 +99,10 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     private void setImg(ViewHolder viewHolder, boolean isChecked){
         if(isChecked){
-            viewHolder.mLabel.setTextColor(mCtx.getResources().getColor(R.color.customBlack));
+            viewHolder.mLabel.setTextColor(context.getResources().getColor(R.color.customBlack));
             viewHolder.mIcon.setVisibility(View.VISIBLE);
         }else {
-            viewHolder.mLabel.setTextColor(mCtx.getResources().getColor(R.color.customGray));
+            viewHolder.mLabel.setTextColor(context.getResources().getColor(R.color.customGray));
             viewHolder.mIcon.setVisibility(View.INVISIBLE);
         }
     }
@@ -111,39 +110,39 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     private void initWidget(ViewHolder viewHolder, int position){
         switch (position){
             case 0:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, TELETYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, TELETYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.TELECHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, TELETYPE));
+                setImg(viewHolder, getTypeNFState(context, TELETYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.TELECHOOSENCOLOR)));
                 break;
             case 1:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, EMAILTYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, EMAILTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.EMAILCHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, EMAILTYPE));
+                setImg(viewHolder, getTypeNFState(context, EMAILTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.EMAILCHOOSENCOLOR)));
                 break;
             case 2:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, FACETYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, FACETYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.FACECHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, FACETYPE));
+                setImg(viewHolder, getTypeNFState(context, FACETYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.FACECHOOSENCOLOR)));
                 break;
             case 3:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, SMSTYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, SMSTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.SMSCHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, SMSTYPE));
+                setImg(viewHolder, getTypeNFState(context, SMSTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.SMSCHOOSENCOLOR)));
                 break;
             case 4:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, CALTYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, CALTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.CALCHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, CALTYPE));
+                setImg(viewHolder, getTypeNFState(context, CALTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.CALCHOOSENCOLOR)));
                 break;
             case 5:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, WEICHATTYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, WEICHATTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.WECHATCHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, WEICHATTYPE));
+                setImg(viewHolder, getTypeNFState(context, WEICHATTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.WECHATCHOOSENCOLOR)));
                 break;
             case 6:
-                viewHolder.mSwitch.setChecked(getTypeNFState(mCtx, WHATSTYPE));
-                setImg(viewHolder, getTypeNFState(mCtx, WHATSTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(mCtx, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
+                viewHolder.mSwitch.setChecked(getTypeNFState(context, WHATSTYPE));
+                setImg(viewHolder, getTypeNFState(context, WHATSTYPE));
+                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
                 break;
             default:
                 viewHolder.mSwitch.setChecked(false);
@@ -152,14 +151,14 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     }
 
     private void checkedImg(int pos, boolean isChecked){
-        LinearLayout linearLayout = (LinearLayout) getViewByPosition(pos, mListView);
+        LinearLayout linearLayout = (LinearLayout) getViewByPosition(pos, listView);
         TextView tv = (TextView) linearLayout.findViewById(R.id.typeTextView);
         ImageView icon = (ImageView) linearLayout.findViewById(R.id.typeIconImage);
         if(isChecked){
-            tv.setTextColor(mCtx.getResources().getColor(R.color.customBlack));
+            tv.setTextColor(context.getResources().getColor(R.color.customBlack));
             icon.setVisibility(View.VISIBLE);
         }else {
-            tv.setTextColor(mCtx.getResources().getColor(R.color.customGray));
+            tv.setTextColor(context.getResources().getColor(R.color.customGray));
             icon.setVisibility(View.INVISIBLE);
         }
     }
@@ -170,64 +169,64 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         switch (position){
             case 0:
                 if(isChecked){
-                    saveTypeNFState(mCtx, TELETYPE, true);
+                    saveTypeNFState(context, TELETYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, TELETYPE, false);
+                    saveTypeNFState(context, TELETYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
             case 1:
                 if(isChecked){
-                    saveTypeNFState(mCtx, EMAILTYPE, true);
+                    saveTypeNFState(context, EMAILTYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, EMAILTYPE, false);
+                    saveTypeNFState(context, EMAILTYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
             case 2:
                 if(isChecked){
-                    saveTypeNFState(mCtx, FACETYPE, true);
+                    saveTypeNFState(context, FACETYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, FACETYPE, false);
+                    saveTypeNFState(context, FACETYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
             case 3:
                 if(isChecked){
-                    saveTypeNFState(mCtx, SMSTYPE, true);
+                    saveTypeNFState(context, SMSTYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, SMSTYPE, false);
+                    saveTypeNFState(context, SMSTYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
             case 4:
                 if(isChecked){
-                    saveTypeNFState(mCtx, CALTYPE, true);
+                    saveTypeNFState(context, CALTYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, CALTYPE, false);
+                    saveTypeNFState(context, CALTYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
             case 5:
                 if(isChecked){
-                    saveTypeNFState(mCtx, WEICHATTYPE, true);
+                    saveTypeNFState(context, WEICHATTYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, WEICHATTYPE, false);
+                    saveTypeNFState(context, WEICHATTYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
             case 6:
                 if(isChecked){
-                    saveTypeNFState(mCtx, WHATSTYPE, true);
+                    saveTypeNFState(context, WHATSTYPE, true);
                     checkedImg(position, isChecked);
                 }else {
-                    saveTypeNFState(mCtx, WHATSTYPE, false);
+                    saveTypeNFState(context, WHATSTYPE, false);
                     checkedImg(position, isChecked);
                 }
                 break;
@@ -277,9 +276,9 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(mCtx, PaletteActivity.class);
+        Intent intent = new Intent(context, PaletteActivity.class);
         intent.putExtra("Position", (int)v.getTag());
-        mCtx.startActivity(intent);
+        context.startActivity(intent);
     }
 
     class ViewHolder{

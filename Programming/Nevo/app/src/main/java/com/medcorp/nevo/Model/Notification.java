@@ -9,19 +9,19 @@ public class Notification {
         SMS, Email, Call,Facebook,Calendar,Wechat, Whatsapp
     }
 
-    NotificationType mType;
-    int mColor;
-    boolean  mIsOnOff;
+    private NotificationType type;
+    private int color;
+    private boolean isOnOff;
 
     public Notification(NotificationType type, boolean isOnOff,int color)
     {
-        mType = type;
-        mIsOnOff = isOnOff;
-        mColor = color;
+        this.type = type;
+        this.isOnOff = isOnOff;
+        this.color = color;
     }
 
-    public NotificationType getType(){return mType;}
-    public boolean getOnOff() {return mIsOnOff;}
-    public int     getColor() {return mColor;}
+    public NotificationType getType(){return type;}
+    public boolean getOnOff() {return isOnOff;}
+    public int     getColor() {return color;}
 
 }

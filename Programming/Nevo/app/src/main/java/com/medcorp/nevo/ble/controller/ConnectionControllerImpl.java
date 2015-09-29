@@ -196,9 +196,9 @@ import java.util.TimerTask;
 
             //http://stackoverflow.com/questions/21398766/android-ble-connection-time-interval
             //fix a bug:when BLE OTA done,need repair nevo, if not, must twice connect nevo that nevo can work fine, here use code do repair working or twice connection
-            //call doPairDevice() after every connected, if call it within connect() before startScan() invoke,
+            //call pairDevice() after every connected, if call it within connect() before startScan() invoke,
             //some smartphone will popup message ,this message comes from Android OS, such as samsung...
-            if((firstConnected || needPair())&& !getOTAMode()) doPairDevice();
+            if((firstConnected || needPair())&& !getOTAMode()) pairDevice();
         }
 
         currentlyConnected(connected);
@@ -372,7 +372,7 @@ import java.util.TimerTask;
     }
 
     @Override
-    public void doPairDevice()
+    public void pairDevice()
     {
         if(!hasSavedAddress()) return;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -380,7 +380,7 @@ import java.util.TimerTask;
 
         BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
         int state = device.getBondState();
-        Log.i(NevoBT.TAG,"doPairDevice(),current bind state: " + state);
+        Log.i(NevoBT.TAG,"pairDevice(),current bind state: " + state);
         if(state != BluetoothDevice.BOND_BONDED)
         {
             boolean ret = false;
@@ -394,7 +394,7 @@ import java.util.TimerTask;
         }
     }
     @Override
-    public void doUnPairDevice()
+    public void unPairDevice()
     {
         if(!hasSavedAddress()) return;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -402,7 +402,7 @@ import java.util.TimerTask;
 
         BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
         int state = device.getBondState();
-        Log.i(NevoBT.TAG,"doUnPairDevice(),current bind state: " + state);
+        Log.i(NevoBT.TAG,"unPairDevice(),current bind state: " + state);
         if(state == BluetoothDevice.BOND_BONDED)
         {
             boolean ret = false;

@@ -114,7 +114,7 @@ public class TutorialFiveActivity extends Activity
         }
     }
     @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichFirmware, String version) {
 
     }
 }

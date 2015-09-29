@@ -8,172 +8,170 @@ import java.util.List;
  */
 public class DailyHistory {
 
-    private Date mDate;
-    private List<Integer> mHourlySteps;
-    private int mTotalSteps;
-
+    private Date date;
+    private List<Integer> hourlySteps;
+    private int totalSteps;
     //add new from v1.2.2, FW v18/v31, sleep tracker
         //unit:cm->meter
-        int TotalDist;
-        List<Integer> HourlyDist;
-        //unit: cal->kcal
-        int TotalCalories;
-        List<Integer> HourlyCalories;
-
-        int InactivityTime;
-        int TotalInZoneTime;
-        int TotalOutZoneTime;
-        //unit: minute
-        int TotalSleepTime;
-        List<Integer> HourlySleepTime;
-        int TotalWakeTime;
-        List<Integer> HourlyWakeTime;
-        int TotalLightTime;
-        List<Integer> HourlyLightTime;
-        int TotalDeepTime;
-        List<Integer> HourlDeepTime;
+    private int totalDist;
+    private List<Integer> hourlyDist;
+    //unit: cal->kcal
+    private int totalCalories;
+    private List<Integer> hourlyCalories;
+    private int inactivityTime;
+    private int totalInZoneTime;
+    private int totalOutZoneTime;
+    //unit: minute
+    private int totalSleepTime;
+    private List<Integer> hourlySleepTime;
+    private  int totalWakeTime;
+    private  List<Integer> hourlyWakeTime;
+    private int totalLightTime;
+    private List<Integer> hourlyLightTime;
+    private  int totalDeepTime;
+    private List<Integer> hourlyDeepTime;
     //end added
 
     public DailyHistory(Date date) {
-        mDate = date;
+        this.date = date;
     }
 
     public int getTotalSteps() {
-        return mTotalSteps;
+        return totalSteps;
     }
     public void setTotalSteps(int TotalSteps) {
-         mTotalSteps = TotalSteps;
+         totalSteps = TotalSteps;
     }
 
     public List<Integer> getHourlySteps() {
-        return mHourlySteps;
+        return hourlySteps;
     }
     public void setHourlySteps(List<Integer> HourlySteps) {
-        mHourlySteps = HourlySteps;
+        hourlySteps = HourlySteps;
     }
 
     public int getTotalDist() {
-        return TotalDist;
+        return totalDist;
     }
 
     public void setTotalDist(int totalDist) {
-        TotalDist = totalDist;
+        this.totalDist = totalDist;
     }
 
     public List<Integer> getHourlyDist() {
-        return HourlyDist;
+        return hourlyDist;
     }
 
     public void setHourlyDist(List<Integer> hourlyDist) {
-        HourlyDist = hourlyDist;
+        this.hourlyDist = hourlyDist;
     }
 
     public int getTotalCalories() {
-        return TotalCalories;
+        return totalCalories;
     }
 
     public void setTotalCalories(int totalCalories) {
-        TotalCalories = totalCalories;
+        this.totalCalories = totalCalories;
     }
 
     public List<Integer> getHourlyCalories() {
-        return HourlyCalories;
+        return hourlyCalories;
     }
 
     public void setHourlyCalories(List<Integer> hourlyCalories) {
-        HourlyCalories = hourlyCalories;
+        this.hourlyCalories = hourlyCalories;
     }
 
     public int getInactivityTime() {
-        return InactivityTime;
+        return inactivityTime;
     }
 
     public void setInactivityTime(int inactivityTime) {
-        InactivityTime = inactivityTime;
+        this.inactivityTime = inactivityTime;
     }
 
     public int getTotalInZoneTime() {
-        return TotalInZoneTime;
+        return totalInZoneTime;
     }
 
     public void setTotalInZoneTime(int totalInZoneTime) {
-        TotalInZoneTime = totalInZoneTime;
+        this.totalInZoneTime = totalInZoneTime;
     }
 
     public int getTotalOutZoneTime() {
-        return TotalOutZoneTime;
+        return totalOutZoneTime;
     }
 
     public void setTotalOutZoneTime(int totalOutZoneTime) {
-        TotalOutZoneTime = totalOutZoneTime;
+        this.totalOutZoneTime = totalOutZoneTime;
     }
 
     public int getTotalSleepTime() {
-        return TotalSleepTime;
+        return totalSleepTime;
     }
 
     public void setTotalSleepTime(int totalSleepTime) {
-        TotalSleepTime = totalSleepTime;
+        this.totalSleepTime = totalSleepTime;
     }
 
     public List<Integer> getHourlySleepTime() {
-        return HourlySleepTime;
+        return hourlySleepTime;
     }
 
     public void setHourlySleepTime(List<Integer> hourlySleepTime) {
-        HourlySleepTime = hourlySleepTime;
+        this.hourlySleepTime = hourlySleepTime;
     }
 
     public int getTotalWakeTime() {
-        return TotalWakeTime;
+        return totalWakeTime;
     }
 
     public void setTotalWakeTime(int totalWakeTime) {
-        TotalWakeTime = totalWakeTime;
+        this.totalWakeTime = totalWakeTime;
     }
 
     public List<Integer> getHourlyWakeTime() {
-        return HourlyWakeTime;
+        return hourlyWakeTime;
     }
 
     public void setHourlyWakeTime(List<Integer> hourlyWakeTime) {
-        HourlyWakeTime = hourlyWakeTime;
+        this.hourlyWakeTime = hourlyWakeTime;
     }
 
     public int getTotalLightTime() {
-        return TotalLightTime;
+        return totalLightTime;
     }
 
     public void setTotalLightTime(int totalLightTime) {
-        TotalLightTime = totalLightTime;
+        this.totalLightTime = totalLightTime;
     }
 
     public List<Integer> getHourlyLightTime() {
-        return HourlyLightTime;
+        return hourlyLightTime;
     }
 
     public void setHourlyLightTime(List<Integer> hourlyLightTime) {
-        HourlyLightTime = hourlyLightTime;
+        this.hourlyLightTime = hourlyLightTime;
     }
 
     public int getTotalDeepTime() {
-        return TotalDeepTime;
+        return totalDeepTime;
     }
 
     public void setTotalDeepTime(int totalDeepTime) {
-        TotalDeepTime = totalDeepTime;
+        this.totalDeepTime = totalDeepTime;
     }
 
-    public List<Integer> getHourlDeepTime() {
-        return HourlDeepTime;
+    public List<Integer> getHourlyDeepTime() {
+        return hourlyDeepTime;
     }
 
-    public void setHourlDeepTime(List<Integer> hourlDeepTime) {
-        HourlDeepTime = hourlDeepTime;
+    public void setHourlyDeepTime(List<Integer> hourlyDeepTime) {
+        this.hourlyDeepTime = hourlyDeepTime;
     }
 
     public Date getDate() {
-        return mDate;
+        return date;
     }
 
 }

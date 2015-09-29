@@ -28,6 +28,8 @@ import java.util.UUID;
 import com.medcorp.nevo.ble.ble.GattAttributes;
 import com.medcorp.nevo.ble.ble.NevoBTService;
 import com.medcorp.nevo.ble.ble.GattAttributes.SupportedService;
+import com.medcorp.nevo.ble.Exception.BLENotSupportedException;
+import com.medcorp.nevo.ble.Exception.BluetoothDisabledException;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
@@ -110,7 +112,7 @@ import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
      * Simple constructor
      * @param context
      * @throws BLENotSupportedException
-     * @throws BluetoothDisabledException 
+     * @throws BluetoothDisabledException
      */
 	public NevoBTImpl(Context context){
 		this.mContext = context;

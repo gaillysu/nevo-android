@@ -24,12 +24,12 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
-import com.medcorp.nevo.ble.kernel.BLEUnstableException;
+import com.medcorp.nevo.ble.Exception.BLEUnstableException;
 import com.medcorp.nevo.ble.kernel.NevoBT;
-import com.medcorp.nevo.ble.kernel.OnConnectListener;
-import com.medcorp.nevo.ble.kernel.OnDataReceivedListener;
-import com.medcorp.nevo.ble.kernel.OnExceptionListener;
-import com.medcorp.nevo.ble.kernel.OnFirmwareVersionListener;
+import com.medcorp.nevo.ble.listener.OnConnectListener;
+import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
+import com.medcorp.nevo.ble.listener.OnExceptionListener;
+import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.model.packet.DataFactory;
 import com.medcorp.nevo.ble.model.packet.SensorData;
 import com.medcorp.nevo.ble.model.request.SensorRequest;

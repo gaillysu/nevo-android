@@ -20,9 +20,9 @@ public class SetAlarmNevoRequest extends NevoRequest {
         for (int i =0;i<list.size();i++)
         {
             Alarm alarm = list.get(i);
-            mHour[i]  = alarm.getmHour();
-            mMinute[i] = alarm.getmMinute();
-            mEnable[i] = alarm.ismEnable();
+            mHour[i]  = alarm.getHour();
+            mMinute[i] = alarm.getMinute();
+            mEnable[i] = alarm.isEnable();
         }
 	}
 	

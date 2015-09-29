@@ -6,7 +6,7 @@ public interface Goal {
 		LOW,MEDIUM,HIGH
 	}
 	
-	String getType();
-	GoalIntensity getGoalIntensity();
-	int getValue();
+	public String getType();
+	public GoalIntensity getGoalIntensity();
+	public int getValue();
 }

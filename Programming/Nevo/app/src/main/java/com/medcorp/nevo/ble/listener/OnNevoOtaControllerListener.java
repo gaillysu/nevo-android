@@ -1,5 +1,6 @@
-package com.medcorp.nevo.ble.controller;
+package com.medcorp.nevo.ble.listener;
 
+import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
 /**

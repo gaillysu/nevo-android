@@ -37,10 +37,10 @@ import com.medcorp.nevo.Model.Notification;
 import com.medcorp.nevo.NevoGFT.GoogleFitManager;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.View.TimePickerView;
-import com.medcorp.nevo.ble.kernel.BLEConnectTimeoutException;
-import com.medcorp.nevo.ble.kernel.BLENotSupportedException;
-import com.medcorp.nevo.ble.kernel.BLEUnstableException;
-import com.medcorp.nevo.ble.kernel.BluetoothDisabledException;
+import com.medcorp.nevo.ble.Exception.BLEConnectTimeoutException;
+import com.medcorp.nevo.ble.Exception.BLENotSupportedException;
+import com.medcorp.nevo.ble.Exception.BLEUnstableException;
+import com.medcorp.nevo.ble.Exception.BluetoothDisabledException;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
@@ -295,10 +295,10 @@ import java.util.TimeZone;
 
 
                         mSavedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
+                        mSavedDailyHistory.get(mCurrentDay).setHourlyDeepTime(thispacket.getHourlDeepTime());
 
                         Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyDeepTime().toString());
 
                         mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
                         mSavedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());

@@ -1,7 +1,7 @@
 /*
  * COPYRIGHT (C) 2014 MED Enterprises LTD. All Rights Reserved.
  */
-package com.medcorp.nevo.ble.kernel;
+package com.medcorp.nevo.ble.Exception;
 
 public class BLENotSupportedException extends Exception {
 

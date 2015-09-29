@@ -1,4 +1,4 @@
-package com.medcorp.nevo.ble.kernel;
+package com.medcorp.nevo.ble.Exception;
 
 /**
  * Created by gaillysu on 15/5/11.
