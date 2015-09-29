@@ -74,8 +74,9 @@ public class GattAttributes {
     public static boolean supportedBLECharacteristic(String uuid){
 		if (uuid.equals(GattAttributes.NEVO_CALLBACK_CHARACTERISTIC)
            || uuid.equals(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)
-           || uuid.equals(GattAttributes.NEVO_OTA_CHARACTERISTIC))
-			return true;
+           || uuid.equals(GattAttributes.NEVO_OTA_CHARACTERISTIC)) {
+            return true;
+        }
 		return false;
     }
     

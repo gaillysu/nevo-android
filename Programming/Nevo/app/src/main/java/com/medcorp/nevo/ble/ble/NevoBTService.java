@@ -237,7 +237,6 @@ public class NevoBTService extends Service {
 			return false;
 		}
 
-
 		bluetoothAdapter = bluetoothManager.getAdapter();
 		if (bluetoothAdapter == null) {
 			Log.e(NevoBT.TAG, "Unable to obtain a BluetoothAdapter.");

@@ -11,8 +11,6 @@ package com.medcorp.nevo.ble.listener;
  */
 	
 public interface OnExceptionListener {
-
-		
 		/**
 		 * This function is called everytime an important exception is raised.
 		 * Up to you to inform the user and/or launch a re-scan

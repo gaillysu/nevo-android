@@ -14,7 +14,7 @@ import java.util.List;
  * Created by gaillysu on 15/4/1.
  */
 public class DailyTrackerNevoPacket extends NevoPacket {
-    public DailyTrackerNevoPacket(ArrayList<NevoRawData> packets) {
+    public DailyTrackerNevoPacket(List<NevoRawData> packets) {
         super(packets);
     }
 

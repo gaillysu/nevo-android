@@ -40,7 +40,7 @@ import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.history.DateAdapter;
-import com.medcorp.nevo.history.SpecialCalendar;
+import com.medcorp.nevo.model.SpecialCalendar;
 import com.medcorp.nevo.history.database.DatabaseHelper;
 import com.medcorp.nevo.history.database.IDailyHistory;
 import com.medcorp.nevo.model.DailyHistory;

@@ -4,7 +4,6 @@ package com.medcorp.nevo.history;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.model.SpecialCalendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,17 +22,11 @@ public class DateAdapter extends BaseAdapter {
     private boolean isLeapyear = false; // 是否为闰年
     private int daysOfMonth = 0; // 某月的天数
     private int dayOfWeek = 0; // 具体某一天是星期几
-    private int nextDayOfWeek = 0;
-    private int lastDayOfWeek = 0;
     private int lastDaysOfMonth = 0; // 上一个月的总天数
-    private int eachDayOfWeek = 0;
     private Context context;
     private SpecialCalendar sc = null;
-    private Resources res = null;
-    private Drawable drawable = null;
     private String[] dayNumber = new String[7];
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
-    private int currentFlag = -1; // 用于标记当天
     // 系统当前时间
     private String sysDate = "";
     private String sys_year = "";
@@ -42,16 +36,7 @@ public class DateAdapter extends BaseAdapter {
     private String currentMonth = "";
     private String currentWeek = "";
     private String currentDay = "";
-    private int weeksOfMonth;
-    private int default_postion;
     private int clickTemp = -1;
-    private int week_num = 0;
-    private int week_c = 0;
-    private int month = 0;
-    private int jumpWeek = 0;
-    private int c_month = 0;
-    private int c_day_week = 0;
-    private int n_day_week = 0;
     private boolean isStart;
 
     // 标识选择的Item
@@ -65,21 +50,14 @@ public class DateAdapter extends BaseAdapter {
         sys_year = sysDate.split("-")[0];
         sys_month = sysDate.split("-")[1];
         sys_day = sysDate.split("-")[2];
-        month = Integer.parseInt(sys_month);
     }
 
     public DateAdapter(Context context, Resources rs, int year_c, int month_c,
                        int week_c, int week_num, int default_postion, boolean isStart) {
         this();
         this.context = context;
-        this.res = rs;
-        this.default_postion = default_postion;
-        this.week_c = week_c;
         this.isStart = isStart;
         sc = new SpecialCalendar();
-
-        lastDayOfWeek = sc.getWeekDayOfLastMonth(year_c, month_c,
-                sc.getDaysOfMonth(sc.isLeapYear(year_c), month_c));
         Log.i(TAG, "week_c:" + week_c);
         currentYear = String.valueOf(year_c);
         ; // 得到当前的年份
@@ -150,7 +128,6 @@ public class DateAdapter extends BaseAdapter {
         daysOfMonth = sc.getDaysOfMonth(isLeapyear, month); // 某月的总天数
         dayOfWeek = sc.getWeekdayOfMonth(year, month); // 某月第一天为星期几
         lastDaysOfMonth = sc.getDaysOfMonth(isLeapyear, month - 1);
-        nextDayOfWeek = sc.getDaysOfMonth(isLeapyear, month + 1);
     }
 
     public void getWeek(int year, int month, int week) {
@@ -178,45 +155,18 @@ public class DateAdapter extends BaseAdapter {
         return dayNumber;
     }
 
-    /**
-     * 得到某月有几周(特殊算法)
-     */
-    public int getWeeksOfMonth() {
-        // getCalendar(year, month);
-        int preMonthRelax = 0;
-        if (dayOfWeek != 7) {
-            preMonthRelax = dayOfWeek;
-        }
-        if ((daysOfMonth + preMonthRelax) % 7 == 0) {
-            weeksOfMonth = (daysOfMonth + preMonthRelax) / 7;
-        } else {
-            weeksOfMonth = (daysOfMonth + preMonthRelax) / 7 + 1;
-        }
-        return weeksOfMonth;
-    }
-
-    /**
-     * 某一天在第几周
-     */
-    public void getDayInWeek(int year, int month) {
-
-    }
-
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return dayNumber.length;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 

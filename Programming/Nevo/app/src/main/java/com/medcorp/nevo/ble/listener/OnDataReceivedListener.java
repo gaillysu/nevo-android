@@ -16,6 +16,6 @@ public interface OnDataReceivedListener {
 	 *
 	 * @param data the data coming from peripherals. Several kinds of SensorData are possible depending on the connected peripheral.
 	 */
-	void onDataReceived(SensorData data);
+	public void onDataReceived(SensorData data);
 	
 }

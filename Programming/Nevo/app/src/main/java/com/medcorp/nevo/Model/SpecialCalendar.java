@@ -1,16 +1,14 @@
-package com.medcorp.nevo.history;
+package com.medcorp.nevo.model;
 
 import java.util.Calendar;
 
 public class SpecialCalendar {
 
-    private int daysOfMonth = 0;      //某月的天数
-    private int dayOfWeek = 0;        //具体某一天是星期几
+    private int daysOfMonth = 0;      //Number of days in month
+    private int dayOfWeek = 0;        //Specific day of week
     private int eachDayOfWeek = 0;
 
-
-
-    // 判断是否为闰年
+    // Determine whether this is a leap year or not
     public boolean isLeapYear(int year) {
         if (year % 100 == 0 && year % 400 == 0) {
             return true;
@@ -20,7 +18,7 @@ public class SpecialCalendar {
         return false;
     }
 
-    //得到某月有多少天数
+    //Get number of days in month
     public int getDaysOfMonth(boolean isLeapyear, int month) {
         switch (month) {
             case 1:
@@ -44,7 +42,6 @@ public class SpecialCalendar {
                 } else {
                     daysOfMonth = 28;
                 }
-
         }
         return daysOfMonth;
     }

@@ -2,7 +2,7 @@ package com.medcorp.nevo.ble.model.request;
 
 import com.medcorp.nevo.model.Notification;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SetNotificationNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x02;
@@ -21,12 +21,7 @@ public class SetNotificationNevoRequest extends NevoRequest {
         public final static int ORANGE_LED = 0x080000;
         public final static int LIGHTGREEN_LED = 0x020000;
         //white LED control bit is bit0~10
-        final static int WHITE_1_LED = 0x000001;
-        final static int WHITE_3_LED = 0x000004;
-        final static int WHITE_5_LED = 0x000010;
-        final static int WHITE_7_LED = 0x000040;
-        final static int WHITE_9_LED = 0x000100;
-        final static int WHITE_11_LED = 0x000400;
+
     }
 
     private byte call_vib_number = 0;
@@ -50,7 +45,7 @@ public class SetNotificationNevoRequest extends NevoRequest {
     private byte whatsapp_vib_number = 0;
     private int whatsapp_led_pattern = 0;
 
-    public SetNotificationNevoRequest(ArrayList<Notification> list)
+    public SetNotificationNevoRequest(List<Notification> list)
     {
         for(Notification notification:list) {
             if( notification.getType()== Notification.NotificationType.Call) {

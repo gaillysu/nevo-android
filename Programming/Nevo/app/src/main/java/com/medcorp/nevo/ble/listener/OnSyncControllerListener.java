@@ -11,14 +11,14 @@ public interface OnSyncControllerListener {
     /**
     Called when a packet is received from the device
     */
-    void packetReceived(NevoPacket packet);
+    public void packetReceived(NevoPacket packet);
     /**
     Called when a peripheral connects or disconnects
     */
-    void connectionStateChanged(boolean isConnected);
+    public void connectionStateChanged(boolean isConnected);
 
     /*
     called when get version info
      */
-    void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version);
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version);
 }

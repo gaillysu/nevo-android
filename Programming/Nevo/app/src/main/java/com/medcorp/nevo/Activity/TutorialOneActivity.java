@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.util.Constants;
 
 /**
  * Turorial One
@@ -19,29 +17,29 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
-        {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-            return;
-        }
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.tutorial_activity_1);
-
-        findViewById(R.id.activateButton).setOnClickListener(this);
-
-        findViewById(R.id.uriButton).setOnClickListener(this);
-
-        findViewById(R.id.imagewatch).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(TutorialOneActivity.this, OTAActivity.class);
-                intent.putExtra("from","tutorial");
-                startActivity(intent);
-                return false;
-            }
-        });
+//        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
+//        {
+//            startActivity(new Intent(this, MainActivity.class));
+//            finish();
+//            return;
+//        }
+//
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        setContentView(R.layout.tutorial_activity_1);
+//
+//        findViewById(R.id.activateButton).setOnClickListener(this);
+//
+//        findViewById(R.id.uriButton).setOnClickListener(this);
+//
+//        findViewById(R.id.imagewatch).setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View view) {
+//                Intent intent = new Intent(TutorialOneActivity.this, OTAActivity.class);
+//                intent.putExtra("from","tutorial");
+//                startActivity(intent);
+//                return false;
+//            }
+//        });
     }
 
     @Override

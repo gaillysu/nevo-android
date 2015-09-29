@@ -16,5 +16,5 @@ public interface OnFirmwareVersionListener {
      @parameter whichfirmware, firmware type
      @parameter version, return the version
      */
-    void  firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version);
+    public void  firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version);
 }

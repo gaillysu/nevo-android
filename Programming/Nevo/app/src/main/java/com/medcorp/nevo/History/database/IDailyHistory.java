@@ -168,7 +168,7 @@ public class IDailyHistory {
         setTotalLightTime(history.getTotalLightTime());
         setHourlyLightTime(history.getHourlyLightTime()==null?new String():history.getHourlyLightTime().toString());
         setTotalDeepTime(history.getTotalDeepTime());
-        setHourlDeepTime(history.getHourlyDeepTime()==null?new String():history.getHourlyDeepTime().toString());
+        setHourlDeepTime(history.getHourlDeepTime()==null?new String():history.getHourlDeepTime().toString());
 
         //in /out ZONE
         setInactivityTime(history.getInactivityTime());
