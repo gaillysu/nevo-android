@@ -18,12 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.RoundProgressBar;
-import com.medcorp.nevo.ble.controller.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;
+import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
+import com.medcorp.nevo.view.RoundProgressBar;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

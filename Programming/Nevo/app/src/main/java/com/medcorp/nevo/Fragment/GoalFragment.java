@@ -14,14 +14,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.StepPickerView;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.view.StepPickerView;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom

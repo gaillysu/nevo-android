@@ -8,15 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.model.Notification.NotificationType;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.NotificationItem;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.notification.NevoNotificationListener;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.model.Notification.NotificationType;
+import com.medcorp.nevo.view.NotificationItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * NotificationFragment
  */
 public class NotificationFragment extends Fragment
-        implements OnSyncControllerListener{
+        implements OnSyncControllerListener {
 
     public static final String NOTIFICATIONFRAGMENT = "NotificationFragment";
     public static final int NOTIPOSITION = 3;

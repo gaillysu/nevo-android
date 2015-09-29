@@ -16,23 +16,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.R;
+import com.medcorp.nevo.ble.controller.OtaController;
+import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.ble.model.packet.NevoPacket;
+import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.ConnectAnimationFragment;
 import com.medcorp.nevo.fragment.GoalFragment;
 import com.medcorp.nevo.fragment.HistoryFragment;
+import com.medcorp.nevo.fragment.MyNevoFragment;
 import com.medcorp.nevo.fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.fragment.NotificationFragment;
-import com.medcorp.nevo.fragment.MyNevoFragment;
 import com.medcorp.nevo.fragment.WelcomeFragment;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.IGoogleFit;
-import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
-import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.ble.util.Optional;
 
 import java.util.List;
 

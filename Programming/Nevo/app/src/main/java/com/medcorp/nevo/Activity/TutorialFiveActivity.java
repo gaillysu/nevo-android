@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 
@@ -20,7 +20,7 @@ import com.medcorp.nevo.ble.util.Constants;
  * TutorialFour
  */
 public class TutorialFiveActivity extends Activity
-        implements View.OnClickListener, OnSyncControllerListener{
+        implements View.OnClickListener, OnSyncControllerListener {
 
     private Button mConnectButton;
     private ImageView mConnectImg;
