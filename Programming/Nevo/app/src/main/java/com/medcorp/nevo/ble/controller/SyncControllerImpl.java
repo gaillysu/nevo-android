@@ -54,11 +54,11 @@ import com.medcorp.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.database.IDailyHistory;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
-import com.medcorp.nevo.history.database.DatabaseHelper;
-import com.medcorp.nevo.history.database.IDailyHistory;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;
@@ -226,7 +226,7 @@ import java.util.TimeZone;
                         List<Alarm> list = new ArrayList<Alarm>();
 
                         String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
-                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0,mContext);
+                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
                         list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
 
                         strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");

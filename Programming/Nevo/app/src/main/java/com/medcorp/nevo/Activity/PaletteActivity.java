@@ -2,9 +2,7 @@ package com.medcorp.nevo.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -13,8 +11,27 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.ble.model.application.ApplicationLed;
+import com.medcorp.nevo.ble.model.application.CalendarColor;
+import com.medcorp.nevo.ble.model.application.EmailColor;
+import com.medcorp.nevo.ble.model.application.FacebookColor;
+import com.medcorp.nevo.ble.model.application.SmsColor;
+import com.medcorp.nevo.ble.model.application.TelephoneColor;
+import com.medcorp.nevo.ble.model.application.WeChatColor;
+import com.medcorp.nevo.ble.model.application.WhatsappColor;
+import com.medcorp.nevo.ble.model.application.visitor.ApplicationLedVisitor;
+import com.medcorp.nevo.ble.model.application.visitor.ColorSaver;
+import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
+import com.medcorp.nevo.ble.model.color.BlueLed;
+import com.medcorp.nevo.ble.model.color.GreenLed;
+import com.medcorp.nevo.ble.model.color.LightGreenLed;
+import com.medcorp.nevo.ble.model.color.NevoLed;
+import com.medcorp.nevo.ble.model.color.OrangeLed;
+import com.medcorp.nevo.ble.model.color.RedLed;
+import com.medcorp.nevo.ble.model.color.UnknownLed;
+import com.medcorp.nevo.ble.model.color.YellowLed;
+import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 
 /**
@@ -31,21 +48,7 @@ public class PaletteActivity extends Activity
     private ImageView mYellow;
     private ImageView mBack;
 
-    public static final int BLUE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.BLUE_LED;
-    public static final int LIGHTGREEN_LED = SetNotificationNevoRequest.SetNortificationRequestValues.LIGHTGREEN_LED;
-    public static final int GREEN_LED = SetNotificationNevoRequest.SetNortificationRequestValues.GREEN_LED;
-    public static final int ORANGE_LED = SetNotificationNevoRequest.SetNortificationRequestValues.ORANGE_LED;
-    public static final int RED_LED = SetNotificationNevoRequest.SetNortificationRequestValues.RED_LED;
-    public static final int YELLOW_LED = SetNotificationNevoRequest.SetNortificationRequestValues.YELLOW_LED;
-
-    public static final String TELECHOOSENCOLOR = "telechoosencolor";
-    public static final String EMAILCHOOSENCOLOR = "emailchoosencolor";
-    public static final String FACECHOOSENCOLOR = "facechoosencolor";
-    public static final String SMSCHOOSENCOLOR = "smschoosencolor";
-    public static final String CALCHOOSENCOLOR = "calchoosencolor";
-    public static final String WECHATCHOOSENCOLOR = "wechatchoosencolor";
-    public static final String WHATSAPPCHOOSENCOLOR = "whatsappchoosencolor";
-    private int mChoosenColor = -1;
+    private NevoLed chosenLed = new UnknownLed();
     private int mPosition = -1;
     private TextView mTitle;
 
@@ -54,7 +57,6 @@ public class PaletteActivity extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.palette_activity);
-
         initView();
         initLayout(mPosition);
     }
@@ -79,40 +81,43 @@ public class PaletteActivity extends Activity
     }
 
     private void initLayout(int position){
+        ColorGetter getter = new ColorGetter(this);
         switch (position){
+
+        getter.visit(applicationLed);
             case 0:
-                mChoosenColor = getTypeChoosenColor(this, TELECHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new TelephoneColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.call_string));
                 break;
             case 1:
-                mChoosenColor = getTypeChoosenColor(this, EMAILCHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new EmailColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.email_string));
                 break;
             case 2:
-                mChoosenColor = getTypeChoosenColor(this, FACECHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new FacebookColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.facebook_string));
                 break;
             case 3:
-                mChoosenColor = getTypeChoosenColor(this, SMSCHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new SmsColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.sms_string));
                 break;
             case 4:
-                mChoosenColor = getTypeChoosenColor(this, CALCHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new CalendarColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.calendar_string));
                 break;
             case 5:
-                mChoosenColor = getTypeChoosenColor(this, WECHATCHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new WeChatColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.wechat_string));
                 break;
             case 6:
-                mChoosenColor = getTypeChoosenColor(this, WHATSAPPCHOOSENCOLOR);
-                setImageLight(mChoosenColor);
+                chosenLed = getTypeChoosenColor(this, new WhatsappColor());
+                setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.whatsapp_string));
                 break;
             default:
@@ -120,28 +125,28 @@ public class PaletteActivity extends Activity
         }
     }
 
-    private void saveChoosenColor(final int position, final int choosenColor){
+    private void saveChoosenColor(final int position, NevoLed chosenLed){
         switch (position){
             case 0:
-                saveTypeChoosenColor(this, TELECHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new TelephoneColor(), chosenLed);
                 break;
             case 1:
-                saveTypeChoosenColor(this, EMAILCHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new EmailColor(), chosenLed);
                 break;
             case 2:
-                saveTypeChoosenColor(this, FACECHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new FacebookColor(), chosenLed);
                 break;
             case 3:
-                saveTypeChoosenColor(this, SMSCHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new SmsColor(), chosenLed);
                 break;
             case 4:
-                saveTypeChoosenColor(this, CALCHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new CalendarColor(), chosenLed);
                 break;
             case 5:
-                saveTypeChoosenColor(this, WECHATCHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new WeChatColor(), chosenLed);
                 break;
             case 6:
-                saveTypeChoosenColor(this, WHATSAPPCHOOSENCOLOR, choosenColor);
+                saveTypeChoosenColor(this, new WhatsappColor(), chosenLed);
                 break;
             default:
                 break;
@@ -152,136 +157,63 @@ public class PaletteActivity extends Activity
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.blueImage:
-                mChoosenColor = PaletteActivity.BLUE_LED;
-                setImageLight(mChoosenColor);
-                saveChoosenColor(mPosition, mChoosenColor);
+                chosenLed = new BlueLed();
+                setImageLight(chosenLed);
+                saveChoosenColor(mPosition, chosenLed);
                 break;
             case R.id.grassGreenImage:
-                mChoosenColor = PaletteActivity.LIGHTGREEN_LED;
-                setImageLight(mChoosenColor);
-                saveChoosenColor(mPosition, mChoosenColor);
+                chosenLed = new LightGreenLed();
+                setImageLight(chosenLed);
+                saveChoosenColor(mPosition, chosenLed);
                 break;
             case R.id.greenImage:
-                mChoosenColor = PaletteActivity.GREEN_LED;
-                setImageLight(mChoosenColor);
-                saveChoosenColor(mPosition, mChoosenColor);
+                chosenLed = new GreenLed();
+                setImageLight(chosenLed);
+                saveChoosenColor(mPosition, chosenLed);
                 break;
             case R.id.orangeImage:
-                mChoosenColor = PaletteActivity.ORANGE_LED;
-                setImageLight(mChoosenColor);
-                saveChoosenColor(mPosition, mChoosenColor);
+                chosenLed = new OrangeLed();
+                setImageLight(chosenLed);
+                saveChoosenColor(mPosition, chosenLed);
                 break;
             case R.id.redImage:
-                mChoosenColor = PaletteActivity.RED_LED;
-                setImageLight(mChoosenColor);
-                saveChoosenColor(mPosition, mChoosenColor);
+                chosenLed = new RedLed();
+                setImageLight(chosenLed);
+                saveChoosenColor(mPosition, chosenLed);
                 break;
             case R.id.yellowImage:
-                mChoosenColor = PaletteActivity.YELLOW_LED;
-                setImageLight(mChoosenColor);
-                saveChoosenColor(mPosition, mChoosenColor);
+                chosenLed = new YellowLed();
+                setImageLight(chosenLed);
+                saveChoosenColor(mPosition, chosenLed);
                 break;
             case R.id.backimage:
                 finish();
                 break;
             default:
+                chosenLed = new UnknownLed();
                 break;
         }
     }
 
-    private void setImageLight(int type){
-        switch (type){
-            case PaletteActivity.BLUE_LED:
-                mBlue.setSelected(true);
-                mGrassGreen.setSelected(false);
-                mGreen.setSelected(false);
-                mOrange.setSelected(false);
-                mRed.setSelected(false);
-                mYellow.setSelected(false);
-                break;
-            case PaletteActivity.LIGHTGREEN_LED:
-                mBlue.setSelected(false);
-                mGrassGreen.setSelected(true);
-                mGreen.setSelected(false);
-                mOrange.setSelected(false);
-                mRed.setSelected(false);
-                mYellow.setSelected(false);
-                break;
-            case PaletteActivity.GREEN_LED:
-                mBlue.setSelected(false);
-                mGrassGreen.setSelected(false);
-                mGreen.setSelected(true);
-                mOrange.setSelected(false);
-                mRed.setSelected(false);
-                mYellow.setSelected(false);
-                break;
-            case PaletteActivity.ORANGE_LED:
-                mBlue.setSelected(false);
-                mGrassGreen.setSelected(false);
-                mGreen.setSelected(false);
-                mOrange.setSelected(true);
-                mRed.setSelected(false);
-                mYellow.setSelected(false);
-                break;
-            case PaletteActivity.RED_LED:
-                mBlue.setSelected(false);
-                mGrassGreen.setSelected(false);
-                mGreen.setSelected(false);
-                mOrange.setSelected(false);
-                mRed.setSelected(true);
-                mYellow.setSelected(false);
-                break;
-            case PaletteActivity.YELLOW_LED:
-                mBlue.setSelected(false);
-                mGrassGreen.setSelected(false);
-                mGreen.setSelected(false);
-                mOrange.setSelected(false);
-                mRed.setSelected(false);
-                mYellow.setSelected(true);
-                break;
-            default:
-                break;
-        }
+    private void setImageLight(NevoLed led){
+        NevoLedVisitor visitor = new ColorLedVisotor();
+        mBlue.setSelected(false);
+        mGrassGreen.setSelected(false);
+        mGreen.setSelected(false);
+        mOrange.setSelected(false);
+        mRed.setSelected(false);
+        mYellow.setSelected(false);
+        visitor.visit(led);
     }
 
-    public static void saveTypeChoosenColor(Context context, String tag, int value){
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(tag.equals(TELECHOOSENCOLOR)){
-            pref.edit().putInt(TELECHOOSENCOLOR, value).apply();
-        }else if(tag.equals(EMAILCHOOSENCOLOR)){
-            pref.edit().putInt(EMAILCHOOSENCOLOR, value).apply();
-        }else if(tag.equals(FACECHOOSENCOLOR)){
-            pref.edit().putInt(FACECHOOSENCOLOR, value).apply();
-        }else if(tag.equals(SMSCHOOSENCOLOR)){
-            pref.edit().putInt(SMSCHOOSENCOLOR, value).apply();
-        }else if(tag.equals(CALCHOOSENCOLOR)){
-            pref.edit().putInt(CALCHOOSENCOLOR, value).apply();
-        }else if(tag.equals(WECHATCHOOSENCOLOR)){
-            pref.edit().putInt(WECHATCHOOSENCOLOR, value).apply();
-        }else if(tag.equals(WHATSAPPCHOOSENCOLOR)){
-            pref.edit().putInt(WHATSAPPCHOOSENCOLOR, value).apply();
-        }
+    public static void saveTypeChoosenColor(Context context, ApplicationLed applicationLed, NevoLed value){
+        ApplicationLedVisitor saver = new ColorSaver(context,value);
+        saver.visit(applicationLed);
     }
 
-    public static int getTypeChoosenColor(Context context, String tag){
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(tag.equals(TELECHOOSENCOLOR)){
-            return pref.getInt(TELECHOOSENCOLOR, ORANGE_LED);
-        }else if(tag.equals(EMAILCHOOSENCOLOR)){
-            return pref.getInt(EMAILCHOOSENCOLOR, YELLOW_LED);
-        }else if(tag.equals(FACECHOOSENCOLOR)){
-            return pref.getInt(FACECHOOSENCOLOR, BLUE_LED);
-        }else if(tag.equals(SMSCHOOSENCOLOR)){
-            return pref.getInt(SMSCHOOSENCOLOR, GREEN_LED);
-        }else if(tag.equals(CALCHOOSENCOLOR)){
-            return pref.getInt(CALCHOOSENCOLOR, RED_LED);
-        }else if(tag.equals(WECHATCHOOSENCOLOR)){
-            return pref.getInt(WECHATCHOOSENCOLOR, LIGHTGREEN_LED);
-        }else if(tag.equals(WHATSAPPCHOOSENCOLOR)){
-            return pref.getInt(WHATSAPPCHOOSENCOLOR, LIGHTGREEN_LED);
-        }
-        return -1;
-    }
+//    public static NevoLed getTypeChoosenColor(Context context, ApplicationLed applicationLed){
+
+//    }
 
     @Override
     protected void onResume() {
@@ -303,5 +235,54 @@ public class PaletteActivity extends Activity
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
 
+    }
+
+    private class ColorLedVisotor implements NevoLedVisitor<Void>{
+
+        @Override
+        public Void visit(BlueLed led) {
+            mBlue.setSelected(true);
+            return null;
+        }
+
+        @Override
+        public Void visit(GreenLed led) {
+            mGreen.setSelected(true);
+            return null;
+        }
+
+        @Override
+        public Void visit(LightGreenLed led) {
+            mGrassGreen.setSelected(true);
+            return null;
+        }
+
+        @Override
+        public Void visit(OrangeLed led) {
+            mOrange.setSelected(true);
+            return null;
+        }
+
+        @Override
+        public Void visit(RedLed led) {
+            mRed.setSelected(true);
+            return null;
+        }
+
+        @Override
+        public Void visit(YellowLed led) {
+            mYellow.setSelected(false);
+            return null;
+        }
+
+        @Override
+        public Void visit(UnknownLed led) {
+            return null;
+        }
+
+        @Override
+        public Void visit(NevoLed led) {
+            return null;
+        }
     }
 }

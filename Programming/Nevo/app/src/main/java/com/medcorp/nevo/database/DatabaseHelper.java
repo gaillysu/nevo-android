@@ -1,4 +1,4 @@
-package com.medcorp.nevo.history.database;
+package com.medcorp.nevo.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
 
@@ -24,9 +25,9 @@ public class TutorialOneActivity extends Activity implements View.OnClickListene
 //            return;
 //        }
 //
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        setContentView(R.layout.tutorial_activity_1);
-//
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.tutorial_activity_1);
+
 //        findViewById(R.id.activateButton).setOnClickListener(this);
 //
 //        findViewById(R.id.uriButton).setOnClickListener(this);

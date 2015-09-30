@@ -19,7 +19,6 @@ import com.medcorp.nevo.ble.util.Optional;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -391,6 +390,7 @@ import java.util.TimerTask;
         }
 
     }
+
     private boolean createBond(Class btClass, BluetoothDevice btDevice)
             throws Exception {
         Method createBondMethod = btClass.getMethod("createBond");

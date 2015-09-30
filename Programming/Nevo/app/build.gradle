@@ -18,6 +18,7 @@ android {
         versionCode 123
         versionName "1.2.3"
     }
+
     buildTypes {
         release {
             minifyEnabled false

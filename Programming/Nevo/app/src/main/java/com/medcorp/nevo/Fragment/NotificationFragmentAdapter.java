@@ -15,10 +15,10 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.customfontview.RalewayTextView;
+import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.view.NotificationItem;
+import com.medcorp.nevo.view.customfontview.RalewayTextView;
 
 import java.util.List;
 

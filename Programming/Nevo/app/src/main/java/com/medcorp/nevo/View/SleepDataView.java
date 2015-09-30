@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.medcorp.nevo.history.database.DatabaseHelper;
+import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.R;
 
 import org.json.JSONException;
