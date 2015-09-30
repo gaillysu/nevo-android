@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,7 +54,7 @@ public class OTAActivity extends Activity
     int buildinFirmwareVersion= 0;
     //TODO these static variable should be moved to mNevoOtaController due to mNevoOtaController is a singleton class
     private static DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
-    private static ArrayList<String> firmwareURLs = new ArrayList<String>();
+    private static List<String> firmwareURLs = new ArrayList<String>();
     private static int currentIndex = 0;
 
     OtaController mNevoOtaController ;
@@ -85,10 +86,12 @@ public class OTAActivity extends Activity
         int  currentSoftwareVersion = 0;
         int  currentFirmwareVersion = 0;
 
-        if(mNevoOtaController.getSoftwareVersion() != null)
+        if(mNevoOtaController.getSoftwareVersion() != null) {
             currentSoftwareVersion = Integer.parseInt(mNevoOtaController.getSoftwareVersion());
-        if(mNevoOtaController.getFirmwareVersion() != null)
+        }
+        if(mNevoOtaController.getFirmwareVersion() != null) {
             currentFirmwareVersion = Integer.parseInt(mNevoOtaController.getFirmwareVersion());
+        }
 
         try {
             files = mContext.getAssets().list("firmware");

@@ -18,7 +18,6 @@ public class TutorialFourActivity extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_4);
-
         findViewById(R.id.t3_back_button).setOnClickListener(this);
         findViewById(R.id.t3_next_button).setOnClickListener(this);
     }

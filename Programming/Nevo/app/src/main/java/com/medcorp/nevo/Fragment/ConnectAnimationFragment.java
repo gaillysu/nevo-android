@@ -96,7 +96,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
         @Override
         public void onAnimationRepeat(Animation animation) {
-
         }
     }
 
@@ -110,7 +109,6 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
 
     @Override
     public void packetReceived(NevoPacket packet) {
-
     }
 
     @Override

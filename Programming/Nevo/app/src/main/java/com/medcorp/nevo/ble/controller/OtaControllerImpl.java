@@ -7,8 +7,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.ble.GattAttributes;
+import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoFirmwareData;
 import com.medcorp.nevo.ble.model.packet.NevoRawData;
@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -51,8 +52,8 @@ import java.util.UUID;
     private ConnectionController mConnectionController;
 
     private DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.APPLICATION ;
-    private ArrayList<NevoFirmwareData> mPacketsbuffer = new ArrayList<NevoFirmwareData>();
-    private ArrayList<NevoRawData> mNevoPacketsbuffer = new ArrayList<NevoRawData>();
+    private List<NevoFirmwareData> mPacketsbuffer = new ArrayList<NevoFirmwareData>();
+    private List<NevoRawData> mNevoPacketsbuffer = new ArrayList<NevoRawData>();
 
     private int uploadTimeInSeconds = 0;
     private String firmwareFile ;

@@ -378,7 +378,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             @Override
             public void run() {
                 List<Fragment> fragments = getSupportFragmentManager().getFragments();
-
                 for(Fragment fragment :  fragments) {
                     if(fragment instanceof MyNevoFragment){
                         ((MyNevoFragment)fragment).firmwareVersionReceived(whichfirmware,version);

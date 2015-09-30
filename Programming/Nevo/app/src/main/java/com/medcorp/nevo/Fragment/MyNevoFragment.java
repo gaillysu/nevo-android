@@ -1,6 +1,5 @@
 package com.medcorp.nevo.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -32,11 +31,10 @@ import com.medcorp.nevo.ble.util.Constants;
  */
 public class MyNevoFragment extends Fragment implements View.OnClickListener,OnSyncControllerListener {
 
-
     private static final String TAG="MyNevoFragment";
     public static final String MYNEVOFRAGMENT = "MyNevoFragment";
     public static final int MYNEVOPOSITION = 4;
-    private Context mCtx;
+//    private Context mCtx;
     private Button mynevo_pushOTAButton;
     private ImageView mNevoBatteryImage;
     private TextView mNameTextView;
@@ -48,7 +46,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mynevo_fragment, container, false);
-        mCtx = getActivity();
+//        mCtx = getActivity();
         mynevo_pushOTAButton = (Button) rootView.findViewById(R.id.mynevo_push_ota);
         mynevo_pushOTAButton.setOnClickListener(this);
 
@@ -113,11 +111,11 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
             case R.id.mynevo_push_ota:
                 if(mBatteryValue == 0)
                 {
-                    Toast.makeText(mCtx,R.string.update_error_lowbattery,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),R.string.update_error_lowbattery,Toast.LENGTH_LONG).show();
                     return;
                 }
-                Intent intent = new Intent(mCtx, OTAActivity.class);
-                mCtx.startActivity(intent);
+                Intent intent = new Intent(getActivity(), OTAActivity.class);
+                getActivity().startActivity(intent);
                 break;
             default:
                 break;

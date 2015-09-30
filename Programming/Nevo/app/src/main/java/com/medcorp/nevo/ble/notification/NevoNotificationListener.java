@@ -19,15 +19,15 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.ble.controller.ConnectionController;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
 import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
 
 import java.util.Date;
 import java.util.Timer;
@@ -56,7 +56,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
             switch (state){
                 case TelephonyManager.CALL_STATE_RINGING:
                     if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE))
-                        sendNotification(PaletteActivity.getTypeChoosenColor(NevoNotificationListener.this,PaletteActivity.TELECHOOSENCOLOR));
+                        sendNotification(PaletteActivity.getTypeChoosenColor(NevoNotificationListener.this, com.medcorp.nevo.activity.PaletteActivity.TELECHOOSENCOLOR));
                     break;
             }
         }
@@ -87,7 +87,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.SMSTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.SMSCHOOSENCOLOR));
+                    sendNotification(PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.SMSCHOOSENCOLOR));
             }
 
             //email,native email or gmail client
@@ -100,7 +100,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.EMAILTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.EMAILCHOOSENCOLOR));
+                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.EMAILCHOOSENCOLOR));
             }
             //calendar
             else if(arg0.getPackageName().equals("com.google.android.calendar")
@@ -108,28 +108,28 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.CALTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.CALCHOOSENCOLOR));
+                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.CALCHOOSENCOLOR));
             }
             //facebook
             else if(arg0.getPackageName().equals("com.facebook.katana")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.FACETYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.FACECHOOSENCOLOR));
+                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.FACECHOOSENCOLOR));
             }
             //wechat
             else if(arg0.getPackageName().equals("com.tencent.mm")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WEICHATTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WECHATCHOOSENCOLOR));
+                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.WECHATCHOOSENCOLOR));
             }
             //whatsapp
             else if(arg0.getPackageName().equals("com.whatsapp")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WHATSTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WHATSAPPCHOOSENCOLOR));
+                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.WHATSAPPCHOOSENCOLOR));
             }
 
             else {
@@ -197,12 +197,10 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 }
 
             }).show();
-
-
         }
         else
         {
-            //  doSomethingThatRequiresNotificationAccessPermission();
+//              doSomethingThatRequiresNotificationAccessPermission();
 
 
         }
@@ -212,11 +210,11 @@ public class NevoNotificationListener extends NotificationListenerService implem
     public void onErrorDetected(Exception e) {
         int titleID = R.string.ble_notification_title;
         int msgID = 0;
-        if (e instanceof QuickBTUnBindNevoException)
+        if (e instanceof QuickBTUnBindNevoException) {
             msgID = R.string.ble_notification_message;
-        else if  (e instanceof QuickBTSendTimeoutException)
+        } else if  (e instanceof QuickBTSendTimeoutException) {
             msgID = R.string.ble_connecttimeout;
-        else
+        } else
         {
             //unknown exception, discard it
             return;

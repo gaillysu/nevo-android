@@ -39,16 +39,13 @@ public class TutorialFiveActivity extends Activity
         mNextButton = (Button) findViewById(R.id.t4_next_Button);
         mNextButton.setOnClickListener(this);
 
-        if(SyncController.Singleton.getInstance(this)!=null && SyncController.Singleton.getInstance(this).isConnected()){
+        if(SyncController.Singleton.getInstance(this).isConnected()){
             mConnectButton.setVisibility(View.INVISIBLE);
             mNextButton.setVisibility(View.VISIBLE);
             mConnectImg.setImageResource(R.drawable.success);
             mConnectImg.setBackgroundResource(R.color.transparent);
         }
-
-        if(SyncController.Singleton.getInstance(this)!=null) {
-            SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
-        }
+        SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
     }
 
     @Override
@@ -115,6 +112,5 @@ public class TutorialFiveActivity extends Activity
     }
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichFirmware, String version) {
-
     }
 }
