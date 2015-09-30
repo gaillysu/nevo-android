@@ -67,6 +67,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         //disenable navigation drawer shadow
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
         navigationDrawerFragment = (NavigationDrawerFragment)

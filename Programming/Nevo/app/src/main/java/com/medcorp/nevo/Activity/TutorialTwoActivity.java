@@ -18,7 +18,6 @@ public class TutorialTwoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tutorial_activity_2);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         findViewById(R.id.t1_back_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,6 +35,5 @@ public class TutorialTwoActivity extends Activity {
                 finish();
             }
         });
-
     }
 }
