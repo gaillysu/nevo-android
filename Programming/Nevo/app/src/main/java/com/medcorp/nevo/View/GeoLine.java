@@ -40,9 +40,9 @@ public class GeoLine extends SurfaceView implements SurfaceHolder.Callback {
     private final int y_count = 7;
 
     final float SLEEP_H = 80.0f;
-    final float SLEEP_L = 30.0f;
+    final float SLEEP_L = 50.0f;
     final float STEPS_H = 80.0f;
-    final float STEPS_L = 30.0f;
+    final float STEPS_L = 50.0f;
 	
 	private DATASOURCETYPE  mDataType = DATASOURCETYPE.Sleep;
 	
@@ -205,7 +205,7 @@ public class GeoLine extends SurfaceView implements SurfaceHolder.Callback {
 
 				currentX+=10;// 往前进
 
-				if (currentX >= right) {
+				if (currentX >= getWidth()) {
                     currentX = 0;
                     outPutComments();
                     return;
@@ -226,7 +226,7 @@ public class GeoLine extends SurfaceView implements SurfaceHolder.Callback {
 		if (length == 0)
 			oldX = 0;
 		//Canvas canvas = sfh.lockCanvas();
-		Canvas canvas = sfh.lockCanvas(new Rect(oldX, 0, oldX + length, bottom));// 范围选取正确
+		Canvas canvas = sfh.lockCanvas(new Rect(oldX, 0, oldX + length+gapX/2, bottom));// 范围选取正确
 		
 		int colors[] = {Color.GREEN ,Color.LTGRAY, Color.BLUE};
 		
@@ -348,7 +348,7 @@ public class GeoLine extends SurfaceView implements SurfaceHolder.Callback {
             } else if (average < STEPS_L) {
                 comments ="Goal completion is too low,please Come on!";
                 isLow = true;
-            }
+            } else comments = "Goal progress";
         }
         else if(mDataType == DATASOURCETYPE.SleepEfficiency)
         {
@@ -358,7 +358,7 @@ public class GeoLine extends SurfaceView implements SurfaceHolder.Callback {
             else if(average<SLEEP_L) {
                 comments ="Low quality sleep,Please do more exercise!";
                 isLow = true;
-            }
+            } else comments = "Sleep efficiency";
         }
 
         Canvas canvas = sfh.lockCanvas();
