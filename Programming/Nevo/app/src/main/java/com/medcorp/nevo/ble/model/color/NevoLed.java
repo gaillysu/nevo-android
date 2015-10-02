@@ -1,14 +1,13 @@
 package com.medcorp.nevo.ble.model.color;
 
-import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
+import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitable;
 
 /**
  * Created by Karl on 9/30/15.
  */
-public abstract class NevoLed {
+public abstract class NevoLed implements NevoLedVisitable{
     public abstract int getColor();
     public abstract String getTag();
-    public abstract void accept (NevoLedVisitor visitor);
 
     @Override
     public boolean equals(Object o) {

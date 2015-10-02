@@ -20,11 +20,18 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.ble.controller.ConnectionController;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
 import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
+import com.medcorp.nevo.ble.model.application.CalendarColor;
+import com.medcorp.nevo.ble.model.application.EmailColor;
+import com.medcorp.nevo.ble.model.application.FacebookColor;
+import com.medcorp.nevo.ble.model.application.SmsColor;
+import com.medcorp.nevo.ble.model.application.TelephoneColor;
+import com.medcorp.nevo.ble.model.application.WeChatColor;
+import com.medcorp.nevo.ble.model.application.WhatsappColor;
+import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
@@ -55,8 +62,10 @@ public class NevoNotificationListener extends NotificationListenerService implem
         public void onCallStateChanged(int state, String incomingNumber) {
             switch (state){
                 case TelephonyManager.CALL_STATE_RINGING:
-                    if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE))
-                        sendNotification(PaletteActivity.getTypeChoosenColor(NevoNotificationListener.this, com.medcorp.nevo.activity.PaletteActivity.TELECHOOSENCOLOR));
+                    if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE)) {
+                        ColorGetter getter = new ColorGetter(NevoNotificationListener.this);
+                        sendNotification(new TelephoneColor().accept(getter).getColor());
+                    }
                     break;
             }
         }
@@ -76,7 +85,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
         if(arg0 == null) return;
 
         Notification mNotification = arg0.getNotification();
-
+        ColorGetter colorGetter = new ColorGetter(this);
         if (mNotification != null) {
             //sms
             if(arg0.getPackageName().equals("com.google.android.talk")
@@ -87,7 +96,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.SMSTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.SMSCHOOSENCOLOR));
+                    sendNotification(new SmsColor().accept(colorGetter).getColor());
             }
 
             //email,native email or gmail client
@@ -100,7 +109,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.EMAILTYPE))
-                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.EMAILCHOOSENCOLOR));
+                    sendNotification(new EmailColor().accept(colorGetter).getColor());
             }
             //calendar
             else if(arg0.getPackageName().equals("com.google.android.calendar")
@@ -108,28 +117,28 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.CALTYPE))
-                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.CALCHOOSENCOLOR));
+                    sendNotification(new CalendarColor().accept(colorGetter).getColor());
             }
             //facebook
             else if(arg0.getPackageName().equals("com.facebook.katana")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.FACETYPE))
-                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.FACECHOOSENCOLOR));
+                    sendNotification(new FacebookColor().accept(colorGetter).getColor());
             }
             //wechat
             else if(arg0.getPackageName().equals("com.tencent.mm")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WEICHATTYPE))
-                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.WECHATCHOOSENCOLOR));
+                    sendNotification(new WeChatColor().accept(colorGetter).getColor());
             }
             //whatsapp
             else if(arg0.getPackageName().equals("com.whatsapp")){
                 Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
                 if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WHATSTYPE))
-                    sendNotification(com.medcorp.nevo.activity.PaletteActivity.getTypeChoosenColor(this, com.medcorp.nevo.activity.PaletteActivity.WHATSAPPCHOOSENCOLOR));
+                    sendNotification(new WhatsappColor().accept(colorGetter).getColor());
             }
 
             else {

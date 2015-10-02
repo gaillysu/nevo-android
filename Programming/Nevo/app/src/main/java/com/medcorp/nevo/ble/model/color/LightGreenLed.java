@@ -20,8 +20,9 @@ public class LightGreenLed extends NevoLed{
         return TAG;
     }
 
+
     @Override
-    public void accept(NevoLedVisitor visitor) {
-        visitor.visit(this);
+    public <T> T accept(NevoLedVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

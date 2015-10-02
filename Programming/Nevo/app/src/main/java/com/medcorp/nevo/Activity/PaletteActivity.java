@@ -30,6 +30,7 @@ import com.medcorp.nevo.ble.model.color.OrangeLed;
 import com.medcorp.nevo.ble.model.color.RedLed;
 import com.medcorp.nevo.ble.model.color.UnknownLed;
 import com.medcorp.nevo.ble.model.color.YellowLed;
+import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitable;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
@@ -83,40 +84,38 @@ public class PaletteActivity extends Activity
     private void initLayout(int position){
         ColorGetter getter = new ColorGetter(this);
         switch (position){
-
-        getter.visit(applicationLed);
             case 0:
-                chosenLed = getTypeChoosenColor(this, new TelephoneColor());
+                chosenLed = new TelephoneColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.call_string));
                 break;
             case 1:
-                chosenLed = getTypeChoosenColor(this, new EmailColor());
+                chosenLed = new EmailColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.email_string));
                 break;
             case 2:
-                chosenLed = getTypeChoosenColor(this, new FacebookColor());
+                chosenLed = new FacebookColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.facebook_string));
                 break;
             case 3:
-                chosenLed = getTypeChoosenColor(this, new SmsColor());
+                chosenLed = new SmsColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.sms_string));
                 break;
             case 4:
-                chosenLed = getTypeChoosenColor(this, new CalendarColor());
+                chosenLed = new CalendarColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.calendar_string));
                 break;
             case 5:
-                chosenLed = getTypeChoosenColor(this, new WeChatColor());
+                chosenLed = new WeChatColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.wechat_string));
                 break;
             case 6:
-                chosenLed = getTypeChoosenColor(this, new WhatsappColor());
+                chosenLed = new WhatsappColor().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.whatsapp_string));
                 break;
@@ -196,24 +195,20 @@ public class PaletteActivity extends Activity
     }
 
     private void setImageLight(NevoLed led){
-        NevoLedVisitor visitor = new ColorLedVisotor();
+        NevoLedVisitor visitor = new ColorLedVisitor();
         mBlue.setSelected(false);
         mGrassGreen.setSelected(false);
         mGreen.setSelected(false);
         mOrange.setSelected(false);
         mRed.setSelected(false);
         mYellow.setSelected(false);
-        visitor.visit(led);
+        led.accept(visitor);
     }
 
     public static void saveTypeChoosenColor(Context context, ApplicationLed applicationLed, NevoLed value){
         ApplicationLedVisitor saver = new ColorSaver(context,value);
-        saver.visit(applicationLed);
+        applicationLed.accept(saver);
     }
-
-//    public static NevoLed getTypeChoosenColor(Context context, ApplicationLed applicationLed){
-
-//    }
 
     @Override
     protected void onResume() {
@@ -237,7 +232,7 @@ public class PaletteActivity extends Activity
 
     }
 
-    private class ColorLedVisotor implements NevoLedVisitor<Void>{
+    private class ColorLedVisitor implements NevoLedVisitor<Void>{
 
         @Override
         public Void visit(BlueLed led) {
@@ -271,7 +266,7 @@ public class PaletteActivity extends Activity
 
         @Override
         public Void visit(YellowLed led) {
-            mYellow.setSelected(false);
+            mYellow.setSelected(true);
             return null;
         }
 
@@ -281,8 +276,9 @@ public class PaletteActivity extends Activity
         }
 
         @Override
-        public Void visit(NevoLed led) {
+        public Void visit(NevoLedVisitable led) {
             return null;
         }
+
     }
 }

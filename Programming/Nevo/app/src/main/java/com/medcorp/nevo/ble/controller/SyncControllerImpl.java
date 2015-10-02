@@ -26,12 +26,13 @@ import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.ble.exception.BLEConnectTimeoutException;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.ble.model.application.TelephoneColor;
+import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
@@ -196,28 +197,28 @@ import java.util.TimeZone;
                         // Steps count is 0, and all notification is off, because Notification is very
                         // important for user, so here need use local's setting sync with nevo
                         List<Notification> list = new ArrayList<Notification>();
-
+                        ColorGetter getter = new ColorGetter(mContext);
                         list.add(new Notification(Notification.NotificationType.Call
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.TELETYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.TELECHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
                         list.add(new Notification(Notification.NotificationType.SMS
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.SMSTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.SMSCHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
                         list.add(new Notification(Notification.NotificationType.Email
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.EMAILTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.EMAILCHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
                         list.add(new Notification(Notification.NotificationType.Facebook
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.FACETYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.FACECHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
                         list.add(new Notification(Notification.NotificationType.Calendar
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.CALTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.CALCHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
                         list.add(new Notification(Notification.NotificationType.Wechat
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WEICHATTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.WECHATCHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
                         list.add(new Notification(Notification.NotificationType.Whatsapp
                                 , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WHATSTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
+                                , new TelephoneColor().accept(getter).getColor()));
 
                         sendRequest(new SetNotificationNevoRequest(list));
                     }

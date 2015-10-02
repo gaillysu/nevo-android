@@ -31,7 +31,6 @@ import com.medcorp.nevo.fragment.MyNevoFragment;
 import com.medcorp.nevo.fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.fragment.NotificationFragment;
 import com.medcorp.nevo.fragment.WelcomeFragment;
-import com.medcorp.nevo.googlefit.GoogleFitManager;
 
 import java.util.List;
 
@@ -82,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         SyncController.Singleton.getInstance(this).startConnect(false, this);
 
-        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
+//        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
 
         final String google_services_framework ="com.google.android.gsf";
         final String google_play_services ="com.google.android.gms";

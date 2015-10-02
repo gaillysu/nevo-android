@@ -17,6 +17,23 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.PaletteActivity;
+import com.medcorp.nevo.ble.model.application.CalendarColor;
+import com.medcorp.nevo.ble.model.application.EmailColor;
+import com.medcorp.nevo.ble.model.application.FacebookColor;
+import com.medcorp.nevo.ble.model.application.SmsColor;
+import com.medcorp.nevo.ble.model.application.TelephoneColor;
+import com.medcorp.nevo.ble.model.application.WeChatColor;
+import com.medcorp.nevo.ble.model.application.WhatsappColor;
+import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
+import com.medcorp.nevo.ble.model.color.BlueLed;
+import com.medcorp.nevo.ble.model.color.GreenLed;
+import com.medcorp.nevo.ble.model.color.LightGreenLed;
+import com.medcorp.nevo.ble.model.color.OrangeLed;
+import com.medcorp.nevo.ble.model.color.RedLed;
+import com.medcorp.nevo.ble.model.color.UnknownLed;
+import com.medcorp.nevo.ble.model.color.YellowLed;
+import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitable;
+import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
 import com.medcorp.nevo.view.NotificationItem;
 import com.medcorp.nevo.view.customfontview.RalewayTextView;
 
@@ -77,26 +94,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         return view;
     }
 
-    private int iconResource(int choosenColor){
-        switch (choosenColor){
-            case PaletteActivity.BLUE_LED:
-                return R.drawable.blue_indicator;
-            case PaletteActivity.YELLOW_LED:
-                return R.drawable.yellow_indicator;
-            case PaletteActivity.GREEN_LED:
-                return R.drawable.green_indicator;
-            case PaletteActivity.LIGHTGREEN_LED:
-                return R.drawable.grass_green_indicator;
-            case PaletteActivity.ORANGE_LED:
-                return R.drawable.orange_indicator;
-            case PaletteActivity.RED_LED:
-                return R.drawable.red_indicator;
-            default:
-                break;
-        }
-        return 0;
-    }
-
     private void setImg(ViewHolder viewHolder, boolean isChecked){
         if(isChecked){
             viewHolder.mLabel.setTextColor(context.getResources().getColor(R.color.customBlack));
@@ -108,41 +105,43 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     }
 
     private void initWidget(ViewHolder viewHolder, int position){
+        ColorGetter getter = new ColorGetter(context);
+        LedImageVisitor imageVisitor = new LedImageVisitor();
         switch (position){
             case 0:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, TELETYPE));
                 setImg(viewHolder, getTypeNFState(context, TELETYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.TELECHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource(new TelephoneColor().accept(getter).accept(imageVisitor));
                 break;
             case 1:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, EMAILTYPE));
                 setImg(viewHolder, getTypeNFState(context, EMAILTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.EMAILCHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource( new EmailColor().accept(getter).accept(imageVisitor));
                 break;
             case 2:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, FACETYPE));
                 setImg(viewHolder, getTypeNFState(context, FACETYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.FACECHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource( new FacebookColor().accept(getter).accept(imageVisitor));
                 break;
             case 3:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, SMSTYPE));
                 setImg(viewHolder, getTypeNFState(context, SMSTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.SMSCHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource( new SmsColor().accept(getter).accept(imageVisitor));
                 break;
             case 4:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, CALTYPE));
                 setImg(viewHolder, getTypeNFState(context, CALTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.CALCHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource( new CalendarColor().accept(getter).accept(imageVisitor));
                 break;
             case 5:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, WEICHATTYPE));
                 setImg(viewHolder, getTypeNFState(context, WEICHATTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.WECHATCHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource( new WeChatColor().accept(getter).accept(imageVisitor));
                 break;
             case 6:
                 viewHolder.mSwitch.setChecked(getTypeNFState(context, WHATSTYPE));
                 setImg(viewHolder, getTypeNFState(context, WHATSTYPE));
-                viewHolder.mIcon.setImageResource(iconResource(PaletteActivity.getTypeChoosenColor(context, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
+                viewHolder.mIcon.setImageResource( new WhatsappColor().accept(getter).accept(imageVisitor));
                 break;
             default:
                 viewHolder.mSwitch.setChecked(false);
@@ -299,4 +298,49 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             return listView.getChildAt(childIndex);
         }
     }
+
+    private class LedImageVisitor implements NevoLedVisitor<Integer>{
+
+        @Override
+        public Integer visit(BlueLed led) {
+            return R.drawable.blue_indicator;
+        }
+
+        @Override
+        public Integer visit(GreenLed led) {
+            return R.drawable.green_indicator;
+        }
+
+        @Override
+        public Integer visit(LightGreenLed led) {
+            return R.drawable.grass_green_indicator;
+        }
+
+        @Override
+        public Integer visit(OrangeLed led) {
+            return R.drawable.orange_indicator;
+        }
+
+        @Override
+        public Integer visit(RedLed led) {
+            return R.drawable.red_indicator;
+        }
+
+        @Override
+        public Integer visit(YellowLed led) {
+            return R.drawable.yellow_indicator;
+        }
+
+        @Override
+        public Integer visit(UnknownLed led) {
+            return 0;
+        }
+
+        @Override
+        public Integer visit(NevoLedVisitable led) {
+            return 0;
+        }
+
+    }
+
 }

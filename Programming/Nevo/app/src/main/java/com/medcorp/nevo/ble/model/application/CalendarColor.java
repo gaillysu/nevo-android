@@ -1,28 +1,17 @@
 package com.medcorp.nevo.ble.model.application;
 
 import com.medcorp.nevo.ble.model.application.visitor.ApplicationLedVisitor;
-import com.medcorp.nevo.ble.model.color.NevoLed;
 
 /**
  * Created by Karl on 9/30/15.
  */
-public class CalendarColor implements ApplicationLed {
+public class CalendarColor extends ApplicationLed {
 
-    private NevoLed led;
     private final String TAG = "calchoosencolor";
 
-    public CalendarColor(NevoLed led) {
-        this.led = led;
-    }
 
     public CalendarColor() {
 
-    }
-
-
-    @Override
-    public NevoLed getLed() {
-        return led;
     }
 
     @Override
@@ -31,7 +20,7 @@ public class CalendarColor implements ApplicationLed {
     }
 
     @Override
-    public void accept(ApplicationLedVisitor visitor) {
-        visitor.visit(this);
+    public <T> T accept(ApplicationLedVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

@@ -7,10 +7,6 @@ package com.medcorp.nevo.ble.exception;
  */
 public class BLEUnstableException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7967365228475902486L;
-
 
 }

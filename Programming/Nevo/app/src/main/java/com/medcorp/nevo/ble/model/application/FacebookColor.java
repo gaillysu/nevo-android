@@ -1,27 +1,17 @@
 package com.medcorp.nevo.ble.model.application;
 
 import com.medcorp.nevo.ble.model.application.visitor.ApplicationLedVisitor;
-import com.medcorp.nevo.ble.model.color.NevoLed;
 
 /**
  * Created by Karl on 9/30/15.
  */
-public class FacebookColor implements ApplicationLed {
+public class FacebookColor extends ApplicationLed {
 
-    private NevoLed led;
     private final String TAG = "facechoosencolor";
 
-    public FacebookColor(NevoLed led) {
-        this.led = led;
-    }
 
     public FacebookColor() {
 
-    }
-
-    @Override
-    public NevoLed getLed() {
-        return led;
     }
 
     @Override
@@ -30,7 +20,7 @@ public class FacebookColor implements ApplicationLed {
     }
 
     @Override
-    public void accept(ApplicationLedVisitor visitor) {
-        visitor.visit(this);
+    public <T> T accept(ApplicationLedVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }
