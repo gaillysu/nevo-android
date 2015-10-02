@@ -252,7 +252,6 @@ public class GoogleFitManager implements IGoogleFit {
                                 Log.i(TAG, "Connected!!!");
                                 // Now you can make calls to the Fitness APIs.  What to do?
                                 // Play with some sessions!!
-
                             }
 
                             @Override

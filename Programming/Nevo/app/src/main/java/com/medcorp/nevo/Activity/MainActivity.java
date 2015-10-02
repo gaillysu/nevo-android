@@ -32,7 +32,6 @@ import com.medcorp.nevo.fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.fragment.NotificationFragment;
 import com.medcorp.nevo.fragment.WelcomeFragment;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
-import com.medcorp.nevo.googlefit.IGoogleFit;
 
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     private static int position = -1;
     private static String tag;
     private Boolean isVisible = true;
-    private IGoogleFit googleFitManager;
+//    private IGoogleFit googleFitManager;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
