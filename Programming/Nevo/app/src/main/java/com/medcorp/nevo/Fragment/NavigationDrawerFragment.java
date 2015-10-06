@@ -72,7 +72,8 @@ public class NavigationDrawerFragment extends Fragment {
             new DrawerIcon(R.drawable.icon_alarm_button_selected),
             new DrawerIcon(R.drawable.icon_notification_button_selected),
             new DrawerIcon(R.drawable.icon_ota_button_selected),
-            new DrawerIcon(R.drawable.icon_history_button_selected)
+            new DrawerIcon(R.drawable.icon_sleep_button_selected),
+            //new DrawerIcon(R.drawable.icon_history_button_selected)
     };
     private ImageView mDrawerIconImageArray[] = new ImageView[mDrawerIconArray.length];
 
