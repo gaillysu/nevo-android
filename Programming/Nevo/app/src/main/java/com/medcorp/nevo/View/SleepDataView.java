@@ -29,6 +29,9 @@ public class SleepDataView extends View {
     private int mRoundColor;
     private int mRoundProgressColor;
     private int mTextColor;
+    private int mWakeSleepColor;
+    private int mLightSleepColor;
+    private int mDeepSleepColor;
     private float mTextSize;
     private float mRoundWidth;
     private int mMax;
@@ -78,6 +81,10 @@ public class SleepDataView extends View {
         mTextIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
         mStyle = mTypedArray.getInt(R.styleable.RoundProgressBar_style, 0);
 
+        mWakeSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepWakeColor, Color.GREEN);
+        mLightSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepLightColor, Color.LTGRAY);
+        mDeepSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepDeepColor, Color.BLUE);
+
         mTypedArray.recycle();
     }
 
@@ -110,7 +117,7 @@ public class SleepDataView extends View {
         RectF oval = new RectF(getWidth()/2 - radius, getHeight()/2 - radius, getWidth()/2
                 + radius, getHeight()/2 + radius);
 
-        int colors[] = {Color.GREEN, Color.LTGRAY, Color.BLUE,Color.TRANSPARENT};
+        int colors[] = {mWakeSleepColor,mLightSleepColor,mDeepSleepColor,Color.TRANSPARENT};
         Paint[] mPaints;
         mPaints = new Paint[colors.length];
         for (int i = 0; i < colors.length; i++) {
@@ -270,9 +277,9 @@ public class SleepDataView extends View {
                 mPaint.setTypeface(Typeface.DEFAULT);
                 mPaint.setTextSize(24f);
 
-                canvas.drawText("St: "+new SimpleDateFormat("dd/MM HH:mm").format(startDate), oval.right-45,oval.top+30, mPaint);
-                canvas.drawText("Ed: "+new SimpleDateFormat("dd/MM HH:mm").format(endDate), oval.right-45,oval.top+54, mPaint);
-                canvas.drawText("Du: "+ (total>=60?(total/60 + "h "):"") + (total%60) + "min", oval.right-45,oval.top+78, mPaint);
+                //canvas.drawText("St: "+new SimpleDateFormat("dd/MM HH:mm").format(startDate), oval.right-45,oval.top+30, mPaint);
+                //canvas.drawText("Ed: "+new SimpleDateFormat("dd/MM HH:mm").format(endDate), oval.right-45,oval.top+54, mPaint);
+                //canvas.drawText("Du: "+ (total>=60?(total/60 + "h "):"") + (total%60) + "min", oval.right-45,oval.top+78, mPaint);
 
 
             } catch (JSONException e) {

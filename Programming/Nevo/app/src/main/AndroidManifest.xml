@@ -65,7 +65,9 @@
         <activity android:name=".OTAActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
-
+        <activity android:name=".HistoryActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <service
             android:name=".ble.ble.NevoBTService"
             android:enabled="true" />

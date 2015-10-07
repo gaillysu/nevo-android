@@ -23,6 +23,7 @@ import com.medcorp.nevo.Fragment.HistoryFragment;
 import com.medcorp.nevo.Fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.Fragment.NotificationFragment;
 import com.medcorp.nevo.Fragment.MyNevoFragment;
+import com.medcorp.nevo.Fragment.SleepHistoryFragment;
 import com.medcorp.nevo.Fragment.WelcomeFragment;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.OtaController;
@@ -208,10 +209,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTag = MyNevoFragment.MYNEVOFRAGMENT;
                 mTitle = getString(R.string.title_section5);
                 break;
-            case HistoryFragment.HISTORYPOSITION+1:
+            /*case HistoryFragment.HISTORYPOSITION+1:
                 tag.set(HistoryFragment.HISTORYFRAGMENT);
                 mPosition = HistoryFragment.HISTORYPOSITION;
                 mTag = HistoryFragment.HISTORYFRAGMENT;
+                mTitle = getString(R.string.title_section6);
+                break;
+                */
+            case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
+                tag.set(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
+                mPosition = SleepHistoryFragment.SLEEPHISTORYPOSITION;
+                mTag = SleepHistoryFragment.SLEEPHISTORYFRAGMENT;
                 mTitle = getString(R.string.title_section6);
                 break;
             default:
@@ -296,6 +304,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else if(tag.equals(HistoryFragment.HISTORYFRAGMENT)){
             HistoryFragment historyFragment = (HistoryFragment) getSupportFragmentManager().findFragmentByTag(HistoryFragment.HISTORYFRAGMENT);
             return historyFragment;
+        }else if(tag.equals(SleepHistoryFragment.SLEEPHISTORYFRAGMENT)){
+            SleepHistoryFragment historyFragment = (SleepHistoryFragment) getSupportFragmentManager().findFragmentByTag(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
+            return historyFragment;
         }
         return null;
     }
@@ -327,6 +338,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 ((MyNevoFragment)fragment).packetReceived(packet);
             }else if(fragment instanceof HistoryFragment){
                 ((HistoryFragment)fragment).packetReceived(packet);
+            }else if(fragment instanceof SleepHistoryFragment){
+                ((SleepHistoryFragment)fragment).packetReceived(packet);
             }
         }
     }
@@ -363,6 +376,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                         ((MyNevoFragment)fragment).connectionStateChanged(isConnected);
                     }else if(fragment instanceof HistoryFragment){
                         ((HistoryFragment)fragment).connectionStateChanged(isConnected);
+                    }else if(fragment instanceof SleepHistoryFragment){
+                        ((SleepHistoryFragment)fragment).connectionStateChanged(isConnected);
                     }
                 }
             }
@@ -413,8 +428,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 case MyNevoFragment.MYNEVOPOSITION+1:
                     fragment.set(new MyNevoFragment());
                     break;
-                case HistoryFragment.HISTORYPOSITION+1:
-                    fragment.set(new HistoryFragment());
+                //case HistoryFragment.HISTORYPOSITION+1:
+                //    fragment.set(new HistoryFragment());
+                //    break;
+                case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
+                    fragment.set(new SleepHistoryFragment());
                     break;
                 case ConnectAnimationFragment.CONNECTPOSITION+1:
                     fragment.set(new ConnectAnimationFragment());
