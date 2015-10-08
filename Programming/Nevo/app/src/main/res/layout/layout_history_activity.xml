@@ -20,6 +20,7 @@
             android:gravity="center" />
 
         <ImageView
+            android:padding="5dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/backImage"
@@ -30,86 +31,117 @@
             android:layout_marginStart="83dp" />
     </RelativeLayout>
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/history_bar"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_below="@+id/header"
+        android:weightSum="5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:layout_weight="4"
+            android:background="#CECECD"
+            android:id="@+id/history_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header">
+        </com.github.mikephil.charting.charts.BarChart>
+
+
+        <LinearLayout
+            android:weightSum="3"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:id="@+id/data_table"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/history_bar"
+            android:background="@color/customWhite"
+            android:layout_alignParentBottom="true">
+
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_alignParentTop="true"
+                android:id="@+id/totalSleepLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:id="@+id/total_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_sleep"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3"
+                    android:id="@+id/total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8 hours"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_below="@+id/totalSleepLayout"
+                android:id="@+id/lightSleepLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:id="@+id/light_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/light_sleep"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3"
+                    android:id="@+id/light_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 hours"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_below="@id/lightSleepLayout"
+                android:id="@+id/deepSleepLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:id="@+id/deep_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/deep_sleep"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3"
+                    android:id="@+id/deep_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 hours"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/header">
-
-    </com.github.mikephil.charting.charts.BarChart>
-
-
-    <TableLayout
-        android:id="@+id/data_table"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*"
-        android:layout_below="@+id/history_bar"
-        android:background="@color/customWhite"
+        android:id="@+id/imageView4"
         android:layout_alignParentBottom="true"
-        >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/total_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total"/>
-            <TextView
-                android:id="@+id/total_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="8 hours"/>
-        </TableRow>
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/wake_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="wake"/>
-            <TextView
-                android:id="@+id/wake_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1 hours"/>
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/light_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="light"/>
-            <TextView
-                android:id="@+id/light_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4 hours"/>
-        </TableRow>
-        <TableRow
-            android:id="@+id/tableRow4"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/deep_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="deep"/>
-            <TextView
-                android:id="@+id/deep_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3 hours"/>
-        </TableRow>
-    </TableLayout>
-
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="36dp" />
 </RelativeLayout>

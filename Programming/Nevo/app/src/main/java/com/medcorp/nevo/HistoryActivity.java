@@ -1,13 +1,20 @@
 package com.medcorp.nevo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
 
@@ -15,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +30,9 @@ import java.util.List;
 /**
  * Created by gaillysu on 15/10/7.
  */
-public class HistoryActivity extends Activity {
+public class HistoryActivity extends Activity implements OnChartValueSelectedListener {
 
     private BarChart  mBarChart;
-    private JSONObject sleepAnalysisResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,27 @@ public class HistoryActivity extends Activity {
         });
 
         mBarChart = (BarChart)findViewById(R.id.history_bar);
+        mBarChart.setOnChartValueSelectedListener(this);
+        mBarChart.setDescription("");
+        mBarChart.setNoDataTextDescription("");
+        mBarChart.setPinchZoom(false);
+        mBarChart.setDrawGridBackground(false);
+        mBarChart.setScaleEnabled(false);
+        mBarChart.setDrawValueAboveBar(false);
+        mBarChart.setDoubleTapToZoomEnabled(false);
+//        mBarChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 0.0f);
+
+        YAxis yAxis = mBarChart.getAxisLeft();
+        yAxis.setDrawAxisLine(false);
+        yAxis.setDrawGridLines(false);
+        yAxis.setEnabled(false);
+        yAxis.setSpaceTop(0.6f);
+
+        XAxis xAxis = mBarChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawGridLines(false);
+
         //Init Chart by read local database
         List<IDailyHistory> history = new ArrayList<IDailyHistory>();
         try {
@@ -48,10 +76,15 @@ public class HistoryActivity extends Activity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(history.isEmpty()) return;
+        mBarChart.setScaleX(history.size()/7);
+        mBarChart.setScaleY(1);
+
+        if(history.isEmpty()){
+            return;
+        }
         //fill the ChartBar's dataset with "history" List
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        List<String> xVals = new ArrayList<String>();
+        List<BarEntry> yVals1 = new ArrayList<BarEntry>();
 
         int i = 0;
         float val1 =0 ;
@@ -60,9 +93,12 @@ public class HistoryActivity extends Activity {
 
         for (IDailyHistory daily: history) {
             Date theDay = new Date(daily.getCreated()); // getCreated() return millsecond from 1970.1.1 00:00:00
-         //   xVals.add(theDay);
-            sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(theDay);
+            SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
 
+            xVals.add(sdf.format(theDay));
+            Log.w("Karl", sdf.format(theDay));
+            JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(theDay);
+            Log.w("Karl", sleepAnalysisResult.toString());
             long startsleep =0;
             long endsleep=0;
 
@@ -73,13 +109,10 @@ public class HistoryActivity extends Activity {
                 e.printStackTrace();
             }
             //no sleep data for this day
-            if(startsleep == 0 || endsleep ==0 || startsleep==endsleep)
-            {
-                yVals1.add(new BarEntry(new float[] { 0, 0, 0 }, i));
-                i++;
+            if(startsleep == 0 || endsleep ==0 || startsleep==endsleep) {
+                continue;
             }
-            else
-            {
+            else {
                 try {
                     int [] values1 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
                     int [] values2 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
@@ -97,6 +130,25 @@ public class HistoryActivity extends Activity {
                 }
             }
         }
+        Log.w("Karl"," yvals length = " + yVals1.size());
+        BarDataSet set1 = new BarDataSet(yVals1, "");
+//        set1.setBarSpacePercent(35f);
+
+        List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(set1);
+
+        BarData data = new BarData(xVals, dataSets);
+//        data.setValueTextSize(10f);
+        mBarChart.setData(data);
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
 
     }
 }

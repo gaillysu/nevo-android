@@ -98,8 +98,8 @@
     <string name="install_google_app_title">请先安装谷歌服务</string>
     <string name="install_google_app_content">\t\t\t\tNevo应用的运动历史数据需要用到\"谷歌健康\"应用来显示, 请您首先下载谷歌应用商店，并在商店搜索谷歌健康应用Google fit。使用前需要VPN连接网络并注册一个谷歌账户。您的详细运动数据将在记录显示在谷歌健康应用内。</string>
     <!-- Success messages of OTA-->
-    <string name="update_ble_success_message">Ble upgrade completed, reconnect the watch to the phone by pressing and holding the third button on the watch. Make sure that the watch is paired so it won\'t interrupt the upgrade procedure. Once it\'s connected you can continue to upgrade the Mcu by clicking on continue.</string>
-    <string name="update_mcu_success_message">Mcu upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the button, or there will be a timeout phenomenon</string>
-    <string name="continue_button">Continue</string>
+    <string name="update_ble_success_message">完成BLE升級後，請按手錶的第三個按鈕以重新開啟藍芽功能，並與電話連接。請確保電話與手錶配對成功以免影響升級過程。連接後輕觸「繼續」以進行MCU升級。</string>
+    <string name="update_mcu_success_message">完成MCU升級後，請開啟手錶的藍芽功能並與電話重新連接，「繼續」的訊息會彈出，請立即輕觸以避免升級超時。</string>
+    <string name="continue_button">继续</string>
     <string name="app_version">應用版本:</string>
 </resources>

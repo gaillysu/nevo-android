@@ -104,4 +104,9 @@
     <string name="update_mcu_success_message">Mcu upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the button, or there will be a timeout phenomenon</string>
 
     <string name="app_version">app Version:</string>
+
+    <string name="light_sleep">Light Sleep</string>
+    <string name="deep_sleep">Deep Sleep</string>
+    <string name="total_sleep">Total Sleep</string>
+
 </resources>
