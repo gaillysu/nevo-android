@@ -165,6 +165,9 @@ public class OTAActivity extends Activity
         else
         {
             mFirmwareTotal.setText(mContext.getString(R.string.latestversion));
+            findViewById(R.id.textView5).setVisibility(View.INVISIBLE);
+            findViewById(R.id.textInfomation).setVisibility(View.INVISIBLE);
+
         }
 
     }
@@ -222,7 +225,6 @@ public class OTAActivity extends Activity
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         /*always light on screen */
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
     }
 
     @Override
