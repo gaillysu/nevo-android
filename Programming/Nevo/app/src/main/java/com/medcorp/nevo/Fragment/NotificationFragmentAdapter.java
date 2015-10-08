@@ -2,8 +2,6 @@ package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +11,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.PaletteActivity;
-import com.medcorp.nevo.ble.model.application.CalendarColor;
-import com.medcorp.nevo.ble.model.application.EmailColor;
-import com.medcorp.nevo.ble.model.application.FacebookColor;
-import com.medcorp.nevo.ble.model.application.SmsColor;
-import com.medcorp.nevo.ble.model.application.TelephoneColor;
-import com.medcorp.nevo.ble.model.application.WeChatColor;
-import com.medcorp.nevo.ble.model.application.WhatsappColor;
-import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
+import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.color.BlueLed;
 import com.medcorp.nevo.ble.model.color.GreenLed;
 import com.medcorp.nevo.ble.model.color.LightGreenLed;
@@ -48,19 +47,16 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     private int listItemResourceId;
     private Context context;
     private ListView listView;
-    public static final String TELETYPE = "tele";
-    public static final String EMAILTYPE = "email";
-    public static final String FACETYPE = "facebook";
-    public static final String SMSTYPE = "sms";
-    public static final String CALTYPE = "calendar";
-    public static final String WEICHATTYPE = "weichat";
-    public static final String WHATSTYPE = "whatsapp";
+    private NotificationDataHelper helper;
+    private NotificationColorGetter getter;
 
     public NotificationFragmentAdapter(Context context, int mListItemResourceId, List<NotificationItem> objects, ListView listView){
         super(context, mListItemResourceId, objects);
         this.listItemResourceId = mListItemResourceId;
         this.context = context;
         this.listView = listView;
+        this.helper = new NotificationDataHelper(context);
+        this.getter = new NotificationColorGetter(context);
     }
 
     @Override
@@ -105,43 +101,29 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
     }
 
     private void initWidget(ViewHolder viewHolder, int position){
-        ColorGetter getter = new ColorGetter(context);
+
         LedImageVisitor imageVisitor = new LedImageVisitor();
         switch (position){
             case 0:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, TELETYPE));
-                setImg(viewHolder, getTypeNFState(context, TELETYPE));
-                viewHolder.mIcon.setImageResource(new TelephoneColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new TelephoneNotification(), viewHolder, imageVisitor);
                 break;
             case 1:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, EMAILTYPE));
-                setImg(viewHolder, getTypeNFState(context, EMAILTYPE));
-                viewHolder.mIcon.setImageResource( new EmailColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new EmailNotification(), viewHolder, imageVisitor);
                 break;
             case 2:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, FACETYPE));
-                setImg(viewHolder, getTypeNFState(context, FACETYPE));
-                viewHolder.mIcon.setImageResource( new FacebookColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new FacebookNotification(), viewHolder, imageVisitor);
                 break;
             case 3:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, SMSTYPE));
-                setImg(viewHolder, getTypeNFState(context, SMSTYPE));
-                viewHolder.mIcon.setImageResource( new SmsColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new SmsNotification(), viewHolder, imageVisitor);
                 break;
             case 4:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, CALTYPE));
-                setImg(viewHolder, getTypeNFState(context, CALTYPE));
-                viewHolder.mIcon.setImageResource( new CalendarColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new CalendarNotification(), viewHolder, imageVisitor);
                 break;
             case 5:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, WEICHATTYPE));
-                setImg(viewHolder, getTypeNFState(context, WEICHATTYPE));
-                viewHolder.mIcon.setImageResource( new WeChatColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new WeChatNotification(), viewHolder, imageVisitor);
                 break;
             case 6:
-                viewHolder.mSwitch.setChecked(getTypeNFState(context, WHATSTYPE));
-                setImg(viewHolder, getTypeNFState(context, WHATSTYPE));
-                viewHolder.mIcon.setImageResource( new WhatsappColor().accept(getter).accept(imageVisitor));
+                initWidgetHelper(new WhatsappNotification(), viewHolder, imageVisitor);
                 break;
             default:
                 viewHolder.mSwitch.setChecked(false);
@@ -149,9 +131,16 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         }
     }
 
+    private void initWidgetHelper(Notification applicationNotification, ViewHolder viewHolder, LedImageVisitor imageVisitor){
+        applicationNotification = helper.getState(applicationNotification);
+        viewHolder.mSwitch.setChecked(applicationNotification.isOn());
+        setImg(viewHolder, applicationNotification.isOn());
+        viewHolder.mIcon.setImageResource(new TelephoneNotification().accept(getter).accept(imageVisitor));
+    }
+
     private void checkedImg(int pos, boolean isChecked){
         LinearLayout linearLayout = (LinearLayout) getViewByPosition(pos, listView);
-        TextView tv = (TextView) linearLayout.findViewById(R.id.typeTextView);
+        RalewayTextView tv = (RalewayTextView) linearLayout.findViewById(R.id.typeTextView);
         ImageView icon = (ImageView) linearLayout.findViewById(R.id.typeIconImage);
         if(isChecked){
             tv.setTextColor(context.getResources().getColor(R.color.customBlack));
@@ -161,117 +150,47 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             icon.setVisibility(View.INVISIBLE);
         }
     }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
         int position = (int)buttonView.getTag();
 
         switch (position){
             case 0:
-                if(isChecked){
-                    saveTypeNFState(context, TELETYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, TELETYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new TelephoneNotification(isChecked));
+                checkedImg(position, isChecked);
                 break;
             case 1:
-                if(isChecked){
-                    saveTypeNFState(context, EMAILTYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, EMAILTYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new EmailNotification(isChecked));
+                checkedImg(position, isChecked);
                 break;
             case 2:
-                if(isChecked){
-                    saveTypeNFState(context, FACETYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, FACETYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new FacebookNotification(isChecked));
+                checkedImg(position, isChecked);
+
                 break;
             case 3:
-                if(isChecked){
-                    saveTypeNFState(context, SMSTYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, SMSTYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new SmsNotification(isChecked));
+                checkedImg(position, isChecked);
                 break;
             case 4:
-                if(isChecked){
-                    saveTypeNFState(context, CALTYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, CALTYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new CalendarNotification(isChecked));
+                checkedImg(position, isChecked);
                 break;
             case 5:
-                if(isChecked){
-                    saveTypeNFState(context, WEICHATTYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, WEICHATTYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new WeChatNotification(isChecked));
+                checkedImg(position, isChecked);
                 break;
             case 6:
-                if(isChecked){
-                    saveTypeNFState(context, WHATSTYPE, true);
-                    checkedImg(position, isChecked);
-                }else {
-                    saveTypeNFState(context, WHATSTYPE, false);
-                    checkedImg(position, isChecked);
-                }
+                helper.saveState(new WhatsappNotification(isChecked));
+                checkedImg(position, isChecked);
                 break;
             default:
                 break;
         }
     }
 
-    public static void saveTypeNFState(Context context, String tag, boolean value){
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(tag.equals(TELETYPE)){
-            pref.edit().putBoolean(TELETYPE, value).apply();
-        }else if(tag.equals(EMAILTYPE)){
-            pref.edit().putBoolean(EMAILTYPE, value).apply();
-        }else if(tag.equals(FACETYPE)){
-            pref.edit().putBoolean(FACETYPE, value).apply();
-        }else if(tag.equals(SMSTYPE)){
-            pref.edit().putBoolean(SMSTYPE, value).apply();
-        }else if(tag.equals(CALTYPE)){
-            pref.edit().putBoolean(CALTYPE, value).apply();
-        }else if(tag.equals(WEICHATTYPE)){
-            pref.edit().putBoolean(WEICHATTYPE, value).apply();
-        }else if(tag.equals(WHATSTYPE)){
-            pref.edit().putBoolean(WHATSTYPE, value).apply();
-        }
-    }
-
-    public static Boolean getTypeNFState(Context context, String tag){
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(tag.equals(TELETYPE)){
-            return pref.getBoolean(TELETYPE, false);
-        }else if(tag.equals(EMAILTYPE)){
-            return pref.getBoolean(EMAILTYPE, false);
-        }else if(tag.equals(FACETYPE)){
-            return pref.getBoolean(FACETYPE, false);
-        }else if(tag.equals(SMSTYPE)){
-            return pref.getBoolean(SMSTYPE, false);
-        }else if(tag.equals(CALTYPE)){
-            return pref.getBoolean(CALTYPE, false);
-        }else if(tag.equals(WEICHATTYPE)){
-            return pref.getBoolean(WEICHATTYPE, false);
-        }else if(tag.equals(WHATSTYPE)){
-            return pref.getBoolean(WHATSTYPE, false);
-        }
-        return false;
-    }
 
     @Override
     public void onClick(View v) {
@@ -280,7 +199,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         context.startActivity(intent);
     }
 
-    class ViewHolder{
+    public class ViewHolder{
         ImageView mIcon;
         RalewayTextView mLabel;
         Switch mSwitch;
@@ -298,6 +217,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
             return listView.getChildAt(childIndex);
         }
     }
+
 
     private class LedImageVisitor implements NevoLedVisitor<Integer>{
 

@@ -11,17 +11,17 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.application.ApplicationLed;
-import com.medcorp.nevo.ble.model.application.CalendarColor;
-import com.medcorp.nevo.ble.model.application.EmailColor;
-import com.medcorp.nevo.ble.model.application.FacebookColor;
-import com.medcorp.nevo.ble.model.application.SmsColor;
-import com.medcorp.nevo.ble.model.application.TelephoneColor;
-import com.medcorp.nevo.ble.model.application.WeChatColor;
-import com.medcorp.nevo.ble.model.application.WhatsappColor;
-import com.medcorp.nevo.ble.model.application.visitor.ApplicationLedVisitor;
-import com.medcorp.nevo.ble.model.application.visitor.ColorSaver;
-import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorSaver;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.color.BlueLed;
 import com.medcorp.nevo.ble.model.color.GreenLed;
 import com.medcorp.nevo.ble.model.color.LightGreenLed;
@@ -82,40 +82,40 @@ public class PaletteActivity extends Activity
     }
 
     private void initLayout(int position){
-        ColorGetter getter = new ColorGetter(this);
+        NotificationColorGetter getter = new NotificationColorGetter(this);
         switch (position){
             case 0:
-                chosenLed = new TelephoneColor().accept(getter);
+                chosenLed = new TelephoneNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.call_string));
                 break;
             case 1:
-                chosenLed = new EmailColor().accept(getter);
+                chosenLed = new EmailNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.email_string));
                 break;
             case 2:
-                chosenLed = new FacebookColor().accept(getter);
+                chosenLed = new FacebookNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.facebook_string));
                 break;
             case 3:
-                chosenLed = new SmsColor().accept(getter);
+                chosenLed = new SmsNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.sms_string));
                 break;
             case 4:
-                chosenLed = new CalendarColor().accept(getter);
+                chosenLed = new CalendarNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.calendar_string));
                 break;
             case 5:
-                chosenLed = new WeChatColor().accept(getter);
+                chosenLed = new WeChatNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.wechat_string));
                 break;
             case 6:
-                chosenLed = new WhatsappColor().accept(getter);
+                chosenLed = new WhatsappNotification().accept(getter);
                 setImageLight(chosenLed);
                 mTitle.setText(getResources().getString(R.string.whatsapp_string));
                 break;
@@ -127,25 +127,25 @@ public class PaletteActivity extends Activity
     private void saveChoosenColor(final int position, NevoLed chosenLed){
         switch (position){
             case 0:
-                saveTypeChoosenColor(this, new TelephoneColor(), chosenLed);
+                saveTypeChoosenColor(this, new TelephoneNotification(), chosenLed);
                 break;
             case 1:
-                saveTypeChoosenColor(this, new EmailColor(), chosenLed);
+                saveTypeChoosenColor(this, new EmailNotification(), chosenLed);
                 break;
             case 2:
-                saveTypeChoosenColor(this, new FacebookColor(), chosenLed);
+                saveTypeChoosenColor(this, new FacebookNotification(), chosenLed);
                 break;
             case 3:
-                saveTypeChoosenColor(this, new SmsColor(), chosenLed);
+                saveTypeChoosenColor(this, new SmsNotification(), chosenLed);
                 break;
             case 4:
-                saveTypeChoosenColor(this, new CalendarColor(), chosenLed);
+                saveTypeChoosenColor(this, new CalendarNotification(), chosenLed);
                 break;
             case 5:
-                saveTypeChoosenColor(this, new WeChatColor(), chosenLed);
+                saveTypeChoosenColor(this, new WeChatNotification(), chosenLed);
                 break;
             case 6:
-                saveTypeChoosenColor(this, new WhatsappColor(), chosenLed);
+                saveTypeChoosenColor(this, new WhatsappNotification(), chosenLed);
                 break;
             default:
                 break;
@@ -205,9 +205,9 @@ public class PaletteActivity extends Activity
         led.accept(visitor);
     }
 
-    public static void saveTypeChoosenColor(Context context, ApplicationLed applicationLed, NevoLed value){
-        ApplicationLedVisitor saver = new ColorSaver(context,value);
-        applicationLed.accept(saver);
+    public static void saveTypeChoosenColor(Context context, Notification applicationNotification, NevoLed value){
+        NotificationVisitor saver = new NotificationColorSaver(context,value);
+        applicationNotification.accept(saver);
     }
 
     @Override

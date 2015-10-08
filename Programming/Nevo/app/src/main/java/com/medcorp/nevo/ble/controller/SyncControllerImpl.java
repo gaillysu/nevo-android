@@ -26,13 +26,21 @@ import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
 import com.medcorp.nevo.ble.exception.BLEConnectTimeoutException;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.application.TelephoneColor;
-import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
@@ -58,19 +66,19 @@ import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.IDailyHistory;
 import com.medcorp.nevo.fragment.AlarmFragment;
-import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;
-import com.medcorp.nevo.model.Notification;
 import com.medcorp.nevo.view.TimePickerView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 /*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
@@ -196,31 +204,26 @@ import java.util.TimeZone;
                         // set Local Notification setting to Nevo, when nevo 's battery removed, the
                         // Steps count is 0, and all notification is off, because Notification is very
                         // important for user, so here need use local's setting sync with nevo
-                        List<Notification> list = new ArrayList<Notification>();
-                        ColorGetter getter = new ColorGetter(mContext);
-                        list.add(new Notification(Notification.NotificationType.Call
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.TELETYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
-                        list.add(new Notification(Notification.NotificationType.SMS
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.SMSTYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
-                        list.add(new Notification(Notification.NotificationType.Email
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.EMAILTYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
-                        list.add(new Notification(Notification.NotificationType.Facebook
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.FACETYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
-                        list.add(new Notification(Notification.NotificationType.Calendar
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.CALTYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
-                        list.add(new Notification(Notification.NotificationType.Wechat
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WEICHATTYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
-                        list.add(new Notification(Notification.NotificationType.Whatsapp
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WHATSTYPE)
-                                , new TelephoneColor().accept(getter).getColor()));
 
-                        sendRequest(new SetNotificationNevoRequest(list));
+                        Map<Notification, Integer> applicationapplicationNotificationColorMap = new HashMap<Notification, Integer>();
+                        NotificationColorGetter getter = new NotificationColorGetter(mContext);
+                        NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
+                        Notification applicationNotification = new TelephoneNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new SmsNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new EmailNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new FacebookNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new CalendarNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new WeChatNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new WhatsappNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+
+                        sendRequest(new SetNotificationNevoRequest(applicationapplicationNotificationColorMap));
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {

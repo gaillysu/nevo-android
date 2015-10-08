@@ -16,4 +16,13 @@ public abstract class NevoLed implements NevoLedVisitable{
         }
         return super.equals(o);
     }
+
+//    BLUE_LED   = 0x010000;
+//    GREEN_LED  = 0x100000;
+//    YELLOW_LED = 0x040000;
+//    RED_LED    = 0x200000;
+//    ORANGE_LED = 0x080000;
+//    LIGHTGREEN_LED = 0x020000;
+
+
 }

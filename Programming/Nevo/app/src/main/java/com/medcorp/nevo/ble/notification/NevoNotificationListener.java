@@ -22,19 +22,19 @@ import android.util.Log;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.ConnectionController;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
 import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
 import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
-import com.medcorp.nevo.ble.model.application.CalendarColor;
-import com.medcorp.nevo.ble.model.application.EmailColor;
-import com.medcorp.nevo.ble.model.application.FacebookColor;
-import com.medcorp.nevo.ble.model.application.SmsColor;
-import com.medcorp.nevo.ble.model.application.TelephoneColor;
-import com.medcorp.nevo.ble.model.application.WeChatColor;
-import com.medcorp.nevo.ble.model.application.WhatsappColor;
-import com.medcorp.nevo.ble.model.application.visitor.ColorGetter;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.fragment.NotificationFragmentAdapter;
 
 import java.util.Date;
 import java.util.Timer;
@@ -62,9 +62,10 @@ public class NevoNotificationListener extends NotificationListenerService implem
         public void onCallStateChanged(int state, String incomingNumber) {
             switch (state){
                 case TelephonyManager.CALL_STATE_RINGING:
-                    if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE)) {
-                        ColorGetter getter = new ColorGetter(NevoNotificationListener.this);
-                        sendNotification(new TelephoneColor().accept(getter).getColor());
+                    NotificationDataHelper helper = new NotificationDataHelper(NevoNotificationListener.this);
+                    if(helper.getState(new TelephoneNotification()).isOn()) {
+                        NotificationColorGetter getter = new NotificationColorGetter(NevoNotificationListener.this);
+                        sendNotification(new TelephoneNotification().accept(getter).getColor());
                     }
                     break;
             }
@@ -81,70 +82,66 @@ public class NevoNotificationListener extends NotificationListenerService implem
     }
 
     @Override
-    public void onNotificationPosted(StatusBarNotification arg0) {
-        if(arg0 == null) return;
+    public void onNotificationPosted(StatusBarNotification statusBarNotification) {
+        if(statusBarNotification == null) {
+            return;
+        }
 
-        Notification mNotification = arg0.getNotification();
-        ColorGetter colorGetter = new ColorGetter(this);
-        if (mNotification != null) {
+        Notification notification = statusBarNotification.getNotification();
+        NotificationColorGetter applicationColorGetter = new NotificationColorGetter(this);
+        NotificationDataHelper helper = new NotificationDataHelper(this);
+        if (notification != null) {
             //sms
-            if(arg0.getPackageName().equals("com.google.android.talk")
-                    || arg0.getPackageName().equals("com.android.mms")
-                    || arg0.getPackageName().equals("com.google.android.apps.messaging")
-                    || arg0.getPackageName().equals("com.sonyericsson.conversations")
+            if(statusBarNotification.getPackageName().equals("com.google.android.talk")
+                    || statusBarNotification.getPackageName().equals("com.android.mms")
+                    || statusBarNotification.getPackageName().equals("com.google.android.apps.messaging")
+                    || statusBarNotification.getPackageName().equals("com.sonyericsson.conversations")
                     ) {
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.SMSTYPE))
-                    sendNotification(new SmsColor().accept(colorGetter).getColor());
+                if(helper.getState(new SmsNotification()).isOn())
+                    sendNotification(new SmsNotification().accept(applicationColorGetter).getColor());
             }
 
             //email,native email or gmail client
-            else if(arg0.getPackageName().equals("com.android.email")
-                    || arg0.getPackageName().equals("com.google.android.email")
-                    || arg0.getPackageName().equals("com.google.android.gm")
-                    || arg0.getPackageName().equals("com.kingsoft.email")
-                    || arg0.getPackageName().equals("com.tencent.androidqqmail")
-                    || arg0.getPackageName().equals("com.outlook.Z7")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.android.email")
+                    || statusBarNotification.getPackageName().equals("com.google.android.email")
+                    || statusBarNotification.getPackageName().equals("com.google.android.gm")
+                    || statusBarNotification.getPackageName().equals("com.kingsoft.email")
+                    || statusBarNotification.getPackageName().equals("com.tencent.androidqqmail")
+                    || statusBarNotification.getPackageName().equals("com.outlook.Z7")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.EMAILTYPE))
-                    sendNotification(new EmailColor().accept(colorGetter).getColor());
+                if(helper.getState(new EmailNotification()).isOn())
+                    sendNotification(new EmailNotification().accept(applicationColorGetter).getColor());
             }
             //calendar
-            else if(arg0.getPackageName().equals("com.google.android.calendar")
-                    || arg0.getPackageName().equals("com.android.calendar")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.google.android.calendar")
+                    || statusBarNotification.getPackageName().equals("com.android.calendar")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.CALTYPE))
-                    sendNotification(new CalendarColor().accept(colorGetter).getColor());
+                if(helper.getState(new CalendarNotification()).isOn())
+                    sendNotification(new CalendarNotification().accept(applicationColorGetter).getColor());
             }
             //facebook
-            else if(arg0.getPackageName().equals("com.facebook.katana")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.facebook.katana")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.FACETYPE))
-                    sendNotification(new FacebookColor().accept(colorGetter).getColor());
+                if(helper.getState(new FacebookNotification()).isOn())
+                    sendNotification(new FacebookNotification().accept(applicationColorGetter).getColor());
             }
             //wechat
-            else if(arg0.getPackageName().equals("com.tencent.mm")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.tencent.mm")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WEICHATTYPE))
-                    sendNotification(new WeChatColor().accept(colorGetter).getColor());
+                if(helper.getState(new WeChatNotification()).isOn())
+                    sendNotification(new WeChatNotification().accept(applicationColorGetter).getColor());
             }
             //whatsapp
-            else if(arg0.getPackageName().equals("com.whatsapp")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.whatsapp")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WHATSTYPE))
-                    sendNotification(new WhatsappColor().accept(colorGetter).getColor());
+                if(helper.getState(new WhatsappNotification()).isOn())
+                    sendNotification(new WhatsappNotification().accept(applicationColorGetter).getColor());
             }
 
             else {
-                Log.v(TAG, "Unknown Notification : "+arg0.getPackageName());
+                Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());
             }
-
         }
     }
 
@@ -210,8 +207,6 @@ public class NevoNotificationListener extends NotificationListenerService implem
         else
         {
 //              doSomethingThatRequiresNotificationAccessPermission();
-
-
         }
     }
 

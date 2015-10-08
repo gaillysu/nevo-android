@@ -86,7 +86,6 @@ import java.util.TimerTask;
                     Log.w(NevoBT.TAG, "Connection lost, reconnecting in "+mReConnectTimerPattern[mTimerIndex]/1000+"s");
                     connect();
                 }
-
                 restartAutoReconnectTimer();
             }
         }, mReConnectTimerPattern[mTimerIndex] );
