@@ -259,7 +259,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
                         //refresh data after 1s for save local database done.
                         //showGraph();
                         sleepAnalysisResult = DatabaseHelper.getInstance(mCtx).getSleepZone(new Date());
-                        setProgressBar();
+                        initLayout(true);
                         //end refresh
                     }
                 },1000);
