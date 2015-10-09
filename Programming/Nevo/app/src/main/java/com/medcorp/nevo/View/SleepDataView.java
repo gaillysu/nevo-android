@@ -140,6 +140,7 @@ public class SleepDataView extends View {
                 long endsleep = mSleepAnalysisResult.getLong("endDateTime");
                 if(startsleep == 0 || endsleep ==0 || startsleep==endsleep)
                 {
+                    if(mTextIsDisplayable)
                     canvas.drawText("----", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
                     return;
                 }
@@ -182,6 +183,7 @@ public class SleepDataView extends View {
                     //draw text
                     percent = (int)(((float) sleeptotal / (float) total) * 100);
                     textWidth = mPaint.measureText(percent + "%");
+                    if(mTextIsDisplayable)
                     canvas.drawText(percent + "%", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
 
                     //draw circle
