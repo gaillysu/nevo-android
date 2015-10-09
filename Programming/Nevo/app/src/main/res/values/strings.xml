@@ -108,5 +108,6 @@
     <string name="light_sleep">Light Sleep</string>
     <string name="deep_sleep">Deep Sleep</string>
     <string name="total_sleep">Total Sleep</string>
+    <string name="minutes">minutes</string>
 
 </resources>

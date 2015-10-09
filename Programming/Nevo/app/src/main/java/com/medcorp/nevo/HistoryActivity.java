@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -34,7 +35,7 @@ import java.util.List;
 public class HistoryActivity extends Activity implements OnChartValueSelectedListener {
 
     private BarChart  mBarChart;
-
+    private List<BarEntry> mSleepData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +67,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         yAxis.setSpaceTop(0.6f);
 
         XAxis xAxis = mBarChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawAxisLine(false);
         xAxis.setDrawGridLines(false);
 
@@ -114,28 +115,20 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
                 continue;
             }
             else {
-                try {
-                    int [] values1 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
-                    int [] values2 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
-                    int [] values3 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
+                    val1 = 0;
+                    val2 = getDailyTotalSleepTime(SleepType.DEEPSLEEP, sleepAnalysisResult);
+                    val3 = getDailyTotalSleepTime(SleepType.WAKESLEEP, sleepAnalysisResult) + getDailyTotalSleepTime(SleepType.LIGHTSLEEP, sleepAnalysisResult);
 
-                    val1 = 0;for(int k=0;k<values1.length;k++) val1 +=values1[k];
-                    val2 = 0;for(int k=0;k<values2.length;k++) val2 +=values2[k];
-                    val3 = 0;for(int k=0;k<values3.length;k++) val3 +=values3[k];
-
-                    yVals1.add(new BarEntry(new float[] { val1, val2, val3 }, i));
+                    yVals1.add(new BarEntry(new float[] { val2, val3 }, i));
                     i++;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         }
         Log.w("Karl", " yvals length = " + yVals1.size());
         BarDataSet set1 = new BarDataSet(yVals1, "");
+        mSleepData = yVals1;
         Resources rs = getResources();
-        set1.setColors(new int[]{rs.getColor(R.color.deep_sleep), rs.getColor(R.color.light_sleep), rs.getColor(R.color.wake_sleep)});
-        set1.setStackLabels(new String[]{"Deep", "Light", "Wake"});
+        set1.setColors(new int[]{rs.getColor(R.color.deep_sleep), rs.getColor(R.color.light_sleep)});
+        set1.setStackLabels(new String[]{rs.getString(R.string.deep_sleep), rs.getString(R.string.light_sleep)});
 //        set1.setBarSpacePercent(35f);
 
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
@@ -146,9 +139,51 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         mBarChart.setData(data);
     }
 
+    public int getDailyTotalSleepTime(SleepType type, JSONObject sleepAnalysisResult){
+        String key = "";
+        int time = 0;
+        switch (type){
+            case LIGHTSLEEP:
+                key = "mergeHourlyLightTime";
+                break;
+            case WAKESLEEP:
+                key = "mergeHourlyWakeTime";
+                break;
+            case DEEPSLEEP:
+                key = "mergeHourlyDeepTime";
+                break;
+        }
+        try{
+            int [] values =  DatabaseHelper.string2IntArray(sleepAnalysisResult.getString(key));
+            for(int k=0;k<values.length;k++) time +=values[k];
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return time;
+    }
+
+    public enum SleepType {
+        LIGHTSLEEP,
+        DEEPSLEEP,
+        WAKESLEEP
+    }
+    private void refreshSleepDetail(BarEntry be){
+        TextView lightValue = (TextView)findViewById(R.id.light_value);
+        TextView totalValue = (TextView)findViewById(R.id.total_value);
+        TextView deepValue = (TextView)findViewById(R.id.deep_value);
+        float[] vals = be.getVals();be.getVals();
+        if(vals.length>=2){
+            String minutes = getResources().getString(R.string.minutes);
+            deepValue.setText(String.format("%.0f %s", vals[0], minutes));
+            lightValue.setText(String.format("%.0f %s", vals[1], minutes));
+            totalValue.setText(String.format("%.0f %s", be.getVal(), minutes));
+        }
+    }
+
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
+        BarEntry be = mSleepData.get(e.getXIndex());
+        refreshSleepDetail(be);
     }
 
     @Override
