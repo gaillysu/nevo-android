@@ -63,7 +63,8 @@
                 android_custom:roundProgressColor="#fff5a41c"
                 android_custom:sleepWakeColor="@color/wake_sleep"
                 android_custom:sleepLightColor="@color/light_sleep"
-                android_custom:sleepDeepColor="@color/deep_sleep"/>
+                android_custom:sleepDeepColor="@color/deep_sleep"
+                android_custom:textIsDisplayable="false"/>
 
         </RelativeLayout>
 
