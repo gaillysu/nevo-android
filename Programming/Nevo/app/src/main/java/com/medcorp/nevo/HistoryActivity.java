@@ -1,10 +1,12 @@
 package com.medcorp.nevo;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -14,6 +16,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
@@ -30,125 +33,217 @@ import java.util.List;
 /**
  * Created by gaillysu on 15/10/7.
  */
-public class HistoryActivity extends Activity implements OnChartValueSelectedListener {
+public class HistoryActivity extends Activity implements OnChartValueSelectedListener, OnChartGestureListener {
 
-    private BarChart  mBarChart;
+    private BarChart barChart;
+    private TextView totalSleep;
+    private TextView lightSleep;
+    private TextView deepSleep;
+    private List<SleepData> sleepDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        sleepDataList = new ArrayList<SleepData>();
         setContentView(R.layout.layout_history_activity);
+        Typeface tf = Typeface.createFromAsset(getAssets(),
+                "font/Raleway-Light.ttf");
+        totalSleep = (TextView) findViewById(R.id.total_sleep_textview);
+        lightSleep= (TextView) findViewById(R.id.light_sleep_textview);
+        deepSleep= (TextView) findViewById(R.id.deep_sleep_textview);
+        FontManager.changeFonts(new View[]{totalSleep, lightSleep, deepSleep}, this);
+                ((ImageView) findViewById(R.id.backImage)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        HistoryActivity.this.finish();
+                    }
+                });
 
-        ((ImageView)findViewById(R.id.backImage)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HistoryActivity.this.finish();
-            }
-        });
+        barChart = (BarChart)findViewById(R.id.history_bar);
+        barChart.setDescription("");
+        barChart.setNoDataTextDescription("");
+        barChart.getLegend().setEnabled(false);
+        barChart.setOnChartValueSelectedListener(this);
 
-        mBarChart = (BarChart)findViewById(R.id.history_bar);
-        mBarChart.setOnChartValueSelectedListener(this);
-        mBarChart.setDescription("");
-        mBarChart.setNoDataTextDescription("");
-        mBarChart.setPinchZoom(false);
-        mBarChart.setDrawGridBackground(false);
-        mBarChart.setScaleEnabled(false);
-        mBarChart.setDrawValueAboveBar(false);
-        mBarChart.setDoubleTapToZoomEnabled(false);
-//        mBarChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 0.0f);
+        barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(false);
+        barChart.setScaleEnabled(false);
+        barChart.setDrawValueAboveBar(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 0.0f);
+        barChart.setDragEnabled(true);
 
-        YAxis yAxis = mBarChart.getAxisLeft();
-        yAxis.setDrawAxisLine(false);
+        YAxis yAxis = barChart.getAxisLeft();
         yAxis.setDrawGridLines(false);
         yAxis.setEnabled(false);
-        yAxis.setSpaceTop(0.6f);
+        yAxis.setSpaceTop(60f);
+        yAxis.setGridColor(getResources().getColor(R.color.transparent));
 
-        XAxis xAxis = mBarChart.getXAxis();
+        XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
-        xAxis.setDrawAxisLine(false);
         xAxis.setDrawGridLines(false);
+//        xAxis.setEnabled(false);
+        xAxis.setGridColor(getResources().getColor(R.color.transparent));
+        xAxis.setTypeface(tf);
 
-        //Init Chart by read local database
         List<IDailyHistory> history = new ArrayList<IDailyHistory>();
         try {
             history  = DatabaseHelper.getInstance(this).getDailyHistoryDao().queryBuilder().orderBy("created", false).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        mBarChart.setScaleX(history.size()/7);
-        mBarChart.setScaleY(1);
 
-        if(history.isEmpty()){
-            return;
-        }
-        //fill the ChartBar's dataset with "history" List
         List<String> xVals = new ArrayList<String>();
-        List<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        List<BarEntry> yValue = new ArrayList<BarEntry>();
 
         int i = 0;
-        float val1 =0 ;
-        float val2 =0;
-        float val3 =0;
-
         for (IDailyHistory daily: history) {
-            Date theDay = new Date(daily.getCreated()); // getCreated() return millsecond from 1970.1.1 00:00:00
+            Date historyDate = new Date(daily.getCreated()); // getCreated() return millsecond from 1970.1.1 00:00:00
             SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
-
-            xVals.add(sdf.format(theDay));
-            Log.w("Karl", sdf.format(theDay));
-            JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(theDay);
-            Log.w("Karl", sleepAnalysisResult.toString());
-            long startsleep =0;
-            long endsleep=0;
+            JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(historyDate);
 
             try {
-                startsleep = sleepAnalysisResult.getLong("startDateTime");
-                endsleep = sleepAnalysisResult.getLong("endDateTime");
+                long startsleep = sleepAnalysisResult.getLong("startDateTime");
+                long endsleep = sleepAnalysisResult.getLong("endDateTime");
+                if(startsleep == 0 || endsleep ==0 || startsleep==endsleep) {
+                    continue;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            //no sleep data for this day
+
+            try {
+                int [] wakeTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
+                int [] lightSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
+                int [] deepSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
+
+                if(wakeTimes.length > 0 || lightSleepTimes.length > 0 || deepSleepTimes.length > 0) {
+
+                    int awake = 0;
+                    for (int k = 0; k < wakeTimes.length; k++) {
+                        awake += wakeTimes[k];
+                    }
+                    int lightSleep = 0;
+                    for (int k = 0; k < lightSleepTimes.length; k++) {
+                        lightSleep += lightSleepTimes[k];
+                    }
+                    int deepSleep = 0;
+                    for (int k = 0; k < deepSleepTimes.length; k++) {
+                        deepSleep += deepSleepTimes[k];
+                    }
+                    SleepData sleepData = new SleepData(awake+lightSleep+deepSleep, deepSleep, lightSleep, awake);
+                    sleepDataList.add(sleepData);
+                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
+                    xVals.add(sdf.format(historyDate));
+                    i++;
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //no sleep data for this day
-            if(startsleep == 0 || endsleep ==0 || startsleep==endsleep) {
-                continue;
-            }
-            else {
-                try {
-                    int [] values1 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
-                    int [] values2 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
-                    int [] values3 = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
-
-                    val1 = 0;for(int k=0;k<values1.length;k++) val1 +=values1[k];
-                    val2 = 0;for(int k=0;k<values2.length;k++) val2 +=values2[k];
-                    val3 = 0;for(int k=0;k<values3.length;k++) val3 +=values3[k];
-
-                    yVals1.add(new BarEntry(new float[] { val1, val2, val3 }, i));
-                    i++;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        Log.w("Karl"," yvals length = " + yVals1.size());
-        BarDataSet set1 = new BarDataSet(yVals1, "");
-//        set1.setBarSpacePercent(35f);
 
+        if(sleepDataList.isEmpty()){
+            totalSleep.setText(getString(R.string.sleep_no_data));
+            lightSleep.setText(getString(R.string.sleep_no_data));
+            deepSleep.setText(getString(R.string.sleep_no_data));
+        }
+
+        if (sleepDataList.size() < 7) {
+            barChart.setScaleMinima((.14f), 1f);
+        }else{
+            barChart.setScaleMinima((history.size()/7),1f);
+        }
+
+        BarDataSet dataSet = new BarDataSet(yValue, "");
+        dataSet.setDrawValues(false);
+        dataSet.setColors(new int[]{getResources().getColor(R.color.wake_sleep), getResources().getColor(R.color.light_sleep)});
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        dataSets.add(set1);
+        dataSets.add(dataSet);
 
         BarData data = new BarData(xVals, dataSets);
-//        data.setValueTextSize(10f);
-        mBarChart.setData(data);
+
+        barChart.setData(data);
     }
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
+        SleepData data = sleepDataList.get(e.getXIndex());
+        totalSleep.setText(getHours(data.getTotalSleep()) + " hours " + getLeftoverMinutes(data.getTotalSleep()) + " minutes" );
+        deepSleep.setText(getHours(data.getDeepSleep()) + " hours " + getLeftoverMinutes(data.getDeepSleep()) + " minutes" );
+        lightSleep.setText(getHours(data.getLightSleep()) + " hours " + getLeftoverMinutes(data.getLightSleep()) + " minutes" );
     }
 
     @Override
     public void onNothingSelected() {
+    }
 
+    private int getHours(int i){
+        double hours = i/60;
+        return (int) hours;
+    }
+
+    private int getLeftoverMinutes(int i){
+        return i%60;
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+
+    private class SleepData {
+
+        private int deepSleep;
+        private int totalSleep;
+        private int lightSleep;
+        private int awake;
+
+        public SleepData(int totalSleep, int deepSleep, int lightSleep, int awake) {
+            this.deepSleep = deepSleep;
+            this.totalSleep = totalSleep;
+            this.lightSleep = lightSleep;
+            this.awake = awake;
+        }
+
+        public int getLightSleep() {
+            return lightSleep+awake;
+        }
+
+        public int getDeepSleep() {
+            return deepSleep;
+        }
+
+        public int getTotalSleep() {
+            return totalSleep;
+        }
     }
 }

@@ -100,6 +100,6 @@
     <!-- Success messages of OTA-->
     <string name="update_ble_success_message">完成BLE升級後，請按手錶的第三個按鈕以重新開啟藍芽功能，並與電話連接。請確保電話與手錶配對成功以免影響升級過程。連接後輕觸「繼續」以進行MCU升級。</string>
     <string name="update_mcu_success_message">完成MCU升級後，請開啟手錶的藍芽功能並與電話重新連接，「繼續」的訊息會彈出，請立即輕觸以避免升級超時。</string>
-    <string name="continue_button">继续</string>
+    <string name="continue_button">繼續</string>
     <string name="app_version">應用版本:</string>
 </resources>
