@@ -387,10 +387,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             json.put("mergeHourlyDeepTime",mergeDeepTime.toString());
 
             //update to database
-            list.get(0).setStartDateTime(sleepstart);
-            list.get(0).setEndDateTime(sleepend);
-            SaveDailyHistory(list.get(0));
-
+            if(list.size()>0){
+                list.get(0).setStartDateTime(sleepstart);
+                list.get(0).setEndDateTime(sleepend);
+                SaveDailyHistory(list.get(0));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
