@@ -134,8 +134,8 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         Log.w("Karl", " yvals length = " + yVals1.size());
         BarDataSet set1 = new BarDataSet(yVals1, "");
         Resources rs = getResources();
-        set1.setColors(new int[]{rs.getColor(R.color.wake_sleep), rs.getColor(R.color.light_sleep), rs.getColor(R.color.deep_sleep)});
-        set1.setStackLabels(new String[]{"Wake", "Light", "Deep"});
+        set1.setColors(new int[]{rs.getColor(R.color.deep_sleep), rs.getColor(R.color.light_sleep), rs.getColor(R.color.wake_sleep)});
+        set1.setStackLabels(new String[]{"Deep", "Light", "Wake"});
 //        set1.setBarSpacePercent(35f);
 
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
