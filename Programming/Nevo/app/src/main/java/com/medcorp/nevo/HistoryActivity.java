@@ -1,6 +1,7 @@
 package com.medcorp.nevo;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -130,8 +131,11 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
                 }
             }
         }
-        Log.w("Karl"," yvals length = " + yVals1.size());
+        Log.w("Karl", " yvals length = " + yVals1.size());
         BarDataSet set1 = new BarDataSet(yVals1, "");
+        Resources rs = getResources();
+        set1.setColors(new int[]{rs.getColor(R.color.wake_sleep), rs.getColor(R.color.light_sleep), rs.getColor(R.color.deep_sleep)});
+        set1.setStackLabels(new String[]{"Wake", "Light", "Deep"});
 //        set1.setBarSpacePercent(35f);
 
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
