@@ -28,7 +28,7 @@ public class NotificationFragment extends Fragment
         implements OnSyncControllerListener{
 
     public static final String NOTIFICATIONFRAGMENT = "NotificationFragment";
-    public static final int NOTIPOSITION = 3;
+    public static final int NOTIPOSITION = 4;
     private ListView mListView;
     private List<NotificationItem> mList;
     private NotificationFragmentAdapter mAdatper;
