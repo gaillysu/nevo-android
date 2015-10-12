@@ -8,8 +8,8 @@
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
     <color name="wake_sleep">#fff6d380</color>
-    <color name="light_sleep">#fffcb600</color>
-    <color name="deep_sleep">#ffc08b00</color>
+    <color name="light_sleep">#fff6d380</color>
+    <color name="deep_sleep">#fffcb400</color>
     <color name="history_data_black">#ff524e4e</color>
 
 </resources>
