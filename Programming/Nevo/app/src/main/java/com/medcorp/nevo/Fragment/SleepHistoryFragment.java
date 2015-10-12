@@ -53,7 +53,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
 
 
     public static final String SLEEPHISTORYFRAGMENT = "SleepHistoryFragment";
-    public static final int SLEEPHISTORYPOSITION = 5;
+    public static final int SLEEPHISTORYPOSITION = 2;
     private static final String PREF_CUR_STEP = "currentStep";
     private ImageView mHourImage, mMinImage;
     private SleepDataView mRoundProgressBar;

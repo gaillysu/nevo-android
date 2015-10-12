@@ -34,7 +34,7 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
 
 
     public static final String ALARMFRAGMENT = "AlarmFragment";
-    public static final int ALARMPOSITION = 2;
+    public static final int ALARMPOSITION = 3;
     private TextView mClockTextView;
     private ImageView mEditClockImage;
     private Button mOnButton;

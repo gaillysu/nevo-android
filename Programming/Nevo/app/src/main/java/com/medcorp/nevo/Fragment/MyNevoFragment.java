@@ -36,7 +36,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
 
     private static final String TAG="MyNevoFragment";
     public static final String MYNEVOFRAGMENT = "MyNevoFragment";
-    public static final int MYNEVOPOSITION = 4;
+    public static final int MYNEVOPOSITION = 5;
     private Context mCtx;
     private Button mynevo_pushOTAButton;
     private ImageView mNevoBatteryImage;
