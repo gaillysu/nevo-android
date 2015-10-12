@@ -80,6 +80,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis.setTextSize(8f);
         xAxis.setDrawGridLines(false);
         xAxis.setGridColor(getResources().getColor(R.color.transparent));
         xAxis.setTypeface(tf);
@@ -157,7 +158,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
 
         BarDataSet dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
-        dataSet.setColors(new int[]{getResources().getColor(R.color.wake_sleep), getResources().getColor(R.color.light_sleep)});
+        dataSet.setColors(new int[]{getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.deep_sleep)});
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
 
