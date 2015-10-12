@@ -102,4 +102,14 @@
     <string name="update_mcu_success_message">完成MCU升級後，請開啟手錶的藍芽功能並與電話重新連接，「繼續」的訊息會彈出，請立即輕觸以避免升級超時。</string>
     <string name="continue_button">繼續</string>
     <string name="app_version">應用版本:</string>
+
+    <string name="light_sleep">淺睡:</string>
+    <string name="deep_sleep">深睡:</string>
+    <string name="total_sleep">總睡眠:</string>
+
+    <string name="sleep_no_data">無睡眠數據</string>
+    <string name="sleep_select_date">請選擇日期</string>
+
+    <string name="hours_and"> 小時 </string>
+    <string name="minutes"> 分鍾</string>
 </resources>
