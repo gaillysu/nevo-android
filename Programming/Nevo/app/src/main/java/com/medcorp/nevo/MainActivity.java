@@ -209,13 +209,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 mTag = MyNevoFragment.MYNEVOFRAGMENT;
                 mTitle = getString(R.string.title_section5);
                 break;
-            /*case HistoryFragment.HISTORYPOSITION+1:
-                tag.set(HistoryFragment.HISTORYFRAGMENT);
-                mPosition = HistoryFragment.HISTORYPOSITION;
-                mTag = HistoryFragment.HISTORYFRAGMENT;
-                mTitle = getString(R.string.title_section6);
-                break;
-                */
             case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
                 tag.set(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
                 mPosition = SleepHistoryFragment.SLEEPHISTORYPOSITION;
