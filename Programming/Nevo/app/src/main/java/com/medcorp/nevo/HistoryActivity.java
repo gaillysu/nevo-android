@@ -150,15 +150,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
                     yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
                     xVals.add(sdf.format(historyDate));
                     i++;
-                    sleepDataList.add(sleepData);
-                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
-                    xVals.add(sdf.format(historyDate));
-                    i++;
-                    sleepDataList.add(sleepData);
-                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
-                    xVals.add(sdf.format(historyDate));
-                    i++;
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -174,7 +165,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         if (sleepDataList.size() < 7) {
             barChart.setScaleMinima((.14f), 1f);
         }else{
-            barChart.setScaleMinima((sleepDataList.size()/6r),1f);
+            barChart.setScaleMinima((sleepDataList.size()/6f),1f);
         }
 
         dataSet = new BarDataSet(yValue, "");
