@@ -81,6 +81,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
         xAxis.setDrawGridLines(false);
+        xAxis.setTextSize(9f);
         xAxis.setGridColor(getResources().getColor(R.color.transparent));
         xAxis.setTypeface(tf);
 
@@ -136,6 +137,14 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
                     yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
                     xVals.add(sdf.format(historyDate));
                     i++;
+                    sleepDataList.add(sleepData);
+                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
+                    xVals.add(sdf.format(historyDate));
+                    i++;
+                    sleepDataList.add(sleepData);
+                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
+                    xVals.add(sdf.format(historyDate));
+                    i++;
 
                 }
             } catch (JSONException e) {
@@ -152,7 +161,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         if (sleepDataList.size() < 7) {
             barChart.setScaleMinima((.14f), 1f);
         }else{
-            barChart.setScaleMinima((history.size()/7),1f);
+            barChart.setScaleMinima((sleepDataList.size()/7),1f);
         }
 
         BarDataSet dataSet = new BarDataSet(yValue, "");
@@ -171,9 +180,9 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         SleepData data = sleepDataList.get(e.getXIndex());
         String hoursAnd = getString(R.string.hours_and);
         String minutes= getString(R.string.minutes);
-        totalSleep.setText(getHours(data.getTotalSleep()) + hoursAnd + getLeftoverMinutes(data.getTotalSleep()) + minutes );
-        deepSleep.setText(getHours(data.getDeepSleep()) + hoursAnd + getLeftoverMinutes(data.getDeepSleep()) + minutes );
-        lightSleep.setText(getHours(data.getLightSleep()) + hoursAnd + getLeftoverMinutes(data.getLightSleep()) + minutes );
+        totalSleep.setText(getHours(data.getTotalSleep())+ " " + hoursAnd + " "+ getLeftoverMinutes(data.getTotalSleep())+ " " + minutes );
+        deepSleep.setText(getHours(data.getDeepSleep())+ " " + hoursAnd+ " " + getLeftoverMinutes(data.getDeepSleep())+ " " + minutes );
+        lightSleep.setText(getHours(data.getLightSleep())+ " " + hoursAnd+ " " + getLeftoverMinutes(data.getLightSleep())+ " " + minutes );
     }
 
     @Override
