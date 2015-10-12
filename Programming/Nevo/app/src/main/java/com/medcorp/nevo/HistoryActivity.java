@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -35,9 +37,13 @@ import java.util.List;
 public class HistoryActivity extends Activity implements OnChartValueSelectedListener {
 
     private BarChart barChart;
+    private BarDataSet dataSet;
     private TextView totalSleep;
     private TextView lightSleep;
     private TextView deepSleep;
+    private TextView totalSleepTitle;
+    private TextView lightSleepTitle;
+    private TextView deepSleepTitle;
     private List<SleepData> sleepDataList;
 
     @Override
@@ -45,12 +51,20 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         super.onCreate(savedInstanceState);
         sleepDataList = new ArrayList<SleepData>();
         setContentView(R.layout.layout_history_activity);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Typeface tf = Typeface.createFromAsset(getAssets(),
                 "font/Raleway-Light.ttf");
         totalSleep = (TextView) findViewById(R.id.total_sleep_textview);
         lightSleep= (TextView) findViewById(R.id.light_sleep_textview);
         deepSleep= (TextView) findViewById(R.id.deep_sleep_textview);
-        FontManager.changeFonts(new View[]{totalSleep, lightSleep, deepSleep}, this);
+        totalSleepTitle = (TextView)findViewById(R.id.total_title);
+        lightSleepTitle = (TextView)findViewById(R.id.light_title);
+        deepSleepTitle = (TextView)findViewById(R.id.deep_title);
+
+
+
+        FontManager.changeBoldFonts(new View[]{totalSleep, lightSleep, deepSleep}, this);
+        FontManager.changeFonts(new View[]{totalSleepTitle, deepSleepTitle, lightSleepTitle}, this);
                 ((ImageView) findViewById(R.id.backImage)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -63,7 +77,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         barChart.setNoDataTextDescription("");
         barChart.getLegend().setEnabled(false);
         barChart.setOnChartValueSelectedListener(this);
-
         barChart.setPinchZoom(false);
         barChart.setDrawGridBackground(false);
         barChart.setScaleEnabled(false);
@@ -80,9 +93,8 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
-        xAxis.setTextSize(8f);
         xAxis.setDrawGridLines(false);
-        xAxis.setTextSize(9f);
+        xAxis.setTextSize(8f);
         xAxis.setGridColor(getResources().getColor(R.color.transparent));
         xAxis.setTypeface(tf);
 
@@ -162,22 +174,29 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         if (sleepDataList.size() < 7) {
             barChart.setScaleMinima((.14f), 1f);
         }else{
-            barChart.setScaleMinima((sleepDataList.size()/7),1f);
+            barChart.setScaleMinima((sleepDataList.size()/6r),1f);
         }
 
-        BarDataSet dataSet = new BarDataSet(yValue, "");
+        dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.deep_sleep)});
+//        dataSet.setHighLightColor(R.color.white);
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
-
         BarData data = new BarData(xVals, dataSets);
-
         barChart.setData(data);
+        barChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
+        barChart.postOnAnimation(new Runnable() {
+            @Override
+            public void run() {
+                barChart.moveViewToX(sleepDataList.size());
+            }
+        });
     }
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        barChart.highlightValue(e.getXIndex(), dataSetIndex);
         SleepData data = sleepDataList.get(e.getXIndex());
         String hoursAnd = getString(R.string.hours_and);
         String minutes= getString(R.string.minutes);
@@ -198,7 +217,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
     private int getLeftoverMinutes(int i){
         return i%60;
     }
-
 
 
     private class SleepData {
@@ -227,4 +245,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
             return totalSleep;
         }
     }
+
+
 }
