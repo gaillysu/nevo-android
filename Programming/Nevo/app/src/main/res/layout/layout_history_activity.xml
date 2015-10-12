@@ -11,12 +11,14 @@
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:textSize="23sp"
             android:textColor="@color/white"
             android:id="@+id/titleTextView"
             android:text="Sleep History"
             android:background="@color/customBlack"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
             android:gravity="center" />
 
         <ImageView
@@ -24,6 +26,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/backImage"
+
             android:background="@drawable/back"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"

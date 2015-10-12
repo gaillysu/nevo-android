@@ -3,7 +3,6 @@ package com.medcorp.nevo;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,7 +15,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
@@ -27,13 +25,14 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by gaillysu on 15/10/7.
  */
-public class HistoryActivity extends Activity implements OnChartValueSelectedListener, OnChartGestureListener {
+public class HistoryActivity extends Activity implements OnChartValueSelectedListener {
 
     private BarChart barChart;
     private TextView totalSleep;
@@ -82,20 +81,20 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
         xAxis.setDrawGridLines(false);
-//        xAxis.setEnabled(false);
         xAxis.setGridColor(getResources().getColor(R.color.transparent));
         xAxis.setTypeface(tf);
 
         List<IDailyHistory> history = new ArrayList<IDailyHistory>();
         try {
             history  = DatabaseHelper.getInstance(this).getDailyHistoryDao().queryBuilder().orderBy("created", false).query();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
-
+        Collections.reverse(history);
         int i = 0;
         for (IDailyHistory daily: history) {
             Date historyDate = new Date(daily.getCreated()); // getCreated() return millsecond from 1970.1.1 00:00:00
@@ -112,8 +111,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
                 e.printStackTrace();
                 continue;
             }
-
-            //no sleep data for this day
 
             try {
                 int [] wakeTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
@@ -139,6 +136,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
                     yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
                     xVals.add(sdf.format(historyDate));
                     i++;
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -171,9 +169,11 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         SleepData data = sleepDataList.get(e.getXIndex());
-        totalSleep.setText(getHours(data.getTotalSleep()) + " hours " + getLeftoverMinutes(data.getTotalSleep()) + " minutes" );
-        deepSleep.setText(getHours(data.getDeepSleep()) + " hours " + getLeftoverMinutes(data.getDeepSleep()) + " minutes" );
-        lightSleep.setText(getHours(data.getLightSleep()) + " hours " + getLeftoverMinutes(data.getLightSleep()) + " minutes" );
+        String hoursAnd = getString(R.string.hours_and);
+        String minutes= getString(R.string.minutes);
+        totalSleep.setText(getHours(data.getTotalSleep()) + hoursAnd + getLeftoverMinutes(data.getTotalSleep()) + minutes );
+        deepSleep.setText(getHours(data.getDeepSleep()) + hoursAnd + getLeftoverMinutes(data.getDeepSleep()) + minutes );
+        lightSleep.setText(getHours(data.getLightSleep()) + hoursAnd + getLeftoverMinutes(data.getLightSleep()) + minutes );
     }
 
     @Override
@@ -189,35 +189,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         return i%60;
     }
 
-    @Override
-    public void onChartLongPressed(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartDoubleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartSingleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-    }
-
-    @Override
-    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-    }
-
-    @Override
-    public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
-    }
 
 
     private class SleepData {
