@@ -251,7 +251,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                            if(hourlySleepTime[i]==0) {n = i - 1;break;}
                        }
                        if(m == n)
-                           sleepend = sleepstart + hourlySleepTime[i] * 60 * 1000;
+                           sleepend = sleepstart + hourlySleepTime[n] * 60 * 1000;
                        else {
                            sleepend = start + (n * 60 + hourlySleepTime[n]) * 60 * 1000;
                        }
@@ -386,7 +386,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                                 if(hourlySleepTime[i]==0) {n = i - 1;break;}
                             }
                             if(m == n)
-                                sleepend = sleepstart + hourlySleepTime[i] * 60 * 1000;
+                                sleepend = sleepstart + hourlySleepTime[n] * 60 * 1000;
                             else {
                                 sleepend = start + (n * 60 + hourlySleepTime[n]) * 60 * 1000;
                             }
