@@ -26,10 +26,8 @@ import android.widget.Toast;
 
 import com.medcorp.nevo.Fragment.AlarmFragment;
 import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.GoogleFitManager;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.MainActivity;
 import com.medcorp.nevo.Model.Alarm;
 import com.medcorp.nevo.Model.DailyHistory;
 import com.medcorp.nevo.Model.Goal;
@@ -320,7 +318,7 @@ import java.util.TimeZone;
                         }
 
                         //discard tutorial activity, only MainActivity can save data to Google git
-                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+//                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
 
                         mCurrentDay++;
                         if(mCurrentDay < mSavedDailyHistory.size() && mSyncAllFlag)

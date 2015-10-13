@@ -80,7 +80,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         SyncController.Singleton.getInstance(this).startConnect(false, this);
 		
-        mGfManager = GoogleFitManager.getInstance(MainActivity.this, this);
+//        mGfManager = GoogleFitManager.getInstance(MainActivity.this, this);
 
         final String google_services_framework ="com.google.android.gsf";
         final String google_play_services ="com.google.android.gms";
@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
         if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
             Log.i("GoogleFitManager", "Connecting...");
-            mGfManager.getmClient().connect();
+//            mGfManager.getmClient().connect();
         }
         else
         {
