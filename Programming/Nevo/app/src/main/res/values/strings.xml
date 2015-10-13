@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Nevo</string>
-    <string name="title_section1">nevo</string>
+    <string name="title_section1">Nevo</string>
     <string name="title_section2">Goal</string>
     <string name="title_section3">Alarm</string>
     <string name="title_section4">Notifications</string>

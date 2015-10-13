@@ -15,7 +15,7 @@
             android:textSize="23sp"
             android:textColor="@color/white"
             android:id="@+id/titleTextView"
-            android:text="Sleep History"
+            android:text="@string/title_section6"
             android:background="@color/customBlack"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
