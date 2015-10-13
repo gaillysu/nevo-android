@@ -29,15 +29,18 @@
         android:text="@string/sleeptracking_instruction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/header"
+        android:layout_toRightOf="@+id/sleeptracking_image"
         android:layout_margin="25dp"
+        android:layout_centerVertical="true"
         />
 
     <ImageView
-        android:layout_below="@+id/sleeptracking_textview"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
         android:id="@+id/sleeptracking_image"
         android:src="@drawable/sleeptracking_tutorial"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+
         android:layout_height="wrap_content" />
 
     <Button
