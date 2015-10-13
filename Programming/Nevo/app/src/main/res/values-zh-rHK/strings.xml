@@ -113,6 +113,6 @@
     <string name="hours_and"> 小時 </string>
     <string name="minutes"> 分鍾</string>
 
-    <string name="sleep_tracking">睡眠跟蹤</string>
-    <string name="sleeptracking_instruction">按住第壹個按鈕3秒，激活睡眠跟蹤模式。在妳醒來後，重復相同的操作，停止睡眠跟蹤模式，來查看妳的睡眠行為.</string>
+    <string name="sleep_tracking">Sleep Tracking</string>
+    <string name="sleeptracking_instruction">Hold button #1 for 3 seconds to activate Sleep Tracking mode. After you wake up, hold button #1 for 3 seconds to return to Activity mode. You may then check the app for your sleep history.</string>
 </resources>
