@@ -113,6 +113,6 @@
     <string name="hours_and"> 小时 </string>
     <string name="minutes"> 分钟</string>
 
-    <string name="sleep_tracking">Sleep Tracking</string>
-    <string name="sleeptracking_instruction">Hold the first button for 3 seconds to activate sleep tracking mode. After you wake up repeat the same progress to get out of sleep tracking mode and see your sleep behaviour.</string>
+    <string name="sleep_tracking">睡眠跟踪</string>
+    <string name="sleeptracking_instruction">按住第一个按钮3秒，激活睡眠跟踪模式。在你醒来后，重复相同的操作，停止睡眠跟踪模式，来查看你的睡眠行为.</string>
 </resources>
