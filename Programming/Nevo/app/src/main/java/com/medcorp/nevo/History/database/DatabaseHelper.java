@@ -307,6 +307,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 offset = 0;
                 for(i=0;i<hourlySleepTime.length;i++)
                 {
+                    //if today 's 00:00 has no sleep, should check yesterday's sleep data[20:00~23:00]
+                    //if these yesterday sleep data also is zero, should recalculator today's sleep data
+                    //for example, I like stay up late, always go to sleep after 1:00, this case shouldn't discard.
+                    //so I add some new code to fix this case.
                     if(hourlySleepTime[i]==0) break;
                     else
                     {
@@ -361,6 +365,41 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 {
                     //no yesterday's sleep data, no use it
                     sleepstart = start;
+                    //NEW CODE for stay up late.
+                    //if also no today's sleep data, recalculator today 's sleep data, such as today's sleep from 1:00~10:00
+                    if(sleepend == start)
+                    {
+                        int m =0,n =0;
+                        for(i=0;i<hourlySleepTime.length;i++)
+                        {
+                            if(hourlySleepTime[i]>0) break;
+                        }
+                        //find out
+                        if(i!=hourlySleepTime.length) {
+                            m = i;
+                            sleepstart = start + ((i + 1) * 60 - hourlySleepTime[i]) * 60 * 1000;
+
+                            n = hourlySleepTime.length -1;
+                            for(i=m+1;i<hourlySleepTime.length;i++)
+                            {
+                                //find out the new end index 'n'
+                                if(hourlySleepTime[i]==0) {n = i - 1;break;}
+                            }
+                            if(m == n)
+                                sleepend = sleepstart + hourlySleepTime[i] * 60 * 1000;
+                            else {
+                                sleepend = start + (n * 60 + hourlySleepTime[n]) * 60 * 1000;
+                            }
+
+                            for(int k=m;k<=n;k++)
+                            {
+                                mergeWakeTime.add(hourlyWakeTime[k]);
+                                mergeLightTime.add(hourlyLightTime[k]);
+                                mergeDeepTime.add(hourlyDeepTime[k]);
+                            }
+                        }
+
+                    }
                 }
 
 
