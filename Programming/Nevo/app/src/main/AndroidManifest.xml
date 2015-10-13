@@ -38,6 +38,10 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".SleepTrackingTutorial"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".TutorialActivity.TutorialThreeActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>

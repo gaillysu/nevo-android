@@ -98,4 +98,15 @@
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sleeptracking_tutorial_button"
+        android:background="#d1cfcf"
+        android:src="@drawable/question_button"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

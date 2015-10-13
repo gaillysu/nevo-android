@@ -112,4 +112,7 @@
 
     <string name="hours_and"> 小時 </string>
     <string name="minutes"> 分鍾</string>
+
+    <string name="sleep_tracking">Sleep Tracking</string>
+    <string name="sleeptracking_instruction">Hold the first button for 3 seconds to activate sleep tracking mode. After you wake up repeat the same progress to get out of sleep tracking mode and see your sleep behaviour.</string>
 </resources>

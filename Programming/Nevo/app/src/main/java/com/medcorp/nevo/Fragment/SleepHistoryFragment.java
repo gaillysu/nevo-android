@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +23,13 @@ import com.medcorp.nevo.History.database.IDailyHistory;
 import com.medcorp.nevo.HistoryActivity;
 import com.medcorp.nevo.MainActivity;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.SleepTrackingTutorial;
 import com.medcorp.nevo.View.SleepDataView;
 import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
@@ -49,7 +47,7 @@ import java.util.List;
 /**
  * WelcomeFragment aims to display current time and steps how many you took.
  */
-public class SleepHistoryFragment extends Fragment implements OnSyncControllerListener {
+public class SleepHistoryFragment extends Fragment implements OnSyncControllerListener, View.OnClickListener {
 
 
     public static final String SLEEPHISTORYFRAGMENT = "SleepHistoryFragment";
@@ -62,7 +60,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
     private long mLastTapTime = 0;
     private ImageView mClockView;
     private static boolean mIsVisible;
-
+    private final String FIRST_TIME_KEY = "sleep_history_first_time_key";;
     private Context mCtx;
     JSONObject sleepAnalysisResult;
     private int TotalHistory;
@@ -78,8 +76,6 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
             mUiHandler.postDelayed(mTimerTask,10000);
-            //if (SyncController.Singleton.getInstance(getActivity()).isConnected())
-            //    SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }
     };
 
@@ -97,25 +93,20 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.sleephistory_fragment, container, false);
         mCtx = getActivity();
+        if (this.firstTimeFragment()){
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mCtx).edit();
+            editor.putBoolean(FIRST_TIME_KEY,false);
+            editor.commit();
+            startSleepTrackingTutorial();
+        }
         mIsVisible = true;
         mHourImage = (ImageView) rootView.findViewById(R.id.HomeClockHour);
         mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
         mRoundProgressBar = (SleepDataView) rootView.findViewById(R.id.SleepDataViewBar);
         mTextView = (TextView) rootView.findViewById(R.id.textView);
         mClockView = (ImageView)rootView.findViewById(R.id.clock_imageView);
-        mClockView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //double click clock within 2s, light on nevo all color LED
-                if ((System.currentTimeMillis() - mLastTapTime) > 2000)
-                    mLastTapTime = System.currentTimeMillis();
-                else {
-                    if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
-                        SyncController.Singleton.getInstance(getActivity()).findDevice();
-                    }
-                }
-            }
-        });
+        rootView.findViewById(R.id.sleeptracking_tutorial_button).setOnClickListener(this);
+        mClockView.setOnClickListener(this);
         View [] viewArray = new View []{
                 rootView.findViewById(R.id.textView)
         };
@@ -130,13 +121,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         }
 
         ImageView  history = (ImageView)rootView.findViewById(R.id.btnhistory);
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mCtx, HistoryActivity.class);
-                mCtx.startActivity(intent);
-            }
-        });
+        history.setOnClickListener(this);
         return rootView;
     }
 
@@ -169,7 +154,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
             initLayout(false);
         }
         refreshTime();
-        mUiHandler.postDelayed(mTimerTask,10000);
+        mUiHandler.postDelayed(mTimerTask, 10000);
     }
 
     private void initLayout(boolean connected){
@@ -333,4 +318,39 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         }
         return new ArrayList<IDailyHistory>();
     }
+
+    private boolean firstTimeFragment(){
+        SharedPreferences preferences  = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        return preferences.getBoolean(FIRST_TIME_KEY,true);
+    }
+
+    private void startSleepTrackingTutorial(){
+        Intent i = new Intent(mCtx, SleepTrackingTutorial.class);
+        getActivity().startActivity(i);
+        getActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.sleeptracking_tutorial_button:
+                startSleepTrackingTutorial();
+                break;
+            case R.id.clock_imageView:
+                if ((System.currentTimeMillis() - mLastTapTime) > 2000)
+                    mLastTapTime = System.currentTimeMillis();
+                else {
+                    if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
+                        SyncController.Singleton.getInstance(getActivity()).findDevice();
+                    }
+                }
+                break;
+            case R.id.btnhistory:
+                Intent intent = new Intent(mCtx, HistoryActivity.class);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                break;
+        }
+    }
+
 }
