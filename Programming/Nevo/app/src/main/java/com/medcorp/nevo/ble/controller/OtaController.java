@@ -2,7 +2,9 @@ package com.medcorp.nevo.ble.controller;
 
 import android.content.Context;
 
-import com.medcorp.nevo.ble.util.Constants.*;
+import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
+import com.medcorp.nevo.ble.util.Constants.DFUControllerState;
+import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
 /**
  * this class define some functions for firmware upgrade.
  * @author Gaillysu

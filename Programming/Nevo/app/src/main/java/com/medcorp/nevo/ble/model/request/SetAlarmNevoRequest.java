@@ -1,8 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.Model.Alarm;
+import com.medcorp.nevo.model.Alarm;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SetAlarmNevoRequest extends NevoRequest {
 
@@ -12,7 +12,7 @@ public class SetAlarmNevoRequest extends NevoRequest {
 	private int[] mMinute;
 	private boolean[] mEnable;
 	
-	public SetAlarmNevoRequest(ArrayList<Alarm> list)
+	public SetAlarmNevoRequest(List<Alarm> list)
 	{
 		mHour = new int[list.size()];
 		mMinute = new int[list.size()];
@@ -20,9 +20,9 @@ public class SetAlarmNevoRequest extends NevoRequest {
         for (int i =0;i<list.size();i++)
         {
             Alarm alarm = list.get(i);
-            mHour[i]  = alarm.getmHour();
-            mMinute[i] = alarm.getmMinute();
-            mEnable[i] = alarm.ismEnable();
+            mHour[i]  = alarm.getHour();
+            mMinute[i] = alarm.getMinute();
+            mEnable[i] = alarm.isEnable();
         }
 	}
 	

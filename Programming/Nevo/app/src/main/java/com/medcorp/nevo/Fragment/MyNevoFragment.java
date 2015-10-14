@@ -1,6 +1,5 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -17,13 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.OTAActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
+import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.activity.OTAActivity;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
@@ -33,11 +31,11 @@ import com.medcorp.nevo.ble.util.Constants;
  */
 public class MyNevoFragment extends Fragment implements View.OnClickListener,OnSyncControllerListener {
 
-
     private static final String TAG="MyNevoFragment";
     public static final String MYNEVOFRAGMENT = "MyNevoFragment";
     public static final int MYNEVOPOSITION = 5;
     private Context mCtx;
+
     private Button mynevo_pushOTAButton;
     private ImageView mNevoBatteryImage;
     private TextView mNameTextView;
@@ -49,7 +47,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mynevo_fragment, container, false);
-        mCtx = getActivity();
+//        mCtx = getActivity();
         mynevo_pushOTAButton = (Button) rootView.findViewById(R.id.mynevo_push_ota);
         mynevo_pushOTAButton.setOnClickListener(this);
 
@@ -81,12 +79,6 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         * my nevo 电量显示设置,初始值 2
         * */
         setBatteryValueText(2);
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.mynevoTextView),
-                rootView.findViewById(R.id.updateuTextView),
-                rootView.findViewById(R.id.batteryValueTextView)
-        };
-        FontManager.changeFonts(viewArray, getActivity());
         return rootView;
     }
 
@@ -120,11 +112,11 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
             case R.id.mynevo_push_ota:
                 if(mBatteryValue == 0)
                 {
-                    Toast.makeText(mCtx,R.string.update_error_lowbattery,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),R.string.update_error_lowbattery,Toast.LENGTH_LONG).show();
                     return;
                 }
-                Intent intent = new Intent(mCtx, OTAActivity.class);
-                mCtx.startActivity(intent);
+                Intent intent = new Intent(getActivity(), OTAActivity.class);
+                getActivity().startActivity(intent);
                 break;
             default:
                 break;

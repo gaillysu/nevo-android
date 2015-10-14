@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,15 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.Model.Notification.NotificationType;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.NotificationItem;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationDefaultColorVisitor;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.notification.NevoNotificationListener;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.view.NotificationItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,23 +32,23 @@ import java.util.List;
  * NotificationFragment
  */
 public class NotificationFragment extends Fragment
-        implements OnSyncControllerListener{
+        implements OnSyncControllerListener {
 
     public static final String NOTIFICATIONFRAGMENT = "NotificationFragment";
     public static final int NOTIPOSITION = 4;
     private ListView mListView;
     private List<NotificationItem> mList;
     private NotificationFragmentAdapter mAdatper;
-
+    private NotificationDefaultColorVisitor defaultColorvisitor = new NotificationDefaultColorVisitor();
     private void initListView(){
         mList = new ArrayList<NotificationItem>();
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.Call), getResources().getString(R.string.call_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.Email), getResources().getString(R.string.email_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.Facebook), getResources().getString(R.string.facebook_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.SMS), getResources().getString(R.string.sms_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.Calendar), getResources().getString(R.string.calendar_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.Wechat), getResources().getString(R.string.wechat_string), R.drawable.setting));
-        mList.add(new NotificationItem(getDefaultColor(NotificationType.Whatsapp), getResources().getString(R.string.whatsapp_string), R.drawable.setting));
+        mList.add(new NotificationItem(new TelephoneNotification().accept(defaultColorvisitor), getResources().getString(R.string.call_string), R.drawable.setting));
+        mList.add(new NotificationItem(new EmailNotification().accept(defaultColorvisitor), getResources().getString(R.string.email_string), R.drawable.setting));
+        mList.add(new NotificationItem(new FacebookNotification().accept(defaultColorvisitor), getResources().getString(R.string.facebook_string), R.drawable.setting));
+        mList.add(new NotificationItem(new SmsNotification().accept(defaultColorvisitor), getResources().getString(R.string.sms_string), R.drawable.setting));
+        mList.add(new NotificationItem(new CalendarNotification().accept(defaultColorvisitor), getResources().getString(R.string.calendar_string), R.drawable.setting));
+        mList.add(new NotificationItem(new WeChatNotification().accept(defaultColorvisitor), getResources().getString(R.string.wechat_string), R.drawable.setting));
+        mList.add(new NotificationItem(new WhatsappNotification().accept(defaultColorvisitor), getResources().getString(R.string.whatsapp_string), R.drawable.setting));
     }
 
     @Override
@@ -57,7 +64,6 @@ public class NotificationFragment extends Fragment
         mListView = (ListView) rootView.findViewById(R.id.TypeListView);
         mAdatper = new NotificationFragmentAdapter(getActivity(), R.layout.notification_listview_item, mList, mListView);
         mListView.setAdapter(mAdatper);
-
         return rootView;
     }
 
@@ -72,7 +78,6 @@ public class NotificationFragment extends Fragment
 
     @Override
     public void packetReceived(NevoPacket packet) {
-
     }
 
     @Override
@@ -82,23 +87,5 @@ public class NotificationFragment extends Fragment
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
 
-    }
-
-    private int getDefaultColor(NotificationType type){
-        if(type == NotificationType.Call)
-            return R.drawable.orange_indicator;
-        if(type == NotificationType.Email)
-            return R.drawable.yellow_indicator;
-        if(type == NotificationType.Facebook)
-            return R.drawable.blue_indicator;
-        if(type == NotificationType.SMS)
-            return R.drawable.green_indicator;
-        if(type == NotificationType.Calendar)
-            return R.drawable.red_indicator;
-        if(type == NotificationType.Wechat)
-            return R.drawable.grass_green_indicator;
-        if(type == NotificationType.Whatsapp)
-            return R.drawable.grass_green_indicator;
-        return 0;
     }
 }

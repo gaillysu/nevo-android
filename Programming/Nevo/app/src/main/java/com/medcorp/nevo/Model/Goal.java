@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Model;
+package com.medcorp.nevo.model;
 
 public interface Goal {
 	
@@ -6,7 +6,7 @@ public interface Goal {
 		LOW,MEDIUM,HIGH
 	}
 	
-	String getType();
-	GoalIntensity getGoalIntensity();
-	int getValue();
+	public String getType();
+	public GoalIntensity getGoalIntensity();
+	public int getValue();
 }

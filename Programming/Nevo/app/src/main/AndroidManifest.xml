@@ -17,14 +17,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:theme="@style/CustomTheme"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".TutorialActivity.TutorialOneActivity"
+            android:name=".activity.TutorialOneActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name=".TutorialActivity.TutorialTwoActivity"
+            android:name=".activity.TutorialTwoActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
@@ -43,30 +43,31 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".TutorialActivity.TutorialThreeActivity"
+            android:name=".activity.TutorialThreeActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".TutorialActivity.TutorialFourActivity"
+            android:name=".activity.TutorialFourActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".TutorialActivity.TutorialFiveActivity"
+            android:name=".activity.TutorialFiveActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".TutorialActivity.TutorialTipsOneActivity"
+            android:name=".activity.TutorialTipsOneActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".TutorialActivity.TutorialTipsTwoActivity"
+            android:name=".activity.TutorialTipsTwoActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".PaletteActivity"
+        <activity android:name=".activity.PaletteActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".OTAActivity"
+        <activity android:name=".activity.OTAActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity android:name=".HistoryActivity"

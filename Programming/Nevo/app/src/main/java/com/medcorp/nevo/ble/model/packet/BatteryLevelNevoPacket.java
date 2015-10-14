@@ -1,14 +1,12 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.Model.DailyHistory;
-
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by gaillysu on 15/4/1.
  */
 public class BatteryLevelNevoPacket extends NevoPacket {
-    public BatteryLevelNevoPacket(ArrayList<NevoRawData> packets) {
+    public BatteryLevelNevoPacket(List<NevoRawData> packets) {
         super(packets);
     }
     /**

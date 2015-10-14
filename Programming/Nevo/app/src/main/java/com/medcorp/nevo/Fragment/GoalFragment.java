@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,15 +14,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.StepPickerView;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.view.StepPickerView;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
@@ -63,16 +62,6 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
                 mIntensiveButton,
                 mSportiveButton
         };
-
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.steps_textView),
-                rootView.findViewById(R.id.goal_stepsUnit),
-                rootView.findViewById(R.id.modarateButton),
-                rootView.findViewById(R.id.intensiveButton),
-                rootView.findViewById(R.id.sportiveButton)
-        };
-        FontManager.changeFonts(viewArray,getActivity());
-
         return rootView;
     }
 

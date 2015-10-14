@@ -1,6 +1,5 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.Model.DailyHistory;
 import com.medcorp.nevo.ble.util.HexUtils;
 
 import java.text.ParseException;
@@ -15,7 +14,7 @@ import java.util.List;
  * Created by gaillysu on 15/4/1.
  */
 public class DailyTrackerNevoPacket extends NevoPacket {
-    public DailyTrackerNevoPacket(ArrayList<NevoRawData> packets) {
+    public DailyTrackerNevoPacket(List<NevoRawData> packets) {
         super(packets);
     }
 

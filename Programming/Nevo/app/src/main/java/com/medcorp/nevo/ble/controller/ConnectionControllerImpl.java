@@ -19,7 +19,6 @@ import com.medcorp.nevo.ble.util.Optional;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,11 +34,6 @@ import java.util.TimerTask;
     //perhaps it is no useful,so app start scanning every 10s that is a good idea
     //so I fix the pattern as this {1000,10000}
 
-    //private final static int[] mReConnectTimerPattern = new int[]{1000, 10000,10000,10000,
-    //        30000,30000,30000,30000,30000,30000,30000,30000,30000,30000,/*5min*/
-    //        60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,/*10min*/
-    //        120000,120000,120000,120000,120000,120000,120000,120000,120000,/*20min*/
-    //        240000,3600000};
     //fixed by Gailly, from 1s to 1.5s, disconnect watch, defer 1.5s and reconnect it, it will easily get connected.
     private final static int[] mReConnectTimerPattern = new int[]{1500,
             10000,10000,10000,10000,10000,10000, /*1min*/
@@ -51,11 +45,6 @@ import java.util.TimerTask;
     //This boolean is the only reliable way to know if we are connected or not
     private boolean mIsConnected = false;
 
-    //Every 2 seconds we will ping the device.
-    //If there's no response, we are disconnected
-    private int CHECK_CONNECTION_INTERVAL = 6000;
-    private Timer mCheckConnectionTimer = null;
-    private Date mLastPacket = new Date();
     Optional<ConnectionController.Delegate> mDelegate = new Optional<>();
     Context mContext;
 
@@ -71,28 +60,8 @@ import java.util.TimerTask;
         mContext = ctx;
         NevoBT.Singleton.getInstance(mContext).setDelegate(this);
 
-        //This timer will check if there's a conenction at regular intervals
-        startCheckConnectionTimer();
-
         //This timer will retry to connect at given intervals
         restartAutoReconnectTimer();
-    }
-
-    private void startCheckConnectionTimer()
-    {
-        /* //sorry I remove these code, due to on Samsung smartphone, readCharacteristic will lead to BT got disconnect about perhaps 5min,10min,30min,... BT protocol stack will auto maintain the connection, no need  use the heartbeat  packets
-        //first stop the timer thread!
-        if(mCheckConnectionTimer!=null)mCheckConnectionTimer.cancel();
-        mCheckConnectionTimer = new Timer();
-        mCheckConnectionTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                NevoBT.Singleton.getInstance(mContext).ping();
-                //If we havne't received any packets for more than 10 sec, it means that we are not connected
-                if(new Date().getTime() - mLastPacket.getTime() > CHECK_CONNECTION_INTERVAL * 1.5) currentlyConnected(false);
-            }
-        }, CHECK_CONNECTION_INTERVAL, CHECK_CONNECTION_INTERVAL);
-        */
     }
 
     private void restartAutoReconnectTimer() {
@@ -117,7 +86,6 @@ import java.util.TimerTask;
                     Log.w(NevoBT.TAG, "Connection lost, reconnecting in "+mReConnectTimerPattern[mTimerIndex]/1000+"s");
                     connect();
                 }
-
                 restartAutoReconnectTimer();
             }
         }, mReConnectTimerPattern[mTimerIndex] );
@@ -167,8 +135,6 @@ import java.util.TimerTask;
     }
 
     private void currentlyConnected(boolean isConnected) {
-        if(isConnected) mLastPacket = new Date();
-
         if(isConnected!=mIsConnected) {
 
             mIsConnected = isConnected;
@@ -196,9 +162,9 @@ import java.util.TimerTask;
 
             //http://stackoverflow.com/questions/21398766/android-ble-connection-time-interval
             //fix a bug:when BLE OTA done,need repair nevo, if not, must twice connect nevo that nevo can work fine, here use code do repair working or twice connection
-            //call doPairDevice() after every connected, if call it within connect() before startScan() invoke,
+            //call pairDevice() after every connected, if call it within connect() before startScan() invoke,
             //some smartphone will popup message ,this message comes from Android OS, such as samsung...
-            if((firstConnected || needPair())&& !getOTAMode()) doPairDevice();
+            if((firstConnected || needPair())&& !getOTAMode()) pairDevice();
         }
 
         currentlyConnected(connected);
@@ -310,8 +276,6 @@ import java.util.TimerTask;
             //restart timer and ping Timer
             mTimerIndex = 0; //after 1s ,do connect
             restartAutoReconnectTimer();
-            mLastPacket = new Date(); //from now, waiting 6s to do checking
-            startCheckConnectionTimer();
         }
 
     }
@@ -347,8 +311,6 @@ import java.util.TimerTask;
        //restart timer and ping Timer
        mTimerIndex = 0; //after 1s ,do connect
        restartAutoReconnectTimer();
-       mLastPacket = new Date(); //from now, waiting 6s to do checking
-       startCheckConnectionTimer();
     }
 
     /**
@@ -372,7 +334,7 @@ import java.util.TimerTask;
     }
 
     @Override
-    public void doPairDevice()
+    public void pairDevice()
     {
         if(!hasSavedAddress()) return;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -380,7 +342,7 @@ import java.util.TimerTask;
 
         BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
         int state = device.getBondState();
-        Log.i(NevoBT.TAG,"doPairDevice(),current bind state: " + state);
+        Log.i(NevoBT.TAG,"pairDevice(),current bind state: " + state);
         if(state != BluetoothDevice.BOND_BONDED)
         {
             boolean ret = false;
@@ -394,7 +356,7 @@ import java.util.TimerTask;
         }
     }
     @Override
-    public void doUnPairDevice()
+    public void unPairDevice()
     {
         if(!hasSavedAddress()) return;
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -402,7 +364,7 @@ import java.util.TimerTask;
 
         BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
         int state = device.getBondState();
-        Log.i(NevoBT.TAG,"doUnPairDevice(),current bind state: " + state);
+        Log.i(NevoBT.TAG,"unPairDevice(),current bind state: " + state);
         if(state == BluetoothDevice.BOND_BONDED)
         {
             boolean ret = false;
@@ -427,6 +389,7 @@ import java.util.TimerTask;
         }
 
     }
+
     private boolean createBond(Class btClass, BluetoothDevice btDevice)
             throws Exception {
         Method createBondMethod = btClass.getMethod("createBond");

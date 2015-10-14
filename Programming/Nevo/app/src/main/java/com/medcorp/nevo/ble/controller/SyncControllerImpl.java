@@ -23,22 +23,23 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import com.medcorp.nevo.Fragment.AlarmFragment;
-import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.History.database.DatabaseHelper;
-import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.Model.Alarm;
-import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.Model.Goal;
-import com.medcorp.nevo.Model.Notification;
-import com.medcorp.nevo.PaletteActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.TimePickerView;
-import com.medcorp.nevo.ble.kernel.BLEConnectTimeoutException;
-import com.medcorp.nevo.ble.kernel.BLENotSupportedException;
-import com.medcorp.nevo.ble.kernel.BLEUnstableException;
-import com.medcorp.nevo.ble.kernel.BluetoothDisabledException;
+import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
+import com.medcorp.nevo.ble.exception.BLEConnectTimeoutException;
+import com.medcorp.nevo.ble.exception.BLENotSupportedException;
+import com.medcorp.nevo.ble.exception.BLEUnstableException;
+import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
@@ -61,11 +62,22 @@ import com.medcorp.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.database.IDailyHistory;
+import com.medcorp.nevo.fragment.AlarmFragment;
+import com.medcorp.nevo.googlefit.GoogleFitManager;
+import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.view.TimePickerView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 /*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
@@ -79,9 +91,9 @@ import java.util.TimeZone;
 
 	private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
 
-    private ArrayList<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
+    private List<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
 
-    private ArrayList<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
+    private List<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
     private long mLastPressAkey = 0;
@@ -92,7 +104,7 @@ import java.util.TimeZone;
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
 
-    /*package*/SyncControllerImpl(Context context)
+    public SyncControllerImpl(Context context)
     {
         mContext = context;
 
@@ -128,12 +140,14 @@ import java.util.TimeZone;
     //Each packets should go through this function. It will ensure that they are properly queued and sent in order.
     private void sendRequest(final SensorRequest request)
     {
-        if(mConnectionController.getOTAMode()) return;
+        if(mConnectionController.getOTAMode()) {
+            return;
+        }
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
             @Override
             public void run() {
 
-                Log.i("SyncControllerImpl",request.getClass().getName());
+                Log.i(TAG,request.getClass().getName());
 
                 mConnectionController.sendRequest(request);
             }
@@ -147,7 +161,6 @@ import java.util.TimeZone;
     @Override
     public void onDataReceived(SensorData data) {
 
-			//if(last Packet)
 			if (data.getType().equals(NevoRawData.TYPE))
 			{
 				final NevoRawData nevoData = (NevoRawData) data;
@@ -190,40 +203,33 @@ import java.util.TimeZone;
                         // set Local Notification setting to Nevo, when nevo 's battery removed, the
                         // Steps count is 0, and all notification is off, because Notification is very
                         // important for user, so here need use local's setting sync with nevo
-                        ArrayList<Notification> list = new ArrayList<Notification>();
 
-                        list.add(new Notification(Notification.NotificationType.Call
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.TELETYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.TELECHOOSENCOLOR)));
-                        list.add(new Notification(Notification.NotificationType.SMS
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.SMSTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.SMSCHOOSENCOLOR)));
-                        list.add(new Notification(Notification.NotificationType.Email
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.EMAILTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.EMAILCHOOSENCOLOR)));
-                        list.add(new Notification(Notification.NotificationType.Facebook
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.FACETYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.FACECHOOSENCOLOR)));
-                        list.add(new Notification(Notification.NotificationType.Calendar
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.CALTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.CALCHOOSENCOLOR)));
-                        list.add(new Notification(Notification.NotificationType.Wechat
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WEICHATTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.WECHATCHOOSENCOLOR)));
-                        list.add(new Notification(Notification.NotificationType.Whatsapp
-                                , NotificationFragmentAdapter.getTypeNFState(mContext, NotificationFragmentAdapter.WHATSTYPE)
-                                , PaletteActivity.getTypeChoosenColor(mContext, PaletteActivity.WHATSAPPCHOOSENCOLOR)));
+                        Map<Notification, Integer> applicationapplicationNotificationColorMap = new HashMap<Notification, Integer>();
+                        NotificationColorGetter getter = new NotificationColorGetter(mContext);
+                        NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
+                        Notification applicationNotification = new TelephoneNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new SmsNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new EmailNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new FacebookNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new CalendarNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new WeChatNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotification = new WhatsappNotification();
+                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
 
-                        sendRequest(new SetNotificationNevoRequest(list));
+                        sendRequest(new SetNotificationNevoRequest(applicationapplicationNotificationColorMap));
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                        ArrayList<Alarm> list = new ArrayList<Alarm>();
+                        List<Alarm> list = new ArrayList<Alarm>();
 
-                        //start sync alarm, phone --> nevo
-                        //sendRequest(new SetAlarmNevoRequest());
                         String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
-                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0,mContext);
+                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
                         list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
 
                         strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");
@@ -237,14 +243,6 @@ import java.util.TimeZone;
                     }
                     else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
-                    /*
-                       //start sync Goal, nevo --> phone (nevo 's led light on is based on Nevo's goal)
-                        syncStepandGoal();
-                        //syncActivityData();
-                    }
-                    else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                    */
                         //start sync data, nevo-->phone
                         syncActivityData();
                     }
@@ -254,7 +252,7 @@ import java.util.TimeZone;
                         mCurrentDay = 0;
                         mSavedDailyHistory = infopacket.getDailyTrackerInfo();
                         Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
-                        if(mSavedDailyHistory.size()>0) {
+                        if(!mSavedDailyHistory.isEmpty()) {
                             mSyncAllFlag = true;
                             getDailyTracker(mCurrentDay);
                         }
@@ -319,7 +317,6 @@ import java.util.TimeZone;
 
                         //discard tutorial activity, only MainActivity can save data to Google git
 //                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
-
                         mCurrentDay++;
                         if(mCurrentDay < mSavedDailyHistory.size() && mSyncAllFlag)
                         {
@@ -348,7 +345,9 @@ import java.util.TimeZone;
                         long currentTime = System.currentTimeMillis();
                         if(currentTime - mLastPressAkey < 500)
                         {
-                            if(mLocalService!=null) mLocalService.findCellPhone();
+                            if(mLocalService!=null) {
+                                mLocalService.findCellPhone();
+                            }
                             //let all color LED light on, means that find CellPhone is successful.
                             sendRequest(new TestModeNevoRequest(0x3F0000,false));
                         }
@@ -382,7 +381,7 @@ import java.util.TimeZone;
                     mPacketsbuffer.clear();
                     setRtc();
                 }
-            },4000);
+            }, 4000);
 
         } else {
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
@@ -404,13 +403,13 @@ import java.util.TimeZone;
         if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
                 || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
             //We haven't synched for a while, let's sync now !
-            Log.i("SyncControllerImpl","*** Sync started ! ***");
+            Log.i(TAG,"*** Sync started ! ***");
             getDailyTrackerInfo(true);
         }
         else
         {
             //here sync StepandGoal for good user experience
-            Log.i("SyncControllerImpl","*** Sync step count and goal ***");
+            Log.i(TAG,"*** Sync step count and goal ***");
             getStepsAndGoal();
         }
     }
@@ -419,7 +418,7 @@ import java.util.TimeZone;
      When the sync process is finished, le't refresh the date of sync
      */
     private void syncFinished() {
-        Log.i("SyncControllerImpl","*** Sync finished ***");
+        Log.i(TAG,"*** Sync finished ***");
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
         //tell history to refresh
@@ -432,8 +431,11 @@ import java.util.TimeZone;
     @Override
     public void  getDailyTrackerInfo(boolean syncAll)
     {
-        if(syncAll) sendRequest(new ReadDailyTrackerInfoNevoRequest());
-        else if(!mSyncAllFlag)getDailyTracker(0);
+        if(syncAll){
+            sendRequest(new ReadDailyTrackerInfoNevoRequest());
+        } else if(!mSyncAllFlag){
+            getDailyTracker(0);
+        }
     }
 
     private void  getDailyTracker(int trackerno)
@@ -447,7 +449,7 @@ import java.util.TimeZone;
     }
 
     @Override
-    public void setAlarm(ArrayList<Alarm> list) {
+    public void setAlarm(List<Alarm> list) {
         sendRequest(new SetAlarmNevoRequest(list));
     }
 
@@ -517,7 +519,7 @@ import java.util.TimeZone;
                         Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
                     }
                 });
-            } catch (Throwable t) {
+            } catch (Exception e1) {
 
             }
         } else if (e instanceof BLENotSupportedException) {
@@ -528,7 +530,7 @@ import java.util.TimeZone;
                         Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
                     }
                 });
-            } catch (Throwable t) {
+            } catch (Exception e2) {
 
             }
         }else if (e instanceof BLEUnstableException) {
@@ -539,7 +541,7 @@ import java.util.TimeZone;
                         Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
                     }
                 });
-            } catch (Throwable t) {
+            } catch (Exception e3) {
 
             }
         }else if (e instanceof BLEConnectTimeoutException) {
@@ -550,7 +552,9 @@ import java.util.TimeZone;
                 showMessage(R.string.ble_connection_timeout_title, R.string.ble_connecttimeout);
             }
         }
-        if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
+        if(mOnSyncControllerListener.notEmpty()){
+            mOnSyncControllerListener.get().connectionStateChanged(false);
+        }
     }
 
 
@@ -560,7 +564,9 @@ import java.util.TimeZone;
 
     @Override
     public void showMessage(final int titleID, final int msgID) {
-        if(mLocalService!=null && mVisible) mLocalService.PopupMessage(titleID, msgID);
+        if(mLocalService!=null && mVisible){
+            mLocalService.PopupMessage(titleID, msgID);
+        }
     }
 
     private boolean mVisible = false;
@@ -603,7 +609,6 @@ import java.util.TimeZone;
                 if(intent.getAction().equals(Intent.ACTION_SCREEN_ON))
                 {
                     Log.i("LocalService","Screen On");
-                    //Toast.makeText(context,"ScreenOn",Toast.LENGTH_LONG).show();
                     if(!ConnectionController.Singleton.getInstance(context).isConnected())
                     {
                         ConnectionController.Singleton.getInstance(context).newScan();
@@ -612,7 +617,6 @@ import java.util.TimeZone;
                 else if(intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED))
                 {
                     Log.i("LocalService","Low level BT connected");
-                    //Toast.makeText(context,"low level BT Connected",Toast.LENGTH_LONG).show();
                     if(!ConnectionController.Singleton.getInstance(context).isConnected())
                     {
                         ConnectionController.Singleton.getInstance(context).newScan();
@@ -639,11 +643,6 @@ import java.util.TimeZone;
             return new LocalBinder();
         }
 
-        @Override
-        public boolean onUnbind(Intent intent) {
-            return super.onUnbind(intent);
-        }
-
         private void PopupMessage(final int titleID, final int msgID)
         {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -651,8 +650,6 @@ import java.util.TimeZone;
                 public void run() {
                     if(mAlertDialog !=null && mAlertDialog.isShowing())
                     {
-                        //mAlertDialog.dismiss();
-                        //mAlertDialog =null;
                         return;
                     }
                     AlertDialog.Builder ab = new AlertDialog.Builder(LocalService.this, AlertDialog.THEME_HOLO_LIGHT)

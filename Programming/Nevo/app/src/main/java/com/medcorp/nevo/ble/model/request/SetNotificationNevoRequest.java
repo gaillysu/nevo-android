@@ -1,9 +1,16 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.Model.Notification;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 public class SetNotificationNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x02;
@@ -15,19 +22,8 @@ public class SetNotificationNevoRequest extends NevoRequest {
         final static int VIB_MOTOR = 0x800000;
         final static int LED_OFF = 0x000000;
         //color LED control bit is bit16~21
-        public final static int BLUE_LED   = 0x010000;
-        public final static int GREEN_LED  = 0x100000;
-        public final static int YELLOW_LED = 0x040000;
-        public final static int RED_LED    = 0x200000;
-        public final static int ORANGE_LED = 0x080000;
-        public final static int LIGHTGREEN_LED = 0x020000;
         //white LED control bit is bit0~10
-        final static int WHITE_1_LED = 0x000001;
-        final static int WHITE_3_LED = 0x000004;
-        final static int WHITE_5_LED = 0x000010;
-        final static int WHITE_7_LED = 0x000040;
-        final static int WHITE_9_LED = 0x000100;
-        final static int WHITE_11_LED = 0x000400;
+
     }
 
     private byte call_vib_number = 0;
@@ -51,43 +47,17 @@ public class SetNotificationNevoRequest extends NevoRequest {
     private byte whatsapp_vib_number = 0;
     private int whatsapp_led_pattern = 0;
 
-    public SetNotificationNevoRequest(ArrayList<Notification> list)
+    public SetNotificationNevoRequest(Map<Notification, Integer> applicationNotificationColorMap)
     {
-        for(Notification notification:list) {
-            if( notification.getType()== Notification.NotificationType.Call) {
-                call_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                call_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
-            if( notification.getType()== Notification.NotificationType.SMS) {
-                sms_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                sms_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
-            if( notification.getType()== Notification.NotificationType.Email) {
-                email_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                email_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
-            if( notification.getType()== Notification.NotificationType.Facebook) {
-                facebook_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                facebook_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
-            if( notification.getType()== Notification.NotificationType.Calendar) {
-                calendar_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                calendar_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
-            if( notification.getType()== Notification.NotificationType.Wechat) {
-                wechat_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                wechat_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
-            if( notification.getType()== Notification.NotificationType.Whatsapp) {
-                whatsapp_vib_number = notification.getOnOff()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
-                whatsapp_led_pattern = SetNortificationRequestValues.VIB_MOTOR | notification.getColor();
-            }
+        StateSaver stateSaver = new StateSaver(applicationNotificationColorMap);
+        for (Notification applicationNotification: applicationNotificationColorMap.keySet()) {
+            applicationNotification.accept(stateSaver);
+
         }
     }
 
     @Override
 	public byte[] getRawData() {
-
 		return null;
 	}
 
@@ -142,4 +112,67 @@ public class SetNotificationNevoRequest extends NevoRequest {
 			return HEADER;
 	}
 
+
+    private class StateSaver implements NotificationVisitor<Void> {
+
+        private final Map<Notification, Integer> applicationNotificationColorMap;
+
+        public StateSaver(final Map<Notification, Integer> applicationNotificationColorMap) {
+            this.applicationNotificationColorMap = applicationNotificationColorMap;
+        }
+
+        @Override
+        public Void visit(CalendarNotification calendarNotification) {
+            calendar_vib_number = calendarNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            calendar_led_pattern = SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(calendarNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(EmailNotification emailNotification) {
+            email_vib_number= emailNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            email_led_pattern = SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(emailNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(FacebookNotification facebookNotification) {
+            facebook_vib_number = facebookNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            facebook_led_pattern = SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(facebookNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(SmsNotification smsNotification) {
+            sms_vib_number = smsNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            sms_led_pattern= SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(smsNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(TelephoneNotification telephoneNotification) {
+            call_vib_number = telephoneNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            call_led_pattern = SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(telephoneNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(WeChatNotification weChatNotification) {
+            wechat_vib_number = weChatNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            wechat_led_pattern = SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(weChatNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(WhatsappNotification whatsappNotification) {
+            whatsapp_vib_number= whatsappNotification.isOn()?SetNortificationRequestValues.VIBRATION_ON:SetNortificationRequestValues.VIBRATION_OFF;
+            whatsapp_led_pattern = SetNortificationRequestValues.VIB_MOTOR | applicationNotificationColorMap.get(whatsappNotification);
+            return null;
+        }
+
+        @Override
+        public Void visit(Notification applicationNotification) {
+            return null;
+        }
+    }
 }

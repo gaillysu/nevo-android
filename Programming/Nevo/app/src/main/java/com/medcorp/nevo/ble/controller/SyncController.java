@@ -1,12 +1,12 @@
 package com.medcorp.nevo.ble.controller;
 
-import com.medcorp.nevo.Model.Alarm;
-import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.Model.Goal;
-
 import android.content.Context;
 
-import java.util.ArrayList;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.model.Goal;
+
+import java.util.List;
 
 /**
  * this class define some functions for communication with Nevo,
@@ -69,7 +69,7 @@ public interface SyncController {
           minute:0~59
           enable : true or false
      */
-	public void setAlarm(ArrayList<Alarm> list);
+	public void setAlarm(List<Alarm> list);
     /*
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
      */
