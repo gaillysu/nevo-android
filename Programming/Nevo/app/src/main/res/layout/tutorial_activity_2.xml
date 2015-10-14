@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.medcorp.nevo.view.customfontview.RalewayButton
+    <com.medcorp.nevo.View.customfontview.RalewayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/t1_back_button"
@@ -21,7 +21,7 @@
         android:src="@drawable/stupe_image1"
         android:layout_gravity="center_horizontal" />
 
-    <com.medcorp.nevo.view.customfontview.RalewayTextView
+    <com.medcorp.nevo.View.customfontview.RalewayTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -45,7 +45,7 @@
             android:paddingLeft="-10dp"
             android:layout_gravity="left|center_vertical" />
 
-        <com.medcorp.nevo.view.customfontview.RalewayTextView
+        <com.medcorp.nevo.View.customfontview.RalewayTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/t1_message"
@@ -60,7 +60,7 @@
             android:layout_gravity="right|center_vertical" />
     </LinearLayout>
 
-    <com.medcorp.nevo.view.customfontview.RalewayButton
+    <com.medcorp.nevo.View.customfontview.RalewayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/t1_next_button"

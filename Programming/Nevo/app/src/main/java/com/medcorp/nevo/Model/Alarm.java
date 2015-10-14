@@ -1,4 +1,4 @@
-package com.medcorp.nevo.model;
+package com.medcorp.nevo.Model;
 
 /**
  * Created by gaillysu on 15/4/21.

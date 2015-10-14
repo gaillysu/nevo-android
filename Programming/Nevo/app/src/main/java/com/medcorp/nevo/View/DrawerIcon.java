@@ -1,4 +1,4 @@
-package com.medcorp.nevo.view;
+package com.medcorp.nevo.View;
 
 /**
  * DrawerIcon works for the icon on the NavigationDrawer

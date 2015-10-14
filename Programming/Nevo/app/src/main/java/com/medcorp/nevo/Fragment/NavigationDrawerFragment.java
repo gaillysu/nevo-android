@@ -1,4 +1,4 @@
-package com.medcorp.nevo.fragment;
+package com.medcorp.nevo.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.DrawerIcon;
+import com.medcorp.nevo.View.DrawerIcon;
 
 import java.util.ArrayList;
 import java.util.List;

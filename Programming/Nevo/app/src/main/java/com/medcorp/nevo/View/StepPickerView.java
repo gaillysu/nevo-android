@@ -1,4 +1,4 @@
-package com.medcorp.nevo.view;
+package com.medcorp.nevo.View;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import com.medcorp.nevo.fragment.GoalFragment;
-import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.Fragment.GoalFragment;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.R;
 
 import java.lang.reflect.Field;

@@ -1,6 +1,6 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.Model.Alarm;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.activity;
+package com.medcorp.nevo.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,7 +23,7 @@ import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
-import com.medcorp.nevo.view.RoundProgressBar;
+import com.medcorp.nevo.View.RoundProgressBar;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

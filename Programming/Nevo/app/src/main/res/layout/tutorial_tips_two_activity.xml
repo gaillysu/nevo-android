@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.medcorp.nevo.view.customfontview.RalewayButton
+    <com.medcorp.nevo.View.customfontview.RalewayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back"
@@ -14,7 +14,7 @@
         android:id="@+id/t2_tips_backButton"
         android:background="#00000000"/>
 
-    <com.medcorp.nevo.view.customfontview.RalewayTextView
+    <com.medcorp.nevo.View.customfontview.RalewayTextView
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:id="@+id/t2_tips_title"
@@ -39,7 +39,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"/>
 
-        <com.medcorp.nevo.view.customfontview.RalewayTextView
+        <com.medcorp.nevo.View.customfontview.RalewayTextView
             android:layout_width="275dp"
             android:layout_height="wrap_content"
             android:id="@+id/t2_tips_message"
@@ -53,7 +53,7 @@
             android:paddingLeft="11dp"/>
     </FrameLayout>
 
-    <com.medcorp.nevo.view.customfontview.RalewayButton
+    <com.medcorp.nevo.View.customfontview.RalewayButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/finish"

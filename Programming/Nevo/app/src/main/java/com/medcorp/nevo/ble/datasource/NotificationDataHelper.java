@@ -20,6 +20,7 @@ public class NotificationDataHelper {
     public void saveState(Notification applicationNotification){
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(applicationNotification.getOnOffTag(), applicationNotification.isOn());
+        editor.commit();
     }
 
     public Notification getState(Notification applicationNotification){

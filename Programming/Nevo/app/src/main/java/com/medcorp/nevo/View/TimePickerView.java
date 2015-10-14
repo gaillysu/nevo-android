@@ -1,4 +1,4 @@
-package com.medcorp.nevo.view;
+package com.medcorp.nevo.View;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -12,8 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
-import com.medcorp.nevo.fragment.AlarmFragment;
-import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.Fragment.AlarmFragment;
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Optional;
 

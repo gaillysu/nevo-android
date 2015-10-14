@@ -1,6 +1,6 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.Model.Goal;
 
 public class NumberOfStepsGoal implements Goal {
 	

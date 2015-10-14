@@ -1,4 +1,4 @@
-package com.medcorp.nevo.model;
+package com.medcorp.nevo.Model;
 
 public interface Goal {
 	

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.view;
+package com.medcorp.nevo.View;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

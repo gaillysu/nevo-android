@@ -1,4 +1,4 @@
-package com.medcorp.nevo.view.fontstrategy;
+package com.medcorp.nevo.View.fontstrategy;
 
 import android.content.Context;
 import android.graphics.Typeface;

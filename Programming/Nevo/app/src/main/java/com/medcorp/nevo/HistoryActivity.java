@@ -62,7 +62,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         deepSleepTitle = (TextView)findViewById(R.id.deep_title);
 
 
-
         FontManager.changeBoldFonts(new View[]{totalSleep, lightSleep, deepSleep}, this);
         FontManager.changeFonts(new View[]{totalSleepTitle, deepSleepTitle, lightSleepTitle}, this);
                 ((ImageView) findViewById(R.id.backImage)).setOnClickListener(new View.OnClickListener() {

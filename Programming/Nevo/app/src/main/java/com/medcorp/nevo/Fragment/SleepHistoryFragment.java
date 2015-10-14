@@ -17,22 +17,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.Activity.MainActivity;
 import com.medcorp.nevo.FontManager;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
 import com.medcorp.nevo.HistoryActivity;
-import com.medcorp.nevo.MainActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.SleepTrackingTutorial;
-import com.medcorp.nevo.View.SleepDataView;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.View.SleepDataView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

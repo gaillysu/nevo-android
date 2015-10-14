@@ -1,7 +1,7 @@
 package com.medcorp.nevo.ble.model.packet;
 
 import com.medcorp.nevo.ble.util.HexUtils;
-import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.Model.DailyHistory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.activity;
+package com.medcorp.nevo.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -16,17 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.Fragment.AlarmFragment;
-import com.medcorp.nevo.Fragment.ConnectAnimationFragment;
-import com.medcorp.nevo.Fragment.GoalFragment;
-import com.medcorp.nevo.Fragment.HistoryFragment;
-import com.medcorp.nevo.Fragment.NavigationDrawerFragment;
-import com.medcorp.nevo.Fragment.NotificationFragment;
-import com.medcorp.nevo.Fragment.MyNevoFragment;
 import com.medcorp.nevo.Fragment.SleepHistoryFragment;
-import com.medcorp.nevo.Fragment.WelcomeFragment;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
-
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.SyncController;
@@ -34,14 +24,14 @@ import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.fragment.AlarmFragment;
-import com.medcorp.nevo.fragment.ConnectAnimationFragment;
-import com.medcorp.nevo.fragment.GoalFragment;
-import com.medcorp.nevo.fragment.HistoryFragment;
-import com.medcorp.nevo.fragment.MyNevoFragment;
-import com.medcorp.nevo.fragment.NavigationDrawerFragment;
-import com.medcorp.nevo.fragment.NotificationFragment;
-import com.medcorp.nevo.fragment.WelcomeFragment;
+import com.medcorp.nevo.Fragment.AlarmFragment;
+import com.medcorp.nevo.Fragment.ConnectAnimationFragment;
+import com.medcorp.nevo.Fragment.GoalFragment;
+import com.medcorp.nevo.Fragment.HistoryFragment;
+import com.medcorp.nevo.Fragment.MyNevoFragment;
+import com.medcorp.nevo.Fragment.NavigationDrawerFragment;
+import com.medcorp.nevo.Fragment.NotificationFragment;
+import com.medcorp.nevo.Fragment.WelcomeFragment;
 
 import java.util.List;
 
@@ -223,9 +213,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 break;
             case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
                 tag.set(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
-                mPosition = SleepHistoryFragment.SLEEPHISTORYPOSITION;
-                mTag = SleepHistoryFragment.SLEEPHISTORYFRAGMENT;
-                mTitle = getString(R.string.title_section6);
+                MainActivity.position = SleepHistoryFragment.SLEEPHISTORYPOSITION;
+                MainActivity.tag  = SleepHistoryFragment.SLEEPHISTORYFRAGMENT;
+                title = getString(R.string.title_section6);
                 break;
             default:
                 break;
@@ -236,7 +226,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
-            if(position !=OTAActivity.OTAPOSITION && OtaController.Singleton.getInstance(this,false).getState() == Constants.DFUControllerState.INIT)
+            if(position != com.medcorp.nevo.Activity.OTAActivity.OTAPOSITION && OtaController.Singleton.getInstance(this,false).getState() == Constants.DFUControllerState.INIT)
             {
                 OtaController.Singleton.getInstance(this,false).switch2SyncController();
             }

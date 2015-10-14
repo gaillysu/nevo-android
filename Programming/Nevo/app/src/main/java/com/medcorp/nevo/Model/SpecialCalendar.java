@@ -1,4 +1,4 @@
-package com.medcorp.nevo.model;
+package com.medcorp.nevo.Model;
 
 import java.util.Calendar;
 

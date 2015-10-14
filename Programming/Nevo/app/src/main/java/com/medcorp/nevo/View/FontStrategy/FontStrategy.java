@@ -1,4 +1,4 @@
-package com.medcorp.nevo.view.fontstrategy;
+package com.medcorp.nevo.View.fontstrategy;
 
 import android.widget.Button;
 import android.widget.EditText;

@@ -1,11 +1,11 @@
-package com.medcorp.nevo.view.customfontview;
+package com.medcorp.nevo.View.customfontview;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.medcorp.nevo.view.fontstrategy.FontStrategy;
-import com.medcorp.nevo.view.fontstrategy.RalewayFontStrategy;
+import com.medcorp.nevo.View.fontstrategy.FontStrategy;
+import com.medcorp.nevo.View.fontstrategy.RalewayFontStrategy;
 
 /**
  * Created by Karl on 9/29/15.
