@@ -1,36 +1,36 @@
-package com.medcorp.nevo.Model;
+package com.medcorp.nevo.model;
 
 /**
  * Created by gaillysu on 15/4/21.
  */
 public class Alarm {
 
-    private int mIndex;
-    private int mHour;
-    private int mMinute;
-    private boolean mEnable;
+    private int index;
+    private int hour;
+    private int minute;
+    private boolean enable;
 
     public Alarm(int index,int hour, int minute,boolean enable)
     {
-        mIndex = index;
-        mHour = hour;
-        mMinute = minute;
-        mEnable = enable;
+        this.index = index;
+        this.hour = hour;
+        this.minute = minute;
+        this.enable = enable;
     }
 
-    public int getmIndex() {
-        return mIndex;
+    public int getIndex() {
+        return index;
     }
 
-    public int getmHour() {
-        return mHour;
+    public int getHour() {
+        return hour;
     }
 
-    public int getmMinute() {
-        return mMinute;
+    public int getMinute() {
+        return minute;
     }
 
-    public boolean ismEnable() {
-        return mEnable;
+    public boolean isEnable() {
+        return enable;
     }
 }

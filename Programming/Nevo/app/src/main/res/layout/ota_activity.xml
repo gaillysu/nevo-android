@@ -49,7 +49,7 @@
             android:layout_alignParentBottom="false"
             android:layout_marginTop="0dp" >
 
-            <com.medcorp.nevo.View.RoundProgressBar
+            <com.medcorp.nevo.view.RoundProgressBar
                 android:id="@+id/otaProgressBar"
                 android:layout_width="260dp"
                 android:layout_height="260dp"
@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
+        <com.medcorp.nevo.view.customfontview.RalewayButton
             android:id="@+id/reUpgradebutton"
             android:layout_width="160dp"
             android:layout_height="50dp"

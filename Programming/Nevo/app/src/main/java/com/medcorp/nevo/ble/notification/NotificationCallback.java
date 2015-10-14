@@ -8,5 +8,5 @@ public interface NotificationCallback {
      *
      * @param e : Exception when got error, link@QuickBTUnBindNevoException,QuickBTSendTimeoutException
      */
-    void onErrorDetected(Exception e);
+    public void onErrorDetected(Exception e);
 }

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -29,26 +29,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.medcorp.nevo.History.DateAdapter;
-import com.medcorp.nevo.History.SpecialCalendar;
-import com.medcorp.nevo.History.database.DatabaseHelper;
-import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.Model.DailyHistory;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.GeoBar;
-import com.medcorp.nevo.View.GeoLine;
-import com.medcorp.nevo.View.RoundProgressBar;
-import com.medcorp.nevo.View.SleepDataView;
-import com.medcorp.nevo.View.StepPickerView;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.history.DateAdapter;
+import com.medcorp.nevo.model.SpecialCalendar;
+import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.database.IDailyHistory;
+import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.view.GeoBar;
+import com.medcorp.nevo.view.GeoLine;
+import com.medcorp.nevo.view.RoundProgressBar;
+import com.medcorp.nevo.view.SleepDataView;
+import com.medcorp.nevo.view.StepPickerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.View;
+package com.medcorp.nevo.view;
 
 /**
  * NotificationItem
