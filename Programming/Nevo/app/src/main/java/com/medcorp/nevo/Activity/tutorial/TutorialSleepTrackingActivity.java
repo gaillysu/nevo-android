@@ -1,17 +1,17 @@
-package com.medcorp.nevo.activity;
+package com.medcorp.nevo.activity.tutorial;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.medcorp.nevo.activity.baseactivities.BaseFragmentActivity;
+import com.medcorp.nevo.activity.base.BaseFragmentActivity;
 import com.medcorp.nevo.R;
 
 /**
  * Created by Karl on 10/13/15.
  */
-public class SleepTrackingTutorialActivity extends BaseFragmentActivity implements View.OnClickListener{
+public class TutorialSleepTrackingActivity extends BaseFragmentActivity implements View.OnClickListener{
 
     private Button backButton;
 

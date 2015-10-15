@@ -1,4 +1,4 @@
-package com.medcorp.nevo.activity.baseactivities;
+package com.medcorp.nevo.activity.base;
 
 import android.app.Activity;
 
@@ -7,7 +7,7 @@ import com.medcorp.nevo.application.ApplicationModel;
 /**
  * Created by Karl on 10/15/15.
  */
-public abstract class BaseFragmentActivity extends Activity {
+public abstract class BaseActivity extends Activity {
 
     private ApplicationModel application;
 

@@ -1,13 +1,14 @@
-package com.medcorp.nevo.activity.baseactivities;
+package com.medcorp.nevo.activity.base;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 
 import com.medcorp.nevo.application.ApplicationModel;
 
 /**
  * Created by Karl on 10/15/15.
  */
-public abstract class BaseActionBarActivity  extends ActionBarActivity {
+public abstract class BaseFragmentActivity extends Activity {
+
     private ApplicationModel application;
 
     public ApplicationModel getModel() {

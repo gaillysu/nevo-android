@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".activity.TutorialOneActivity"
+            android:name=".activity.tutorial.TutorialOneActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -35,31 +35,31 @@
         </activity>
 
         <activity
-            android:name=".activity.TutorialTwoActivity"
+            android:name=".activity.tutorial.TutorialTwoActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.SleepTrackingTutorialActivity"
+            android:name=".activity.tutorial.TutorialSleepTrackingActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TutorialThreeActivity"
+            android:name=".activity.tutorial.TutorialThreeActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TutorialFourActivity"
+            android:name=".activity.tutorial.TutorialFourActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TutorialFiveActivity"
+            android:name=".activity.tutorial.TutorialFiveActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TutorialTipsOneActivity"
+            android:name=".activity.tutorial.TutorialTipsOneActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.TutorialTipsTwoActivity"
+            android:name=".activity.tutorial.TutorialTipsTwoActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
 

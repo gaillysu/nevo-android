@@ -22,7 +22,7 @@ import com.medcorp.nevo.history.database.DatabaseHelper;
 import com.medcorp.nevo.history.database.IDailyHistory;
 import com.medcorp.nevo.activity.HistoryActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.activity.SleepTrackingTutorialActivity;
+import com.medcorp.nevo.activity.tutorial.TutorialSleepTrackingActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
@@ -320,7 +320,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
     }
 
     private void startSleepTrackingTutorial(){
-        Intent i = new Intent(mCtx, SleepTrackingTutorialActivity.class);
+        Intent i = new Intent(mCtx, TutorialSleepTrackingActivity.class);
         getActivity().startActivity(i);
         getActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
     }

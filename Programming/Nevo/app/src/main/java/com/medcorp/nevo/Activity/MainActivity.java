@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.activity.baseactivities.BaseActionBarActivity;
+import com.medcorp.nevo.activity.base.BaseActionBarActivity;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.ConnectAnimationFragment;
 import com.medcorp.nevo.fragment.GoalFragment;

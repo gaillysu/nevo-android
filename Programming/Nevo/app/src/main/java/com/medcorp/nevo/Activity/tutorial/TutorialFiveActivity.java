@@ -1,4 +1,4 @@
-package com.medcorp.nevo.activity;
+package com.medcorp.nevo.activity.tutorial;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.medcorp.nevo.activity.baseactivities.BaseActivity;
+import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
