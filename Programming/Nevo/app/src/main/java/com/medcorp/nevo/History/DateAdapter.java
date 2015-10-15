@@ -1,4 +1,4 @@
-package com.medcorp.nevo.History;
+package com.medcorp.nevo.history;
 
 
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.Model.SpecialCalendar;
+import com.medcorp.nevo.model.SpecialCalendar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

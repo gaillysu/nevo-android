@@ -26,7 +26,7 @@ import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.IDailyHistory;
-import com.medcorp.nevo.Model.SleepBehavior;
+import com.medcorp.nevo.model.SleepBehavior;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -16,8 +16,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.medcorp.nevo.History.database.DatabaseHelper;
-import com.medcorp.nevo.History.database.IDailyHistory;
+import com.medcorp.nevo.history.database.DatabaseHelper;
+import com.medcorp.nevo.history.database.IDailyHistory;
 import com.medcorp.nevo.R;
 
 import org.json.JSONException;

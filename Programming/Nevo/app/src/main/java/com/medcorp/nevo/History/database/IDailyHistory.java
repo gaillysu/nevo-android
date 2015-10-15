@@ -1,5 +1,5 @@
-package com.medcorp.nevo.History.database;
-import com.medcorp.nevo.Model.DailyHistory;
+package com.medcorp.nevo.history.database;
+import com.medcorp.nevo.model.DailyHistory;
 import com.j256.ormlite.field.DatabaseField;
 
 import org.json.JSONException;

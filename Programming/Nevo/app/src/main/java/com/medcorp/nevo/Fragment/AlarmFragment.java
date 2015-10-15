@@ -20,7 +20,7 @@ import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.Model.Alarm;
+import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.view.TimePickerView;
 
 import java.util.ArrayList;

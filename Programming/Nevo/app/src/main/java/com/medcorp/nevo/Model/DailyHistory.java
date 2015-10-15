@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Model;
+package com.medcorp.nevo.model;
 
         import java.util.Date;
         import java.util.List;

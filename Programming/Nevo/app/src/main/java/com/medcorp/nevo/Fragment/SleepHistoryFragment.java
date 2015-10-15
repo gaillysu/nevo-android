@@ -18,8 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.History.database.DatabaseHelper;
-import com.medcorp.nevo.History.database.IDailyHistory;
+import com.medcorp.nevo.history.database.DatabaseHelper;
+import com.medcorp.nevo.history.database.IDailyHistory;
 import com.medcorp.nevo.activity.HistoryActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.SleepTrackingTutorialActivity;
