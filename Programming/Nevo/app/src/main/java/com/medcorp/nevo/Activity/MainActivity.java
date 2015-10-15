@@ -65,7 +65,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        getModel();
+        getModel().setActiveActivity(this);
         //disenable navigation drawer shadow
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -81,7 +81,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
-        SyncController.Singleton.getInstance(this).startConnect(false, this);
+        getModel().getSyncController().startConnect(false, this);
 
 //        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
 
@@ -222,14 +222,14 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
                 break;
         }
 
-        if(SyncController.Singleton.getInstance(this)!=null && !SyncController.Singleton.getInstance(this).isConnected()){
+        if(getModel().getSyncController()!=null && !getModel().getSyncController().isConnected()){
             replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
         }else{
             Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
-            if(position != com.medcorp.nevo.activity.OTAActivity.OTAPOSITION && OtaController.Singleton.getInstance(this,false).getState() == Constants.DFUControllerState.INIT)
+            if(position != com.medcorp.nevo.activity.OTAActivity.OTAPOSITION && getModel().getOtaController().getState() == Constants.DFUControllerState.INIT)
             {
-                OtaController.Singleton.getInstance(this,false).switch2SyncController();
+                getModel().getOtaController().switch2SyncController();
             }
         }
     }
@@ -259,19 +259,6 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
             return true;
         }
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.firmware_version:
-                if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
-                    item.setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void restoreActionBar() {
@@ -447,10 +434,10 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     @Override
     protected void onResume() {
         super.onResume();
-        SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
-        SyncController.Singleton.getInstance(this).setVisible(true);
+        getModel().getSyncController().setSyncControllerListenser(this);
+        getModel().getSyncController().setVisible(true);
         if(!isVisible){
-            if(SyncController.Singleton.getInstance(this).isConnected()){
+            if(getModel().getSyncController().isConnected()){
                 replaceFragment(position, tag);
             }else {
                 replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
@@ -462,7 +449,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     @Override
     protected void onPause() {
         super.onPause();
-        SyncController.Singleton.getInstance(this).setVisible(false);
+        getModel().getSyncController().setVisible(false);
         isVisible = false;
     }
 
