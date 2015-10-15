@@ -10,6 +10,7 @@ import com.medcorp.nevo.view.fontstrategy.FontStrategy;
 import com.medcorp.nevo.view.fontstrategy.RalewayBoldFontStrategy;
 import com.medcorp.nevo.view.fontstrategy.RalewayFontStrategy;
 
+
 /**
  * Created by Karl on 9/29/15.
  */
