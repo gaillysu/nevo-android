@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
@@ -36,7 +37,7 @@ import java.util.TimerTask;
 /**
  * NotificationFragment
  */
-public class OTAActivity extends Activity
+public class OTAActivity extends BaseActivity
         implements View.OnClickListener,OnNevoOtaControllerListener {
     private static final String TAG="OTAActivity";
     public static final String OTAACTIVITY = "OTAActivity";

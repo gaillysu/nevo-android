@@ -1,16 +1,17 @@
 package com.medcorp.nevo;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseFragmentActivity;
+
 /**
  * Created by Karl on 10/13/15.
  */
-public class SleepTrackingTutorial extends FragmentActivity implements View.OnClickListener{
+public class SleepTrackingTutorial extends BaseFragmentActivity implements View.OnClickListener{
 
     private Button backButton;
     private TextView instructionTextView;
@@ -18,6 +19,7 @@ public class SleepTrackingTutorial extends FragmentActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getModel();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sleeptracking_tutorial);
         instructionTextView = (TextView) findViewById(R.id.sleeptracking_textview);

@@ -1,6 +1,5 @@
 package com.medcorp.nevo.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
@@ -19,7 +19,7 @@ import com.medcorp.nevo.ble.util.Constants;
 /**
  * TutorialFour
  */
-public class TutorialFiveActivity extends Activity
+public class TutorialFiveActivity extends BaseActivity
         implements View.OnClickListener, OnSyncControllerListener {
 
     private Button mConnectButton;

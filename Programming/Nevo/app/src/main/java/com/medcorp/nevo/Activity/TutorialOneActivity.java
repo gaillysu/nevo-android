@@ -1,19 +1,19 @@
 package com.medcorp.nevo.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Constants;
 
 /**
  * Turorial One
  */
-public class TutorialOneActivity extends Activity implements View.OnClickListener{
+public class TutorialOneActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

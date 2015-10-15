@@ -1,17 +1,17 @@
 package com.medcorp.nevo.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
 import com.medcorp.nevo.R;
 
 /**
  * TutorialTwoActivity
  */
-public class TutorialTwoActivity extends Activity {
+public class TutorialTwoActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

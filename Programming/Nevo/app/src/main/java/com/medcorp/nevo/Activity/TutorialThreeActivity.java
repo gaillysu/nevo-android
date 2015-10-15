@@ -1,6 +1,5 @@
 package com.medcorp.nevo.Activity;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,12 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
 import com.medcorp.nevo.R;
 
 /**
  * Tutorial Two
  */
-public class TutorialThreeActivity extends Activity implements View.OnClickListener{
+public class TutorialThreeActivity extends BaseActivity implements View.OnClickListener{
 
     private Button mT2NextButton;
     private TextView mBLEText;

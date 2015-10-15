@@ -1,6 +1,5 @@
 package com.medcorp.nevo.Activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
@@ -38,7 +38,7 @@ import com.medcorp.nevo.ble.util.Constants;
 /**
  * ColorPanelActivity
  */
-public class PaletteActivity extends Activity
+public class PaletteActivity extends BaseActivity
         implements View.OnClickListener, OnSyncControllerListener {
 
     private ImageView mBlue;

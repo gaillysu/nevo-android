@@ -9,21 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.Fragment.SleepHistoryFragment;
-import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.Activity.BaseActivities.BaseActionBarActivity;
 import com.medcorp.nevo.Fragment.AlarmFragment;
 import com.medcorp.nevo.Fragment.ConnectAnimationFragment;
 import com.medcorp.nevo.Fragment.GoalFragment;
@@ -31,7 +23,15 @@ import com.medcorp.nevo.Fragment.HistoryFragment;
 import com.medcorp.nevo.Fragment.MyNevoFragment;
 import com.medcorp.nevo.Fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.Fragment.NotificationFragment;
+import com.medcorp.nevo.Fragment.SleepHistoryFragment;
 import com.medcorp.nevo.Fragment.WelcomeFragment;
+import com.medcorp.nevo.R;
+import com.medcorp.nevo.ble.controller.OtaController;
+import com.medcorp.nevo.ble.controller.SyncController;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.ble.model.packet.NevoPacket;
+import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.ble.util.Optional;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ import java.util.List;
  *  /giphy danger !
  *
  * */
-public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
+public class MainActivity extends BaseActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
     private static int position = -1;
     private static String tag;
     private Boolean isVisible = true;
@@ -65,6 +65,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+        getModel();
         //disenable navigation drawer shadow
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
