@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
+import com.medcorp.nevo.activity.baseactivities.BaseActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Constants;
 

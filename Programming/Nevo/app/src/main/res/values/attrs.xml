@@ -15,5 +15,11 @@
         <attr name="sleepWakeColor" format="color"/>
         <attr name="sleepLightColor" format="color"/>
         <attr name="sleepDeepColor" format="color"/>
-    </declare-styleable> 
+    </declare-styleable>
+
+
+    <declare-styleable name="CustomRaleWayAttr">
+        <attr name="bold" format="boolean"/>
+    </declare-styleable>
+
 </resources>

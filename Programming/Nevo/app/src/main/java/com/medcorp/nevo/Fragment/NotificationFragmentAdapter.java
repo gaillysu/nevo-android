@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.Switch;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.Activity.PaletteActivity;
+import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
 import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
@@ -33,8 +33,8 @@ import com.medcorp.nevo.ble.model.color.UnknownLed;
 import com.medcorp.nevo.ble.model.color.YellowLed;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitable;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
-import com.medcorp.nevo.View.NotificationItem;
-import com.medcorp.nevo.View.customfontview.RalewayTextView;
+import com.medcorp.nevo.view.NotificationItem;
+import com.medcorp.nevo.view.customfontview.RalewayTextView;
 
 import java.util.List;
 

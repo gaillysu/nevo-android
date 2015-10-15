@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -17,13 +17,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.Activity.MainActivity;
-import com.medcorp.nevo.FontManager;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.HistoryActivity;
+import com.medcorp.nevo.activity.HistoryActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.SleepTrackingTutorial;
+import com.medcorp.nevo.activity.SleepTrackingTutorialActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
@@ -32,7 +31,7 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.View.SleepDataView;
+import com.medcorp.nevo.view.SleepDataView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,10 +106,6 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         mClockView = (ImageView)rootView.findViewById(R.id.clock_imageView);
         rootView.findViewById(R.id.sleeptracking_tutorial_button).setOnClickListener(this);
         mClockView.setOnClickListener(this);
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.textView)
-        };
-        FontManager.changeFonts(viewArray,getActivity());
 
         sleepAnalysisResult = DatabaseHelper.getInstance(mCtx).getSleepZone(new Date());
         try {
@@ -325,7 +320,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
     }
 
     private void startSleepTrackingTutorial(){
-        Intent i = new Intent(mCtx, SleepTrackingTutorial.class);
+        Intent i = new Intent(mCtx, SleepTrackingTutorialActivity.class);
         getActivity().startActivity(i);
         getActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
     }

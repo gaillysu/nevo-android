@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,12 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.View.AlertDialogView;
+import com.medcorp.nevo.view.AlertDialogView;
 
 /**
  * A Round Pointer Animation

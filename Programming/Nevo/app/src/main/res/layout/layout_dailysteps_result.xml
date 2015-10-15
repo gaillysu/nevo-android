@@ -38,7 +38,7 @@
             android:src="@drawable/clockview_minute"
             android:visibility="visible"/>
 
-        <com.medcorp.nevo.View.RoundProgressBar
+        <com.medcorp.nevo.view.RoundProgressBar
         android:id="@+id/roundProgressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

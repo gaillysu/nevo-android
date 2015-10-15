@@ -23,7 +23,7 @@
     </RelativeLayout>
 
 
-    <TextView
+    <com.medcorp.nevo.view.customfontview.RalewayTextView
         android:id="@+id/sleeptracking_textview"
         android:textColor="@color/customBlack"
         android:text="@string/sleeptracking_instruction"
@@ -45,7 +45,7 @@
 
         android:layout_height="wrap_content" />
 
-    <Button
+    <com.medcorp.nevo.view.customfontview.RalewayButton
         android:layout_marginTop="25dp"
         android:id="@+id/back_button"
         android:textColor="@color/customBlack"

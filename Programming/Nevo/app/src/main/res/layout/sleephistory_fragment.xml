@@ -51,7 +51,7 @@
                 android:src="@drawable/clockview_minute"
                 android:visibility="gone"/>
 
-            <com.medcorp.nevo.View.SleepDataView
+            <com.medcorp.nevo.view.SleepDataView
                 android:id="@+id/SleepDataViewBar"
                 android:layout_width="315dp"
                 android:layout_height="315dp"
@@ -86,7 +86,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center_horizontal"/>
 
-            <TextView
+            <com.medcorp.nevo.view.customfontview.RalewayTextView
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="----"

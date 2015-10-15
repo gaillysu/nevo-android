@@ -1,12 +1,10 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,14 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
+import com.medcorp.nevo.activity.baseactivities.BaseActivity;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.view.RoundProgressBar;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
-import com.medcorp.nevo.View.RoundProgressBar;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -40,15 +38,12 @@ import java.util.TimerTask;
 public class OTAActivity extends BaseActivity
         implements View.OnClickListener,OnNevoOtaControllerListener {
     private static final String TAG="OTAActivity";
-    public static final String OTAACTIVITY = "OTAActivity";
     public static final int OTAPOSITION = 4;
-    private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private RoundProgressBar mOTAProgressBar;
     private Button mReButton;
     private ImageView mBackImage;
     private TextView mTitleTextView;
     private TextView mFirmwareTotal;
-    private TextView mOtaInfomation;
 
     //save the build-in firmware version, it should be the latest FW version
     int buildinSoftwareVersion = 0;
@@ -77,7 +72,9 @@ public class OTAActivity extends BaseActivity
                 || mNevoOtaController.getFirmwareVersion() == null
                 || mNevoOtaController.getState() != Constants.DFUControllerState.INIT)
         {
-            if(!bHelpMode) return;
+            if(!bHelpMode) {
+                return;
+            }
         }
 
         firmwareURLs.clear();
@@ -215,7 +212,6 @@ public class OTAActivity extends BaseActivity
         mTitleTextView.setOnClickListener(this);
 
         mFirmwareTotal = (TextView)findViewById(R.id.textFirmwareTotal);
-        mOtaInfomation = (TextView)findViewById(R.id.textInfomation);
         mFirmwareTotal.setText("");
         /*
         * Hide Status Bar

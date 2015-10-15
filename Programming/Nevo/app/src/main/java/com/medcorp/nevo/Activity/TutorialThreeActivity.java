@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity;
+package com.medcorp.nevo.activity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.Activity.BaseActivities.BaseActivity;
+import com.medcorp.nevo.activity.baseactivities.BaseActivity;
 import com.medcorp.nevo.R;
 
 /**

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -18,15 +18,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.View.RoundProgressBar;
-import com.medcorp.nevo.View.StepPickerView;
+import com.medcorp.nevo.view.RoundProgressBar;
+import com.medcorp.nevo.view.StepPickerView;
 
 import java.util.Calendar;
 

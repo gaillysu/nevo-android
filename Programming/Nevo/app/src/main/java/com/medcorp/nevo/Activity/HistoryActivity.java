@@ -1,11 +1,9 @@
-package com.medcorp.nevo;
+package com.medcorp.nevo.activity;
 
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -20,6 +18,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.History.database.DatabaseHelper;
 import com.medcorp.nevo.History.database.IDailyHistory;
+import com.medcorp.nevo.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,16 +59,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         totalSleepTitle = (TextView)findViewById(R.id.total_title);
         lightSleepTitle = (TextView)findViewById(R.id.light_title);
         deepSleepTitle = (TextView)findViewById(R.id.deep_title);
-
-
-        FontManager.changeBoldFonts(new View[]{totalSleep, lightSleep, deepSleep}, this);
-        FontManager.changeFonts(new View[]{totalSleepTitle, deepSleepTitle, lightSleepTitle}, this);
-                ((ImageView) findViewById(R.id.backImage)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        HistoryActivity.this.finish();
-                    }
-                });
 
         barChart = (BarChart)findViewById(R.id.history_bar);
         barChart.setDescription("");

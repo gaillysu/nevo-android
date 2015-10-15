@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.DrawerIcon;
+import com.medcorp.nevo.view.DrawerIcon;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
@@ -23,7 +23,7 @@ import com.medcorp.nevo.ble.model.notification.visitor.NotificationDefaultColorV
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.notification.NevoNotificationListener;
 import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.View.NotificationItem;
+import com.medcorp.nevo.view.NotificationItem;
 
 import java.util.ArrayList;
 import java.util.List;

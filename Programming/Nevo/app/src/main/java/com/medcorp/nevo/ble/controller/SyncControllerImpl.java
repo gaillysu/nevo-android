@@ -63,11 +63,11 @@ import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.IDailyHistory;
-import com.medcorp.nevo.Fragment.AlarmFragment;
+import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.Model.Alarm;
 import com.medcorp.nevo.Model.DailyHistory;
 import com.medcorp.nevo.Model.Goal;
-import com.medcorp.nevo.View.TimePickerView;
+import com.medcorp.nevo.view.TimePickerView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

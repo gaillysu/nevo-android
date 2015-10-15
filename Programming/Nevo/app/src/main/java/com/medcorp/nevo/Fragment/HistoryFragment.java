@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -30,7 +30,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.Activity.MainActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
@@ -44,11 +44,11 @@ import com.medcorp.nevo.Model.SpecialCalendar;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.IDailyHistory;
 import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.View.GeoBar;
-import com.medcorp.nevo.View.GeoLine;
-import com.medcorp.nevo.View.RoundProgressBar;
-import com.medcorp.nevo.View.SleepDataView;
-import com.medcorp.nevo.View.StepPickerView;
+import com.medcorp.nevo.view.GeoBar;
+import com.medcorp.nevo.view.GeoLine;
+import com.medcorp.nevo.view.RoundProgressBar;
+import com.medcorp.nevo.view.SleepDataView;
+import com.medcorp.nevo.view.StepPickerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

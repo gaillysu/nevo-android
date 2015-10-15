@@ -1,4 +1,4 @@
-package com.medcorp.nevo.Activity.BaseActivities;
+package com.medcorp.nevo.activity.baseactivities;
 
 import android.app.Activity;
 
