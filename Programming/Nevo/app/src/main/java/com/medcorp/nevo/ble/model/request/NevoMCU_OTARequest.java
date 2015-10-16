@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.ble.ble.GattAttributes;
+import android.content.Context;
+
+import com.medcorp.nevo.R;
 
 import java.util.UUID;
 
@@ -12,9 +14,13 @@ import java.util.UUID;
 
 public abstract  class NevoMCU_OTARequest extends NevoRequest {
 
+    public NevoMCU_OTARequest(Context context) {
+        super(context);
+    }
+
     @Override
     public UUID getServiceUUID() {
-        return UUID.fromString(GattAttributes.NEVO_SERVICE);
+        return UUID.fromString(context.getString(R.string.NEVO_SERVICE));
     }
 
     @Override

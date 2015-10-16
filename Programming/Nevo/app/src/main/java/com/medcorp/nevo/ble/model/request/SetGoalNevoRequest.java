@@ -1,15 +1,19 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 import com.medcorp.nevo.model.Goal;
 
 public class SetGoalNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x22;
     private Goal mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
-	public SetGoalNevoRequest(Goal goal )
+	public SetGoalNevoRequest(Context context, Goal goal )
 	{
+		super(context);
 		mGoal = goal;
 	}
+
 	@Override
 	public byte[] getRawData() {		
 		return null;

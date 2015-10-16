@@ -1,9 +1,11 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.ble.model.notification.Notification;
+import android.content.Context;
+
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
@@ -47,8 +49,9 @@ public class SetNotificationNevoRequest extends NevoRequest {
     private byte whatsapp_vib_number = 0;
     private int whatsapp_led_pattern = 0;
 
-    public SetNotificationNevoRequest(Map<Notification, Integer> applicationNotificationColorMap)
+    public SetNotificationNevoRequest(Context context, Map<Notification, Integer> applicationNotificationColorMap)
     {
+        super(context);
         StateSaver stateSaver = new StateSaver(applicationNotificationColorMap);
         for (Notification applicationNotification: applicationNotificationColorMap.keySet()) {
             applicationNotification.accept(stateSaver);

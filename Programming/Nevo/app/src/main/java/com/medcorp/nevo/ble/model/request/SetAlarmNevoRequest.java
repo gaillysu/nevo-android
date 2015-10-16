@@ -1,5 +1,7 @@
 package com.medcorp.nevo.ble.model.request;
 
+import android.content.Context;
+
 import com.medcorp.nevo.model.Alarm;
 
 import java.util.List;
@@ -12,8 +14,9 @@ public class SetAlarmNevoRequest extends NevoRequest {
 	private int[] mMinute;
 	private boolean[] mEnable;
 	
-	public SetAlarmNevoRequest(List<Alarm> list)
+	public SetAlarmNevoRequest(Context context, List<Alarm> list)
 	{
+		super(context);
 		mHour = new int[list.size()];
 		mMinute = new int[list.size()];
 		mEnable = new boolean[list.size()];

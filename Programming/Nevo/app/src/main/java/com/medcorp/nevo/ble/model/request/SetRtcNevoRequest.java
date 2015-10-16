@@ -1,11 +1,18 @@
 package com.medcorp.nevo.ble.model.request;
 
+import android.content.Context;
+
 import java.util.Calendar;
 import java.util.Date;
 
 public class SetRtcNevoRequest extends NevoRequest {
 
 	public  final static  byte HEADER = 0x01;
+
+	public SetRtcNevoRequest(Context context) {
+		super(context);
+	}
+
 	@Override
 	public byte[] getRawData() {
 		

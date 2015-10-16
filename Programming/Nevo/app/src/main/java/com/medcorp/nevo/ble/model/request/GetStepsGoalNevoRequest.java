@@ -1,9 +1,16 @@
 package com.medcorp.nevo.ble.model.request;
 
+import android.content.Context;
+
 public class GetStepsGoalNevoRequest extends NevoRequest {
 
 	public  final static  byte HEADER = 0x26;
-	@Override
+
+        public GetStepsGoalNevoRequest(Context context) {
+                super(context);
+        }
+
+        @Override
 	public byte[] getRawData() {
 
 		return null;

@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.kernel.NevoBT;
 import com.medcorp.nevo.ble.listener.OnConnectListener;
@@ -170,7 +171,7 @@ public class NevoBTService extends Service {
 		 */
 		public String getFirmwareVersion()
 		{
-			return NevoBTService.this.getFirmwareVersion();
+			return firmwareVersion;
 		}
 
 		/**
@@ -179,7 +180,7 @@ public class NevoBTService extends Service {
 		 */
 		public String getSoftwareVersion()
 		{
-			return NevoBTService.this.getSoftwareVersion();
+			return softwareVersion;
 		}
 
 		/**
@@ -195,7 +196,7 @@ public class NevoBTService extends Service {
      */
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.v(NevoBT.TAG,"ImazeBTService onBind() called");
+		Log.v(NevoBT.TAG, "ImazeBTService onBind() called");
 		return new LocalBinder();
 	}
 
@@ -459,10 +460,10 @@ public class NevoBTService extends Service {
 
 					final String uuid = characteristic.getUuid().toString();
 					//read firmware/software version
-					if(service.getUuid().toString().equals(GattAttributes.DEVICEINFO_UDID))
+					if(service.getUuid().toString().equals(getString(R.string.DEVICEINFO_UDID)))
 					{
-						if(characteristic.getUuid().toString().equals(GattAttributes.DEVICEINFO_FIRMWARE_VERSION)
-								|| characteristic.getUuid().toString().equals(GattAttributes.DEVICEINFO_SOFTWARE_VERSION))
+						if(characteristic.getUuid().toString().equals(getString(R.string.DEVICEINFO_FIRMWARE_VERSION))
+								|| characteristic.getUuid().toString().equals(getString(R.string.DEVICEINFO_SOFTWARE_VERSION)))
 						{
 							queuedMainThread.post(new Runnable() {
 								@Override
@@ -476,7 +477,7 @@ public class NevoBTService extends Service {
 
 					//Is this characteristic supported ?
 					Log.v(NevoBT.TAG,"Characteristic UUID:" + uuid);
-					if (GattAttributes.supportedBLECharacteristic(uuid))
+					if (GattAttributes.supportedBLECharacteristic(NevoBTService.this,uuid))
 					{
 						Log.i(NevoBT.TAG, "Activating supported characteristic : "+address+" "+uuid);
 						setCharacteristicNotification(gatt, characteristic, true);
@@ -516,12 +517,12 @@ public class NevoBTService extends Service {
 										 int status) {
 			queuedMainThread.next();
 			if (status == BluetoothGatt.GATT_SUCCESS) {
-				if (UUID.fromString(GattAttributes.DEVICEINFO_FIRMWARE_VERSION).equals(characteristic.getUuid())){
+				if (UUID.fromString(getString(R.string.DEVICEINFO_FIRMWARE_VERSION)).equals(characteristic.getUuid())){
 					firmwareVersion = StringUtils.newStringUsAscii(characteristic.getValue());
 					Log.i(NevoBT.TAG,"FIRMWARE VERSION **************** "+ firmwareVersion);
 					onFirmwareVersionListener.firmwareVersionReceived(Constants.DfuFirmwareTypes.APPLICATION, firmwareVersion);
 				}
-				else if (UUID.fromString(GattAttributes.DEVICEINFO_SOFTWARE_VERSION).equals(characteristic.getUuid())){
+				else if (UUID.fromString(getString(R.string.DEVICEINFO_SOFTWARE_VERSION)).equals(characteristic.getUuid())){
 					softwareVersion = StringUtils.newStringUsAscii(characteristic.getValue());
 					Log.i(NevoBT.TAG,"SOFTWARE VERSION **************** "+ softwareVersion);
 					onFirmwareVersionListener.firmwareVersionReceived(Constants.DfuFirmwareTypes.SOFTDEVICE, softwareVersion);
@@ -580,7 +581,7 @@ public class NevoBTService extends Service {
 	 */
 	private void dataReceived(final BluetoothGattCharacteristic characteristic, final String address) {
 
-		SensorData data = DataFactory.fromBluetoothGattCharacteristic(characteristic, address);
+		SensorData data = DataFactory.fromBluetoothGattCharacteristic(this,characteristic, address);
 
 		if(data!=null&& dataReceivedListener !=null) dataReceivedListener.onDataReceived(data);
 	}
@@ -641,7 +642,7 @@ public class NevoBTService extends Service {
 			}
 		});
 
-		final BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(GattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+		final BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(getString(R.string.CLIENT_CHARACTERISTIC_CONFIG)));
 		if(descriptor!=null){
 			descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
 			queuedMainThread.post(new Runnable() {
@@ -683,7 +684,7 @@ public class NevoBTService extends Service {
 			for(BluetoothGattService ser : gatt.getServices())
 			{
 				if(ser.getUuid().equals(service)
-						&& GattAttributes.supportedBLEService(service.toString()))
+						&& GattAttributes.supportedBLEService(this,service.toString()))
 				{
 					return new Optional<String>(gatt.getDevice().getAddress());
 				}
@@ -697,7 +698,6 @@ public class NevoBTService extends Service {
 		UUID characteristicUUID = deviceRequest.getInputCharacteristicUUID();
 		final byte[] rawData = deviceRequest.getRawData();
 		byte[][] rawDatas = deviceRequest.getRawDataEx();
-
 		if(bluetoothGattMap == null || bluetoothGattMap.isEmpty())  {
 			Log.w(NevoBT.TAG, "Send failed. No device connected" );
 			return;
@@ -761,8 +761,8 @@ public class NevoBTService extends Service {
 	private void ping()
 	{
 
-		UUID serviceUUID = UUID.fromString(GattAttributes.DEVICEINFO_UDID);
-		UUID characteristicUUID = UUID.fromString(GattAttributes.DEVICEINFO_FIRMWARE_VERSION);
+		UUID serviceUUID = UUID.fromString(getString(R.string.DEVICEINFO_UDID));
+		UUID characteristicUUID = UUID.fromString(getString(R.string.DEVICEINFO_FIRMWARE_VERSION));
 
 		if(bluetoothGattMap == null || bluetoothGattMap.isEmpty())  {
 			Log.w(NevoBT.TAG, "Get failed. No device connected" );
@@ -790,16 +790,6 @@ public class NevoBTService extends Service {
 		if(!sent) {
 			Log.w(NevoBT.TAG, "Get failed. No device have the right service and characteristic" );
 		}
-	}
-
-	private String getFirmwareVersion()
-	{
-		return firmwareVersion;
-	}
-
-	private String getSoftwareVersion()
-	{
-		return softwareVersion;
 	}
 
 }

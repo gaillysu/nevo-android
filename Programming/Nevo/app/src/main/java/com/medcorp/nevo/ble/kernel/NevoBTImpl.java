@@ -19,20 +19,20 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import com.medcorp.nevo.ble.ble.GattAttributes;
-import com.medcorp.nevo.ble.ble.NevoBTService;
 import com.medcorp.nevo.ble.ble.GattAttributes.SupportedService;
+import com.medcorp.nevo.ble.ble.NevoBTService;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
 import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -226,11 +226,11 @@ import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
                 //Also if a pairing is known to be needed, It should have already been paired : !GattAttributes.shouldPairBeforeUse(advertisedUUIDs) || (GattAttributes.shouldPairBeforeUse(advertisedUUIDs) && device.getBondState()==BluetoothDevice.BOND_BONDED)
                 // Either : No need to pair before use Or : (Need to pair before use and we are actually paired)
                 if ((mCurrentService.isEmpty() || !mCurrentService.get().isOneOfThosServiceConnected(advertisedUUIDs))
-                        && !GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).isEmpty()
+                        && !GattAttributes.supportedBLEServiceByEnum(mContext,advertisedUUIDs, mSupportServicelist).isEmpty()
 					 )
                 {
 
-                    Log.d(TAG, "Device "+deviceAddress+" found to support service : "+GattAttributes.supportedBLEServiceByEnum(advertisedUUIDs, mSupportServicelist).get(0));
+                    Log.d(TAG, "Device "+deviceAddress+" found to support service : "+GattAttributes.supportedBLEServiceByEnum(mContext,advertisedUUIDs, mSupportServicelist).get(0));
 
                     //If yes, let's bind this device !
                     if(mCurrentService.isEmpty())

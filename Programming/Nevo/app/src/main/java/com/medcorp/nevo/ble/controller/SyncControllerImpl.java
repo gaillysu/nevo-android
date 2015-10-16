@@ -83,7 +83,7 @@ import java.util.TimeZone;
 /*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
     private final static String TAG = "SyncControllerImpl";
 
-	Context mContext;
+	private Context mContext;
 
 	private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
 
@@ -185,17 +185,17 @@ import java.util.TimeZone;
                     if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //setp2:start set user profile
-                        sendRequest(new SetProfileNevoRequest());
+                        sendRequest(new SetProfileNevoRequest(mContext));
                     }
                     else if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //step3:WriteSetting
-                        sendRequest(new WriteSettingNevoRequest());
+                        sendRequest(new WriteSettingNevoRequest(mContext));
                     }
                     else if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
                         //step4:SetCardio
-                        sendRequest(new SetCardioNevoRequest());
+                        sendRequest(new SetCardioNevoRequest(mContext));
                     }
 
                     else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
@@ -223,7 +223,7 @@ import java.util.TimeZone;
                         applicationNotification = new WhatsappNotification();
                         applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
 
-                        sendRequest(new SetNotificationNevoRequest(applicationapplicationNotificationColorMap));
+                        sendRequest(new SetNotificationNevoRequest(mContext,applicationapplicationNotificationColorMap));
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
@@ -350,7 +350,7 @@ import java.util.TimeZone;
                                 mLocalService.findCellPhone();
                             }
                             //let all color LED light on, means that find CellPhone is successful.
-                            sendRequest(new TestModeNevoRequest(0x3F0000,false));
+                            sendRequest(new TestModeNevoRequest(mContext,0x3F0000,false));
                         }
                     }
                     else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
@@ -358,7 +358,7 @@ import java.util.TimeZone;
                         if (!mEnableTestMode)
                         {
                             mEnableTestMode = true;
-                            sendRequest(new TestModeNevoRequest(0,false));
+                            sendRequest(new TestModeNevoRequest(mContext,0,false));
                         }
                     }
 
@@ -426,14 +426,14 @@ import java.util.TimeZone;
     }
 
     private void setRtc() {
-        sendRequest(new SetRtcNevoRequest());
+        sendRequest(new SetRtcNevoRequest(mContext));
     }
 
     @Override
     public void  getDailyTrackerInfo(boolean syncAll)
     {
         if(syncAll){
-            sendRequest(new ReadDailyTrackerInfoNevoRequest());
+            sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
         } else if(!mSyncAllFlag){
             getDailyTracker(0);
         }
@@ -441,28 +441,28 @@ import java.util.TimeZone;
 
     private void  getDailyTracker(int trackerno)
     {
-        sendRequest(new ReadDailyTrackerNevoRequest(trackerno));
+        sendRequest(new ReadDailyTrackerNevoRequest(mContext, trackerno));
     }
 
     @Override
     public void setGoal(Goal goal) {
-        sendRequest(new SetGoalNevoRequest(goal));
+        sendRequest(new SetGoalNevoRequest(mContext,goal));
     }
 
     @Override
     public void setAlarm(List<Alarm> list) {
-        sendRequest(new SetAlarmNevoRequest(list));
+        sendRequest(new SetAlarmNevoRequest(mContext,list));
     }
 
     @Override
     public void getStepsAndGoal() {
-        sendRequest(new GetStepsGoalNevoRequest());
+        sendRequest(new GetStepsGoalNevoRequest(mContext));
     }
 
     @Override
     public void getBatteryLevel()
     {
-        sendRequest(new GetBatteryLevelNevoRequest());
+        sendRequest(new GetBatteryLevelNevoRequest(mContext));
     }
 
     /**
@@ -474,7 +474,7 @@ import java.util.TimeZone;
     @Override
     public void findDevice()
     {
-        sendRequest(new LedLightOnOffNevoRequest(0x3F0000,false));
+        sendRequest(new LedLightOnOffNevoRequest(mContext,0x3F0000,false));
     }
 
     @Override

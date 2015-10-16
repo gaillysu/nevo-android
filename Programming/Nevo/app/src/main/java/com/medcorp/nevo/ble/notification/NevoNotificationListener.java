@@ -164,7 +164,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
             @Override
             public void run() {
                 ConnectionController.Singleton.getInstance(NevoNotificationListener.this)
-                        .sendRequest(new LedLightOnOffNevoRequest(count%2==0?ledcolor:0, count%2==0?true:false));
+                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledcolor:0, count%2==0?true:false));
                 showNotification(count-1,ledcolor);
             }
         },count%2==0?(count==LIGHTTIMES*2?0:500):1200); //first time should do right now, here have 0ms

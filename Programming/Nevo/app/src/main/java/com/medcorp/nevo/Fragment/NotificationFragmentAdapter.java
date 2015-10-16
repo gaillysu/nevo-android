@@ -135,7 +135,7 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         applicationNotification = helper.getState(applicationNotification);
         viewHolder.mSwitch.setChecked(applicationNotification.isOn());
         setImg(viewHolder, applicationNotification.isOn());
-        viewHolder.mIcon.setImageResource(new TelephoneNotification().accept(getter).accept(imageVisitor));
+        viewHolder.mIcon.setImageResource(applicationNotification.accept(getter).accept(imageVisitor));
     }
 
     private void checkedImg(int pos, boolean isChecked){

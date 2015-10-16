@@ -5,14 +5,14 @@ package com.medcorp.nevo.ble.ble;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.content.Context;
 import android.os.Build;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Optional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -28,53 +28,18 @@ public class GattAttributes {
         allService
     }
 
-    private static final Map<String, String> attributes = new HashMap<String, String>();
-
-    public static final String DEVICEINFO_UDID 	= "0000180a-0000-1000-8000-00805f9b34fb";
-    public static final String DEVICEINFO_FIRMWARE_VERSION 	= "00002a26-0000-1000-8000-00805f9b34fb";
-    public static final String DEVICEINFO_SOFTWARE_VERSION 	= "00002a28-0000-1000-8000-00805f9b34fb";
-
-    // Client Characteristic
-    public static final String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
-    //Nevo communicaiton service
-    public static final String NEVO_SERVICE = "f0ba3020-6cac-4c99-9089-4b0a1df45002";
-
-    //This service will return us all the data we ask for through notification
-    public static final String NEVO_CALLBACK_CHARACTERISTIC = "f0ba3021-6cac-4c99-9089-4b0a1df45002";
-    public static final String NEVO_INPUT_CHARACTERISTIC = "f0ba3022-6cac-4c99-9089-4b0a1df45002";
-    public static final String NEVO_OTA_CHARACTERISTIC = "f0ba3023-6cac-4c99-9089-4b0a1df45002";
-    public static final String NEVO_NOTIFICATION_CHARACTERISTIC = "f0ba3024-6cac-4c99-9089-4b0a1df45002";
-
-    public static final String NEVO_OTA_SERVICE = "00001530-1212-efde-1523-785feabcd123";
-    public static final String NEVO_OTA_CONTROL_CHARACTERISTIC = "00001532-1212-efde-1523-785feabcd123";
-    public static final String NEVO_OTA_CALLBACK_CHARACTERISTIC = "00001531-1212-efde-1523-785feabcd123";
-
-
-    static
-    {
-        // Sample Services.
-    	attributes.put(DEVICEINFO_UDID, "Device Information");
-        attributes.put(NEVO_SERVICE, "Nevo Service");
-    }
-
-    public static String lookup(String uuid, String defaultName) 
-    {
-        String name = attributes.get(uuid);
-        return name == null ? defaultName : name;
-    }
-    
-    
-    public static boolean supportedBLEService(String uuid) {
-		if (uuid.equals(GattAttributes.NEVO_SERVICE))
-			return true;
+    public static boolean supportedBLEService(Context context, String uuid) {
+		if (uuid.equals(context.getString(R.string.NEVO_SERVICE))) {
+            return true;
+        }
 		return false;
 	}
     
 
-    public static boolean supportedBLECharacteristic(String uuid){
-		if (uuid.equals(GattAttributes.NEVO_CALLBACK_CHARACTERISTIC)
-           || uuid.equals(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)
-           || uuid.equals(GattAttributes.NEVO_OTA_CHARACTERISTIC)) {
+    public static boolean supportedBLECharacteristic(Context context,String uuid){
+        if (uuid.equals(context.getString(R.string.NEVO_CALLBACK_CHARACTERISTIC))
+                || uuid.equals(context.getString(R.string.NEVO_OTA_CALLBACK_CHARACTERISTIC))
+                || uuid.equals(context.getString(R.string.NEVO_OTA_CHARACTERISTIC))) {
             return true;
         }
 		return false;
@@ -87,36 +52,38 @@ public class GattAttributes {
     public static BluetoothGattCharacteristic initBLECharacteristic(String uuid, BluetoothGattCharacteristic characteristic){
 		return characteristic;
     }
-    
-    public static boolean supportedBLEService(List<UUID> uuids) {
+
+    public static boolean supportedBLEService(Context context, List<UUID> uuids) {
     	boolean supported = false;
     	for(UUID uuid : uuids){
-    		if(supportedBLEService(uuid.toString())) {supported = true;break;}
+    		if(supportedBLEService(context,uuid.toString())) {supported = true;break;}
     	}
 		return supported;
 	}
     
-    public static Optional<SupportedService>  TransferUUID2SupportedService(String uuid)
+    public static Optional<SupportedService>  TransferUUID2SupportedService(Context context, String uuid)
     {
-        if(uuid.equals(GattAttributes.NEVO_SERVICE))
-            return new Optional<SupportedService>(SupportedService.nevo);
-        if(uuid.equals(GattAttributes.NEVO_OTA_SERVICE))
-            return new Optional<SupportedService>(SupportedService.nevo_ota);
+        if(uuid.equals(context.getString(R.string.NEVO_SERVICE))){
+        return new Optional<SupportedService>(SupportedService.nevo);
+    }
+        if(uuid.equals(context.getString(R.string.NEVO_OTA_SERVICE))){
+        return new Optional<SupportedService>(SupportedService.nevo_ota);
+    }
        return new Optional<SupportedService>();
     }
     
-    public static String  TransferSupportedService2UUID(SupportedService service)
+    public static String  TransferSupportedService2UUID(Context context, SupportedService service)
     {
         if(service.equals(SupportedService.nevo))
-            return GattAttributes.NEVO_SERVICE;
+            return context.getString(R.string.NEVO_SERVICE);
     	return null;
     }
     
-    public static List<UUID> supportedBLEServiceByEnum(List<UUID> uuids,List<SupportedService> supportServicelist) {
+    public static List<UUID> supportedBLEServiceByEnum(Context context, List<UUID> uuids,List<SupportedService> supportServicelist) {
     	List<UUID> chosenServices = new ArrayList<UUID>();
     	
     	for(UUID uuid : uuids){
-    		Optional<SupportedService> service = TransferUUID2SupportedService(uuid.toString());
+    		Optional<SupportedService> service = TransferUUID2SupportedService(context, uuid.toString());
     		
     		//If this service is unknown, no reason to pursue
     		if(service.isEmpty()) continue;

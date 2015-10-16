@@ -1,12 +1,15 @@
 package com.medcorp.nevo.ble.model.request;
 
+import android.content.Context;
+
 public class ReadDailyTrackerNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x25;
     // tracker no is 0~6
     private int mTrackerNo = 0;
 
-    public ReadDailyTrackerNevoRequest(int trackerno)
+    public ReadDailyTrackerNevoRequest(Context context, int trackerno)
     {
+        super(context);
         mTrackerNo = trackerno;
     }
 	@Override

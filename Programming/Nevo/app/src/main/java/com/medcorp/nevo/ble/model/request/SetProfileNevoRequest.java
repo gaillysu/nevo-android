@@ -1,7 +1,14 @@
 package com.medcorp.nevo.ble.model.request;
 
+import android.content.Context;
+
 public class SetProfileNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x20;
+
+	public SetProfileNevoRequest(Context context) {
+		super(context);
+	}
+
 	@Override
 	public byte[] getRawData() {
 	

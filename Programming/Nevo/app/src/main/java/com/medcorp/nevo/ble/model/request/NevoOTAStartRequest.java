@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 /**
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
@@ -9,6 +11,10 @@ package com.medcorp.nevo.ble.model.request;
 public  class NevoOTAStartRequest extends  NevoMCU_OTARequest{
 
     public  final static  byte HEADER = 0x72;
+
+    public NevoOTAStartRequest(Context context) {
+        super(context);
+    }
 
     @Override
     public byte[] getRawData() {

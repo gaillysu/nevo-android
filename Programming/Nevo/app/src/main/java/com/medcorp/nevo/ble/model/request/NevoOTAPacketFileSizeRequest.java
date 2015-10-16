@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 /**
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
@@ -10,11 +12,13 @@ public  class NevoOTAPacketFileSizeRequest extends NevoOTARequest {
 
     private int mFilelen;
     private boolean mIsOld;
-    public NevoOTAPacketFileSizeRequest(int filelen,boolean isOld)
+    public NevoOTAPacketFileSizeRequest(Context context,int filelen,boolean isOld)
     {
+        super(context);
         mFilelen = filelen;
         mIsOld = isOld;
     }
+
     @Override
     public byte[] getRawData() {
         if(mIsOld)

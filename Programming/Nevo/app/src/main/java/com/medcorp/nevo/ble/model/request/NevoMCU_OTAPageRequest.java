@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 /**
@@ -12,8 +14,9 @@ public  class NevoMCU_OTAPageRequest extends  NevoMCU_OTARequest{
 
     //one page has 5 packets
     private ArrayList<NevoMCU_OTAPacketRequest> mPage = new ArrayList<NevoMCU_OTAPacketRequest>();
-    public NevoMCU_OTAPageRequest()
+    public NevoMCU_OTAPageRequest(Context context)
     {
+        super(context);
 
     }
     public void addPacket(NevoMCU_OTAPacketRequest packet)

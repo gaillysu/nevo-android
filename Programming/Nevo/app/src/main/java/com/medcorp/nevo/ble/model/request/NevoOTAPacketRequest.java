@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 /**
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
@@ -9,8 +11,9 @@ package com.medcorp.nevo.ble.model.request;
 public  class NevoOTAPacketRequest extends NevoOTARequest {
 
     private byte[] mPacket;
-    public NevoOTAPacketRequest(byte[] packet)
+    public NevoOTAPacketRequest(Context context,byte[] packet)
     {
+        super(context);
         mPacket = packet;
     }
 
