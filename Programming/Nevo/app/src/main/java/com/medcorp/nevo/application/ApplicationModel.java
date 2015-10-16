@@ -1,7 +1,9 @@
 package com.medcorp.nevo.application;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.os.Build;
 import android.util.Log;
 
 import com.medcorp.nevo.activity.MainActivity;
@@ -35,6 +37,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         mDatabaseHelper =  DatabaseHelper.getInstance(this);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void packetReceived(NevoPacket packet) {
         //dispatch to current activity
@@ -45,6 +48,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void connectionStateChanged(boolean isConnected) {
         //dispatch to current activity
@@ -55,6 +59,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
         //dispatch to current activity

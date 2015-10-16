@@ -1,5 +1,6 @@
 package com.medcorp.nevo.ble.controller;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -15,6 +16,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -645,6 +647,7 @@ import java.util.TimeZone;
         private void PopupMessage(final int titleID, final int msgID)
         {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
                 @Override
                 public void run() {
                     if(mAlertDialog !=null && mAlertDialog.isShowing())
@@ -697,6 +700,7 @@ import java.util.TimeZone;
         //start vibrate
         //light screen on
         //play music ???
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void findCellPhone()
         {
             Vibrator vibrator = (Vibrator) LocalService.this.getSystemService(Context.VIBRATOR_SERVICE);
