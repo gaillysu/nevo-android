@@ -80,7 +80,8 @@
     <string name="currentFWversion">手表当前固件版本:</string>
     <string name="latestFWversion">您确认升级新的固件吗? :</string>
     <string name="lastestSyncDate">上一次升级时间\n</string>
-    <string name="update_error_lowbattery">电池电量低，禁止升级.</string>
+    <string name="update_error_lowbattery_title">电量不足</string>
+    <string name="update_error_lowbattery">更新要求充足电量，现有电量不足，请更换电池后再更新。</string>
     <string name="update_error_timeout">升级超时.</string>
     <string name="update_error_noconnect">请先连接Nevo.</string>
     <string name="update_error_openfile">打开固件文件错误.</string>

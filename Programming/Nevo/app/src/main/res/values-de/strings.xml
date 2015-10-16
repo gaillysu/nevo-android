@@ -80,7 +80,8 @@
     <string name="currentFWversion">Ihre Nevo ist nicht auf dem neuesten Stand:</string>
     <string name="latestFWversion"> Voulez-vous installer la dernière version ? :</string>
     <string name="lastestSyncDate">Letztes Update \nam</string>
-    <string name="update_error_lowbattery">Low battery for update.</string>
+    <string name="update_error_lowbattery_title">Not enough battery</string>
+    <string name="update_error_lowbattery">Updating the watch costs a lot of battery. Your watch does not have enough battery to perform an update. To upgrade the watch, please buy a new battery.</string>
     <string name="update_error_timeout">Update time out.</string>
     <string name="update_error_noconnect">Pas de nevo connectée.</string>
     <string name="update_error_openfile">Open Firmware file error.</string>

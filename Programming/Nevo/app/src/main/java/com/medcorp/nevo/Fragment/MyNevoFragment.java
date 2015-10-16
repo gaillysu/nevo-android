@@ -1,6 +1,9 @@
 package com.medcorp.nevo.Fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -120,7 +123,12 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
             case R.id.mynevo_push_ota:
                 if(mBatteryValue == 0)
                 {
-                    Toast.makeText(mCtx,R.string.update_error_lowbattery,Toast.LENGTH_LONG).show();
+                    //fix bug: https://med-corp.atlassian.net/projects/ONA/issues/ONA-11
+                    new AlertDialog.Builder(((Activity) mCtx), AlertDialog.THEME_HOLO_LIGHT)
+                            .setTitle(R.string.update_error_lowbattery_title)
+                            .setMessage(R.string.update_error_lowbattery)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setCancelable(false).create().show();
                     return;
                 }
                 Intent intent = new Intent(mCtx, OTAActivity.class);
