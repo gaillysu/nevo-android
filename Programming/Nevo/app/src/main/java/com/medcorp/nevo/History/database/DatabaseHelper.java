@@ -440,15 +440,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
-     *
-     * @return today's Daily record or null
+     *@param thedate: one day
+     * @return the given date‘s daily record or null
      */
-    public IDailyHistory getDailyHistory()
+    public IDailyHistory getDailyHistory(Date thedate)
     {
         List<Long> days = new ArrayList<Long>();
         //set theDay from 00:00:00
         Calendar calBeginning = new GregorianCalendar();
-        calBeginning.setTime(new Date());
+        calBeginning.setTime(thedate);
         calBeginning.set(Calendar.HOUR_OF_DAY, 0);
         calBeginning.set(Calendar.MINUTE, 0);
         calBeginning.set(Calendar.SECOND, 0);
