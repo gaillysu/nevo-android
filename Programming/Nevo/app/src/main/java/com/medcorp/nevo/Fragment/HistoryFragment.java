@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -31,19 +30,16 @@ import android.widget.ViewFlipper;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.history.DateAdapter;
-import com.medcorp.nevo.model.SpecialCalendar;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.IDailyHistory;
+import com.medcorp.nevo.history.DateAdapter;
 import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.model.SpecialCalendar;
 import com.medcorp.nevo.view.GeoBar;
 import com.medcorp.nevo.view.GeoLine;
 import com.medcorp.nevo.view.RoundProgressBar;
@@ -65,7 +61,7 @@ import java.util.List;
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
-public class HistoryFragment extends Fragment implements OnSyncControllerListener,OnGestureListener {
+public class HistoryFragment extends BaseFragment implements OnGestureListener {
 
 
     private static final String TAG="HistoryFragment";
@@ -86,9 +82,7 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
     private int week_c = 0;
     private int week_num = 0;
     private String currentDate = "";
-    private static int jumpWeek = 0;
-    private static int jumpMonth = 0;
-    private static int jumpYear = 0;
+
     private DateAdapter dateAdapter;
     private int daysOfMonth = 0; // 某月的天数
     private int dayOfWeek = 0; // 具体某一天是星期几
@@ -125,6 +119,7 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
     TextView mDailyTextView;
     TextView mWeeklyTextView;
     TextView mMonthlyTextView;
+
 
     enum VIEWMODE{
     Daily,Weekly,Monthly
@@ -508,68 +503,6 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
             mLayoutGraphContent.addView(l3);
 
         } //end for
-        /**
-        //动态代码加入新页: mode3--睡眠、运动共用一屏，点击切换显示,并且支持左右连续滑动（mode1+mode2)
-        else if(modeFlag == 3)
-        for(int k = SyncController.Singleton.getInstance(getActivity()).getHistory(mSelectdays).size()-1;k>=0;k--)
-        {
-            List<IDailyHistory> historyarray = SyncController.Singleton.getInstance(getActivity()).getHistory(mSelectdays);
-
-            mCurrentDate = new Date(historyarray.get(k).getCreated());
-            initGraphData();
-
-            PinChart pinchart = new PinChart(mCtx);
-            PinChart pinchart2 = new PinChart(mCtx);
-            GeoLine geoline = new GeoLine(mCtx);
-            GeoBar bar = new GeoBar(mCtx);
-
-            LinearLayout l3 = new LinearLayout(mCtx);
-            l3.setLayoutParams(new LinearLayout.LayoutParams(
-                    w, LayoutParams.WRAP_CONTENT));
-            l3.setOrientation(LinearLayout.VERTICAL);
-
-            LinearLayout  l31 = new LinearLayout(mCtx);
-            l31.setLayoutParams(new LinearLayout.LayoutParams(
-                    w, h/2-130));
-            l31.setBackgroundResource(android.R.color.holo_blue_light);
-            l31.setOrientation(LinearLayout.HORIZONTAL);
-
-            pinchart2.initData(PinChart.RESULTTYPE.Activity,percent,(int)currentStep);
-            pinchart2.setLayoutParams(new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            //l31.addView(pinchart2);
-
-            pinchart.initData(PinChart.RESULTTYPE.Sleep, degree,(int)totalSleep);
-            pinchart.setLayoutParams(new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            l31.addView(pinchart);
-
-
-            LinearLayout  l32 = new LinearLayout(mCtx);
-            l32.setLayoutParams(new LinearLayout.LayoutParams(
-                    w, h/2-128));
-            l32.setBackgroundResource(android.R.color.black);
-            l32.setOrientation(LinearLayout.HORIZONTAL);
-
-
-            bar.initData(GeoBar.DATASOURCETYPE.StepCount, hourlyStepCount,null,null);
-            bar.setLayoutParams(new LinearLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            //l32.addView(bar);
-
-            geoline.initData(GeoLine.DATASOURCETYPE.Sleep, wake, light, deep);
-            geoline.setLayoutParams(new LinearLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-            l32.addView(geoline);
-
-            l3.addView(l31);
-            l3.addView(l32);
-            mLayoutGraphContent.addView(l3);
-        } //end for
-        */
-
-        //mHScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-
 
     }
 
@@ -728,72 +661,23 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
     @Override
     public void onResume() {
         super.onResume();
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
+        if (getModel().isWatchConnected()) {
             //if sync not done,force sync all days(max 7 days) once
             if(getDailyHistory(new Date()).isEmpty())
             {
                 TotalHistory = 0;
                 currentHistory = 0;
-                syncAllFlag = true;
-                SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(syncAllFlag);
+                getModel().getDailyInfo(true);
             }
             else //only sync current day
             {
                 TotalHistory = 1;
                 currentHistory = 0;
-                syncAllFlag = false;
-                SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(syncAllFlag);
+                getModel().getDailyInfo(false);
             }
         }
     }
 
-    @Override
-    public void packetReceived(NevoPacket packet) {
-        if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == packet.getHeader())
-        {
-            DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
-            TotalHistory = infopacket.getDailyTrackerInfo().size();
-        }
-        else if((byte) ReadDailyTrackerNevoRequest.HEADER == packet.getHeader()) {
-            DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
-            currentHistory++;
-            if(currentHistory == TotalHistory)
-            {
-                //if current day step count and sleep time both has no change, do nothing
-                if(!syncAllFlag)
-                {
-                    List<IDailyHistory> list = getDailyHistory(mCurrentDate);
-                    if(!list.isEmpty())
-                    {
-                        if(thispacket.getDailySteps() == list.get(0).getSteps()
-                                && thispacket.getTotalSleepTime() == list.get(0).getTotalSleepTime())
-                            return;
-                    }
-                }
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //refresh data after 1s for save local database done.
-                        mCurrentDate = new Date();
-                        selectPostion = dateAdapter.getTodayPosition();
-                        dateAdapter.setSeclection(selectPostion);
-                        dateAdapter.notifyDataSetChanged();
-                        showGraph();
-                        //end refresh
-                    }
-                },1000);
-            }
-        }
-    }
-
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?HistoryFragment.HISTORYPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?HistoryFragment.HISTORYFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
-    }
 
     private void initCalendar()
     {
@@ -1337,7 +1221,7 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
         int year = dateAdapter.getCurrentYear(selectPostion);
         int month = dateAdapter.getCurrentMonth(selectPostion);
         SpecialCalendar sc = new SpecialCalendar();
-        int dayNumber = sc.getDaysOfMonth(sc.isLeapYear(year),month);
+        int dayNumber = sc.getDaysOfMonth(sc.isLeapYear(year), month);
 
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         try {
@@ -1491,5 +1375,58 @@ public class HistoryFragment extends Fragment implements OnSyncControllerListene
         return  new Date(theday.getTime()-24*60*60*1000);
     }
 
+    @Override
+    public void notifyDatasetChanged() {
+
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(HistoryFragment.HISTORYPOSITION, HistoryFragment.HISTORYFRAGMENT);
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+        ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+
+    @Override
+    public void packetReceived(NevoPacket packet) {
+        if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == packet.getHeader())
+        {
+            DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
+            TotalHistory = infopacket.getDailyTrackerInfo().size();
+        }
+        else if((byte) ReadDailyTrackerNevoRequest.HEADER == packet.getHeader()) {
+            DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
+            currentHistory++;
+            if(currentHistory == TotalHistory)
+            {
+                //if current day step count and sleep time both has no change, do nothing
+                if(!syncAllFlag)
+                {
+                    List<IDailyHistory> list = getDailyHistory(mCurrentDate);
+                    if(!list.isEmpty())
+                    {
+                        if(thispacket.getDailySteps() == list.get(0).getSteps()
+                                && thispacket.getTotalSleepTime() == list.get(0).getTotalSleepTime())
+                            return;
+                    }
+                }
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //refresh data after 1s for save local database done.
+                        mCurrentDate = new Date();
+                        selectPostion = dateAdapter.getTodayPosition();
+                        dateAdapter.setSeclection(selectPostion);
+                        dateAdapter.notifyDataSetChanged();
+                        showGraph();
+                        //end refresh
+                    }
+                },1000);
+            }
+        }
+    }
 
 }

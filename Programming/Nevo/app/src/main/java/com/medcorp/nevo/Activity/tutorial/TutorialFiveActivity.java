@@ -9,18 +9,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.activity.observer.ActivityObservable;
 
 /**
  * TutorialFour
  */
-public class TutorialFiveActivity extends BaseActivity
-        implements View.OnClickListener, OnSyncControllerListener {
+public class TutorialFiveActivity extends BaseActivity implements View.OnClickListener, ActivityObservable{
 
     private Button mConnectButton;
     private ImageView mConnectImg;
@@ -39,13 +35,13 @@ public class TutorialFiveActivity extends BaseActivity
         mNextButton = (Button) findViewById(R.id.t4_next_Button);
         mNextButton.setOnClickListener(this);
 
-        if(SyncController.Singleton.getInstance(this).isConnected()){
+        if(getModel().isWatchConnected()){
             mConnectButton.setVisibility(View.INVISIBLE);
             mNextButton.setVisibility(View.VISIBLE);
             mConnectImg.setImageResource(R.drawable.success);
             mConnectImg.setBackgroundResource(R.color.transparent);
         }
-        SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
+
     }
 
     @Override
@@ -73,13 +69,31 @@ public class TutorialFiveActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void notifyDatasetChanged() {
+
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        mConnectImg.clearAnimation();
+        mNextButton.setVisibility(View.VISIBLE);
+        mConnectButton.setVisibility(View.INVISIBLE);
+        mConnectButton.setClickable(false);
+        mConnectImg.setImageResource(R.drawable.success);
+        mConnectImg.setBackgroundResource(R.color.transparent);
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+
+    }
+
     public class myAnimationListener implements Animation.AnimationListener{
 
         @Override
         public void onAnimationStart(Animation animation) {
-            if(SyncController.Singleton.getInstance(TutorialFiveActivity.this)!=null && !SyncController.Singleton.getInstance(TutorialFiveActivity.this).isConnected()){
-                SyncController.Singleton.getInstance(TutorialFiveActivity.this).startConnect(true, TutorialFiveActivity.this);
-            }
+            getModel().startConnectToWatch(true);
         }
 
         @Override
@@ -93,24 +107,4 @@ public class TutorialFiveActivity extends BaseActivity
 
         }
     }
-
-    @Override
-    public void packetReceived(NevoPacket packet) {
-
-    }
-
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(isConnected){
-            mConnectImg.clearAnimation();
-            mNextButton.setVisibility(View.VISIBLE);
-            mConnectButton.setVisibility(View.INVISIBLE);
-            mConnectButton.setClickable(false);
-            mConnectImg.setImageResource(R.drawable.success);
-            mConnectImg.setBackgroundResource(R.color.transparent);
-        }
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichFirmware, String version) {
-    }
-}
+ }

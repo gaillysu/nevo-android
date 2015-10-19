@@ -1,18 +1,18 @@
 package com.medcorp.nevo.application;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Application;
 import android.os.Build;
 import android.util.Log;
 
-import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
 
 /**
@@ -24,14 +24,14 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private OtaController mOtaController;
     //private NetworkController mNetworkController;
     private DatabaseHelper mDatabaseHelper;
-
-    private Activity mCurrentActivity;
+    private Optional<ActivityObservable> observableActivity;
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.w("Karl", "On create app model");
+        observableActivity = new Optional<>();
         mSyncController = SyncController.Singleton.getInstance(this);
         mOtaController = OtaController.Singleton.getInstance(this,false);
         mDatabaseHelper =  DatabaseHelper.getInstance(this);
@@ -40,43 +40,37 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void packetReceived(NevoPacket packet) {
-        //dispatch to current activity
-        if(mCurrentActivity !=null && !mCurrentActivity.isDestroyed()
-                && mCurrentActivity instanceof MainActivity)
-        {
-            ((MainActivity)mCurrentActivity).packetReceived(packet);
+        // TODO @Gailly save all the new data which comes in with the mDatabaseHelper (that's what I assume)
+        if(observableActivity.notEmpty()) {
+            observableActivity.get().notifyDatasetChanged();
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        //dispatch to current activity
-        if(mCurrentActivity !=null && !mCurrentActivity.isDestroyed()
-                && mCurrentActivity instanceof MainActivity)
-        {
-            ((MainActivity)mCurrentActivity).connectionStateChanged(isConnected);
+        if(observableActivity.notEmpty()) {
+            if (isConnected) {
+                observableActivity.get().notifyOnConnected();
+            } else {
+                observableActivity.get().notifyOnDisconnected();
+            }
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-        //dispatch to current activity
-        if(mCurrentActivity !=null && !mCurrentActivity.isDestroyed()
-                && mCurrentActivity instanceof MainActivity)
-        {
-            ((MainActivity)mCurrentActivity).firmwareVersionReceived(whichfirmware, version);
-        }
+
     }
 
     /**
-     * set current active activity
-     * @param activity
+     * set current Observable activity
+     * @param
      */
-    public void setActiveActivity(Activity activity)
+    public void setActiveActivity(ActivityObservable observable)
     {
-        mCurrentActivity = activity;
+        this.observableActivity.set(observable);
     }
 
     /**
@@ -93,11 +87,41 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
      */
    // public void sendRequest(NetworkRequest request)
    // {
-
    // }
 
     public SyncController getSyncController(){return mSyncController;}
     public OtaController getOtaController(){return mOtaController;}
     public DatabaseHelper getDatabaseHelper(){return mDatabaseHelper;}
 
+    public void startConnectToWatch(boolean forceScan) {
+        mSyncController.startConnect(forceScan,this);
+    }
+
+    public boolean isWatchConnected() {
+        return mSyncController.isConnected();
+    }
+
+    public void blinkWatch(){
+        mSyncController.findDevice();
+    }
+
+    public void getDailyInfo(boolean syncAll) {
+        mSyncController.getDailyTrackerInfo(syncAll);
+    }
+
+    public void getBatteryLevelOfWatch() {
+        mSyncController.getBatteryLevel();
+    }
+
+    public String getWatchSoftware() {
+        return mSyncController.getSoftwareVersion();
+    }
+
+    public String getWatchFirmware() {
+        return mSyncController.getSoftwareVersion();
+    }
+
+    public void forgetDevice() {
+        mSyncController.forgetDevice();
+    }
 }

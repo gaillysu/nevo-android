@@ -11,7 +11,6 @@ public abstract class BaseActionBarActivity  extends ActionBarActivity {
     private ApplicationModel application;
 
     public ApplicationModel getModel() {
-
         if (application == null) {
             application = (ApplicationModel) getApplication();
         }

@@ -10,27 +10,23 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.history.database.DatabaseHelper;
-import com.medcorp.nevo.history.database.IDailyHistory;
-import com.medcorp.nevo.activity.HistoryActivity;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.HistoryActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.tutorial.TutorialSleepTrackingActivity;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.history.database.DatabaseHelper;
+import com.medcorp.nevo.history.database.IDailyHistory;
 import com.medcorp.nevo.view.SleepDataView;
 
 import org.json.JSONException;
@@ -46,7 +42,7 @@ import java.util.List;
 /**
  * WelcomeFragment aims to display current time and steps how many you took.
  */
-public class SleepHistoryFragment extends Fragment implements OnSyncControllerListener, View.OnClickListener {
+public class SleepHistoryFragment extends BaseFragment implements View.OnClickListener {
 
 
     public static final String SLEEPHISTORYFRAGMENT = "SleepHistoryFragment";
@@ -64,7 +60,6 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
     JSONObject sleepAnalysisResult;
     private int TotalHistory;
     private int currentHistory;
-    private boolean syncAllFlag = true;
     private long startsleep;
     private long endsleep;
 
@@ -126,7 +121,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
         //when app start,syncController is connecting, send this cmd, will lead to  timeout
         // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
+        if (getModel().isWatchConnected()){
             initLayout(true);
             //if no today's sleep data, sync it now.
             if(startsleep == 0 || endsleep ==0 || startsleep==endsleep)
@@ -135,14 +130,13 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
                 if (getDailyHistory(new Date()).isEmpty()) {
                     TotalHistory = 0;
                     currentHistory = 0;
-                    syncAllFlag = true;
-                    SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(syncAllFlag);
+                    getModel().getDailyInfo(true);
+
                 } else //only sync current day
                 {
                     TotalHistory = 1;
                     currentHistory = 0;
-                    syncAllFlag = false;
-                    SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(syncAllFlag);
+                    getModel().getDailyInfo(false);
                 }
             }
         }else {
@@ -201,7 +195,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         });
     }
 
-    public void setProgressBar(){
+    public void setProgressBar() {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -219,6 +213,7 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getInt(PREF_CUR_STEP, 0);
     }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -266,16 +261,6 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         }
     }
 
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected)
-            initLayout(false);
-        ((MainActivity)getActivity()).replaceFragment(isConnected? SleepHistoryFragment.SLEEPHISTORYPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected? SleepHistoryFragment.SLEEPHISTORYFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
-    }
 
     @Override
     public void onPause() {
@@ -335,8 +320,8 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
                 if ((System.currentTimeMillis() - mLastTapTime) > 2000)
                     mLastTapTime = System.currentTimeMillis();
                 else {
-                    if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
-                        SyncController.Singleton.getInstance(getActivity()).findDevice();
+                    if (getModel().isWatchConnected()) {
+                        getModel().blinkWatch();
                     }
                 }
                 break;
@@ -348,4 +333,19 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
         }
     }
 
+    @Override
+    public void notifyDatasetChanged() {
+
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(SleepHistoryFragment.SLEEPHISTORYPOSITION, SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+        initLayout(false);
+        ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
 }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,6 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.view.TimePickerView;
 
@@ -30,7 +26,7 @@ import java.util.List;
 /**
  * AlarmFragment, it works for setting alarm and turning alarm on or off.
  */
-public class AlarmFragment extends Fragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks,OnSyncControllerListener {
+public class AlarmFragment extends BaseFragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks{
 
 
     public static final String ALARMFRAGMENT = "AlarmFragment";
@@ -265,16 +261,17 @@ public class AlarmFragment extends Fragment implements View.OnClickListener, Tim
     }
 
     @Override
-    public void packetReceived(NevoPacket packet) {
+    public void notifyDatasetChanged() {
 
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?AlarmFragment.ALARMPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?AlarmFragment.ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(AlarmFragment.ALARMPOSITION,AlarmFragment.ALARMFRAGMENT);
     }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
 
+    @Override
+    public void notifyOnDisconnected() {
+        ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

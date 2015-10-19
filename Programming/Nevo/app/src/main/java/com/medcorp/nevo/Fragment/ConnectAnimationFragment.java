@@ -3,7 +3,6 @@ package com.medcorp.nevo.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -18,16 +17,12 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.view.AlertDialogView;
 
 /**
  * A Round Pointer Animation
  */
-public class ConnectAnimationFragment extends Fragment implements View.OnClickListener, OnSyncControllerListener {
+public class ConnectAnimationFragment extends BaseFragment implements View.OnClickListener {
 
 
     public static final String CONNECTFRAGMENT = "ConnectAnimationFragment";
@@ -70,7 +65,7 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
                 animRotate.setAnimationListener(new myAnimationListener());
                 break;
             case R.id.forget_device_button:
-                SyncController.Singleton.getInstance(getActivity()).forgetDevice();
+                getModel().forgetDevice();
                 Log.d("ConnectAnimationFragemt", "Forget Device Address");
                 break;
             default:
@@ -78,12 +73,27 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         }
     }
 
+    @Override
+    public void notifyDatasetChanged() {
+
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+
+    }
+
     public class myAnimationListener implements Animation.AnimationListener{
 
         @Override
         public void onAnimationStart(Animation animation) {
-            if(SyncController.Singleton.getInstance(getActivity())!=null && !SyncController.Singleton.getInstance(getActivity()).isConnected()){
-                SyncController.Singleton.getInstance(getActivity()).startConnect(false, (OnSyncControllerListener)getActivity());
+            if(getModel().isWatchConnected()){
+                getModel().startConnectToWatch(false);
             }
         }
 
@@ -107,16 +117,5 @@ public class ConnectAnimationFragment extends Fragment implements View.OnClickLi
         newFragment.show(getActivity().getSupportFragmentManager(), "warning");
     }
 
-    @Override
-    public void packetReceived(NevoPacket packet) {
-    }
 
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if (isConnected)((MainActivity)getActivity()).replaceFragment(mPostion, mTag);
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
-    }
 }

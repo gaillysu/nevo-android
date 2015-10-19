@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ import java.util.Calendar;
 /**
  * WelcomeFragment aims to display current time and steps how many you took.
  */
-public class WelcomeFragment extends Fragment implements OnSyncControllerListener {
+public class WelcomeFragment extends BaseFragment {
 
 
     public static final String WELCOMEFRAGMENT = "WelcomeFragment";
@@ -207,17 +206,6 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected)
-            initLayout(false);
-        ((MainActivity)getActivity()).replaceFragment(isConnected?WelcomeFragment.WELPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?WelcomeFragment.WELCOMEFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         mUiHandler.removeCallbacks(mTimerTask);
@@ -227,5 +215,21 @@ public class WelcomeFragment extends Fragment implements OnSyncControllerListene
     public void onDestroyView() {
         super.onDestroyView();
         mIsVisible = false;
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+        //TODO Delete packet received method and get it from the database.
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(WelcomeFragment.WELPOSITION, WelcomeFragment.WELCOMEFRAGMENT);
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+            initLayout(false);
+        ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

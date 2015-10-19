@@ -75,6 +75,8 @@ public class TutorialThreeActivity extends BaseActivity implements View.OnClickL
         }).start();
     }
 
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){

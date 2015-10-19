@@ -7,21 +7,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.notification.Notification;
-import com.medcorp.nevo.ble.model.notification.CalendarNotification;
-import com.medcorp.nevo.ble.model.notification.EmailNotification;
-import com.medcorp.nevo.ble.model.notification.FacebookNotification;
-import com.medcorp.nevo.ble.model.notification.SmsNotification;
-import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
-import com.medcorp.nevo.ble.model.notification.WeChatNotification;
-import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorSaver;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
+import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.model.color.BlueLed;
 import com.medcorp.nevo.ble.model.color.GreenLed;
 import com.medcorp.nevo.ble.model.color.LightGreenLed;
@@ -32,14 +20,23 @@ import com.medcorp.nevo.ble.model.color.UnknownLed;
 import com.medcorp.nevo.ble.model.color.YellowLed;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitable;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorSaver;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
 /**
  * ColorPanelActivity
  */
 public class PaletteActivity extends BaseActivity
-        implements View.OnClickListener, OnSyncControllerListener {
+        implements View.OnClickListener, ActivityObservable {
 
     private ImageView mBlue;
     private ImageView mGrassGreen;
@@ -213,23 +210,22 @@ public class PaletteActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        SyncController.Singleton.getInstance(this).setSyncControllerListenser(this);
+        getModel().setActiveActivity(this);
     }
 
     @Override
-    public void packetReceived(NevoPacket packet) {
+    public void notifyDatasetChanged() {
 
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected){
+    public void notifyOnConnected() {
+
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
             finish();
-        }
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
     }
 
     private class ColorLedVisitor implements NevoLedVisitor<Void>{
@@ -267,11 +263,6 @@ public class PaletteActivity extends BaseActivity
         @Override
         public Void visit(YellowLed led) {
             mYellow.setSelected(true);
-            return null;
-        }
-
-        @Override
-        public Void visit(UnknownLed led) {
             return null;
         }
 

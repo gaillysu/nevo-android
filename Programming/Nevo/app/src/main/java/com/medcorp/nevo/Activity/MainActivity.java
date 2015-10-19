@@ -1,8 +1,6 @@
 package com.medcorp.nevo.activity;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
@@ -10,13 +8,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActionBarActivity;
+import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.AlarmFragment;
+import com.medcorp.nevo.fragment.BaseFragment;
 import com.medcorp.nevo.fragment.ConnectAnimationFragment;
 import com.medcorp.nevo.fragment.GoalFragment;
 import com.medcorp.nevo.fragment.HistoryFragment;
@@ -25,15 +26,6 @@ import com.medcorp.nevo.fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.fragment.NotificationFragment;
 import com.medcorp.nevo.fragment.SleepHistoryFragment;
 import com.medcorp.nevo.fragment.WelcomeFragment;
-import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.ble.util.Optional;
-
-import java.util.List;
 
 
 /**
@@ -43,10 +35,12 @@ import java.util.List;
  *  /giphy danger !
  *
  * */
-public class MainActivity extends BaseActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnSyncControllerListener {
+public class MainActivity extends BaseActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityObservable {
+
     private static int position = -1;
     private static String tag;
     private Boolean isVisible = true;
+    private Optional<BaseFragment> activeFragment;
 //    private IGoogleFit googleFitManager;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -63,11 +57,11 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
         getModel().setActiveActivity(this);
         //disenable navigation drawer shadow
-
+        this.activeFragment = new Optional<>();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
         navigationDrawerFragment = (NavigationDrawerFragment)
@@ -81,51 +75,51 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
 
-        getModel().getSyncController().startConnect(false, this);
+        getModel().connectionStateChanged(false);
 
 //        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
+//
+//        final String google_services_framework ="com.google.android.gsf";
+//        final String google_play_services ="com.google.android.gms";
+//        final String google_fitness ="com.google.android.apps.fitness";
+//        final String google_account = "com.google.android.gsf.login";
+//
+//        final PackageManager pm = getPackageManager();
+//        boolean isInstalled_gsf = false;
+//        boolean isInstalled_gps = false;
+//        boolean isInstalled_gf = false;
+//        boolean isInstalled_gam = false;
 
-        final String google_services_framework ="com.google.android.gsf";
-        final String google_play_services ="com.google.android.gms";
-        final String google_fitness ="com.google.android.apps.fitness";
-        final String google_account = "com.google.android.gsf.login";
-
-        final PackageManager pm = getPackageManager();
-        boolean isInstalled_gsf = false;
-        boolean isInstalled_gps = false;
-        boolean isInstalled_gf = false;
-        boolean isInstalled_gam = false;
-
-        final List<PackageInfo> appList  = pm.getInstalledPackages(0);
-        for (PackageInfo app:appList)
-        {
-            if(app.packageName.equals(google_services_framework))
-            {
-                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
-                isInstalled_gsf = true;
-            }
-            else if(app.packageName.equals(google_play_services) /*&& app.versionName.contains("7.")*/)
-            {
-                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
-                isInstalled_gps = true;
-            }
-            else if(app.packageName.equals(google_fitness) /*&& app.versionName.contains("1.5")*/)
-            {
-                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
-                isInstalled_gf = true;
-            }
-            else if(app.packageName.equals(google_account))
-            {
-                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
-                isInstalled_gam = true;
-            }
-        }
-        if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
-            Log.i("GoogleFitManager", "Connecting...");
-//            googleFitManager.getClient().connect();
-        }
-        else
-        {
+//        final List<PackageInfo> appList  = pm.getInstalledPackages(0);
+//        for (PackageInfo app:appList)
+//        {
+//            if(app.packageName.equals(google_services_framework))
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gsf = true;
+//            }
+//            else if(app.packageName.equals(google_play_services) /*&& app.versionName.contains("7.")*/)
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gps = true;
+//            }
+//            else if(app.packageName.equals(google_fitness) /*&& app.versionName.contains("1.5")*/)
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gf = true;
+//            }
+//            else if(app.packageName.equals(google_account))
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gam = true;
+//            }
+//        }
+//        if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
+//            Log.i("GoogleFitManager", "Connecting...");
+////            googleFitManager.getClient().connect();
+//        }
+//        else
+//        {
             //some android ROM image has disable the alertDialog feature, such as xiaomi
             //SyncController.Singleton.getInstance(this).setVisible(true);
             //SyncController.Singleton.getInstance(this).showMessage(R.string.install_google_app_title,R.string.install_google_app_content);
@@ -146,12 +140,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
             })
              .show();
              */
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+//        }
     }
 
     @Override
@@ -225,9 +214,8 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         if(getModel().getSyncController()!=null && !getModel().getSyncController().isConnected()){
             replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
         }else{
-            Log.d("MainActivity", "Connect");
             replaceFragment(position, tag.get());
-            if(position != com.medcorp.nevo.activity.OTAActivity.OTAPOSITION && getModel().getOtaController().getState() == Constants.DFUControllerState.INIT)
+            if(position != OTAActivity.OTAPOSITION && getModel().getOtaController().getState() == Constants.DFUControllerState.INIT)
             {
                 getModel().getOtaController().switch2SyncController();
             }
@@ -238,23 +226,21 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
      * Replace fragment in the MainActivity
      * */
     public void replaceFragment(final int position, final String tag){
+        if(tag != null){
+            activeFragment.set(getFragment(tag));
+        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 // .addToBackStack(null)
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
                 .commitAllowingStateLoss();
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         if (!navigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            // getMenuInflater().inflate(R.menu.main, menu);
-            // if(SyncController.Singleton.getInstance(this).getFirmwareVersion() != null)
-            //     menu.findItem(R.id.firmware_version).setTitle("Firmware Version: " + SyncController.Singleton.getInstance(this).getFirmwareVersion() + ", " + SyncController.Singleton.getInstance(this).getSoftwareVersion());
             restoreActionBar();
             return true;
         }
@@ -268,7 +254,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         actionBar.setTitle(title);
     }
 
-    public Fragment getFragment(String tag){
+    public BaseFragment getFragment(String tag){
         if(tag.equals(AlarmFragment.ALARMFRAGMENT)){
             AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag(AlarmFragment.ALARMFRAGMENT);
             return alramfragment;
@@ -295,91 +281,24 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     }
 
     @Override
-    public void packetReceived(NevoPacket packet) {
-
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-
-        for(Fragment fragment :  fragments) {
-            if(fragment instanceof WelcomeFragment)
-            {
-                ((WelcomeFragment)fragment).packetReceived(packet);
-            }
-            else if(fragment instanceof GoalFragment)
-            {
-                ((GoalFragment)fragment).packetReceived(packet);
-            }
-            else if(fragment instanceof AlarmFragment)
-            {
-                ((AlarmFragment)fragment).packetReceived(packet);
-            }
-            else if(fragment instanceof ConnectAnimationFragment)
-            {
-                ((ConnectAnimationFragment)fragment).packetReceived(packet);
-            }else if(fragment instanceof NotificationFragment){
-                ((NotificationFragment)fragment).packetReceived(packet);
-            }else if(fragment instanceof MyNevoFragment){
-                ((MyNevoFragment)fragment).packetReceived(packet);
-            }else if(fragment instanceof HistoryFragment){
-                ((HistoryFragment)fragment).packetReceived(packet);
-            }else if(fragment instanceof SleepHistoryFragment){
-                ((SleepHistoryFragment)fragment).packetReceived(packet);
-            }
+    public void notifyDatasetChanged() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().notifyDatasetChanged();
         }
     }
 
     @Override
-    public void connectionStateChanged(final boolean isConnected) {
-        if(!isVisible) return;
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                List<Fragment> fragments = getSupportFragmentManager().getFragments();
-
-                for(Fragment fragment :  fragments) {
-                    if(fragment instanceof WelcomeFragment)
-                    {
-                        ((WelcomeFragment)fragment).connectionStateChanged(isConnected);
-                    }
-                    else if(fragment instanceof GoalFragment)
-                    {
-                        ((GoalFragment)fragment).connectionStateChanged(isConnected);
-                    }
-                    else if(fragment instanceof AlarmFragment)
-                    {
-                        ((AlarmFragment)fragment).connectionStateChanged(isConnected);
-                    }
-                    else if(fragment instanceof ConnectAnimationFragment)
-                    {
-                        ((ConnectAnimationFragment)fragment).connectionStateChanged(isConnected);
-                    }else if(fragment instanceof NotificationFragment){
-                        ((NotificationFragment)fragment).connectionStateChanged(isConnected);
-                    }else if(fragment instanceof MyNevoFragment){
-                        ((MyNevoFragment)fragment).connectionStateChanged(isConnected);
-                    }else if(fragment instanceof HistoryFragment){
-                        ((HistoryFragment)fragment).connectionStateChanged(isConnected);
-                    }else if(fragment instanceof SleepHistoryFragment){
-                        ((SleepHistoryFragment)fragment).connectionStateChanged(isConnected);
-                    }
-                }
-            }
-        });
+    public void notifyOnConnected() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().notifyOnConnected();
+        }
     }
 
     @Override
-    public void firmwareVersionReceived(final Constants.DfuFirmwareTypes whichfirmware, final String version) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<Fragment> fragments = getSupportFragmentManager().getFragments();
-                for(Fragment fragment :  fragments) {
-                    if(fragment instanceof MyNevoFragment){
-                        ((MyNevoFragment)fragment).firmwareVersionReceived(whichfirmware,version);
-                    }
-                }
-            }
-        });
+    public void notifyOnDisconnected() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().notifyOnDisconnected();
+        }
     }
 
     public static class PlaceholderFragment {
@@ -434,10 +353,9 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().getSyncController().setSyncControllerListenser(this);
-        getModel().getSyncController().setVisible(true);
+        getModel().setActiveActivity(this);
         if(!isVisible){
-            if(getModel().getSyncController().isConnected()){
+            if(getModel().isWatchConnected()){
                 replaceFragment(position, tag);
             }else {
                 replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);

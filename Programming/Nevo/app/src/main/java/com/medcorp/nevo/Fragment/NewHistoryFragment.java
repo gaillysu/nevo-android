@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * Created by Karl on 10/2/15.
  */
-public class NewHistoryFragment extends Fragment implements OnSyncControllerListener {
+public class NewHistoryFragment extends BaseFragment {
 
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
@@ -97,16 +97,6 @@ public class NewHistoryFragment extends Fragment implements OnSyncControllerList
 
         barChart.setData(data);
         barChart.invalidate();
-        List<IDailyHistory> dailyHistoryList = getDailyHistory();
-        Log.w("Karl","Size of daily history = " + dailyHistoryList.size());
-        for (IDailyHistory history: dailyHistoryList) {
-            try {
-                JSONObject json = new JSONObject(history.getRemarks());
-                Log.w("Karl",json.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private int[] getColors() {
@@ -129,30 +119,19 @@ public class NewHistoryFragment extends Fragment implements OnSyncControllerList
             //if sync not done,force sync all days(max 7 days) once
             if(getDailyHistory().isEmpty())
             {
-                SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(true);
+                getModel().getDailyInfo(true);
             }
             else
             {
-                SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(false);
+                getModel().getDailyInfo(false);
             }
-            SyncController.Singleton.getInstance(getActivity()).setSyncControllerListenser(this);
         }
     }
 
     @Override
     public void packetReceived(NevoPacket packet) {
         if((byte) ReadDailyTrackerNevoRequest.HEADER == packet.getHeader()) {
-
             DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
-            Log.w("Karl", "Yo?2 " + thispacket.getDate());
-            Log.w("Karl", "=======================");
-            Log.w("Karl", "Hourly deep");
-            Log.w("Karl", "Total " + thispacket.getHourlDeepTime().size());
-            Log.w("Karl", "Light deep");
-            Log.w("Karl", "Total " + thispacket.getHourlyLightTime().size());
-            Log.w("Karl", "sleep deep");
-            Log.w("Karl", "Total " + thispacket.getHourlySleepTime().size());
-
             if ((thispacket.getTotalLightTime() > 0) && (thispacket.getTotalDeepTime() > 0)){
                 SleepBehavior sleepbehavior = new SleepBehavior(thispacket.getHourlDeepTime(), thispacket.getHourlyLightTime());
                 sleepbehavior.printBehavior();
@@ -161,12 +140,17 @@ public class NewHistoryFragment extends Fragment implements OnSyncControllerList
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
+    public void notifyDatasetChanged() {
 
     }
 
     @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+    public void notifyOnConnected() {
+
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
 
     }
 

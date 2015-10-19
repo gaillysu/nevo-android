@@ -39,4 +39,5 @@ public class TutorialFourActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
 }

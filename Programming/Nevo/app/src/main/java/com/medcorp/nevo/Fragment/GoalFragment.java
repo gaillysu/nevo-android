@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +16,13 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.view.StepPickerView;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
-public class GoalFragment extends Fragment implements View.OnClickListener,StepPickerView.StepPickerFragmentCallbacks,OnSyncControllerListener {
+public class GoalFragment extends BaseFragment implements View.OnClickListener,StepPickerView.StepPickerFragmentCallbacks{
 
 
     public static final String GOALFRAGMENT = "GoalFragment";
@@ -175,17 +171,20 @@ public class GoalFragment extends Fragment implements View.OnClickListener,StepP
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getInt(PREF_KEY_STEP_MODE, CUSTOM);
     }
+
+
     @Override
-    public void packetReceived(NevoPacket packet) {
+    public void notifyDatasetChanged() {
 
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-       ((MainActivity)getActivity()).replaceFragment(isConnected?GoalFragment.GOALPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?GoalFragment.GOALFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(GoalFragment.GOALPOSITION, GoalFragment.GOALFRAGMENT);
     }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
 
+    @Override
+    public void notifyOnDisconnected() {
+        ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

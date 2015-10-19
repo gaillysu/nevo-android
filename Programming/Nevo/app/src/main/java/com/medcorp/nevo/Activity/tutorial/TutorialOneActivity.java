@@ -15,7 +15,7 @@ import com.medcorp.nevo.ble.util.Constants;
 /**
  * Turorial One
  */
-public class TutorialOneActivity extends BaseActivity implements View.OnClickListener{
+public class TutorialOneActivity extends BaseActivity implements View.OnClickListener, View.OnLongClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class TutorialOneActivity extends BaseActivity implements View.OnClickLis
             finish();
             return;
         }
-//
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_1);
 
@@ -35,15 +35,7 @@ public class TutorialOneActivity extends BaseActivity implements View.OnClickLis
 
         findViewById(R.id.uriButton).setOnClickListener(this);
 
-        findViewById(R.id.imagewatch).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Intent intent = new Intent(TutorialOneActivity.this, OTAActivity.class);
-                intent.putExtra("from","tutorial");
-                startActivity(intent);
-                return false;
-            }
-        });
+        findViewById(R.id.imagewatch).setOnLongClickListener(this);
     }
 
     @Override
@@ -63,5 +55,18 @@ public class TutorialOneActivity extends BaseActivity implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()){
+            case R.id.imagewatch:
+                Intent intent = new Intent(TutorialOneActivity.this, OTAActivity.class);
+                intent.putExtra("from","tutorial");
+                startActivity(intent);
+                return false;
+        }
+
+        return false;
     }
 }

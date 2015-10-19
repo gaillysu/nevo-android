@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.OTAActivity;
-import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
@@ -30,7 +27,7 @@ import com.medcorp.nevo.ble.util.Constants;
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
-public class MyNevoFragment extends Fragment implements View.OnClickListener,OnSyncControllerListener {
+public class MyNevoFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String TAG="MyNevoFragment";
     public static final String MYNEVOFRAGMENT = "MyNevoFragment";
@@ -61,10 +58,10 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         mVersionInfoTextView = (TextView) rootView.findViewById(R.id.textVersionInfo);
 
         mVersionInfoTextView.setText(getString(R.string.mcu_version)
-                                    + SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion()
+                                    + getModel().getWatchSoftware()
                                     + " , "
                                     + getString(R.string.ble_version)
-                                    + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
+                                    + getModel().getWatchFirmware()
                                     );
         mAppVersionInfoTextView = (TextView) rootView.findViewById(R.id.appVersionInfo);
         String version = null;
@@ -103,8 +100,9 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     @Override
     public void onResume() {
         super.onResume();
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected())
-            SyncController.Singleton.getInstance(getActivity()).getBatteryLevel();
+        if (getModel().isWatchConnected()){
+            getModel().getBatteryLevelOfWatch();
+        }
     }
 
     @Override
@@ -144,23 +142,32 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected ? MyNevoFragment.MYNEVOPOSITION : ConnectAnimationFragment.CONNECTPOSITION, isConnected ? MyNevoFragment.MYNEVOFRAGMENT : ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 mVersionInfoTextView.setText(getString(R.string.mcu_version)
-                                + SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion()
+                                + getModel().getWatchSoftware()
                                 + " , "
                                 + getString(R.string.ble_version)
-                                + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
+                                + getModel().getWatchFirmware()
                 );
             }
         });
 
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        ((MainActivity)getActivity()).replaceFragment(MyNevoFragment.MYNEVOPOSITION,MyNevoFragment.MYNEVOFRAGMENT);
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+        ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
     }
 }

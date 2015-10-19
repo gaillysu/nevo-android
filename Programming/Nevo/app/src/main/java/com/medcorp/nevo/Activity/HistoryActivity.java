@@ -40,9 +40,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
     private TextView totalSleep;
     private TextView lightSleep;
     private TextView deepSleep;
-    private TextView totalSleepTitle;
-    private TextView lightSleepTitle;
-    private TextView deepSleepTitle;
+
     private List<SleepData> sleepDataList;
 
     @Override
@@ -56,9 +54,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         totalSleep = (TextView) findViewById(R.id.total_sleep_textview);
         lightSleep= (TextView) findViewById(R.id.light_sleep_textview);
         deepSleep= (TextView) findViewById(R.id.deep_sleep_textview);
-        totalSleepTitle = (TextView)findViewById(R.id.total_title);
-        lightSleepTitle = (TextView)findViewById(R.id.light_title);
-        deepSleepTitle = (TextView)findViewById(R.id.deep_title);
 
         barChart = (BarChart)findViewById(R.id.history_bar);
         barChart.setDescription("");
@@ -158,7 +153,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.deep_sleep)});
-//        dataSet.setHighLightColor(R.color.white);
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);
