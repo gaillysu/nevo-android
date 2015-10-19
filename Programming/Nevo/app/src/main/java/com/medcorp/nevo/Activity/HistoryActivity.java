@@ -88,7 +88,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
 
         List<IDailyHistory> history = new ArrayList<IDailyHistory>();
         try {
-            history  = DatabaseHelper.getInstance(this).getDailyHistoryDao().queryBuilder().orderBy("created", false).query();
+            history  = DatabaseHelper.getInstance(this).getDailyHistoryDao().queryBuilder().orderBy("created", true).query();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,7 +96,6 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
 
         List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
-        Collections.reverse(history);
         int i = 0;
         for (IDailyHistory daily: history) {
             Date historyDate = new Date(daily.getCreated()); // getCreated() return millsecond from 1970.1.1 00:00:00

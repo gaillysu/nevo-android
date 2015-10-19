@@ -438,4 +438,45 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return json;
     }
+
+    /**
+     *
+     * @return today's Daily record or null
+     */
+    public IDailyHistory getDailyHistory()
+    {
+        List<Long> days = new ArrayList<Long>();
+        //set theDay from 00:00:00
+        Calendar calBeginning = new GregorianCalendar();
+        calBeginning.setTime(new Date());
+        calBeginning.set(Calendar.HOUR_OF_DAY, 0);
+        calBeginning.set(Calendar.MINUTE, 0);
+        calBeginning.set(Calendar.SECOND, 0);
+        calBeginning.set(Calendar.MILLISECOND, 0);
+        Date theday = calBeginning.getTime();
+        days.add(theday.getTime());
+        try {
+            List<IDailyHistory> history = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created",days).query();
+            if(!history.isEmpty()) return history.get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @return all records of daily history, ordered by date ascending, such as Oct 18,19...
+     */
+    public List<IDailyHistory> getAllDailyHistory()
+    {
+        List<IDailyHistory> history = new ArrayList<IDailyHistory>();
+        try {
+            history =  getDailyHistoryDao().queryBuilder().orderBy("created", true).query();
+            if(!history.isEmpty()) return history;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
