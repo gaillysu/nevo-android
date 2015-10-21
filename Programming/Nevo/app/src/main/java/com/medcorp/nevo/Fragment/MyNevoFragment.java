@@ -31,6 +31,8 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 
+import java.io.IOException;
+
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
  */
@@ -121,12 +123,21 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     public void onClick(View v){
         switch (v.getId()){
             case R.id.mynevo_push_ota:
-                if(mBatteryValue == 0)
+                //fix bug: https://med-corp.atlassian.net/projects/ONA/issues/ONA-10
+                if(!needUpdate())
+                {
+                    new AlertDialog.Builder(((Activity) mCtx), AlertDialog.THEME_HOLO_LIGHT)
+                            .setMessage(R.string.latestversion)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .setCancelable(false).create().show();
+                    return;
+                }
+                if(mBatteryValue == 0 || SyncController.Singleton.getInstance(getActivity()).getMyphoneBattery()<20)
                 {
                     //fix bug: https://med-corp.atlassian.net/projects/ONA/issues/ONA-11
                     new AlertDialog.Builder(((Activity) mCtx), AlertDialog.THEME_HOLO_LIGHT)
                             .setTitle(R.string.update_error_lowbattery_title)
-                            .setMessage(R.string.update_error_lowbattery)
+                            .setMessage(mBatteryValue==0?R.string.update_error_lowbattery:R.string.update_error_lowbattery_phone)
                             .setPositiveButton(android.R.string.ok, null)
                             .setCancelable(false).create().show();
                     return;
@@ -177,5 +188,49 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
             }
         });
 
+    }
+    private Boolean needUpdate()
+    {
+        String[]files;
+        String vString;
+        int start;
+        int end;
+
+        int  currentSoftwareVersion = 0;
+        int  currentFirmwareVersion = 0;
+
+        vString = SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion();
+        if(null!=vString)currentSoftwareVersion= Integer.parseInt(vString);
+
+        vString = SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion();
+        if(null!=vString)currentFirmwareVersion= Integer.parseInt(vString);
+
+        int buildinSoftwareVersion = 0;
+        int buildinFirmwareVersion= 0;
+
+        try {
+            files = mCtx.getAssets().list("firmware");
+            for(String file:files)
+            {
+                if(file.contains(".hex"))
+                {
+                    start  = file.toLowerCase().indexOf("_v");
+                    end = file.toLowerCase().indexOf(".hex");
+                    vString = file.substring(start+2,end);
+                    if(vString != null) buildinFirmwareVersion = Integer.parseInt(vString);
+                }
+                if(file.contains(".bin"))
+                {
+                    start  = file.toLowerCase().indexOf("_v");
+                    end = file.toLowerCase().indexOf(".bin");
+                    vString = file.substring(start+2,end);
+                    if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return (buildinSoftwareVersion>currentSoftwareVersion || buildinFirmwareVersion>currentFirmwareVersion);
     }
 }

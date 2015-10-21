@@ -14,6 +14,7 @@ import android.content.ServiceConnection;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -562,6 +563,11 @@ import java.util.TimeZone;
     public void showMessage(final int titleID, final int msgID) {
         if(mLocalService!=null && mVisible) mLocalService.PopupMessage(titleID, msgID);
     }
+    @Override
+    public int  getMyphoneBattery() {
+        if(mLocalService!=null) return mLocalService.getMyphoneBatteryLevel();
+        return 0;
+    }
 
     private boolean mVisible = false;
 
@@ -618,6 +624,13 @@ import java.util.TimeZone;
                         ConnectionController.Singleton.getInstance(context).newScan();
                     }
                 }
+                else if(intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED))
+                {
+                    int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                    int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+                    Log.i("LocalService","Battery level got changed: " + level +"/"+scale);
+                    mMyphoneBatteryLevel = level;
+                }
             }
         };
 
@@ -626,6 +639,7 @@ import java.util.TimeZone;
             super.onCreate();
             registerReceiver(myReceiver,new IntentFilter(Intent.ACTION_SCREEN_ON));
             registerReceiver(myReceiver,new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+            registerReceiver(myReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         }
 
         @Override
@@ -686,6 +700,14 @@ import java.util.TimeZone;
             });
         }
 
+        /**
+         * return smart phone battery level for OTA using.
+         */
+        private int mMyphoneBatteryLevel = 0;
+        private int getMyphoneBatteryLevel()
+        {
+            return mMyphoneBatteryLevel;
+        }
         public class LocalBinder extends Binder {
 
             public void PopupMessage(int titleID, int msgID)
@@ -695,6 +717,10 @@ import java.util.TimeZone;
             public void findCellPhone()
             {
                 LocalService.this.findCellPhone();
+            }
+            public int getMyphoneBatteryLevel()
+            {
+                return LocalService.this.getMyphoneBatteryLevel();
             }
         }
         //when nevo paired cellphone, press twice A key, will invoke "findCellPhone"

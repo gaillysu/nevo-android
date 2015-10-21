@@ -107,4 +107,9 @@ public interface SyncController {
      */
     public void  getDailyTrackerInfo(boolean syncAll);
 
+    /**
+     * return my phone's battery level[0~100]
+     */
+    public int  getMyphoneBattery();
+
 }

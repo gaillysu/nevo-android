@@ -81,7 +81,9 @@
     <string name="latestFWversion">您確認升級新的固件版本</string>
     <string name="lastestSyncDate">上壹次升級時間\n</string>
     <string name="update_error_lowbattery_title">电量不足</string>
-    <string name="update_error_lowbattery">更新要求充足电量，现有电量不足，请更换电池後再更新。</string>
+    <string name="update_error_lowbattery">更新要求充足电量，现有手表电量不足，请更换电池後再更新。</string>
+    <string name="update_error_lowbattery_phone">更新要求充足电量，现有手机电量不足，请充电後再更新。</string>
+    <string name="update_button">升級</string>
     <string name="update_error_timeout">升級超時.</string>
     <string name="update_error_noconnect">請先連接Nevo.</string>
     <string name="update_error_openfile">打開固件文件錯誤.</string>

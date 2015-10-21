@@ -83,6 +83,8 @@
     <string name="lastestSyncDate">Latest Update\non</string>
     <string name="update_error_lowbattery_title">Not enough battery</string>
     <string name="update_error_lowbattery">Updating the watch costs a lot of battery. Your watch does not have enough battery to perform an update. To upgrade the watch, please buy a new battery.</string>
+    <string name="update_error_lowbattery_phone">Updating the watch costs a lot of battery. Your phone does not have enough battery to perform an update. To upgrade the watch, please charge the phone.</string>
+    <string name="update_button">Upgrade</string>
     <string name="update_error_timeout">Update Time out.</string>
     <string name="update_error_noconnect">No nevo connected.</string>
     <string name="update_error_openfile">Open Firmware file error.</string>
