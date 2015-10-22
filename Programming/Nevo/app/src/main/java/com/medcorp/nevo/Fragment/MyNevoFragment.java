@@ -81,7 +81,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         }
         mAppVersionInfoTextView.setText(getString(R.string.app_version)+version);
         //show MCU/BLE version
-
+        mynevo_pushOTAButton.setVisibility(needUpdate()?View.VISIBLE:View.INVISIBLE);
         /*
         * my nevo 电量显示设置,初始值 2
         * */
@@ -185,6 +185,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
                                 + getString(R.string.ble_version)
                                 + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
                 );
+                mynevo_pushOTAButton.setVisibility(needUpdate()?View.VISIBLE:View.INVISIBLE);
             }
         });
 
@@ -201,9 +202,11 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
 
         vString = SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion();
         if(null!=vString)currentSoftwareVersion= Integer.parseInt(vString);
+        else return false;
 
         vString = SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion();
         if(null!=vString)currentFirmwareVersion= Integer.parseInt(vString);
+        else return false;
 
         int buildinSoftwareVersion = 0;
         int buildinFirmwareVersion= 0;
@@ -218,6 +221,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
                     end = file.toLowerCase().indexOf(".hex");
                     vString = file.substring(start+2,end);
                     if(vString != null) buildinFirmwareVersion = Integer.parseInt(vString);
+                    else return false;
                 }
                 if(file.contains(".bin"))
                 {
@@ -225,6 +229,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
                     end = file.toLowerCase().indexOf(".bin");
                     vString = file.substring(start+2,end);
                     if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
+                    else return false;
                 }
             }
 
