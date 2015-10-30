@@ -503,6 +503,7 @@ import java.util.TimeZone;
     public void forgetDevice() {
         mConnectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
+        mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC,0).commit();
     }
 
     @Override
