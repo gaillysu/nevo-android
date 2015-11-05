@@ -50,7 +50,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
     private TextView mBatteryValueTextView;
     private TextView mVersionInfoTextView;
     private TextView mAppVersionInfoTextView;
-    private int mBatteryValue = -1;
+    private int mBatteryValue = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mynevo_fragment, container, false);
@@ -132,12 +132,12 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
                             .setCancelable(false).create().show();
                     return;
                 }
-                if(mBatteryValue == 0 || SyncController.Singleton.getInstance(getActivity()).getMyphoneBattery()<20)
+                if(mBatteryValue<2 || SyncController.Singleton.getInstance(getActivity()).getMyphoneBattery()<20)
                 {
                     //fix bug: https://med-corp.atlassian.net/projects/ONA/issues/ONA-11
                     new AlertDialog.Builder(((Activity) mCtx), AlertDialog.THEME_HOLO_LIGHT)
                             .setTitle(R.string.update_error_lowbattery_title)
-                            .setMessage(mBatteryValue==0?R.string.update_error_lowbattery:R.string.update_error_lowbattery_phone)
+                            .setMessage(mBatteryValue<2?R.string.update_error_lowbattery:R.string.update_error_lowbattery_phone)
                             .setPositiveButton(android.R.string.ok, null)
                             .setCancelable(false).create().show();
                     return;
