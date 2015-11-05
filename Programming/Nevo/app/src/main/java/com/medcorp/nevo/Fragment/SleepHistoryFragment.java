@@ -162,8 +162,26 @@ public class SleepHistoryFragment extends Fragment implements OnSyncControllerLi
             Date startDate = new Date(startsleep);
             Date endDate = new Date(endsleep);
             long total = (endDate.getTime() - startDate.getTime())/1000/60;
-            if(total == 0) setText("----");
-            else setText(""+ (total>=60?(total/60 + "h "):"") + (total%60) + "min");
+            if(total == 0)
+            {
+                setText("----");
+            }
+            else
+            {
+                //when user sleep got interrupted, calculate the total sleep time from every hour, not use "start-end"
+                try {
+                    int [] wakeTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
+                    int [] lightSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
+                    int [] deepSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
+                    total = 0;
+                    for (int k = 0; k < wakeTimes.length; k++)total +=wakeTimes[k];
+                    for (int k = 0; k < wakeTimes.length; k++)total +=lightSleepTimes[k];
+                    for (int k = 0; k < wakeTimes.length; k++)total +=deepSleepTimes[k];
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                setText(""+ (total>=60?(total/60 + "h "):"") + (total%60) + "min");
+            }
             setProgressBar();
             //SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
         }else {
