@@ -10,7 +10,10 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.model.DailySleep;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.model.DailySteps;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -443,7 +446,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      *@param thedate: one day
      * @return the given date‘s daily record or null
      */
-    public IDailyHistory getDailyHistory(Date thedate)
+    public DailyHistory getDailyHistory(Date thedate)
     {
         List<Long> days = new ArrayList<Long>();
         //set theDay from 00:00:00
@@ -457,26 +460,56 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         days.add(theday.getTime());
         try {
             List<IDailyHistory> history = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created",days).query();
-            if(!history.isEmpty()) return history.get(0);
+            if(!history.isEmpty()) return history.get(0).getDailyHistory();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new DailyHistory(new Date());
     }
 
     /**
      *
      * @return all records of daily history, ordered by date ascending, such as Oct 18,19...
      */
-    public List<IDailyHistory> getAllDailyHistory()
+    public List<DailyHistory> getAllDailyHistory()
     {
-        List<IDailyHistory> history = new ArrayList<IDailyHistory>();
+        List<DailyHistory> dailyHistories = new ArrayList<DailyHistory>();
         try {
-            history =  getDailyHistoryDao().queryBuilder().orderBy("created", true).query();
-            if(!history.isEmpty()) return history;
+            List<IDailyHistory> iDailyHistories = getDailyHistoryDao().queryBuilder().orderBy("created", true).query();
+            for (IDailyHistory iDailyHistory: iDailyHistories) {
+                dailyHistories.add(iDailyHistory.getDailyHistory());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<DailyHistory>();
     }
-}
+
+    public DailySteps getSteps(Date date){
+        DailyHistory history = getDailyHistory(date);
+        return new DailySteps(history);
+    }
+
+    public List<DailySteps> getAllSteps(){
+        List <DailyHistory> dailyHistories = getAllDailyHistory();
+        List<DailySteps> dailySteps = new ArrayList<DailySteps>();
+        for (DailyHistory history: dailyHistories) {
+            dailySteps.add(new DailySteps(history));
+        }
+        return dailySteps;
+    }
+
+    public DailySleep getSleep(Date date){
+        DailyHistory history = getDailyHistory(date);
+        return new DailySleep(history);
+    }
+
+    public List<DailySleep> getAllSleep(){
+        List <DailyHistory> dailyHistories = getAllDailyHistory();
+        List<DailySleep> dailySleeps = new ArrayList<DailySleep>();
+        for (DailyHistory history: dailyHistories) {
+            dailySleeps.add(new DailySleep(history));
+        }
+        return dailySleeps;
+    }
+ }

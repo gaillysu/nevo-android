@@ -5,8 +5,8 @@ package com.medcorp.nevo.model;
  */
 public class SleepBehaviorSection {
 
-    private int minutes;
-    private SleepBehavior.SLEEP behavior;
+    private final int minutes;
+    private final SleepBehavior.SLEEP behavior;
 
     public SleepBehaviorSection(SleepBehavior.SLEEP behavior, int minutes) {
         this.behavior = behavior;

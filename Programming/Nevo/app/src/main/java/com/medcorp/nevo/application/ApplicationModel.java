@@ -13,7 +13,11 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.history.database.DatabaseHelper;
+import com.medcorp.nevo.model.DailySleep;
+import com.medcorp.nevo.model.DailySteps;
+
+import java.util.List;
 
 /**
  * Created by Karl on 10/15/15.
@@ -91,7 +95,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     public SyncController getSyncController(){return mSyncController;}
     public OtaController getOtaController(){return mOtaController;}
-    public DatabaseHelper getDatabaseHelper(){return mDatabaseHelper;}
 
     public void startConnectToWatch(boolean forceScan) {
         mSyncController.startConnect(forceScan,this);
@@ -123,5 +126,13 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     public void forgetDevice() {
         mSyncController.forgetDevice();
+    }
+
+    public List<DailySteps> getAllSteps(){
+        return mDatabaseHelper.getAllSteps();
+    }
+
+    public List<DailySleep> getAllSleep(){
+        return mDatabaseHelper.getAllSleep();
     }
 }

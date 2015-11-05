@@ -38,6 +38,8 @@ public class DailyHistory {
         mDate = date;
     }
 
+
+
     public int getTotalSteps() {
         return mTotalSteps;
     }
