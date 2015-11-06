@@ -15,24 +15,23 @@ import android.widget.Switch;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.PaletteActivity;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
-import com.medcorp.nevo.ble.model.notification.Notification;
-import com.medcorp.nevo.ble.model.notification.CalendarNotification;
-import com.medcorp.nevo.ble.model.notification.EmailNotification;
-import com.medcorp.nevo.ble.model.notification.FacebookNotification;
-import com.medcorp.nevo.ble.model.notification.SmsNotification;
-import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
-import com.medcorp.nevo.ble.model.notification.WeChatNotification;
-import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.color.BlueLed;
 import com.medcorp.nevo.ble.model.color.GreenLed;
 import com.medcorp.nevo.ble.model.color.LightGreenLed;
 import com.medcorp.nevo.ble.model.color.OrangeLed;
 import com.medcorp.nevo.ble.model.color.RedLed;
-import com.medcorp.nevo.ble.model.color.UnknownLed;
 import com.medcorp.nevo.ble.model.color.YellowLed;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitable;
 import com.medcorp.nevo.ble.model.color.visitor.NevoLedVisitor;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.view.NotificationItem;
 import com.medcorp.nevo.view.customfontview.RalewayTextView;
 
@@ -249,11 +248,6 @@ public class NotificationFragmentAdapter extends ArrayAdapter<NotificationItem>
         @Override
         public Integer visit(YellowLed led) {
             return R.drawable.yellow_indicator;
-        }
-
-        @Override
-        public Integer visit(UnknownLed led) {
-            return 0;
         }
 
         @Override

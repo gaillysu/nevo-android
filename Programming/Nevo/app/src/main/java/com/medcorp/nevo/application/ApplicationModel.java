@@ -13,7 +13,7 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.history.database.DatabaseHelper;
+import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.model.DailySleep;
 import com.medcorp.nevo.model.DailySteps;
 

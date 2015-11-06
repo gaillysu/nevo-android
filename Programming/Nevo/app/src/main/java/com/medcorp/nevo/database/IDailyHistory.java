@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by gaillysu on 15/8/11.
@@ -16,7 +17,7 @@ public class IDailyHistory {
 
     static String TRAININGID_KEY = "trainingID";
     @DatabaseField(generatedId = true)
-    int trainingID = 0;
+    private int trainingID = 0;
     /**
      * Created  time in milliseconds since January 1, 1970, 00:00:00 GMT
      * for sample: Aug 12,2015,00:00:00
@@ -24,88 +25,88 @@ public class IDailyHistory {
      */
     static String CREATED_KEY = "created";
     @DatabaseField
-    long created = 0;
+    private long created = 0;
 
     static String STEPS_KEY = "steps";
     @DatabaseField
-    int steps = 0;
+    private int steps = 0;
 
     static String HOURLYSTEPS_KEY = "hourlysteps";
     @DatabaseField
-    String hourlysteps ="";
+    private String hourlysteps ="";
 
     static String DISTANCE_KEY = "distance";
     @DatabaseField
-    double distance = 0;
+    private double distance = 0;
 
     static String HOURLYDISTANCE_KEY = "hourlydistance";
     @DatabaseField
-    String hourlydistance ="";
+    private String hourlydistance ="";
 
 
     static String CALORIES_KEY = "calories";
     @DatabaseField
-    double calories = 0;
+    private double calories = 0;
 
     static String HOURLYCALORIES_KEY = "hourlycalories";
     @DatabaseField
-    String hourlycalories ="";
+    private String hourlycalories ="";
 
     static String InactivityTime_KEY = "InactivityTime";
     @DatabaseField
-    int InactivityTime = 0;
+    private int InactivityTime = 0;
 
     static String TotalInZoneTime_KEY = "TotalInZoneTime";
     @DatabaseField
-    int TotalInZoneTime = 0;
+    private int TotalInZoneTime = 0;
 
     static String TotalOutZoneTime_KEY = "TotalOutZoneTime";
     @DatabaseField
-    int TotalOutZoneTime = 0;
+    private int TotalOutZoneTime = 0;
 
     static String AVGHRM_KEY = "avghrm";
     @DatabaseField
-    int avghrm = 0;
+    private int avghrm = 0;
 
     static String MAXHRM_KEY = "maxhrm";
     @DatabaseField
-    int maxhrm = 0;
+    private int maxhrm = 0;
 
     static String GOALREACH_KEY = "goalreach";
     @DatabaseField
-    double goalreach = 0;
+    private double goalreach = 0;
 
     static String TotalSleepTime_KEY = "TotalSleepTime";
     @DatabaseField
-    int TotalSleepTime = 0;
+    private int TotalSleepTime = 0;
 
     static String HourlySleepTime_KEY = "HourlySleepTime";
     @DatabaseField
-    String HourlySleepTime="";
+    private String HourlySleepTime="";
 
     static String TotalWakeTime_KEY = "TotalWakeTime";
     @DatabaseField
-    int TotalWakeTime =0;
+    private int TotalWakeTime =0;
 
     static String HourlyWakeTime_KEY = "HourlyWakeTime";
     @DatabaseField
-    String HourlyWakeTime="";
+    private String HourlyWakeTime="";
 
     static String TotalLightTime_KEY = "TotalLightTime";
     @DatabaseField
-    int TotalLightTime = 0;
+    private int TotalLightTime = 0;
 
     static String HourlyLightTime_KEY = "HourlyLightTime";
     @DatabaseField
-    String HourlyLightTime="";
+    private String HourlyLightTime="";
 
     static String TotalDeepTime_KEY = "TotalDeepTime";
     @DatabaseField
-    int TotalDeepTime =0;
+    private int TotalDeepTime =0;
 
     static String HourlDeepTime_KEY = "HourlDeepTime";
     @DatabaseField
-    String HourlDeepTime="";
+    private String HourlDeepTime="";
 
     /**
      * Start date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep start time
@@ -113,7 +114,7 @@ public class IDailyHistory {
      */
     static String STARTDATETIME_KEY = "startDateTime";
     @DatabaseField
-    long startDateTime = 0;
+    private long startDateTime = 0;
 
     /**
      * End date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep end time
@@ -121,7 +122,7 @@ public class IDailyHistory {
      */
     static String ENDDATETIME_KEY = "endDateTime";
     @DatabaseField
-    long endDateTime = 0;
+    private long endDateTime = 0;
 
     /**
      * Start date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep start time
@@ -130,7 +131,7 @@ public class IDailyHistory {
      */
     static String RESTSTARTDATETIME_KEY = "reststartDateTime";
     @DatabaseField
-    long reststartDateTime = 0;
+    private long reststartDateTime = 0;
 
     /**
      * End date in milliseconds since January 1, 1970, 00:00:00 GMT, means sleep end time
@@ -138,18 +139,23 @@ public class IDailyHistory {
      */
     static String RESTENDDATETIME_KEY = "restendDateTime";
     @DatabaseField
-    long restendDateTime = 0;
+    private long restendDateTime = 0;
 
     //this field save other values with Json string
     static String DESCRIPTION_KEY = "remarks";
     @DatabaseField
-    String remarks = "";
+    private String remarks = "";
+
+    private DailyHistory dailyHistory;
 
     //must have no-arg construct function
-    public IDailyHistory(){}
+    public IDailyHistory(){
+        dailyHistory = new DailyHistory(new Date());
+    }
 
     public IDailyHistory(DailyHistory history)
     {
+        this.dailyHistory = history;
         setCreated(history.getDate().getTime());
 
         //step data
@@ -403,5 +409,10 @@ public class IDailyHistory {
 
     public void setRestendDateTime(long restendDateTime) {
         this.restendDateTime = restendDateTime;
+    }
+
+    public DailyHistory getDailyHistory()
+    {
+        return dailyHistory;
     }
 }

@@ -16,8 +16,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.medcorp.nevo.history.database.DatabaseHelper;
-import com.medcorp.nevo.history.database.IDailyHistory;
+import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.database.IDailyHistory;
 import com.medcorp.nevo.R;
 
 import org.json.JSONException;
@@ -26,7 +26,6 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 

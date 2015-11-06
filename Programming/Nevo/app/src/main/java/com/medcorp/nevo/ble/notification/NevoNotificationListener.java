@@ -23,8 +23,7 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.ConnectionController;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
-import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
-import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
+import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
@@ -54,6 +53,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
     private TelephonyManager mTm;
 
     private CallStateListener mListener;
+
 
     // listen incoming call and then send led command to nevo watch
     class CallStateListener extends PhoneStateListener {
@@ -211,19 +211,10 @@ public class NevoNotificationListener extends NotificationListenerService implem
     }
 
     @Override
-    public void onErrorDetected(Exception e) {
+    public void onErrorDetected(NevoException e) {
         int titleID = R.string.ble_notification_title;
-        int msgID = 0;
-        if (e instanceof QuickBTUnBindNevoException) {
-            msgID = R.string.ble_notification_message;
-        } else if  (e instanceof QuickBTSendTimeoutException) {
-            msgID = R.string.ble_connecttimeout;
-        } else
-        {
-            //unknown exception, discard it
-            return;
-        }
-
+        int msgID = e.getWarningMessageId();
+        //unknown exception, discard it
         SyncController.Singleton.getInstance(null).showMessage(titleID,msgID);
     }
 

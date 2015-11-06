@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
+import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoFirmwareData;
 import com.medcorp.nevo.ble.model.packet.NevoRawData;
@@ -745,22 +746,29 @@ import java.util.UUID;
     }
 
     @Override
-    public void onException(Exception e) {
+    public void onException(NevoException e) {
         //the exception got happened when do connection NEVO
         Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
-        if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
+        if(mTimeoutTimer != null) {
+            mTimeoutTimer.cancel();
+            mTimeoutTimer = null;
+        }
         if(e instanceof BLEUnstableException && getState()!= DFUControllerState.DISCOVERING)
         {
             Log.e(TAG,"happen " + e + ",due to DFU mode to normal mode, perhaps BLE is not stable,again auto reconnect it after 10s");
             return;
         }
-        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
+        if(mOnOtaControllerListener.notEmpty()) {
+            mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
+        }
 
     }
 
     @Override
     public void firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version) {
-    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+        if(mOnOtaControllerListener.notEmpty()) {
+            mOnOtaControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+        }
     }
     //end ConnectionController.Delegate interface
 

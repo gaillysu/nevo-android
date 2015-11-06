@@ -31,6 +31,10 @@ import com.medcorp.nevo.ble.exception.BLEConnectTimeoutException;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
+import com.medcorp.nevo.ble.exception.NevoException;
+import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
+import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
+import com.medcorp.nevo.ble.exception.visitor.NevoExceptionVisitor;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
@@ -80,7 +84,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-/*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate{
+/*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate, NevoExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
 
 	private Context mContext;
@@ -205,25 +209,25 @@ import java.util.TimeZone;
                         // Steps count is 0, and all notification is off, because Notification is very
                         // important for user, so here need use local's setting sync with nevo
 
-                        Map<Notification, Integer> applicationapplicationNotificationColorMap = new HashMap<Notification, Integer>();
+                        Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
                         NotificationColorGetter getter = new NotificationColorGetter(mContext);
                         NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
                         Notification applicationNotification = new TelephoneNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
                         applicationNotification = new SmsNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
                         applicationNotification = new EmailNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
                         applicationNotification = new FacebookNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
                         applicationNotification = new CalendarNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
                         applicationNotification = new WeChatNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
                         applicationNotification = new WhatsappNotification();
-                        applicationapplicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
 
-                        sendRequest(new SetNotificationNevoRequest(mContext,applicationapplicationNotificationColorMap));
+                        sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
                     }
                     else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
@@ -393,7 +397,7 @@ import java.util.TimeZone;
 	}
 
     /**
-     This function will syncrhonise activity data with the watch.
+     This function will synchronise activity data with the watch.
      It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
      The watch should be emptied after all data have been saved.
      */
@@ -508,51 +512,8 @@ import java.util.TimeZone;
     }
 
     @Override
-    public void onException(Exception e) {
-			/*
-			 * Standard exception callback
-			 */
-        if (e instanceof BluetoothDisabledException) {
-            try {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (Exception e1) {
-
-            }
-        } else if (e instanceof BLENotSupportedException) {
-            try {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (Exception e2) {
-
-            }
-        }else if (e instanceof BLEUnstableException) {
-            try {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (Exception e3) {
-
-            }
-        }else if (e instanceof BLEConnectTimeoutException) {
-            mTimeOutcount = mTimeOutcount + 1;
-            //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
-            if (mTimeOutcount  == 3) {
-                mTimeOutcount = 0;
-                showMessage(R.string.ble_connection_timeout_title, R.string.ble_connecttimeout);
-            }
-        }
+    public void onException(NevoException e) {
+            e.accept(this);
         if(mOnSyncControllerListener.notEmpty()){
             mOnSyncControllerListener.get().connectionStateChanged(false);
         }
@@ -598,6 +559,76 @@ import java.util.TimeZone;
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
         if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+    }
+
+    @Override
+    public Void visit(QuickBTUnBindNevoException e) {
+        return null;
+    }
+
+    @Override
+    public Void visit(BLEConnectTimeoutException e) {
+        mTimeOutcount = mTimeOutcount + 1;
+        //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
+        if (mTimeOutcount  == 3) {
+            mTimeOutcount = 0;
+            showMessage(e.getWarningMessageTitle(), e.getWarningMessageId());
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(final BLENotSupportedException e) {
+        try {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e2) {
+
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(final BLEUnstableException e) {
+        try {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e3) {
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(final BluetoothDisabledException e) {
+        try {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e1) {
+
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(QuickBTSendTimeoutException e) {
+        return null;
+    }
+
+    @Override
+    public Void visit(NevoException e) {
+        return null;
     }
 
     /*inner class , static type, @link:http://stackoverflow.com/questions/10305261/broadcastreceiver-cant-instantiate-class-no-empty-constructor */

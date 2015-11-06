@@ -24,6 +24,10 @@ import com.medcorp.nevo.ble.ble.GattAttributes.SupportedService;
 import com.medcorp.nevo.ble.ble.NevoBTService;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
 import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
+import com.medcorp.nevo.ble.listener.OnConnectListener;
+import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
+import com.medcorp.nevo.ble.listener.OnExceptionListener;
+import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
@@ -71,8 +75,13 @@ import java.util.UUID;
 	/**
 	 * The list of callbacks to call when the data is updated
 	 */
-	private Optional<NevoBT.Delegate> mDelegate = new Optional<NevoBT.Delegate>();
-	
+//	private Optional<NevoBT.Delegate> mDelegate = new Optional<NevoBT.Delegate>();
+
+	private Optional<OnExceptionListener> onExceptionListener = new Optional<OnExceptionListener>();
+	private Optional<OnDataReceivedListener> onDataReceivedListener = new Optional<OnDataReceivedListener>();
+	private Optional<OnConnectListener> onConnectListener = new Optional<OnConnectListener>();
+	private Optional<OnFirmwareVersionListener> onFirmwareVersionListener = new Optional<OnFirmwareVersionListener>();
+
 	/**
 	 * The list of currently binded services.
 	 * Warning though, alway check they haven't stopped
@@ -120,20 +129,13 @@ import java.util.UUID;
 		try {
 			initBluetoothAdapter();
 		} catch (BLENotSupportedException e) {
-			if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+			onExceptionListener.isEmpty() || onDataReceivedListener.isEmpty() || onConnectListener.isEmpty() || onFirmwareVersionListener.isEmpty()
+			if(onConnectListener.notEmpty()) onExceptionListener.get().onException(e);
 		} catch (BluetoothDisabledException e) {
             if(mDelegate.notEmpty()) mDelegate.get().onException(e);
 		}
 	}
 
-    /**
-     *
-     * @param delegate
-     */
-	@Override
-	public void setDelegate(Delegate delegate) {
-		mDelegate.set(delegate);
-	}
 
     @Override
 	public synchronized void startScan(final List<SupportedService> servicelist, final Optional<String> preferredAddress) {
@@ -142,7 +144,9 @@ import java.util.UUID;
         if (preferredAddress.notEmpty() && isAlreadyConnected(preferredAddress.get()) ) {return;}
 
         //Ok, so we're not connected to this address. If we're connected to another one, we should disconnect
-        if (!isDisconnected()) disconnect();
+        if (!isDisconnected()){
+			disconnect();
+		}
 
 		//We check if bluetooth is enabled and/or if the device isn't ble capable
 		try {
@@ -264,7 +268,8 @@ import java.util.UUID;
 		}
 	}
 
-    @Override
+
+	@Override
     public void ping() {
         if(mCurrentService.notEmpty()) {
             mCurrentService.get().ping();
@@ -379,8 +384,7 @@ import java.util.UUID;
 				//here comment by gaillysu, should not call disconnect()
 				//disconnect(deviceAddress);
 
-                if(mDelegate.isEmpty()) {
-
+                if(onExceptionListener.isEmpty() || onDataReceivedListener.isEmpty() || onConnectListener.isEmpty() || onFirmwareVersionListener.isEmpty() ) {
                     Log.e(NevoBT.TAG, "Impossible to connect service ! No delegate");
                     return;
                 }
@@ -389,7 +393,8 @@ import java.util.UUID;
 				mCurrentService = new Optional<NevoBTService.LocalBinder> ( (NevoBTService.LocalBinder) service );
 				
 				//We launch a conenction to the given device
-				mCurrentService.get().initialize(mDelegate.get(),mDelegate.get(),mDelegate.get(),mDelegate.get());
+				mCurrentService.get().initialize(onDataReceivedListener.get(),onConnectListener.get(),onExceptionListener.get(),onFirmwareVersionListener.get());
+
 				//now connect this device
 				mCurrentService.get().connect(deviceAddress);
 			}
@@ -398,7 +403,7 @@ import java.util.UUID;
 		//We start the actual binding
 		//Note that the service will restart as long as it is binded, because we have set : Activity.BIND_AUTO_CREATE
 		mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection.get(),Activity.BIND_AUTO_CREATE);
-		Log.v(NevoBT.TAG,"mContext.bindService");
+		Log.v(NevoBT.TAG, "mContext.bindService");
 	}
 	
 	private BluetoothAdapter initBluetoothAdapter() throws BLENotSupportedException, BluetoothDisabledException {
@@ -507,7 +512,26 @@ import java.util.UUID;
         return uuids;
     }
 
-	
+	@Override
+	public void setOnExceptionListener(OnExceptionListener listener) {
+		onExceptionListener.set(listener);
+	}
+
+	@Override
+	public void setOnDataReceivedListener(OnDataReceivedListener listener) {
+		onDataReceivedListener.set(listener);
+	}
+
+	@Override
+	public void setOnConnectListener(OnConnectListener listener) {
+		onConnectListener.set(listener);
+	}
+
+	@Override
+	public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener) {
+		onFirmwareVersionListener.set(listener);
+	}
+
 	/*
 	 * End of Util Functions
 	 */

@@ -10,7 +10,10 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.model.DailySleep;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.model.DailySteps;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -163,7 +166,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         //Log.i("DatabaseHelper","string2IntArray: "+string);
         String s = string;
         if(string.startsWith("[") && string.endsWith("]"))
-          s = string.substring(1,string.length()-1);
+            s = string.substring(1,string.length()-1);
         else return new int[0];
         String[] temp = s.split(",");
         int[] ret = new int[temp.length];
@@ -225,75 +228,75 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List <IDailyHistory> list = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created", days).query();
 
             if(list.size()==1){
-               //only the today's sleep [0~23],such as the first record in the datebase
-               if(list.get(0).getCreated()==start)
-               {
-                   int m =0,n =0;
+                //only the today's sleep [0~23],such as the first record in the datebase
+                if(list.get(0).getCreated()==start)
+                {
+                    int m =0,n =0;
 
-                   hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
-                   hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
-                   hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
-                   hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
+                    hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
+                    hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
+                    hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
+                    hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
 
-                   for(i=0;i<hourlySleepTime.length;i++)
-                   {
-                       if(hourlySleepTime[i]>0) break;
-                   }
-                   //find out
-                   if(i!=hourlySleepTime.length) {
-                       m = i;
-                       sleepstart = start + ((i + 1) * 60 - hourlySleepTime[i]) * 60 * 1000;
+                    for(i=0;i<hourlySleepTime.length;i++)
+                    {
+                        if(hourlySleepTime[i]>0) break;
+                    }
+                    //find out
+                    if(i!=hourlySleepTime.length) {
+                        m = i;
+                        sleepstart = start + ((i + 1) * 60 - hourlySleepTime[i]) * 60 * 1000;
 
-                       n = hourlySleepTime.length -1;
-                       for(i=m+1;i<hourlySleepTime.length;i++)
-                       {
-                           //find out the new end index 'n'
-                           if(hourlySleepTime[i]==0) {n = i - 1;break;}
-                       }
-                       if(m == n)
-                           sleepend = sleepstart + hourlySleepTime[n] * 60 * 1000;
-                       else {
-                           sleepend = start + (n * 60 + hourlySleepTime[n]) * 60 * 1000;
-                       }
+                        n = hourlySleepTime.length -1;
+                        for(i=m+1;i<hourlySleepTime.length;i++)
+                        {
+                            //find out the new end index 'n'
+                            if(hourlySleepTime[i]==0) {n = i - 1;break;}
+                        }
+                        if(m == n)
+                            sleepend = sleepstart + hourlySleepTime[n] * 60 * 1000;
+                        else {
+                            sleepend = start + (n * 60 + hourlySleepTime[n]) * 60 * 1000;
+                        }
 
-                       for(int k=m;k<=n;k++)
-                       {
-                           mergeWakeTime.add(hourlyWakeTime[k]);
-                           mergeLightTime.add(hourlyLightTime[k]);
-                           mergeDeepTime.add(hourlyDeepTime[k]);
-                       }
-                   }
-               }
-               //only yesterday's sleep [20~23],perhaps no sync today sleep[0~12]
-               else if(list.get(0).getCreated()==end)
-               {
-                   int m =0,n =0;
+                        for(int k=m;k<=n;k++)
+                        {
+                            mergeWakeTime.add(hourlyWakeTime[k]);
+                            mergeLightTime.add(hourlyLightTime[k]);
+                            mergeDeepTime.add(hourlyDeepTime[k]);
+                        }
+                    }
+                }
+                //only yesterday's sleep [20~23],perhaps no sync today sleep[0~12]
+                else if(list.get(0).getCreated()==end)
+                {
+                    int m =0,n =0;
 
-                   hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
-                   hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
-                   hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
-                   hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
+                    hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
+                    hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
+                    hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
+                    hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
 
-                   offset = 0;
+                    offset = 0;
 
-                   for (i = hourlySleepTime.length - 1; i >= 20; i--) {
-                       if (hourlySleepTime[i] == 0) break;
-                       else{
-                           //if sleep is broken at someone hour, this hour sleep time>0 and <60
-                           offset += 60;//hourlySleepTime[i];
-                           mergeWakeTime.add(0,hourlyWakeTime[i]);
-                           mergeLightTime.add(0,hourlyLightTime[i]);
-                           mergeDeepTime.add(0,hourlyDeepTime[i]);
-                       }
-                   }
-                   //find out
-                   if(offset>0)
-                   {
-                       offset = offset - (60-hourlySleepTime[i+1]);
-                       sleepend = start; // this day
-                       sleepstart = start - offset * 60 * 1000; // yesterday
-                   }
-               }
+                    for (i = hourlySleepTime.length - 1; i >= 20; i--) {
+                        if (hourlySleepTime[i] == 0) break;
+                        else{
+                            //if sleep is broken at someone hour, this hour sleep time>0 and <60
+                            offset += 60;//hourlySleepTime[i];
+                            mergeWakeTime.add(0,hourlyWakeTime[i]);
+                            mergeLightTime.add(0,hourlyLightTime[i]);
+                            mergeDeepTime.add(0,hourlyDeepTime[i]);
+                        }
+                    }
+                    //find out
+                    if(offset>0)
+                    {
+                        offset = offset - (60-hourlySleepTime[i+1]);
+                        sleepend = start; // this day
+                        sleepstart = start - offset * 60 * 1000; // yesterday
+                    }
+                }
             }
             //today and yesterday all got sync.
             else if(list.size()==2)
@@ -438,5 +441,75 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return json;
     }
-}
 
+    /**
+     *@param thedate: one day
+     * @return the given date‘s daily record or null
+     */
+    public DailyHistory getDailyHistory(Date thedate)
+    {
+        List<Long> days = new ArrayList<Long>();
+        //set theDay from 00:00:00
+        Calendar calBeginning = new GregorianCalendar();
+        calBeginning.setTime(thedate);
+        calBeginning.set(Calendar.HOUR_OF_DAY, 0);
+        calBeginning.set(Calendar.MINUTE, 0);
+        calBeginning.set(Calendar.SECOND, 0);
+        calBeginning.set(Calendar.MILLISECOND, 0);
+        Date theday = calBeginning.getTime();
+        days.add(theday.getTime());
+        try {
+            List<IDailyHistory> history = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created",days).query();
+            if(!history.isEmpty()) return history.get(0).getDailyHistory();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new DailyHistory(new Date());
+    }
+
+    /**
+     *
+     * @return all records of daily history, ordered by date ascending, such as Oct 18,19...
+     */
+    public List<DailyHistory> getAllDailyHistory()
+    {
+        List<DailyHistory> dailyHistories = new ArrayList<DailyHistory>();
+        try {
+            List<IDailyHistory> iDailyHistories = getDailyHistoryDao().queryBuilder().orderBy("created", true).query();
+            for (IDailyHistory iDailyHistory: iDailyHistories) {
+                dailyHistories.add(iDailyHistory.getDailyHistory());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<DailyHistory>();
+    }
+
+    public DailySteps getSteps(Date date){
+        DailyHistory history = getDailyHistory(date);
+        return new DailySteps(history);
+    }
+
+    public List<DailySteps> getAllSteps(){
+        List <DailyHistory> dailyHistories = getAllDailyHistory();
+        List<DailySteps> dailySteps = new ArrayList<DailySteps>();
+        for (DailyHistory history: dailyHistories) {
+            dailySteps.add(new DailySteps(history));
+        }
+        return dailySteps;
+    }
+
+    public DailySleep getSleep(Date date){
+        DailyHistory history = getDailyHistory(date);
+        return new DailySleep(history);
+    }
+
+    public List<DailySleep> getAllSleep(){
+        List <DailyHistory> dailyHistories = getAllDailyHistory();
+        List<DailySleep> dailySleeps = new ArrayList<DailySleep>();
+        for (DailyHistory history: dailyHistories) {
+            dailySleeps.add(new DailySleep(history));
+        }
+        return dailySleeps;
+    }
+ }

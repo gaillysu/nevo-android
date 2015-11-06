@@ -102,7 +102,15 @@ public interface NevoBT {
 	/**
 	 * Delegate will be notified of connection change, exceptions and data received events
 	 */
-	void setDelegate(Delegate d);
+
+    void setOnExceptionListener(OnExceptionListener listener);
+
+    void setOnDataReceivedListener(OnDataReceivedListener listener);
+
+    void setOnConnectListener(OnConnectListener listener);
+
+    void setOnFirmwareVersionListener(OnFirmwareVersionListener listener);
+
 
     /**
      *
@@ -120,8 +128,4 @@ public interface NevoBT {
      * Pings the currently connected device (if any) to check it is actually connected
      */
     void ping();
-
-        interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener,OnFirmwareVersionListener {
-
-    }
 }

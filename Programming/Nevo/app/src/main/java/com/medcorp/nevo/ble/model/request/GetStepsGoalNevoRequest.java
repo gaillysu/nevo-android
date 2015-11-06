@@ -36,7 +36,6 @@ public class GetStepsGoalNevoRequest extends NevoRequest {
 
 	@Override
 	public byte getHeader() {
-
 		return HEADER;
 	}
 

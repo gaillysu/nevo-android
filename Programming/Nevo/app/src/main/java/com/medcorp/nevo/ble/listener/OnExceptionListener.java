@@ -3,6 +3,8 @@
  */
 package com.medcorp.nevo.ble.listener;
 
+import com.medcorp.nevo.ble.exception.NevoException;
+
 /**
  * This Listener will be called when an exception have been raised.
  * The user should be informed properly and react accordingly.
@@ -14,9 +16,8 @@ public interface OnExceptionListener {
 		/**
 		 * This function is called everytime an important exception is raised.
 		 * Up to you to inform the user and/or launch a re-scan
-		 * @param peripheral
 		 */
-		public void onException(Exception e);
+		public void onException(NevoException e);
 
 
 }

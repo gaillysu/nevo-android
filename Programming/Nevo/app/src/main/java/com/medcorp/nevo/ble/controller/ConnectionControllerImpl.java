@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.ble.GattAttributes;
+import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.kernel.NevoBT;
 import com.medcorp.nevo.ble.model.packet.SensorData;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
@@ -174,7 +175,7 @@ import java.util.TimerTask;
     }
 
     @Override
-    public void onException(final Exception e) {
+    public void onException(final NevoException e) {
         //Callback are usually called on the main thread
         new Handler(Looper.getMainLooper()).post(new Runnable() {
 
