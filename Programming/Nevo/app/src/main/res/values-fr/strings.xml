@@ -105,7 +105,7 @@
     <string name="update_mcu_success_message">Mise à jour MCU effectuée, veuillez activer le Bluetooth de la montre afin de compléter la connexion à NEVO et ressortir les informations, cliquer sur la touche pour continuer, sinon ça bascule en mode pause.</string>
 
     <string name="continue_button">Continuer</string>
-    <string name="app_version">app Version:</string>
+    <string name="app_version">App version:</string>
 
     <string name="light_sleep">Sommeil léger:</string>
     <string name="deep_sleep">Sommeil profond:</string>

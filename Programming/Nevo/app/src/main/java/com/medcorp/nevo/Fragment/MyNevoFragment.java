@@ -68,7 +68,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
 
         mVersionInfoTextView.setText(getString(R.string.mcu_version)
                                     + SyncController.Singleton.getInstance(getActivity()).getSoftwareVersion()
-                                    + " , "
+                                    + "\n"
                                     + getString(R.string.ble_version)
                                     + SyncController.Singleton.getInstance(getActivity()).getFirmwareVersion()
                                     );
@@ -81,7 +81,7 @@ public class MyNevoFragment extends Fragment implements View.OnClickListener,OnS
         }
         mAppVersionInfoTextView.setText(getString(R.string.app_version)+version);
         //show MCU/BLE version
-        mynevo_pushOTAButton.setVisibility(needUpdate()?View.VISIBLE:View.INVISIBLE);
+        mynevo_pushOTAButton.setVisibility(needUpdate() ? View.VISIBLE : View.INVISIBLE);
         /*
         * my nevo 电量显示设置,初始值 2
         * */

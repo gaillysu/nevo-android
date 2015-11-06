@@ -54,6 +54,7 @@
     <string name="ble_connecttimeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
     <string name="ble_connection_timeout_title">Bluetooth Verbindung Timeout</string>
     <string name="ble_connection_timeout_cancel">Abrechen</string>
+
     <string name="ble_connection_timeout_help">Hilfe</string>
     <string name="ble_notification_title">Notifikations</string>
     <string name="ble_notification_message">Kein Nevo gepaart bitte zuerst eine Verbindung nevo und Paar</string>
@@ -63,6 +64,7 @@
     <string name="tutorial_tips_one_tilte">Bluetooth-Verbindung wird getrennt wenn Geräte nicht im Empfangsbereich</string>
     <string name="tutorial_tips_one_message">Um die Batterie zu schonen, trennt die Bluetooth-Funktion das Gerät automatisch vom Telefon, wenn dieses länger als 2 Minuten keine Verbindung mit dem Telefon hatte. Sie erhalten keine Benachrichtigung darüber, dass die NEVO vom Telefon getrennt wurde.</string>
     <string name="tutorial_tips_two_message">Verbinden Sie die Bluetooth-Funktion erneut, um wieder Benachrichtigungen zu erhalten, wenn Sie die 3. Taste ca. 3 Sekunden gedrückt halten.</string>
+    <string name="tutorial_tips_two_title">Bluetooth wieder verbunden</string>
     <string name="forget_device">Vergessen Sie dieses nevo</string>
     <string name="FirmwareUpgrade">Firmware Upgrade</string>
     <string name="waiting">Bitte warten...</string>
@@ -103,7 +105,7 @@
     <string name="update_mcu_success_message">MCU-Aktualisierung abgeschlossen; bitte rufen Sie die Bluetooth-Funktion der Uhr auf, um sicher zu stellen, dass die NEVO verbunden ist, und die Informationen angezeigt werden; andernfalls wird eine Zeitüberschreitung (Timeout) angezeigt.</string>
 
     <string name="continue_button">Weiter</string>
-    <string name="app_version">app Version:</string>
+    <string name="app_version">App version:</string>
 
     <string name="light_sleep">Leichter schlaf:</string>
     <string name="deep_sleep">Tief schlaf:</string>

@@ -106,7 +106,7 @@
     <string name="update_ble_success_message">Ble upgrade completed, reconnect the watch to the phone by pressing and holding the third button on the watch. Make sure that the watch is paired so it won\'t interrupt the upgrade procedure. Once it\'s connected you can continue to upgrade the Mcu by clicking on continue.</string>
     <string name="update_mcu_success_message">Mcu upgrade completed please open the watch Bluetooth, to ensure that the connection has been connected to the Nevo and pop up on the information, click on the button to continue to click on the button, or there will be a timeout phenomenon</string>
 
-    <string name="app_version">app Version:</string>
+    <string name="app_version">App version:</string>
 
     <string name="light_sleep">Light sleep:</string>
     <string name="deep_sleep">Deep sleep:</string>
@@ -120,5 +120,4 @@
 
     <string name="sleep_tracking">Sleep Tracking</string>
     <string name="sleeptracking_instruction">Hold button #1 for 3 seconds to activate Sleep Tracking mode. After you wake up, hold button #1 for 3 seconds to return to Activity mode. You may then check the app for your sleep history.</string>
-    <string name="bye">Hello!</string>
 </resources>
