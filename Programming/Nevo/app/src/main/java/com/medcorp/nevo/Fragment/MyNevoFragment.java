@@ -159,6 +159,7 @@ public class MyNevoFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void notifyDatasetChanged() {
+
     }
 
     @Override

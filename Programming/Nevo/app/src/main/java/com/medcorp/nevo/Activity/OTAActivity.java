@@ -15,14 +15,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.RoundProgressBar;
+import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.ble.controller.OtaController;
+import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
+import com.medcorp.nevo.view.RoundProgressBar;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,7 +43,6 @@ public class OTAActivity extends BaseActivity
     private RoundProgressBar mOTAProgressBar;
     private Button mReButton;
     private ImageView mBackImage;
-    private TextView mTitleTextView;
     private TextView mFirmwareTotal;
 
     //save the build-in firmware version, it should be the latest FW version
@@ -181,7 +181,7 @@ public class OTAActivity extends BaseActivity
 
         mContext = this;
         bHelpMode = getIntent().getStringExtra("from") == null ? false: getIntent().getStringExtra("from").equals("tutorial");
-        mNevoOtaController = OtaController.Singleton.getInstance(this,bHelpMode);
+        mNevoOtaController = new OtaControllerImpl(this,bHelpMode);
         mNevoOtaController.setConnectControllerDelegate2Self();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
 
@@ -208,8 +208,8 @@ public class OTAActivity extends BaseActivity
         mBackImage = (ImageView)findViewById(R.id.backImage);
         mBackImage.setOnClickListener(this);
 
-        mTitleTextView = (TextView)findViewById(R.id.titleTextView);
-        mTitleTextView.setOnClickListener(this);
+        findViewById(R.id.titleTextView).setOnClickListener(this);
+
 
         mFirmwareTotal = (TextView)findViewById(R.id.textFirmwareTotal);
         mFirmwareTotal.setText("");
@@ -226,7 +226,6 @@ public class OTAActivity extends BaseActivity
         super.onDestroy();
         if(bHelpMode)
         {
-            OtaController.Singleton.destroy();
             return;
         }
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)

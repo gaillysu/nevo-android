@@ -30,19 +30,6 @@ import java.util.List;
  */
 public interface SyncController {
 
-	public  class Singleton {
-		private static  SyncControllerImpl sInstance = null;
-		public static SyncController getInstance(Context context) {
-			if(null == sInstance )
-			{
-				sInstance = new SyncControllerImpl(context);
-			} else {
-				sInstance.setContext(context);
-			}
-			return sInstance;
-		}
-	}
-	
     /*
     return SyncController 's Context , mostly it is a activity, such as MainActivity or OTA activity
      */

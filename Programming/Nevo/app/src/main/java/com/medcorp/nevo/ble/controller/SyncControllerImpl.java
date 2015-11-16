@@ -35,6 +35,10 @@ import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
 import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
 import com.medcorp.nevo.ble.exception.visitor.NevoExceptionVisitor;
+import com.medcorp.nevo.ble.listener.OnConnectListener;
+import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
+import com.medcorp.nevo.ble.listener.OnExceptionListener;
+import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
@@ -84,14 +88,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-/*package*/ class SyncControllerImpl implements SyncController, ConnectionController.Delegate, NevoExceptionVisitor<Void> {
+public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<Void>, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
     private final static String TAG = "SyncControllerImpl";
 
 	private Context mContext;
 
 	private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
 
-	private ConnectionController mConnectionController;
+	private ConnectionController connectionController;
 
 	private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
 
@@ -112,9 +116,12 @@ import java.util.TimeZone;
     {
         mContext = context;
 
-        mConnectionController = ConnectionController.Singleton.getInstance(context);
+        connectionController = ConnectionController.Singleton.getInstance(context);
 
-        mConnectionController.setDelegate(this);
+        connectionController.setOnExceptionListener(this);
+        connectionController.setOnDataReceivedListener(this);
+        connectionController.setOnConnectListener(this);
+        connectionController.setOnFirmwareVersionListener(this);
 
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
@@ -134,10 +141,10 @@ import java.util.TimeZone;
 
         if (forceScan)
         {
-            mConnectionController.forgetSavedAddress();
+            connectionController.forgetSavedAddress();
         }
 
-        mConnectionController.connect();
+        connectionController.connect();
 
     }
 
@@ -145,7 +152,7 @@ import java.util.TimeZone;
     @Override
     public void sendRequest(final SensorRequest request)
     {
-        if(mConnectionController.getOTAMode()) {
+        if(connectionController.getOTAMode()) {
             return;
         }
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
@@ -154,7 +161,7 @@ import java.util.TimeZone;
 
                 Log.i(TAG,request.getClass().getName());
 
-                mConnectionController.sendRequest(request);
+                connectionController.sendRequest(request);
             }
         });
 
@@ -493,21 +500,21 @@ import java.util.TimeZone;
 
     @Override
     public boolean isConnected() {
-        return mConnectionController.isConnected();
+        return connectionController.isConnected();
     }
 
     @Override
     public String getFirmwareVersion() {
-        return mConnectionController.getFirmwareVersion();
+        return connectionController.getFirmwareVersion();
     }
 
     @Override
     public String getSoftwareVersion() {
-        return mConnectionController.getSoftwareVersion();
+        return connectionController.getSoftwareVersion();
     }
     @Override
     public void forgetDevice() {
-        mConnectionController.forgetSavedAddress();
+        connectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
     }
 

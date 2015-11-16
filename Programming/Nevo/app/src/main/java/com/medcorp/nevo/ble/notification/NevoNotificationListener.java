@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
-import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -21,7 +20,6 @@ import android.util.Log;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.controller.ConnectionController;
-import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
 import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
@@ -40,7 +38,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @TargetApi(18)
-public class NevoNotificationListener extends NotificationListenerService implements NotificationCallback{
+public class NevoNotificationListener extends NotificationBaseListenerService implements NotificationCallback{
 
     static Optional<Date> lastNotification = new Optional<Date>();
 
@@ -215,7 +213,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
         int titleID = R.string.ble_notification_title;
         int msgID = e.getWarningMessageId();
         //unknown exception, discard it
-        SyncController.Singleton.getInstance(null).showMessage(titleID,msgID);
+        getModel().getSyncController().showMessage(titleID,msgID);
     }
 
     @Override

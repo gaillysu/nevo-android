@@ -3,8 +3,6 @@
  */
 package com.medcorp.nevo.ble.kernel;
 
-import android.content.Context;
-
 import com.medcorp.nevo.ble.ble.GattAttributes.SupportedService;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
 import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
@@ -66,18 +64,18 @@ public interface NevoBT {
 	 * rename calss "Builder" to "Factory" ,such as AOSP naming rule
 	 * add "sInstance" member ,no need alloc memory every time.
 	 */
-	public class Singleton {
-		private static NevoBTImpl sInstance = null;
-		public static NevoBT getInstance(Context context) {
-			if(null == sInstance )
-			{
-				sInstance = new NevoBTImpl(context);
-			} else {
-				sInstance.setContext(context);
-			}
-			return sInstance;
-		}
-	}
+//	public class Singleton {
+//		private static NevoBTImpl sInstance = null;
+//		public static NevoBT getInstance(Context context) {
+//			if(null == sInstance )
+//			{
+//				sInstance = new NevoBTImpl(context);
+//			} else {
+//				sInstance.setContext(context);
+//			}
+//			return sInstance;
+//		}
+//	}
 
 	/**
      * Start scanning for nearby devices supporting the given services, it should connect automatically to the first device encountered.

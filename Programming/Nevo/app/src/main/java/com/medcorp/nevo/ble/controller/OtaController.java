@@ -1,7 +1,9 @@
 package com.medcorp.nevo.ble.controller;
 
-import android.content.Context;
-
+import com.medcorp.nevo.ble.listener.OnConnectListener;
+import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
+import com.medcorp.nevo.ble.listener.OnExceptionListener;
+import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.util.Constants.DFUControllerState;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
@@ -11,29 +13,6 @@ import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
  *
  */
 public interface OtaController {
-
-    /**
-     * define OtaControllerImpl Singleton, for supporting background run mode
-     */
-    public  class Singleton {
-        private static  OtaControllerImpl sInstance = null;
-        public static OtaController getInstance(Context context,boolean helpmode) {
-            if(null == sInstance )
-            {
-                sInstance = new OtaControllerImpl(context,helpmode);
-            } else {
-                sInstance.setContext(context);
-            }
-            return sInstance;
-        }
-        public static void destroy() {
-            if(null != sInstance )
-            {
-                sInstance.destroy();
-                sInstance = null;
-            }
-        }
-    }
 
     /**
      * start OTA
@@ -118,4 +97,10 @@ public interface OtaController {
 
     public static String PREF_NAME = "nevoPrefs";
     public static String SYNCDATE = "nevoSyncdate";
+
+    public void setOnExceptionListener(OnExceptionListener listener);
+    public void setOnDataReceivedListener(OnDataReceivedListener listener);
+    public void setOnConnectListener(OnConnectListener listener);
+    public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener);
+
 }

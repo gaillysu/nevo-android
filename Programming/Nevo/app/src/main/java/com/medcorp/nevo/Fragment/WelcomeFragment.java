@@ -51,9 +51,9 @@ public class WelcomeFragment extends BaseFragment {
         public void run() {
             refreshTime();
             mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,10000);
-            if (SyncController.Singleton.getInstance(getActivity()).isConnected())
-                SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
+            mUiHandler.postDelayed(mTimerTask, 10000);
+            if (getModel().getSyncController().isConnected())
+                getModel().getSyncController().getStepsAndGoal();
         }
     };
 
@@ -83,8 +83,8 @@ public class WelcomeFragment extends BaseFragment {
                 if ((System.currentTimeMillis() - mLastTapTime) > 2000)
                     mLastTapTime = System.currentTimeMillis();
                 else {
-                    if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
-                        SyncController.Singleton.getInstance(getActivity()).findDevice();
+                    if (getModel().getSyncController().isConnected()) {
+                        getModel().getSyncController().findDevice();
                     }
                 }
             }
@@ -98,7 +98,7 @@ public class WelcomeFragment extends BaseFragment {
         //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
         //when app start,syncController is connecting, send this cmd, will lead to  timeout
         // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
+        if (getModel().getSyncController().isConnected()){
             initLayout(true);
         }else {
             initLayout(false);

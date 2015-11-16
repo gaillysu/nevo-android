@@ -115,7 +115,7 @@ public class NewHistoryFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
+        if (getModel().getSyncController().isConnected()) {
             //if sync not done,force sync all days(max 7 days) once
             if(getDailyHistory().isEmpty())
             {
