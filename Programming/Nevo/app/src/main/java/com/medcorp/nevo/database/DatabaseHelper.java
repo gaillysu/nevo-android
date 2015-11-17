@@ -39,6 +39,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private  Dao<IDailyHistory,Integer> mDailyhistoryDao = null;
+    private  Dao<User,Integer> mUserDao = null;
+    private  Dao<Sleep,Integer> mSleepDao = null;
+    private  Dao<Steps,Integer> mStepsDao = null;
+    private  Dao<Heartbeat,Integer> mHeartbeatDao = null;
 
     //Classic singleton
     private static DatabaseHelper sInstance = null;
@@ -67,6 +71,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
 
             TableUtils.createTable(connectionSource, IDailyHistory.class);
+            TableUtils.createTable(connectionSource,User.class);
+            TableUtils.createTable(connectionSource, Sleep.class);
+            TableUtils.createTable(connectionSource, Steps.class);
+            TableUtils.createTable(connectionSource, Heartbeat.class);
 
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
@@ -78,6 +86,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
 
             TableUtils.dropTable(connectionSource, IDailyHistory.class, true);
+            TableUtils.dropTable(connectionSource, User.class, true);
+            TableUtils.dropTable(connectionSource, Sleep.class, true);
+            TableUtils.dropTable(connectionSource, Steps.class, true);
+            TableUtils.dropTable(connectionSource, Heartbeat.class, true);
 
             onCreate(sqliteDatabase, connectionSource);
         } catch (SQLException e) {
@@ -93,6 +105,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mDailyhistoryDao;
     }
 
+    public Dao<User, Integer> getUserDao() throws SQLException {
+        if (mUserDao == null)
+            mUserDao = getDao(User.class);
+
+        return mUserDao;
+    }
+
+    public Dao<Sleep, Integer> getSleepDao() throws SQLException {
+        if (mSleepDao == null)
+            mSleepDao = getDao(Sleep.class);
+
+        return mSleepDao;
+    }
+
+    public Dao<Steps, Integer> getStepsDao() throws SQLException {
+        if (mStepsDao == null)
+            mStepsDao = getDao(Steps.class);
+
+        return mStepsDao;
+    }
+
+    public Dao<Heartbeat, Integer> getHeartbeatDao() throws SQLException {
+        if (mHeartbeatDao == null)
+            mHeartbeatDao = getDao(Heartbeat.class);
+
+        return mHeartbeatDao;
+    }
 
     /**
      * create or update one record.
