@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.view.StepPickerView;
 
@@ -102,7 +101,7 @@ public class GoalFragment extends BaseFragment implements View.OnClickListener,S
     public void setStep(final String goal){
         mStepsTextView.setText(goal);
         StepPickerView.saveStepTextToPreference(getActivity(), goal);
-        SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(Integer.parseInt(goal)));
+        getModel().getSyncController().setGoal(new NumberOfStepsGoal(Integer.parseInt(goal)));
     }
 
     @Override
@@ -120,24 +119,23 @@ public class GoalFragment extends BaseFragment implements View.OnClickListener,S
                 setSelectedButtonProperty(mButtonArray,mModarateButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), MODERATE);
                 setStep(new Integer(7000).toString());
-                SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(7000));
+                getModel().getSyncController().setGoal(new NumberOfStepsGoal(7000));
                 break;
             case R.id.intensiveButton:
                 setSelectedButtonProperty(mButtonArray,mIntensiveButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), INTENSIVE);
                 setStep(new Integer(10000).toString());
-                SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(10000));
+                getModel().getSyncController().setGoal(new NumberOfStepsGoal(10000));
                 break;
             case R.id.sportiveButton:
                 setSelectedButtonProperty(mButtonArray,mSportiveButton);
                 GoalFragment.saveGoalModeToPreference(getActivity(), SPORTIVE);
                 setStep(new Integer(20000).toString());
-                SyncController.Singleton.getInstance(getActivity()).setGoal(new NumberOfStepsGoal(20000));
+                getModel().getSyncController().setGoal(new NumberOfStepsGoal(20000));
                 break;
             default:
                 break;
         }
-
     }
 
     /**

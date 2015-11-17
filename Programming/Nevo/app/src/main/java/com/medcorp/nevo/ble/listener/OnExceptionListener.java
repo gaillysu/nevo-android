@@ -3,6 +3,7 @@
  */
 package com.medcorp.nevo.ble.listener;
 
+
 import com.medcorp.nevo.ble.exception.NevoException;
 
 /**

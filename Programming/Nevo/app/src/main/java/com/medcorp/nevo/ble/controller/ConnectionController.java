@@ -33,14 +33,7 @@ public interface ConnectionController {
         }
     }
 
-    /**
-     set one  delegate,  this delegate comes from syncController
-     Layer struct: L1(NevoBT) -->L2 (ConnectionController,Single instance) -->L3 (syncController, single instance)
-     -->L4(UI viewController), L1 is the base Layer, L4 is the top layer
-     */
-    public ConnectionController.Delegate setDelegate(ConnectionController.Delegate delegate);
-
-    /**
+        /**
      Tries to connect to a Nevo
      Myabe it will scan for nearby nevo, maybe it will simply connect to a known nevo
      */
@@ -125,8 +118,9 @@ public interface ConnectionController {
     public void pairDevice();
     public void unPairDevice();
 
-    interface Delegate extends OnExceptionListener, OnDataReceivedListener, OnConnectListener ,OnFirmwareVersionListener{
-
-    }
+    public void setOnExceptionListener(OnExceptionListener listener);
+    public void setOnDataReceivedListener(OnDataReceivedListener listener);
+    public void setOnConnectListener(OnConnectListener listener);
+    public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener);
 
 }

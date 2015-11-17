@@ -13,6 +13,11 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.ble.GattAttributes;
 import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.kernel.NevoBT;
+import com.medcorp.nevo.ble.kernel.NevoBTImpl;
+import com.medcorp.nevo.ble.listener.OnConnectListener;
+import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
+import com.medcorp.nevo.ble.listener.OnExceptionListener;
+import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.model.packet.SensorData;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
@@ -27,7 +32,7 @@ import java.util.TimerTask;
 /**
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-/*package*/ class ConnectionControllerImpl implements ConnectionController, NevoBT.Delegate {
+/*package*/ class ConnectionControllerImpl implements ConnectionController, OnConnectListener, OnExceptionListener, OnDataReceivedListener, OnFirmwareVersionListener {
 
     private Timer mAutoReconnectTimer = null;
     private int  mTimerIndex = 0;
@@ -46,8 +51,13 @@ import java.util.TimerTask;
     //This boolean is the only reliable way to know if we are connected or not
     private boolean mIsConnected = false;
 
-    Optional<ConnectionController.Delegate> mDelegate = new Optional<>();
-    Context mContext;
+    private Optional<OnExceptionListener> onExceptionListener = new Optional<>();
+    private Optional<OnDataReceivedListener> onDataReceivedListener = new Optional<>();
+    private Optional<OnConnectListener> onConnectListener = new Optional<>();
+    private Optional<OnFirmwareVersionListener> onFirmwareVersionListener = new Optional<>();
+
+    private Context mContext;
+    private NevoBT nevoBT;
 
     /**
      this parameter saved old BLE 's  address, when doing BLE OTA, the address has been changed to another one
@@ -57,9 +67,14 @@ import java.util.TimerTask;
     private boolean isOTAmode = false;
 
 
-    /*package*/ ConnectionControllerImpl(Context ctx){
+
+    public ConnectionControllerImpl(Context ctx){
         mContext = ctx;
-        NevoBT.Singleton.getInstance(mContext).setDelegate(this);
+        nevoBT = new NevoBTImpl(mContext);
+        nevoBT.setOnConnectListener(this);
+        nevoBT.setOnExceptionListener(this);
+        nevoBT.setOnDataReceivedListener(this);
+        nevoBT.setOnFirmwareVersionListener(this);
 
         //This timer will retry to connect at given intervals
         restartAutoReconnectTimer();
@@ -72,7 +87,7 @@ import java.util.TimerTask;
         mAutoReconnectTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(mIsConnected) {
+                if (mIsConnected) {
                     //Yes, we're connected ! Let's retry in 1 sec.
                     mTimerIndex = 0;
 
@@ -83,13 +98,14 @@ import java.util.TimerTask;
                 } else {
                     //Ouch we're not connected, we have to try to connect, let's increment the timer index
                     mTimerIndex++;
-                    if(mTimerIndex>=mReConnectTimerPattern.length) mTimerIndex = mReConnectTimerPattern.length - 1;
-                    Log.w(NevoBT.TAG, "Connection lost, reconnecting in "+mReConnectTimerPattern[mTimerIndex]/1000+"s");
+                    if (mTimerIndex >= mReConnectTimerPattern.length)
+                        mTimerIndex = mReConnectTimerPattern.length - 1;
+                    Log.w(NevoBT.TAG, "Connection lost, reconnecting in " + mReConnectTimerPattern[mTimerIndex] / 1000 + "s");
                     connect();
                 }
                 restartAutoReconnectTimer();
             }
-        }, mReConnectTimerPattern[mTimerIndex] );
+        }, mReConnectTimerPattern[mTimerIndex]);
     }
 
     @Override
@@ -110,8 +126,8 @@ import java.util.TimerTask;
         Optional<String> preferredAddress = new Optional<String>();
 
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
-        Log.w(NevoBT.TAG,"servicelist:"+servicelist.get(0) + ",address:"+ (preferredAddress.isEmpty()?"null":preferredAddress.get()));
-        NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
+        Log.w(NevoBT.TAG, "servicelist:" + servicelist.get(0) + ",address:" + (preferredAddress.isEmpty() ? "null" : preferredAddress.get()));
+        nevoBT.startScan(servicelist, preferredAddress);
 
     }
 
@@ -122,17 +138,17 @@ import java.util.TimerTask;
         servicelist.add(GattAttributes.SupportedService.nevo);
         Optional<String> preferredAddress = new Optional<String>();
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
-        NevoBT.Singleton.getInstance(mContext).startScan(servicelist, preferredAddress);
+        nevoBT.startScan(servicelist, preferredAddress);
     }
 
    /*package*/ void destroy()
     {
-        NevoBT.Singleton.getInstance(mContext).disconnect();
+        nevoBT.disconnect();
     }
 
     @Override
     public void sendRequest(SensorRequest request) {
-        NevoBT.Singleton.getInstance(mContext).sendRequest(request);
+        nevoBT.sendRequest(request);
     }
 
     private void currentlyConnected(boolean isConnected) {
@@ -145,8 +161,8 @@ import java.util.TimerTask;
 
                 @Override
                 public void run() {
-                    Log.w("Nevo BT SDK","Connected : "+mIsConnected);
-                    if(mDelegate.notEmpty()) mDelegate.get().onConnectionStateChanged(mIsConnected,"");
+                    Log.w("Nevo BT SDK", "Connected : " + mIsConnected);
+                    if(onConnectListener.notEmpty()) onConnectListener.get().onConnectionStateChanged(mIsConnected, "");
                 }
             });
         }
@@ -181,7 +197,9 @@ import java.util.TimerTask;
 
             @Override
             public void run() {
-                if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+                if (onExceptionListener.notEmpty()){
+                    onExceptionListener.get().onException(e);
+                }
             }
         });
 
@@ -196,16 +214,11 @@ import java.util.TimerTask;
 
             @Override
             public void run() {
-                if(mDelegate.notEmpty()) mDelegate.get().onDataReceived(data);
+                if (onDataReceivedListener.notEmpty())
+                    onDataReceivedListener.get().onDataReceived(data);
             }
         });
 
-    }
-    @Override
-    public ConnectionController.Delegate setDelegate(Delegate delegate) {
-        ConnectionController.Delegate old_deledgate = mDelegate.notEmpty()?mDelegate.get():null;
-        mDelegate.set(delegate);
-        return old_deledgate;
     }
 
     public void setContext(Context context) {
@@ -245,12 +258,12 @@ import java.util.TimerTask;
 
     @Override
     public String getFirmwareVersion() {
-        return NevoBT.Singleton.getInstance(mContext).getFirmwareVersion();
+        return nevoBT.getFirmwareVersion();
     }
 
     @Override
     public String getSoftwareVersion() {
-        return NevoBT.Singleton.getInstance(mContext).getSoftwareVersion();
+        return nevoBT.getSoftwareVersion();
     }
 
     @Override
@@ -261,7 +274,7 @@ import java.util.TimerTask;
 
         if (disConnect)
         {
-            NevoBT.Singleton.getInstance(mContext).disconnect();
+            nevoBT.disconnect();
         }
         //whennever OTA mode true or false, keep the auto reconnect timer always on
         /**
@@ -301,7 +314,7 @@ import java.util.TimerTask;
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if(mDelegate.notEmpty()) mDelegate.get().firmwareVersionReceived(whichfirmware,version);
+                if(onFirmwareVersionListener.notEmpty()) onFirmwareVersionListener.get().firmwareVersionReceived(whichfirmware,version);
             }
         });
     }
@@ -365,7 +378,7 @@ import java.util.TimerTask;
 
         BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
         int state = device.getBondState();
-        Log.i(NevoBT.TAG,"unPairDevice(),current bind state: " + state);
+        Log.i(NevoBT.TAG, "unPairDevice(),current bind state: " + state);
         if(state == BluetoothDevice.BOND_BONDED)
         {
             boolean ret = false;
@@ -388,7 +401,6 @@ import java.util.TimerTask;
                 e.printStackTrace();
             }
         }
-
     }
 
     private boolean createBond(Class btClass, BluetoothDevice btDevice)
@@ -412,16 +424,41 @@ import java.util.TimerTask;
     }
     private boolean needPair()
     {
-        if(getOTAMode()) return false;
-        if(!hasSavedAddress()) return false;
+        if(getOTAMode()) {
+            return false;
+        }
+        if(!hasSavedAddress()) {
+            return false;
+        }
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) return false;
-
+        if (!bluetoothAdapter.isEnabled()) {
+            return false;
+        }
         BluetoothDevice   device = bluetoothAdapter.getRemoteDevice(getSaveAddress());
         int state = device.getBondState();
         Log.i(NevoBT.TAG,"needPair(),current bind state: " + state);
-        if(state != BluetoothDevice.BOND_BONDED) return true;
+        if(state != BluetoothDevice.BOND_BONDED) {
+            return true;
+        }
         return false;
+    }
+
+
+    @Override
+    public void setOnExceptionListener(OnExceptionListener listener){
+        this.onExceptionListener.set(listener);
+    }
+    @Override
+    public void setOnDataReceivedListener(OnDataReceivedListener listener){
+        this.onDataReceivedListener.set(listener);
+    }
+    @Override
+    public void setOnConnectListener(OnConnectListener listener){
+        this.onConnectListener.set(listener);
+    }
+    @Override
+    public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener){
+        this.onFirmwareVersionListener.set(listener);
     }
 
 }

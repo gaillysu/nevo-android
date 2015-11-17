@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.view.TimePickerView;
 
@@ -207,7 +206,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener,
         onOff = AlarmFragment.getClockStateFromPreference(2,getActivity());
         list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
 
-        SyncController.Singleton.getInstance(getActivity()).setAlarm(list);
+        getModel().getSyncController().setAlarm(list);
     }
     public void setClock(int index,final String time){
         switch (index){

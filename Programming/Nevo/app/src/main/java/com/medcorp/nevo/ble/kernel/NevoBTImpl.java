@@ -43,7 +43,7 @@ import java.util.UUID;
 /**
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-/*package*/ class NevoBTImpl implements NevoBT {
+public class NevoBTImpl implements NevoBT {
 	/*
 	 * Here's how it works under the hood.
 	 * ImazeBTImpl is our Kernerl.
@@ -129,10 +129,13 @@ import java.util.UUID;
 		try {
 			initBluetoothAdapter();
 		} catch (BLENotSupportedException e) {
-			onExceptionListener.isEmpty() || onDataReceivedListener.isEmpty() || onConnectListener.isEmpty() || onFirmwareVersionListener.isEmpty()
-			if(onConnectListener.notEmpty()) onExceptionListener.get().onException(e);
+			if(onExceptionListener.notEmpty()) {
+				onExceptionListener.get().onException(e);
+			}
 		} catch (BluetoothDisabledException e) {
-            if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+			if(onExceptionListener.notEmpty()) {
+				onExceptionListener.get().onException(e);
+			}
 		}
 	}
 
@@ -152,9 +155,13 @@ import java.util.UUID;
 		try {
 			initBluetoothAdapter();
         } catch (BLENotSupportedException e) {
-            if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+            if(onExceptionListener.notEmpty()) {
+				onExceptionListener.get().onException(e);
+			}
         } catch (BluetoothDisabledException e) {
-            if(mDelegate.notEmpty()) mDelegate.get().onException(e);
+			if(onExceptionListener.notEmpty()) {
+				onExceptionListener.get().onException(e);
+			}
         }
 
 		
@@ -531,9 +538,5 @@ import java.util.UUID;
 	public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener) {
 		onFirmwareVersionListener.set(listener);
 	}
-
-	/*
-	 * End of Util Functions
-	 */
 
 }
