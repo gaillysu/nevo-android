@@ -89,7 +89,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public Dao<IDailyHistory, Integer> getDailyHistoryDao() throws SQLException {
         if (mDailyhistoryDao == null)
             mDailyhistoryDao = getDao(IDailyHistory.class);
-
         return mDailyhistoryDao;
     }
 

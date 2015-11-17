@@ -29,7 +29,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private DatabaseHelper mDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
