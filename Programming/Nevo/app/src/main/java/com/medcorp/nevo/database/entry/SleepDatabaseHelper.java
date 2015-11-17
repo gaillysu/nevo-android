@@ -2,6 +2,7 @@ package com.medcorp.nevo.database.entry;
 
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.database.Sleep;
 import com.medcorp.nevo.database.User;
 
 import java.sql.SQLException;
@@ -11,21 +12,21 @@ import java.util.List;
 /**
  * Created by karl-john on 17/11/15.
  */
-public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
+public class SleepDatabaseHelper implements BaseEntryDatabaseHelper<Sleep> {
 
     // instance of the database goes here as private variable
     private DatabaseHelper mDatabaseHelper;
 
-    public UserDatabaseHelper() {
+    public SleepDatabaseHelper() {
         // Open the database & initlialize
         mDatabaseHelper = DatabaseHelper.getInstance(ApplicationModel.getApplicationModel());
     }
 
     @Override
-    public boolean add(User object) {
+    public boolean add(Sleep object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().create(object);
+            result = mDatabaseHelper.getSleepDao().create(object);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,10 +34,10 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     }
 
     @Override
-    public boolean update(User object) {
+    public boolean update(Sleep object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().update(object);
+            result = mDatabaseHelper.getSleepDao().update(object);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,7 +48,7 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     public boolean remove(int id) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().deleteById(id);
+            result = mDatabaseHelper.getSleepDao().deleteById(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,10 +56,10 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     }
 
     @Override
-    public User get(int id) {
-        List<User> user = new ArrayList<User>();
+    public Sleep get(int id) {
+        List<Sleep> user = new ArrayList<Sleep>();
         try {
-            user = mDatabaseHelper.getUserDao().queryBuilder().where().eq(User.fID,id).query();
+            user = mDatabaseHelper.getSleepDao().queryBuilder().where().eq(Sleep.fID,id).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,10 +67,10 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     }
 
     @Override
-    public List<User> getAll() {
-        List<User> user = new ArrayList<User>();
+    public List<Sleep> getAll() {
+        List<Sleep> user = new ArrayList<Sleep>();
         try {
-            user = mDatabaseHelper.getUserDao().queryBuilder().query();
+            user = mDatabaseHelper.getSleepDao().queryBuilder().query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
