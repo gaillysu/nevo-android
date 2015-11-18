@@ -2,7 +2,7 @@ package com.medcorp.nevo.database.entry;
 
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.User;
+import com.medcorp.nevo.database.Heartbeat;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,21 +11,21 @@ import java.util.List;
 /**
  * Created by karl-john on 17/11/15.
  */
-public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
+public class HeartbeatDatabaseHelper implements BaseEntryDatabaseHelper<Heartbeat> {
 
     // instance of the database goes here as private variable
     private DatabaseHelper mDatabaseHelper;
 
-    public UserDatabaseHelper() {
+    public HeartbeatDatabaseHelper() {
         // Open the database & initlialize
         mDatabaseHelper = DatabaseHelper.getInstance(ApplicationModel.getApplicationModel());
     }
 
     @Override
-    public boolean add(User object) {
+    public boolean add(Heartbeat object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().create(object);
+            result = mDatabaseHelper.getHeartbeatDao().create(object);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,10 +33,10 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     }
 
     @Override
-    public boolean update(User object) {
+    public boolean update(Heartbeat object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().update(object);
+            result = mDatabaseHelper.getHeartbeatDao().update(object);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     public boolean remove(int id) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().deleteById(id);
+            result = mDatabaseHelper.getHeartbeatDao().deleteById(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -55,10 +55,10 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     }
 
     @Override
-    public User get(int id) {
-        List<User> user = new ArrayList<User>();
+    public Heartbeat get(int id) {
+        List<Heartbeat> user = new ArrayList<Heartbeat>();
         try {
-            user = mDatabaseHelper.getUserDao().queryBuilder().where().eq(User.fID,id).query();
+            user = mDatabaseHelper.getHeartbeatDao().queryBuilder().where().eq(Heartbeat.fID,id).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,10 +66,10 @@ public class UserDatabaseHelper implements BaseEntryDatabaseHelper<User> {
     }
 
     @Override
-    public List<User> getAll() {
-        List<User> user = new ArrayList<User>();
+    public List<Heartbeat> getAll() {
+        List<Heartbeat> user = new ArrayList<Heartbeat>();
         try {
-            user = mDatabaseHelper.getUserDao().queryBuilder().query();
+            user = mDatabaseHelper.getHeartbeatDao().queryBuilder().query();
         } catch (SQLException e) {
             e.printStackTrace();
         }

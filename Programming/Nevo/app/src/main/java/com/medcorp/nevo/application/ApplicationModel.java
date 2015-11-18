@@ -14,8 +14,13 @@ import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.model.DailySleep;
-import com.medcorp.nevo.model.DailySteps;
+import com.medcorp.nevo.database.Sleep;
+import com.medcorp.nevo.database.Steps;
+import com.medcorp.nevo.database.entry.HeartbeatDatabaseHelper;
+import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
+import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.database.entry.UserDatabaseHelper;
+
 
 import java.util.List;
 
@@ -24,18 +29,28 @@ import java.util.List;
  */
 public class ApplicationModel extends Application  implements OnSyncControllerListener {
 
+    private static ApplicationModel  mApplicationModel;
     private SyncController  mSyncController;
     //private NetworkController mNetworkController;
-    private DatabaseHelper mDatabaseHelper;
+    //private DatabaseHelper mDatabaseHelper;
+    private UserDatabaseHelper mUserDatabaseHelper;
+    private HeartbeatDatabaseHelper mHeartbeatDatabaseHelper;
+    private StepsDatabaseHelper mStepsDatabaseHelper;
+    private SleepDatabaseHelper mSleepDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.w("Karl", "On create app model");
+        mApplicationModel = this;
         observableActivity = new Optional<>();
         mSyncController = new SyncControllerImpl(this);
-        mDatabaseHelper =  DatabaseHelper.getInstance(this);
+        //mDatabaseHelper =  DatabaseHelper.getInstance(this);
+        mUserDatabaseHelper = new UserDatabaseHelper();
+        mHeartbeatDatabaseHelper = new HeartbeatDatabaseHelper();
+        mStepsDatabaseHelper = new StepsDatabaseHelper();
+        mSleepDatabaseHelper = new SleepDatabaseHelper();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -89,6 +104,10 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
    // public void sendRequest(NetworkRequest request)
    // {
    // }
+    public static Application getApplicationModel()
+    {
+        return mApplicationModel;
+    }
 
     public SyncController getSyncController(){return mSyncController;}
 
@@ -124,11 +143,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         mSyncController.forgetDevice();
     }
 
-    public List<DailySteps> getAllSteps(){
-        return mDatabaseHelper.getAllSteps();
+    public List<Steps> getAllSteps(){
+        return mStepsDatabaseHelper.getAll();
     }
 
-    public List<DailySleep> getAllSleep(){
-        return mDatabaseHelper.getAllSleep();
+    public List<Sleep> getAllSleep(){
+        return mSleepDatabaseHelper.getAll();
     }
 }

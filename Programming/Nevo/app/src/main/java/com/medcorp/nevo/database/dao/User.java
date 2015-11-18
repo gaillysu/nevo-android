@@ -59,4 +59,59 @@ public class User {
     @DatabaseField
     private String Remarks;
 
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public long getBirthday() {
+        return Birthday;
+    }
+
+    public void setBirthday(long birthday) {
+        Birthday = birthday;
+    }
+
+    public int getAge() {
+        return Age;
+    }
+
+    public void setAge(int age) {
+        Age = age;
+    }
+
+    public int getWeight() {
+        return Weight;
+    }
+
+    public void setWeight(int weight) {
+        Weight = weight;
+    }
+
+    public int getHeight() {
+        return Height;
+    }
+
+    public void setHeight(int height) {
+        Height = height;
+    }
+
+    public long getCreatedDate() {
+        return CreatedDate;
+    }
+
+    public void setCreatedDate(long createdDate) {
+        CreatedDate = createdDate;
+    }
+
+    public String getRemarks() {
+        return Remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        Remarks = remarks;
+    }
 }

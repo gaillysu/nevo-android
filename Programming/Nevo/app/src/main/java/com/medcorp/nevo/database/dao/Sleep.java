@@ -127,4 +127,132 @@ public class Sleep {
     public static final String fRemarks = "Remarks";
     @DatabaseField
     private String Remarks;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(int userID) {
+        UserID = userID;
+    }
+
+    public long getCreatedDate() {
+        return CreatedDate;
+    }
+
+    public void setCreatedDate(long createdDate) {
+        CreatedDate = createdDate;
+    }
+
+    public long getDate() {
+        return Date;
+    }
+
+    public void setDate(long date) {
+        Date = date;
+    }
+
+    public int getTotalSleepTime() {
+        return TotalSleepTime;
+    }
+
+    public void setTotalSleepTime(int totalSleepTime) {
+        TotalSleepTime = totalSleepTime;
+    }
+
+    public int getTotalWakeTime() {
+        return TotalWakeTime;
+    }
+
+    public void setTotalWakeTime(int totalWakeTime) {
+        TotalWakeTime = totalWakeTime;
+    }
+
+    public int getTotalLightTime() {
+        return TotalLightTime;
+    }
+
+    public void setTotalLightTime(int totalLightTime) {
+        TotalLightTime = totalLightTime;
+    }
+
+    public int getTotalDeepTime() {
+        return TotalDeepTime;
+    }
+
+    public void setTotalDeepTime(int totalDeepTime) {
+        TotalDeepTime = totalDeepTime;
+    }
+
+    public String getHourlySleep() {
+        return HourlySleep;
+    }
+
+    public void setHourlySleep(String hourlySleep) {
+        HourlySleep = hourlySleep;
+    }
+
+    public String getHourlyWake() {
+        return HourlyWake;
+    }
+
+    public void setHourlyWake(String hourlyWake) {
+        HourlyWake = hourlyWake;
+    }
+
+    public String getHourlyLight() {
+        return HourlyLight;
+    }
+
+    public void setHourlyLight(String hourlyLight) {
+        HourlyLight = hourlyLight;
+    }
+
+    public String getHourlyDeep() {
+        return HourlyDeep;
+    }
+
+    public void setHourlyDeep(String hourlyDeep) {
+        HourlyDeep = hourlyDeep;
+    }
+
+    public long getStart() {
+        return Start;
+    }
+
+    public void setStart(long start) {
+        Start = start;
+    }
+
+    public long getEnd() {
+        return End;
+    }
+
+    public void setEnd(long end) {
+        End = end;
+    }
+
+    public int getSleepQuality() {
+        return SleepQuality;
+    }
+
+    public void setSleepQuality(int sleepQuality) {
+        SleepQuality = sleepQuality;
+    }
+
+    public String getRemarks() {
+        return Remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        Remarks = remarks;
+    }
 }

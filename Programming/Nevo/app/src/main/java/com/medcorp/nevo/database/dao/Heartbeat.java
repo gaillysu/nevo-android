@@ -57,4 +57,60 @@ public class Heartbeat {
     public static final String fRemarks = "Remarks";
     @DatabaseField
     private String Remarks;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(int userID) {
+        UserID = userID;
+    }
+
+    public long getCreatedDate() {
+        return CreatedDate;
+    }
+
+    public void setCreatedDate(long createdDate) {
+        CreatedDate = createdDate;
+    }
+
+    public long getDate() {
+        return Date;
+    }
+
+    public void setDate(long date) {
+        Date = date;
+    }
+
+    public int getMaxHrm() {
+        return MaxHrm;
+    }
+
+    public void setMaxHrm(int maxHrm) {
+        MaxHrm = maxHrm;
+    }
+
+    public int getAvgHrm() {
+        return AvgHrm;
+    }
+
+    public void setAvgHrm(int avgHrm) {
+        AvgHrm = avgHrm;
+    }
+
+    public String getRemarks() {
+        return Remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        Remarks = remarks;
+    }
 }
