@@ -36,7 +36,7 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.IDailyHistory;
+import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.history.DateAdapter;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.SpecialCalendar;

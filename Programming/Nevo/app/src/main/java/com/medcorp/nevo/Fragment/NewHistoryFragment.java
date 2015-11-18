@@ -3,7 +3,6 @@ package com.medcorp.nevo.fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,18 +17,11 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.IDailyHistory;
-import com.medcorp.nevo.model.SleepBehavior;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.medcorp.nevo.database.dao.IDailyHistory;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;

@@ -17,7 +17,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.IDailyHistory;
+import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.R;
 
 import org.json.JSONException;

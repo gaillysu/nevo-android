@@ -2,7 +2,10 @@ package com.medcorp.nevo.database.entry;
 
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.Steps;
+import com.medcorp.nevo.database.dao.StepsDAO;
+import com.medcorp.nevo.database.dao.UserDAO;
+import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.model.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ import java.util.List;
 /**
  * Created by karl-john on 17/11/15.
  */
-public class StepsDatabaseHelper implements BaseEntryDatabaseHelper<Steps> {
+public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     // instance of the database goes here as private variable
     private DatabaseHelper mDatabaseHelper;
@@ -25,7 +28,7 @@ public class StepsDatabaseHelper implements BaseEntryDatabaseHelper<Steps> {
     public boolean add(Steps object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getStepsDao().create(object);
+            result = mDatabaseHelper.getStepsDao().create(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -36,7 +39,7 @@ public class StepsDatabaseHelper implements BaseEntryDatabaseHelper<Steps> {
     public boolean update(Steps object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getStepsDao().update(object);
+            result = mDatabaseHelper.getStepsDao().update(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,23 +59,69 @@ public class StepsDatabaseHelper implements BaseEntryDatabaseHelper<Steps> {
 
     @Override
     public Steps get(int id) {
-        List<Steps> user = new ArrayList<Steps>();
+        List<Steps> stepsList = new ArrayList<Steps>();
         try {
-            user = mDatabaseHelper.getStepsDao().queryBuilder().where().eq(Steps.fID,id).query();
+            List<StepsDAO> stepsDAOList = mDatabaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fID, id).query();
+            for(StepsDAO stepsDAO : stepsDAOList){
+                stepsList.add(convertToNormal(stepsDAO));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user.isEmpty()?null:user.get(0);
+        return stepsList.isEmpty()?null:stepsList.get(0);
     }
 
     @Override
     public List<Steps> getAll() {
-        List<Steps> user = new ArrayList<Steps>();
+        List<Steps> stepsList = new ArrayList<Steps>();
         try {
-            user = mDatabaseHelper.getStepsDao().queryBuilder().query();
+            List<StepsDAO> stepsDAOList = mDatabaseHelper.getStepsDao().queryBuilder().query();
+            for(StepsDAO stepsDAO : stepsDAOList){
+                stepsList.add(convertToNormal(stepsDAO));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user.isEmpty()?null:user;
+        return stepsList.isEmpty()?null:stepsList;
+    }
+
+    private StepsDAO convertToDao(Steps steps){
+        StepsDAO stepsDao = new StepsDAO();
+        stepsDao.setID(steps.getiD());
+        stepsDao.setUserID(steps.getUserID());
+        stepsDao.setCreatedDate(steps.getCreatedDate());
+        stepsDao.setDate(steps.getDate());
+        stepsDao.setSteps(steps.getSteps());
+        stepsDao.setWalkSteps(steps.getWalkSteps());
+        stepsDao.setRunSteps(steps.getRunSteps());
+        stepsDao.setDistance(steps.getDistance());
+        stepsDao.setCalories(steps.getCalories());
+        stepsDao.setHourlySteps(steps.getHourlySteps());
+        stepsDao.setHourlyDistance(steps.getHourlyDistance());
+        stepsDao.setHourlyCalories(steps.getHourlyCalories());
+        stepsDao.setInZoneTime(steps.getInZoneTime());
+        stepsDao.setOutZoneTime(steps.getOutZoneTime());
+        stepsDao.setNoActivityTime(steps.getNoActivityTime());
+        stepsDao.setGoalReached(steps.isGoalReached());
+        stepsDao.setRemarks(steps.getRemarks());
+        return stepsDao;
+    }
+
+    private Steps convertToNormal(StepsDAO stepsDAO){
+        Steps steps = new Steps(stepsDAO.getID(),stepsDAO.getUserID(),stepsDAO.getCreatedDate());
+        steps.setDate(stepsDAO.getDate());
+        steps.setSteps(stepsDAO.getSteps());
+        steps.setWalkSteps(stepsDAO.getWalkSteps());
+        steps.setRunSteps(stepsDAO.getRunSteps());
+        steps.setDistance(stepsDAO.getDistance());
+        steps.setCalories(stepsDAO.getCalories());
+        steps.setHourlySteps(stepsDAO.getHourlySteps());
+        steps.setHourlyDistance(stepsDAO.getHourlyDistance());
+        steps.setHourlyCalories(stepsDAO.getHourlyCalories());
+        steps.setInZoneTime(stepsDAO.getInZoneTime());
+        steps.setOutZoneTime(stepsDAO.getOutZoneTime());
+        steps.setNoActivityTime(stepsDAO.getNoActivityTime());
+        steps.setGoalReached(stepsDAO.isGoalReached());
+        return steps;
     }
 }

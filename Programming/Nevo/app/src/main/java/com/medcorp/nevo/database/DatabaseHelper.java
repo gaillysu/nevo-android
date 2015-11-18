@@ -10,10 +10,13 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.model.DailySleep;
+import com.medcorp.nevo.database.dao.HeartbeatDAO;
+import com.medcorp.nevo.database.dao.IDailyHistory;
+import com.medcorp.nevo.database.dao.SleepDAO;
+import com.medcorp.nevo.database.dao.StepsDAO;
+import com.medcorp.nevo.database.dao.UserDAO;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.model.DailyHistory;
-import com.medcorp.nevo.model.DailySteps;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,10 +42,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private  Dao<IDailyHistory,Integer> mDailyhistoryDao = null;
-    private  Dao<User,Integer> mUserDao = null;
-    private  Dao<Sleep,Integer> mSleepDao = null;
-    private  Dao<Steps,Integer> mStepsDao = null;
-    private  Dao<Heartbeat,Integer> mHeartbeatDao = null;
+    private  Dao<UserDAO,Integer> mUserDao = null;
+    private  Dao<SleepDAO,Integer> mSleepDao = null;
+    private  Dao<StepsDAO,Integer> mStepsDao = null;
+    private  Dao<HeartbeatDAO,Integer> mHeartbeatDao = null;
 
     //Classic singleton
     private static DatabaseHelper sInstance = null;
@@ -71,10 +74,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
 
             TableUtils.createTable(connectionSource, IDailyHistory.class);
-            TableUtils.createTable(connectionSource,User.class);
-            TableUtils.createTable(connectionSource, Sleep.class);
-            TableUtils.createTable(connectionSource, Steps.class);
-            TableUtils.createTable(connectionSource, Heartbeat.class);
+            TableUtils.createTable(connectionSource,UserDAO.class);
+            TableUtils.createTable(connectionSource, SleepDAO.class);
+            TableUtils.createTable(connectionSource, StepsDAO.class);
+            TableUtils.createTable(connectionSource, HeartbeatDAO.class);
 
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
@@ -86,10 +89,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
 
             TableUtils.dropTable(connectionSource, IDailyHistory.class, true);
-            TableUtils.dropTable(connectionSource, User.class, true);
-            TableUtils.dropTable(connectionSource, Sleep.class, true);
-            TableUtils.dropTable(connectionSource, Steps.class, true);
-            TableUtils.dropTable(connectionSource, Heartbeat.class, true);
+            TableUtils.dropTable(connectionSource, UserDAO.class, true);
+            TableUtils.dropTable(connectionSource, SleepDAO.class, true);
+            TableUtils.dropTable(connectionSource, StepsDAO.class, true);
+            TableUtils.dropTable(connectionSource, HeartbeatDAO.class, true);
 
             onCreate(sqliteDatabase, connectionSource);
         } catch (SQLException e) {
@@ -104,30 +107,30 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mDailyhistoryDao;
     }
 
-    public Dao<User, Integer> getUserDao() throws SQLException {
+    public Dao<UserDAO, Integer> getUserDao() throws SQLException {
         if (mUserDao == null)
-            mUserDao = getDao(User.class);
+            mUserDao = getDao(UserDAO.class);
 
         return mUserDao;
     }
 
-    public Dao<Sleep, Integer> getSleepDao() throws SQLException {
+    public Dao<SleepDAO, Integer> getSleepDao() throws SQLException {
         if (mSleepDao == null)
-            mSleepDao = getDao(Sleep.class);
+            mSleepDao = getDao(SleepDAO.class);
 
         return mSleepDao;
     }
 
-    public Dao<Steps, Integer> getStepsDao() throws SQLException {
+    public Dao<StepsDAO, Integer> getStepsDao() throws SQLException {
         if (mStepsDao == null)
-            mStepsDao = getDao(Steps.class);
+            mStepsDao = getDao(StepsDAO.class);
 
         return mStepsDao;
     }
 
-    public Dao<Heartbeat, Integer> getHeartbeatDao() throws SQLException {
+    public Dao<HeartbeatDAO, Integer> getHeartbeatDao() throws SQLException {
         if (mHeartbeatDao == null)
-            mHeartbeatDao = getDao(Heartbeat.class);
+            mHeartbeatDao = getDao(HeartbeatDAO.class);
 
         return mHeartbeatDao;
     }
@@ -262,9 +265,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         int theDayCount = 0;
 
         try {
-            //List<IDailyHistory> list = DatabaseHelper.getInstance(mCtx).getDailyHistoryDao().queryBuilder().orderBy("created", false).where().le("created",start).and().ge("created", end).query();
-            List <IDailyHistory> list = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created", days).query();
 
+            List <IDailyHistory> list = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created", days).query();
+            //List<IDailyHistory> list = DatabaseHelper.getInstance(mCtx).getDailyHistoryDao().queryBuilder().orderBy("created", false).where().le("created",start).and().ge("created", end).query();
             if(list.size()==1){
                 //only the today's sleep [0~23],such as the first record in the datebase
                 if(list.get(0).getCreated()==start)
@@ -521,33 +524,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return new ArrayList<DailyHistory>();
-    }
-
-    public DailySteps getSteps(Date date){
-        DailyHistory history = getDailyHistory(date);
-        return new DailySteps(history);
-    }
-
-    public List<DailySteps> getAllSteps(){
-        List <DailyHistory> dailyHistories = getAllDailyHistory();
-        List<DailySteps> dailySteps = new ArrayList<DailySteps>();
-        for (DailyHistory history: dailyHistories) {
-            dailySteps.add(new DailySteps(history));
-        }
-        return dailySteps;
-    }
-
-    public DailySleep getSleep(Date date){
-        DailyHistory history = getDailyHistory(date);
-        return new DailySleep(history);
-    }
-
-    public List<DailySleep> getAllSleep(){
-        List <DailyHistory> dailyHistories = getAllDailyHistory();
-        List<DailySleep> dailySleeps = new ArrayList<DailySleep>();
-        for (DailyHistory history: dailyHistories) {
-            dailySleeps.add(new DailySleep(history));
-        }
-        return dailySleeps;
     }
  }

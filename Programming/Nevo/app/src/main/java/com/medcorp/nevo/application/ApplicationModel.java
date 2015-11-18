@@ -13,13 +13,14 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.Sleep;
-import com.medcorp.nevo.database.Steps;
+import com.medcorp.nevo.database.dao.SleepDAO;
+import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.database.entry.HeartbeatDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.database.entry.UserDatabaseHelper;
+import com.medcorp.nevo.model.Sleep;
+import com.medcorp.nevo.model.Steps;
 
 
 import java.util.List;
