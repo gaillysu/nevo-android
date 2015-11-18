@@ -5,7 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 /**
  * Created by gaillysu on 15/11/17.
  */
-public class Heartbeat {
+public class HeartbeatDAO {
     /**
      * field name and initialize value, Primary field
      */
