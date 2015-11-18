@@ -226,8 +226,8 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
      * Replace fragment in the MainActivity
      * */
     public void replaceFragment(final int position, final String tag){
-        if(tag != null){
-            activeFragment.set(getFragment(tag));
+        if(tag != null && activeFragment!= null ){
+                activeFragment.set(getFragment(tag));
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();

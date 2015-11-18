@@ -13,7 +13,7 @@ public abstract class BaseFragment extends Fragment implements FragmentObservabl
     private ApplicationModel applicationModel;
 
     public ApplicationModel getModel() {
-        if (applicationModel != null) {
+        if (applicationModel == null) {
             applicationModel = (ApplicationModel) getActivity().getApplication();
         }
         return applicationModel;
