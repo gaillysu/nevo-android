@@ -51,6 +51,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         observableActivity = new Optional<>();
         mOtaController  = new OtaControllerImpl(this,false);
         mSyncController = new SyncControllerImpl(this);
+        mSyncController.setSyncControllerListenser(this);
         //mDatabaseHelper =  DatabaseHelper.getInstance(this);
         mUserDatabaseHelper = new UserDatabaseHelper();
         mHeartbeatDatabaseHelper = new HeartbeatDatabaseHelper();
