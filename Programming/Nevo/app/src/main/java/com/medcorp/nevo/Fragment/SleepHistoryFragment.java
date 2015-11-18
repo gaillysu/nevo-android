@@ -215,6 +215,7 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
     }
 
 
+    /**
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void packetReceived(NevoPacket packet) {
@@ -260,7 +261,7 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
             });
         }
     }
-
+    */
 
     @Override
     public void onPause() {

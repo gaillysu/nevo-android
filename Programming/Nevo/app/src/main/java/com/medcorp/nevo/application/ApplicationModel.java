@@ -6,6 +6,8 @@ import android.os.Build;
 import android.util.Log;
 
 import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.ble.controller.OtaController;
+import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
@@ -32,6 +34,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     private static ApplicationModel  mApplicationModel;
     private SyncController  mSyncController;
+    private OtaController   mOtaController;
     //private NetworkController mNetworkController;
     //private DatabaseHelper mDatabaseHelper;
     private UserDatabaseHelper mUserDatabaseHelper;
@@ -46,6 +49,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         Log.w("Karl", "On create app model");
         mApplicationModel = this;
         observableActivity = new Optional<>();
+        mOtaController  = new OtaControllerImpl(this,false);
         mSyncController = new SyncControllerImpl(this);
         //mDatabaseHelper =  DatabaseHelper.getInstance(this);
         mUserDatabaseHelper = new UserDatabaseHelper();
@@ -111,6 +115,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public SyncController getSyncController(){return mSyncController;}
+    public OtaController getOtaController(){return mOtaController;}
 
     public void startConnectToWatch(boolean forceScan) {
         mSyncController.startConnect(forceScan,this);

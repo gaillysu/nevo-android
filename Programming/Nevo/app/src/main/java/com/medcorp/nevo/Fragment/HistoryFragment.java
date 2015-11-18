@@ -1389,7 +1389,7 @@ public class HistoryFragment extends BaseFragment implements OnGestureListener {
     public void notifyOnDisconnected() {
         ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
     }
-
+/**
     @Override
     public void packetReceived(NevoPacket packet) {
         if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == packet.getHeader())
@@ -1428,5 +1428,5 @@ public class HistoryFragment extends BaseFragment implements OnGestureListener {
             }
         }
     }
-
+*/
 }

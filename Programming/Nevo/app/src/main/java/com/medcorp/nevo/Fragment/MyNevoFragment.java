@@ -123,7 +123,7 @@ public class MyNevoFragment extends BaseFragment implements View.OnClickListener
 
     }
 
-
+/**
     @Override
     public void packetReceived(NevoPacket packet) {
         if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader())
@@ -156,7 +156,7 @@ public class MyNevoFragment extends BaseFragment implements View.OnClickListener
         });
 
     }
-
+*/
     @Override
     public void notifyDatasetChanged() {
 

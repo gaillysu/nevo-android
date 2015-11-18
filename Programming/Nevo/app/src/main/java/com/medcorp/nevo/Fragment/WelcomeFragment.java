@@ -170,7 +170,7 @@ public class WelcomeFragment extends BaseFragment {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getInt(PREF_CUR_STEP, 0);
     }
-
+/**
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void packetReceived(NevoPacket packet) {
@@ -204,7 +204,7 @@ public class WelcomeFragment extends BaseFragment {
             });
         }
     }
-
+*/
     @Override
     public void onPause() {
         super.onPause();

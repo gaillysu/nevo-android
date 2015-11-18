@@ -120,6 +120,7 @@ public class NewHistoryFragment extends BaseFragment {
         }
     }
 
+    /**
     @Override
     public void packetReceived(NevoPacket packet) {
         if((byte) ReadDailyTrackerNevoRequest.HEADER == packet.getHeader()) {
@@ -130,7 +131,7 @@ public class NewHistoryFragment extends BaseFragment {
             }
         }
     }
-
+    */
     @Override
     public void notifyDatasetChanged() {
 
