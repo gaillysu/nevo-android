@@ -1,4 +1,4 @@
-package com.medcorp.nevo.database;
+package com.medcorp.nevo.database.dao;
 import com.medcorp.nevo.model.DailyHistory;
 import com.j256.ormlite.field.DatabaseField;
 
