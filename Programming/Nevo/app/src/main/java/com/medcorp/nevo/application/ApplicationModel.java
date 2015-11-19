@@ -34,7 +34,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     private static ApplicationModel  mApplicationModel;
     private SyncController  mSyncController;
-    private OtaController   mOtaController;
+    //private OtaController   mOtaController;
     //private NetworkController mNetworkController;
     //private DatabaseHelper mDatabaseHelper;
     private UserDatabaseHelper mUserDatabaseHelper;
@@ -49,7 +49,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         Log.w("Karl", "On create app model");
         mApplicationModel = this;
         observableActivity = new Optional<>();
-        mOtaController  = new OtaControllerImpl(this,false);
+        //mOtaController  = new OtaControllerImpl(this,false);
         mSyncController = new SyncControllerImpl(this);
         mSyncController.setSyncControllerListenser(this);
         //mDatabaseHelper =  DatabaseHelper.getInstance(this);
@@ -116,7 +116,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public SyncController getSyncController(){return mSyncController;}
-    public OtaController getOtaController(){return mOtaController;}
+    //public OtaController getOtaController(){return mOtaController;}
 
     public void startConnectToWatch(boolean forceScan) {
         mSyncController.startConnect(forceScan,this);

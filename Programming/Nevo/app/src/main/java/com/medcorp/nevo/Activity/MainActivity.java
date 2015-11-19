@@ -61,7 +61,6 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         setContentView(R.layout.activity_main);
         getModel().setActiveActivity(this);
         //disenable navigation drawer shadow
-        this.activeFragment = new Optional<>();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
         navigationDrawerFragment = (NavigationDrawerFragment)
@@ -74,8 +73,6 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         navigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-
-        getModel().connectionStateChanged(false);
 
 //        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
 //
@@ -215,10 +212,6 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
             replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
         }else{
             replaceFragment(position, tag.get());
-            if(position != OTAActivity.OTAPOSITION && getModel().getOtaController().getState() == Constants.DFUControllerState.INIT)
-            {
-                getModel().getOtaController().switch2SyncController();
-            }
         }
     }
 
@@ -226,16 +219,16 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
      * Replace fragment in the MainActivity
      * */
     public void replaceFragment(final int position, final String tag){
-        if(tag != null && activeFragment!= null ){
-                activeFragment.set(getFragment(tag));
-        }
+
+        Fragment fg = PlaceholderFragment.newInstance(position + 1);
+        activeFragment =  new Optional<>();
+        activeFragment.set((BaseFragment) fg);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 // .addToBackStack(null)
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), tag)
+                .replace(R.id.container, fg, tag)
                 .commitAllowingStateLoss();
-
     }
 
     @Override
