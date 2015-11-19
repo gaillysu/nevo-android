@@ -28,6 +28,8 @@ import com.medcorp.nevo.view.RoundProgressBar;
 import com.medcorp.nevo.view.StepPickerView;
 
 import java.util.Calendar;
+import java.util.Date;
+import com.medcorp.nevo.model.Steps;
 
 /**
  * WelcomeFragment aims to display current time and steps how many you took.
@@ -219,7 +221,17 @@ public class WelcomeFragment extends BaseFragment {
 
     @Override
     public void notifyDatasetChanged() {
-        //TODO Delete packet received method and get it from the database.
+        //TODO define the "id".
+        /**
+        int id = 1; //
+        Steps steps =  getModel().getDailySteps(id);
+        if(steps == null) return;
+        int dailySteps = steps.getSteps();
+        int dailyGoal =  steps.getGoal();
+        Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+        setText(dailySteps + "/" + dailyGoal);
+        setProgressBar((int) (100.0 * dailySteps / dailyGoal));
+         */
     }
 
     @Override

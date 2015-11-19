@@ -118,11 +118,11 @@ public class StepsDAO {
     private int NoActivityTime;
 
     /**
-     * goal result, reached or not, boolean type
+     * goal value
      */
-    public static final String fGoalReached = "GoalReached";
+    public static final String fGoal = "Goal";
     @DatabaseField
-    private boolean GoalReached;
+    private int Goal;
 
     /**
      * remarks field, save extend  infomation
@@ -253,12 +253,12 @@ public class StepsDAO {
         NoActivityTime = noActivityTime;
     }
 
-    public boolean isGoalReached() {
-        return GoalReached;
+    public int getGoal() {
+        return Goal;
     }
 
-    public void setGoalReached(boolean goalReached) {
-        GoalReached = goalReached;
+    public void setGoal(int goal) {
+        Goal = goal;
     }
 
     public String getRemarks() {

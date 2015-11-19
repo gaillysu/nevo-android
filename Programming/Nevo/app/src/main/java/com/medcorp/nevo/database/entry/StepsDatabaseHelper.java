@@ -1,5 +1,6 @@
 package com.medcorp.nevo.database.entry;
 
+import com.j256.ormlite.dao.Dao;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.StepsDAO;
@@ -37,13 +38,14 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     @Override
     public boolean update(Steps object) {
-        int result = -1;
+        Dao.CreateOrUpdateStatus result = null;
         try {
-            result = mDatabaseHelper.getStepsDao().update(convertToDao(object));
+            result = mDatabaseHelper.getStepsDao().createOrUpdate(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return result>=0;
+       return true;
     }
 
     @Override
@@ -102,7 +104,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         stepsDao.setInZoneTime(steps.getInZoneTime());
         stepsDao.setOutZoneTime(steps.getOutZoneTime());
         stepsDao.setNoActivityTime(steps.getNoActivityTime());
-        stepsDao.setGoalReached(steps.isGoalReached());
+        stepsDao.setGoal(steps.getGoal());
         stepsDao.setRemarks(steps.getRemarks());
         return stepsDao;
     }
@@ -121,7 +123,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         steps.setInZoneTime(stepsDAO.getInZoneTime());
         steps.setOutZoneTime(stepsDAO.getOutZoneTime());
         steps.setNoActivityTime(stepsDAO.getNoActivityTime());
-        steps.setGoalReached(stepsDAO.isGoalReached());
+        steps.setGoal(stepsDAO.getGoal());
         return steps;
     }
 }

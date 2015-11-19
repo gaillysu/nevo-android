@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
 import com.medcorp.nevo.ble.exception.BLEConnectTimeoutException;
 import com.medcorp.nevo.ble.exception.BLENotSupportedException;
@@ -49,6 +50,7 @@ import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
+import com.medcorp.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
@@ -77,12 +79,15 @@ import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.view.TimePickerView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,7 +196,6 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
                         return;
                     }
-					if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
 
                     if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
                     {
@@ -371,8 +375,27 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                             mEnableTestMode = true;
                             sendRequest(new TestModeNevoRequest(mContext,0,false));
                         }
-                    }
+                        //save current day's step count to "Steps" table
+                        Date currentday = new Date();
 
+                        //TODO: define the id
+                        int id = 1;
+                        Steps steps = new Steps(id,1,currentday.getTime());
+
+                        steps.setDate(((ApplicationModel) mContext).getDateFromDate(currentday).getTime());
+
+                        DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
+                        steps.setSteps(steppacket.getDailySteps());
+                        steps.setGoal(steppacket.getDailyStepsGoal());
+
+                        //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
+                        //steps.setCalories(...);
+                        //steps.setDistance(...);
+                        ((ApplicationModel)mContext).saveDailySteps(steps);
+                        //end save
+                    }
+                    //process done(such as save local db), then notify top layer to get or refresh screen
+                    if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
                     mPacketsbuffer.clear();
                 }
 			}

@@ -1,5 +1,6 @@
 package com.medcorp.nevo.database.entry;
 
+import com.j256.ormlite.dao.Dao;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.UserDAO;
@@ -35,13 +36,14 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
 
     @Override
     public boolean update(User object) {
-        int result = -1;
+        Dao.CreateOrUpdateStatus result = null;
         try {
-            result = mDatabaseHelper.getUserDao().update(convertToDao(object));
+            result = mDatabaseHelper.getUserDao().createOrUpdate(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return result>=0;
+        return true;
     }
 
     @Override

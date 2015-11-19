@@ -1,5 +1,6 @@
 package com.medcorp.nevo.database.entry;
 
+import com.j256.ormlite.dao.Dao;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.SleepDAO;
@@ -36,13 +37,14 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
     @Override
     public boolean update(Sleep object) {
-        int result = -1;
+        Dao.CreateOrUpdateStatus result = null;
         try {
-            result = databaseHelper.getSleepDao().update(convertToDao(object));
+            result = databaseHelper.getSleepDao().createOrUpdate(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return result>=0;
+        return true;
     }
 
     @Override

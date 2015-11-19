@@ -15,6 +15,7 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.SleepDAO;
 import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.database.entry.HeartbeatDatabaseHelper;
@@ -25,6 +26,10 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 
 
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -156,5 +161,46 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     public List<Sleep> getAllSleep(){
         return mSleepDatabaseHelper.getAll();
+    }
+
+    public void saveDailySteps(Steps steps)
+    {
+        mStepsDatabaseHelper.update(steps);
+    }
+
+    /**
+     * id: the unique value, we use the  Date().getTime() as its value
+     * @param id
+     * @return
+     */
+    public Steps getDailySteps(int id)
+    {
+        return mStepsDatabaseHelper.get(id);
+    }
+    public void saveDailySleep(Sleep sleep)
+    {
+        mSleepDatabaseHelper.update(sleep);
+    }
+    /**
+     * id: the unique value, we use the  Date().getTime() as its value
+     * @param id
+     * @return
+     */
+    public Sleep getDailySleep(int id)
+    {
+        return mSleepDatabaseHelper.get(id);
+    }
+
+    public Date getDateFromDate(Date date)
+    {
+        //set the Day from 00:00:00
+        Calendar calBeginning = new GregorianCalendar();
+        calBeginning.setTime(date);
+        calBeginning.set(Calendar.HOUR_OF_DAY, 0);
+        calBeginning.set(Calendar.MINUTE, 0);
+        calBeginning.set(Calendar.SECOND, 0);
+        calBeginning.set(Calendar.MILLISECOND, 0);
+        Date today = calBeginning.getTime();
+        return today;
     }
 }

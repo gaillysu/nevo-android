@@ -32,7 +32,7 @@ public class Steps {
 
     private int noActivityTime;
 
-    private boolean goalReached;
+    private int goal;
 
     private String remarks;
 
@@ -43,7 +43,7 @@ public class Steps {
         this.createdDate = createdDate;
     }
 
-    public Steps(int iD, int userID, long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, boolean goalReached, String remarks) {
+    public Steps(int iD, int userID, long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, String remarks) {
         this.iD = iD;
         this.userID = userID;
         this.createdDate = createdDate;
@@ -59,7 +59,7 @@ public class Steps {
         this.inZoneTime = inZoneTime;
         this.outZoneTime = outZoneTime;
         this.noActivityTime = noActivityTime;
-        this.goalReached = goalReached;
+        this.goal = goal;
         this.remarks = remarks;
     }
 
@@ -111,8 +111,8 @@ public class Steps {
         this.noActivityTime = noActivityTime;
     }
 
-    public void setGoalReached(boolean goalReached) {
-        this.goalReached = goalReached;
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 
     public void setRemarks(String remarks) {
@@ -179,8 +179,8 @@ public class Steps {
         return noActivityTime;
     }
 
-    public boolean isGoalReached() {
-        return goalReached;
+    public int getGoal() {
+        return goal;
     }
 
     public String getRemarks() {

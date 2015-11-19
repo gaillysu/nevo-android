@@ -1,5 +1,6 @@
 package com.medcorp.nevo.database.entry;
 
+import com.j256.ormlite.dao.Dao;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.HeartbeatDAO;
@@ -35,13 +36,14 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
 
     @Override
     public boolean update(Heartbeat object) {
-        int result = -1;
+        Dao.CreateOrUpdateStatus result = null;
         try {
-            result = mDatabaseHelper.getHeartbeatDao().update(convertToDao(object));
+            result = mDatabaseHelper.getHeartbeatDao().createOrUpdate(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return result>=0;
+        return true;
     }
 
     @Override
