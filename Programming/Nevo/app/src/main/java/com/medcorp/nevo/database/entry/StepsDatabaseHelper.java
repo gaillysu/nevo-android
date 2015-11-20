@@ -89,7 +89,6 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     private StepsDAO convertToDao(Steps steps){
         StepsDAO stepsDao = new StepsDAO();
-        stepsDao.setID(steps.getiD());
         stepsDao.setUserID(steps.getUserID());
         stepsDao.setCreatedDate(steps.getCreatedDate());
         stepsDao.setDate(steps.getDate());

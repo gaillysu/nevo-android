@@ -104,7 +104,6 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         sleepDAO.setTotalLightTime(sleep.getTotalLightTime());
         sleepDAO.setTotalSleepTime(sleep.getTotalSleepTime());
         sleepDAO.setTotalWakeTime(sleep.getTotalWakeTime());
-        sleepDAO.setUserID(sleep.getUserID());
         return sleepDAO;
     }
 

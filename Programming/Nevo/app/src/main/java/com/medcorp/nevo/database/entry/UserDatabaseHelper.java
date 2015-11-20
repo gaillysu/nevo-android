@@ -87,7 +87,6 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
 
     private UserDAO convertToDao(User user){
         UserDAO userDAO = new UserDAO();
-        userDAO.setID(user.getId());
         userDAO.setCreatedDate(user.getCreatedDate());
         userDAO.setHeight(user.getHeight());
         userDAO.setAge(user.getAge());
