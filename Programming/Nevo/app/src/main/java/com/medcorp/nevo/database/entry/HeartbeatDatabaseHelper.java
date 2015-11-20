@@ -8,6 +8,7 @@ import com.medcorp.nevo.model.Heartbeat;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,21 +37,13 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
 
     @Override
     public boolean update(Heartbeat object) {
-        Dao.CreateOrUpdateStatus result = null;
-        try {
-            result = mDatabaseHelper.getHeartbeatDao().createOrUpdate(convertToDao(object));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean remove(int id) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getHeartbeatDao().deleteById(id);
+            List<HeartbeatDAO> heartbeatDAOList = mDatabaseHelper.getHeartbeatDao().queryBuilder().where().eq(HeartbeatDAO.fUserID, object.getUserID()).and().eq(HeartbeatDAO.fDate,object.getDate()).query();
+            if(heartbeatDAOList.isEmpty()) return add(object);
+            HeartbeatDAO daoobject = convertToDao(object);
+            daoobject.setID(heartbeatDAOList.get(0).getID());
+            result = mDatabaseHelper.getHeartbeatDao().update(daoobject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,10 +51,21 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
     }
 
     @Override
-    public Heartbeat get(int id) {
+    public boolean remove(int userid,Date date) {
+        try {
+            List<HeartbeatDAO> heartbeatDAOList = mDatabaseHelper.getHeartbeatDao().queryBuilder().where().eq(HeartbeatDAO.fUserID, userid).and().eq(HeartbeatDAO.fDate,date.getTime()).query();
+            if(!heartbeatDAOList.isEmpty()) mDatabaseHelper.getHeartbeatDao().delete(heartbeatDAOList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public Heartbeat get(int userid,Date date) {
         List<Heartbeat> heartbeatList = new ArrayList<Heartbeat>();
         try {
-            List<HeartbeatDAO> heartbeatDAOList = mDatabaseHelper.getHeartbeatDao().queryBuilder().where().eq(HeartbeatDAO.fID, id).query();
+            List<HeartbeatDAO> heartbeatDAOList = mDatabaseHelper.getHeartbeatDao().queryBuilder().where().eq(HeartbeatDAO.fUserID, userid).and().eq(HeartbeatDAO.fDate,date.getTime()).query();
             for(HeartbeatDAO heartBeatDao : heartbeatDAOList){
                 heartbeatList.add(convertToNormal(heartBeatDao));
             }
@@ -82,7 +86,7 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return heartbeatList.isEmpty()?null:heartbeatList;
+        return heartbeatList;
     }
 
     private HeartbeatDAO convertToDao(Heartbeat heartbeat){

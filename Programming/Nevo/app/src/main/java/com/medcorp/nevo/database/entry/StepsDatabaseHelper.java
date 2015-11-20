@@ -10,6 +10,7 @@ import com.medcorp.nevo.model.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,21 +39,14 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     @Override
     public boolean update(Steps object) {
-        Dao.CreateOrUpdateStatus result = null;
-        try {
-            result = mDatabaseHelper.getStepsDao().createOrUpdate(convertToDao(object));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-       return true;
-    }
 
-    @Override
-    public boolean remove(int id) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getStepsDao().deleteById(id);
+            List<StepsDAO> stepsDAOList = mDatabaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, object.getUserID()).and().eq(StepsDAO.fDate,object.getDate()).query();
+            if(stepsDAOList.isEmpty()) return add(object);
+            StepsDAO daoobject = convertToDao(object);
+            daoobject.setID(stepsDAOList.get(0).getID());
+            result = mDatabaseHelper.getStepsDao().update(daoobject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,10 +54,22 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     }
 
     @Override
-    public Steps get(int id) {
+    public boolean remove(int userid,Date date) {
+        try {
+            List<StepsDAO> stepsDAOList = mDatabaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userid).and().eq(StepsDAO.fDate,date.getTime()).query();
+            if(!stepsDAOList.isEmpty())mDatabaseHelper.getStepsDao().delete(stepsDAOList);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public Steps get(int userid,Date date) {
         List<Steps> stepsList = new ArrayList<Steps>();
         try {
-            List<StepsDAO> stepsDAOList = mDatabaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fID, id).query();
+            List<StepsDAO> stepsDAOList = mDatabaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userid).and().eq(StepsDAO.fDate,date.getTime()).query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 stepsList.add(convertToNormal(stepsDAO));
             }
@@ -84,7 +90,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return stepsList.isEmpty()?null:stepsList;
+        return stepsList;
     }
 
     private StepsDAO convertToDao(Steps steps){

@@ -169,26 +169,26 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     /**
-     * id: the unique value, we use the  Date().getTime() as its value
-     * @param id
+     * userid: which one's steps, date:which date's steps
+     * @param userid,date
      * @return
      */
-    public Steps getDailySteps(int id)
+    public Steps getDailySteps(int userid,Date date)
     {
-        return mStepsDatabaseHelper.get(id);
+        return mStepsDatabaseHelper.get(userid,date);
     }
     public void saveDailySleep(Sleep sleep)
     {
         mSleepDatabaseHelper.update(sleep);
     }
     /**
-     * id: the unique value, we use the  Date().getTime() as its value
-     * @param id
+     * userid: which one's sleep, date:which date's sleep
+     * @param userid,date
      * @return
      */
-    public Sleep getDailySleep(int id)
+    public Sleep getDailySleep(int userid,Date date)
     {
-        return mSleepDatabaseHelper.get(id);
+        return mSleepDatabaseHelper.get(userid,date);
     }
 
     public Date getDateFromDate(Date date)

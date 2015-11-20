@@ -8,6 +8,7 @@ import com.medcorp.nevo.model.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,21 +37,13 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
 
     @Override
     public boolean update(User object) {
-        Dao.CreateOrUpdateStatus result = null;
-        try {
-            result = mDatabaseHelper.getUserDao().createOrUpdate(convertToDao(object));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean remove(int id) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().deleteById(id);
+            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, object.getId()).query();
+            if(userDAOList.isEmpty()) return add(object);
+            UserDAO daoobject = convertToDao(object);
+            daoobject.setID(userDAOList.get(0).getID());
+            result = mDatabaseHelper.getUserDao().update(daoobject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,10 +51,22 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public User get(int id) {
+    public boolean remove(int userid,Date date) {
+        try {
+            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, userid).query();
+            if(!userDAOList.isEmpty()) mDatabaseHelper.getUserDao().delete(userDAOList);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public User get(int userid,Date date) {
         List<User> userList = new ArrayList<User>();
         try {
-            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
+            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, userid).query();
             for(UserDAO userDAO: userDAOList) {
                 userList.add(convertToNormal(userDAO));
             }
@@ -82,7 +87,7 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return userList.isEmpty()?null: userList;
+        return userList;
     }
 
     private UserDAO convertToDao(User user){

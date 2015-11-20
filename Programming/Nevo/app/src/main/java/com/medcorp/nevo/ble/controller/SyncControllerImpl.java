@@ -377,17 +377,14 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         }
                         //save current day's step count to "Steps" table
                         Date currentday = new Date();
-
-                        //TODO: define the id
-                        int id = 1;
-                        Steps steps = new Steps(id,1,currentday.getTime());
+                        Steps steps = new Steps(-1,1,currentday.getTime());
 
                         steps.setDate(((ApplicationModel) mContext).getDateFromDate(currentday).getTime());
 
                         DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
                         steps.setSteps(steppacket.getDailySteps());
                         steps.setGoal(steppacket.getDailyStepsGoal());
-
+                        
                         //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
                         //steps.setCalories(...);
                         //steps.setDistance(...);

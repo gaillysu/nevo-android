@@ -221,17 +221,13 @@ public class WelcomeFragment extends BaseFragment {
 
     @Override
     public void notifyDatasetChanged() {
-        //TODO define the "id".
-        /**
-        int id = 1; //
-        Steps steps =  getModel().getDailySteps(id);
+        Steps steps =  getModel().getDailySteps(1,getModel().getDateFromDate(new Date()));
         if(steps == null) return;
         int dailySteps = steps.getSteps();
         int dailyGoal =  steps.getGoal();
         Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
         setText(dailySteps + "/" + dailyGoal);
         setProgressBar((int) (100.0 * dailySteps / dailyGoal));
-         */
     }
 
     @Override

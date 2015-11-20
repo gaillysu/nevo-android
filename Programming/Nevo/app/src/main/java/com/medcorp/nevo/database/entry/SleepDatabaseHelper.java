@@ -8,6 +8,7 @@ import com.medcorp.nevo.model.Sleep;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,21 +38,13 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
     @Override
     public boolean update(Sleep object) {
-        Dao.CreateOrUpdateStatus result = null;
-        try {
-            result = databaseHelper.getSleepDao().createOrUpdate(convertToDao(object));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean remove(int id) {
         int result = -1;
         try {
-            result = databaseHelper.getSleepDao().deleteById(id);
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, object.getUserID()).and().eq(SleepDAO.fDate,object.getDate()).query();
+            if(sleepDAOList.isEmpty()) return add(object);
+            SleepDAO daoobject = convertToDao(object);
+            daoobject.setID(sleepDAOList.get(0).getID());
+            result = databaseHelper.getSleepDao().update(daoobject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,10 +52,22 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     }
 
     @Override
-    public Sleep get(int id) {
+    public boolean remove(int userid,Date date) {
+        try {
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userid).and().eq(SleepDAO.fDate,date.getTime()).query();
+            if(!sleepDAOList.isEmpty()) databaseHelper.getSleepDao().delete(sleepDAOList);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public Sleep get(int userid,Date date) {
         List<Sleep> sleepList = new ArrayList<Sleep>();
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fID, id).query();
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userid).and().eq(SleepDAO.fDate,date.getTime()).query();
             for (SleepDAO userDao: sleepDAOList) {
                 sleepList.add(convertToNormal(userDao));
             }
@@ -84,7 +89,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return sleepList.isEmpty()?null:sleepList;
+        return sleepList;
     }
 
     private SleepDAO convertToDao(Sleep sleep){
