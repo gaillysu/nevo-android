@@ -148,7 +148,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public String getWatchFirmware() {
-        return mSyncController.getSoftwareVersion();
+        return mSyncController.getFirmwareVersion();
     }
 
     public void forgetDevice() {

@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.OTAActivity;
+import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.listener.OnConnectListener;
@@ -121,13 +123,13 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         connectionController = ConnectionController.Singleton.getInstance(context);
 
         connectionController.setOnExceptionListener(this);
-        oldOnExceptionListener.set(this);
+        oldOnExceptionListener.set((OnExceptionListener)(((OTAActivity)context).getModel().getSyncController()));
         connectionController.setOnDataReceivedListener(this);
-        oldOnDataReceivedListener.set(this);
+        oldOnDataReceivedListener.set((OnDataReceivedListener)(((OTAActivity)context).getModel().getSyncController()));
         connectionController.setOnConnectListener(this);
-        oldOnConnectListener.set(this);
+        oldOnConnectListener.set((OnConnectListener)(((OTAActivity)context).getModel().getSyncController()));
         connectionController.setOnFirmwareVersionListener(this);
-        oldOnConnectListener.set(this);
+        oldOnFirmwareVersionListener.set((OnFirmwareVersionListener)(((OTAActivity)context).getModel().getSyncController()));
 
         //help mode by press A/B key and install battery
         bHelpMode = helpmode;
@@ -628,18 +630,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         }
         if (switch2SyncController)
         {
-            if(oldOnExceptionListener.notEmpty()){
-                connectionController.setOnExceptionListener(oldOnExceptionListener.get());
-            }
-            if(oldOnDataReceivedListener.notEmpty()){
-                connectionController.setOnDataReceivedListener(oldOnDataReceivedListener.get());
-            }
-            if(oldOnConnectListener.notEmpty()){
-                connectionController.setOnConnectListener(oldOnConnectListener.get());
-            }
-            if(oldOnFirmwareVersionListener.notEmpty()){
-                connectionController.setOnFirmwareVersionListener(oldOnFirmwareVersionListener.get());
-            }
+            switch2SyncController();
         }
         if(bHelpMode)
         {
