@@ -16,13 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.OTAActivity;
 import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
 
 /**
  * GoalFragment aims to set goals including Moderate, Intensive, Sportive and Custom
@@ -123,6 +121,7 @@ public class MyNevoFragment extends BaseFragment implements View.OnClickListener
 
     }
 
+
 /**
     @Override
     public void packetReceived(NevoPacket packet) {
@@ -170,5 +169,24 @@ public class MyNevoFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void notifyOnDisconnected() {
         ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+        final byte value = battery.getBatterylevel();
+        Log.i(TAG, "Battery level:" + value);//0,1,2
+        mBatteryValue = value;
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                //show value or IOCN
+                setBatteryValueText(value);
+            }
+        });
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 }

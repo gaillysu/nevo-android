@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.model.Alarm;
@@ -272,5 +273,15 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void notifyOnDisconnected() {
         ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 }

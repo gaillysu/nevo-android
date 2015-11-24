@@ -27,9 +27,9 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <!--android:name=".activity.tutorial.TutorialOneActivity"-->
+
         <activity
-            android:name=".activity.task.GoogleFitTestActivity"
+            android:name=".activity.tutorial.TutorialOneActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>

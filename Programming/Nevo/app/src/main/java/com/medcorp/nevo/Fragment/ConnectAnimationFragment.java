@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.view.AlertDialogView;
@@ -85,6 +86,15 @@ public class ConnectAnimationFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void notifyOnDisconnected() {
+
+    }
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
 
     }
 

@@ -16,10 +16,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 
@@ -144,6 +142,15 @@ public class NewHistoryFragment extends BaseFragment {
 
     @Override
     public void notifyOnDisconnected() {
+
+    }
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
 
     }
 

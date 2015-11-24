@@ -1,10 +1,8 @@
 package com.medcorp.nevo.fragment;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,15 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.HistoryActivity;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.tutorial.TutorialSleepTrackingActivity;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.view.SleepDataView;
@@ -348,5 +342,31 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
     public void notifyOnDisconnected() {
         initLayout(false);
         ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+        //double click get response within 2s, blink clock image once
+        //use 2s, get rid of notification's response
+        if((System.currentTimeMillis() - mLastTapTime) < 2000)
+        {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            //perhaps 2s later, the fragment got destory!!!!
+                            if (mIsVisible && getActivity()!=null) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
+                        }
+                    }, 3000);
+                }
+            });
+        }
     }
 }

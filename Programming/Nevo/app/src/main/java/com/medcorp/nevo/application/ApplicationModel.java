@@ -5,19 +5,17 @@ import android.app.Application;
 import android.os.Build;
 import android.util.Log;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
+import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
+import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.dao.SleepDAO;
-import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.database.entry.HeartbeatDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
@@ -26,7 +24,6 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 
 
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -67,9 +64,16 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void packetReceived(NevoPacket packet) {
-        // TODO @Gailly save all the new data which comes in with the mDatabaseHelper (that's what I assume)
         if(observableActivity.notEmpty()) {
-            observableActivity.get().notifyDatasetChanged();
+            if (packet.getHeader() == (byte) GetStepsGoalNevoRequest.HEADER) {
+                observableActivity.get().notifyDatasetChanged();
+            }
+            else if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader()) {
+                observableActivity.get().batteryInfoReceived(new Battery(packet.newBatteryLevelNevoPacket().getBatteryLevel()));
+            }
+            else if((byte) 0xF0 == packet.getHeader()) {
+                observableActivity.get().findWatchSuccess();
+            }
         }
     }
 

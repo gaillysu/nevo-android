@@ -11,10 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActionBarActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.BaseFragment;
@@ -291,6 +292,20 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     public void notifyOnDisconnected() {
         if (activeFragment.notEmpty()) {
             activeFragment.get().notifyOnDisconnected();
+        }
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().batteryInfoReceived(battery);
+        }
+    }
+
+    @Override
+    public void findWatchSuccess() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().findWatchSuccess();
         }
     }
 

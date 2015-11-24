@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
@@ -226,6 +227,16 @@ public class PaletteActivity extends BaseActivity
     @Override
     public void notifyOnDisconnected() {
             finish();
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 
     private class ColorLedVisitor implements NevoLedVisitor<Void>{

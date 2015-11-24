@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,13 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.history.DateAdapter;
@@ -1388,6 +1382,15 @@ public class HistoryFragment extends BaseFragment implements OnGestureListener {
     @Override
     public void notifyOnDisconnected() {
         ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 /**
     @Override

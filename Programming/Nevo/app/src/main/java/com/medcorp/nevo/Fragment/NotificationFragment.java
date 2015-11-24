@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
@@ -84,5 +85,14 @@ public class NotificationFragment extends BaseFragment {
     @Override
     public void notifyOnDisconnected() {
         ((MainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+    }
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 }

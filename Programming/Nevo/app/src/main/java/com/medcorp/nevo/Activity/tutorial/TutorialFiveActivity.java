@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
@@ -26,8 +27,9 @@ public class TutorialFiveActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.tutorial_activity_5);
+        getModel().setActiveActivity(this);
         findViewById(R.id.t4_back_Button).setOnClickListener(this);
         mConnectButton = (Button) findViewById(R.id.t4_connect_Button);
         mConnectButton.setOnClickListener(this);
@@ -86,6 +88,15 @@ public class TutorialFiveActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void notifyOnDisconnected() {
+
+    }
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
 
     }
 
