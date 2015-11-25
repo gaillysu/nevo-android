@@ -126,12 +126,14 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
                     currentHistory = 0;
                     getModel().getDailyInfo(true);
 
-                } else //only sync current day
+                }
+                /** no need sync current day every time
+                else //only sync current day
                 {
                     TotalHistory = 1;
                     currentHistory = 0;
                     getModel().getDailyInfo(false);
-                }
+                }*/
             }
         }else {
             initLayout(false);

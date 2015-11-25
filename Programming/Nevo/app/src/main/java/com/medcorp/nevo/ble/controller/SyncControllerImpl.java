@@ -325,7 +325,39 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         try {
                                 IDailyHistory history = new IDailyHistory(mSavedDailyHistory.get(mCurrentDay));
                                 DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                                Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                                Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+
+                                //update steps/sleep tables
+                                Steps steps = new Steps(-1,1,history.getCreated());
+                                steps.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+
+                                steps.setSteps(history.getSteps());
+                                steps.setCalories((int) history.getCalories());
+                                steps.setDistance((int) history.getDistance());
+                                steps.setHourlyCalories(history.getHourlycalories());
+                                steps.setHourlyDistance(history.getHourlydistance());
+                                steps.setHourlySteps(history.getHourlysteps());
+
+                                steps.setGoal(thispacket.getStepsGoal());
+                                steps.setWalkSteps(thispacket.getDailyWalkSteps());
+                                steps.setRunSteps(thispacket.getDailyRunSteps());
+                                //update  the day 's "steps" table
+                                ((ApplicationModel)mContext).saveDailySteps(steps);
+
+                                Sleep sleep = new Sleep(-1,1,history.getCreated());
+                                sleep.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                                sleep.setHourlySleep(history.getHourlySleepTime());
+                                sleep.setHourlyWake(history.getHourlyWakeTime());
+                                sleep.setHourlyLight(history.getHourlyLightTime());
+                                sleep.setHourlyDeep(history.getHourlDeepTime());
+                            //I don't know the actual start/end sleep time, it need yesterday's sleep data and today's sleep data to calculate it
+                            // TODO Karl make this work.
+                            //  sleep.setStart(0);
+                            //  sleep.setEnd(0);
+
+                                //update the day 's "sleep" table
+                                ((ApplicationModel)mContext).saveDailySleep(sleep);
+                                //end update
                         } catch (SQLException e) {
                                 e.printStackTrace();
                                 Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());

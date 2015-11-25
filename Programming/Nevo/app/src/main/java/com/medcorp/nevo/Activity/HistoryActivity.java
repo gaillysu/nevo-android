@@ -3,6 +3,7 @@ package com.medcorp.nevo.activity;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -53,6 +54,12 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         totalSleep = (TextView) findViewById(R.id.total_sleep_textview);
         lightSleep= (TextView) findViewById(R.id.light_sleep_textview);
         deepSleep= (TextView) findViewById(R.id.deep_sleep_textview);
+        findViewById(R.id.backImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         barChart = (BarChart)findViewById(R.id.history_bar);
         barChart.setDescription("");

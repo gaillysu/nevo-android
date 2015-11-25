@@ -359,5 +359,48 @@ public class DailyTrackerNevoPacket extends NevoPacket {
         return HourlyDeepTime;
     }
 
+    /**
+     *
+     * @return some day 's step goal setting
+     */
+    public int getStepsGoal()
+    {
+        int stepGoal = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[6],
+                getPackets().get(0).getRawData()[7],
+                getPackets().get(0).getRawData()[8],
+                getPackets().get(0).getRawData()[9]
+        });
+
+        return stepGoal;
+    }
+    /**
+     return History Daily walk steps
+     */
+    public int getDailyWalkSteps()
+    {
+        int dailySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[8],
+                getPackets().get(1).getRawData()[9],
+                getPackets().get(1).getRawData()[10],
+                getPackets().get(1).getRawData()[11]
+        });
+
+        return dailySteps;
+
+    }
+
+    /**
+     return History Daily run steps
+     */
+    public int getDailyRunSteps()
+    {
+        int dailySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[12],
+                getPackets().get(1).getRawData()[13],
+                getPackets().get(1).getRawData()[14],
+                getPackets().get(1).getRawData()[15]
+        });
+
+        return dailySteps;
+
+    }
     //end added
 }
