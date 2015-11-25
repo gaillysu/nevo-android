@@ -64,21 +64,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
     //END - Classic singleton
 
-    /**
-     * Please use getInstance instead.
-     * Because it is much safer to have only one instance of OpenHelper
-     * But I couldn't just put this constructor private since it is a requirement of OrmLiteSqlite
-     * @param  context
-     */
-    @Deprecated
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
         try {
-
             TableUtils.createTable(connectionSource, IDailyHistory.class);
             TableUtils.createTable(connectionSource,UserDAO.class);
             TableUtils.createTable(connectionSource, SleepDAO.class);
@@ -86,7 +78,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, HeartbeatDAO.class);
             TableUtils.createTable(connectionSource, AlarmDAO.class);
             TableUtils.createTable(connectionSource, PresetDAO.class);
-
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
         }
@@ -95,7 +86,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
         try {
-
             TableUtils.dropTable(connectionSource, IDailyHistory.class, true);
             TableUtils.dropTable(connectionSource, UserDAO.class, true);
             TableUtils.dropTable(connectionSource, SleepDAO.class, true);

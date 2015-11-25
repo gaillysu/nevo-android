@@ -211,7 +211,7 @@ public class PaletteActivity extends BaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().setActiveActivity(this);
+        getModel().observableActivity(this);
     }
 
     @Override

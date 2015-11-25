@@ -5,7 +5,6 @@ import android.app.Application;
 import android.os.Build;
 import android.util.Log;
 
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
@@ -16,13 +15,11 @@ import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.database.entry.HeartbeatDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
-import com.medcorp.nevo.database.entry.UserDatabaseHelper;
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
-
 
 import java.util.Calendar;
 import java.util.Date;
@@ -34,31 +31,21 @@ import java.util.List;
  */
 public class ApplicationModel extends Application  implements OnSyncControllerListener {
 
-    private static ApplicationModel  mApplicationModel;
-    private SyncController  mSyncController;
-    //private OtaController   mOtaController;
-    //private NetworkController mNetworkController;
-    //private DatabaseHelper mDatabaseHelper;
-    private UserDatabaseHelper mUserDatabaseHelper;
-    private HeartbeatDatabaseHelper mHeartbeatDatabaseHelper;
-    private StepsDatabaseHelper mStepsDatabaseHelper;
-    private SleepDatabaseHelper mSleepDatabaseHelper;
+    private SyncController syncController;
+
+    private StepsDatabaseHelper stepsDatabaseHelper;
+    private SleepDatabaseHelper sleepDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.w("Karl", "On create app model");
-        mApplicationModel = this;
         observableActivity = new Optional<>();
-        //mOtaController  = new OtaControllerImpl(this,false);
-        mSyncController = new SyncControllerImpl(this);
-        mSyncController.setSyncControllerListenser(this);
-        //mDatabaseHelper =  DatabaseHelper.getInstance(this);
-        mUserDatabaseHelper = new UserDatabaseHelper();
-        mHeartbeatDatabaseHelper = new HeartbeatDatabaseHelper();
-        mStepsDatabaseHelper = new StepsDatabaseHelper();
-        mSleepDatabaseHelper = new SleepDatabaseHelper();
+        syncController = new SyncControllerImpl(this);
+        syncController.setSyncControllerListenser(this);
+        stepsDatabaseHelper = new StepsDatabaseHelper(this);
+        sleepDatabaseHelper = new SleepDatabaseHelper(this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -95,109 +82,80 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     }
 
-    /**
-     * set current Observable activity
-     * @param
-     */
-    public void setActiveActivity(ActivityObservable observable)
+    public void observableActivity(ActivityObservable observable)
     {
         this.observableActivity.set(observable);
     }
 
-    /**
-     * send request to nevo
-     * @param request
-     */
     public void sendRequest(SensorRequest request)
     {
-        mSyncController.sendRequest(request);
+        syncController.sendRequest(request);
     }
 
-    /**
-     * send request to MED server, such as upload data/login/register profile
-     */
-   // public void sendRequest(NetworkRequest request)
-   // {
-   // }
-    public static Application getApplicationModel()
-    {
-        return mApplicationModel;
-    }
-
-    public SyncController getSyncController(){return mSyncController;}
+    public SyncController getSyncController(){return syncController;}
     //public OtaController getOtaController(){return mOtaController;}
 
     public void startConnectToWatch(boolean forceScan) {
-        mSyncController.startConnect(forceScan,this);
+        syncController.startConnect(forceScan, this);
     }
 
     public boolean isWatchConnected() {
-        return mSyncController.isConnected();
+        return syncController.isConnected();
     }
 
     public void blinkWatch(){
-        mSyncController.findDevice();
+        syncController.findDevice();
     }
 
     public void getDailyInfo(boolean syncAll) {
-        mSyncController.getDailyTrackerInfo(syncAll);
+        syncController.getDailyTrackerInfo(syncAll);
     }
 
     public void getBatteryLevelOfWatch() {
-        mSyncController.getBatteryLevel();
+        syncController.getBatteryLevel();
     }
 
     public String getWatchSoftware() {
-        return mSyncController.getSoftwareVersion();
+        return syncController.getSoftwareVersion();
     }
 
     public String getWatchFirmware() {
-        return mSyncController.getFirmwareVersion();
+        return syncController.getFirmwareVersion();
     }
 
     public void forgetDevice() {
-        mSyncController.forgetDevice();
+        syncController.forgetDevice();
     }
 
     public List<Steps> getAllSteps(){
-        return mStepsDatabaseHelper.getAll();
+        return stepsDatabaseHelper.getAll();
     }
 
     public List<Sleep> getAllSleep(){
-        return mSleepDatabaseHelper.getAll();
+        return sleepDatabaseHelper.getAll();
     }
 
     public void saveDailySteps(Steps steps)
     {
-        mStepsDatabaseHelper.update(steps);
+        stepsDatabaseHelper.update(steps);
     }
 
-    /**
-     * userid: which one's steps, date:which date's steps
-     * @param userid,date
-     * @return
-     */
     public Steps getDailySteps(int userid,Date date)
     {
-        return mStepsDatabaseHelper.get(userid,date);
+        return stepsDatabaseHelper.get(userid,date);
     }
     public void saveDailySleep(Sleep sleep)
     {
-        mSleepDatabaseHelper.update(sleep);
+        sleepDatabaseHelper.update(sleep);
     }
-    /**
-     * userid: which one's sleep, date:which date's sleep
-     * @param userid,date
-     * @return
-     */
+
     public Sleep getDailySleep(int userid,Date date)
     {
-        return mSleepDatabaseHelper.get(userid,date);
+        return sleepDatabaseHelper.get(userid,date);
     }
 
     public Date getDateFromDate(Date date)
     {
-        //set the Day from 00:00:00
         Calendar calBeginning = new GregorianCalendar();
         calBeginning.setTime(date);
         calBeginning.set(Calendar.HOUR_OF_DAY, 0);

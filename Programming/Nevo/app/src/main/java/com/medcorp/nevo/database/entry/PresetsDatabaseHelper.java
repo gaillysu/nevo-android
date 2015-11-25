@@ -1,6 +1,7 @@
 package com.medcorp.nevo.database.entry;
 
-import com.medcorp.nevo.application.ApplicationModel;
+import android.content.Context;
+
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.PresetDAO;
 import com.medcorp.nevo.model.Preset;
@@ -17,8 +18,8 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
 
     private DatabaseHelper databaseHelper;
 
-    public PresetsDatabaseHelper() {
-        databaseHelper = DatabaseHelper.getInstance(ApplicationModel.getApplicationModel());
+    public PresetsDatabaseHelper(Context context) {
+        databaseHelper = DatabaseHelper.getInstance(context);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
     public boolean update(Preset object) {
         int result = -1;
         try {
-            List<PresetDAO> presetDAOList = databaseHelper.getPresetDao().queryBuilder().where().eq(PresetDAO.iDString, object.getID()).query();
+            List<PresetDAO> presetDAOList = databaseHelper.getPresetDao().queryBuilder().where().eq(PresetDAO.iDString, object.getId()).query();
             if(presetDAOList.isEmpty()) return add(object);
             PresetDAO presetDAO = convertToDao(object);
             presetDAO.setID(presetDAOList.get(0).getID());
@@ -89,7 +90,7 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
 
     private PresetDAO convertToDao(Preset preset){
         PresetDAO presetDAO = new PresetDAO();
-        presetDAO.setID(preset.getID());
+        presetDAO.setID(preset.getId());
         presetDAO.setLabel(preset.getLabel());
         presetDAO.setSteps(preset.getSteps());
         return new PresetDAO();

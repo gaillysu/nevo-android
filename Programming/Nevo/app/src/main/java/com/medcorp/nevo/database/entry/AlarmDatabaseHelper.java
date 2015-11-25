@@ -1,6 +1,7 @@
 package com.medcorp.nevo.database.entry;
 
-import com.medcorp.nevo.application.ApplicationModel;
+import android.content.Context;
+
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.AlarmDAO;
 import com.medcorp.nevo.model.Alarm;
@@ -17,8 +18,8 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
 
     private DatabaseHelper databaseHelper;
 
-    public AlarmDatabaseHelper() {
-        databaseHelper = DatabaseHelper.getInstance(ApplicationModel.getApplicationModel());
+    public AlarmDatabaseHelper(Context context) {
+        databaseHelper = DatabaseHelper.getInstance(context);
     }
 
     @Override

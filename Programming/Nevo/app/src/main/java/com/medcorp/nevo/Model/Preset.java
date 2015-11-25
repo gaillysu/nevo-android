@@ -5,20 +5,21 @@ package com.medcorp.nevo.model;
  */
 public class Preset {
 
-    private final int ID;
+    // TODO change the name of the class to Goal bu since goal now is occupied we can't send it. Gotta configure it later.
+    private final int id;
     private String label;
     private boolean status;
     private int steps;
 
-    public Preset(int ID, String label, boolean status, int steps) {
-        this.ID = ID;
+    public Preset(int id, String label, boolean status, int steps) {
+        this.id = id;
         this.label = label;
         this.status = status;
         this.steps = steps;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public String getLabel() {
