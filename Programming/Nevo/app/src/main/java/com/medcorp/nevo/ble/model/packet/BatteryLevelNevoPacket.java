@@ -21,5 +21,4 @@ public class BatteryLevelNevoPacket extends NevoPacket {
         return getPackets().get(0).getRawData()[2];
     }
 
-
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 
 public class GetStepsGoalNevoRequest extends NevoRequest {
 
-	public  final static  byte HEADER = 0x26;
+	public  final static byte HEADER = 0x26;
 
         public GetStepsGoalNevoRequest(Context context) {
                 super(context);
