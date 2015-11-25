@@ -1,7 +1,7 @@
 package com.medcorp.nevo.database.entry;
 
-import com.j256.ormlite.dao.Dao;
-import com.medcorp.nevo.application.ApplicationModel;
+import android.content.Context;
+
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.UserDAO;
 import com.medcorp.nevo.model.User;
@@ -16,19 +16,17 @@ import java.util.List;
  */
 public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
 
-    // instance of the database goes here as private variable
-    private DatabaseHelper mDatabaseHelper;
+    private DatabaseHelper databaseHelper;
 
-    public UserDatabaseHelper() {
-        // Open the database & initlialize
-        mDatabaseHelper = DatabaseHelper.getInstance(ApplicationModel.getApplicationModel());
+    public UserDatabaseHelper(Context context) {
+        databaseHelper = DatabaseHelper.getInstance(context);
     }
 
     @Override
     public boolean add(User object) {
         int result = -1;
         try {
-            result = mDatabaseHelper.getUserDao().create(convertToDao(object));
+            result = databaseHelper.getUserDao().create(convertToDao(object));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,11 +37,11 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public boolean update(User object) {
         int result = -1;
         try {
-            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, object.getId()).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, object.getId()).query();
             if(userDAOList.isEmpty()) return add(object);
             UserDAO daoobject = convertToDao(object);
             daoobject.setID(userDAOList.get(0).getID());
-            result = mDatabaseHelper.getUserDao().update(daoobject);
+            result = databaseHelper.getUserDao().update(daoobject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,10 +49,10 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public boolean remove(int userid,Date date) {
+    public boolean remove(int id,Date date) {
         try {
-            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, userid).query();
-            if(!userDAOList.isEmpty()) mDatabaseHelper.getUserDao().delete(userDAOList);
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
+            if(!userDAOList.isEmpty()) databaseHelper.getUserDao().delete(userDAOList);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,10 +61,10 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public User get(int userid,Date date) {
+    public User get(int id,Date date) {
         List<User> userList = new ArrayList<User>();
         try {
-            List<UserDAO> userDAOList = mDatabaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, userid).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
             for(UserDAO userDAO: userDAOList) {
                 userList.add(convertToNormal(userDAO));
             }
@@ -80,7 +78,7 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public List<User> getAll() {
         List<User> userList = new ArrayList<User>();
         try {
-            List<UserDAO> userDAOList  = mDatabaseHelper.getUserDao().queryBuilder().query();
+            List<UserDAO> userDAOList  = databaseHelper.getUserDao().queryBuilder().query();
             for(UserDAO userDAO: userDAOList) {
                 userList.add(convertToNormal(userDAO));
             }

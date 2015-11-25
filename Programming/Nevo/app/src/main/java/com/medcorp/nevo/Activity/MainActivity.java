@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
 
-import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActionBarActivity;
@@ -60,7 +59,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        getModel().setActiveActivity(this);
+        getModel().observableActivity(this);
         //disenable navigation drawer shadow
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
@@ -361,7 +360,7 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().setActiveActivity(this);
+        getModel().observableActivity(this);
         if(!isVisible){
             if(getModel().isWatchConnected()){
                 replaceFragment(position, tag);

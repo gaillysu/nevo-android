@@ -10,8 +10,10 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.database.dao.AlarmDAO;
 import com.medcorp.nevo.database.dao.HeartbeatDAO;
 import com.medcorp.nevo.database.dao.IDailyHistory;
+import com.medcorp.nevo.database.dao.PresetDAO;
 import com.medcorp.nevo.database.dao.SleepDAO;
 import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.database.dao.UserDAO;
@@ -41,44 +43,41 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "nevowatch.db";
     private static final int DATABASE_VERSION = 1;
 
-    private  Dao<IDailyHistory,Integer> mDailyhistoryDao = null;
-    private  Dao<UserDAO,Integer> mUserDao = null;
-    private  Dao<SleepDAO,Integer> mSleepDao = null;
-    private  Dao<StepsDAO,Integer> mStepsDao = null;
-    private  Dao<HeartbeatDAO,Integer> mHeartbeatDao = null;
+    private  Dao<IDailyHistory,Integer> dailyhistoryDao = null;
+    private  Dao<UserDAO,Integer> userDao = null;
+    private  Dao<SleepDAO,Integer> sleepDao = null;
+    private  Dao<StepsDAO,Integer> stepsDao = null;
+    private  Dao<HeartbeatDAO,Integer> heartbeatDAO = null;
+    private  Dao<AlarmDAO,Integer> alarmDao = null;
+    private  Dao<PresetDAO,Integer> presetsDAO = null;
+
 
     //Classic singleton
-    private static DatabaseHelper sInstance = null;
+    private static DatabaseHelper instance = null;
+
     public static DatabaseHelper getInstance(Context ctx) {
-        if(null == sInstance )
+        if(null == instance )
         {
-            sInstance = new DatabaseHelper(ctx);
+            instance = new DatabaseHelper(ctx);
         }
-        return sInstance;
+        return instance;
     }
     //END - Classic singleton
 
-    /**
-     * Please use getInstance instead.
-     * Because it is much safer to have only one instance of OpenHelper
-     * But I couldn't just put this constructor private since it is a requirement of OrmLiteSqlite
-     * @param  context
-     */
-    @Deprecated
-    public DatabaseHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
         try {
-
             TableUtils.createTable(connectionSource, IDailyHistory.class);
             TableUtils.createTable(connectionSource,UserDAO.class);
             TableUtils.createTable(connectionSource, SleepDAO.class);
             TableUtils.createTable(connectionSource, StepsDAO.class);
             TableUtils.createTable(connectionSource, HeartbeatDAO.class);
-
+            TableUtils.createTable(connectionSource, AlarmDAO.class);
+            TableUtils.createTable(connectionSource, PresetDAO.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
         }
@@ -87,13 +86,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
         try {
-
             TableUtils.dropTable(connectionSource, IDailyHistory.class, true);
             TableUtils.dropTable(connectionSource, UserDAO.class, true);
             TableUtils.dropTable(connectionSource, SleepDAO.class, true);
             TableUtils.dropTable(connectionSource, StepsDAO.class, true);
             TableUtils.dropTable(connectionSource, HeartbeatDAO.class, true);
-
+            TableUtils.dropTable(connectionSource, AlarmDAO.class, true);
+            TableUtils.dropTable(connectionSource, PresetDAO.class, true);
             onCreate(sqliteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
@@ -102,37 +101,48 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<IDailyHistory, Integer> getDailyHistoryDao() throws SQLException {
-        if (mDailyhistoryDao == null)
-            mDailyhistoryDao = getDao(IDailyHistory.class);
-        return mDailyhistoryDao;
+        if (dailyhistoryDao == null)
+            dailyhistoryDao = getDao(IDailyHistory.class);
+        return dailyhistoryDao;
     }
 
     public Dao<UserDAO, Integer> getUserDao() throws SQLException {
-        if (mUserDao == null)
-            mUserDao = getDao(UserDAO.class);
+        if (userDao == null)
+            userDao = getDao(UserDAO.class);
 
-        return mUserDao;
+        return userDao;
     }
 
     public Dao<SleepDAO, Integer> getSleepDao() throws SQLException {
-        if (mSleepDao == null)
-            mSleepDao = getDao(SleepDAO.class);
+        if (sleepDao == null)
+            sleepDao = getDao(SleepDAO.class);
 
-        return mSleepDao;
+        return sleepDao;
     }
 
     public Dao<StepsDAO, Integer> getStepsDao() throws SQLException {
-        if (mStepsDao == null)
-            mStepsDao = getDao(StepsDAO.class);
+        if (stepsDao == null)
+            stepsDao = getDao(StepsDAO.class);
 
-        return mStepsDao;
+        return stepsDao;
     }
 
     public Dao<HeartbeatDAO, Integer> getHeartbeatDao() throws SQLException {
-        if (mHeartbeatDao == null)
-            mHeartbeatDao = getDao(HeartbeatDAO.class);
+        if (heartbeatDAO == null)
+            heartbeatDAO = getDao(HeartbeatDAO.class);
+        return heartbeatDAO;
+    }
 
-        return mHeartbeatDao;
+    public Dao<AlarmDAO, Integer> getAlarmDao() throws SQLException {
+        if (alarmDao== null)
+            alarmDao= getDao(AlarmDAO.class);
+        return alarmDao;
+    }
+
+    public Dao<PresetDAO, Integer> getPresetDao() throws SQLException {
+        if (presetsDAO== null)
+            presetsDAO= getDao(PresetDAO.class);
+        return presetsDAO;
     }
 
     /**
@@ -525,4 +535,4 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return new ArrayList<DailyHistory>();
     }
- }
+}

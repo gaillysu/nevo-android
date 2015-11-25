@@ -5,21 +5,23 @@ package com.medcorp.nevo.model;
  */
 public class Alarm {
 
-    private int index;
+    private final int id;
     private int hour;
     private int minute;
     private boolean enable;
+    private String label;
 
-    public Alarm(int index,int hour, int minute,boolean enable)
+    public Alarm(int id, int hour, int minute,boolean enable,String label)
     {
-        this.index = index;
         this.hour = hour;
+        this.id = id;
         this.minute = minute;
         this.enable = enable;
+        this.label = label;
     }
 
-    public int getIndex() {
-        return index;
+    public int getId() {
+        return id;
     }
 
     public int getHour() {
@@ -32,5 +34,25 @@ public class Alarm {
 
     public boolean isEnable() {
         return enable;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
