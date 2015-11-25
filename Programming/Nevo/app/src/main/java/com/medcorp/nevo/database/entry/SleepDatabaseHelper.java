@@ -94,6 +94,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
     private SleepDAO convertToDao(Sleep sleep){
         SleepDAO sleepDAO = new SleepDAO();
+        sleepDAO.setUserID(sleep.getUserID());
         sleepDAO.setCreatedDate(sleep.getCreatedDate());
         sleepDAO.setDate(sleep.getDate());
         sleepDAO.setEnd(sleep.getEnd());
@@ -101,7 +102,6 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         sleepDAO.setHourlyLight(sleep.getHourlyLight());
         sleepDAO.setHourlySleep(sleep.getHourlySleep());
         sleepDAO.setHourlyWake(sleep.getHourlyWake());
-        sleepDAO.setID(sleep.getiD());
         sleepDAO.setRemarks(sleep.getRemarks());
         sleepDAO.setSleepQuality(sleep.getSleepQuality());
         sleepDAO.setStart(sleep.getStart());

@@ -91,7 +91,7 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
 
     private HeartbeatDAO convertToDao(Heartbeat heartbeat){
         HeartbeatDAO heartbeatDAO = new HeartbeatDAO();
-        heartbeatDAO.setID(heartbeat.getiD());
+        heartbeatDAO.setUserID(heartbeat.getUserID());
         heartbeatDAO.setRemarks(heartbeat.getRemarks());
         heartbeatDAO.setAvgHrm(heartbeat.getAvgHrm());
         heartbeatDAO.setCreatedDate(heartbeat.getCreatedDate());
