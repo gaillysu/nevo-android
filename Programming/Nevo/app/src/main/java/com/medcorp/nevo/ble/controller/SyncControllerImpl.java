@@ -25,6 +25,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
@@ -41,10 +42,10 @@ import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
 import com.medcorp.nevo.ble.listener.OnExceptionListener;
 import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
@@ -79,15 +80,14 @@ import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;
-import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.model.Sleep;
+import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.view.TimePickerView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,13 +96,13 @@ import java.util.TimeZone;
 public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<Void>, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
     private final static String TAG = "SyncControllerImpl";
 
-	private Context mContext;
+    private Context mContext;
 
-	private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
+    private static final int SYNC_INTERVAL = 0; //every half hour , do sync when connected again
 
-	private ConnectionController connectionController;
+    private ConnectionController connectionController;
 
-	private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
+    private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
 
     private List<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
 
@@ -129,7 +129,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         connectionController.setOnFirmwareVersionListener(this);
 
         Intent intent = new Intent(mContext,LocalService.class);
-        mContext.getApplicationContext().bindService(intent,mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
+        mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
     }
 
     /*package*/void setContext(Context context) {
@@ -160,11 +160,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         if(connectionController.getOTAMode()) {
             return;
         }
-        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable(){
+        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
             @Override
             public void run() {
 
-                Log.i(TAG,request.getClass().getName());
+                Log.i(TAG, request.getClass().getName());
 
                 connectionController.sendRequest(request);
             }
@@ -172,264 +172,270 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     }
 
-	/**
-	 * This listener is called when new data is received
-	 */
+    /**
+     * This listener is called when new data is received
+     */
     @Override
     public void onDataReceived(SensorData data) {
 
-			if (data.getType().equals(NevoRawData.TYPE))
-			{
-				final NevoRawData nevoData = (NevoRawData) data;
-                mPacketsbuffer.add(nevoData);
+        if (data.getType().equals(NevoRawData.TYPE))
+        {
+            final NevoRawData nevoData = (NevoRawData) data;
+            mPacketsbuffer.add(nevoData);
 
-				if((byte)0xFF == nevoData.getRawData()[0])
-				{
-					QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
+            if((byte)0xFF == nevoData.getRawData()[0])
+            {
+                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
 
-					NevoPacket packet = new NevoPacket(mPacketsbuffer);
-                    //if packets invaild, discard them, and reset buffer
-                    if(!packet.isVaildPackets())
-                    {
-                        Log.e("Nevo Error","InVaild Packets Received!");
-                        mPacketsbuffer.clear();
+                NevoPacket packet = new NevoPacket(mPacketsbuffer);
+                //if packets invaild, discard them, and reset buffer
+                if(!packet.isVaildPackets())
+                {
+                    Log.e("Nevo Error","InVaild Packets Received!");
+                    mPacketsbuffer.clear();
 
-                        return;
+                    return;
+                }
+
+                if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    //setp2:start set user profile
+                    sendRequest(new SetProfileNevoRequest(mContext));
+                }
+                else if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    //step3:WriteSetting
+                    sendRequest(new WriteSettingNevoRequest(mContext));
+                }
+                else if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    //step4:SetCardio
+                    sendRequest(new SetCardioNevoRequest(mContext));
+                }
+
+                else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    //start sync notification, phone --> nevo
+                    // set Local Notification setting to Nevo, when nevo 's battery removed, the
+                    // Steps count is 0, and all notification is off, because Notification is very
+                    // important for user, so here need use local's setting sync with nevo
+
+                    Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
+                    NotificationColorGetter getter = new NotificationColorGetter(mContext);
+                    NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
+                    Notification applicationNotification = new TelephoneNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                    applicationNotification = new SmsNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                    applicationNotification = new EmailNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                    applicationNotification = new FacebookNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                    applicationNotification = new CalendarNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                    applicationNotification = new WeChatNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+                    applicationNotification = new WhatsappNotification();
+                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+
+                    sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
+                }
+                else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    List<Alarm> list = new ArrayList<Alarm>();
+
+                    String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
+                    Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
+                    list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+
+                    strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");
+                    onOff = AlarmFragment.getClockStateFromPreference(1,mContext);
+                    list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+
+                    strAlarm = TimePickerView.getAlarmFromPreference(2,mContext).split(":");
+                    onOff = AlarmFragment.getClockStateFromPreference(2,mContext);
+                    list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+                    setAlarm(list);
+                }
+                else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    //start sync data, nevo-->phone
+                    syncActivityData();
+                }
+                else if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
+                    mCurrentDay = 0;
+                    mSavedDailyHistory = infopacket.getDailyTrackerInfo();
+//                        Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
+                    if(!mSavedDailyHistory.isEmpty()) {
+                        mSyncAllFlag = true;
+                        getDailyTracker(mCurrentDay);
                     }
+                }
+                else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
 
-                    if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        //setp2:start set user profile
-                        sendRequest(new SetProfileNevoRequest(mContext));
-                    }
-                    else if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        //step3:WriteSetting
-                        sendRequest(new WriteSettingNevoRequest(mContext));
-                    }
-                    else if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        //step4:SetCardio
-                        sendRequest(new SetCardioNevoRequest(mContext));
-                    }
-
-                    else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        //start sync notification, phone --> nevo
-                        // set Local Notification setting to Nevo, when nevo 's battery removed, the
-                        // Steps count is 0, and all notification is off, because Notification is very
-                        // important for user, so here need use local's setting sync with nevo
-
-                        Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
-                        NotificationColorGetter getter = new NotificationColorGetter(mContext);
-                        NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
-                        Notification applicationNotification = new TelephoneNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                        applicationNotification = new SmsNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                        applicationNotification = new EmailNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                        applicationNotification = new FacebookNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                        applicationNotification = new CalendarNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                        applicationNotification = new WeChatNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                        applicationNotification = new WhatsappNotification();
-                        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-
-                        sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
-                    }
-                    else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        List<Alarm> list = new ArrayList<Alarm>();
-
-                        String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
-                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
-                        list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
-
-                        strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");
-                        onOff = AlarmFragment.getClockStateFromPreference(1,mContext);
-                        list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
-
-                        strAlarm = TimePickerView.getAlarmFromPreference(2,mContext).split(":");
-                        onOff = AlarmFragment.getClockStateFromPreference(2,mContext);
-                        list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
-                        setAlarm(list);
-                    }
-                    else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        //start sync data, nevo-->phone
-                        syncActivityData();
-                    }
-                    else if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
+                    if(mSavedDailyHistory.isEmpty()) {
                         mCurrentDay = 0;
-                        mSavedDailyHistory = infopacket.getDailyTrackerInfo();
-                        Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
-                        if(!mSavedDailyHistory.isEmpty()) {
-                            mSyncAllFlag = true;
-                            getDailyTracker(mCurrentDay);
-                        }
+                        mSavedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
                     }
-                    else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
+                    mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
 
-                        if(mSavedDailyHistory.isEmpty()) {
-                            mCurrentDay = 0;
-                            mSavedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
-                        }
-                        mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
+                    mSavedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
 
-                        mSavedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalSleepTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
+                    mSavedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
 
-                        mSavedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + mSavedDailyHistory.get(mCurrentDay).getTotalWakeTime());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + mSavedDailyHistory.get(mCurrentDay).getTotalWakeTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
+                    mSavedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
 
-                        mSavedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
-
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + mSavedDailyHistory.get(mCurrentDay).getTotalLightTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + mSavedDailyHistory.get(mCurrentDay).getTotalLightTime());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
 
 
-                        mSavedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
+                    mSavedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
 
-                        mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
-                        mSavedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
-                        mSavedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
+                    mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
+                    mSavedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
+                    mSavedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getTotalDist());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getHourlyDist().toString());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getTotalCalories());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getHourlyCalories().toString());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getTotalDist());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getHourlyDist().toString());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getTotalCalories());
+//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getHourlyCalories().toString());
 
-                        //save it to local database
-                        try {
-                                IDailyHistory history = new IDailyHistory(mSavedDailyHistory.get(mCurrentDay));
-                                DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                                Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
 
-                                //update steps/sleep tables
-                                Steps steps = new Steps(-1,1,history.getCreated());
-                                steps.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                    //save it to local database
+                    try {
+                        IDailyHistory history = new IDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+                        DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
+                        Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                        //update steps/sleep tables
+                        Steps steps = new Steps(-1,1,history.getCreated());
+                        steps.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
 
-                                steps.setSteps(history.getSteps());
-                                steps.setCalories((int) history.getCalories());
-                                steps.setDistance((int) history.getDistance());
-                                steps.setHourlyCalories(history.getHourlycalories());
-                                steps.setHourlyDistance(history.getHourlydistance());
-                                steps.setHourlySteps(history.getHourlysteps());
+                        steps.setSteps(history.getSteps());
+                        steps.setCalories((int) history.getCalories());
+                        steps.setDistance((int) history.getDistance());
+                        steps.setHourlyCalories(history.getHourlycalories());
+                        steps.setHourlyDistance(history.getHourlydistance());
+                        steps.setHourlySteps(history.getHourlysteps());
 
-                                steps.setGoal(thispacket.getStepsGoal());
-                                steps.setWalkSteps(thispacket.getDailyWalkSteps());
-                                steps.setRunSteps(thispacket.getDailyRunSteps());
-                                //update  the day 's "steps" table
-                                ((ApplicationModel)mContext).saveDailySteps(steps);
+                        steps.setGoal(thispacket.getStepsGoal());
+                        steps.setWalkSteps(thispacket.getDailyWalkSteps());
+                        steps.setRunSteps(thispacket.getDailyRunSteps());
+                        //update  the day 's "steps" table
+                        ((ApplicationModel)mContext).saveDailySteps(steps);
 
-                                Sleep sleep = new Sleep(-1,1,history.getCreated());
-                                sleep.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                                sleep.setHourlySleep(history.getHourlySleepTime());
-                                sleep.setHourlyWake(history.getHourlyWakeTime());
-                                sleep.setHourlyLight(history.getHourlyLightTime());
-                                sleep.setHourlyDeep(history.getHourlDeepTime());
+                        if(history.getTotalSleepTime() != 0) {
+
+
+                            Sleep sleep = new Sleep(-1, 1, history.getCreated());
+                            sleep.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                            sleep.setHourlySleep(history.getHourlySleepTime());
+                            sleep.setHourlyWake(history.getHourlyWakeTime());
+                            sleep.setHourlyLight(history.getHourlyLightTime());
+                            sleep.setHourlyDeep(history.getHourlDeepTime());
+
                             //I don't know the actual start/end sleep time, it need yesterday's sleep data and today's sleep data to calculate it
                             // TODO Karl make this work.
-                            //  sleep.setStart(0);
-                            //  sleep.setEnd(0);
-
-                                //update the day 's "sleep" table
-                                ((ApplicationModel)mContext).saveDailySleep(sleep);
-                                //end update
-                        } catch (SQLException e) {
-                                e.printStackTrace();
-                                Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
+//                              sleep.setStart(0);
+//                              sleep.setEnd(0);
+                            ((ApplicationModel) mContext).saveDailySleep(sleep);
+                            //end update
                         }
+                    } catch (SQLException e) {
+                        Log.w("Karl", "Crash");
+                        e.printStackTrace();
+                        Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
+                    }
 
-                        //discard tutorial activity, only MainActivity can save data to Google git
+
+                    Log.w("Karl", "Done?");
+                    //discard tutorial activity, only MainActivity can save data to Google git
 //                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
-                        mCurrentDay++;
-                        if(mCurrentDay < mSavedDailyHistory.size() && mSyncAllFlag)
-                        {
-                            getDailyTracker(mCurrentDay);
-                        }
-                        else
-                        {
-                            mSyncAllFlag = false;
-                            mCurrentDay = 0;
-                            //DatabaseHelper.outPutDatabase(mContext);
-                            syncFinished();
-                        }
-                    }
-                    //press B key once--- down and up within 500ms
-                    else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
+                    mCurrentDay++;
+                    if(mCurrentDay < mSavedDailyHistory.size() && mSyncAllFlag)
                     {
-                       long currentTime = System.currentTimeMillis();
-                       //remove repeat press B key down within 6s
-                       if(currentTime - mLastPressAkey > 6000)
-                       {
-                           mLastPressAkey = currentTime;
-                       }
+                        getDailyTracker(mCurrentDay);
                     }
-                    else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x00 == packet.getPackets().get(0).getRawData()[2])
+                    else
                     {
-                        long currentTime = System.currentTimeMillis();
-                        if(currentTime - mLastPressAkey < 500)
-                        {
-                            if(mLocalService!=null) {
-                                mLocalService.findCellPhone();
-                            }
-                            //let all color LED light on, means that find CellPhone is successful.
-                            sendRequest(new TestModeNevoRequest(mContext,0x3F0000,false));
-                        }
+                        mSyncAllFlag = false;
+                        mCurrentDay = 0;
+                        //DatabaseHelper.outPutDatabase(mContext);
+                        syncFinished();
                     }
-                    else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
-                    {
-                        if (!mEnableTestMode)
-                        {
-                            mEnableTestMode = true;
-                            sendRequest(new TestModeNevoRequest(mContext,0,false));
-                        }
-                        //save current day's step count to "Steps" table
-                        Date currentday = new Date();
-                        Steps steps = new Steps(-1,1,currentday.getTime());
-
-                        steps.setDate(((ApplicationModel) mContext).getDateFromDate(currentday).getTime());
-
-                        DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
-                        steps.setSteps(steppacket.getDailySteps());
-                        steps.setGoal(steppacket.getDailyStepsGoal());
-                        
-                        //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
-                        //steps.setCalories(...);
-                        //steps.setDistance(...);
-                        ((ApplicationModel)mContext).saveDailySteps(steps);
-                        //end save
-                    }
-                    //process done(such as save local db), then notify top layer to get or refresh screen
-                    if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
-                    mPacketsbuffer.clear();
                 }
-			}
+                //press B key once--- down and up within 500ms
+                else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
+                {
+                    long currentTime = System.currentTimeMillis();
+                    //remove repeat press B key down within 6s
+                    if(currentTime - mLastPressAkey > 6000)
+                    {
+                        mLastPressAkey = currentTime;
+                    }
+                }
+                else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x00 == packet.getPackets().get(0).getRawData()[2])
+                {
+                    long currentTime = System.currentTimeMillis();
+                    if(currentTime - mLastPressAkey < 500)
+                    {
+                        if(mLocalService!=null) {
+                            mLocalService.findCellPhone();
+                        }
+                        //let all color LED light on, means that find CellPhone is successful.
+                        sendRequest(new TestModeNevoRequest(mContext,0x3F0000,false));
+                    }
+                }
+                else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
+                {
+                    if (!mEnableTestMode)
+                    {
+                        mEnableTestMode = true;
+                        sendRequest(new TestModeNevoRequest(mContext,0,false));
+                    }
+                    //save current day's step count to "Steps" table
+                    Date currentday = new Date();
+                    Steps steps = new Steps(-1,1,currentday.getTime());
 
-	}
+                    steps.setDate(((ApplicationModel) mContext).getDateFromDate(currentday).getTime());
+
+                    DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
+                    steps.setSteps(steppacket.getDailySteps());
+                    steps.setGoal(steppacket.getDailyStepsGoal());
+
+                    //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
+                    //steps.setCalories(...);
+                    //steps.setDistance(...);
+                    ((ApplicationModel)mContext).saveDailySteps(steps);
+                    //end save
+                }
+                //process done(such as save local db), then notify top layer to get or refresh screen
+                if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
+                mPacketsbuffer.clear();
+            }
+        }
+
+    }
 
     @Override
     public void onConnectionStateChanged(boolean isConnected, String address) {
@@ -453,7 +459,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             mPacketsbuffer.clear();
         }
 
-	}
+    }
 
     /**
      This function will synchronise activity data with the watch.
@@ -462,20 +468,20 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
      */
     private void syncActivityData() {
 
-        long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
-        String lasttimezone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
-        if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
-                || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
-            //We haven't synched for a while, let's sync now !
-            Log.i(TAG,"*** Sync started ! ***");
-            getDailyTrackerInfo(true);
-        }
-        else
-        {
-            //here sync StepandGoal for good user experience
-            Log.i(TAG,"*** Sync step count and goal ***");
-            getStepsAndGoal();
-        }
+//        long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
+//        String lasttimezone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
+//        if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
+//                || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
+//            //We haven't synched for a while, let's sync now !
+//            Log.i(TAG,"*** Sync started ! ***");
+        getDailyTrackerInfo(true);
+//        }
+//        else
+//        {
+//            //here sync StepandGoal for good user experience
+//            Log.i(TAG,"*** Sync step count and goal ***");
+//            getStepsAndGoal();
+//        }
     }
 
     /**
@@ -495,11 +501,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     @Override
     public void  getDailyTrackerInfo(boolean syncAll)
     {
-        if(syncAll){
-            sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
-        } else if(!mSyncAllFlag){
-            getDailyTracker(0);
-        }
+//        if(syncAll){
+        sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
+//        } else if(!mSyncAllFlag){
+//            getDailyTracker(0);
+//        }
     }
 
     private void  getDailyTracker(int trackerno)
@@ -541,9 +547,9 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-	public Context getContext() {		
-		return mContext;
-	}
+    public Context getContext() {
+        return mContext;
+    }
 
     @Override
     public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
@@ -572,7 +578,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     @Override
     public void onException(NevoException e) {
-            e.accept(this);
+        e.accept(this);
         if(mOnSyncControllerListener.notEmpty()){
             mOnSyncControllerListener.get().connectionStateChanged(false);
         }
