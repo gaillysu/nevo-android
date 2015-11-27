@@ -20,6 +20,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.database.dao.SleepDAO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,9 +88,9 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         xAxis.setGridColor(getResources().getColor(R.color.transparent));
         xAxis.setTypeface(tf);
 
-        List<IDailyHistory> history = new ArrayList<IDailyHistory>();
+        List<SleepDAO> history = new ArrayList<SleepDAO>();
         try {
-            history  = DatabaseHelper.getInstance(this).getDailyHistoryDao().queryBuilder().orderBy("created", true).query();
+            history  = DatabaseHelper.getInstance(this).getSleepDao().queryBuilder().orderBy("Date", true).query();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,8 +99,8 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
         int i = 0;
-        for (IDailyHistory daily: history) {
-            Date historyDate = new Date(daily.getCreated()); // getCreated() return millsecond from 1970.1.1 00:00:00
+        for (SleepDAO daily: history) {
+            Date historyDate = new Date(daily.getDate()); // getCreated() return millsecond from 1970.1.1 00:00:00
             SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
             JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(historyDate);
 

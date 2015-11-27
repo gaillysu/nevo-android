@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.database.dao.SleepDAO;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.HistoryActivity;
@@ -121,12 +122,14 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
             if(startsleep == 0 || endsleep ==0 || startsleep==endsleep)
             {
                 //blank database, sync all data up to last 7 days
+                /*
                 if (getDailyHistory(new Date()).isEmpty()) {
                     TotalHistory = 0;
                     currentHistory = 0;
                     getModel().getDailyInfo(true);
 
                 }
+                */
                 /** no need sync current day every time
                 else //only sync current day
                 {
@@ -276,7 +279,7 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
      * @param from
      * @return
      */
-    List<IDailyHistory> getDailyHistory(Date from)
+    List<SleepDAO> getDailyHistory(Date from)
     {
         List<Long> days = new ArrayList<Long>();
         //set theDay from 00:00:00
@@ -289,11 +292,11 @@ public class SleepHistoryFragment extends BaseFragment implements View.OnClickLi
         Date theday = calBeginning.getTime();
         days.add(theday.getTime());
         try {
-            return DatabaseHelper.getInstance(mCtx).getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created",days).query();
+            return DatabaseHelper.getInstance(mCtx).getSleepDao().queryBuilder().orderBy("Date", false).where().in("Date",days).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<IDailyHistory>();
+        return new ArrayList<SleepDAO>();
     }
 
     private boolean firstTimeFragment(){

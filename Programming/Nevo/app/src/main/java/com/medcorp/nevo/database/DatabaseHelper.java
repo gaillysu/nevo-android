@@ -19,6 +19,7 @@ import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.database.dao.UserDAO;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.model.DailyHistory;
+import com.medcorp.nevo.model.Sleep;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -226,7 +227,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
-     *
+     * !!!IMPORTANT how to define one day's sleep time? here  use the time slot：yesterday[18:00]~today[17:59]
      * @param date: a date for some day
      * @return the day 's sleep analysis result
      * include sleep start/end time, noon sleep time
@@ -274,32 +275,35 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         int theDayCount = 0;
 
+        final int conSleepStartEnd = 18;
+
         try {
 
-            List <IDailyHistory> list = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created", days).query();
+            List<SleepDAO> list = getSleepDao().queryBuilder().orderBy("Date", false).where().in("Date", days).query();
+            //List <IDailyHistory> list = getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created", days).query();
             //List<IDailyHistory> list = DatabaseHelper.getInstance(mCtx).getDailyHistoryDao().queryBuilder().orderBy("created", false).where().le("created",start).and().ge("created", end).query();
             if(list.size()==1){
-                //only the today's sleep [0~23],such as the first record in the datebase
-                if(list.get(0).getCreated()==start)
+                //only the today's sleep [0~17],such as the first record in the datebase
+                if(list.get(0).getDate()==start)
                 {
                     int m =0,n =0;
 
-                    hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
-                    hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
-                    hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
-                    hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
+                    hourlySleepTime = string2IntArray(list.get(0).getHourlySleep());
+                    hourlyWakeTime = string2IntArray(list.get(0).getHourlyWake());
+                    hourlyLightTime = string2IntArray(list.get(0).getHourlyLight());
+                    hourlyDeepTime = string2IntArray(list.get(0).getHourlyDeep());
 
-                    for(i=0;i<hourlySleepTime.length;i++)
+                    for(i=0;i<conSleepStartEnd;i++)
                     {
                         if(hourlySleepTime[i]>0) break;
                     }
                     //find out
-                    if(i!=hourlySleepTime.length) {
+                    if(i!=conSleepStartEnd) {
                         m = i;
                         sleepstart = start + ((i + 1) * 60 - hourlySleepTime[i]) * 60 * 1000;
 
-                        n = hourlySleepTime.length -1;
-                        for(i=m+1;i<hourlySleepTime.length;i++)
+                        n = conSleepStartEnd -1;
+                        for(i=m+1;i<conSleepStartEnd;i++)
                         {
                             //find out the new end index 'n'
                             if(hourlySleepTime[i]==0) {n = i - 1;break;}
@@ -318,19 +322,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         }
                     }
                 }
-                //only yesterday's sleep [20~23],perhaps no sync today sleep[0~12]
-                else if(list.get(0).getCreated()==end)
+                //only yesterday's sleep [18~23],perhaps no sync today sleep[0~17] or today's sleep data is all "0"
+                else if(list.get(0).getDate()==end)
                 {
                     int m =0,n =0;
 
-                    hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
-                    hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
-                    hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
-                    hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
+                    hourlySleepTime = string2IntArray(list.get(0).getHourlySleep());
+                    hourlyWakeTime = string2IntArray(list.get(0).getHourlyWake());
+                    hourlyLightTime = string2IntArray(list.get(0).getHourlyLight());
+                    hourlyDeepTime = string2IntArray(list.get(0).getHourlyDeep());
 
                     offset = 0;
 
-                    for (i = hourlySleepTime.length - 1; i >= 20; i--) {
+                    for (i = hourlySleepTime.length - 1; i >= conSleepStartEnd; i--) {
                         if (hourlySleepTime[i] == 0) break;
                         else{
                             //if sleep is broken at someone hour, this hour sleep time>0 and <60
@@ -353,15 +357,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             else if(list.size()==2)
             {
                 //check today firstly, calculator sleep end time
-                hourlySleepTime = string2IntArray(list.get(0).getHourlySleepTime());
-                hourlyWakeTime = string2IntArray(list.get(0).getHourlyWakeTime());
-                hourlyLightTime = string2IntArray(list.get(0).getHourlyLightTime());
-                hourlyDeepTime = string2IntArray(list.get(0).getHourlDeepTime());
+                hourlySleepTime = string2IntArray(list.get(0).getHourlySleep());
+                hourlyWakeTime = string2IntArray(list.get(0).getHourlyWake());
+                hourlyLightTime = string2IntArray(list.get(0).getHourlyLight());
+                hourlyDeepTime = string2IntArray(list.get(0).getHourlyDeep());
 
                 offset = 0;
-                for(i=0;i<hourlySleepTime.length;i++)
+                for(i=0;i<conSleepStartEnd;i++)
                 {
-                    //if today 's 00:00 has no sleep, should check yesterday's sleep data[20:00~23:00]
+                    //if today 's 00:00 has no sleep, should check yesterday's sleep data[18:00~23:00]
                     //if these yesterday sleep data also is zero, should recalculator today's sleep data
                     //for example, I like stay up late, always go to sleep after 1:00, this case shouldn't discard.
                     //so I add some new code to fix this case.
@@ -390,14 +394,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
 
                 //check yesterday, calculator sleep start time
-                hourlySleepTime2 = string2IntArray(list.get(1).getHourlySleepTime());
-                hourlyWakeTime2 = string2IntArray(list.get(1).getHourlyWakeTime());
-                hourlyLightTime2 = string2IntArray(list.get(1).getHourlyLightTime());
-                hourlyDeepTime2 = string2IntArray(list.get(1).getHourlDeepTime());
-
-                //only calculator yesterday 20~23
+                hourlySleepTime2 = string2IntArray(list.get(1).getHourlySleep());
+                hourlyWakeTime2 = string2IntArray(list.get(1).getHourlyWake());
+                hourlyLightTime2 = string2IntArray(list.get(1).getHourlyLight());
+                hourlyDeepTime2 = string2IntArray(list.get(1).getHourlyDeep());
+                //only calculator yesterday 18~23
                 offset = 0;
-                for(i=hourlySleepTime2.length-1;i>=20;i--)
+                for(i=hourlySleepTime2.length-1;i>=conSleepStartEnd;i--)
                 {
                     if(hourlySleepTime2[i]==0) break;
                     else
@@ -424,17 +427,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     if(sleepend == start)
                     {
                         int m =0,n =0;
-                        for(i=0;i<hourlySleepTime.length;i++)
+                        for(i=0;i<conSleepStartEnd;i++)
                         {
                             if(hourlySleepTime[i]>0) break;
                         }
                         //find out
-                        if(i!=hourlySleepTime.length) {
+                        if(i!=conSleepStartEnd) {
                             m = i;
                             sleepstart = start + ((i + 1) * 60 - hourlySleepTime[i]) * 60 * 1000;
 
-                            n = hourlySleepTime.length -1;
-                            for(i=m+1;i<hourlySleepTime.length;i++)
+                            n = conSleepStartEnd -1;
+                            for(i=m+1;i<conSleepStartEnd;i++)
                             {
                                 //find out the new end index 'n'
                                 if(hourlySleepTime[i]==0) {n = i - 1;break;}
@@ -465,8 +468,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if(hourlySleepTime[12]>0 || hourlySleepTime[13]>0) {
                     restend = start + (13 * 60 + hourlySleepTime[13]) * 60 * 1000;
                     reststart = start + (13 * 60 - hourlySleepTime[12]) * 60 * 1000;
-                    list.get(0).setReststartDateTime(reststart);
-                    list.get(0).setRestendDateTime(restend);
+                    //list.get(0).setReststartDateTime(reststart);
+                    //list.get(0).setRestendDateTime(restend);
 
                     json.put("startRestDateTime",reststart);
                     json.put("endRestDateTime",restend);
@@ -480,11 +483,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             json.put("mergeHourlyDeepTime",mergeDeepTime.toString());
 
             //update to database
-            if(list.size()>0){
-                list.get(0).setStartDateTime(sleepstart);
-                list.get(0).setEndDateTime(sleepend);
-                SaveDailyHistory(list.get(0));
-            }
+            //if(list.size()>0){
+                //list.get(0).setStartDateTime(sleepstart);
+                //list.get(0).setEndDateTime(sleepend);
+                //SaveDailyHistory(list.get(0));
+            //}
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {

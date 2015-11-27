@@ -98,7 +98,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     private Context mContext;
 
-    private static final int SYNC_INTERVAL = 0; //every half hour , do sync when connected again
+    private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
 
     private ConnectionController connectionController;
 
@@ -289,27 +289,27 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     mSavedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
                     mSavedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
 
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalSleepTime());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
 
                     mSavedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
                     mSavedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
 
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + mSavedDailyHistory.get(mCurrentDay).getTotalWakeTime());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + mSavedDailyHistory.get(mCurrentDay).getTotalWakeTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
 
                     mSavedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
                     mSavedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
 
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + mSavedDailyHistory.get(mCurrentDay).getTotalLightTime());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + mSavedDailyHistory.get(mCurrentDay).getTotalLightTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
 
 
                     mSavedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
                     mSavedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
 
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
+                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
 
                     mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
                     mSavedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
@@ -323,10 +323,10 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
 
                     //save it to local database
-                    try {
+                    //try {
                         IDailyHistory history = new IDailyHistory(mSavedDailyHistory.get(mCurrentDay));
-                        DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                        Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                        //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
+                        //Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
                         //update steps/sleep tables
                         Steps steps = new Steps(-1,1,history.getCreated());
                         steps.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
@@ -353,22 +353,22 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                             sleep.setHourlyWake(history.getHourlyWakeTime());
                             sleep.setHourlyLight(history.getHourlyLightTime());
                             sleep.setHourlyDeep(history.getHourlDeepTime());
-
-                            //I don't know the actual start/end sleep time, it need yesterday's sleep data and today's sleep data to calculate it
-                            // TODO Karl make this work.
-//                              sleep.setStart(0);
-//                              sleep.setEnd(0);
+                            sleep.setTotalSleepTime(history.getTotalSleepTime());
+                            sleep.setTotalWakeTime(history.getTotalWakeTime());
+                            sleep.setTotalLightTime(history.getTotalLightTime());
+                            sleep.setTotalDeepTime(history.getTotalDeepTime());
+                            //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
+                            sleep.setStart(0);
+                            sleep.setEnd(0);
                             ((ApplicationModel) mContext).saveDailySleep(sleep);
                             //end update
                         }
-                    } catch (SQLException e) {
+                    /*} catch (SQLException e) {
                         Log.w("Karl", "Crash");
                         e.printStackTrace();
                         Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
-                    }
+                    }*/
 
-
-                    Log.w("Karl", "Done?");
                     //discard tutorial activity, only MainActivity can save data to Google git
 //                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
                     mCurrentDay++;
@@ -468,20 +468,20 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
      */
     private void syncActivityData() {
 
-//        long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
-//        String lasttimezone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
-//        if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
-//                || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
-//            //We haven't synched for a while, let's sync now !
-//            Log.i(TAG,"*** Sync started ! ***");
+        long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
+        String lasttimezone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
+        if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
+                || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
+            //We haven't synched for a while, let's sync now !
+            Log.i(TAG,"*** Sync started ! ***");
         getDailyTrackerInfo(true);
-//        }
-//        else
-//        {
-//            //here sync StepandGoal for good user experience
-//            Log.i(TAG,"*** Sync step count and goal ***");
-//            getStepsAndGoal();
-//        }
+        }
+        else
+        {
+            //here sync StepandGoal for good user experience
+            Log.i(TAG,"*** Sync step count and goal ***");
+            getStepsAndGoal();
+        }
     }
 
     /**
@@ -501,11 +501,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     @Override
     public void  getDailyTrackerInfo(boolean syncAll)
     {
-//        if(syncAll){
+        if(syncAll){
         sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
-//        } else if(!mSyncAllFlag){
-//            getDailyTracker(0);
-//        }
+        } else if(!mSyncAllFlag){
+            getDailyTracker(0);
+        }
     }
 
     private void  getDailyTracker(int trackerno)
