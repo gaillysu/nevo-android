@@ -20,7 +20,6 @@ import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.BaseFragment;
 import com.medcorp.nevo.fragment.ConnectAnimationFragment;
 import com.medcorp.nevo.fragment.GoalFragment;
-import com.medcorp.nevo.fragment.HistoryFragment;
 import com.medcorp.nevo.fragment.MyNevoFragment;
 import com.medcorp.nevo.fragment.NavigationDrawerFragment;
 import com.medcorp.nevo.fragment.NotificationFragment;
@@ -263,9 +262,6 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
         }else if(tag.equals(MyNevoFragment.MYNEVOFRAGMENT)){
             MyNevoFragment mynevoFragment = (MyNevoFragment) getSupportFragmentManager().findFragmentByTag(MyNevoFragment.MYNEVOFRAGMENT);
             return mynevoFragment;
-        }else if(tag.equals(HistoryFragment.HISTORYFRAGMENT)){
-            HistoryFragment historyFragment = (HistoryFragment) getSupportFragmentManager().findFragmentByTag(HistoryFragment.HISTORYFRAGMENT);
-            return historyFragment;
         }else if(tag.equals(SleepHistoryFragment.SLEEPHISTORYFRAGMENT)){
             SleepHistoryFragment historyFragment = (SleepHistoryFragment) getSupportFragmentManager().findFragmentByTag(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
             return historyFragment;
@@ -336,9 +332,6 @@ public class MainActivity extends BaseActionBarActivity implements NavigationDra
                 case MyNevoFragment.MYNEVOPOSITION+1:
                     fragment.set(new MyNevoFragment());
                     break;
-                //case HistoryFragment.HISTORYPOSITION+1:
-                //    fragment.set(new HistoryFragment());
-                //    break;
                 case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
                     fragment.set(new SleepHistoryFragment());
                     break;

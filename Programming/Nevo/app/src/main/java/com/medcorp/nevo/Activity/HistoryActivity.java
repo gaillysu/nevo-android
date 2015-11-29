@@ -17,15 +17,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.database.dao.SleepDAO;
+import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
+import com.medcorp.nevo.model.SleepData;
+import com.medcorp.nevo.util.SleepDataHandler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,63 +83,77 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         xAxis.setTextSize(8f);
         xAxis.setGridColor(getResources().getColor(R.color.transparent));
         xAxis.setTypeface(tf);
-
-        List<SleepDAO> history = new ArrayList<SleepDAO>();
-        try {
-            history  = DatabaseHelper.getInstance(this).getSleepDao().queryBuilder().orderBy("Date", true).query();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
         List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
+        SleepDatabaseHelper helper = new SleepDatabaseHelper(this);
+        SleepDataHandler handler = new SleepDataHandler(helper.getAll());
         int i = 0;
-        for (SleepDAO daily: history) {
-            Date historyDate = new Date(daily.getDate()); // getCreated() return millsecond from 1970.1.1 00:00:00
-            SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
-            JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(historyDate);
-
-            try {
-                long startsleep = sleepAnalysisResult.getLong("startDateTime");
-                long endsleep = sleepAnalysisResult.getLong("endDateTime");
-                if(startsleep == 0 || endsleep ==0 || startsleep==endsleep) {
-                    continue;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            try {
-                int [] wakeTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
-                int [] lightSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
-                int [] deepSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
-
-                if(wakeTimes.length > 0 || lightSleepTimes.length > 0 || deepSleepTimes.length > 0) {
-
-                    int awake = 0;
-                    for (int k = 0; k < wakeTimes.length; k++) {
-                        awake += wakeTimes[k];
-                    }
-                    int lightSleep = 0;
-                    for (int k = 0; k < lightSleepTimes.length; k++) {
-                        lightSleep += lightSleepTimes[k];
-                    }
-                    int deepSleep = 0;
-                    for (int k = 0; k < deepSleepTimes.length; k++) {
-                        deepSleep += deepSleepTimes[k];
-                    }
-                    SleepData sleepData = new SleepData(awake+lightSleep+deepSleep, deepSleep, lightSleep, awake);
-                    sleepDataList.add(sleepData);
-                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
-                    xVals.add(sdf.format(historyDate));
-                    i++;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        sleepDataList = handler.getSleepData();
+        for (SleepData sleepData:sleepDataList) {
+            yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
+            xVals.add(sdf.format(new Date(sleepData.getDate())));
+            i++;
         }
+//
+//
+//        List<SleepDAO> history = new ArrayList<SleepDAO>();
+//        try {
+//            history  = DatabaseHelper.getInstance(this).getSleepDao().queryBuilder().orderBy("Date", true).query();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        List<String> xVals = new ArrayList<String>();
+//        List<BarEntry> yValue = new ArrayList<BarEntry>();
+//        int i = 0;
+//        for (SleepDAO daily: history) {
+//            Date historyDate = new Date(daily.getDate()); // getCreated() return millsecond from 1970.1.1 00:00:00
+//            SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
+//            JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(this).getSleepZone(historyDate);
+//
+//            try {
+//                long startsleep = sleepAnalysisResult.getLong("startDateTime");
+//                long endsleep = sleepAnalysisResult.getLong("endDateTime");
+//                if(startsleep == 0 || endsleep ==0 || startsleep==endsleep) {
+//                    continue;
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                continue;
+//            }
+//
+//            try {
+//                int [] wakeTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
+//                int [] lightSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
+//                int [] deepSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
+//
+//                if(wakeTimes.length > 0 || lightSleepTimes.length > 0 || deepSleepTimes.length > 0) {
+//
+//                    int awake = 0;
+//                    for (int k = 0; k < wakeTimes.length; k++) {
+//                        awake += wakeTimes[k];
+//                    }
+//                    int lightSleep = 0;
+//                    for (int k = 0; k < lightSleepTimes.length; k++) {
+//                        lightSleep += lightSleepTimes[k];
+//                    }
+//                    int deepSleep = 0;
+//                    for (int k = 0; k < deepSleepTimes.length; k++) {
+//                        deepSleep += deepSleepTimes[k];
+//                    }
+//
+//                    SleepData sleepData = new SleepData(awake+lightSleep+deepSleep, deepSleep, lightSleep, awake);
+//                    sleepDataList.add(sleepData);
+//                    yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
+//                    xVals.add(sdf.format(historyDate));
+//                    i++;
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         if(sleepDataList.isEmpty()){
             totalSleep.setText(getString(R.string.sleep_no_data));
@@ -180,7 +190,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         String hoursAnd = getString(R.string.hours_and);
         String minutes= getString(R.string.minutes);
         totalSleep.setText(getHours(data.getTotalSleep())+ " " + hoursAnd + " "+ getLeftoverMinutes(data.getTotalSleep())+ " " + minutes );
-        deepSleep.setText(getHours(data.getDeepSleep())+ " " + hoursAnd+ " " + getLeftoverMinutes(data.getDeepSleep())+ " " + minutes );
+        deepSleep.setText(getHours(data.getDeepSleep()) + " " + hoursAnd + " " + getLeftoverMinutes(data.getDeepSleep()) + " " + minutes);
         lightSleep.setText(getHours(data.getLightSleep())+ " " + hoursAnd+ " " + getLeftoverMinutes(data.getLightSleep())+ " " + minutes );
     }
 
@@ -196,34 +206,4 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
     private int getLeftoverMinutes(int i){
         return i%60;
     }
-
-
-    private class SleepData {
-
-        private int deepSleep;
-        private int totalSleep;
-        private int lightSleep;
-        private int awake;
-
-        public SleepData(int totalSleep, int deepSleep, int lightSleep, int awake) {
-            this.deepSleep = deepSleep;
-            this.totalSleep = totalSleep;
-            this.lightSleep = lightSleep;
-            this.awake = awake;
-        }
-
-        public int getLightSleep() {
-            return lightSleep+awake;
-        }
-
-        public int getDeepSleep() {
-            return deepSleep;
-        }
-
-        public int getTotalSleep() {
-            return totalSleep;
-        }
-    }
-
-
 }

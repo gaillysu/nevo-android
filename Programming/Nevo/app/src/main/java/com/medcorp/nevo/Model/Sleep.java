@@ -1,11 +1,16 @@
 package com.medcorp.nevo.model;
 
-import com.j256.ormlite.field.DatabaseField;
-
 /**
  * Created by gaillysu on 15/11/17.
  */
 public class Sleep {
+
+    public enum SleepQuality{
+        WAKE,
+        LIGHT,
+        DEEP
+    }
+
     private final int iD;
 
     private final int userID;
@@ -177,5 +182,26 @@ public class Sleep {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    @Override
+    public String toString() {
+
+        return "iD = " + iD + " \n " +
+                "userID = " + userID + " \n " +
+                "createdDate = " + createdDate + " \n " +
+                "date = " + date + " \n " +
+                "totalSleepTime = " + totalSleepTime + " \n " +
+                "totalWakeTime = " + totalWakeTime + " \n " +
+                "totalLightTime = " + totalLightTime + " \n " +
+                "totalDeepTime = " + totalDeepTime + " \n " +
+                "hourlySleep = " + hourlySleep + " \n " +
+                "hourlyWake = " + hourlyWake + " \n " +
+                "hourlyLight = " + hourlyLight + " \n " +
+                "hourlyDeep = " + hourlyDeep + " \n " +
+                "start = " + start + " \n " +
+                "end = " + end + " \n " +
+                "sleepQuality = " + sleepQuality + " \n " +
+                "remarks = " + remarks + " \n ";
     }
 }
