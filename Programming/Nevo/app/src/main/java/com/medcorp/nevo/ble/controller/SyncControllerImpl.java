@@ -574,6 +574,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     public void forgetDevice() {
         connectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
+        //when forget the watch, force a big sync when got connected again
+        getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
     }
 
     @Override
