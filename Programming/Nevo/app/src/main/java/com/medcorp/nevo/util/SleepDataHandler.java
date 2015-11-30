@@ -1,15 +1,19 @@
 package com.medcorp.nevo.util;
 
+import android.util.Log;
+
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Karl on 11/27/15.
@@ -17,6 +21,7 @@ import java.util.List;
 public class SleepDataHandler {
 
     private List<Sleep> sleepList;
+    private boolean logging;
 
     public SleepDataHandler(List<Sleep> sleepList) {
         this.sleepList = sleepList;
@@ -138,30 +143,79 @@ public class SleepDataHandler {
 
     public List<SleepData> getSleepData() {
         List<SleepData> sleepDataList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
+        if (logging) {
+            for (Sleep sleep : sleepList) {
+                Log.w("Karl",sleep.toString());
+            }
+        }
         for (int i = 0; i < sleepList.size(); i++) {
             Sleep todaySleep = sleepList.get(i);
+            if (logging){
+                Log.w("Karl", "=========================================");
+                Log.w("Karl", "Today = " + sdf.format(new Date(todaySleep.getDate())));
+            }
             if (sleptToday(todaySleep)) {
+                if (logging){
+                    Log.w("Karl", "User slept today");
+                }
                 if (sleptAfterTwelve(todaySleep)) {
+                    if (logging){
+                        Log.w("Karl", "User slept after twelve");
+                    }
                     SleepData sleepData = getSleepData(todaySleep);
                     sleepDataList.add(sleepData);
+                    if(i > 0){
+                        Sleep yesterdaySleep = sleepList.get(i -1);
+                        if (isYesterday(todaySleep, yesterdaySleep)){
+                            Log.w("Karl"," HMmm we lso got that strange data of yesterday. Just add it");
+                            SleepData strangeData = getSleepDataAfterSix(yesterdaySleep);
+                            if (strangeData.getTotalSleep() > 0) {
+                                sleepDataList.add(strangeData);
+                            }
+                        }
+                    }
                 } else {
+                    if (logging){
+                        Log.w("Karl", "User Slept before twelve");
+                    }
                     if (i > 0) {
                         Sleep yesterdaySleep = sleepList.get(i - 1);
                         if (isYesterday(todaySleep, yesterdaySleep)) {
+                            if (logging){
+                                Log.w("Karl", "There is yesterdays data! We added it");
+                            }
                             SleepData sleepData = merge(getSleepData(todaySleep), getSleepDataAfterSix(yesterdaySleep));
                             sleepDataList.add(sleepData);
+                        }else{
+                            if (logging){
+                                Log.w("Karl", "Strange sleep data! But its added");
+                            }
+                            SleepData strangeData = getSleepData(todaySleep);
+                            sleepDataList.add(strangeData);
                         }
                     }
                 }
             } else if ((i + 1) < sleepList.size()) {
                 Sleep tomorrow = sleepList.get(i + 1);
                 if (!sleptToday(tomorrow)) {
+                    if (logging){
+                        Log.w("Karl", "Strange sleep data for tomorrow! But its added");
+                    }
+
                     sleepDataList.add(getSleepDataAfterSix(todaySleep));
                 }
             } else if (i == sleepList.size() - 1) {
+                if (logging){
+                    Log.w("Karl", "Strangest sleep data! But its added");
+                }
                 sleepDataList.add(getSleepDataAfterSix(todaySleep));
             }
         }
         return sleepDataList;
+    }
+
+    public void setLoggingOn(boolean logging){
+        this.logging = logging;
     }
 }
