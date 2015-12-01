@@ -1,6 +1,7 @@
 package com.medcorp.nevo.database.entry;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.UserDAO;
@@ -45,10 +46,12 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         int result = -1;
         try {
             List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, object.getId()).query();
-            if(userDAOList.isEmpty()) return add(object);
-            UserDAO daoobject = convertToDao(object);
-            daoobject.setID(userDAOList.get(0).getID());
-            result = databaseHelper.getUserDao().update(daoobject);
+            if(userDAOList.isEmpty()){
+                return add(object);
+            }
+            UserDAO daoObject = convertToDao(object);
+            daoObject.setID(userDAOList.get(0).getID());
+            result = databaseHelper.getUserDao().update(daoObject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,8 +62,10 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public boolean remove(int id,Date date) {
         try {
             List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
-            if(!userDAOList.isEmpty()) databaseHelper.getUserDao().delete(userDAOList);
-            return true;
+            if(!userDAOList.isEmpty()) {
+                Log.w("Karl", "ID = " + databaseHelper.getUserDao().delete(userDAOList));
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -103,8 +108,8 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         userDAO.setBirthday(user.getBirthday());
         userDAO.setWeight(user.getWeight());
         userDAO.setRemarks(user.getRemarks());
-        userDAO.setFirstName(user.getFirstname());
-        userDAO.setLastName(user.getLastname());
+        userDAO.setFirstName(user.getFirstName());
+        userDAO.setLastName(user.getLastName());
         userDAO.setSex(user.getSex());
         return userDAO;
     }
@@ -117,8 +122,8 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         user.setBirthday(userDAO.getBirthday());
         user.setWeight(userDAO.getWeight());
         user.setRemarks(userDAO.getRemarks());
-        user.setFirstname(userDAO.getFirstName());
-        user.setLastname(userDAO.getLastName());
+        user.setFirstName(userDAO.getFirstName());
+        user.setLastName(userDAO.getLastName());
         user.setSex(userDAO.getSex());
         return user;
     }

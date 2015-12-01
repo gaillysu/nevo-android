@@ -16,9 +16,9 @@ public class User {
 
     private int sex;
 
-    private String firstname;
+    private String firstName;
 
-    private String lastname;
+    private String lastName;
 
     private String remarks;
 
@@ -26,9 +26,9 @@ public class User {
         this.createdDate = createdDate;
     }
 
-    public User(String firstname,String lastname,int sex, long birthday, int age, int weight, int height, long createdDate, String remarks) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public User(String firstName,String lastName,int sex, long birthday, int age, int weight, int height, long createdDate, String remarks) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.sex = sex;
         this.birthday = birthday;
         this.age = age;
@@ -92,20 +92,20 @@ public class User {
         this.sex = sex;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public long getBirthday() {
@@ -114,5 +114,10 @@ public class User {
 
     public void setBirthday(long birthday) {
         this.birthday = birthday;
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
     }
 }
