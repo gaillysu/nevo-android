@@ -2,7 +2,7 @@ package com.medcorp.nevo.model;
 
 public class User {
 
-    private final int id ;
+    private  int id;
 
     private long birthday;
 
@@ -14,15 +14,22 @@ public class User {
 
     private final long createdDate;
 
+    private int sex;
+
+    private String firstname;
+
+    private String lastname;
+
     private String remarks;
 
-    public User(int id, long createdDate) {
-        this.id = id;
+    public User(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public User(int id, long birthday, int age, int weight, int height, long createdDate, String remarks) {
-        this.id = id;
+    public User(String firstname,String lastname,int sex, long birthday, int age, int weight, int height, long createdDate, String remarks) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.sex = sex;
         this.birthday = birthday;
         this.age = age;
         this.weight = weight;
@@ -31,9 +38,6 @@ public class User {
         this.remarks = remarks;
     }
 
-    public void setBirthday(long birthday) {
-        this.birthday = birthday;
-    }
 
     public void setAge(int age) {
         this.age = age;
@@ -51,13 +55,14 @@ public class User {
         this.remarks = remarks;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
 
-    public long getBirthday() {
-        return birthday;
-    }
 
     public int getAge() {
         return age;
@@ -77,5 +82,37 @@ public class User {
 
     public String getRemarks() {
         return remarks;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public long getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(long birthday) {
+        this.birthday = birthday;
     }
 }

@@ -93,7 +93,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public SyncController getSyncController(){return syncController;}
-    //public OtaController getOtaController(){return mOtaController;}
 
     public void startConnectToWatch(boolean forceScan) {
         syncController.startConnect(forceScan, this);

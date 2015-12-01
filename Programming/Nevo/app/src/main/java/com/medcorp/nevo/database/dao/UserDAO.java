@@ -42,6 +42,26 @@ public class UserDAO {
     @DatabaseField
     private int Height = 175;
 
+    /**
+     * Sex = 0, female, sex = 1, male
+     */
+    public static  final String fSex = "Sex";
+    @DatabaseField
+    private int Sex = 1;
+
+    /**
+     * first name
+     */
+    public  static final String fFirstName = "FirstName";
+    @DatabaseField
+    private String FirstName;
+
+    /**
+     * last name
+     */
+    public static final String fLastName = "LastName";
+    @DatabaseField
+    private String LastName;
 
     /**
      * created date
@@ -113,5 +133,29 @@ public class UserDAO {
 
     public void setRemarks(String remarks) {
         Remarks = remarks;
+    }
+
+    public int getSex() {
+        return Sex;
+    }
+
+    public void setSex(int sex) {
+        Sex = sex;
+    }
+
+    public String getFirstName() {
+        return FirstName;
+    }
+
+    public void setFirstName(String firstName) {
+        FirstName = firstName;
+    }
+
+    public String getLastName() {
+        return LastName;
+    }
+
+    public void setLastName(String lastName) {
+        LastName = lastName;
     }
 }

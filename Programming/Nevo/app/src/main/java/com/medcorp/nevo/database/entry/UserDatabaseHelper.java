@@ -26,7 +26,14 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public boolean add(User object) {
         int result = -1;
         try {
-            result = databaseHelper.getUserDao().create(convertToDao(object));
+            //result = databaseHelper.getUserDao().create(convertToDao(object));
+            UserDAO res = databaseHelper.getUserDao().createIfNotExists(convertToDao(object));
+            if(res!=null)
+            {
+                //set the new userID
+                object.setId(res.getID());
+                result = 1;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -96,16 +103,23 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         userDAO.setBirthday(user.getBirthday());
         userDAO.setWeight(user.getWeight());
         userDAO.setRemarks(user.getRemarks());
+        userDAO.setFirstName(user.getFirstname());
+        userDAO.setLastName(user.getLastname());
+        userDAO.setSex(user.getSex());
         return userDAO;
     }
 
     private User convertToNormal(UserDAO userDAO){
-        User user = new User(userDAO.getID(), userDAO.getCreatedDate());
+        User user = new User(userDAO.getCreatedDate());
+        user.setId(userDAO.getID());
         user.setAge(userDAO.getAge());
         user.setHeight(userDAO.getHeight());
         user.setBirthday(userDAO.getBirthday());
         user.setWeight(userDAO.getWeight());
         user.setRemarks(userDAO.getRemarks());
+        user.setFirstname(userDAO.getFirstName());
+        user.setLastname(userDAO.getLastName());
+        user.setSex(userDAO.getSex());
         return user;
     }
 }
