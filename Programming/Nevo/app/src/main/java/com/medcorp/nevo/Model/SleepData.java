@@ -6,14 +6,12 @@ package com.medcorp.nevo.model;
 public class SleepData {
 
     private int deepSleep;
-    private int totalSleep;
     private int lightSleep;
     private int awake;
     private long date;
 
-    public SleepData(int totalSleep, int deepSleep, int lightSleep, int awake, long date) {
+    public SleepData(int deepSleep, int lightSleep, int awake, long date) {
         this.deepSleep = deepSleep;
-        this.totalSleep = totalSleep;
         this.lightSleep = lightSleep;
         this.awake = awake;
         this.date = date;
@@ -28,12 +26,9 @@ public class SleepData {
     }
 
     public int getTotalSleep() {
-        return totalSleep;
+        return deepSleep + lightSleep + awake;
     }
 
-    public void setTotalSleep(int totalSleep) {
-        this.totalSleep = totalSleep;
-    }
 
     public int getLightSleep() {
         return lightSleep;

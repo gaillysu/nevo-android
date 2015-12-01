@@ -11,6 +11,7 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,10 +22,17 @@ import java.util.logging.Logger;
 public class SleepDataHandler {
 
     private List<Sleep> sleepList;
-    private boolean logging;
 
     public SleepDataHandler(List<Sleep> sleepList) {
         this.sleepList = sleepList;
+    }
+
+    public SleepDataHandler(List<Sleep> sleepList, boolean sortByDate) {
+        this.sleepList = sleepList;
+        if (sortByDate){
+            Collections.sort(this.sleepList, new SleepSorter());
+        }
+
     }
 
     private SleepData getSleepData(Sleep todaySleep) {
@@ -51,7 +59,7 @@ public class SleepDataHandler {
             e.printStackTrace();
         }
 
-        return new SleepData((lightSleep + deepSleep + wake), deepSleep, lightSleep, wake, todaySleep.getCreatedDate());
+        return new SleepData(deepSleep, lightSleep, wake, todaySleep.getCreatedDate());
     }
 
     private boolean sleptToday(Sleep sleep) {
@@ -99,10 +107,10 @@ public class SleepDataHandler {
     }
 
     private boolean isYesterday(Sleep todaySleep, Sleep yesterdaySleep) {
-        Calendar todayCalendar = Calendar.getInstance(); // today
+        Calendar todayCalendar = Calendar.getInstance();
         todayCalendar.setTime(new Date(todaySleep.getDate()));
         Calendar yesterdayCalendar = Calendar.getInstance();
-        yesterdayCalendar.setTime(new Date(yesterdaySleep.getDate())); // your date
+        yesterdayCalendar.setTime(new Date(yesterdaySleep.getDate()));
         if (todayCalendar.get(Calendar.YEAR) == yesterdayCalendar.get(Calendar.YEAR)
                 && todayCalendar.get(Calendar.DAY_OF_YEAR) - 1 == yesterdayCalendar.get(Calendar.DAY_OF_YEAR)) {
             return true;
@@ -133,89 +141,64 @@ public class SleepDataHandler {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return new SleepData((lightSleep + deepSleep + wake), deepSleep, lightSleep, wake,yesterdaySleep.getDate());
+        int totalSleep = lightSleep + deepSleep + wake;
+        if(totalSleep > 0) {
+            return new SleepData(deepSleep, lightSleep, wake, yesterdaySleep.getDate());
+        }else{
+            return new SleepData(0, 0, 0, yesterdaySleep.getDate());
+        }
     }
 
     private SleepData merge(SleepData today, SleepData yesterday) {
-        return new SleepData((today.getTotalSleep()+ yesterday.getTotalSleep()), (today.getDeepSleep() + yesterday.getDeepSleep()), (today.getLightSleep() + yesterday.getLightSleep()), (today.getAwake() + yesterday.getAwake()),today.getDate());
+        if (yesterday.getTotalSleep() == 0){
+            return today;
+        }
+        return new SleepData((today.getDeepSleep() + yesterday.getDeepSleep()), (today.getLightSleep() + yesterday.getLightSleep()), (today.getAwake() + yesterday.getAwake()),today.getDate());
     }
 
     public List<SleepData> getSleepData() {
         List<SleepData> sleepDataList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
-        if (logging) {
-            for (Sleep sleep : sleepList) {
-                Log.w("Karl",sleep.toString());
-            }
-        }
         for (int i = 0; i < sleepList.size(); i++) {
             Sleep todaySleep = sleepList.get(i);
-            if (logging){
-                Log.w("Karl", "=========================================");
-                Log.w("Karl", "Today = " + sdf.format(new Date(todaySleep.getDate())));
-            }
             if (sleptToday(todaySleep)) {
-                if (logging){
-                    Log.w("Karl", "User slept today");
-                }
                 if (sleptAfterTwelve(todaySleep)) {
-                    if (logging){
-                        Log.w("Karl", "User slept after twelve");
-                    }
                     SleepData sleepData = getSleepData(todaySleep);
                     sleepDataList.add(sleepData);
                     if(i > 0){
                         Sleep yesterdaySleep = sleepList.get(i -1);
                         if (isYesterday(todaySleep, yesterdaySleep)){
-                            Log.w("Karl"," HMmm we lso got that strange data of yesterday. Just add it");
                             SleepData strangeData = getSleepDataAfterSix(yesterdaySleep);
                             if (strangeData.getTotalSleep() > 0) {
                                 sleepDataList.add(strangeData);
                             }
                         }
+                    }else if (i == sleepList.size()-1){
+                        if(sleptAfterTwelve(todaySleep)){
+                            SleepData sleepData2 = getSleepDataAfterSix(todaySleep);
+                            if (sleepData2.getTotalSleep() > 0) {
+                                sleepDataList.add(sleepData2);
+                            }
+                        }
                     }
                 } else {
-                    if (logging){
-                        Log.w("Karl", "User Slept before twelve");
-                    }
                     if (i > 0) {
                         Sleep yesterdaySleep = sleepList.get(i - 1);
                         if (isYesterday(todaySleep, yesterdaySleep)) {
-                            if (logging){
-                                Log.w("Karl", "There is yesterdays data! We added it");
-                            }
-                            SleepData sleepData = merge(getSleepData(todaySleep), getSleepDataAfterSix(yesterdaySleep));
-                            sleepDataList.add(sleepData);
+                            sleepDataList.add(merge(getSleepData(todaySleep), getSleepDataAfterSix(yesterdaySleep)));
                         }else{
-                            if (logging){
-                                Log.w("Karl", "Strange sleep data! But its added");
-                            }
-                            SleepData strangeData = getSleepData(todaySleep);
-                            sleepDataList.add(strangeData);
+                            sleepDataList.add(getSleepData(todaySleep));
                         }
                     }
                 }
             } else if ((i + 1) < sleepList.size()) {
                 Sleep tomorrow = sleepList.get(i + 1);
                 if (!sleptToday(tomorrow)) {
-                    if (logging){
-                        Log.w("Karl", "Strange sleep data for tomorrow! But its added");
-                    }
-
                     sleepDataList.add(getSleepDataAfterSix(todaySleep));
                 }
             } else if (i == sleepList.size() - 1) {
-                if (logging){
-                    Log.w("Karl", "Strangest sleep data! But its added");
-                }
                 sleepDataList.add(getSleepDataAfterSix(todaySleep));
             }
         }
         return sleepDataList;
-    }
-
-    public void setLoggingOn(boolean logging){
-        this.logging = logging;
     }
 }
