@@ -17,6 +17,7 @@ public interface iEntryDatabaseHelper<T> {
      * @param date : which day's record, if the table is "User", ignore it.
      * @return
      */
+
     public boolean remove(int userid,Date date);
     public T get(int userid,Date date);
     public List<T> getAll();
