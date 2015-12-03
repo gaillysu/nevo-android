@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface iEntryDatabaseHelper<T> {
 
-    public boolean add(T object);
+    public T add(T object);
     public boolean update(T object);
 
     /**

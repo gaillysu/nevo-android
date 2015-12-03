@@ -23,14 +23,17 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     }
 
     @Override
-    public boolean add(Steps object) {
-        int result = -1;
+    public Steps add(Steps object) {
         try {
-            result = databaseHelper.getStepsDao().create(convertToDao(object));
+            StepsDAO res = databaseHelper.getStepsDao().createIfNotExists(convertToDao(object));
+            if(res != null)
+            {
+                return convertToNormal(res);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result>=0;
+        return null;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         int result = -1;
         try {
             List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, object.getUserID()).and().eq(StepsDAO.fDate,object.getDate()).query();
-            if(stepsDAOList.isEmpty()) return add(object);
+            if(stepsDAOList.isEmpty()) return add(object)!=null;
             StepsDAO daoobject = convertToDao(object);
             daoobject.setID(stepsDAOList.get(0).getID());
             result = databaseHelper.getStepsDao().update(daoobject);

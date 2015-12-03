@@ -34,7 +34,7 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
 
     public void testFunctions(){
         Log.w("Karl", "add user");
-        assertEquals(true, db.add(dummyUser));
+        assertEquals(true, db.add(dummyUser)!=null);
         Log.w("Karl","get user");
         List<User> userList = db.getAll();
         User newJoe = null;

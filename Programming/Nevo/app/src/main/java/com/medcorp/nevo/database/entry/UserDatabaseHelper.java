@@ -24,21 +24,17 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public boolean add(User object) {
-        int result = -1;
+    public User add(User object) {
         try {
-            //result = databaseHelper.getUserDao().create(convertToDao(object));
             UserDAO res = databaseHelper.getUserDao().createIfNotExists(convertToDao(object));
             if(res!=null)
             {
-                //set the new userID
-                object.setId(res.getID());
-                result = 1;
+                return convertToNormal(res);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result>=0;
+        return null;
     }
 
     @Override
@@ -47,7 +43,7 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         try {
             List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, object.getId()).query();
             if(userDAOList.isEmpty()){
-                return add(object);
+                return add(object)!=null;
             }
             UserDAO daoObject = convertToDao(object);
             daoObject.setID(userDAOList.get(0).getID());

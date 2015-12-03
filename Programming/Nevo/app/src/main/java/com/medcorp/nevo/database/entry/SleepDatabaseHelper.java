@@ -23,15 +23,18 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     }
 
     @Override
-    public boolean add(Sleep object) {
-        int result = -1;
-        try {
-            result = databaseHelper.getSleepDao().create(convertToDao(object));
+    public Sleep add(Sleep object) {
 
+        try {
+            SleepDAO  res = databaseHelper.getSleepDao().createIfNotExists(convertToDao(object));
+            if(res != null)
+            {
+                return convertToNormal(res);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result>=0;
+        return null;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         int result = -1;
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, object.getUserID()).and().eq(SleepDAO.fDate,object.getDate()).query();
-            if(sleepDAOList.isEmpty()) return add(object);
+            if(sleepDAOList.isEmpty()) return add(object)!=null;
             SleepDAO daoobject = convertToDao(object);
             daoobject.setID(sleepDAOList.get(0).getID());
             result = databaseHelper.getSleepDao().update(daoobject);

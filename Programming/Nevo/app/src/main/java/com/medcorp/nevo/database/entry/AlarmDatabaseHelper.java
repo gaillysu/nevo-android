@@ -23,14 +23,17 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
     }
 
     @Override
-    public boolean add(Alarm object) {
-        int result = -1;
+    public Alarm add(Alarm object) {
         try {
-            result = databaseHelper.getAlarmDao().create(convertToDao(object));
+            AlarmDAO res = databaseHelper.getAlarmDao().createIfNotExists(convertToDao(object));
+            if(res != null)
+            {
+                return convertToNormal(res);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result>=0;
+        return null;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
         int result = -1;
         try {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, object.getId()).query();
-            if(alarmDAOList.isEmpty()) return add(object);
+            if(alarmDAOList.isEmpty()) return add(object)!=null;
             AlarmDAO alarmDAO = convertToDao(object);
             alarmDAO.setID(alarmDAOList.get(0).getID());
             result = databaseHelper.getAlarmDao().update(alarmDAO);
@@ -52,8 +55,11 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
     public boolean remove(int alarmId,Date date) {
         try {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, alarmId).query();
-            if(!alarmDAOList.isEmpty()) databaseHelper.getAlarmDao().delete(alarmDAOList);
-            return true;
+            if(!alarmDAOList.isEmpty())
+            {
+                databaseHelper.getAlarmDao().delete(alarmDAOList);
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -91,10 +97,9 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
     private AlarmDAO convertToDao(Alarm alarm){
         AlarmDAO alarmDAO = new AlarmDAO();
         alarmDAO.setAlarm(alarm.getHour() + ":" + alarm.getMinute());
-        alarmDAO.setID(alarm.getId());
         alarmDAO.setLabel(alarm.getLabel());
         alarmDAO.setEnabled(alarm.isEnable());
-        return new AlarmDAO();
+        return alarmDAO;
     }
 
     private Alarm convertToNormal(AlarmDAO alarmDAO){

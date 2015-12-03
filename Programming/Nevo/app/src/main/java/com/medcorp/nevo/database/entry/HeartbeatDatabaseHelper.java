@@ -23,14 +23,17 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
     }
 
     @Override
-    public boolean add(Heartbeat object) {
-        int result = -1;
+    public Heartbeat add(Heartbeat object) {
         try {
-            result = databaseHelper.getHeartbeatDao().create(convertToDao(object));
+            HeartbeatDAO res = databaseHelper.getHeartbeatDao().createIfNotExists(convertToDao(object));
+            if(res!=null)
+            {
+                return convertToNormal(res);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result>=0;
+        return null;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
         int result = -1;
         try {
             List<HeartbeatDAO> heartbeatDAOList = databaseHelper.getHeartbeatDao().queryBuilder().where().eq(HeartbeatDAO.fUserID, object.getUserID()).and().eq(HeartbeatDAO.fDate,object.getDate()).query();
-            if(heartbeatDAOList.isEmpty()) return add(object);
+            if(heartbeatDAOList.isEmpty()) return add(object)!=null;
             HeartbeatDAO daoobject = convertToDao(object);
             daoobject.setID(heartbeatDAOList.get(0).getID());
             result = databaseHelper.getHeartbeatDao().update(daoobject);

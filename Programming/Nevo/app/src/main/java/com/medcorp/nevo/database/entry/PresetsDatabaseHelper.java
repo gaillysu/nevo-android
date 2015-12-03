@@ -23,14 +23,17 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
     }
 
     @Override
-    public boolean add(Preset object) {
-        int result = -1;
+    public Preset add(Preset object) {
         try {
-            result = databaseHelper.getPresetDao().create(convertToDao(object));
+            PresetDAO res  = databaseHelper.getPresetDao().createIfNotExists(convertToDao(object));
+            if(res != null)
+            {
+                return convertToNormal(res);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return result>=0;
+        return null;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
         int result = -1;
         try {
             List<PresetDAO> presetDAOList = databaseHelper.getPresetDao().queryBuilder().where().eq(PresetDAO.iDString, object.getId()).query();
-            if(presetDAOList.isEmpty()) return add(object);
+            if(presetDAOList.isEmpty()) return add(object)!=null;
             PresetDAO presetDAO = convertToDao(object);
             presetDAO.setID(presetDAOList.get(0).getID());
             result = databaseHelper.getPresetDao().update(presetDAO);
