@@ -2,9 +2,9 @@ package com.medcorp.nevo.model;
 
 public class Steps {
 
-    private final int iD;
+    private int iD;
 
-    private final int userID;
+    private int userID;
 
     private final long createdDate;
 
@@ -37,15 +37,11 @@ public class Steps {
     private String remarks;
 
 
-    public Steps(int iD, int userID, long createdDate) {
-        this.iD = iD;
-        this.userID = userID;
+    public Steps(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Steps(int iD, int userID, long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, String remarks) {
-        this.iD = iD;
-        this.userID = userID;
+    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, String remarks) {
         this.createdDate = createdDate;
         this.date = date;
         this.steps = steps;
@@ -61,6 +57,14 @@ public class Steps {
         this.noActivityTime = noActivityTime;
         this.goal = goal;
         this.remarks = remarks;
+    }
+
+    public void setiD(int iD) {
+        this.iD = iD;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public void setDate(long date) {

@@ -127,11 +127,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public List<Steps> getAllSteps(){
-        return stepsDatabaseHelper.getAll();
+        return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll());
     }
 
     public List<Sleep> getAllSleep(){
-        return sleepDatabaseHelper.getAll();
+        return sleepDatabaseHelper.convertToNormalList(sleepDatabaseHelper.getAll());
     }
 
     public void saveDailySteps(Steps steps)
@@ -140,8 +140,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public Steps getDailySteps(int userid,Date date)
-    {
-        return stepsDatabaseHelper.get(userid,date);
+    {   Optional<Steps> steps = stepsDatabaseHelper.get(userid, date);
+        if (steps.notEmpty()) {
+            return steps.get();
+        }
+        return new Steps(0);
     }
     public void saveDailySleep(Sleep sleep)
     {
@@ -149,8 +152,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public Sleep getDailySleep(int userid,Date date)
-    {
-        return sleepDatabaseHelper.get(userid,date);
+    {   Optional<Sleep> sleep = sleepDatabaseHelper.get(userid, date);
+        if(sleep.notEmpty()) {
+            return sleep.get();
+        }
+        return new Sleep(0);
     }
 
     public Date getDateFromDate(Date date)

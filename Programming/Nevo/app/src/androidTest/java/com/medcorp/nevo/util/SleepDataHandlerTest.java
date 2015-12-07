@@ -1,4 +1,4 @@
-package com.medcorp.nevo.application;
+package com.medcorp.nevo.util;
 
 /**
  * Created by Karl on 11/27/15.
@@ -6,21 +6,18 @@ package com.medcorp.nevo.application;
 
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
-import com.medcorp.nevo.util.SleepDataHandler;
-import com.medcorp.nevo.util.SleepSorter;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Karl on 11/27/15.
  */
-public class TestSleepData extends TestCase {
+public class SleepDataHandlerTest extends TestCase {
 
     private Sleep sleepBeforeAndAfter;
     private Sleep sleepBeforeWakeAfter;
@@ -30,49 +27,47 @@ public class TestSleepData extends TestCase {
     private Sleep strangeData2;
     private Sleep strangeData3;
 
-
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
-        sleepBeforeAndAfter = new Sleep(1,1,1448812800000l);;
+        sleepBeforeAndAfter = new Sleep(1448812800000l);;
         sleepBeforeAndAfter.setDate(1448812800000l);
         sleepBeforeAndAfter.setHourlyWake("[0, 0, 10, 0, 10, 10, 10, 11, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0]");
         sleepBeforeAndAfter.setHourlyLight("[0, 60, 50, 60, 50, 50, 50, 49, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 20, 30, 50, 5]");
         sleepBeforeAndAfter.setHourlyDeep("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 30, 10, 10]") ;
 
-        sleepBeforeWakeAfter = new Sleep(1,1,1448726400000l);
+        sleepBeforeWakeAfter = new Sleep(1448726400000l);
         sleepBeforeWakeAfter.setDate(1448726400000l);
         sleepBeforeWakeAfter.setHourlyWake("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10]");
         sleepBeforeWakeAfter.setHourlyLight("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19]");
         sleepBeforeWakeAfter.setHourlyDeep("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]") ;
 
-        sleepBeforeWakeAfter2 = new Sleep(1,1,1448640000000l);;
+        sleepBeforeWakeAfter2 = new Sleep(1448640000000l);;
         sleepBeforeWakeAfter2.setDate(1448640000000l);
         sleepBeforeWakeAfter2.setHourlyWake("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
         sleepBeforeWakeAfter2.setHourlyLight("[23, 50, 27, 23, 50, 27, 23, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
         sleepBeforeWakeAfter2.setHourlyDeep("[37, 10, 33, 37, 10, 33, 37, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]") ;
 
-        sleepAfterWakeAfter = new Sleep(1,1,1448553600000l);;
+        sleepAfterWakeAfter = new Sleep(1448553600000l);;
         sleepAfterWakeAfter.setDate(1448553600000l);
         sleepAfterWakeAfter.setHourlyWake("[0, 10, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
         sleepAfterWakeAfter.setHourlyLight("[0, 40, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
         sleepAfterWakeAfter.setHourlyDeep("[0, 10, 60, 60, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]") ;
 
-        strangeData = new Sleep(1,1,1448467200000l);;
+        strangeData = new Sleep(1448467200000l);;
         strangeData.setDate(1448467200000l);
         strangeData.setHourlyWake("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 4]");
         strangeData.setHourlyLight("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50]");
         strangeData.setHourlyDeep("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6]") ;
 
-        strangeData2 = new Sleep(1,1,1448380800000l);;
+        strangeData2 = new Sleep(1448380800000l);;
         strangeData2.setDate(1448380800000l);
         strangeData2.setHourlyWake("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0]");
         strangeData2.setHourlyLight("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 20]");
         strangeData2.setHourlyDeep("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40]") ;
 
-        strangeData3 = new Sleep(1,1,1448294400000l);;
+        strangeData3 = new Sleep(1448294400000l);;
         strangeData3.setDate(1448294400000l);
         strangeData3.setHourlyWake("[0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
         strangeData3.setHourlyLight("[0, 45, 20, 35, 45, 20, 35, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");

@@ -3,10 +3,10 @@ package com.medcorp.nevo.database;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.UserDatabaseHelper;
+import com.medcorp.nevo.database.entry.iEntryDatabaseHelper;
 import com.medcorp.nevo.model.User;
-
-import junit.framework.Assert;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class UserDatabaseHelperTest extends AndroidTestCase {
 
-    private UserDatabaseHelper db;
+    private iEntryDatabaseHelper<User> db;
     private User dummyUser;
 
     @Override
@@ -23,7 +23,6 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
         super.setUp();
         db = new UserDatabaseHelper(getContext());
         dummyUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
-
     }
 
     @Override
@@ -36,7 +35,7 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
         Log.w("Karl", "add user");
         assertEquals(true, db.add(dummyUser)!=null);
         Log.w("Karl","get user");
-        List<User> userList = db.getAll();
+        List<User> userList = db.convertToNormalList(db.getAll());
         User newJoe = null;
         for (User user: userList){
             if (user.getLastName().equals(dummyUser.getLastName())){
@@ -53,15 +52,19 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
         newJoe.setLastName("Chow");
         Log.w("Karl", "update user");
         assertEquals(true, db.update(newJoe));
-        User updatedJoe = db.get(newJoe.getId(),null);
-        assertEquals(newJoe.getFirstName(),updatedJoe.getFirstName());
-        assertEquals(newJoe.getAge(),updatedJoe.getAge());
-        assertEquals(newJoe.getBirthday(),updatedJoe.getBirthday());
-        assertEquals(newJoe.getHeight(),updatedJoe.getHeight());
-        assertEquals(newJoe.getSex(),updatedJoe.getSex());
-        assertEquals(newJoe.getWeight(),updatedJoe.getWeight());
-        assertEquals(newJoe.getLastName(),updatedJoe.getLastName());
-        Log.w("Karl", "remove user");
+        Optional<User> userOptional= db.get(newJoe.getId(),null);
+        if (userOptional.notEmpty()){
+            User updatedJoe = userOptional.get();
+            assertEquals(newJoe.getFirstName(),updatedJoe.getFirstName());
+            assertEquals(newJoe.getAge(),updatedJoe.getAge());
+            assertEquals(newJoe.getBirthday(),updatedJoe.getBirthday());
+            assertEquals(newJoe.getHeight(),updatedJoe.getHeight());
+            assertEquals(newJoe.getSex(),updatedJoe.getSex());
+            assertEquals(newJoe.getWeight(),updatedJoe.getWeight());
+            assertEquals(newJoe.getLastName(),updatedJoe.getLastName());
+
+        }
+                Log.w("Karl", "remove user");
         assertEquals(true,db.remove(newJoe.getId(),null));
     }
 

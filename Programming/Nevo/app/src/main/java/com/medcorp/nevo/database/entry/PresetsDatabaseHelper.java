@@ -2,6 +2,7 @@ package com.medcorp.nevo.database.entry;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.PresetDAO;
 import com.medcorp.nevo.model.Preset;
@@ -23,17 +24,18 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
     }
 
     @Override
-    public Preset add(Preset object) {
+    public Optional<Preset> add(Preset object) {
+        Optional<Preset> presetOptional = new Optional<>();
         try {
             PresetDAO res  = databaseHelper.getPresetDao().createIfNotExists(convertToDao(object));
             if(res != null)
             {
-                return convertToNormal(res);
+                    presetOptional.set(convertToNormal(res));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return presetOptional;
     }
 
     @Override
@@ -64,26 +66,36 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
     }
 
     @Override
-    public Preset get(int presetId,Date date) {
-        List<Preset> presetList = new ArrayList<Preset>();
+    public List<Optional<Preset>> get(int presetId) {
+        List<Optional<Preset>> presetList = new ArrayList<Optional<Preset>>();
         try {
             List<PresetDAO> presetDAOList = databaseHelper.getPresetDao().queryBuilder().where().eq(PresetDAO.iDString, presetId).query();
             for(PresetDAO presetDAO: presetDAOList) {
-                presetList.add(convertToNormal(presetDAO));
+                Optional<Preset> presetOptional = new Optional<>();
+                presetOptional.set(convertToNormal(presetDAO));
+                presetList.add(presetOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return presetList.isEmpty()?null: presetList.get(0);
+        return presetList;
     }
 
     @Override
-    public List<Preset> getAll() {
-        List<Preset> presetList = new ArrayList<Preset>();
+    public Optional<Preset> get(int presetId,Date date) {
+        List<Optional<Preset>> presetList = get(presetId);
+        return presetList.isEmpty()? new Optional<Preset>(): presetList.get(0);
+    }
+
+    @Override
+    public List<Optional<Preset>> getAll() {
+        List<Optional<Preset>> presetList = new ArrayList<Optional<Preset>>();
         try {
             List<PresetDAO> presetDAOList  = databaseHelper.getPresetDao().queryBuilder().query();
             for(PresetDAO presetDAO: presetDAOList) {
-                presetList.add(convertToNormal(presetDAO));
+                Optional<Preset> presetOptional = new Optional<>();
+                presetOptional.set(convertToNormal(presetDAO));
+                presetList.add(presetOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,6 +112,18 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
     }
 
     private Preset convertToNormal(PresetDAO presetDAO){
-        return new Preset(presetDAO.getID(),presetDAO.getLabel(),presetDAO.isEnabled(), presetDAO.getSteps());
+        return new Preset(presetDAO.getLabel(),presetDAO.isEnabled(), presetDAO.getSteps());
+    }
+
+
+    @Override
+    public List<Preset> convertToNormalList(List<Optional<Preset>> optionals) {
+        List<Preset> presetList = new ArrayList<>();
+        for (Optional<Preset> presetOptional: optionals) {
+            if (presetOptional.notEmpty()){
+                presetList.add(presetOptional.get());
+            }
+        }
+        return presetList;
     }
 }

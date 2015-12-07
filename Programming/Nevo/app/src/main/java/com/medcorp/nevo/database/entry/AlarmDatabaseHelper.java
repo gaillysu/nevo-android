@@ -2,6 +2,7 @@ package com.medcorp.nevo.database.entry;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.AlarmDAO;
 import com.medcorp.nevo.model.Alarm;
@@ -23,17 +24,18 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
     }
 
     @Override
-    public Alarm add(Alarm object) {
+    public Optional<Alarm> add(Alarm object) {
+        Optional<Alarm> alarm = new Optional<>();
         try {
             AlarmDAO res = databaseHelper.getAlarmDao().createIfNotExists(convertToDao(object));
             if(res != null)
             {
-                return convertToNormal(res);
+                alarm.set(convertToNormal(res));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return alarm;
     }
 
     @Override
@@ -41,7 +43,9 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
         int result = -1;
         try {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, object.getId()).query();
-            if(alarmDAOList.isEmpty()) return add(object)!=null;
+            if(alarmDAOList.isEmpty()) {
+                return add(object)!=null;
+            }
             AlarmDAO alarmDAO = convertToDao(object);
             alarmDAO.setID(alarmDAOList.get(0).getID());
             result = databaseHelper.getAlarmDao().update(alarmDAO);
@@ -57,8 +61,9 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, alarmId).query();
             if(!alarmDAOList.isEmpty())
             {
-                databaseHelper.getAlarmDao().delete(alarmDAOList);
-                return true;
+                if(alarmDAOList.size() == databaseHelper.getAlarmDao().delete(alarmDAOList)){
+                    return true;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -67,29 +72,51 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
     }
 
     @Override
-    public Alarm  get(int alarmId,Date date) {
-        List<Alarm> alarmList = new ArrayList<Alarm>();
+    public List<Optional<Alarm>> get(int alarmId) {
+        List<Optional<Alarm>> alarmList = new ArrayList<>();
         try {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, alarmId).query();
             for(AlarmDAO alarmDAO: alarmDAOList) {
-                alarmList.add(convertToNormal(alarmDAO));
+                Alarm alarm = convertToNormal(alarmDAO);;
+                Optional<Alarm> alarmOptional = new Optional<>();
+                alarmOptional.set(alarm);
+                alarmList.add(alarmOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return alarmList.isEmpty()?null: alarmList.get(0);
+        return alarmList;
     }
 
     @Override
-    public List<Alarm> getAll() {
-        List<Alarm> alarmList = new ArrayList<Alarm>();
+    public Optional<Alarm> get(int alarmId,Date date) {
+        List<Optional<Alarm>> alarmList = get(alarmId);
+        return alarmList.isEmpty()?new Optional<Alarm>() : alarmList.get(0);
+    }
+
+    @Override
+    public List<Optional<Alarm>> getAll() {
+        List<Optional<Alarm>> alarmList = new ArrayList<>();
         try {
             List<AlarmDAO> alarmDAOList  = databaseHelper.getAlarmDao().queryBuilder().query();
             for(AlarmDAO alarmDAO: alarmDAOList) {
-                alarmList.add(convertToNormal(alarmDAO));
+                Optional alarm = new Optional<Alarm>();
+                alarm.set(convertToNormal(alarmDAO));
+                alarmList.add(alarm);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return alarmList;
+    }
+
+    @Override
+    public List<Alarm> convertToNormalList(List<Optional<Alarm>> optionals) {
+        List<Alarm> alarmList = new ArrayList<>();
+        for (Optional<Alarm> alarm: optionals) {
+            if (alarm.notEmpty()){
+                alarmList.add(alarm.get());
+            }
         }
         return alarmList;
     }
@@ -106,6 +133,10 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
         String[] splittedAlarmStrings = alarmDAO.getAlarm().split(":");
         int hour = Integer.parseInt(splittedAlarmStrings[0]);
         int minutes = Integer.parseInt(splittedAlarmStrings[1]);
-        return new Alarm(alarmDAO.getID(),hour,minutes,alarmDAO.isEnabled(), alarmDAO.getLabel());
+        Alarm alarm =new Alarm(hour,minutes,alarmDAO.isEnabled(), alarmDAO.getLabel());
+        alarm.setId(alarmDAO.getID());
+        return  alarm;
     }
+
+
 }

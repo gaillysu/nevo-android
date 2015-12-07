@@ -74,7 +74,6 @@ import com.medcorp.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
-import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.model.Alarm;
@@ -84,7 +83,6 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.view.TimePickerView;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -246,15 +244,15 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
                     String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
                     Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
-                    list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+                    list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
 
                     strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");
                     onOff = AlarmFragment.getClockStateFromPreference(1,mContext);
-                    list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+                    list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
 
                     strAlarm = TimePickerView.getAlarmFromPreference(2,mContext).split(":");
                     onOff = AlarmFragment.getClockStateFromPreference(2,mContext);
-                    list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+                    list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
                     setAlarm(list);
                 }
                 else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
@@ -328,7 +326,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
                         //Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
                         //update steps/sleep tables
-                        Steps steps = new Steps(-1,1,history.getCreated());
+                        Steps steps = new Steps(history.getCreated());
                         steps.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
 
                         steps.setSteps(history.getSteps());
@@ -347,7 +345,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         if(history.getTotalSleepTime() != 0) {
 
 
-                            Sleep sleep = new Sleep(-1, 1, history.getCreated());
+                            Sleep sleep = new Sleep(history.getCreated());
                             sleep.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
                             sleep.setHourlySleep(history.getHourlySleepTime());
                             sleep.setHourlyWake(history.getHourlyWakeTime());
@@ -415,7 +413,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     }
                     //save current day's step count to "Steps" table
                     Date currentday = new Date();
-                    Steps steps = new Steps(-1,1,currentday.getTime());
+                    Steps steps = new Steps(currentday.getTime());
 
                     steps.setDate(((ApplicationModel) mContext).getDateFromDate(currentday).getTime());
 

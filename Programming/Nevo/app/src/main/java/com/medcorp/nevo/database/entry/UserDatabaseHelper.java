@@ -1,8 +1,8 @@
 package com.medcorp.nevo.database.entry;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.UserDAO;
 import com.medcorp.nevo.model.User;
@@ -24,17 +24,20 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public User add(User object) {
+    public Optional<User> add(User object) {
+        Optional<User> userOptional = new Optional<>();
         try {
             UserDAO res = databaseHelper.getUserDao().createIfNotExists(convertToDao(object));
             if(res!=null)
             {
-                return convertToNormal(res);
+
+                userOptional.set(convertToNormal(res));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return userOptional;
     }
 
     @Override
@@ -59,7 +62,6 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         try {
             List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
             if(!userDAOList.isEmpty()) {
-                Log.w("Karl", "ID = " + databaseHelper.getUserDao().delete(userDAOList));
                 return true;
             }
         } catch (SQLException e) {
@@ -69,26 +71,36 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public User get(int id,Date date) {
-        List<User> userList = new ArrayList<User>();
+    public List<Optional<User>> get(int userId) {
+        List<Optional<User>> userList = new ArrayList<Optional<User>>();
         try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, userId).query();
             for(UserDAO userDAO: userDAOList) {
-                userList.add(convertToNormal(userDAO));
+                Optional<User> userOptional = new Optional<>();
+                userOptional.set(convertToNormal(userDAO));
+                userList.add(userOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return userList.isEmpty()?null: userList.get(0);
+        return userList;
     }
 
     @Override
-    public List<User> getAll() {
-        List<User> userList = new ArrayList<User>();
+    public Optional<User> get(int id,Date date) {
+        List<Optional<User>> userList = get(id);
+        return userList.isEmpty()?new Optional<User>(): userList.get(0);
+    }
+
+    @Override
+    public List<Optional<User>> getAll() {
+        List<Optional<User>> userList = new ArrayList<Optional<User>>();
         try {
             List<UserDAO> userDAOList  = databaseHelper.getUserDao().queryBuilder().query();
             for(UserDAO userDAO: userDAOList) {
-                userList.add(convertToNormal(userDAO));
+                Optional<User> userOptional = new Optional<>();
+                userOptional.set(convertToNormal(userDAO));
+                userList.add(userOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,5 +134,16 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         user.setLastName(userDAO.getLastName());
         user.setSex(userDAO.getSex());
         return user;
+    }
+
+    @Override
+    public List<User> convertToNormalList(List<Optional<User>> optionals) {
+        List<User> userList = new ArrayList<>();
+        for (Optional<User> userOptional: optionals) {
+            if (userOptional.notEmpty()){
+                userList.add(userOptional.get());
+            }
+        }
+        return userList;
     }
 }

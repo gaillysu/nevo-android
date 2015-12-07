@@ -199,13 +199,13 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener,
 
         String[] strAlarm = TimePickerView.getAlarmFromPreference(0,getActivity()).split(":");
         Boolean onOff = AlarmFragment.getClockStateFromPreference(0,getActivity());
-        list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+        list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
         strAlarm = TimePickerView.getAlarmFromPreference(1,getActivity()).split(":");
         onOff = AlarmFragment.getClockStateFromPreference(1,getActivity());
-        list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+        list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
         strAlarm = TimePickerView.getAlarmFromPreference(2,getActivity()).split(":");
         onOff = AlarmFragment.getClockStateFromPreference(2,getActivity());
-        list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+        list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
 
         getModel().getSyncController().setAlarm(list);
     }

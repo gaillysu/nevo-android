@@ -5,19 +5,22 @@ package com.medcorp.nevo.model;
  */
 public class Alarm {
 
-    private final int id;
+    private int id = -1;
     private int hour;
     private int minute;
     private boolean enable;
     private String label;
 
-    public Alarm(int id, int hour, int minute,boolean enable,String label)
+    public Alarm(int hour, int minute,boolean enable,String label)
     {
         this.hour = hour;
-        this.id = id;
         this.minute = minute;
         this.enable = enable;
         this.label = label;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

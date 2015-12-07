@@ -1,31 +1,13 @@
 package com.medcorp.nevo.model;
 
-import java.util.Comparator;
-
 /**
  * Created by gaillysu on 15/11/17.
  */
 public class Sleep implements Comparable<Sleep>{
 
-    @Override
-    public int compareTo(Sleep another) {
-        if (getDate() < another.getDate()){
-            return -1;
-        }else if(getDate() > another.getDate()){
-            return 1;
-        }
-        return 0;
-    }
+    private int iD;
 
-    public enum SleepQuality{
-        WAKE,
-        LIGHT,
-        DEEP
-    }
-
-    private final int iD;
-
-    private final int userID;
+    private int userID;
 
     private final long createdDate;
 
@@ -55,15 +37,11 @@ public class Sleep implements Comparable<Sleep>{
 
     private String remarks;
 
-    public Sleep(int iD, int userID, long createdDate) {
-        this.iD = iD;
-        this.userID = userID;
+    public Sleep(long createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Sleep(int iD, int userID, long createdDate, long date, int totalSleepTime, int totalWakeTime, int totalLightTime, int totalDeepTime, String hourlySleep, String hourlyWake, String hourlyLight, String hourlyDeep, long start, long end, int sleepQuality, String remarks) {
-        this.iD = iD;
-        this.userID = userID;
+    public Sleep(long createdDate, long date, int totalSleepTime, int totalWakeTime, int totalLightTime, int totalDeepTime, String hourlySleep, String hourlyWake, String hourlyLight, String hourlyDeep, long start, long end, int sleepQuality, String remarks) {
         this.createdDate = createdDate;
         this.date = date;
         this.totalSleepTime = totalSleepTime;
@@ -80,8 +58,12 @@ public class Sleep implements Comparable<Sleep>{
         this.remarks = remarks;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setiD(int iD) {
+        this.iD = iD;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public void setTotalSleepTime(int totalSleepTime) {
@@ -196,26 +178,20 @@ public class Sleep implements Comparable<Sleep>{
         this.remarks = remarks;
     }
 
-    @Override
-    public String toString() {
 
-        return
-//                "iD = " + iD + " \n " +
-//                "userID = " + userID + " \n " +
-                "createdDate = " + createdDate + " \n " +
-                "date = " + date + " \n " +
-//                "totalSleepTime = " + totalSleepTime + " \n " +
-//                "totalWakeTime = " + totalWakeTime + " \n " +
-//                "totalLightTime = " + totalLightTime + " \n " +
-//                "totalDeepTime = " + totalDeepTime + " \n " +
-                "hourlySleep = " + hourlySleep + " \n " +
-                "hourlyWake = " + hourlyWake + " \n " +
-                "hourlyLight = " + hourlyLight + " \n " +
-                "hourlyDeep = " + hourlyDeep + " \n " +
-//                "start = " + start + " \n " +
-//                "end = " + end + " \n " +
-//                "sleepQuality = " + sleepQuality + " \n " +
-                "remarks = " + remarks + " \n ";
-
+    public void setDate(long date) {
+        this.date = date;
     }
+
+    @Override
+    public int compareTo(Sleep another) {
+        if (getDate() < another.getDate()){
+            return -1;
+        }else if(getDate() > another.getDate()){
+            return 1;
+        }
+        return 0;
+    }
+
+
 }

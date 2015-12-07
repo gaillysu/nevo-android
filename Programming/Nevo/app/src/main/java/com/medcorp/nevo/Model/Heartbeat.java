@@ -1,15 +1,13 @@
 package com.medcorp.nevo.model;
 
-import com.j256.ormlite.field.DatabaseField;
-
 /**
  * Created by gaillysu on 15/11/17.
  */
 public class Heartbeat {
 
-    private final int iD;
+    private int iD;
 
-    private final int userID;
+    private int userID;
 
     private final long createdDate;
 
@@ -21,9 +19,8 @@ public class Heartbeat {
 
     private String remarks;
 
-    public Heartbeat(int iD, int userID, long createdDate, long date, int maxHrm, int avgHrm, String remarks) {
-        this.iD = iD;
-        this.userID = userID;
+    public Heartbeat(long createdDate, long date, int maxHrm, int avgHrm, String remarks) {
+
         this.createdDate = createdDate;
         this.date = date;
         this.maxHrm = maxHrm;
@@ -35,6 +32,14 @@ public class Heartbeat {
         this.iD = iD;
         this.userID = userID;
         this.createdDate = createdDate;
+    }
+
+    public void setiD(int iD) {
+        this.iD = iD;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public int getiD() {

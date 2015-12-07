@@ -3,6 +3,7 @@ package com.medcorp.nevo.application;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
@@ -12,12 +13,9 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.model.User;
 
-import junit.framework.Assert;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * Created by gaillysu on 15/11/27.
@@ -33,9 +31,11 @@ public class DatabaseTestcase extends AndroidTestCase {
     //every test, simlator different user to login
     private User user;
 
-    private Alarm[] alarm = {new Alarm(0,6,30,true,"breakfast time"),
-            new Alarm(1,12,30,true,"lunch time"),
-            new Alarm(2,18,30,true,"supper time")};
+
+
+    private Optional<Alarm>[] alarm = new Optional[3];
+
+
 
     //sample data:
     int age = 20; // insert "user" table
@@ -47,6 +47,16 @@ public class DatabaseTestcase extends AndroidTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        Optional<Alarm> optionalAlarm = new Optional<>();
+        Optional<Alarm> optionalAlarm2 = new Optional<>();
+        Optional<Alarm> optionalAlarm3 = new Optional<>();
+        Alarm alarm = new Alarm(6,30,true,"breakfast time");
+        Alarm alarm2 = new Alarm(12,30,true,"lunch time");
+        Alarm alarm3 = new Alarm(18,30,true,"supper time");
+        optionalAlarm.set(alarm);
+        optionalAlarm2.set(alarm2);
+        optionalAlarm3.set(alarm3);
+
         userDB = new UserDatabaseHelper(getContext());
         stepsDB = new StepsDatabaseHelper(getContext());
         sleepDB = new SleepDatabaseHelper(getContext());
@@ -88,28 +98,32 @@ public class DatabaseTestcase extends AndroidTestCase {
         Log.i(TAG, "start test Add() function");
 
         user = new User("","Tom",1,new Date().getTime(),age,75,175,new Date().getTime(),"");
-        user = userDB.add(user);
-        assertNotNull(user);
+        Optional<User> userOptional = userDB.add(user);
+        assertNotNull(userOptional.get());
+        assertEquals(false, userOptional.isEmpty());
 
-        Steps steps = new Steps(-1,user.getId(),new Date().getTime());
+        Steps steps = new Steps(new Date().getTime());
         steps.setDate(getDateFromDate(new Date()).getTime());
         steps.setSteps(totalstep);
         steps.setGoal(goal);
-        steps = stepsDB.add(steps);
-        assertNotNull(steps);
+        Optional<Steps> stepsOptional =stepsDB.add(steps);
+        assertNotNull(stepsOptional.get());
 
-        Sleep sleep = new Sleep(-1,user.getId(),new Date().getTime());
+        Sleep sleep = new Sleep(new Date().getTime());
         sleep.setDate(getDateFromDate(new Date()).getTime());
         sleep.setTotalSleepTime(totalsleep);
-        sleep = sleepDB.add(sleep);
+        Optional<Sleep>  sleepOptional = sleepDB.add(sleep);
         assertNotNull(sleep);
 
-        alarm[0] = alarmDB.add(alarm[0]);
+        alarm[0] = alarmDB.add(alarm[0].get());
         assertNotNull(alarm[0]);
-        alarm[1] = alarmDB.add(alarm[1]);
+        alarm[1] = alarmDB.add(alarm[1].get());
         assertNotNull(alarm[1]);
-        alarm[2] = alarmDB.add(alarm[2]);
+        alarm[2] = alarmDB.add(alarm[2].get());
         assertNotNull(alarm[2]);
+        assertEquals(true, alarm[2].notEmpty());
+        assertNotNull(alarm[2].get());
+
 
         Log.i(TAG, "end test Add() function");
 
@@ -133,13 +147,13 @@ public class DatabaseTestcase extends AndroidTestCase {
         user.setAge(age);
         userDB.update(user);
 
-        Steps steps = new Steps(-1,user.getId(),new Date().getTime());
+        Steps steps = new Steps(new Date().getTime());
         steps.setDate(getDateFromDate(new Date()).getTime());
         steps.setSteps(totalstep);
         steps.setGoal(goal);
         stepsDB.update(steps);
 
-        Sleep sleep = new Sleep(-1,user.getId(),new Date().getTime());
+        Sleep sleep = new Sleep(new Date().getTime());
         sleep.setDate(getDateFromDate(new Date()).getTime());
         sleep.setTotalSleepTime(totalsleep);
         sleepDB.update(sleep);
@@ -149,13 +163,13 @@ public class DatabaseTestcase extends AndroidTestCase {
         assertNotNull(alarm[2]);
 
         Log.i(TAG, "disable all alarms");
-        alarm[0].setEnable(false);
-        alarm[1].setEnable(false);
-        alarm[2].setEnable(false);
+        alarm[0].get().setEnable(false);
+        alarm[1].get().setEnable(false);
+        alarm[2].get().setEnable(false);
 
-        alarmDB.update(alarm[0]);
-        alarmDB.update(alarm[1]);
-        alarmDB.update(alarm[2]);
+        alarmDB.update(alarm[0].get());
+        alarmDB.update(alarm[1].get());
+        alarmDB.update(alarm[2].get());
 
         Log.i(TAG, "end test Update() function");
     }
@@ -166,53 +180,63 @@ public class DatabaseTestcase extends AndroidTestCase {
         userDB.remove(user.getId(), null);
         stepsDB.remove(user.getId(),getDateFromDate(new Date()));
         sleepDB.remove(user.getId(),getDateFromDate(new Date()));
-        alarmDB.remove(alarm[0].getId(),null);
-        alarmDB.remove(alarm[1].getId(),null);
-        alarmDB.remove(alarm[2].getId(),null);
+        alarmDB.remove(alarm[0].get().getId(),null);
+        alarmDB.remove(alarm[1].get().getId(),null);
+        alarmDB.remove(alarm[2].get().getId(),null);
         Log.i(TAG, "end test remove() function.");
     }
 
     private  void doGet()
     {
         Log.i(TAG, "start test get() function.");
-        User theuser =  userDB.get(user.getId(), null);
+        Optional<User> theuser =  userDB.get(user.getId(), null);
+        assertNotNull(theuser.get());
+        assertEquals(false,theuser.isEmpty());
 
-        assertEquals(user.getId(),theuser.getId());
-        assertEquals(user.getAge(), theuser.getAge());
+        assertEquals(user.getId(), theuser.get().getId());
+        assertEquals(user.getAge(), theuser.get().getAge());
 
-        Steps steps = stepsDB.get(theuser.getId(),getDateFromDate(new Date()));
-        Sleep sleep = sleepDB.get(theuser.getId(),getDateFromDate(new Date()));
+        Optional<Steps> stepsOptional = stepsDB.get(theuser.get().getId(),getDateFromDate(new Date()));
+        Optional<Sleep> sleepOptional = sleepDB.get(theuser.get().getId(),getDateFromDate(new Date()));
+
+        assertNotNull(stepsOptional.get());
+        assertEquals(false, stepsOptional.isEmpty());
+        assertNotNull(sleepOptional.get());
+        assertEquals(false,sleepOptional.isEmpty());
+
+        Steps steps = stepsOptional.get();
+        Sleep sleep = sleepOptional.get();
 
         assertEquals(steps.getSteps(),totalstep);
         assertEquals(steps.getGoal(),goal);
         assertEquals(sleep.getTotalSleepTime(),totalsleep);
 
-        Alarm thealarm[]={null,null,null};
+        Optional<Alarm>  thealarm[] = new Optional[3];
 
-        thealarm[0] = alarmDB.get(alarm[0].getId(),null);
-        thealarm[1] = alarmDB.get(alarm[1].getId(),null);
-        thealarm[2] = alarmDB.get(alarm[2].getId(),null);
+        thealarm[0] = alarmDB.get(alarm[0].get().getId(),null);
+        thealarm[1] = alarmDB.get(alarm[1].get().getId(),null);
+        thealarm[2] = alarmDB.get(alarm[2].get().getId(),null);
         assertNotNull(thealarm[0]);
         assertNotNull(thealarm[1]);
         assertNotNull(thealarm[2]);
 
-        assertEquals(thealarm[0].getId(), alarm[0].getId());
-        assertEquals(thealarm[0].getLabel(), alarm[0].getLabel());
-        assertEquals(thealarm[0].getHour(), alarm[0].getHour());
-        assertEquals(thealarm[0].getMinute(), alarm[0].getMinute());
-        assertEquals(thealarm[0].isEnable(), alarm[0].isEnable());
+        assertEquals(thealarm[0].get().getId(), alarm[0].get().getId());
+        assertEquals(thealarm[0].get().getLabel(), alarm[0].get().getLabel());
+        assertEquals(thealarm[0].get().getHour(), alarm[0].get().getHour());
+        assertEquals(thealarm[0].get().getMinute(), alarm[0].get().getMinute());
+        assertEquals(thealarm[0].get().isEnable(), alarm[0].get().isEnable());
 
-        assertEquals(thealarm[1].getId(), alarm[1].getId());
-        assertEquals(thealarm[1].getLabel(), alarm[1].getLabel());
-        assertEquals(thealarm[1].getHour(), alarm[1].getHour());
-        assertEquals(thealarm[1].getMinute(), alarm[1].getMinute());
-        assertEquals(thealarm[1].isEnable() , alarm[1].isEnable());
+        assertEquals(thealarm[1].get().getId(), alarm[1].get().getId());
+        assertEquals(thealarm[1].get().getLabel(), alarm[1].get().getLabel());
+        assertEquals(thealarm[1].get().getHour(), alarm[1].get().getHour());
+        assertEquals(thealarm[1].get().getMinute(), alarm[1].get().getMinute());
+        assertEquals(thealarm[1].get().isEnable() , alarm[1].get().isEnable());
 
-        assertEquals(thealarm[2].getId(), alarm[2].getId());
-        assertEquals(thealarm[2].getLabel(), alarm[2].getLabel());
-        assertEquals(thealarm[2].getHour(), alarm[2].getHour());
-        assertEquals(thealarm[2].getMinute(), alarm[2].getMinute());
-        assertEquals(thealarm[2].isEnable() , alarm[2].isEnable());
+        assertEquals(thealarm[2].get().getId(), alarm[2].get().getId());
+        assertEquals(thealarm[2].get().getLabel(), alarm[2].get().getLabel());
+        assertEquals(thealarm[2].get().getHour(), alarm[2].get().getHour());
+        assertEquals(thealarm[2].get().getMinute(), alarm[2].get().getMinute());
+        assertEquals(thealarm[2].get().isEnable() , alarm[2].get().isEnable());
 
         Log.i(TAG, "end test get() function.");
     }

@@ -2,6 +2,7 @@ package com.medcorp.nevo.database.entry;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.SleepDAO;
 import com.medcorp.nevo.model.Sleep;
@@ -23,25 +24,25 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     }
 
     @Override
-    public Sleep add(Sleep object) {
-
+    public Optional<Sleep> add(Sleep object) {
+        Optional<Sleep> sleepOptional = new Optional<>();
         try {
             SleepDAO  res = databaseHelper.getSleepDao().createIfNotExists(convertToDao(object));
             if(res != null)
             {
-                return convertToNormal(res);
+                sleepOptional.set(convertToNormal(res));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return sleepOptional;
     }
 
     @Override
     public boolean update(Sleep object) {
         int result = -1;
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, object.getUserID()).and().eq(SleepDAO.fDate,object.getDate()).query();
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, object.getUserID()).and().eq(SleepDAO.fDate, object.getDate()).query();
             if(sleepDAOList.isEmpty()) return add(object)!=null;
             SleepDAO daoobject = convertToDao(object);
             daoobject.setID(sleepDAOList.get(0).getID());
@@ -55,9 +56,11 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     @Override
     public boolean remove(int userId,Date date) {
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userId).and().eq(SleepDAO.fDate,date.getTime()).query();
-            if(!sleepDAOList.isEmpty()) databaseHelper.getSleepDao().delete(sleepDAOList);
-            return true;
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userId).and().eq(SleepDAO.fDate, date.getTime()).query();
+            if(!sleepDAOList.isEmpty()) {
+                databaseHelper.getSleepDao().delete(sleepDAOList);
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -65,27 +68,47 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     }
 
     @Override
-    public Sleep get(int userId,Date date) {
-        List<Sleep> sleepList = new ArrayList<Sleep>();
+    public List<Optional<Sleep>> get(int userId) {
+        List<Optional<Sleep>> sleepList = new ArrayList<Optional<Sleep>>();
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userId).and().eq(SleepDAO.fDate,date.getTime()).query();
-            for (SleepDAO userDao: sleepDAOList) {
-                sleepList.add(convertToNormal(userDao));
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userId).query();
+            for (SleepDAO sleepDAO: sleepDAOList) {
+                Optional<Sleep> sleepOptional = new Optional<Sleep>();
+                sleepOptional.set(convertToNormal(sleepDAO));
+                sleepList.add(sleepOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return sleepList.isEmpty()?null:sleepList.get(0);
+        return sleepList;
     }
 
     @Override
-    public List<Sleep> getAll() {
-        List<Sleep> sleepList = new ArrayList<Sleep>();
+    public Optional<Sleep> get(int userId,Date date) {
+        List<Optional<Sleep>> sleepList = new ArrayList<Optional<Sleep>>();
+        try {
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userId).and().eq(SleepDAO.fDate, date.getTime()).query();
+            for (SleepDAO sleepDAO: sleepDAOList) {
+                Optional<Sleep> sleepOptional = new Optional<Sleep>();
+                sleepOptional.set(convertToNormal(sleepDAO));
+                sleepList.add(sleepOptional);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sleepList.isEmpty()?new Optional<Sleep>():sleepList.get(0);
+    }
+
+    @Override
+    public List<Optional<Sleep>> getAll() {
+        List<Optional<Sleep>> sleepList = new ArrayList<Optional<Sleep>>();
 
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().query();
-            for (SleepDAO userDao: sleepDAOList) {
-                sleepList.add(convertToNormal(userDao));
+            for (SleepDAO sleepDAO: sleepDAOList) {
+                Optional<Sleep> sleepOptional = new Optional<Sleep>();
+                sleepOptional.set(convertToNormal(sleepDAO));
+                sleepList.add(sleepOptional);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -114,7 +137,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     }
 
     private Sleep convertToNormal(SleepDAO sleepDAO){
-        Sleep sleep = new Sleep(sleepDAO.getID(), sleepDAO.getUserID(), sleepDAO.getCreatedDate());
+        Sleep sleep = new Sleep(sleepDAO.getCreatedDate());
         sleep.setDate(sleepDAO.getDate());
         sleep.setEnd(sleepDAO.getEnd());
         sleep.setHourlyDeep(sleepDAO.getHourlyDeep());
@@ -129,5 +152,16 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         sleep.setTotalSleepTime(sleepDAO.getTotalSleepTime());
         sleep.setTotalWakeTime(sleepDAO.getTotalWakeTime());
         return sleep;
+    }
+
+    @Override
+    public List<Sleep> convertToNormalList(List<Optional<Sleep>> optionals) {
+        List<Sleep> sleepList = new ArrayList<>();
+        for (Optional<Sleep> sleepOptional: optionals) {
+            if (sleepOptional.notEmpty()){
+                sleepList.add(sleepOptional.get());
+            }
+        }
+        return sleepList;
     }
 }

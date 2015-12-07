@@ -90,7 +90,7 @@ public class HistoryActivity extends Activity implements OnChartValueSelectedLis
         List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
         SleepDatabaseHelper helper = new SleepDatabaseHelper(this);
-        List<Sleep> sleepList = helper.getAll();
+        List<Sleep> sleepList = helper.convertToNormalList(helper.getAll());
         SleepSorter sorter = new SleepSorter();
         Collections.sort(sleepList,sorter);
         SleepDataHandler handler = new SleepDataHandler(sleepList);

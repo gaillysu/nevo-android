@@ -1,5 +1,7 @@
 package com.medcorp.nevo.database.entry;
 
+import com.medcorp.nevo.ble.util.Optional;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,18 +10,14 @@ import java.util.List;
  */
 public interface iEntryDatabaseHelper<T> {
 
-    public T add(T object);
+    public Optional<T> add(T object);
     public boolean update(T object);
 
-    /**
-     *
-     * @param userid
-     * @param date : which day's record, if the table is "User", ignore it.
-     * @return
-     */
+    public boolean remove(int userId,Date date);
+    public List<Optional<T>> get(int userId);
+    public Optional<T> get(int userId,Date date);
+    public List<Optional<T>> getAll();
 
-    public boolean remove(int userid,Date date);
-    public T get(int userid,Date date);
-    public List<T> getAll();
+    public List<T> convertToNormalList(List <Optional<T>> optionalList);
 
 }
