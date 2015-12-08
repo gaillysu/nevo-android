@@ -58,8 +58,10 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     public boolean remove(int userId,Date date) {
         try {
             List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userId).and().eq(StepsDAO.fDate,date.getTime()).query();
-            if(!stepsDAOList.isEmpty()) databaseHelper.getStepsDao().delete(stepsDAOList);
-            return true;
+            if(!stepsDAOList.isEmpty())
+            {
+                return databaseHelper.getStepsDao().delete(stepsDAOList)>=0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,7 +77,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     public Optional<Steps>  get(int userId,Date date) {
         List<Optional<Steps> > stepsList = new ArrayList<Optional<Steps> >();
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userId).and().eq(StepsDAO.fDate,date.getTime()).query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userId).and().eq(StepsDAO.fDate, date.getTime()).query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 Optional<Steps> stepsOptional = new Optional<>();
                 stepsOptional.set(convertToNormal(stepsDAO));
@@ -126,6 +128,8 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     private Steps convertToNormal(StepsDAO stepsDAO){
         Steps steps = new Steps(stepsDAO.getCreatedDate());
+        steps.setUserID(stepsDAO.getUserID());
+        steps.setiD(stepsDAO.getID());
         steps.setDate(stepsDAO.getDate());
         steps.setSteps(stepsDAO.getSteps());
         steps.setWalkSteps(stepsDAO.getWalkSteps());

@@ -30,6 +30,8 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
         addUser = new User("KarlAdd","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
         removeUser = new User("KarlRemove","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
         updateUser = new User("KarlUpdate","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
+
+
     }
 
     @Override
@@ -38,76 +40,44 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
 
     }
 
-    public void testFunctions(){
-        Log.w("Karl", "add user");
-        assertEquals(true, db.add(dummyUser)!=null);
-        Log.w("Karl","get user");
-        List<User> userList = db.convertToNormalList(db.getAll());
-        User newJoe = null;
-        for (User user: userList){
-            if (user.getLastName().equals(dummyUser.getLastName())){
-                newJoe = user;
-            }
-        }
-        assertNotNull(newJoe);
-        newJoe.setFirstName("Karl");
-        newJoe.setAge(10);
-        newJoe.setBirthday(946728000100l);
-        newJoe.setHeight(200);
-        newJoe.setSex(100);
-        newJoe.setWeight(120);
-        newJoe.setLastName("Chow");
-        Log.w("Karl", "update user");
-        assertEquals(true, db.update(newJoe));
-        Optional<User> userOptional= db.get(newJoe.getId(),null);
-        if (userOptional.notEmpty()){
-            User updatedJoe = userOptional.get();
-            assertEquals(newJoe.getFirstName(),updatedJoe.getFirstName());
-            assertEquals(newJoe.getAge(),updatedJoe.getAge());
-            assertEquals(newJoe.getBirthday(),updatedJoe.getBirthday());
-            assertEquals(newJoe.getHeight(),updatedJoe.getHeight());
-            assertEquals(newJoe.getSex(),updatedJoe.getSex());
-            assertEquals(newJoe.getWeight(),updatedJoe.getWeight());
-            assertEquals(newJoe.getLastName(),updatedJoe.getLastName());
-
-        }
-                Log.w("Karl", "remove user");
-        assertEquals(true,db.remove(newJoe.getId(),null));
-    }
-
     public void testAdd()
     {
         Optional<User> thisUser1 = db.add(addUser);
-        assertEquals(true, thisUser1!=null);
-        assertEquals(true, thisUser1.get().getId()!= -1);
+        assertEquals(false, thisUser1.isEmpty());
+        assertEquals(true, thisUser1.get().getId() != -1);
         Optional<User> thisUser2 = db.get(thisUser1.get().getId(),null);
 
-        assertEquals(thisUser1.get().getId(),thisUser2.get().getId());
-        assertEquals(thisUser1.get().getFirstName(), thisUser2.get().getFirstName());
-        assertEquals(thisUser1.get().getLastName(),thisUser2.get().getLastName());
-        assertEquals(thisUser1.get().getAge(),thisUser2.get().getAge());
+        assertEquals(addUser.getId(), thisUser2.get().getId());
+        assertEquals(addUser.getFirstName(), thisUser2.get().getFirstName());
+        assertEquals(addUser.getLastName(),thisUser2.get().getLastName());
+        assertEquals(addUser.getAge(),thisUser2.get().getAge());
     }
     public void testRemove()
     {
         Optional<User> thisUser1 = db.add(removeUser);
-        assertEquals(true, thisUser1!=null);
+        assertEquals(false, thisUser1.isEmpty());
         assertEquals(true, thisUser1.get().getId()!= -1);
         assertEquals(true, db.remove(thisUser1.get().getId(), null));
         Optional<User> thisUser2 = db.get(thisUser1.get().getId(),null);
-        assertEquals(true, thisUser2 == null);
+        assertEquals(true, thisUser2.isEmpty());
     }
 
     public void testUpdate()
     {
-        int userID = 1;
-        Optional<User> thisUser1 = db.get(userID,null);
-        if(thisUser1 == null) return;
 
-        updateUser.setId(thisUser1.get().getId());
+        //add new user to update
+        Optional<User> updatedUser = db.add(updateUser);
+        assertEquals(false, updatedUser.isEmpty());
+        updateUser = updatedUser.get();
+
+        updateUser.setFirstName("werewr");
+        updateUser.setLastName("ertretwq11");
+        updateUser.setAge(100);
+
         assertEquals(true, db.update(updateUser));
 
         Optional<User> thisUser2 = db.get(updateUser.getId(),null);
-        assertEquals(true, thisUser2 == null);
+        assertEquals(false, thisUser2.isEmpty());
 
         assertEquals(updateUser.getId(),thisUser2.get().getId());
         assertEquals(updateUser.getFirstName(), thisUser2.get().getFirstName());

@@ -57,7 +57,10 @@ public class HeartbeatDatabaseHelper implements iEntryDatabaseHelper<Heartbeat> 
     public boolean remove(int userId,Date date) {
         try {
             List<HeartbeatDAO> heartbeatDAOList = databaseHelper.getHeartbeatDao().queryBuilder().where().eq(HeartbeatDAO.fUserID, userId).and().eq(HeartbeatDAO.fDate,date.getTime()).query();
-            if(!heartbeatDAOList.isEmpty()) databaseHelper.getHeartbeatDao().delete(heartbeatDAOList);
+            if(!heartbeatDAOList.isEmpty())
+            {
+                return databaseHelper.getHeartbeatDao().delete(heartbeatDAOList)>=0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

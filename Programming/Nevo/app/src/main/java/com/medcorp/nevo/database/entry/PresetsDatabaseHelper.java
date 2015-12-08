@@ -57,8 +57,10 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
     public boolean remove(int presetId,Date date) {
         try {
             List<PresetDAO> presetDAOList = databaseHelper.getPresetDao().queryBuilder().where().eq(PresetDAO.iDString, presetId).query();
-            if(!presetDAOList.isEmpty()) databaseHelper.getPresetDao().delete(presetDAOList);
-            return true;
+            if(!presetDAOList.isEmpty())
+            {
+              return  databaseHelper.getPresetDao().delete(presetDAOList)>=0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -105,14 +107,16 @@ public class PresetsDatabaseHelper implements iEntryDatabaseHelper<Preset> {
 
     private PresetDAO convertToDao(Preset preset){
         PresetDAO presetDAO = new PresetDAO();
-        presetDAO.setID(preset.getId());
         presetDAO.setLabel(preset.getLabel());
         presetDAO.setSteps(preset.getSteps());
-        return new PresetDAO();
+        presetDAO.setEnabled(preset.isStatus());
+        return presetDAO;
     }
 
     private Preset convertToNormal(PresetDAO presetDAO){
-        return new Preset(presetDAO.getLabel(),presetDAO.isEnabled(), presetDAO.getSteps());
+        Preset preset =  new Preset(presetDAO.getLabel(),presetDAO.isEnabled(), presetDAO.getSteps());
+        preset.setId(presetDAO.getID());
+        return preset;
     }
 
 

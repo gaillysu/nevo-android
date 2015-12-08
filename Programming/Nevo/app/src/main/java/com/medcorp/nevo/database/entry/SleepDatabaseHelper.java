@@ -57,9 +57,9 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     public boolean remove(int userId,Date date) {
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fUserID, userId).and().eq(SleepDAO.fDate, date.getTime()).query();
-            if(!sleepDAOList.isEmpty()) {
-                databaseHelper.getSleepDao().delete(sleepDAOList);
-                return true;
+            if(!sleepDAOList.isEmpty())
+            {
+                return databaseHelper.getSleepDao().delete(sleepDAOList)>=0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -138,6 +138,8 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
     private Sleep convertToNormal(SleepDAO sleepDAO){
         Sleep sleep = new Sleep(sleepDAO.getCreatedDate());
+        sleep.setUserID(sleepDAO.getUserID());
+        sleep.setiD(sleepDAO.getID());
         sleep.setDate(sleepDAO.getDate());
         sleep.setEnd(sleepDAO.getEnd());
         sleep.setHourlyDeep(sleepDAO.getHourlyDeep());

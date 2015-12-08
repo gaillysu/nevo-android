@@ -61,9 +61,7 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, alarmId).query();
             if(!alarmDAOList.isEmpty())
             {
-                if(alarmDAOList.size() == databaseHelper.getAlarmDao().delete(alarmDAOList)){
-                    return true;
-                }
+                return databaseHelper.getAlarmDao().delete(alarmDAOList)>=0;
             }
         } catch (SQLException e) {
             e.printStackTrace();

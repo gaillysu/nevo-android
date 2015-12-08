@@ -30,7 +30,8 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
             UserDAO res = databaseHelper.getUserDao().createIfNotExists(convertToDao(object));
             if(res!=null)
             {
-
+                //here set the ID which comes from database
+                object.setId(res.getID());
                 userOptional.set(convertToNormal(res));
 
             }
@@ -61,8 +62,9 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public boolean remove(int id,Date date) {
         try {
             List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
-            if(!userDAOList.isEmpty()) {
-                return true;
+            if(!userDAOList.isEmpty())
+            {
+                return databaseHelper.getUserDao().delete(userDAOList)>=0;                
             }
         } catch (SQLException e) {
             e.printStackTrace();
