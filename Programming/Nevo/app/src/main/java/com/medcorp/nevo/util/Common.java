@@ -9,6 +9,11 @@ import java.util.GregorianCalendar;
  */
 public class Common {
 
+    /**
+     * return one day which start 00:00:00
+     * @param date : YYYY/MM/DD HH:MM:SS
+     * @return : YYYY/MM/DD 00:00:00
+     */
     static public Date getDateFromDate(Date date)
     {
         Calendar calBeginning = new GregorianCalendar();

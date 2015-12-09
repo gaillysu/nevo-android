@@ -214,11 +214,11 @@ public class WelcomeFragment extends BaseFragment {
 
     @Override
     public void notifyDatasetChanged() {
-        Steps steps =  getModel().getDailySteps(1,getModel().getDateFromDate(new Date()));
+        Steps steps =  getModel().getDailySteps(0,getModel().getDateFromDate(new Date()));
         if(steps == null) return;
         int dailySteps = steps.getSteps();
         int dailyGoal =  steps.getGoal();
-        Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+        Log.i("WelcomeFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
         setText(dailySteps + "/" + dailyGoal);
         setProgressBar((int) (100.0 * dailySteps / dailyGoal));
         saveCurStepToPreference(getActivity(), dailySteps);
