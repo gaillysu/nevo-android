@@ -26,12 +26,6 @@ public class StepsFragment extends Fragment{
     @Bind(R.id.fragment_steps_tab_layout)
     TabLayout tabLayout;
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

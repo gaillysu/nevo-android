@@ -27,7 +27,7 @@ public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return StepsHistoryFragment.instantiate(context,StepsTodayFragment.class.getName());
+                return StepsTodayFragment.instantiate(context,StepsTodayFragment.class.getName());
             case 1:
                 return StepsHistoryFragment.instantiate(context,StepsHistoryFragment.class.getName());
             default:

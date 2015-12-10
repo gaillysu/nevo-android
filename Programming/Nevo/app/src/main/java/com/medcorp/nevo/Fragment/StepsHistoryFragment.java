@@ -21,5 +21,4 @@ public class StepsHistoryFragment extends Fragment{
         // TODO Gailly, implement Step history fragment. See design.
         return view;
     }
-
 }
