@@ -75,7 +75,7 @@ import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.dao.IDailyHistory;
-import com.medcorp.nevo.fragment.AlarmFragment;
+import com.medcorp.nevo.fragment.old.AlarmFragment;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;

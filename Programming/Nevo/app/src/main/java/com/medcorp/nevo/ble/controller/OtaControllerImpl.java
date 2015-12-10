@@ -7,8 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.activity.OTAActivity;
-import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.activity.old.OTAActivity;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.listener.OnConnectListener;

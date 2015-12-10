@@ -1,15 +1,17 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="CustomTheme" parent="Theme.AppCompat.Light">
-        <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="colorPrimary">@color/customBlack</item>
-    </style>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light">
     </style>
+
+    <style name="NevoTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryInverse</item>
+
+        <item name="android:actionMenuTextColor">@color/actionMenuTextColor</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/navigation_drawer_selected_background</item>
+    </style>
+
 </resources>

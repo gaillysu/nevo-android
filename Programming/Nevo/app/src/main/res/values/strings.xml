@@ -117,5 +117,9 @@
 
     <string name="sleep_tracking">Sleep Tracking</string>
     <string name="sleeptracking_instruction">Hold button #1 for 3 seconds to activate Sleep Tracking mode. After you wake up, hold button #1 for 3 seconds to return to Activity mode. You may then check the app for your sleep history.</string>
-    <string name="bye">Hello!</string>
+
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>

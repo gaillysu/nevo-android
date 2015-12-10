@@ -339,9 +339,9 @@ import java.util.TimerTask;
         String  title = connected?mContext.getResources().getString(R.string.notification_connect_title):mContext.getResources().getString(R.string.notification_disconnect_title);
         String  content = connected?mContext.getResources().getString(R.string.notification_connect_content):mContext.getResources().getString(R.string.notification_disconnect_content);
         long when = System.currentTimeMillis();
-        Notification notification = new Notification(icon, title, when);
+
+        Notification notification = new Notification.Builder(mContext).setContentTitle(title).setContentText(content).build();
         //notification.defaults = Notification.DEFAULT_VIBRATE;
-        notification.setLatestEventInfo(mContext, title,content, null);
         //use hardcode message ID
         nftm.notify(connected?1:2, notification);
 

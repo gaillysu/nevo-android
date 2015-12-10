@@ -16,8 +16,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 
-import com.medcorp.nevo.fragment.GoalFragment;
-import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.fragment.old.GoalFragment;
+import com.medcorp.nevo.activity.old.OldMainActivity;
 import com.medcorp.nevo.R;
 
 import java.lang.reflect.Field;
@@ -37,7 +37,7 @@ public class StepPickerView extends DialogFragment{
     private static final int INTENSIVE = 1;
     private static final int SPORTIVE = 2;
     private static final int CUSTOM = -1;
-    private MainActivity mActivity;
+    private OldMainActivity mActivity;
 
     private void setDisplayedValues(){
         for(int i=0; i<NUMBER_OF_VALUES; i++)
@@ -93,7 +93,7 @@ public class StepPickerView extends DialogFragment{
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (MainActivity)getActivity();
+        mActivity = (OldMainActivity)getActivity();
         mCallbacks = (StepPickerFragmentCallbacks) mActivity.getFragment(GoalFragment.GOALFRAGMENT);
     }
 

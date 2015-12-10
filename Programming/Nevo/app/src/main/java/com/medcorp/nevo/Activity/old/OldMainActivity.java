@@ -1,0 +1,379 @@
+package com.medcorp.nevo.activity.old;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.WindowManager;
+
+import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.base.BaseActionBarActivity;
+import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.fragment.old.AlarmFragment;
+import com.medcorp.nevo.fragment.old.BaseFragment;
+import com.medcorp.nevo.fragment.old.ConnectAnimationFragment;
+import com.medcorp.nevo.fragment.old.GoalFragment;
+import com.medcorp.nevo.fragment.old.MyNevoFragment;
+import com.medcorp.nevo.fragment.old.NavigationDrawerFragment;
+import com.medcorp.nevo.fragment.old.NotificationFragment;
+import com.medcorp.nevo.fragment.old.SleepHistoryFragment;
+import com.medcorp.nevo.fragment.old.WelcomeFragment;
+
+
+/**
+ * MainActivity is a controller, which works for updating UI and connect Nevo Watch by bluetooth
+ *
+ *  /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
+ *  /giphy danger !
+ *
+ * */
+public class OldMainActivity extends BaseActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityObservable {
+
+    private static int position = -1;
+    private static String tag;
+    private Boolean isVisible = true;
+    private Optional<BaseFragment> activeFragment;
+//    private IGoogleFit googleFitManager;
+    /**
+     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     */
+    private NavigationDrawerFragment navigationDrawerFragment;
+    private DrawerLayout drawerLayout;
+
+    /**
+     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     */
+    private CharSequence title;
+    private Toolbar toolbar;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_main_old);
+        getModel().observableActivity(this);
+        //disenable navigation drawer shadow
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
+        navigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        title = getTitle();
+        // Set a toolbar which will replace the action bar.
+//        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Set up the drawer.
+        navigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+
+//        googleFitManager = GoogleFitManager.getInstance(MainActivity.this, this);
+//
+//        final String google_services_framework ="com.google.android.gsf";
+//        final String google_play_services ="com.google.android.gms";
+//        final String google_fitness ="com.google.android.apps.fitness";
+//        final String google_account = "com.google.android.gsf.login";
+//
+//        final PackageManager pm = getPackageManager();
+//        boolean isInstalled_gsf = false;
+//        boolean isInstalled_gps = false;
+//        boolean isInstalled_gf = false;
+//        boolean isInstalled_gam = false;
+
+//        final List<PackageInfo> appList  = pm.getInstalledPackages(0);
+//        for (PackageInfo app:appList)
+//        {
+//            if(app.packageName.equals(google_services_framework))
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gsf = true;
+//            }
+//            else if(app.packageName.equals(google_play_services) /*&& app.versionName.contains("7.")*/)
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gps = true;
+//            }
+//            else if(app.packageName.equals(google_fitness) /*&& app.versionName.contains("1.5")*/)
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gf = true;
+//            }
+//            else if(app.packageName.equals(google_account))
+//            {
+//                Log.i(MainActivity.class.getSimpleName(),app.packageName + ",version:"+app.versionName);
+//                isInstalled_gam = true;
+//            }
+//        }
+//        if(isInstalled_gsf && isInstalled_gps && isInstalled_gf && isInstalled_gam) {
+//            Log.i("GoogleFitManager", "Connecting...");
+////            googleFitManager.getClient().connect();
+//        }
+//        else
+//        {
+            //some android ROM image has disable the alertDialog feature, such as xiaomi
+            //SyncController.Singleton.getInstance(this).setVisible(true);
+            //SyncController.Singleton.getInstance(this).showMessage(R.string.install_google_app_title,R.string.install_google_app_content);
+            /**
+             new AlertDialog.Builder(MainActivity.this,AlertDialog.THEME_HOLO_LIGHT)
+             .setTitle(R.string.install_google_app_title)
+             .setMessage(R.string.install_google_app_content)
+             .setPositiveButton(android.R.string.cancel,null)
+             .setNegativeButton(R.string.ok_button,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            String able= getResources().getConfiguration().locale.getCountry();
+            Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.fitness&hl="+able);
+            Intent it = new Intent(Intent.ACTION_VIEW, uri);
+            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(it);
+            }
+            })
+             .show();
+             */
+//        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //if (googleFitManager.getClient().isConnected()) {
+//            googleFitManager.getClient().disconnect();
+        //}
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        googleFitManager.dealActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+//        googleFitManager.dealSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+        Optional<String> tag = new Optional<String>(null);
+        if(position == OldMainActivity.position){
+            return;
+        }
+        switch (position+1){
+            case WelcomeFragment.WELPOSITION+1:
+                tag.set(WelcomeFragment.WELCOMEFRAGMENT);
+                OldMainActivity.position = WelcomeFragment.WELPOSITION;
+                OldMainActivity.tag = WelcomeFragment.WELCOMEFRAGMENT;
+                title = getString(R.string.title_section1);
+                break;
+            case GoalFragment.GOALPOSITION+1:
+                tag.set(GoalFragment.GOALFRAGMENT);
+                OldMainActivity.position = GoalFragment.GOALPOSITION;
+                OldMainActivity.tag = GoalFragment.GOALFRAGMENT;
+                title = getString(R.string.title_section2);
+                break;
+            case AlarmFragment.ALARMPOSITION+1:
+                tag.set(AlarmFragment.ALARMFRAGMENT);
+                OldMainActivity.position = AlarmFragment.ALARMPOSITION;
+                OldMainActivity.tag = AlarmFragment.ALARMFRAGMENT;
+                title = getString(R.string.title_section3);
+                break;
+            case NotificationFragment.NOTIPOSITION+1:
+                tag.set(NotificationFragment.NOTIFICATIONFRAGMENT);
+                OldMainActivity.position = NotificationFragment.NOTIPOSITION;
+                OldMainActivity.tag = NotificationFragment.NOTIFICATIONFRAGMENT;
+                title = getString(R.string.title_section4);
+                break;
+            case MyNevoFragment.MYNEVOPOSITION+1:
+                tag.set(MyNevoFragment.MYNEVOFRAGMENT);
+                OldMainActivity.position = MyNevoFragment.MYNEVOPOSITION;
+                OldMainActivity.tag = MyNevoFragment.MYNEVOFRAGMENT;
+                title = getString(R.string.title_section5);
+                break;
+            case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
+                tag.set(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
+                OldMainActivity.position = SleepHistoryFragment.SLEEPHISTORYPOSITION;
+                OldMainActivity.tag  = SleepHistoryFragment.SLEEPHISTORYFRAGMENT;
+                title = getString(R.string.title_section6);
+                break;
+            default:
+                break;
+        }
+
+        if(getModel().getSyncController()!=null && !getModel().getSyncController().isConnected()){
+            replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+        }else{
+            replaceFragment(position, tag.get());
+        }
+    }
+
+    /**
+     * Replace fragment in the MainActivity
+     * */
+    public void replaceFragment(final int position, final String tag){
+
+        Fragment fg = PlaceholderFragment.newInstance(position + 1);
+        activeFragment =  new Optional<>();
+        activeFragment.set((BaseFragment) fg);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                // .addToBackStack(null)
+                .replace(R.id.container, fg, tag)
+                .commitAllowingStateLoss();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!navigationDrawerFragment.isDrawerOpen()) {
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(title);
+    }
+
+    public BaseFragment getFragment(String tag){
+        if(tag.equals(AlarmFragment.ALARMFRAGMENT)){
+            AlarmFragment alramfragment = (AlarmFragment)getSupportFragmentManager().findFragmentByTag(AlarmFragment.ALARMFRAGMENT);
+            return alramfragment;
+        }else if(tag.equals(GoalFragment.GOALFRAGMENT)){
+            GoalFragment goalfragment = (GoalFragment)getSupportFragmentManager().findFragmentByTag(GoalFragment.GOALFRAGMENT);
+            return goalfragment;
+        }else if(tag.equals(WelcomeFragment.WELCOMEFRAGMENT)){
+            WelcomeFragment welcomeFragment = (WelcomeFragment) getSupportFragmentManager().findFragmentByTag(WelcomeFragment.WELCOMEFRAGMENT);
+            return welcomeFragment;
+        }else if(tag.equals(NotificationFragment.NOTIFICATIONFRAGMENT)){
+            NotificationFragment notificationFragment = (NotificationFragment) getSupportFragmentManager().findFragmentByTag(NotificationFragment.NOTIFICATIONFRAGMENT);
+            return notificationFragment;
+        }else if(tag.equals(MyNevoFragment.MYNEVOFRAGMENT)){
+            MyNevoFragment mynevoFragment = (MyNevoFragment) getSupportFragmentManager().findFragmentByTag(MyNevoFragment.MYNEVOFRAGMENT);
+            return mynevoFragment;
+        }else if(tag.equals(SleepHistoryFragment.SLEEPHISTORYFRAGMENT)){
+            SleepHistoryFragment historyFragment = (SleepHistoryFragment) getSupportFragmentManager().findFragmentByTag(SleepHistoryFragment.SLEEPHISTORYFRAGMENT);
+            return historyFragment;
+        }
+        return null;
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().notifyDatasetChanged();
+        }
+    }
+
+    @Override
+    public void notifyOnConnected() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().notifyOnConnected();
+        }
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().notifyOnDisconnected();
+        }
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().batteryInfoReceived(battery);
+        }
+    }
+
+    @Override
+    public void findWatchSuccess() {
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().findWatchSuccess();
+        }
+    }
+
+    public static class PlaceholderFragment {
+        private static final String POSTITION = "position";
+        private static final String TAG = "tag";
+        private static final String SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static Fragment newInstance(int sectionNumber) {
+            Optional<Fragment> fragment = new Optional<Fragment>(null);
+
+            switch (sectionNumber) {
+                case WelcomeFragment.WELPOSITION+1:
+                    fragment.set(new WelcomeFragment());
+                    break;
+                case GoalFragment.GOALPOSITION+1:
+                    fragment.set(new GoalFragment());
+                    break;
+                case AlarmFragment.ALARMPOSITION+1:
+                    fragment.set(new AlarmFragment());
+                    break;
+                case NotificationFragment.NOTIPOSITION+1:
+                    fragment.set(new NotificationFragment());
+                    break;
+                case MyNevoFragment.MYNEVOPOSITION+1:
+                    fragment.set(new MyNevoFragment());
+                    break;
+                case SleepHistoryFragment.SLEEPHISTORYPOSITION+1:
+                    fragment.set(new SleepHistoryFragment());
+                    break;
+                case ConnectAnimationFragment.CONNECTPOSITION+1:
+                    fragment.set(new ConnectAnimationFragment());
+                    Bundle args = new Bundle();
+                    args.putInt(POSTITION, position);
+                    args.putString(TAG, tag);
+                    args.putInt(SECTION_NUMBER, sectionNumber);
+                    fragment.get().setArguments(args);
+                    break;
+                default:
+                    break;
+            }
+            return fragment.get();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getModel().observableActivity(this);
+        if(!isVisible){
+            if(getModel().isWatchConnected()){
+                replaceFragment(position, tag);
+            }else {
+                replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+            }
+        }
+        isVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getModel().getSyncController().setVisible(false);
+        isVisible = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        position = -1;
+    }
+}

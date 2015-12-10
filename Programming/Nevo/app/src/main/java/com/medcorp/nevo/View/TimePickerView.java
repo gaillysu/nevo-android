@@ -12,8 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.TimePicker;
 
-import com.medcorp.nevo.fragment.AlarmFragment;
-import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.fragment.old.AlarmFragment;
+import com.medcorp.nevo.activity.old.OldMainActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.util.Optional;
 
@@ -27,7 +27,7 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
     private static final String PREF_KEY_ALARM = "alarm";
     private static final String PREF_KEY_ALARM2 = "alarm2";
     private static final String PREF_KEY_ALARM3 = "alarm3";
-    private MainActivity mActivity;
+    private OldMainActivity mActivity;
     private int mAlarmIndex;
 
     @NonNull
@@ -48,7 +48,7 @@ public class TimePickerView extends DialogFragment implements TimePickerDialog.O
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (MainActivity)getActivity();
+        mActivity = (OldMainActivity)getActivity();
         mCallbacks = (TimePickerFragmentCallbacks) mActivity.getFragment(AlarmFragment.ALARMFRAGMENT);
     }
 

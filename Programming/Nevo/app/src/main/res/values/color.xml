@@ -12,4 +12,13 @@
     <color name="deep_sleep">#fffcb400</color>
     <color name="history_data_black">#ff524e4e</color>
 
+
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#FFA000</color>
+    <color name="textColorPrimary">#333</color>
+    <color name="textColor">#333</color>
+    <color name="textColorPrimaryInverse">#FFF</color>
+    <color name="actionMenuTextColor">#FFF</color>
+    <color name="navigation_drawer_selected_background_color">#F5F5F5</color>
+
 </resources>
