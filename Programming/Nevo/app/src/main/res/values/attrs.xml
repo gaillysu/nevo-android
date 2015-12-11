@@ -22,9 +22,11 @@
         <attr name="bold" format="boolean"/>
     </declare-styleable>
 
-    <array name="steps_tab">
-        <item>"TODAY"</item>
-        <item>"HISTORY"</item>
+    <array name="today_history_array">
+        <item>TODAY</item>
+        <item>HISTORY</item>
     </array>
+
+    
 
 </resources>

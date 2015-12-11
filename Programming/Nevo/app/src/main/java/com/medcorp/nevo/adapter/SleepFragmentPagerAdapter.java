@@ -6,18 +6,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.fragment.StepsHistoryFragment;
-import com.medcorp.nevo.fragment.StepsTodayFragment;
+import com.medcorp.nevo.fragment.SleepHistoryFragment;
+import com.medcorp.nevo.fragment.SleepTodayFragment;
 
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
+public class SleepFragmentPagerAdapter extends FragmentPagerAdapter{
 
     private Context context;
     private String[] todayHistoryArray;
 
-    public StepsFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public SleepFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
         todayHistoryArray = context.getResources().getStringArray(R.array.today_history_array);
@@ -27,9 +27,9 @@ public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return StepsTodayFragment.instantiate(context,StepsTodayFragment.class.getName());
+                return SleepTodayFragment.instantiate(context, SleepTodayFragment.class.getName());
             case 1:
-                return StepsHistoryFragment.instantiate(context,StepsHistoryFragment.class.getName());
+                return SleepHistoryFragment.instantiate(context, SleepHistoryFragment.class.getName());
             default:
                 return null;
         }
@@ -45,5 +45,3 @@ public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
         return todayHistoryArray[position];
     }
 }
-
-

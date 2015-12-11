@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 
 import butterknife.Bind;
@@ -114,22 +115,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
-        Class fragmentClass = null;
+
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
-                fragmentClass = StepsFragment.class;
+                fragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
                 break;
             case R.id.nav_alarm_fragment:
-                return;
 
-            case R.id.nav_sleep_fragment:
                 return;
+            case R.id.nav_sleep_fragment:
+                fragment = SleepFragment.instantiate(this, SleepFragment.class.getName());
         }
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
 
