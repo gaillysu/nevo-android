@@ -38,7 +38,6 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         //set user ID as a login user
         loginUser.setId(thisuser.get().getId());
 
-
         db = new StepsDatabaseHelper(getContext());
 
         //this is today's data, today format is YYYYMMDD 00:00:00
@@ -73,7 +72,6 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
 
         //compare data
         assertEquals(addSteps.getSteps(),thisSteps2.get().getSteps());
-
     }
 
     public void testUpdate()

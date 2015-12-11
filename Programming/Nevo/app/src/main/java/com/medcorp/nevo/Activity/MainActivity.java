@@ -17,7 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.fragment.SleepFragment;
+import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 
 import butterknife.Bind;
@@ -121,12 +121,12 @@ public class MainActivity extends AppCompatActivity {
                 fragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
                 break;
             case R.id.nav_alarm_fragment:
-
-                return;
+                fragmentClass = AlarmFragment.class
+                break;
             case R.id.nav_sleep_fragment:
                 fragment = SleepFragment.instantiate(this, SleepFragment.class.getName());
+                break;
         }
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
 
