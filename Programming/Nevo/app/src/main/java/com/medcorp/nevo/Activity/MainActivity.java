@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 
 import butterknife.Bind;
@@ -120,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = StepsFragment.class;
                 break;
             case R.id.nav_alarm_fragment:
-                return;
-
+                fragmentClass = AlarmFragment.class
+                break;
             case R.id.nav_sleep_fragment:
                 return;
         }
