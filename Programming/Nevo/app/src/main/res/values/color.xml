@@ -21,6 +21,8 @@
     <color name="actionMenuTextColor">#FFF</color>
     <color name="navigation_drawer_selected_background_color">#F2F2F2</color>
     <color name="tab_selected_background_color">#6D6D6D</color>
-    <color name="red">#F00</color>
+    <color name="tab_unselected_font_color">#FDFDB3</color>
+
+
 
 </resources>

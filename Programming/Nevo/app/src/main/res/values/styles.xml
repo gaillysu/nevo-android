@@ -16,7 +16,6 @@
     </style>
 
     <style name="NevoTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabTextColor">@color/white</item>
         <item name="tabGravity">fill</item>
         <item name="tabSelectedTextColor">@color/white</item>
         <item name="tabMode">fixed</item>
@@ -24,12 +23,13 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="tabTextAppearance">@style/NevoTabLayoutTextAppearance</item>
         <item name="tabIndicatorHeight">4dp</item>
+
     </style>
 
     <style name="NevoTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">18sp</item>
-
         <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/tab_unselected_font_color</item>
     </style>
 
 </resources>
