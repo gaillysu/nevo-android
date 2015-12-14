@@ -158,6 +158,9 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         if(connectionController.getOTAMode()) {
             return;
         }
+        if(!isConnected()) {
+            return;
+        }
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
             @Override
             public void run() {

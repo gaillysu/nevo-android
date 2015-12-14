@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         mainMenuNavigationSelectListener.onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
-
+        setFragment(firstItem);
     }
 
     @Override
