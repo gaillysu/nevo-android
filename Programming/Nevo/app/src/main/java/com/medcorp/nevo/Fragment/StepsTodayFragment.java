@@ -26,9 +26,6 @@ import butterknife.ButterKnife;
  */
 public class StepsTodayFragment  extends Fragment{
 
-    @Bind(R.id.fragment_steps_relative_layout_sync)
-    RelativeLayout syncRelativeLayout;
-
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
 
