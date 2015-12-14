@@ -25,17 +25,17 @@ public class RalewayTextView extends TextView {
 
     public RalewayTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomRaleWayAttr);
-        changeToBold(context, a.getBoolean(R.styleable.CustomRaleWayAttr_bold, false));
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomFontAttr);
+        setBold(context, a.getBoolean(R.styleable.CustomFontAttr_bold, false));
     }
 
     public RalewayTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomRaleWayAttr, defStyleAttr, 0);
-        changeToBold(context, a.getBoolean(R.styleable.CustomRaleWayAttr_bold, false));
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomFontAttr, defStyleAttr, 0);
+        setBold(context, a.getBoolean(R.styleable.CustomFontAttr_bold, false));
     }
 
-    public void changeToBold(Context context,boolean bold){
+    public void setBold(Context context, boolean bold){
         if (bold){
             strategy = new RalewayBoldFontStrategy(context);
         }else{

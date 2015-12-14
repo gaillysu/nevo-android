@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.view.fontstrategy.FontStrategy;
@@ -14,7 +15,7 @@ import com.medcorp.nevo.view.fontstrategy.RobotoLightFontStrategy;
 /**
  * Created by Karl on 9/29/15.
  */
-public class RobotoTextView extends EditText {
+public class RobotoTextView extends TextView {
 
     private FontStrategy strategy;
 

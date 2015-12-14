@@ -35,6 +35,7 @@ public class SleepFragmentPagerAdapter extends FragmentPagerAdapter{
         }
     }
 
+
     @Override
     public int getCount() {
         return todayHistoryArray.length;

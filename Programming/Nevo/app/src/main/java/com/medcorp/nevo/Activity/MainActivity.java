@@ -18,6 +18,8 @@ import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.AlarmFragment;
+import com.medcorp.nevo.fragment.SettingsFragment;
+import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 
 import butterknife.Bind;
@@ -38,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
+    private MainMenuNavigationSelectListener mainMenuNavigationSelectListener;
+    private MenuItem selectedMenuItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +49,12 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
-        navigationView.setNavigationItemSelectedListener(new MainMenuNavigationSelectListener());
+        mainMenuNavigationSelectListener = new MainMenuNavigationSelectListener();
+        navigationView.setNavigationItemSelectedListener(mainMenuNavigationSelectListener);
         drawerLayout.setDrawerListener(new MainMenuDrawerListener());
+        MenuItem firstItem = navigationView.getMenu().getItem(0);
+        mainMenuNavigationSelectListener.onNavigationItemSelected(firstItem);
+        firstItem.setChecked(true);
 
     }
 
@@ -83,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDrawerClosed(View drawerView) {
-
+        setFragment(selectedMenuItem);
         }
 
         @Override
@@ -104,40 +111,34 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private class MainMenuNavigationSelectListener implements NavigationView.OnNavigationItemSelectedListener {
-
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            selectDrawerItem(item);
-            return true;
-        }
-    }
-
-    private void selectDrawerItem(MenuItem item) {
+    private void setFragment(MenuItem item){
         Fragment fragment = null;
 
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
-                fragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
+                fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
                 break;
             case R.id.nav_alarm_fragment:
-                fragmentClass = AlarmFragment.class
+                fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
                 break;
             case R.id.nav_sleep_fragment:
-                fragment = SleepFragment.instantiate(this, SleepFragment.class.getName());
+                fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
                 break;
+            case R.id.nav_settings_fragment:
+                fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
-
-        setTitle(item.getTitle());
-        drawerLayout.closeDrawers();
     }
 
-    private void setStatusBarColor() {
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+    private class MainMenuNavigationSelectListener implements NavigationView.OnNavigationItemSelectedListener {
+
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            selectedMenuItem = item;
+            setTitle(item.getTitle());
+            drawerLayout.closeDrawers();
+            return true;
+        }
     }
 }
