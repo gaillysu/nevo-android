@@ -18,13 +18,14 @@
     </declare-styleable>
 
 
-    <declare-styleable name="CustomRaleWayAttr">
+    <declare-styleable name="CustomFontAttr">
         <attr name="bold" format="boolean"/>
+        <attr name="light" format="boolean"/>
     </declare-styleable>
 
     <array name="today_history_array">
-        <item>TODAY</item>
-        <item>HISTORY</item>
+        <item>Today</item>
+        <item>History</item>
     </array>
 
     

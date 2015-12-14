@@ -8,7 +8,9 @@
         android:id="@+id/fragment_steps_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable"/>
+        style="@style/NevoTabLayout"
+        app:tabIndicatorColor="@color/tab_selected_background_color" />
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragment_steps_view_pager"
@@ -16,5 +18,4 @@
         android:layout_height="1dp"
         android:layout_weight="1"
         android:background="@color/white"/>
-
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:id="@+id/main_section">
         <item
             android:id="@+id/nav_steps_fragment"
             android:icon="@drawable/ios_steps"
@@ -16,8 +16,9 @@
             android:title="Sleep" />
     </group>
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:id="@+id/settings_section">
         <item
+
             android:id="@+id/nav_settings_fragment"
             android:icon="@drawable/ios_setting"
             android:title="@string/action_settings" />
