@@ -31,7 +31,7 @@ public class StepsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_steps, container, false);
         ButterKnife.bind(this,view);
-        viewPager.setAdapter(new StepsFragmentPagerAdapter(getActivity().getSupportFragmentManager(),
+        viewPager.setAdapter(new StepsFragmentPagerAdapter(getChildFragmentManager(),
                 getActivity()));
         tabLayout.setupWithViewPager(viewPager);
         return view;

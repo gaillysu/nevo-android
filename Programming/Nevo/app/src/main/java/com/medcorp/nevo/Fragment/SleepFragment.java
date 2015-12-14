@@ -31,7 +31,7 @@ public class SleepFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sleep, container, false);
         ButterKnife.bind(this,view);
-        viewPager.setAdapter(new SleepFragmentPagerAdapter(getActivity().getSupportFragmentManager(),
+        viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
                 getActivity()));
         tabLayout.setupWithViewPager(viewPager);
         return view;

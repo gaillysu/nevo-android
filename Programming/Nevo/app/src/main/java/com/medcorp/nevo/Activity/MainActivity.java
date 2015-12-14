@@ -6,15 +6,19 @@ import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeBounds;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.AlarmFragment;
@@ -128,7 +132,25 @@ public class MainActivity extends AppCompatActivity {
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
+//        fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
+
+
+        Fade slideTransition = new Fade();
+        slideTransition.setDuration(300);
+
+        ChangeBounds changeBoundsTransition = new ChangeBounds();
+        changeBoundsTransition.setDuration(300);
+        fragment.setEnterTransition(slideTransition);
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.activity_main_frame_layout, fragment)
+                .addToBackStack(null)
+                .commit();
+
+//        FragmentTransaction ft = fragmentManager.beginTransaction();
+//        ft.setCustomAnimations(android.R.anim.fade_out,android.R.anim.fade_in);
+//        ft.replace(R.id.activity_main_frame_layout, fragment);
+//        ft.commit();
     }
 
     private class MainMenuNavigationSelectListener implements NavigationView.OnNavigationItemSelectedListener {
