@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="customOrange">#f5a41c</color>
-    <color name="customBlack">#2c2c2c</color>
+    <color name="customBlack">#2e335b</color>
     <color name="customGray">#bab9b6</color>
     <color name="customWhite">#f4f2f1</color>
     <color name="transparent">#00000000</color>
