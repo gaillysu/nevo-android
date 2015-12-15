@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
+import com.medcorp.nevo.fragment.listener.OnStepsListener;
+import com.medcorp.nevo.fragment.observer.FragmentObservable;
+import com.medcorp.nevo.model.Battery;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsFragment extends Fragment{
+public class StepsFragment extends Fragment implements FragmentObservable{
 
     @Bind(R.id.fragment_steps_view_pager)
     ViewPager viewPager;
@@ -35,5 +38,30 @@ public class StepsFragment extends Fragment{
                 getActivity()));
         tabLayout.setupWithViewPager(viewPager);
         return view;
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+        //TODO call StepsTodayFragment.OnStepsChanged() function to refresh screen
+    }
+
+    @Override
+    public void notifyOnConnected() {
+
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 }

@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +16,19 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.fragment.listener.OnStepsListener;
+import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.view.RoundProgressBar;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsTodayFragment  extends Fragment{
+public class StepsTodayFragment  extends Fragment implements OnStepsListener{
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
@@ -101,4 +105,14 @@ public class StepsTodayFragment  extends Fragment{
         return view;
     }
 
+    @Override
+    public void OnStepsChanged() {
+        ApplicationModel application = (ApplicationModel)getActivity().getApplication();
+        Steps steps =  application.getDailySteps(1, application.getDateFromDate(new Date()));
+        if(steps == null) return;
+        int dailySteps = steps.getSteps();
+        int dailyGoal =  steps.getGoal();
+        Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+        //TODO refresh UI elements
+    }
 }

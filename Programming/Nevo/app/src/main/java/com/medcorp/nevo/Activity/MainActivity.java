@@ -21,10 +21,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
+import com.medcorp.nevo.fragment.old.BaseFragment;
+import com.medcorp.nevo.model.Battery;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,7 +37,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityObservable{
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -46,10 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MainMenuNavigationSelectListener mainMenuNavigationSelectListener;
     private MenuItem selectedMenuItem;
+    private Optional<Fragment> activeFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_new);
+        ((ApplicationModel)getApplication()).observableActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
@@ -78,6 +85,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+        if(activeFragment.notEmpty())
+        {
+            if(activeFragment.get().getClass().getName().equals(StepsFragment.class.getName()))
+            {
+                ((StepsFragment)activeFragment.get()).notifyDatasetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void notifyOnConnected() {
+
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 
     private class MainMenuDrawerListener implements DrawerLayout.DrawerListener {
@@ -131,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_settings_fragment:
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
         }
+
+        activeFragment =  new Optional<>();
+        activeFragment.set(fragment);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 //        fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
 
