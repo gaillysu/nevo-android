@@ -50,7 +50,7 @@ public class StepsFragment extends BaseFragment{
 
     @Override
     public void notifyDatasetChanged() {
-        // TODO
+
         if(onStepsListener != null) {
             onStepsListener.OnStepsChanged();
         }

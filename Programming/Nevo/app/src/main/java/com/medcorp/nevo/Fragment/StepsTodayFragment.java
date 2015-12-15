@@ -92,6 +92,29 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
             }
         });
     }
+    public void setProgressBar(final int progress){
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                roundProgressBar.setProgress(progress);
+            }
+        });
+    }
+
+    public void setDashboard(final Dashboard dashboard)
+    {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                goal.setText(dashboard.goal + "steps");
+                goal_reach.setText(dashboard.steps + "steps");
+                goal_progress.setText(dashboard.progress + "%");
+                distance.setText(dashboard.distance + "KM");
+                dailysteps.setText(dashboard.allsteps + "");
+                calories.setText(dashboard.calories + "Kcal");
+            }
+        });
+    }
 
     @Nullable
     @Override
@@ -105,13 +128,39 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
     @Override
     public void OnStepsChanged() {
         ApplicationModel application = (ApplicationModel)getActivity().getApplication();
-        Steps steps =  application.getDailySteps(1, application.getDateFromDate(new Date()));
-        if(steps == null) return;
-        // TODO DON'T DO THIS, USE THE BRACKETS.
-
+        Steps steps =  application.getDailySteps(0, application.getDateFromDate(new Date()));
+        if(steps == null) {
+            return;
+        }
         int dailySteps = steps.getSteps();
         int dailyGoal =  steps.getGoal();
         Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
-        //TODO refresh UI elements
+        setProgressBar((int) (100.0 * dailySteps / dailyGoal));
+        setDashboard(new Dashboard(dailySteps,dailyGoal,(int) (100.0 * dailySteps / dailyGoal),steps.getDistance(),dailySteps,steps.getCalories()));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mUiHandler.removeCallbacks(refreshTimerTask);
+    }
+
+    class Dashboard{
+        int steps;
+        int goal;
+        int progress;
+        float distance;
+        int allsteps;
+        int calories;
+
+        Dashboard(int steps,int goal,int progress,float distance,int allsteps,int calories)
+        {
+            this.steps = steps;
+            this.goal = goal;
+            this.progress = progress;
+            this.distance = distance;
+            this.allsteps = allsteps;
+            this.calories = calories;
+        }
     }
 }
