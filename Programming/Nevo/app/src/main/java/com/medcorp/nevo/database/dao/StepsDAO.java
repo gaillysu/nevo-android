@@ -63,6 +63,36 @@ public class StepsDAO {
     @DatabaseField
     private int Distance;
 
+
+    /**
+     * one day's total walk distance ,unit is meter.
+     */
+    public static final String fWalkDistance = "WalkDistance";
+    @DatabaseField
+    private int WalkDistance;
+
+    /**
+     * one day's total run distance ,unit is meter.
+     */
+    public static final String fRunDistance = "RunDistance";
+    @DatabaseField
+    private int RunDistance;
+
+    /**
+     * one day's total walk duration ,unit is minute.
+     */
+    public static final String fWalkDuration = "WalkDuration";
+    @DatabaseField
+    private int WalkDuration;
+
+    /**
+     * one day's total run duration ,unit is minute.
+     */
+    public static final String fRunDuration = "RunDuration";
+    @DatabaseField
+    private int RunDuration;
+
+
     /**
      * one day's total distance ,unit is calorie
      */
@@ -267,5 +297,37 @@ public class StepsDAO {
 
     public void setRemarks(String remarks) {
         Remarks = remarks;
+    }
+
+    public int getWalkDistance() {
+        return WalkDistance;
+    }
+
+    public void setWalkDistance(int walkDistance) {
+        WalkDistance = walkDistance;
+    }
+
+    public int getRunDistance() {
+        return RunDistance;
+    }
+
+    public void setRunDistance(int runDistance) {
+        RunDistance = runDistance;
+    }
+
+    public int getWalkDuration() {
+        return WalkDuration;
+    }
+
+    public void setWalkDuration(int walkDuration) {
+        WalkDuration = walkDuration;
+    }
+
+    public int getRunDuration() {
+        return RunDuration;
+    }
+
+    public void setRunDuration(int runDuration) {
+        RunDuration = runDuration;
     }
 }

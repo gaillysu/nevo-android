@@ -44,9 +44,9 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         today = Common.getDateFromDate(new Date());
 
         //initialize sample data
-        addSteps = new Steps(new Date().getTime(),today.getTime(),1000,800,200,500,10,"","","",0,0,0,10000,"");
-        updateSteps = new Steps(new Date().getTime(),today.getTime(),2000,1800,200,1000,20,"","","",0,0,0,10000,"");
-        removeSteps = new Steps(new Date().getTime(),today.getTime(),3000,2800,200,1500,30,"","","",0,0,0,10000,"");
+        addSteps = new Steps(new Date().getTime(),today.getTime(),1000,800,200,500,10,"","","",0,0,0,10000,0,0,0,0,"");
+        updateSteps = new Steps(new Date().getTime(),today.getTime(),2000,1800,200,1000,20,"","","",0,0,0,10000,0,0,0,0,"");
+        removeSteps = new Steps(new Date().getTime(),today.getTime(),3000,2800,200,1500,30,"","","",0,0,0,10000,0,0,0,0,"");
 
         //set who owner these data.
         addSteps.setUserID(loginUser.getId());

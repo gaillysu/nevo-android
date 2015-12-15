@@ -402,5 +402,57 @@ public class DailyTrackerNevoPacket extends NevoPacket {
         return dailySteps;
 
     }
+
+    public int getDailyWalkDistance()
+    {
+        int packetno = 2;
+        int offset = 6;
+        int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDist/100;
+    }
+    public int getDailyRunDistance()
+    {
+        int packetno = 2;
+        int offset = 10;
+        int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDist/100;
+    }
+
+    public int getDailyWalkDuration()
+    {
+        int packetno = 3;
+        int offset = 8;
+        int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDuration/60;
+    }
+
+    public int getDailyRunDuration()
+    {
+        int packetno = 3;
+        int offset = 4;
+        int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDuration/60;
+    }
+
     //end added
 }

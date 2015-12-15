@@ -7,7 +7,7 @@
     >
          <com.github.mikephil.charting.charts.BarChart
             android:layout_weight="4"
-            android:background="#CECECD"
+            android:background="@color/customWhite"
             android:id="@+id/fragment_steps_history_bar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">

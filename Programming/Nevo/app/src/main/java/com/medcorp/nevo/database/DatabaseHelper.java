@@ -42,7 +42,7 @@ import java.util.List;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "nevowatch.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private  Dao<IDailyHistory,Integer> dailyhistoryDao = null;
     private  Dao<UserDAO,Integer> userDao = null;

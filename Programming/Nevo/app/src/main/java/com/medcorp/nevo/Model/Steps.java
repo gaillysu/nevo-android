@@ -18,6 +18,14 @@ public class Steps {
 
     private int distance;
 
+    private int walkDistance;
+
+    private int runDistance;
+
+    private int walkDuration;
+
+    private int runDuration;
+
     private int calories;
 
     private String hourlySteps;
@@ -41,7 +49,7 @@ public class Steps {
         this.createdDate = createdDate;
     }
 
-    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, String remarks) {
+    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, int walkDistance,int runDistance,int walkDuration,int runDuration,String remarks) {
         this.createdDate = createdDate;
         this.date = date;
         this.steps = steps;
@@ -56,6 +64,10 @@ public class Steps {
         this.outZoneTime = outZoneTime;
         this.noActivityTime = noActivityTime;
         this.goal = goal;
+        this.walkDistance = walkDistance;
+        this.runDistance = runDistance;
+        this.walkDuration = walkDuration;
+        this.runDuration = runDuration;
         this.remarks = remarks;
     }
 
@@ -189,5 +201,37 @@ public class Steps {
 
     public String getRemarks() {
         return remarks;
+    }
+
+    public int getWalkDistance() {
+        return walkDistance;
+    }
+
+    public void setWalkDistance(int walkDistance) {
+        this.walkDistance = walkDistance;
+    }
+
+    public int getRunDistance() {
+        return runDistance;
+    }
+
+    public void setRunDistance(int runDistance) {
+        this.runDistance = runDistance;
+    }
+
+    public int getWalkDuration() {
+        return walkDuration;
+    }
+
+    public void setWalkDuration(int walkDuration) {
+        this.walkDuration = walkDuration;
+    }
+
+    public int getRunDuration() {
+        return runDuration;
+    }
+
+    public void setRunDuration(int runDuration) {
+        this.runDuration = runDuration;
     }
 }

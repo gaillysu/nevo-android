@@ -114,6 +114,10 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         stepsDao.setWalkSteps(steps.getWalkSteps());
         stepsDao.setRunSteps(steps.getRunSteps());
         stepsDao.setDistance(steps.getDistance());
+        stepsDao.setWalkDistance(steps.getWalkDistance());
+        stepsDao.setRunDistance(steps.getRunDistance());
+        stepsDao.setWalkDuration(steps.getWalkDuration());
+        stepsDao.setRunDuration(steps.getRunDuration());
         stepsDao.setCalories(steps.getCalories());
         stepsDao.setHourlySteps(steps.getHourlySteps());
         stepsDao.setHourlyDistance(steps.getHourlyDistance());
@@ -135,6 +139,10 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         steps.setWalkSteps(stepsDAO.getWalkSteps());
         steps.setRunSteps(stepsDAO.getRunSteps());
         steps.setDistance(stepsDAO.getDistance());
+        steps.setWalkDistance(stepsDAO.getWalkDistance());
+        steps.setRunDistance(stepsDAO.getRunDistance());
+        steps.setWalkDuration(stepsDAO.getWalkDuration());
+        steps.setRunDuration(stepsDAO.getRunDuration());
         steps.setCalories(stepsDAO.getCalories());
         steps.setHourlySteps(stepsDAO.getHourlySteps());
         steps.setHourlyDistance(stepsDAO.getHourlyDistance());
@@ -143,6 +151,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         steps.setOutZoneTime(stepsDAO.getOutZoneTime());
         steps.setNoActivityTime(stepsDAO.getNoActivityTime());
         steps.setGoal(stepsDAO.getGoal());
+        steps.setRemarks(stepsDAO.getRemarks());
         return steps;
     }
 

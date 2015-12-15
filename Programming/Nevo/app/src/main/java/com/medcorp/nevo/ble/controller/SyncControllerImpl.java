@@ -342,6 +342,10 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         steps.setGoal(thispacket.getStepsGoal());
                         steps.setWalkSteps(thispacket.getDailyWalkSteps());
                         steps.setRunSteps(thispacket.getDailyRunSteps());
+                        steps.setWalkDistance(thispacket.getDailyWalkDistance());
+                        steps.setRunDistance(thispacket.getDailyRunDistance());
+                        steps.setWalkDuration(thispacket.getDailyWalkDuration());
+                        steps.setRunDuration(thispacket.getDailyRunDuration());
                         //update  the day 's "steps" table
                         ((ApplicationModel)mContext).saveDailySteps(steps);
 
