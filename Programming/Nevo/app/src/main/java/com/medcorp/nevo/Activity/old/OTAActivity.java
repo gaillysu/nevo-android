@@ -48,7 +48,6 @@ public class OTAActivity extends BaseActivity
     //save the build-in firmware version, it should be the latest FW version
     int buildinSoftwareVersion = 0;
     int buildinFirmwareVersion= 0;
-    //TODO these static variable should be moved to mNevoOtaController due to mNevoOtaController is a singleton class
     private static DfuFirmwareTypes enumFirmwareType = DfuFirmwareTypes.APPLICATION;
     private static List<String> firmwareURLs = new ArrayList<String>();
     private static int currentIndex = 0;

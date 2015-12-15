@@ -9,9 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
@@ -95,7 +93,6 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         });
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,6 +107,8 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         ApplicationModel application = (ApplicationModel)getActivity().getApplication();
         Steps steps =  application.getDailySteps(1, application.getDateFromDate(new Date()));
         if(steps == null) return;
+        // TODO DON'T DO THIS, USE THE BRACKETS.
+
         int dailySteps = steps.getSteps();
         int dailyGoal =  steps.getGoal();
         Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
