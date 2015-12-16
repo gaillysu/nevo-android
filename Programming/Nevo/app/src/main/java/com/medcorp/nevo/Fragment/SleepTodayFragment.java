@@ -14,6 +14,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.medcorp.nevo.R;
+
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.view.SleepDataView;
@@ -24,10 +25,13 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.medcorp.nevo.fragment.base.BaseFragment;
+
+
 /**
  * Created by Karl on 12/10/15.
  */
-public class SleepTodayFragment extends Fragment{
+public class SleepTodayFragment extends BaseFragment {
 
     @Bind(R.id.sleepDataViewBar)
     SleepDataView  sleepDataViewBar;

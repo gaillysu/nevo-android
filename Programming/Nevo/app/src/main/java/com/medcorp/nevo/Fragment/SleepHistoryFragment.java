@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
+
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
@@ -35,10 +36,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.medcorp.nevo.fragment.base.BaseFragment;
+
+
 /**
  * Created by Karl on 12/10/15.
  */
-public class SleepHistoryFragment extends Fragment implements OnChartValueSelectedListener {
+
+public class SleepHistoryFragment extends BaseFragment implements OnChartValueSelectedListener {
 
     @Bind(R.id.fragment_sleep_history_bar)
     BarChart barChart;
@@ -65,6 +70,7 @@ public class SleepHistoryFragment extends Fragment implements OnChartValueSelect
 
     private BarDataSet dataSet;
     private List<SleepData> sleepDataList;
+
 
     @Nullable
     @Override

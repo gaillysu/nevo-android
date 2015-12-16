@@ -16,6 +16,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.database.DatabaseHelper;
@@ -130,29 +131,29 @@ public class NewHistoryFragment extends BaseFragment {
         }
     }
     */
-    @Override
-    public void notifyDatasetChanged() {
-
-    }
-
-    @Override
-    public void notifyOnConnected() {
-
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-
-    }
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-
-    }
+//    @Override
+//    public void notifyDatasetChanged() {
+//
+//    }
+//
+//    @Override
+//    public void notifyOnConnected() {
+//
+//    }
+//
+//    @Override
+//    public void notifyOnDisconnected() {
+//
+//    }
+//    @Override
+//    public void batteryInfoReceived(Battery battery) {
+//
+//    }
+//
+//    @Override
+//    public void findWatchSuccess() {
+//
+//    }
 
     private class MyValueFormatter implements ValueFormatter {
 

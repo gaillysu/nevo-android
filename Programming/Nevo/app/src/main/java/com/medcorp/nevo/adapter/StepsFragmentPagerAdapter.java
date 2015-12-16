@@ -52,7 +52,6 @@ public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
         return todayHistoryArray[position];
     }
 
-
 }
 
 

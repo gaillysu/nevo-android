@@ -21,6 +21,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.StepsSorter;
 
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsHistoryFragment extends Fragment implements OnChartValueSelectedListener {
+public class StepsHistoryFragment extends BaseFragment implements OnChartValueSelectedListener {
 
     @Bind(R.id.fragment_steps_history_distance)
     TextView distance;
@@ -147,7 +148,7 @@ public class StepsHistoryFragment extends Fragment implements OnChartValueSelect
 
     }
 
-    void setDashboard( Dashboard dashboard)
+    private void setDashboard( Dashboard dashboard)
     {
         distance.setText(dashboard.distance+"M");
         steps.setText(dashboard.steps+"");
@@ -160,7 +161,7 @@ public class StepsHistoryFragment extends Fragment implements OnChartValueSelect
         runningCalories.setText(dashboard.calories+"Cal");
     }
 
-    class Dashboard{
+    private class Dashboard{
         int steps;
         int distance;
         int calories;

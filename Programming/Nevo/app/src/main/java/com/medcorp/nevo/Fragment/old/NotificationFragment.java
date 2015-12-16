@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.old.OldMainActivity;
@@ -71,28 +72,28 @@ public class NotificationFragment extends BaseFragment {
         mAdatper.notifyDataSetChanged();
     }
 
-
-    @Override
-    public void notifyDatasetChanged() {
-
-    }
-
-    @Override
-    public void notifyOnConnected() {
-        ((OldMainActivity)getActivity()).replaceFragment(NotificationFragment.NOTIPOSITION, NotificationFragment.NOTIFICATIONFRAGMENT);
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-        ((OldMainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-
-    }
+//
+//    @Override
+//    public void notifyDatasetChanged() {
+//
+//    }
+//
+//    @Override
+//    public void notifyOnConnected() {
+//        ((OldMainActivity)getActivity()).replaceFragment(NotificationFragment.NOTIPOSITION, NotificationFragment.NOTIFICATIONFRAGMENT);
+//    }
+//
+//    @Override
+//    public void notifyOnDisconnected() {
+//        ((OldMainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+//    }
+//    @Override
+//    public void batteryInfoReceived(Battery battery) {
+//
+//    }
+//
+//    @Override
+//    public void findWatchSuccess() {
+//
+//    }
 }
