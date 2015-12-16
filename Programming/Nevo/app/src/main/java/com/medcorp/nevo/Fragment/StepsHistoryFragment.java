@@ -22,9 +22,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.util.StepsSorter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -104,6 +106,7 @@ public class StepsHistoryFragment extends Fragment implements OnChartValueSelect
         List<BarEntry> yValue = new ArrayList<BarEntry>();
 
         stepsList = ((ApplicationModel)getActivity().getApplication()).getAllSteps();
+        Collections.sort(stepsList, new StepsSorter());
 
         int i = 0;
         for(Steps steps:stepsList)
@@ -115,7 +118,8 @@ public class StepsHistoryFragment extends Fragment implements OnChartValueSelect
 
         dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
-        dataSet.setColors(new int[]{getResources().getColor(R.color.light_sleep)});
+        dataSet.setColors(new int[]{getResources().getColor(R.color.customGray)});
+        //dataSet.setBarShadowColor(getResources().getColor(R.color.customOrange));
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);

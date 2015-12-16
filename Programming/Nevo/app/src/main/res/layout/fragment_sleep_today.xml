@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:android_custom="http://schemas.android.com/apk/res-auto"
-    xmlns:raleway="http://schemas.android.com/apk/res-auto"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -78,13 +78,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sleep duration"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
-                    raleway:bold="true"
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                    roboto:bold="true"
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_sleepduration"
                     android:layout_width="wrap_content"
@@ -98,14 +98,14 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Deep sleep"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
-                    raleway:bold="true"
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                    roboto:bold="true"
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_deep"
                     android:layout_width="wrap_content"
@@ -119,14 +119,14 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Light sleep"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:id="@+id/fragment_sleep_today_light"
-                    raleway:bold="true"
+                    roboto:bold="true"
                     android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -148,13 +148,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sleep time"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
-                    raleway:bold="true"
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                    roboto:bold="true"
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_start"
                     android:layout_width="wrap_content"
@@ -168,13 +168,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wake time"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
-                    raleway:bold="true"
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                    roboto:bold="true"
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_wake"
                     android:layout_width="wrap_content"
@@ -188,13 +188,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wake Duration"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
-                    raleway:bold="true"
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                    roboto:bold="true"
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_wakeduration"
                     android:layout_width="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:raleway="http://schemas.android.com/apk/res-auto"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="5"
@@ -33,13 +33,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All-day Mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_distance"
                         android:layout_width="wrap_content"
@@ -53,14 +53,14 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All-day Steps"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_steps"
                         android:layout_width="wrap_content"
@@ -74,14 +74,14 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All-day Consume"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:id="@+id/fragment_steps_history_consume"
-                        raleway:bold="true"
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -103,13 +103,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Walking Mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_walkingdistance"
                         android:layout_width="wrap_content"
@@ -123,13 +123,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Walking Duration"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_walkingduration"
                         android:layout_width="wrap_content"
@@ -143,13 +143,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Walking Consume"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_walkingcalories"
                         android:layout_width="wrap_content"
@@ -172,13 +172,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Running Mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_runningdistance"
                         android:layout_width="wrap_content"
@@ -192,13 +192,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Running Duration"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_runningduration"
                         android:layout_width="wrap_content"
@@ -212,13 +212,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Running Consume"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_runningcalories"
                         android:layout_width="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:raleway="http://schemas.android.com/apk/res-auto"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -76,13 +76,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="goal"/>
-                <com.medcorp.nevo.view.customfontview.RalewayTextView
-                    raleway:bold="true"
+                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:id="@+id/fragment_steps_today_goal"
                     android:layout_width="wrap_content"
@@ -96,14 +96,14 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="you reached"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_today_reach"
                         android:layout_width="wrap_content"
@@ -117,14 +117,14 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="progress"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:id="@+id/fragment_steps_today_progress"
-                        raleway:bold="true"
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -146,13 +146,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All day mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_today_distance"
                         android:layout_width="wrap_content"
@@ -166,13 +166,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All day steps"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_today_dailysteps"
                         android:layout_width="wrap_content"
@@ -186,13 +186,13 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/customGray"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All day consume"/>
-                    <com.medcorp.nevo.view.customfontview.RalewayTextView
-                        raleway:bold="true"
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_today_calories"
                         android:layout_width="wrap_content"

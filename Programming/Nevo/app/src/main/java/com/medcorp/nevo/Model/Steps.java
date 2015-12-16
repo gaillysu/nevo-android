@@ -1,6 +1,6 @@
 package com.medcorp.nevo.model;
 
-public class Steps {
+public class Steps implements Comparable<Steps>{
 
     private int iD;
 
@@ -233,5 +233,16 @@ public class Steps {
 
     public void setRunDuration(int runDuration) {
         this.runDuration = runDuration;
+    }
+
+
+    @Override
+    public int compareTo(Steps another) {
+        if (getDate() < another.getDate()){
+            return -1;
+        }else if(getDate() > another.getDate()){
+            return 1;
+        }
+        return 0;
     }
 }
