@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.old.OldMainActivity;
@@ -212,53 +213,53 @@ public class WelcomeFragment extends BaseFragment {
         mIsVisible = false;
     }
 
-    @Override
-    public void notifyDatasetChanged() {
-        Steps steps =  getModel().getDailySteps(1,getModel().getDateFromDate(new Date()));
-        if(steps == null) return;
-        int dailySteps = steps.getSteps();
-        int dailyGoal =  steps.getGoal();
-        Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
-        setText(dailySteps + "/" + dailyGoal);
-        setProgressBar((int) (100.0 * dailySteps / dailyGoal));
-        saveCurStepToPreference(getActivity(), dailySteps);
-        StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
-    }
-
-    @Override
-    public void notifyOnConnected() {
-        ((OldMainActivity)getActivity()).replaceFragment(WelcomeFragment.WELPOSITION, WelcomeFragment.WELCOMEFRAGMENT);
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-            initLayout(false);
-        ((OldMainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-        //double click get response within 2s, blink clock image once
-        //use 2s, get rid of notification's response
-        if((System.currentTimeMillis() - mLastTapTime) < 2000)
-        {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //perhaps 2s later, the fragment got destory!!!!
-                            if (mIsVisible && getActivity()!=null) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
-                        }
-                    }, 3000);
-                }
-            });
-        }
-    }
+//    @Override
+//    public void notifyDatasetChanged() {
+//        Steps steps =  getModel().getDailySteps(1,getModel().getDateFromDate(new Date()));
+//        if(steps == null) return;
+//        int dailySteps = steps.getSteps();
+//        int dailyGoal =  steps.getGoal();
+//        Log.i("MainActivity", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+//        setText(dailySteps + "/" + dailyGoal);
+//        setProgressBar((int) (100.0 * dailySteps / dailyGoal));
+//        saveCurStepToPreference(getActivity(), dailySteps);
+//        StepPickerView.saveStepTextToPreference(getActivity(), "" + dailyGoal);
+//    }
+////
+//    @Override
+//    public void notifyOnConnected() {
+//        ((OldMainActivity)getActivity()).replaceFragment(WelcomeFragment.WELPOSITION, WelcomeFragment.WELCOMEFRAGMENT);
+//    }
+//
+//    @Override
+//    public void notifyOnDisconnected() {
+//            initLayout(false);
+//        ((OldMainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+//    }
+//    @Override
+//    public void batteryInfoReceived(Battery battery) {
+//
+//    }
+//
+//    @Override
+//    public void findWatchSuccess() {
+//        //double click get response within 2s, blink clock image once
+//        //use 2s, get rid of notification's response
+//        if((System.currentTimeMillis() - mLastTapTime) < 2000)
+//        {
+//            getActivity().runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if(mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
+//                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //perhaps 2s later, the fragment got destory!!!!
+//                            if (mIsVisible && getActivity()!=null) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
+//                        }
+//                    }, 3000);
+//                }
+//            });
+//        }
+//    }
 }

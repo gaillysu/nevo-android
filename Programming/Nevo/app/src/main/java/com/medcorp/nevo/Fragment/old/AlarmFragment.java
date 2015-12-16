@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.old.OldMainActivity;
@@ -259,29 +260,29 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener,
         if(index == 2) return pref.getBoolean(PREF_KEY_CLOCK_STATE3, false);
         return false;
     }
-
-    @Override
-    public void notifyDatasetChanged() {
-
-    }
-
-    @Override
-    public void notifyOnConnected() {
-        ((OldMainActivity)getActivity()).replaceFragment(AlarmFragment.ALARMPOSITION,AlarmFragment.ALARMFRAGMENT);
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-        ((OldMainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-
-    }
+//
+//    @Override
+//    public void notifyDatasetChanged() {
+//
+//    }
+//
+//    @Override
+//    public void notifyOnConnected() {
+//        ((OldMainActivity)getActivity()).replaceFragment(AlarmFragment.ALARMPOSITION,AlarmFragment.ALARMFRAGMENT);
+//    }
+//
+//    @Override
+//    public void notifyOnDisconnected() {
+//        ((OldMainActivity)getActivity()).replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+//    }
+//
+//    @Override
+//    public void batteryInfoReceived(Battery battery) {
+//
+//    }
+//
+//    @Override
+//    public void findWatchSuccess() {
+//
+//    }
 }

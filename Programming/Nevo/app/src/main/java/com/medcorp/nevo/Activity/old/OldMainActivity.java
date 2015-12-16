@@ -7,17 +7,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.WindowManager;
 
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.activity.base.BaseActionBarActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.old.AlarmFragment;
-import com.medcorp.nevo.fragment.old.BaseFragment;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.old.ConnectAnimationFragment;
 import com.medcorp.nevo.fragment.old.GoalFragment;
 import com.medcorp.nevo.fragment.old.MyNevoFragment;
@@ -34,7 +34,7 @@ import com.medcorp.nevo.fragment.old.WelcomeFragment;
  *  /giphy danger !
  *
  * */
-public class OldMainActivity extends BaseActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityObservable {
+public class OldMainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, ActivityObservable {
 
     private static int position = -1;
     private static String tag;
@@ -58,7 +58,7 @@ public class OldMainActivity extends BaseActionBarActivity implements Navigation
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main_old);
-        getModel().observableActivity(this);
+//        getModel().observableActivity(this);
         //disenable navigation drawer shadow
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.setScrimColor(getResources().getColor(android.R.color.transparent));
@@ -207,11 +207,11 @@ public class OldMainActivity extends BaseActionBarActivity implements Navigation
                 break;
         }
 
-        if(getModel().getSyncController()!=null && !getModel().getSyncController().isConnected()){
-            replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
-        }else{
-            replaceFragment(position, tag.get());
-        }
+//        if(getModel().getSyncController()!=null && !getModel().getSyncController().isConnected()){
+//            replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+//        }else{
+//            replaceFragment(position, tag.get());
+//        }
     }
 
     /**
@@ -272,35 +272,35 @@ public class OldMainActivity extends BaseActionBarActivity implements Navigation
     @Override
     public void notifyDatasetChanged() {
         if (activeFragment.notEmpty()) {
-            activeFragment.get().notifyDatasetChanged();
+//            activeFragment.get().notifyDatasetChanged();
         }
     }
 
     @Override
     public void notifyOnConnected() {
         if (activeFragment.notEmpty()) {
-            activeFragment.get().notifyOnConnected();
+//            activeFragment.get().notifyOnConnected();
         }
     }
 
     @Override
     public void notifyOnDisconnected() {
         if (activeFragment.notEmpty()) {
-            activeFragment.get().notifyOnDisconnected();
+//            activeFragment.get().notifyOnDisconnected();
         }
     }
 
     @Override
     public void batteryInfoReceived(Battery battery) {
         if (activeFragment.notEmpty()) {
-            activeFragment.get().batteryInfoReceived(battery);
+//            activeFragment.get().batteryInfoReceived(battery);
         }
     }
 
     @Override
     public void findWatchSuccess() {
         if (activeFragment.notEmpty()) {
-            activeFragment.get().findWatchSuccess();
+//            activeFragment.get().findWatchSuccess();
         }
     }
 
@@ -353,21 +353,21 @@ public class OldMainActivity extends BaseActionBarActivity implements Navigation
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().observableActivity(this);
-        if(!isVisible){
-            if(getModel().isWatchConnected()){
-                replaceFragment(position, tag);
-            }else {
-                replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
-            }
-        }
+//        getModel().observableActivity(this);
+//        if(!isVisible){
+//            if(getModel().isWatchConnected()){
+//                replaceFragment(position, tag);
+//            }else {
+//                replaceFragment(ConnectAnimationFragment.CONNECTPOSITION, ConnectAnimationFragment.CONNECTFRAGMENT);
+//            }
+//        }
         isVisible = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        getModel().getSyncController().setVisible(false);
+//        getModel().getSyncController().setVisible(false);
         isVisible = false;
     }
 

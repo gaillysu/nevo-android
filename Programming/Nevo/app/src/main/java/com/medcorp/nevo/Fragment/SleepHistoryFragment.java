@@ -8,11 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 
 /**
  * Created by Karl on 12/10/15.
  */
-public class SleepHistoryFragment extends Fragment{
+public class SleepHistoryFragment extends BaseFragment {
 
     @Nullable
     @Override

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.view.RoundProgressBar;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsTodayFragment  extends Fragment implements OnStepsListener{
+public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
@@ -75,7 +76,7 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         mUiHandler.postDelayed(refreshTimerTask,REFRESHINTERVAL);
     }
 
-    public void setHour(final float degree) {
+    private void setHour(final float degree) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -84,7 +85,7 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         });
     }
 
-    public void setMin(final float degree) {
+    private void setMin(final float degree) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -92,7 +93,7 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
             }
         });
     }
-    public void setProgressBar(final int progress){
+    private void setProgressBar(final int progress){
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -101,7 +102,7 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         });
     }
 
-    public void setDashboard(final Dashboard dashboard)
+    private void setDashboard(final Dashboard dashboard)
     {
         mUiHandler.post(new Runnable() {
             @Override
@@ -145,7 +146,7 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         mUiHandler.removeCallbacks(refreshTimerTask);
     }
 
-    class Dashboard{
+    private class Dashboard{
         int steps;
         int goal;
         int progress;

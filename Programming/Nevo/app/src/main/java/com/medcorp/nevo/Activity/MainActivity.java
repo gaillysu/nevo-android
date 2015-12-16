@@ -4,26 +4,25 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.ChangeBounds;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
+import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
 
 import butterknife.Bind;
@@ -32,7 +31,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends AppCompatActivity implements ActivityObservable{
+public class MainActivity extends BaseActivity implements ActivityObservable, FragmentManager.OnBackStackChangedListener{
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -46,12 +45,16 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MainMenuNavigationSelectListener mainMenuNavigationSelectListener;
     private MenuItem selectedMenuItem;
-    private Optional<Fragment> activeFragment;
+    private Optional<BaseObservableFragment> activeFragment;
+    private FragmentManager fragmentManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_new);
-        ((ApplicationModel)getApplication()).observableActivity(this);
+        activeFragment =  new Optional<>();
+        getModel().observableActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
@@ -61,7 +64,14 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         mainMenuNavigationSelectListener.onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
-        setFragment(firstItem);
+        setTitle(selectedMenuItem.getTitle());
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.addOnBackStackChangedListener(this);
+        fragmentManager.beginTransaction()
+                .add(R.id.activity_main_frame_layout, StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName()), StepsFragment.class.getName())
+                .addToBackStack(StepsFragment.class.getName())
+                .commit();
+
     }
 
     @Override
@@ -86,30 +96,47 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
     public void notifyDatasetChanged() {
         if(activeFragment.notEmpty())
         {
-            if(activeFragment.get().getClass().getName().equals(StepsFragment.class.getName()))
-            {
-                ((StepsFragment)activeFragment.get()).notifyDatasetChanged();
-            }
+            activeFragment.get().notifyDatasetChanged();
         }
     }
 
     @Override
     public void notifyOnConnected() {
-
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().notifyOnConnected();
+        }
     }
 
     @Override
     public void notifyOnDisconnected() {
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().notifyOnDisconnected();
+        }
     }
 
     @Override
     public void batteryInfoReceived(Battery battery) {
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().batteryInfoReceived(battery);
+        }
 
     }
 
     @Override
     public void findWatchSuccess() {
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().findWatchSuccess();
+        }
 
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Log.w("Karl","Backstack count = " + fragmentManager.getBackStackEntryCount());
     }
 
     private class MainMenuDrawerListener implements DrawerLayout.DrawerListener {
@@ -126,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
 
         @Override
         public void onDrawerClosed(View drawerView) {
-        setFragment(selectedMenuItem);
+            setFragment(selectedMenuItem);
         }
 
         @Override
@@ -148,11 +175,13 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
     }
 
     private void setFragment(MenuItem item){
-        Fragment fragment = null;
-
+        boolean chooseStepFragment = false;
+        setTitle(item.getTitle());
+        BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
                 fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
+                chooseStepFragment = true;
                 break;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
@@ -162,31 +191,27 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
                 break;
             case R.id.nav_settings_fragment:
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+                break;
         }
-
-        activeFragment =  new Optional<>();
         activeFragment.set(fragment);
+        String fragmentName = fragment.getClass().getName();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment).commit();
-
-
-        Fade slideTransition = new Fade();
-        slideTransition.setDuration(300);
-
-        ChangeBounds changeBoundsTransition = new ChangeBounds();
-        changeBoundsTransition.setDuration(300);
-        fragment.setEnterTransition(slideTransition);
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.activity_main_frame_layout, fragment)
-                .addToBackStack(null)
-                .commit();
-
-//        FragmentTransaction ft = fragmentManager.beginTransaction();
-//        ft.setCustomAnimations(android.R.anim.fade_out,android.R.anim.fade_in);
-//        ft.replace(R.id.activity_main_frame_layout, fragment);
-//        ft.commit();
+        if (fragmentManager.getBackStackEntryCount() == 1) {
+            Log.w("Karl", "Adding to backstack");
+            fragment.setEnterTransition(new Fade().setDuration(300));
+            fragmentManager.beginTransaction()
+                    .add(R.id.activity_main_frame_layout, fragment)
+                    .addToBackStack(fragmentName)
+                    .commit();
+        }else if(chooseStepFragment){
+            fragmentManager.popBackStack();
+        }else if(fragmentManager.getBackStackEntryCount() > 1){
+            Log.w("Karl","Replacing to backstack");
+            fragment.setEnterTransition(new Fade().setDuration(300));
+            fragmentManager.beginTransaction()
+                    .replace(R.id.activity_main_frame_layout, fragment)
+                    .commit();
+        }
     }
 
     private class MainMenuNavigationSelectListener implements NavigationView.OnNavigationItemSelectedListener {
@@ -194,9 +219,28 @@ public class MainActivity extends AppCompatActivity implements ActivityObservabl
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
             selectedMenuItem = item;
-            setTitle(item.getTitle());
             drawerLayout.closeDrawers();
             return true;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else if(fragmentManager.getBackStackEntryCount() > 1) {
+            Log.w("Karl", "pop on back pressed == 2");
+            fragmentManager.popBackStack();
+        }else if(fragmentManager.getBackStackEntryCount() == 1) {
+            Log.w("Karl", "normal on back pressed == 1");
+            super.onBackPressed();
+            finish();
+        }else{
+            Log.w("Karl","normal on back pressed");
+             super.onBackPressed();
+        }
+
+    }
+
+
 }

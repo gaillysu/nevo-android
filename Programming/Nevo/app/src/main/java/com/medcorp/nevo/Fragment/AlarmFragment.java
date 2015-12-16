@@ -8,13 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.fragment.base.BaseObservableFragment;
+import com.medcorp.nevo.model.Battery;
 
 import butterknife.ButterKnife;
 
 /**
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends Fragment {
+public class AlarmFragment extends BaseObservableFragment{
 
     @Nullable
     @Override
@@ -22,5 +25,30 @@ public class AlarmFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void notifyDatasetChanged() {
+
+    }
+
+    @Override
+    public void notifyOnConnected() {
+
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+
     }
 }
