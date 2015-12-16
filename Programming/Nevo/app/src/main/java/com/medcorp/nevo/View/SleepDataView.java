@@ -291,6 +291,7 @@ public class SleepDataView extends View {
         }
         else
         {
+            if(mTextIsDisplayable)
             canvas.drawText("----", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
 
         }

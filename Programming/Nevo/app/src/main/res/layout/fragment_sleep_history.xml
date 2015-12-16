@@ -8,9 +8,9 @@
     <com.github.mikephil.charting.charts.BarChart
         android:layout_weight="4"
         android:background="@color/customBlack"
-        android:id="@+id/fragment_steps_history_bar"
+        android:id="@+id/fragment_sleep_history_bar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="315dp">
     </com.github.mikephil.charting.charts.BarChart>
 
     <LinearLayout
@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:weightSum="2"
         android:layout_weight="1"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     roboto:bold="true"
                     android:textColor="@color/black"
-                    android:id="@+id/fragment_sleep_today_sleepduration"
+                    android:id="@+id/fragment_sleep_history_sleepduration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
@@ -62,7 +62,7 @@
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     roboto:bold="true"
                     android:textColor="@color/black"
-                    android:id="@+id/fragment_sleep_today_deep"
+                    android:id="@+id/fragment_sleep_history_deep"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:text="Light sleep"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
-                    android:id="@+id/fragment_sleep_today_light"
+                    android:id="@+id/fragment_sleep_history_light"
                     roboto:bold="true"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     roboto:bold="true"
                     android:textColor="@color/black"
-                    android:id="@+id/fragment_sleep_today_start"
+                    android:id="@+id/fragment_sleep_history_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
@@ -131,7 +131,7 @@
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     roboto:bold="true"
                     android:textColor="@color/black"
-                    android:id="@+id/fragment_sleep_today_wake"
+                    android:id="@+id/fragment_sleep_history_wake"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
@@ -151,7 +151,7 @@
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     roboto:bold="true"
                     android:textColor="@color/black"
-                    android:id="@+id/fragment_sleep_today_wakeduration"
+                    android:id="@+id/fragment_sleep_history_wakeduration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"

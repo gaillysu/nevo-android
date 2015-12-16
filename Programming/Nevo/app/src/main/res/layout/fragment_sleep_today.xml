@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1"
+    android:weightSum="5"
     android:background="@color/customBlack">
 
     <RelativeLayout
@@ -13,7 +13,7 @@
         android:layout_width="315dp"
         android:layout_height="315dp"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.18"
+        android:layout_weight="4"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="false"
         android:layout_alignParentBottom="false"
@@ -43,7 +43,7 @@
             android:visibility="visible"/>
 
         <com.medcorp.nevo.view.SleepDataView
-            android:id="@+id/SleepDataViewBar"
+            android:id="@+id/sleepDataViewBar"
             android:layout_width="315dp"
             android:layout_height="315dp"
             android:layout_centerInParent = "true"
@@ -64,6 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_weight="1"
         android:weightSum="2"
         android:layout_marginTop="10dp">
         <LinearLayout

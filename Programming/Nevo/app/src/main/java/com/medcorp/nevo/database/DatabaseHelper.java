@@ -73,7 +73,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, IDailyHistory.class);
-            TableUtils.createTable(connectionSource,UserDAO.class);
+            TableUtils.createTable(connectionSource, UserDAO.class);
             TableUtils.createTable(connectionSource, SleepDAO.class);
             TableUtils.createTable(connectionSource, StepsDAO.class);
             TableUtils.createTable(connectionSource, HeartbeatDAO.class);
@@ -157,15 +157,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             @Override
             public void run() {
 
-                List <IDailyHistory> list = null;
+                List<IDailyHistory> list = null;
                 try {
-                    list = getDailyHistoryDao().queryBuilder().orderBy("created", true).where().eq("created",dailyhistory.getCreated()).query();
+                    list = getDailyHistoryDao().queryBuilder().orderBy("created", true).where().eq("created", dailyhistory.getCreated()).query();
 
-                    if(list!=null && list.size()>0) {
+                    if (list != null && list.size() > 0) {
                         dailyhistory.setTrainingID(list.get(0).getTrainingID());
                         getDailyHistoryDao().update(dailyhistory);
-                    }
-                    else {
+                    } else {
                         getDailyHistoryDao().create(dailyhistory);
                     }
                 } catch (SQLException e) {
@@ -175,7 +174,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
-                }finally {
+                } finally {
                     QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.LocalDatabase).next();
                 }
             }
@@ -476,6 +475,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 //end calculator noon sleep
             }
+
+            int sleepWakeDuration = 0;
+            int sleepLightDuration= 0;
+            int sleepDeepDuration = 0;
+            if(!mergeWakeTime.isEmpty() && !mergeLightTime.isEmpty() && !mergeDeepTime.isEmpty())
+            {
+                int [] values1 = DatabaseHelper.string2IntArray(mergeWakeTime.toString());
+                int [] values2 = DatabaseHelper.string2IntArray(mergeLightTime.toString());
+                int [] values3 = DatabaseHelper.string2IntArray(mergeDeepTime.toString());
+                for(int k:values1) sleepWakeDuration +=k;
+                for(int k:values2) sleepLightDuration +=k;
+                for(int k:values3) sleepDeepDuration +=k;
+            }
+            json.put("sleepWakeDuration",sleepWakeDuration);
+            json.put("sleepLightDuration",sleepLightDuration);
+            json.put("sleepDeepDuration",sleepDeepDuration);
             json.put("startDateTime",sleepstart);
             json.put("endDateTime",sleepend);
             json.put("mergeHourlyWakeTime",mergeWakeTime.toString());

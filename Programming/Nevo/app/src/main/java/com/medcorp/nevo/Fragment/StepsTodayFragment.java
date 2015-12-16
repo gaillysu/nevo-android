@@ -121,7 +121,6 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_steps_today, container, false);
         ButterKnife.bind(this, view);
-        refresh();
         return view;
     }
 
@@ -137,6 +136,12 @@ public class StepsTodayFragment  extends Fragment implements OnStepsListener{
         Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
         setProgressBar((int) (100.0 * dailySteps / dailyGoal));
         setDashboard(new Dashboard(dailySteps,dailyGoal,(int) (100.0 * dailySteps / dailyGoal),steps.getDistance(),dailySteps,steps.getCalories()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh();
     }
 
     @Override
