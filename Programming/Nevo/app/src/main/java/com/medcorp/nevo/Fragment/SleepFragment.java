@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +39,13 @@ public class SleepFragment extends BaseObservableFragment{
         tabLayout.setupWithViewPager(viewPager);
         return view;
     }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(false);
+    }
+
 
     @Override
     public void notifyDatasetChanged() {

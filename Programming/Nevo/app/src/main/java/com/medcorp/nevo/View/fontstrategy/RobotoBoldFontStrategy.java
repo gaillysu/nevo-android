@@ -6,17 +6,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.medcorp.nevo.R;
-
 /**
  * Created by karl-john on 14/12/15.
  */
-public class RobotoFontStrategy implements FontStrategy {
+public class RobotoBoldFontStrategy implements FontStrategy {
 
     private Typeface tf;
-    public RobotoFontStrategy(Context context) {
+    public RobotoBoldFontStrategy(Context context) {
         tf = Typeface.createFromAsset(context.getAssets(),
-                "font/Roboto-Regular.ttf");
+                "font/Roboto-Bold.ttf");
     }
 
     @Override

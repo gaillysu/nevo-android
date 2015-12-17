@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,7 +38,7 @@ public class StepsFragment extends BaseObservableFragment{
         View view = inflater.inflate(R.layout.fragment_steps, container, false);
         ButterKnife.bind(this, view);
         StepsFragmentPagerAdapter adapter = new StepsFragmentPagerAdapter(getChildFragmentManager(),this);
-
+        setHasOptionsMenu(true);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
         return view;
@@ -72,5 +73,11 @@ public class StepsFragment extends BaseObservableFragment{
     @Override
     public void findWatchSuccess() {
 
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(false);
     }
 }

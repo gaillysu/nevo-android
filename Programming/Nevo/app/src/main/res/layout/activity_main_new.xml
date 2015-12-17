@@ -30,7 +30,7 @@ android:layout_height="match_parent">
     android:background="@android:color/white"
         app:itemBackground="@drawable/navigation_drawer_selected_background"
     app:theme="@style/NevoTheme"
-    app:menu="@menu/standard_menu"
+    app:menu="@menu/menu_drawer"
     app:headerLayout="@layout/navigation_header"/>
 
 </android.support.v4.widget.DrawerLayout>

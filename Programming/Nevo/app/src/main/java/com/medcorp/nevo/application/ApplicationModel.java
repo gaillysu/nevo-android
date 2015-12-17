@@ -15,8 +15,10 @@ import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
@@ -35,6 +37,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
+    private AlarmDatabaseHelper alarmDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
 
     @Override
@@ -46,6 +49,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         syncController.setSyncControllerListenser(this);
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
+        alarmDatabaseHelper = new AlarmDatabaseHelper(this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -134,6 +138,10 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return sleepDatabaseHelper.convertToNormalList(sleepDatabaseHelper.getAll());
     }
 
+    public List<Alarm> getAllAlarm(){
+        return alarmDatabaseHelper.convertToNormalList(alarmDatabaseHelper.getAll());
+    }
+
     public void saveDailySteps(Steps steps)
     {
         stepsDatabaseHelper.update(steps);
@@ -169,5 +177,9 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         calBeginning.set(Calendar.MILLISECOND, 0);
         Date today = calBeginning.getTime();
         return today;
+    }
+
+    public Alarm addAlarm(Alarm alarm){
+        return alarmDatabaseHelper.add(alarm).get();
     }
 }

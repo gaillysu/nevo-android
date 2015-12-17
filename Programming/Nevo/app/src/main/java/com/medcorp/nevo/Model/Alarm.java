@@ -58,4 +58,25 @@ public class Alarm {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if (hour == 0){
+            builder.append("00");
+        } else if (hour < 10){
+            builder.append("0" + hour);
+        }else{
+            builder.append(hour);
+        }
+        builder.append(":");
+        if (minute== 0){
+            builder.append("00");
+        } else if (minute< 10){
+            builder.append("0" + minute);
+        }else{
+            builder.append(minute);
+        }
+        return builder.toString();
+    }
 }

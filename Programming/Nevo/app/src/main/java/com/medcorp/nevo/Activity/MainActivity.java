@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -136,7 +137,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onBackStackChanged() {
-        Log.w("Karl","Backstack count = " + fragmentManager.getBackStackEntryCount());
     }
 
     private class MainMenuDrawerListener implements DrawerLayout.DrawerListener {
@@ -185,6 +185,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
                 break;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
+
                 break;
             case R.id.nav_sleep_fragment:
                 fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
@@ -197,7 +198,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         String fragmentName = fragment.getClass().getName();
 
         if (fragmentManager.getBackStackEntryCount() == 1) {
-            Log.w("Karl", "Adding to backstack");
             fragment.setEnterTransition(new Fade().setDuration(300));
             fragmentManager.beginTransaction()
                     .add(R.id.activity_main_frame_layout, fragment)
@@ -206,7 +206,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         }else if(chooseStepFragment){
             fragmentManager.popBackStack();
         }else if(fragmentManager.getBackStackEntryCount() > 1){
-            Log.w("Karl","Replacing to backstack");
             fragment.setEnterTransition(new Fade().setDuration(300));
             fragmentManager.beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment)
@@ -229,18 +228,18 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         }else if(fragmentManager.getBackStackEntryCount() > 1) {
-            Log.w("Karl", "pop on back pressed == 2");
             fragmentManager.popBackStack();
         }else if(fragmentManager.getBackStackEntryCount() == 1) {
-            Log.w("Karl", "normal on back pressed == 1");
             super.onBackPressed();
             finish();
         }else{
-            Log.w("Karl","normal on back pressed");
              super.onBackPressed();
         }
-
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 }

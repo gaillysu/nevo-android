@@ -21,6 +21,7 @@
     <declare-styleable name="CustomFontAttr">
         <attr name="bold" format="boolean"/>
         <attr name="light" format="boolean"/>
+        <attr name="thin" format= "boolean"/>
     </declare-styleable>
 
     <array name="today_history_array">

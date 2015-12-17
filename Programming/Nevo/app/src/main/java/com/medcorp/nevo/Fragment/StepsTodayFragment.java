@@ -72,7 +72,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
         setMin((float) (mCurMin * 6));
         setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
         //realtime sync for current steps and goal
-        ((ApplicationModel)getActivity().getApplication()).getSyncController().getStepsAndGoal();
+        getModel().getSyncController().getStepsAndGoal();
         mUiHandler.postDelayed(refreshTimerTask,REFRESHINTERVAL);
     }
 

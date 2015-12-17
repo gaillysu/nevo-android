@@ -115,4 +115,5 @@
 
     <string name="sleep_tracking">睡眠追蹤</string>
     <string name="sleeptracking_instruction">按住第壹個按鈕3秒，激活睡眠跟蹤模式。在妳醒來後，再按第壹個按鈕3秒，激活運動模式，並連接手表以查看妳的睡眠記錄.</string>
+
 </resources>
