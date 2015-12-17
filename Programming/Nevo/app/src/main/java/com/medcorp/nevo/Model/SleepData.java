@@ -9,12 +9,22 @@ public class SleepData {
     private int lightSleep;
     private int awake;
     private long date;
+    private long sleepStart;
+    private long sleepEnd;
 
     public SleepData(int deepSleep, int lightSleep, int awake, long date) {
         this.deepSleep = deepSleep;
         this.lightSleep = lightSleep;
         this.awake = awake;
         this.date = date;
+    }
+    public SleepData(int deepSleep, int lightSleep, int awake, long date,long sleepStart,long sleepEnd) {
+        this.deepSleep = deepSleep;
+        this.lightSleep = lightSleep;
+        this.awake = awake;
+        this.date = date;
+        this.sleepStart = sleepStart;
+        this.sleepEnd = sleepEnd;
     }
 
     public int getDeepSleep() {
@@ -52,5 +62,21 @@ public class SleepData {
 
     public void setDate(int date) {
         this.date = date;
+    }
+
+    public long getSleepStart() {
+        return sleepStart;
+    }
+
+    public void setSleepStart(long sleepStart) {
+        this.sleepStart = sleepStart;
+    }
+
+    public long getSleepEnd() {
+        return sleepEnd;
+    }
+
+    public void setSleepEnd(long sleepEnd) {
+        this.sleepEnd = sleepEnd;
     }
 }

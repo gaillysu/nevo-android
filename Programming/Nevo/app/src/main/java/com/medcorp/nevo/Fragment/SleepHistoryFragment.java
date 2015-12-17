@@ -139,7 +139,9 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
+        barChart.highlightValue(e.getXIndex(), dataSetIndex);
+        SleepData sleepData = sleepDataList.get(e.getXIndex());
+        setDashboard(new Dashboard(sleepData.getTotalSleep(),sleepData.getDeepSleep(),sleepData.getLightSleep(),sleepData.getSleepStart(),sleepData.getSleepEnd(),sleepData.getAwake()));
     }
 
     @Override
@@ -149,12 +151,12 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
 
     public void setDashboard(final Dashboard dashboard)
     {
-        sleepDuration.setText(dashboard.sleepDuration + "m");
-        sleepDeepDuration.setText(dashboard.sleepDeepDuration + "m");
-        sleepLightDuration.setText(dashboard.sleepLightDuration + "m");
-        sleepStart.setText(dashboard.sleepStart + "s");
-        sleepEnd.setText(dashboard.sleepEnd + "s");
-        sleepWakeDuration.setText(dashboard.sleepWakeDuration + "m");
+        sleepDuration.setText(dashboard.formatDuration(dashboard.sleepDuration));
+        sleepDeepDuration.setText(dashboard.formatDuration(dashboard.sleepDeepDuration));
+        sleepLightDuration.setText(dashboard.formatDuration(dashboard.sleepLightDuration));
+        sleepStart.setText(dashboard.formatTimeStamp(dashboard.sleepStart));
+        sleepEnd.setText(dashboard.formatTimeStamp(dashboard.sleepEnd));
+        sleepWakeDuration.setText(dashboard.formatDuration(dashboard.sleepWakeDuration));
     }
 
     class Dashboard{
@@ -173,6 +175,14 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
             this.sleepStart = sleepStart;
             this.sleepEnd = sleepEnd;
             this.sleepWakeDuration = sleepWakeDuration;
+        }
+        String formatDuration(int durationMinute)
+        {
+            return durationMinute/60 + "h" + durationMinute%60 + "m";
+        }
+        String formatTimeStamp(long timeStamp)
+        {
+            return new SimpleDateFormat("HH:mm").format(new Date(timeStamp));
         }
     }
 }
