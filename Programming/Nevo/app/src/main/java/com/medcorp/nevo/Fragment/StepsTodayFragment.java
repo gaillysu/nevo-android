@@ -107,12 +107,12 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                goal.setText(dashboard.goal + "steps");
-                goal_reach.setText(dashboard.steps + "steps");
+                goal.setText(dashboard.formatSteps(dashboard.goal));
+                goal_reach.setText(dashboard.formatSteps(dashboard.steps));
                 goal_progress.setText(dashboard.progress + "%");
-                distance.setText(dashboard.distance + "KM");
-                dailysteps.setText(dashboard.allsteps + "");
-                calories.setText(dashboard.calories + "Kcal");
+                distance.setText(dashboard.formatDistance(dashboard.distance));
+                dailysteps.setText(dashboard.formatSteps(dashboard.allsteps));
+                calories.setText(dashboard.formatConsume(dashboard.calories));
             }
         });
     }
@@ -155,11 +155,11 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
         int steps;
         int goal;
         int progress;
-        float distance;
+        int distance;
         int allsteps;
         int calories;
 
-        Dashboard(int steps,int goal,int progress,float distance,int allsteps,int calories)
+        Dashboard(int steps,int goal,int progress,int distance,int allsteps,int calories)
         {
             this.steps = steps;
             this.goal = goal;
@@ -167,6 +167,18 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
             this.distance = distance;
             this.allsteps = allsteps;
             this.calories = calories;
+        }
+        String formatSteps(int steps)
+        {
+            return steps + " steps";
+        }
+        String formatDistance(int distanceMeter)
+        {
+            return distanceMeter/1000 + "KM";
+        }
+        String formatConsume(int calories)
+        {
+            return calories/1000 + "KCal";
         }
     }
 }

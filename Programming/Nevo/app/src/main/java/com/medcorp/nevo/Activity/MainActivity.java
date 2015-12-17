@@ -66,10 +66,12 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         mainMenuNavigationSelectListener.onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
         setTitle(selectedMenuItem.getTitle());
+        BaseObservableFragment fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
+        activeFragment.set(fragment);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
         fragmentManager.beginTransaction()
-                .add(R.id.activity_main_frame_layout, StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName()), StepsFragment.class.getName())
+                .add(R.id.activity_main_frame_layout, fragment)
                 .addToBackStack(StepsFragment.class.getName())
                 .commit();
 

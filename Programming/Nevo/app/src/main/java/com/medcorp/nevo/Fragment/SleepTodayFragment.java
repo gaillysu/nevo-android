@@ -22,6 +22,7 @@ import com.medcorp.nevo.view.SleepDataView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -140,12 +141,12 @@ public class SleepTodayFragment extends BaseFragment {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
-                sleepDuration.setText(dashboard.sleepDuration + "m");
-                sleepDeepDuration.setText(dashboard.sleepDeepDuration + "m");
-                sleepLightDuration.setText(dashboard.sleepLightDuration + "m");
-                sleepStart.setText(dashboard.sleepStart + "s");
-                sleepEnd.setText(dashboard.sleepEnd + "s");
-                sleepWakeDuration.setText(dashboard.sleepWakeDuration + "m");
+                sleepDuration.setText(dashboard.formatDuration(dashboard.sleepDuration));
+                sleepDeepDuration.setText(dashboard.formatDuration(dashboard.sleepDeepDuration));
+                sleepLightDuration.setText(dashboard.formatDuration(dashboard.sleepLightDuration));
+                sleepStart.setText(dashboard.formatTimeStamp(dashboard.sleepStart));
+                sleepEnd.setText(dashboard.formatTimeStamp(dashboard.sleepEnd));
+                sleepWakeDuration.setText(dashboard.formatDuration(dashboard.sleepWakeDuration));
             }
         });
     }
@@ -159,12 +160,20 @@ public class SleepTodayFragment extends BaseFragment {
 
         Dashboard(int sleepDuration,int sleepDeepDuration,int sleepLightDuration,long sleepStart,long sleepEnd,int sleepWakeDuration)
         {
-            this.sleepDuration = sleepDuration;
+            this.sleepDuration = sleepDuration/60000;
             this.sleepDeepDuration = sleepDeepDuration;
             this.sleepLightDuration = sleepLightDuration;
             this.sleepStart = sleepStart;
             this.sleepEnd = sleepEnd;
             this.sleepWakeDuration = sleepWakeDuration;
+        }
+        String formatDuration(int durationMinute)
+        {
+            return durationMinute/60 + "h" + durationMinute%60 + "m";
+        }
+        String formatTimeStamp(long timeStamp)
+        {
+            return new SimpleDateFormat("HH:mm").format(new Date(timeStamp));
         }
     }
 }

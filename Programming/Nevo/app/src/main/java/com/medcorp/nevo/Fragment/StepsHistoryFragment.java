@@ -150,15 +150,15 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
 
     private void setDashboard( Dashboard dashboard)
     {
-        distance.setText(dashboard.distance+"M");
-        steps.setText(dashboard.steps+"");
-        calories.setText(dashboard.calories+"Cal");
-        walkingDistance.setText(dashboard.walkDistance+"M");
-        walkingDuration.setText(dashboard.walkDuration+"m");
-        walkingCalories.setText(dashboard.calories+"Cal");
-        runningDistance.setText(dashboard.runDistance+"M");
-        runningDuration.setText(dashboard.runDuration+"m");
-        runningCalories.setText(dashboard.calories+"Cal");
+        distance.setText(dashboard.formatDistance(dashboard.distance));
+        steps.setText(dashboard.formatSteps(dashboard.steps));
+        calories.setText(dashboard.formatConsume(dashboard.calories));
+        walkingDistance.setText(dashboard.formatDistance(dashboard.walkDistance));
+        walkingDuration.setText(dashboard.formatDuration(dashboard.walkDuration));
+        walkingCalories.setText(dashboard.formatConsume(dashboard.calories));
+        runningDistance.setText(dashboard.formatDistance(dashboard.runDistance));
+        runningDuration.setText(dashboard.formatDuration(dashboard.runDuration));
+        runningCalories.setText(dashboard.formatConsume(dashboard.calories));
     }
 
     private class Dashboard{
@@ -183,6 +183,22 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
             this.runSteps = runSteps;
             this.runDistance = runDistance;
             this.runDuration = runDuration;
+        }
+        String formatSteps(int steps)
+        {
+            return steps + " steps";
+        }
+        String formatDistance(int distanceMeter)
+        {
+            return distanceMeter/1000 + "KM";
+        }
+        String formatConsume(int calories)
+        {
+            return calories/1000 + "KCal";
+        }
+        String formatDuration(int durationMinute)
+        {
+            return durationMinute/60 + "h" + durationMinute%60 + "m";
         }
     }
 }
