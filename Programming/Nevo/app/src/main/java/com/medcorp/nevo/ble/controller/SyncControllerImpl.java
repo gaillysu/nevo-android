@@ -83,6 +83,10 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.view.TimePickerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -346,9 +350,15 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         steps.setRunDistance(thispacket.getDailyRunDistance());
                         steps.setWalkDuration(thispacket.getDailyWalkDuration());
                         steps.setRunDuration(thispacket.getDailyRunDuration());
-                        //update  the day 's "steps" table
-                        ((ApplicationModel)mContext).saveDailySteps(steps);
-
+                        try {
+                            steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
+                        } catch (JSONException e) {
+                        e.printStackTrace();
+                        }
+                    //update  the day 's "steps" table
+                        if(steps.getSteps() !=0) {
+                            ((ApplicationModel) mContext).saveDailySteps(steps);
+                        }
                         if(history.getTotalSleepTime() != 0) {
 
 
@@ -365,6 +375,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                             //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
                             sleep.setStart(0);
                             sleep.setEnd(0);
+                            try {
+                                sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             ((ApplicationModel) mContext).saveDailySleep(sleep);
                             //end update
                         }

@@ -115,14 +115,14 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         int i = 0;
         sleepDataList = handler.getSleepData();
         for (SleepData sleepData:sleepDataList) {
-            yValue.add(new BarEntry(new float[]{sleepData.getLightSleep(), sleepData.getDeepSleep()}, i));
+            yValue.add(new BarEntry(new float[]{sleepData.getTotalSleep()}, i));
             xVals.add(sdf.format(new Date(sleepData.getDate())));
             i++;
         }
 
         dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
-        dataSet.setColors(new int[]{getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.deep_sleep)});
+        dataSet.setColors(new int[]{getResources().getColor(R.color.white)});
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);
