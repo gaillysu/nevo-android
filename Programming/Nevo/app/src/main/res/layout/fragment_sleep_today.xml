@@ -24,14 +24,14 @@
             android:layout_height="300dp"
             android:layout_centerInParent = "true"
             android:id="@+id/clock_imageView"
-            android:src="@drawable/clockview600"/>
+            android:src="@drawable/clockview600_sleep"/>
 
         <ImageView
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_centerInParent = "true"
             android:id="@+id/HomeClockHour"
-            android:src="@drawable/clockview_hour"
+            android:src="@drawable/clockview_hour_sleep"
             android:visibility="visible"/>
 
         <ImageView
@@ -39,7 +39,7 @@
             android:layout_height="300dp"
             android:layout_centerInParent = "true"
             android:id="@+id/HomeClockMinute"
-            android:src="@drawable/clockview_minute"
+            android:src="@drawable/clockview_minute_sleep"
             android:visibility="visible"/>
 
         <com.medcorp.nevo.view.SleepDataView
