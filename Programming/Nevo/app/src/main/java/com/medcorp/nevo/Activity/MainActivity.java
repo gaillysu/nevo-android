@@ -3,14 +3,15 @@ package com.medcorp.nevo.activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
 
+    @Bind(R.id.activity_main_coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+
+
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MainMenuNavigationSelectListener mainMenuNavigationSelectListener;
     private MenuItem selectedMenuItem;
@@ -74,7 +79,15 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
                 .add(R.id.activity_main_frame_layout, fragment)
                 .addToBackStack(StepsFragment.class.getName())
                 .commit();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1){
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     @Override
@@ -198,11 +211,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         }
         activeFragment.set(fragment);
         String fragmentName = fragment.getClass().getName();
-
         if (fragmentManager.getBackStackEntryCount() == 1) {
             fragment.setEnterTransition(new Fade().setDuration(300));
             fragmentManager.beginTransaction()
-                    .add(R.id.activity_main_frame_layout, fragment)
+                    .replace(R.id.activity_main_frame_layout, fragment)
                     .addToBackStack(fragmentName)
                     .commit();
         }else if(chooseStepFragment){
@@ -244,4 +256,5 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         getMenuInflater().inflate(R.menu.menu_add, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 }

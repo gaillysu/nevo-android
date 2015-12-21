@@ -15,7 +15,7 @@
 
     <color name="colorPrimary">#FFC107</color>
     <color name="colorPrimaryDark">#FFA000</color>
-    <color name="textColorPrimary">#333</color>
+    <color name="textColorPrimary">#333333</color>
     <color name="textColor">#333</color>
     <color name="textColorPrimaryInverse">#FFF</color>
     <color name="actionMenuTextColor">#FFF</color>

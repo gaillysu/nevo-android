@@ -3,9 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/toolbar"/>
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_settings_frame_layout"
-        />
+        android:layout_height="match_parent" android:id="@+id/activity_alarm_fragment_layout"/>
 </LinearLayout>

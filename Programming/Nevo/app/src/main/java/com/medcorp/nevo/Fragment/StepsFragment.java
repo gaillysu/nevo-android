@@ -1,13 +1,16 @@
 package com.medcorp.nevo.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
@@ -79,5 +82,6 @@ public class StepsFragment extends BaseObservableFragment{
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.add_menu).setVisible(false);
+
     }
 }
