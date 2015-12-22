@@ -1,8 +1,6 @@
 package com.medcorp.nevo.activity.base;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import com.medcorp.nevo.application.ApplicationModel;
@@ -20,10 +18,5 @@ public abstract class BaseActivity extends AppCompatActivity{
             application = (ApplicationModel) getApplication();
         }
         return application;
-    }
-
-    public void startActivity(Class<?> c){
-        Intent i = new Intent(this,c);
-        startActivity(i);
     }
 }
