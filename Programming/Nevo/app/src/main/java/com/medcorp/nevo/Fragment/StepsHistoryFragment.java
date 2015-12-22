@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -25,6 +25,7 @@ import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.StepsSorter;
+import com.medcorp.nevo.view.HistoryMarkerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -142,7 +143,8 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(stepsList.size());
             }
         });
-
+        MarkerView markerView = new HistoryMarkerView(getContext(), R.layout.history_marker_view);
+        barChart.setMarkerView(markerView);
         return view;
     }
 
