@@ -3,8 +3,8 @@
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="5"
-    >
+    android:weightSum="5">
+
          <com.github.mikephil.charting.charts.BarChart
             android:layout_weight="4"
             android:background="@color/customWhite"
@@ -19,214 +19,34 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:weightSum="3"
             android:layout_marginTop="10dp">
             <LinearLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
                     <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="All-day Mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_distance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="5.00KM"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:light="true"
                         android:textColor="@color/customGray"
                         android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All-day Steps"/>
+                        android:text="Steps"/>
                     <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_steps"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="7,000"/>
+                        android:textSize="17sp"
+                        android:text="@string/sleep_select_date"/>
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="All-day Consume"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:id="@+id/fragment_steps_history_consume"
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="50.28Kcal"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Walking Mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_walkingdistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="4.85KM"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Walking Duration"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_walkingduration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="1h 24m"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Walking Consume"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_walkingcalories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="10.02Kcal"/>
-                </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Running Mileage"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_runningdistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="0.15KM"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Running Duration"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_runningduration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="10m"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        android:textColor="@color/customGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Running Consume"/>
-                    <com.medcorp.nevo.view.customfontview.RobotoTextView
-                        roboto:bold="true"
-                        android:textColor="@color/black"
-                        android:id="@+id/fragment_steps_history_runningcalories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="101Kcal"/>
-                </LinearLayout>
-
             </LinearLayout>
 
 

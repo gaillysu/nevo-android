@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -25,7 +24,6 @@ import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.StepsSorter;
-import com.medcorp.nevo.view.HistoryMarkerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,32 +38,8 @@ import butterknife.ButterKnife;
  */
 public class StepsHistoryFragment extends BaseFragment implements OnChartValueSelectedListener {
 
-    @Bind(R.id.fragment_steps_history_distance)
-    TextView distance;
-
     @Bind(R.id.fragment_steps_history_steps)
     TextView steps;
-
-    @Bind(R.id.fragment_steps_history_consume)
-    TextView calories;
-
-    @Bind(R.id.fragment_steps_history_walkingdistance)
-    TextView walkingDistance;
-
-    @Bind(R.id.fragment_steps_history_walkingduration)
-    TextView walkingDuration;
-
-    @Bind(R.id.fragment_steps_history_walkingcalories)
-    TextView walkingCalories;
-
-    @Bind(R.id.fragment_steps_history_runningdistance)
-    TextView runningDistance;
-
-    @Bind(R.id.fragment_steps_history_runningduration)
-    TextView runningDuration;
-
-    @Bind(R.id.fragment_steps_history_runningcalories)
-    TextView runningCalories;
 
     @Bind(R.id.fragment_steps_history_bar)
     BarChart barChart;
@@ -91,7 +65,6 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         barChart.setDoubleTapToZoomEnabled(false);
         barChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 80.0f);
         barChart.setDragEnabled(true);
-        //barChart.setDrawHighlightArrow(true);
 
         YAxis yAxis = barChart.getAxisLeft();
         yAxis.setDrawGridLines(false);
@@ -143,8 +116,6 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(stepsList.size());
             }
         });
-        MarkerView markerView = new HistoryMarkerView(getContext(), R.layout.history_marker_view);
-        barChart.setMarkerView(markerView);
         return view;
     }
 
@@ -153,7 +124,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         barChart.highlightValue(e.getXIndex(), dataSetIndex);
         Steps steps = stepsList.get(e.getXIndex());
         setDashboard(new Dashboard(steps.getSteps(),steps.getDistance(),steps.getCalories(),steps.getWalkSteps(),steps.getWalkDistance(),steps.getWalkDuration(),steps.getRunSteps(),steps.getRunDistance(),steps.getRunDuration()));
-        drawHighlightArrow();
+//        drawHighlightArrow();
     }
 
     @Override
@@ -161,45 +132,17 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
 
     }
 
-    private void drawHighlightArrow()
-    {
-        //TODO draw Arrow for current hightlight bar
-    }
     private void setDashboard( Dashboard dashboard)
     {
-        distance.setText(dashboard.formatDistance(dashboard.distance));
         steps.setText(dashboard.formatSteps(dashboard.steps));
-        calories.setText(dashboard.formatConsume(dashboard.calories));
-        walkingDistance.setText(dashboard.formatDistance(dashboard.walkDistance));
-        walkingDuration.setText(dashboard.formatDuration(dashboard.walkDuration));
-        walkingCalories.setText(dashboard.formatConsume(dashboard.calories));
-        runningDistance.setText(dashboard.formatDistance(dashboard.runDistance));
-        runningDuration.setText(dashboard.formatDuration(dashboard.runDuration));
-        runningCalories.setText(dashboard.formatConsume(dashboard.calories));
     }
 
     private class Dashboard{
         int steps;
-        int distance;
-        int calories;
-        int walkSteps;
-        int walkDistance;
-        int walkDuration;
-        int runSteps;
-        int runDistance;
-        int runDuration;
 
         Dashboard(int steps,int distance,int calories,int walkSteps,int walkDistance,int walkDuration,int runSteps,int runDistance,int runDuration)
         {
             this.steps = steps;
-            this.distance = distance;
-            this.calories = calories;
-            this.walkSteps = walkSteps;
-            this.walkDistance = walkDistance;
-            this.walkDuration = walkDuration;
-            this.runSteps = runSteps;
-            this.runDistance = runDistance;
-            this.runDuration = runDuration;
         }
         String formatSteps(int steps)
         {

@@ -35,16 +35,16 @@
                 android:layout_height="wrap_content">
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
+                    roboto:light="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sleep duration"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
-                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_sleepduration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="7h40m"/>
             </LinearLayout>
             <LinearLayout
@@ -58,14 +58,14 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    roboto:light="true"
                     android:text="Deep sleep"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
-                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_deep"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="1h20m"/>
             </LinearLayout>
             <LinearLayout
@@ -78,14 +78,14 @@
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    roboto:light="true"
                     android:text="Light sleep"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:id="@+id/fragment_sleep_history_light"
-                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="6h20m"/>
             </LinearLayout>
         </LinearLayout>
@@ -107,14 +107,14 @@
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    roboto:light="true"
                     android:text="Sleep time"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
-                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="22:30"/>
             </LinearLayout>
             <LinearLayout
@@ -126,15 +126,15 @@
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
+                    roboto:light="true"
                     android:layout_height="wrap_content"
                     android:text="Wake time"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
-                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_wake"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="07:10"/>
             </LinearLayout>
             <LinearLayout
@@ -145,16 +145,16 @@
                 android:layout_height="wrap_content">
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
+                    roboto:light="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wake Duration"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
-                    roboto:bold="true"
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_wakeduration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:text="20m"/>
             </LinearLayout>
 

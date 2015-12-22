@@ -22,7 +22,7 @@ public class HistoryMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvContent.setText("" + e.getVal()); // set the entry-value as the display text
+        tvContent.setText("" + e.getVal());
     }
 
     @Override

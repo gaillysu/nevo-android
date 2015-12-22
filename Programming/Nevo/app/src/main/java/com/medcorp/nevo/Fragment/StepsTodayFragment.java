@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,20 +34,13 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
     @Bind(R.id.fragment_steps_today_goal)
     TextView goal;
 
-    @Bind(R.id.fragment_steps_today_reach)
-    TextView goal_reach;
 
     @Bind(R.id.fragment_steps_today_progress)
     TextView goal_progress;
 
-    @Bind(R.id.fragment_steps_today_distance)
-    TextView distance;
 
     @Bind(R.id.fragment_steps_today_dailysteps)
     TextView dailysteps;
-
-    @Bind(R.id.fragment_steps_today_calories)
-    TextView calories;
 
     @Bind(R.id.HomeClockHour)
     ImageView hourImage;
@@ -108,11 +100,8 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
             @Override
             public void run() {
                 goal.setText(dashboard.formatSteps(dashboard.goal));
-                goal_reach.setText(dashboard.formatSteps(dashboard.steps));
                 goal_progress.setText(dashboard.progress + "%");
-                distance.setText(dashboard.formatDistance(dashboard.distance));
                 dailysteps.setText(dashboard.formatSteps(dashboard.allsteps));
-                calories.setText(dashboard.formatConsume(dashboard.calories));
             }
         });
     }
