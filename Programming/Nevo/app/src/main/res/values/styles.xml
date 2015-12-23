@@ -10,6 +10,8 @@
         <item name="colorControlNormal">@color/white</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:alertDialogStyle">@style/NevoDialogStyle</item>
+        <item name="preferenceTheme">@style/NevoSettingsLayout</item>
+
     </style>
 
     <style name="NevoActionBar" parent="Widget.AppCompat.ActionBar">
@@ -38,5 +40,26 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/tab_unselected_font_color</item>
     </style>
+
+    <style name="NevoSettingsLayout" parent="PreferenceThemeOverlay">
+        <item name="android:background">@color/white</item>
+        <item name="preferenceFragmentListStyle">@style/NevoSettingsListItem</item>
+        <item name="android:preferenceStyle">@style/Preference</item>
+        <item name="android:preferenceLayoutChild">@style/NevoSettingsListItem</item>
+    </style>
+
+    <style name="NevoSettingsStyle" parent="PreferenceFragmentList">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <style name="NevoSettingsListItem" parent="Preference">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:dividerHeight">2dp</item>
+    </style>
+
+
 
 </resources>

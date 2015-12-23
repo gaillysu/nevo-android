@@ -103,7 +103,7 @@ public class EditAlarmFragment extends BasePreferencesFragment{
     Preference.OnPreferenceClickListener deletePrefClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            if(!getModel().deleleteAlarm(alarm)){
+            if(!getModel().deleteAlarm(alarm)){
                 ToastHelper.showShortToast(getContext(), "Failed to delete alarm");
             }else{
                 ToastHelper.showShortToast(getContext(), "Deleted alarm!");

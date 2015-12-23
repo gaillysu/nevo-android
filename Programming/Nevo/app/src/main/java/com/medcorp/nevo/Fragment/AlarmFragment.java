@@ -3,9 +3,13 @@ package com.medcorp.nevo.fragment;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import android.text.InputType;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,11 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.EditAlarmActivity;
 import com.medcorp.nevo.adapter.AlarmArrayAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Alarm;
@@ -31,7 +37,7 @@ import butterknife.ButterKnife;
 /**
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends BaseObservableFragment implements  TimePickerDialog.OnTimeSetListener{
+public class AlarmFragment extends BaseObservableFragment implements  TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
@@ -45,6 +51,7 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
         ButterKnife.bind(this, view);
         alarmList = getModel().getAllAlarm();
         alarmListView.setAdapter(new AlarmArrayAdapter(getContext(), 0, alarmList));
+        alarmListView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         return view;
     }

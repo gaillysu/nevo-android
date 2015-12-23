@@ -197,17 +197,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
                 break;
         }
         activeFragment.set(fragment);
-        String fragmentName = fragment.getClass().getName();
-
-        if (fragmentManager.getBackStackEntryCount() == 1) {
-            fragment.setEnterTransition(new Fade().setDuration(300));
-            fragmentManager.beginTransaction()
-                    .add(R.id.activity_main_frame_layout, fragment)
-                    .addToBackStack(fragmentName)
-                    .commit();
-        }else if(chooseStepFragment){
-            fragmentManager.popBackStack();
-        }else if(fragmentManager.getBackStackEntryCount() > 1){
+        {
             fragment.setEnterTransition(new Fade().setDuration(300));
             fragmentManager.beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment)

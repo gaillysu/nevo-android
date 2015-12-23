@@ -104,7 +104,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setTextSize(10f);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(Color.WHITE);
         xAxis.setTypeface(tf);
         SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
         List<String> xVals = new ArrayList<String>();
@@ -118,7 +118,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         int i = 0;
         sleepDataList = handler.getSleepData();
         for (SleepData sleepData:sleepDataList) {
-            yValue.add(new BarEntry(new float[]{sleepData.getTotalSleep()}, i));
+            yValue.add(new BarEntry(new float[]{sleepData.getDeepSleep(),sleepData.getLightSleep(),sleepData.getAwake()}, i));
             xVals.add(sdf.format(new Date(sleepData.getDate())));
             i++;
         }
@@ -130,9 +130,10 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
 
         dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
-        dataSet.setColors(new int[]{getResources().getColor(R.color.white)});
-        dataSet.setHighlightEnabled(true);
+        dataSet.setColors(new int[]{getResources().getColor(R.color.deep_sleep), getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.wake_sleep)});
+        dataSet.setHighlightEnabled(false);
         dataSet.setHighLightColor(getResources().getColor(R.color.customOrange));
+
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);
@@ -144,14 +145,15 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(sleepDataList.size());
             }
         });
+        barChart.highlightValue(sleepDataList.size()-1,0);
         return view;
     }
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        barChart.highlightValue(e.getXIndex(), dataSetIndex);
         SleepData sleepData = sleepDataList.get(e.getXIndex());
-        setDashboard(new Dashboard(sleepData.getTotalSleep(),sleepData.getDeepSleep(),sleepData.getLightSleep(),sleepData.getSleepStart(),sleepData.getSleepEnd(),sleepData.getAwake()));
+        setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
+
     }
 
     @Override

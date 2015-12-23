@@ -26,12 +26,12 @@ public class HistoryMarkerView extends MarkerView {
     }
 
     @Override
-    public int getXOffset() {
+    public int getXOffset(float x) {
         return -(getWidth() / 2);
     }
 
     @Override
-    public int getYOffset() {
+    public int getYOffset(float y) {
         return -getHeight();
     }
 }

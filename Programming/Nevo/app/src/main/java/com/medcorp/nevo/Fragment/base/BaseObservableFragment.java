@@ -1,6 +1,7 @@
 package com.medcorp.nevo.fragment.base;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 
 import com.medcorp.nevo.fragment.observer.FragmentObservable;
 
@@ -12,5 +13,9 @@ public abstract class BaseObservableFragment extends  BaseFragment implements Fr
     public static BaseObservableFragment instantiate(Context context, String tag)
     {
         return (BaseObservableFragment) instantiate(context,tag,null);
+    }
+
+    public AppCompatActivity getAppCompatActivity(){
+        return (AppCompatActivity) getActivity();
     }
 }
