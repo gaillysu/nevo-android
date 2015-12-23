@@ -133,7 +133,7 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getContext(), EditAlarmActivity.class);
-
+        Log.w("Karl","Test");
         Bundle bundle = new Bundle();
         bundle.putInt("Alarm_ID", alarmList.get(position).getId());
         i.putExtras(bundle);
