@@ -13,7 +13,8 @@
 
     </PreferenceScreen>
 
-    <PreferenceScreen android:title="Find my watch">
+    <PreferenceScreen android:title="Find my watch"
+        android:key="find_watch_key">
 
     </PreferenceScreen>
 

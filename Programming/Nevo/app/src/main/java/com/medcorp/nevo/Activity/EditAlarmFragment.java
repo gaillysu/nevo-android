@@ -3,7 +3,6 @@ package com.medcorp.nevo.activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
 import android.util.Log;
