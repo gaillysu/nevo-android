@@ -182,16 +182,4 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     public Alarm addAlarm(Alarm alarm){
         return alarmDatabaseHelper.add(alarm).get();
     }
-
-    public Alarm getAlarmById(int alarm_id) {
-        return alarmDatabaseHelper.get(alarm_id).get(0).get();
-    }
-
-    public boolean updateAlarm(Alarm alarm) {
-        return alarmDatabaseHelper.update(alarm);
-    }
-
-    public boolean deleleteAlarm(Alarm alarm) {
-        return alarmDatabaseHelper.remove(alarm.getId(),null);
-    }
 }

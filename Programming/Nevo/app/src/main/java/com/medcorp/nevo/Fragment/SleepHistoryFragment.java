@@ -1,5 +1,6 @@
 package com.medcorp.nevo.fragment;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -78,7 +79,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         View view = inflater.inflate(R.layout.fragment_sleep_history, container, false);
         ButterKnife.bind(this, view);
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
-                "font/Roboto-Light.ttf");
+                "font/Roboto-Bold.ttf");
         barChart.setDescription("");
         barChart.setNoDataTextDescription("");
         barChart.getLegend().setEnabled(false);
@@ -88,20 +89,22 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         barChart.setScaleEnabled(false);
         barChart.setDrawValueAboveBar(false);
         barChart.setDoubleTapToZoomEnabled(false);
-        barChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 0.0f);
+        barChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 80.0f);
         barChart.setDragEnabled(true);
+        barChart.setDrawHighlightArrow(true);
 
         YAxis yAxis = barChart.getAxisLeft();
         yAxis.setDrawGridLines(false);
         yAxis.setEnabled(false);
-        yAxis.setSpaceTop(60f);
-        yAxis.setGridColor(getResources().getColor(R.color.transparent));
+        yAxis = barChart.getAxisRight();
+        yAxis.setDrawGridLines(false);
+        yAxis.setEnabled(false);
 
         XAxis xAxis = barChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setTextSize(8f);
-        xAxis.setGridColor(getResources().getColor(R.color.transparent));
+        xAxis.setTextSize(10f);
+        xAxis.setTextColor(Color.BLACK);
         xAxis.setTypeface(tf);
         SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
         List<String> xVals = new ArrayList<String>();
@@ -119,10 +122,17 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
             xVals.add(sdf.format(new Date(sleepData.getDate())));
             i++;
         }
+        if (sleepDataList.size() < 7) {
+            barChart.setScaleMinima((.14f), 1f);
+        }else{
+            barChart.setScaleMinima((sleepDataList.size()/6f),1f);
+        }
 
         dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{getResources().getColor(R.color.white)});
+        dataSet.setHighlightEnabled(true);
+        dataSet.setHighLightColor(getResources().getColor(R.color.customOrange));
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);

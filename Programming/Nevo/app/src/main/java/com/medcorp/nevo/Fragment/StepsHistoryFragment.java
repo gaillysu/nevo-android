@@ -1,12 +1,20 @@
 package com.medcorp.nevo.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -94,10 +102,10 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
             xVals.add(sdf.format(new Date(steps.getDate())));
             i++;
         }
-        if (stepsList.size() < 8) {
-            barChart.setScaleMinima((.125f), 1f);
+        if (stepsList.size() < 7) {
+            barChart.setScaleMinima((.14f), 1f);
         }else{
-            barChart.setScaleMinima((stepsList.size()/7f),1f);
+            barChart.setScaleMinima((stepsList.size()/6f),1f);
         }
 
         dataSet = new BarDataSet(yValue, "");

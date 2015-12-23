@@ -24,12 +24,6 @@ public class SettingsFragment extends BaseObservableFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
-        String settingsImplFragmentName = SettingsImplFragment.class.getName();
-        Fragment settingsImplFragment = SettingsImplFragment.instantiate(getContext(), settingsImplFragmentName);
-        getChildFragmentManager().beginTransaction()
-                .add(R.id.fragment_settings_frame_layout, settingsImplFragment)
-                .addToBackStack(settingsImplFragmentName)
-                .commit();
         return view;
     }
 
