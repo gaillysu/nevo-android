@@ -16,10 +16,12 @@ import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
+import com.medcorp.nevo.database.entry.PresetsDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 
@@ -38,6 +40,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
+    private PresetsDatabaseHelper presetsDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
 
     @Override
@@ -50,6 +53,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
+        presetsDatabaseHelper = new PresetsDatabaseHelper(this);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -192,6 +196,27 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public boolean deleteAlarm(Alarm alarm){
-      return  alarmDatabaseHelper.remove(alarm.getId(),null);
+      return  alarmDatabaseHelper.remove(alarm.getId(), null);
     }
+
+    public List<Preset> getAllPreset(){
+        return presetsDatabaseHelper.convertToNormalList(presetsDatabaseHelper.getAll());
+    }
+    public Preset addPreset(Preset preset){
+        return presetsDatabaseHelper.add(preset).get();
+    }
+
+    public boolean updatePreset(Preset preset) {
+        return presetsDatabaseHelper.update(preset);
+    }
+
+    public Preset getPresetById(int id){
+        return presetsDatabaseHelper.get(id,null).get();
+    }
+
+    public boolean deleteAlarm(Preset preset){
+        return  presetsDatabaseHelper.remove(preset.getId(), null);
+    }
+
+
 }
