@@ -44,4 +44,8 @@ public class EditGoalsActivity extends BaseActivity  {
         getMenuInflater().inflate(R.menu.menu_done, menu);
         return super.onCreateOptionsMenu(menu);
     }
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 }

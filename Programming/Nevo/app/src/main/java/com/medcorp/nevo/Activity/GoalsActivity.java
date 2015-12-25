@@ -52,7 +52,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         setTitle("Goals");
         presetListView.setVisibility(View.VISIBLE);
         presetList = getModel().getAllPreset();
-        presetArrayAdapter = new PresetArrayAdapter(this,presetList);
+        presetArrayAdapter = new PresetArrayAdapter(this,getModel(),presetList);
         presetListView.setAdapter(presetArrayAdapter);
         presetListView.setOnItemClickListener(this);
         preset = new Preset("",false,7000);
@@ -78,6 +78,8 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         //delete or update the goal, refresh list
         if(resultCode!=0)
         {
+            presetList = getModel().getAllPreset();
+            presetArrayAdapter.setDataset(presetList);
             presetArrayAdapter.notifyDataSetChanged();
         }
     }
