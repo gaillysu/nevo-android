@@ -98,7 +98,7 @@ import java.util.TimerTask;
                 } else {
                     //Ouch we're not connected, we have to try to connect, let's increment the timer index
                     mTimerIndex++;
-                    if (mTimerIndex >= mReConnectTimerPattern.length)
+                    if (mTimerIndex >= mReConnectTimerPattern.length-1)
                     {
                         mTimerIndex = mReConnectTimerPattern.length - 1;
                         if(onConnectListener.notEmpty()) onConnectListener.get().onSearchFailure();
