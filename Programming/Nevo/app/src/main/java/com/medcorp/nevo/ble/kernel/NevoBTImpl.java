@@ -142,7 +142,7 @@ public class NevoBTImpl implements NevoBT {
 
     @Override
 	public synchronized void startScan(final List<SupportedService> servicelist, final Optional<String> preferredAddress) {
-        if(isScanning) {Log.i(TAG,"Scanning......return ******");return;}
+		if(isScanning) {Log.i(TAG,"Scanning......return ******");return;}
         //If we're already conected to this address, no need to go any further
         if (preferredAddress.notEmpty() && isAlreadyConnected(preferredAddress.get()) ) {return;}
 
@@ -182,7 +182,11 @@ public class NevoBTImpl implements NevoBT {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.NevoBT).clear();
 
 				//We start a scan
-				if(mBluetoothAdapter!=null) {isScanning = true;mBluetoothAdapter.startLeScan(mLeScanCallback);}
+				if(mBluetoothAdapter!=null) {
+					if(onConnectListener.notEmpty()) onConnectListener.get().onSearching();
+					isScanning = true;
+					mBluetoothAdapter.startLeScan(mLeScanCallback);
+				}
 				
 		        // Stops scanning after a pre-defined scan period.
 		        new Handler().postDelayed(new Runnable() {
@@ -243,11 +247,13 @@ public class NevoBTImpl implements NevoBT {
 
                     Log.d(TAG, "Device "+deviceAddress+" found to support service : "+GattAttributes.supportedBLEServiceByEnum(mContext,advertisedUUIDs, mSupportServicelist).get(0));
 
+					if(onConnectListener.notEmpty()) onConnectListener.get().onSearchSuccess();
                     //If yes, let's bind this device !
                     if(mCurrentService.isEmpty())
                         bindNewService(deviceAddress);
                     else
                     {
+						if(onConnectListener.notEmpty()) onConnectListener.get().onConnecting();
                         mCurrentService.get().connect(deviceAddress);
                     }
 
@@ -402,6 +408,7 @@ public class NevoBTImpl implements NevoBT {
 				//We launch a conenction to the given device
 				mCurrentService.get().initialize(onDataReceivedListener.get(),onConnectListener.get(),onExceptionListener.get(),onFirmwareVersionListener.get());
 
+				if(onConnectListener.notEmpty()) onConnectListener.get().onConnecting();
 				//now connect this device
 				mCurrentService.get().connect(deviceAddress);
 			}

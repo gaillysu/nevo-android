@@ -304,6 +304,36 @@ public class OldMainActivity extends ActionBarActivity implements NavigationDraw
         }
     }
 
+    @Override
+    public void onSearching() {
+
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onSyncStart() {
+
+    }
+
+    @Override
+    public void onSyncEnd() {
+
+    }
+
     public static class PlaceholderFragment {
         private static final String POSTITION = "position";
         private static final String TAG = "tag";

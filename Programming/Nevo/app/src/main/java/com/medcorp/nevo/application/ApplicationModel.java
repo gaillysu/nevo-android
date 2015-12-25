@@ -90,6 +90,54 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     }
 
+    @Override
+    public void onSearching() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onSearching();
+        }
+    }
+
+    @Override
+    public void onSearchSuccess() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onSearchSuccess();
+        }
+    }
+
+    @Override
+    public void onSearchFailure() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onSearchFailure();
+        }
+    }
+
+    @Override
+    public void onConnecting() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onConnecting();
+        }
+    }
+
+    @Override
+    public void onSyncStart() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onSyncStart();
+        }
+    }
+
+    @Override
+    public void onSyncEnd() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onSyncEnd();
+        }
+    }
+
     public void observableActivity(ActivityObservable observable)
     {
         this.observableActivity.set(observable);

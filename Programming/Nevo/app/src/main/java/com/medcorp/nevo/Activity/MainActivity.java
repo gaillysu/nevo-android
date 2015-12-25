@@ -1,9 +1,13 @@
 package com.medcorp.nevo.activity;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -48,12 +54,14 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     private MenuItem selectedMenuItem;
     private Optional<BaseObservableFragment> activeFragment;
     private FragmentManager fragmentManager;
-
+    private Snackbar snackbar=null;
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_new);
+        rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
         activeFragment =  new Optional<>();
         getModel().observableActivity(this);
         ButterKnife.bind(this);
@@ -105,6 +113,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void notifyOnConnected() {
+        showStateString("Got Connected",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnConnected();
@@ -113,6 +122,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void notifyOnDisconnected() {
+        showStateString("Got disconnected.",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnDisconnected();
@@ -135,6 +145,86 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
             activeFragment.get().findWatchSuccess();
         }
 
+    }
+
+    @Override
+    public void onSearching() {
+        showStateString("Searching watch...",false);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onSearching();
+        }
+    }
+
+    @Override
+    public void onSearchSuccess() {
+        showStateString("Search watch success.",false);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onSearchSuccess();
+        }
+    }
+
+    @Override
+    public void onSearchFailure() {
+        showStateString("Search watch got failure,please check phone and watch bluetooth",true);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onSearchFailure();
+        }
+    }
+
+    @Override
+    public void onConnecting() {
+        showStateString("Connecting watch...",false);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onConnecting();
+        }
+    }
+
+    @Override
+    public void onSyncStart() {
+        showStateString("Sync Data starting...",false);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onSyncStart();
+        }
+    }
+
+    @Override
+    public void onSyncEnd() {
+        showStateString("Sync data finished.",true);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onSyncEnd();
+        }
+    }
+
+    private void showStateString(String strState,boolean dismiss)
+    {
+        if(snackbar != null)
+        {
+            if(snackbar.isShown()) {
+                snackbar.dismiss();
+            }
+        }
+
+        snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_INDEFINITE);
+        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        tv.setText(strState);
+        snackbar.show();
+
+        if(dismiss)
+        {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    snackbar.dismiss();
+                }
+            }, 2000);
+        }
     }
 
     @Override

@@ -100,6 +100,36 @@ public class TutorialFiveActivity extends BaseActivity implements View.OnClickLi
 
     }
 
+    @Override
+    public void onSearching() {
+
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onSyncStart() {
+
+    }
+
+    @Override
+    public void onSyncEnd() {
+
+    }
+
     public class myAnimationListener implements Animation.AnimationListener{
 
         @Override

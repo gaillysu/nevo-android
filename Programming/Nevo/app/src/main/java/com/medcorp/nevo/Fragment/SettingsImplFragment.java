@@ -24,7 +24,6 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
     private Preference.OnPreferenceClickListener goalsPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            //TODO show dialog to list all preset goals, with add/edit feature
             Intent intent = new Intent(getActivity(), GoalsActivity.class);
             getActivity().startActivity(intent);
             getActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);

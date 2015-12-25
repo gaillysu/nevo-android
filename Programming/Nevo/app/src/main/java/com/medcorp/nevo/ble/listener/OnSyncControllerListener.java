@@ -21,4 +21,21 @@ public interface OnSyncControllerListener {
     called when get version info
      */
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version);
+
+    /**
+     * add searching functions: @onSearching,@onSearchSuccess,@onSearchFailure,@onConnecting
+     */
+    public void onSearching();
+
+    public void onSearchSuccess();
+
+    public void onSearchFailure();
+
+    public void onConnecting();
+
+    //the  two functions @onSyncStart,@onSyncEnd
+    public void onSyncStart();
+
+    public void onSyncEnd();
+
 }

@@ -481,6 +481,34 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     }
 
+    @Override
+    public void onSearching() {
+        if(mOnSyncControllerListener.notEmpty()) {
+            mOnSyncControllerListener.get().onSearching();
+        }
+    }
+
+    @Override
+    public void onSearchSuccess() {
+        if(mOnSyncControllerListener.notEmpty()) {
+            mOnSyncControllerListener.get().onSearchSuccess();
+        }
+    }
+
+    @Override
+    public void onSearchFailure() {
+        if(mOnSyncControllerListener.notEmpty()) {
+            mOnSyncControllerListener.get().onSearchFailure();
+        }
+    }
+
+    @Override
+    public void onConnecting() {
+        if(mOnSyncControllerListener.notEmpty()) {
+            mOnSyncControllerListener.get().onConnecting();
+        }
+    }
+
     /**
      This function will synchronise activity data with the watch.
      It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
@@ -494,10 +522,19 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                 || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
             //We haven't synched for a while, let's sync now !
             Log.i(TAG,"*** Sync started ! ***");
+            if(mOnSyncControllerListener.notEmpty())
+            {
+                mOnSyncControllerListener.get().onSyncStart();
+            }
         getDailyTrackerInfo(true);
         }
         else
         {
+            //no need sync step/sleep data, only sync time and user profile
+            if(mOnSyncControllerListener.notEmpty())
+            {
+                mOnSyncControllerListener.get().onSyncEnd();
+            }
             //here sync StepandGoal for good user experience
             Log.i(TAG,"*** Sync step count and goal ***");
             getStepsAndGoal();
@@ -509,6 +546,10 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
      */
     private void syncFinished() {
         Log.i(TAG,"*** Sync finished ***");
+        if(mOnSyncControllerListener.notEmpty())
+        {
+            mOnSyncControllerListener.get().onSyncEnd();
+        }
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
         //tell history to refresh
@@ -563,7 +604,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     @Override
     public void findDevice()
     {
-        sendRequest(new LedLightOnOffNevoRequest(mContext,0x3F0000,false));
+        sendRequest(new LedLightOnOffNevoRequest(mContext,0x3F0000,true));
     }
 
     @Override

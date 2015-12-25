@@ -121,12 +121,8 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
                                                 //save to database and refresh listview
                                                 getModel().addPreset(preset);
                                                 presetList = getModel().getAllPreset();
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        presetArrayAdapter.notifyDataSetChanged();
-                                                    }
-                                                });
+                                                presetArrayAdapter.setDataset(presetList);
+                                                presetArrayAdapter.notifyDataSetChanged();
                                             }
                                         }).negativeText("Cancel")
                                         .show();

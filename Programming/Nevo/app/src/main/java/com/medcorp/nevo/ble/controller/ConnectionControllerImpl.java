@@ -99,9 +99,16 @@ import java.util.TimerTask;
                     //Ouch we're not connected, we have to try to connect, let's increment the timer index
                     mTimerIndex++;
                     if (mTimerIndex >= mReConnectTimerPattern.length)
+                    {
                         mTimerIndex = mReConnectTimerPattern.length - 1;
-                    Log.w(NevoBT.TAG, "Connection lost, reconnecting in " + mReConnectTimerPattern[mTimerIndex] / 1000 + "s");
-                    connect();
+                        if(onConnectListener.notEmpty()) onConnectListener.get().onSearchFailure();
+                        Log.w(NevoBT.TAG, "connection timeout(3 minutes),stop searching.");
+                    }
+                    else
+                    {
+                        Log.w(NevoBT.TAG, "Connection lost, reconnecting in " + mReConnectTimerPattern[mTimerIndex] / 1000 + "s");
+                        connect();
+                    }
                 }
                 restartAutoReconnectTimer();
             }
@@ -128,7 +135,6 @@ import java.util.TimerTask;
         if(hasSavedAddress()) preferredAddress.set(getSaveAddress());
         Log.w(NevoBT.TAG, "servicelist:" + servicelist.get(0) + ",address:" + (preferredAddress.isEmpty() ? "null" : preferredAddress.get()));
         nevoBT.startScan(servicelist, preferredAddress);
-
     }
 
     @Override
@@ -188,6 +194,26 @@ import java.util.TimerTask;
 
         sendNotification(connected);
 
+    }
+
+    @Override
+    public void onSearching() {
+        if(onConnectListener.notEmpty()) onConnectListener.get().onSearching();
+    }
+
+    @Override
+    public void onSearchSuccess() {
+        if(onConnectListener.notEmpty()) onConnectListener.get().onSearchSuccess();
+    }
+
+    @Override
+    public void onSearchFailure() {
+        if(onConnectListener.notEmpty()) onConnectListener.get().onSearchFailure();
+    }
+
+    @Override
+    public void onConnecting() {
+        if(onConnectListener.notEmpty()) onConnectListener.get().onConnecting();
     }
 
     @Override

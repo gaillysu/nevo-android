@@ -761,6 +761,26 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     }
 
     @Override
+    public void onSearching() {
+
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
     public void onDataReceived(SensorData data) {
 
         if (data.getType().equals(NevoFirmwareData.TYPE))

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
+import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Battery;
@@ -31,6 +32,7 @@ public class StepsFragment extends BaseObservableFragment{
     TabLayout tabLayout;
 
     private OnStepsListener onStepsListener;
+    private OnStateListener onStateListener;
 
     @Nullable
     @Override
@@ -47,6 +49,9 @@ public class StepsFragment extends BaseObservableFragment{
     public void setOnStepsListener(OnStepsListener onStepsListener) {
         this.onStepsListener = onStepsListener;
     }
+    public void setOnStateListener(OnStateListener onStateListener) {
+        this.onStateListener = onStateListener;
+    }
 
     @Override
     public void notifyDatasetChanged() {
@@ -57,12 +62,18 @@ public class StepsFragment extends BaseObservableFragment{
 
     @Override
     public void notifyOnConnected() {
-
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_CONNECTED);
+        }
     }
 
     @Override
     public void notifyOnDisconnected() {
-
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_DISCONNECT);
+        }
     }
 
     @Override
@@ -73,6 +84,54 @@ public class StepsFragment extends BaseObservableFragment{
     @Override
     public void findWatchSuccess() {
 
+    }
+
+    @Override
+    public void onSearching() {
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SEARCHING);
+        }
+    }
+
+    @Override
+    public void onSearchSuccess() {
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SEARCH_SUCCESS);
+        }
+    }
+
+    @Override
+    public void onSearchFailure() {
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SEARCH_FAILURE);
+        }
+    }
+
+    @Override
+    public void onConnecting() {
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_CONNECTING);
+        }
+    }
+
+    @Override
+    public void onSyncStart() {
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SYNC_START);
+        }
+    }
+
+    @Override
+    public void onSyncEnd() {
+        if(onStateListener !=null)
+        {
+            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SYNC_END);
+        }
     }
 
     @Override

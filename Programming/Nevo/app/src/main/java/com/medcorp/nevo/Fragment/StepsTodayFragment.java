@@ -1,19 +1,23 @@
 package com.medcorp.nevo.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.view.RoundProgressBar;
@@ -26,7 +30,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
+public class StepsTodayFragment extends BaseFragment implements OnStepsListener,OnStateListener {
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
@@ -65,7 +69,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
         setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
         //realtime sync for current steps and goal
         getModel().getSyncController().getStepsAndGoal();
-        mUiHandler.postDelayed(refreshTimerTask,REFRESHINTERVAL);
+        mUiHandler.postDelayed(refreshTimerTask, REFRESHINTERVAL);
     }
 
     private void setHour(final float degree) {
@@ -125,7 +129,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
         int dailyGoal =  steps.getGoal();
         Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
         setProgressBar((int) (100.0 * dailySteps / dailyGoal));
-        setDashboard(new Dashboard(dailySteps,dailyGoal,(int) (100.0 * dailySteps / dailyGoal),steps.getDistance(),dailySteps,steps.getCalories()));
+        setDashboard(new Dashboard(dailySteps, dailyGoal, (int) (100.0 * dailySteps / dailyGoal), steps.getDistance(), dailySteps, steps.getCalories()));
     }
 
     @Override
@@ -138,6 +142,11 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener{
     public void onPause() {
         super.onPause();
         mUiHandler.removeCallbacks(refreshTimerTask);
+    }
+
+    @Override
+    public void onStateChanged(STATE state) {
+
     }
 
     private class Dashboard{

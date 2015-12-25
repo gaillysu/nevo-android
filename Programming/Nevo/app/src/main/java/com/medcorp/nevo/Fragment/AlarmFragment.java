@@ -100,6 +100,36 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
     }
 
     @Override
+    public void onSearching() {
+
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onSyncStart() {
+
+    }
+
+    @Override
+    public void onSyncEnd() {
+
+    }
+
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         final Alarm alarm = new Alarm(hourOfDay,minute,false,"");
         new MaterialDialog.Builder(getActivity())
@@ -129,7 +159,7 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
         prefs.putString("fragment_edit_alarm_label", alarmList.get(position).getLabel());
         prefs.commit();
         getAppCompatActivity().startActivity(i);
-        getAppCompatActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+        getAppCompatActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         setEnterTransition(new Fade().setDuration(300));
     }
 

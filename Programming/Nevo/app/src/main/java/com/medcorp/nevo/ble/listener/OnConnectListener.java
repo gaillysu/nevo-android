@@ -16,4 +16,15 @@ public interface OnConnectListener {
 	 * This function is called everythime a device is connected or disconnected
 	 */
     public void onConnectionStateChanged(boolean connected, String address);
+
+    /**
+     * add searching functions: @onSearching,@onSearchSuccess,@onSearchFailure,@onConnecting
+     */
+    public void onSearching();
+
+    public void onSearchSuccess();
+
+    public void onSearchFailure();
+
+    public void onConnecting();
 }

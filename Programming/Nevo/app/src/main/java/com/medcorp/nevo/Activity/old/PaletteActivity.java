@@ -239,6 +239,36 @@ public class PaletteActivity extends BaseActivity
 
     }
 
+    @Override
+    public void onSearching() {
+
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onSyncStart() {
+
+    }
+
+    @Override
+    public void onSyncEnd() {
+
+    }
+
     private class ColorLedVisitor implements NevoLedVisitor<Void>{
 
         @Override

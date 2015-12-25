@@ -11,4 +11,19 @@ public interface FragmentObservable {
     public void notifyOnDisconnected();
     public void batteryInfoReceived(Battery battery);
     public void findWatchSuccess();
+    /**
+     * add searching functions: @onSearching,@onSearchSuccess,@onSearchFailure,@onConnecting
+     */
+    public void onSearching();
+
+    public void onSearchSuccess();
+
+    public void onSearchFailure();
+
+    public void onConnecting();
+
+    //the  two functions @onSyncStart,@onSyncEnd
+    public void onSyncStart();
+
+    public void onSyncEnd();
 }
