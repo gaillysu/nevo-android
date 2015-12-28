@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.EditAlarmActivity;
 import com.medcorp.nevo.activity.GoalsActivity;
+import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.application.ApplicationModel;
 
 /**
@@ -21,12 +22,23 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
 
     private Preference findMyWatchPreference;
     private Preference goalsPreference;
+    private Preference myNevoPreference;
     private Preference.OnPreferenceClickListener goalsPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent intent = new Intent(getActivity(), GoalsActivity.class);
             getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            setEnterTransition(new Fade().setDuration(300));
+            return true;
+        }
+    };
+    private Preference.OnPreferenceClickListener myNevoPreferenceListener = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(getActivity(), MyNevoActivity.class);
+            getActivity().startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             setEnterTransition(new Fade().setDuration(300));
             return true;
         }
@@ -49,6 +61,8 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
         findMyWatchPreference.setOnPreferenceClickListener(findMyWatchClickListener);
         goalsPreference = findPreference("goals_key");
         goalsPreference.setOnPreferenceClickListener(goalsPreferenceListener);
+        myNevoPreference = findPreference("my_nevo_key");
+        myNevoPreference.setOnPreferenceClickListener(myNevoPreferenceListener);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

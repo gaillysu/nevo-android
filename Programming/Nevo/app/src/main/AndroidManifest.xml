@@ -82,6 +82,12 @@
         <activity
             android:name=".activity.EditGoalsActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MyNevoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.DfuActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".ble.ble.NevoBTService"

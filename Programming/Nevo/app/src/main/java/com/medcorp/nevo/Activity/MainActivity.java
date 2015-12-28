@@ -86,6 +86,12 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getModel().observableActivity(this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;

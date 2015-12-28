@@ -9,8 +9,8 @@
     <PreferenceScreen android:title="Notifications">
 
     </PreferenceScreen>
-    <PreferenceScreen android:title="My Nevo">
-
+    <PreferenceScreen android:title="My Nevo"
+        android:key="my_nevo_key">
     </PreferenceScreen>
 
     <PreferenceScreen android:title="Find my watch"

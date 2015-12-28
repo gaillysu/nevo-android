@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.old.OTAActivity;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.NevoException;
@@ -122,13 +123,13 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         connectionController = ConnectionController.Singleton.getInstance(context);
 
         connectionController.setOnExceptionListener(this);
-        oldOnExceptionListener.set((OnExceptionListener)(((OTAActivity)context).getModel().getSyncController()));
+        oldOnExceptionListener.set((OnExceptionListener)(((BaseActivity)context).getModel().getSyncController()));
         connectionController.setOnDataReceivedListener(this);
-        oldOnDataReceivedListener.set((OnDataReceivedListener)(((OTAActivity)context).getModel().getSyncController()));
+        oldOnDataReceivedListener.set((OnDataReceivedListener)(((BaseActivity)context).getModel().getSyncController()));
         connectionController.setOnConnectListener(this);
-        oldOnConnectListener.set((OnConnectListener)(((OTAActivity)context).getModel().getSyncController()));
+        oldOnConnectListener.set((OnConnectListener)(((BaseActivity)context).getModel().getSyncController()));
         connectionController.setOnFirmwareVersionListener(this);
-        oldOnFirmwareVersionListener.set((OnFirmwareVersionListener)(((OTAActivity)context).getModel().getSyncController()));
+        oldOnFirmwareVersionListener.set((OnFirmwareVersionListener)(((BaseActivity)context).getModel().getSyncController()));
 
         //help mode by press A/B key and install battery
         bHelpMode = helpmode;
