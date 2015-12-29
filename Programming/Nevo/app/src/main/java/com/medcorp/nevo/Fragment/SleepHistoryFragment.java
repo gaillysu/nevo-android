@@ -4,14 +4,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
@@ -24,8 +20,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
-
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
 import com.medcorp.nevo.util.SleepDataHandler;
@@ -37,7 +33,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.medcorp.nevo.fragment.base.BaseFragment;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 /**
@@ -131,29 +128,31 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{getResources().getColor(R.color.deep_sleep), getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.wake_sleep)});
-        dataSet.setHighlightEnabled(false);
-        dataSet.setHighLightColor(getResources().getColor(R.color.customOrange));
+        dataSet.setHighlightEnabled(true);
+        dataSet.setHighLightColor(getResources().getColor(R.color.white));
+        dataSet.setHighLightAlpha(100);
 
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);
         barChart.setData(data);
         barChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
+
         barChart.postOnAnimation(new Runnable() {
             @Override
             public void run() {
                 barChart.moveViewToX(sleepDataList.size());
             }
         });
-        barChart.highlightValue(sleepDataList.size()-1,0);
+        barChart.highlightValue(sleepDataList.size() - 1, 0);
         return view;
     }
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        barChart.highlightValue(e.getXIndex(), dataSetIndex);
         SleepData sleepData = sleepDataList.get(e.getXIndex());
         setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
-
     }
 
     @Override
