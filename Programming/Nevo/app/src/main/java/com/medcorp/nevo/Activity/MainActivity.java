@@ -273,13 +273,11 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     }
 
     private void setFragment(MenuItem item){
-        boolean chooseStepFragment = false;
         setTitle(item.getTitle());
         BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
                 fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
-                chooseStepFragment = true;
                 break;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
@@ -328,6 +326,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add, menu);
+        getMenuInflater().inflate(R.menu.menu_choose_goal, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

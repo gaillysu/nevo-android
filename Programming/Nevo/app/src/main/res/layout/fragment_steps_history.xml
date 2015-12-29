@@ -29,8 +29,9 @@
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
                     android:layout_width="match_parent"
+                    android:paddingTop="10dp"
                     android:layout_height="match_parent">
                     <com.medcorp.nevo.view.customfontview.RobotoTextView
                         roboto:light="true"

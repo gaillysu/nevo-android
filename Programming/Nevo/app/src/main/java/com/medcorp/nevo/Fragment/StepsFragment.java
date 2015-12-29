@@ -1,21 +1,32 @@
 package com.medcorp.nevo.fragment;
 
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.util.Preferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -138,5 +149,44 @@ public class StepsFragment extends BaseObservableFragment{
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.add_menu).setVisible(false);
+        menu.findItem(R.id.choose_goal_menu).setVisible(true);
     }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.choose_goal_menu:
+                final List<Preset> presetList = getModel().getAllPreset();
+                List<String> stringList = new ArrayList<>();
+
+                for (Preset preset : presetList){
+                    if(preset.isStatus())
+                    stringList.add(preset.toString());
+                }
+                CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
+
+                new MaterialDialog.Builder(getContext())
+                        .title("Goal")
+                        .items(cs)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                //TODO sync the chosen steps with watch, please do Gailly.
+                                Preferences.savePreset(getContext(),presetList.get(which));
+                                return true;
+                            }
+                        })
+                        .positiveText("Ok")
+                        .negativeText("Cancel")
+                        .show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    // TODO: on switch selected check if 3 alarms are already on, if so, show dialog/toast if not sync with the watch
+
 }

@@ -19,7 +19,9 @@ import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
+import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.RoundProgressBar;
 
 import java.util.Calendar;
@@ -115,13 +117,17 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_steps_today, container, false);
         ButterKnife.bind(this, view);
+        Preset preset = getModel().getPresetById(Preferences.getPresetId(getContext()));
+
+//        goal.setText(preset.getSteps());
+        // TODO get last known steps from watch, save it somewhere in the app, as soon watch connected show them in UI and calculate percentage
         return view;
     }
 
     @Override
     public void OnStepsChanged() {
-        ApplicationModel application = (ApplicationModel)getActivity().getApplication();
-        Steps steps =  application.getDailySteps(0, application.getDateFromDate(new Date()));
+
+        Steps steps =  getModel().getDailySteps(0, getModel().getDateFromDate(new Date()));
         if(steps == null) {
             return;
         }

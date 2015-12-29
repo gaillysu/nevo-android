@@ -56,13 +56,13 @@ public class EditAlarmFragment extends BasePreferencesFragment{
                 }
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                getAppCompatActivity().finish();
         }
+        return false;
     }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
-
     }
 
     @Override

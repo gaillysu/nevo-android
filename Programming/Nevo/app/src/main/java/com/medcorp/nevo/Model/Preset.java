@@ -48,4 +48,14 @@ public class Preset {
     public void setSteps(int steps) {
         this.steps = steps;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(label);
+        builder.append(": ");
+        builder.append(steps);
+        builder.append(" steps");
+        return builder.toString();
+    }
 }

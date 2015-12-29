@@ -23,6 +23,7 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
     private Context context;
     private ApplicationModel model;
     private List<Preset> listPreset;
+
     public PresetArrayAdapter(Context context,ApplicationModel model, List<Preset> listPreset)
     {
         super(context,0,listPreset);
@@ -57,10 +58,20 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
                 model.updatePreset(preset);
             }
         });
-        Preset preset = listPreset.get(position);
+        Switch goalSwitch = (Switch) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
+
+        final Preset preset = listPreset.get(position);
         presetLabel.setText(preset.getLabel());
         presetValue.setText(preset.getSteps() + " steps");
         presetOnOff.setChecked(preset.isStatus());
+        goalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                preset.setStatus(isChecked);
+                model.updatePreset(preset);
+            }
+        });
+
         return itemView;
     }
 }

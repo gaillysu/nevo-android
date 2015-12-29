@@ -37,12 +37,14 @@ public class SleepFragment extends BaseObservableFragment{
         viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
                 getActivity()));
         tabLayout.setupWithViewPager(viewPager);
+        setHasOptionsMenu(true);
         return view;
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
         menu.findItem(R.id.add_menu).setVisible(false);
     }
 

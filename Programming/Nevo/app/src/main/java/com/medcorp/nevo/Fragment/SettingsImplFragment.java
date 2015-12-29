@@ -23,6 +23,7 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
     private Preference findMyWatchPreference;
     private Preference goalsPreference;
     private Preference myNevoPreference;
+
     private Preference.OnPreferenceClickListener goalsPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {

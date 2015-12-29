@@ -125,7 +125,7 @@ public class OldGoogleFitManager implements IGoogleFit {
         }
         final Date historyDate = dailyHistory.getDate();
 
-        //TODO by Hugo, I should check that there's no doublons between daily and hourly data
+
         //saveDailyDataPoint( historyDate , dailyHistory.getTotalSteps() );
 
         for(int i=0; i<dailyHistory.getHourlySteps().size(); i++) {
