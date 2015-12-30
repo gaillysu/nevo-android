@@ -124,6 +124,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(stepsList.size());
             }
         });
+        // TODO can't we also set on data received listener at this and update the graph when its synced with the watch with an animation?
         return view;
     }
 
