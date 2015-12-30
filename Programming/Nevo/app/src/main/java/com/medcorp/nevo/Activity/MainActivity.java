@@ -207,6 +207,17 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         }
     }
 
+    @Override
+    public void onInitializeStart() {
+        showStateString("Initialize watch starting...",false);
+    }
+
+    @Override
+    public void onInitializeEnd() {
+        showStateString("Initialize watch finished.",true);
+    }
+
+
     private void showStateString(String strState,boolean dismiss)
     {
         if(snackbar != null)

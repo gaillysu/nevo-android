@@ -130,6 +130,17 @@ public class TutorialFiveActivity extends BaseActivity implements View.OnClickLi
 
     }
 
+    @Override
+    public void onInitializeStart() {
+
+    }
+
+    @Override
+    public void onInitializeEnd() {
+
+    }
+
+
     public class myAnimationListener implements Animation.AnimationListener{
 
         @Override

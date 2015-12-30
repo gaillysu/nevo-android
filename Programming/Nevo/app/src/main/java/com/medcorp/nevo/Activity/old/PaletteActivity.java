@@ -269,6 +269,17 @@ public class PaletteActivity extends BaseActivity
 
     }
 
+    @Override
+    public void onInitializeStart() {
+
+    }
+
+    @Override
+    public void onInitializeEnd() {
+
+    }
+
+
     private class ColorLedVisitor implements NevoLedVisitor<Void>{
 
         @Override

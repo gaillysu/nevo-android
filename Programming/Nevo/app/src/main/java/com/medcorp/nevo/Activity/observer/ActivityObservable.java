@@ -27,4 +27,9 @@ public interface ActivityObservable {
     public void onSyncStart();
 
     public void onSyncEnd();
+
+    public void onInitializeStart();
+
+    public void onInitializeEnd();
+
 }

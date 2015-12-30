@@ -38,4 +38,8 @@ public interface OnSyncControllerListener {
 
     public void onSyncEnd();
 
+    public void onInitializeStart();
+
+    public void onInitializeEnd();
+
 }

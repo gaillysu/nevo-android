@@ -220,6 +220,10 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
                 else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
+                    if(mOnSyncControllerListener.notEmpty())
+                    {
+                        mOnSyncControllerListener.get().onInitializeEnd();
+                    }
                     //start sync notification, phone --> nevo
                     // set Local Notification setting to Nevo, when nevo 's battery removed, the
                     // Steps count is 0, and all notification is off, because Notification is very
@@ -464,14 +468,19 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             mEnableTestMode = false;
             mTimeOutcount = 0;
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(true);
-            //step1:setRTC, should defer about 4s for waiting the Callback characteristic enable Notify
+            //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
+            //and wait reading FW version done , then do setRTC.
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if(mOnSyncControllerListener.notEmpty())
+                    {
+                        mOnSyncControllerListener.get().onInitializeStart();
+                    }
                     mPacketsbuffer.clear();
                     setRtc();
                 }
-            }, 4000);
+            }, 2000);
 
         } else {
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
@@ -530,11 +539,6 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         }
         else
         {
-            //no need sync step/sleep data, only sync time and user profile
-            if(mOnSyncControllerListener.notEmpty())
-            {
-                mOnSyncControllerListener.get().onSyncEnd();
-            }
             //here sync StepandGoal for good user experience
             Log.i(TAG,"*** Sync step count and goal ***");
             getStepsAndGoal();

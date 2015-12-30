@@ -11,9 +11,9 @@
         android:id="@+id/activity_mynevo_list_view_item_title_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="18sp"
         roboto:bold="true"
-        android:paddingTop="10dp"
+        android:paddingTop="8dp"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <RelativeLayout
@@ -43,8 +43,8 @@
 
         <ImageView
             android:id="@+id/activity_mynevo_list_view_item_update_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/firmware_update"/>

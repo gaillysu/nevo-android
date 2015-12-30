@@ -86,6 +86,8 @@ public interface NevoBT {
      */
     void startScan(List<SupportedService> servicelist, Optional<String> preferredAddress);
 
+    void stopScan();
+
     /**
      * WARNING ! You should disconnect(Empty Optional) before stopping the parent activity
      */

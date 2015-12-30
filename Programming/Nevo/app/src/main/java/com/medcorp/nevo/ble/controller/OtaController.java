@@ -7,6 +7,9 @@ import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.util.Constants.DFUControllerState;
 import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
+
+import java.util.List;
+
 /**
  * this class define some functions for firmware upgrade.
  * @author Gaillysu
@@ -27,9 +30,15 @@ public interface OtaController {
     void cancelDFU();
 
     /**
+     * manualmode: false:normal OTA, nevo get connected and work normal
+     *             true: manual OTA: both press Key A & B, insert battery, force nevo entry DFU mode.
+     */
+    void setManualMode(boolean  manualmode);
+
+    /**
      * get in charge of ConnectionController
      */
-    void setConnectControllerDelegate2Self();
+    void switch2OtaController();
 
     /**
      * set hight level listener, it should be a activity (OTA controller view:Activity or one fragment)
@@ -71,11 +80,11 @@ public interface OtaController {
     String getSoftwareVersion();
 
     /**
-     * patch for samsung S4 Ble OTA, send start ble OTA cmd 0x72, can't get disconnect after 7s
-     * so here add this patch function do it
-     * this patch will make a disconnect to nevo (normal OTA should be get disconnect from nevo )
+     *
+     * @param otaMode
+     * @param disConnect
      */
-    void SamsungS4Patch();
+    void setOtaMode(boolean otaMode,boolean disConnect);
 
     /**
      * when BLE OTA done, need unpair Nevo (forget it)
@@ -97,10 +106,5 @@ public interface OtaController {
 
     public static String PREF_NAME = "nevoPrefs";
     public static String SYNCDATE = "nevoSyncdate";
-
-    public void setOnExceptionListener(OnExceptionListener listener);
-    public void setOnDataReceivedListener(OnDataReceivedListener listener);
-    public void setOnConnectListener(OnConnectListener listener);
-    public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener);
 
 }

@@ -1,5 +1,8 @@
 package com.medcorp.nevo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by gaillysu on 15/12/28.
  */
@@ -9,13 +12,15 @@ public class MyNevo {
     private String app_version;
     private int battery_level;
     private boolean available_version;
-    public MyNevo(String ble_firmware_version,String mcu_firmware_version,String app_version,int battery_level,boolean available_version)
+    private List<String> firmwareURLs;
+    public MyNevo(String ble_firmware_version,String mcu_firmware_version,String app_version,int battery_level,boolean available_version,List<String> firmwareURLs)
     {
         this.ble_firmware_version = ble_firmware_version;
         this.mcu_firmware_version = mcu_firmware_version;
         this.app_version = app_version;
         this.battery_level = battery_level;
         this.available_version = available_version;
+        this.firmwareURLs = firmwareURLs;
     }
 
     public String getBle_firmware_version() {
@@ -56,5 +61,13 @@ public class MyNevo {
 
     public void setAvailable_version(boolean available_version) {
         this.available_version = available_version;
+    }
+
+    public List<String> getFirmwareURLs() {
+        return firmwareURLs;
+    }
+
+    public void setFirmwareURLs(List<String> firmwareURLs) {
+        this.firmwareURLs = firmwareURLs;
     }
 }

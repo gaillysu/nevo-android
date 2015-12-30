@@ -162,13 +162,21 @@ import java.util.TimerTask;
 
             mIsConnected = isConnected;
 
+            //stop ble scan for only one ble device can get connected
+            if(isConnected)
+            {
+                nevoBT.stopScan();
+            }
             //Callback are usually called on the main thread
             new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                 @Override
                 public void run() {
                     Log.w("Nevo BT SDK", "Connected : " + mIsConnected);
-                    if(onConnectListener.notEmpty()) onConnectListener.get().onConnectionStateChanged(mIsConnected, "");
+                    if(onConnectListener.notEmpty())
+                    {
+                        onConnectListener.get().onConnectionStateChanged(mIsConnected, "");
+                    }
                 }
             });
         }
@@ -187,7 +195,7 @@ import java.util.TimerTask;
             //fix a bug:when BLE OTA done,need repair nevo, if not, must twice connect nevo that nevo can work fine, here use code do repair working or twice connection
             //call pairDevice() after every connected, if call it within connect() before startScan() invoke,
             //some smartphone will popup message ,this message comes from Android OS, such as samsung...
-            if((firstConnected || needPair())&& !getOTAMode()) pairDevice();
+            if((firstConnected || needPair()) && !getOTAMode()) pairDevice();
         }
 
         currentlyConnected(connected);
@@ -223,7 +231,7 @@ import java.util.TimerTask;
 
             @Override
             public void run() {
-                if (onExceptionListener.notEmpty()){
+                if (onExceptionListener.notEmpty()) {
                     onExceptionListener.get().onException(e);
                 }
             }

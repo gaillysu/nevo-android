@@ -180,9 +180,14 @@ public class OTAActivity extends BaseActivity
 
         mContext = this;
         bHelpMode = getIntent().getStringExtra("from") == null ? false: getIntent().getStringExtra("from").equals("tutorial");
-        mNevoOtaController = new OtaControllerImpl(this,bHelpMode);
-        mNevoOtaController.setConnectControllerDelegate2Self();
+        mNevoOtaController = getModel().getOtaController();
+        mNevoOtaController.switch2OtaController();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
+        mNevoOtaController.setManualMode(bHelpMode);
+        if(bHelpMode)
+        {
+            mNevoOtaController.setOtaMode(true,true);
+        }
 
         initView();
 
@@ -259,6 +264,11 @@ public class OTAActivity extends BaseActivity
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onPrepareOTA(DfuFirmwareTypes which) {
+
     }
 
     @Override

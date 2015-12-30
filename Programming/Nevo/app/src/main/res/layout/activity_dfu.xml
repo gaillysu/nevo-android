@@ -98,6 +98,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
+                        android:gravity="center"
                         roboto:thin="true"
                         android:text=""/>
                     <com.medcorp.nevo.view.customfontview.RobotoTextView

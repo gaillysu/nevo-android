@@ -1,6 +1,8 @@
 package com.medcorp.nevo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +10,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.DfuActivity;
+import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.model.MyNevo;
 import com.medcorp.nevo.view.customfontview.RobotoTextView;
+
+import java.util.ArrayList;
 
 
 /**
@@ -58,6 +64,23 @@ public class MyNevoAdapter extends BaseAdapter {
             if(mynevo.isAvailable_version())
             {
                 infomation.setText("New version available");
+                image.setVisibility(View.VISIBLE);
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, DfuActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("firmwares",(ArrayList<String>)mynevo.getFirmwareURLs());
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                        ((MyNevoActivity)context).finish();
+                    }
+                });
+            }
+            else
+            {
+                infomation.setVisibility(View.INVISIBLE);
+                image.setVisibility(View.INVISIBLE);
             }
         }
         else if(position == 1)

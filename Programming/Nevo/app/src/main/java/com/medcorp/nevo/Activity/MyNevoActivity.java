@@ -1,21 +1,21 @@
 package com.medcorp.nevo.activity;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.adapter.MyNevoAdapter;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.MyNevo;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,7 +32,8 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
     ListView myNevoListView;
 
     private MyNevo mynevo;
-    private final int battery_level = 2; //default is 2,  value is [0,1,2]
+    private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
+    private final boolean available_version = false;//need check later
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +50,8 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        mynevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,true);
-        myNevoListView.setAdapter(new MyNevoAdapter(this,mynevo));
-        myNevoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0)
-                {
-                    Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
-                    MyNevoActivity.this.startActivity(intent);
-                    MyNevoActivity.this.finish();
-                }
-            }
-        });
+        mynevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,available_version,null);
+        myNevoListView.setAdapter(new MyNevoAdapter(this, mynevo));
     }
 
     @Override
@@ -71,6 +61,82 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         if (getModel().isWatchConnected()){
             getModel().getBatteryLevelOfWatch();
         }
+        checkVersion();
+    }
+
+    private void checkVersion()
+    {
+        List<String> firmwareURLs = new ArrayList<String>();
+
+        //check build-in firmwares
+        //fill  list by build-in files or download files
+        if(null == getModel().getWatchSoftware() || null == getModel().getWatchFirmware())
+        {
+            return;
+        }
+
+        String[]files;
+        int  currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
+        int  currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+        int buildinSoftwareVersion = 0;
+        int buildinFirmwareVersion = 0;
+
+        try {
+            files = getAssets().list("firmware");
+            for(String file:files)
+            {
+                if(file.contains(".hex"))
+                {
+                    int start  = file.toLowerCase().indexOf("_v");
+                    int end = file.toLowerCase().indexOf(".hex");
+                    String vString = file.substring(start+2,end);
+                    if(vString != null) buildinFirmwareVersion = Integer.parseInt(vString);
+                    if(currentFirmwareVersion < buildinFirmwareVersion )
+                    {
+                        firmwareURLs.add("firmware/" + file);
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            files = getAssets().list("firmware");
+            for(String file:files)
+            {
+                if(file.contains(".bin"))
+                {
+                    int start  = file.toLowerCase().indexOf("_v");
+                    int end = file.toLowerCase().indexOf(".bin");
+                    String vString = file.substring(start+2,end);
+                    if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
+                    if(currentSoftwareVersion < buildinSoftwareVersion )
+                    {
+                        //if MCU got broken, firstly update MCU
+                        if(currentSoftwareVersion == 0)
+                            firmwareURLs.add(0,"firmware/" + file);
+                        else
+                            firmwareURLs.add("firmware/" + file);
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(!firmwareURLs.isEmpty())
+        {
+            mynevo.setAvailable_version(true);
+            mynevo.setFirmwareURLs(firmwareURLs);
+            myNevoListView.setAdapter(new MyNevoAdapter(this, mynevo));
+        }
+        //check network firmwares
+
+        //end check network firmwares
     }
 
     @Override
@@ -139,4 +205,15 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
     public void onSyncEnd() {
 
     }
+
+    @Override
+    public void onInitializeStart() {
+
+    }
+
+    @Override
+    public void onInitializeEnd() {
+
+    }
+
 }

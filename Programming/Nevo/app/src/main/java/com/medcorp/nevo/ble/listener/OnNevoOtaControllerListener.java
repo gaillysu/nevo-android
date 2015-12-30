@@ -10,6 +10,7 @@ public interface OnNevoOtaControllerListener {
     /**
      Called when a packet is received from the device
      */
+    public void onPrepareOTA(DfuFirmwareTypes which);
     public void packetReceived(NevoPacket packet);
     public void connectionStateChanged(boolean isConnected);
     public void onDFUStarted();

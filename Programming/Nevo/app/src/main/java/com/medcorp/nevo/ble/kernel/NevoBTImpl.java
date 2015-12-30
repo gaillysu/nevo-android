@@ -192,9 +192,12 @@ public class NevoBTImpl implements NevoBT {
 		        new Handler().postDelayed(new Runnable() {
 		            @Override
 		            public void run() {
-		            	if(mBluetoothAdapter!=null) mBluetoothAdapter.stopLeScan(mLeScanCallback);
-		            	Log.v(TAG,"stopLeScan");
-                        isScanning = false;
+		            	if(mBluetoothAdapter!=null && isScanning)
+						{
+							mBluetoothAdapter.stopLeScan(mLeScanCallback);
+							Log.v(TAG, "stopLeScan");
+							isScanning = false;
+						}
 		            }
 		        }, SCAN_PERIOD);
 				
@@ -203,7 +206,17 @@ public class NevoBTImpl implements NevoBT {
 
 	}
 
-    /**
+	@Override
+	public void stopScan() {
+		if(mBluetoothAdapter!=null && isScanning)
+		{
+			mBluetoothAdapter.stopLeScan(mLeScanCallback);
+			Log.v(TAG, "stopLeScan");
+			isScanning = false;
+		}
+	}
+
+	/**
      *  Device scan callback.This callback is called for all devices founds by the scanner
      */
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {

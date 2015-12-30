@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.old.OTAActivity;
+import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.listener.OnConnectListener;
@@ -52,7 +53,7 @@ import java.util.UUID;
 public class OtaControllerImpl implements OtaController, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
     private final static String TAG = "OtaControllerImpl";
 
-    private Context mContext;
+    private ApplicationModel mContext;
 
     private Optional<OnNevoOtaControllerListener> mOnOtaControllerListener = new Optional<OnNevoOtaControllerListener>();
     private ConnectionController connectionController;
@@ -103,45 +104,20 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     private int curpage = 0;
     private int totalpage = 0;
     private int checksum = 0;
-    private boolean bHelpMode = false;
+    private boolean manualmode = false;
     //end added
 
-    private Optional<OnExceptionListener> oldOnExceptionListener = new Optional<>();
-    private Optional<OnDataReceivedListener> oldOnDataReceivedListener = new Optional<>();
-    private Optional<OnConnectListener> oldOnConnectListener = new Optional<>();
-    private Optional<OnFirmwareVersionListener> oldOnFirmwareVersionListener = new Optional<>();
-
-    private Optional<OnExceptionListener> onExceptionListener = new Optional<>();
-    private Optional<OnDataReceivedListener> onDataReceivedListener = new Optional<>();
-    private Optional<OnConnectListener> onConnectListener = new Optional<>();
-    private Optional<OnFirmwareVersionListener> onFirmwareVersionListener = new Optional<>();
-
-   public OtaControllerImpl(Context context,boolean helpmode)
+    public OtaControllerImpl(ApplicationModel context)
     {
         mContext = context;
-
         connectionController = ConnectionController.Singleton.getInstance(context);
-
-        connectionController.setOnExceptionListener(this);
-        oldOnExceptionListener.set((OnExceptionListener)(((BaseActivity)context).getModel().getSyncController()));
-        connectionController.setOnDataReceivedListener(this);
-        oldOnDataReceivedListener.set((OnDataReceivedListener)(((BaseActivity)context).getModel().getSyncController()));
-        connectionController.setOnConnectListener(this);
-        oldOnConnectListener.set((OnConnectListener)(((BaseActivity)context).getModel().getSyncController()));
-        connectionController.setOnFirmwareVersionListener(this);
-        oldOnFirmwareVersionListener.set((OnFirmwareVersionListener)(((BaseActivity)context).getModel().getSyncController()));
-
-        //help mode by press A/B key and install battery
-        bHelpMode = helpmode;
-        if(bHelpMode) connectionController.setOTAMode(true,true);
         connectionController.connect();
-
-    }
-    /*package*/void setContext(Context context) {
-        if(context!=null)
-            mContext = context;
     }
 
+    public void setManualMode(boolean  manualmode)
+    {
+        this.manualmode = manualmode;
+    }
     //below function is defined for BLE OTA,
     //start package function
     void openFile(String filename){
@@ -503,28 +479,13 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             }
         }, MAX_TIME, MAX_TIME);
 
-        connectionController.setOnExceptionListener(this);
-        connectionController.setOnDataReceivedListener(this);
-        connectionController.setOnConnectListener(this);
-        connectionController.setOnFirmwareVersionListener(this);
-
         dfuFirmwareType = firmwareType;
         firmwareFile = filename;
         //Hex to bin and read it to buffer
         openFile(filename);
 
-        //by pass mode for doing OTA
-        /**
-         mConnectionController.setOTAMode(true ,false);
-         //state = DFUControllerState.SEND_START_COMMAND;
-         if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
-         mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
-         if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
-         mConnectionController.sendRequest(new NevoOTAStartRequest());
-         */
-
         //help mode for doing OTA
-        if(bHelpMode && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+        if(manualmode && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
         {
             state = DFUControllerState.SEND_FIRMWARE_DATA;
             sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
@@ -536,9 +497,19 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             state = DFUControllerState.IDLE;
             connectionController.setOTAMode(false, true);
         }
+        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onPrepareOTA(firmwareType);
     }
 
-    public void SamsungS4Patch()
+    public void setOtaMode(boolean otaMode,boolean disConnect)
+    {
+        connectionController.setOTAMode(otaMode, disConnect);
+    }
+    /**
+     * patch for samsung S4 Ble OTA, send start ble OTA cmd 0x72, can't get disconnect after 7s
+     * so here add this patch function do it
+     * this patch will make a disconnect to nevo (normal OTA should be get disconnect from nevo )
+     */
+    private void SamsungS4Patch()
     {
         //app make a disconnect to nevo
         connectionController.setOTAMode(true, true);
@@ -548,7 +519,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
      */
     public void cancelDFU()
     {
-        Log.i(TAG,"cancelDFU");
+        Log.i(TAG, "cancelDFU");
 
         if (dfuFirmwareType.rawValue() == DfuFirmwareTypes.APPLICATION.rawValue())
         { resetSystem();}
@@ -558,9 +529,12 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     /**
      * get in charge of ConnectionController
      */
-    public void setConnectControllerDelegate2Self()
+    public void switch2OtaController()
     {
+        connectionController.setOnExceptionListener(this);
+        connectionController.setOnDataReceivedListener(this);
         connectionController.setOnConnectListener(this);
+        connectionController.setOnFirmwareVersionListener(this);
     }
     /**
      * set hight level listener, it should be a activity (OTA controller view:Activity or one fragment)
@@ -588,24 +562,12 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     @Override
     public  void switch2SyncController()
     {
-        if(oldOnExceptionListener.notEmpty()){
-            connectionController.setOnExceptionListener(oldOnExceptionListener.get());
-        }
-        if(oldOnDataReceivedListener.notEmpty()){
-            connectionController.setOnDataReceivedListener(oldOnDataReceivedListener.get());
-        }
-        if(oldOnConnectListener.notEmpty()){
-            connectionController.setOnConnectListener(oldOnConnectListener.get());
-        }
-        if(oldOnFirmwareVersionListener.notEmpty()){
-            connectionController.setOnFirmwareVersionListener(oldOnFirmwareVersionListener.get());
-        }
+        connectionController.setOnExceptionListener((OnExceptionListener) mContext.getSyncController());
+        connectionController.setOnDataReceivedListener((OnDataReceivedListener)mContext.getSyncController());
+        connectionController.setOnConnectListener((OnConnectListener)mContext.getSyncController());
+        connectionController.setOnFirmwareVersionListener((OnFirmwareVersionListener)mContext.getSyncController());
     }
 
-    /*package*/ void destroy()
-    {
-        ConnectionController.Singleton.destroy();
-    }
     /**
      reset to normal mode "NevoProfile"
      parameter: switch2SyncController: true/false
@@ -632,9 +594,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         {
             switch2SyncController();
         }
-        if(bHelpMode)
+        if(manualmode)
         {
-            bHelpMode = false;
+            manualmode = false;
             connectionController.forgetSavedAddress();
         }
 
@@ -804,7 +766,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     public void onException(NevoException e) {
         //the exception got happened when do connection NEVO
         Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
-        if(mTimeoutTimer != null) {
+        if (mTimeoutTimer != null) {
             mTimeoutTimer.cancel();
             mTimeoutTimer = null;
         }
@@ -935,9 +897,10 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
             return;
         }
-        Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: "+ (curpage));
+        Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: " + (curpage));
 
     }
+
     void MCU_processDFUResponse(NevoFirmwareData rawData)
     {
         Log.i(TAG,"didReceiveReceipt");
@@ -993,23 +956,6 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             }
         }
 
-    }
-
-    @Override
-    public void setOnExceptionListener(OnExceptionListener listener){
-        this.onExceptionListener.set(listener);
-    }
-    @Override
-    public void setOnDataReceivedListener(OnDataReceivedListener listener){
-        this.onDataReceivedListener.set(listener);
-    }
-    @Override
-    public void setOnConnectListener(OnConnectListener listener){
-        this.onConnectListener.set(listener);
-    }
-    @Override
-    public void setOnFirmwareVersionListener(OnFirmwareVersionListener listener){
-        this.onFirmwareVersionListener.set(listener);
     }
     //end MCU OTA
 }

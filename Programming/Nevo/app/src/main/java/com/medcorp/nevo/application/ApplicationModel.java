@@ -6,6 +6,8 @@ import android.os.Build;
 import android.util.Log;
 
 import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.ble.controller.OtaController;
+import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
@@ -36,7 +38,7 @@ import java.util.List;
 public class ApplicationModel extends Application  implements OnSyncControllerListener {
 
     private SyncController syncController;
-
+    private OtaController  otaController;
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
@@ -50,6 +52,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         observableActivity = new Optional<>();
         syncController = new SyncControllerImpl(this);
         syncController.setSyncControllerListenser(this);
+        otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
@@ -138,6 +141,23 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     }
 
+    @Override
+    public void onInitializeStart() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onInitializeStart();
+        }
+    }
+
+    @Override
+    public void onInitializeEnd() {
+        if(observableActivity.notEmpty())
+        {
+            observableActivity.get().onInitializeEnd();
+        }
+    }
+
+
     public void observableActivity(ActivityObservable observable)
     {
         this.observableActivity.set(observable);
@@ -149,6 +169,8 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public SyncController getSyncController(){return syncController;}
+
+    public OtaController getOtaController(){return otaController;}
 
     public void startConnectToWatch(boolean forceScan) {
         syncController.startConnect(forceScan, this);
