@@ -6,7 +6,8 @@
         android:key="link_loss_key"
         android:defaultValue="false"
         />
-    <PreferenceScreen android:title="Notifications">
+    <PreferenceScreen android:title="Notifications"
+        android:key="notification_key">
 
     </PreferenceScreen>
     <PreferenceScreen android:title="My Nevo"

@@ -13,6 +13,7 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.EditAlarmActivity;
 import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
+import com.medcorp.nevo.activity.SettingNotificationActivity;
 import com.medcorp.nevo.application.ApplicationModel;
 
 /**
@@ -23,6 +24,7 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
     private Preference findMyWatchPreference;
     private Preference goalsPreference;
     private Preference myNevoPreference;
+    private Preference notificationPreference;
 
     private Preference.OnPreferenceClickListener goalsPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
@@ -38,6 +40,17 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent intent = new Intent(getActivity(), MyNevoActivity.class);
+            getActivity().startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            setEnterTransition(new Fade().setDuration(300));
+            return true;
+        }
+    };
+
+    private Preference.OnPreferenceClickListener notificationPreferenceListener = new Preference.OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(getActivity(), SettingNotificationActivity.class);
             getActivity().startActivity(intent);
             getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             setEnterTransition(new Fade().setDuration(300));
@@ -64,6 +77,8 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
         goalsPreference.setOnPreferenceClickListener(goalsPreferenceListener);
         myNevoPreference = findPreference("my_nevo_key");
         myNevoPreference.setOnPreferenceClickListener(myNevoPreferenceListener);
+        notificationPreference = findPreference("notification_key");
+        notificationPreference.setOnPreferenceClickListener(notificationPreferenceListener);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

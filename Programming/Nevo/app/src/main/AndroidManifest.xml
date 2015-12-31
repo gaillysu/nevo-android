@@ -88,6 +88,12 @@
         <activity
             android:name=".activity.DfuActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.SettingNotificationActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.EditSettingNotificationActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".ble.ble.NevoBTService"
