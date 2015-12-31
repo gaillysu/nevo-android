@@ -1,5 +1,7 @@
 package com.medcorp.nevo.fragment.listener;
 
+import com.medcorp.nevo.application.ApplicationModel;
+
 /**
  * Created by gaillysu on 15/12/25.
  */

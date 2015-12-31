@@ -32,10 +32,9 @@ public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
             case 0:
                 StepsTodayFragment stepsTodayFragment = (StepsTodayFragment) StepsTodayFragment.instantiate(context,StepsTodayFragment.class.getName());
                 stepsFragment.setOnStepsListener(stepsTodayFragment);
-                stepsFragment.setOnStateListener(stepsTodayFragment);
                 return stepsTodayFragment;
             case 1:
-                return StepsHistoryFragment.instantiate(context,StepsHistoryFragment.class.getName());
+                return StepsHistoryFragment.instantiate(context, StepsHistoryFragment.class.getName());
             default:
                 return null;
         }

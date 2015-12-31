@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsTodayFragment extends BaseFragment implements OnStepsListener,OnStateListener {
+public class StepsTodayFragment extends BaseFragment implements OnStepsListener {
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
@@ -118,9 +118,10 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener,
         View view = inflater.inflate(R.layout.fragment_steps_today, container, false);
         ButterKnife.bind(this, view);
         Preset preset = getModel().getPresetById(Preferences.getPresetId(getContext()));
-
-//        goal.setText(preset.getSteps());
-        // TODO get last known steps from watch, save it somewhere in the app, as soon watch connected show them in UI and calculate percentage
+        if(preset!=null) {
+            //temporarily, we set the goal with the local saved value, but perhaps it is wrong, user can delete it, so the vale which comes from watch is always right, we should show watch's value.
+            goal.setText(""+preset.getSteps());
+        }
         return view;
     }
 
@@ -148,11 +149,6 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener,
     public void onPause() {
         super.onPause();
         mUiHandler.removeCallbacks(refreshTimerTask);
-    }
-
-    @Override
-    public void onStateChanged(STATE state) {
-
     }
 
     private class Dashboard{

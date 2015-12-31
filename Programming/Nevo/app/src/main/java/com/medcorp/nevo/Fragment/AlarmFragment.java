@@ -50,7 +50,7 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         alarmList = new ArrayList<>();
-        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), 0, alarmList);
+        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), getModel(), alarmList);
         alarmListView.setAdapter(alarmArrayAdapter);
         alarmListView.setOnItemClickListener(this);
         refreshListView();

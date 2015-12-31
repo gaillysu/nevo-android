@@ -43,7 +43,6 @@ public class StepsFragment extends BaseObservableFragment{
     TabLayout tabLayout;
 
     private OnStepsListener onStepsListener;
-    private OnStateListener onStateListener;
 
     @Nullable
     @Override
@@ -60,9 +59,6 @@ public class StepsFragment extends BaseObservableFragment{
     public void setOnStepsListener(OnStepsListener onStepsListener) {
         this.onStepsListener = onStepsListener;
     }
-    public void setOnStateListener(OnStateListener onStateListener) {
-        this.onStateListener = onStateListener;
-    }
 
     @Override
     public void notifyDatasetChanged() {
@@ -73,18 +69,12 @@ public class StepsFragment extends BaseObservableFragment{
 
     @Override
     public void notifyOnConnected() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_CONNECTED);
-        }
+
     }
 
     @Override
     public void notifyOnDisconnected() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_DISCONNECT);
-        }
+
     }
 
     @Override
@@ -99,50 +89,37 @@ public class StepsFragment extends BaseObservableFragment{
 
     @Override
     public void onSearching() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SEARCHING);
-        }
+
     }
 
     @Override
     public void onSearchSuccess() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SEARCH_SUCCESS);
-        }
+
     }
 
     @Override
     public void onSearchFailure() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SEARCH_FAILURE);
-        }
+
     }
 
     @Override
     public void onConnecting() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_CONNECTING);
-        }
+
     }
 
     @Override
     public void onSyncStart() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SYNC_START);
-        }
+
     }
 
     @Override
     public void onSyncEnd() {
-        if(onStateListener !=null)
-        {
-            onStateListener.onStateChanged(OnStateListener.STATE.STATE_SYNC_END);
-        }
+        //when big sync done, redraw the all fragments, instead of calling Adapter.notify function to refresh
+        int currentItem = viewPager.getCurrentItem();
+        StepsFragmentPagerAdapter adapter = new StepsFragmentPagerAdapter(getChildFragmentManager(),this);
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(currentItem);
     }
 
     @Override
@@ -160,10 +137,14 @@ public class StepsFragment extends BaseObservableFragment{
             case R.id.choose_goal_menu:
                 final List<Preset> presetList = getModel().getAllPreset();
                 List<String> stringList = new ArrayList<>();
+                final List<Preset> presetEnableList = new ArrayList<Preset>();
 
                 for (Preset preset : presetList){
                     if(preset.isStatus())
-                    stringList.add(preset.toString());
+                    {
+                        stringList.add(preset.toString());
+                        presetEnableList.add(preset);
+                    }
                 }
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
@@ -173,8 +154,11 @@ public class StepsFragment extends BaseObservableFragment{
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                //TODO sync the chosen steps with watch, please do Gailly.
-                                Preferences.savePreset(getContext(),presetList.get(which));
+                                if(which>=0)
+                                {
+                                    getModel().setPreset(presetEnableList.get(which));
+                                    Preferences.savePreset(getContext(), presetEnableList.get(which));
+                                }
                                 return true;
                             }
                         })
@@ -185,8 +169,4 @@ public class StepsFragment extends BaseObservableFragment{
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    // TODO: on switch selected check if 3 alarms are already on, if so, show dialog/toast if not sync with the watch
-
 }

@@ -101,6 +101,11 @@ public class SleepFragment extends BaseObservableFragment{
 
     @Override
     public void onSyncEnd() {
-
+        //calculate sleep result, need waiting big sync done, so here catch it and redraw all fragments
+        int currentItem = viewPager.getCurrentItem();
+        viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
+                getActivity()));
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(currentItem);
     }
 }

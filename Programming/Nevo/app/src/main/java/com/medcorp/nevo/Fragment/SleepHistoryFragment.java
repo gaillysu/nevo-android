@@ -144,7 +144,12 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(sleepDataList.size());
             }
         });
-        barChart.highlightValue(sleepDataList.size() - 1, 0);
+        if(sleepDataList.size()>0)
+        {
+            barChart.highlightValue(sleepDataList.size() - 1, 0);
+            SleepData sleepData = sleepDataList.get(sleepDataList.size() - 1);
+            setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
+        }
         return view;
     }
 

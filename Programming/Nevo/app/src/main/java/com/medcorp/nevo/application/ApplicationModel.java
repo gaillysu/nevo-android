@@ -14,6 +14,7 @@ import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
+import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
@@ -23,6 +24,7 @@ import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
@@ -200,6 +202,14 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return syncController.getFirmwareVersion();
     }
 
+    public void setPreset(Preset preset){
+        syncController.setGoal(new NumberOfStepsGoal(preset.getSteps()));
+    }
+    public void setAlarm(List<Alarm> list)
+    {
+        syncController.setAlarm(list);
+    }
+
     public void forgetDevice() {
         syncController.forgetDevice();
     }
@@ -262,7 +272,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public Alarm getAlarmById(int id){
-        return alarmDatabaseHelper.get(id,null).get();
+        return alarmDatabaseHelper.get(id,null).isEmpty()?null:alarmDatabaseHelper.get(id,null).get();
     }
 
     public boolean deleteAlarm(Alarm alarm){
@@ -281,7 +291,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public Preset getPresetById(int id){
-        return presetsDatabaseHelper.get(id,null).get();
+        return presetsDatabaseHelper.get(id,null).isEmpty()?null:presetsDatabaseHelper.get(id,null).get();
     }
 
     public boolean deleteAlarm(Preset preset){

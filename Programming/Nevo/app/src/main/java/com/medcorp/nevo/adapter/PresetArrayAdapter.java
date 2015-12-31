@@ -50,6 +50,11 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
         RobotoTextView  presetLabel = (RobotoTextView)itemView.findViewById(R.id.activity_goals_list_view_item_goals_label);
         RobotoTextView  presetValue = (RobotoTextView)itemView.findViewById(R.id.activity_goals_list_view_item_goal_steps);
         Switch presetOnOff = (Switch) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
+        final Preset preset = listPreset.get(position);
+        presetLabel.setText(preset.getLabel());
+        presetValue.setText(preset.getSteps() + " steps");
+        presetOnOff.setOnCheckedChangeListener(null);
+        presetOnOff.setChecked(preset.isStatus());
         presetOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -58,20 +63,6 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
                 model.updatePreset(preset);
             }
         });
-        Switch goalSwitch = (Switch) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
-
-        final Preset preset = listPreset.get(position);
-        presetLabel.setText(preset.getLabel());
-        presetValue.setText(preset.getSteps() + " steps");
-        presetOnOff.setChecked(preset.isStatus());
-        goalSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                preset.setStatus(isChecked);
-                model.updatePreset(preset);
-            }
-        });
-
         return itemView;
     }
 }

@@ -1,5 +1,6 @@
 package com.medcorp.nevo.fragment;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,6 +31,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.StepsSorter;
 
@@ -92,7 +94,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
 
-        stepsList = ((ApplicationModel)getActivity().getApplication()).getAllSteps();
+        stepsList = getModel().getAllSteps();
         Collections.sort(stepsList, new StepsSorter());
 
         int i = 0;
@@ -124,7 +126,6 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(stepsList.size());
             }
         });
-        // TODO can't we also set on data received listener at this and update the graph when its synced with the watch with an animation?
         return view;
     }
 
@@ -133,7 +134,6 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         barChart.highlightValue(e.getXIndex(), dataSetIndex);
         Steps steps = stepsList.get(e.getXIndex());
         setDashboard(new Dashboard(steps.getSteps(),steps.getDistance(),steps.getCalories(),steps.getWalkSteps(),steps.getWalkDistance(),steps.getWalkDuration(),steps.getRunSteps(),steps.getRunDistance(),steps.getRunDuration()));
-//        drawHighlightArrow();
     }
 
     @Override

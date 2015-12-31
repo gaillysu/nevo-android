@@ -14,7 +14,6 @@ public class Preferences {
     private static SharedPreferences preferences;
 
     public static void savePreset(Context context, Preset preset){
-        // TODO change key to xml file, Gailly: you can create XML key and replace this.
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("steps_preset_id", preset.getId());
@@ -23,7 +22,7 @@ public class Preferences {
 
     public static int getPresetId(Context context){
         init(context);
-        return preferences.getInt("steps_preset_id", 0);
+        return preferences.getInt("steps_preset_id", -1);
     }
 
     private static void init(Context context){
