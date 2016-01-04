@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     private FragmentManager fragmentManager;
     private Snackbar snackbar=null;
     private View rootView;
+    private boolean bigsyncstart=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +192,8 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onSyncStart() {
+        //big sync need about 7~8s
+        bigsyncstart = true;
         showStateString("Sync Data starting...",false);
         if(activeFragment.notEmpty())
         {
@@ -200,6 +203,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onSyncEnd() {
+        bigsyncstart = false;
         showStateString("Sync data finished.",true);
         if(activeFragment.notEmpty())
         {
@@ -238,7 +242,9 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    snackbar.dismiss();
+                    if (bigsyncstart == false) {
+                        snackbar.dismiss();
+                    }
                 }
             }, 2000);
         }

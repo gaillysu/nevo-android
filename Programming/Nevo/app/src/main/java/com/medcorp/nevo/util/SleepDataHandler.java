@@ -109,13 +109,11 @@ public class SleepDataHandler {
         return true;
     }
 
+    //Sleep.getDate() return the day's time stamp, YYYY/MM/DD 00:00:00
     private boolean isYesterday(Sleep todaySleep, Sleep yesterdaySleep) {
-        Calendar todayCalendar = Calendar.getInstance();
-        todayCalendar.setTime(new Date(todaySleep.getDate()));
-        Calendar yesterdayCalendar = Calendar.getInstance();
-        yesterdayCalendar.setTime(new Date(yesterdaySleep.getDate()));
-        if (todayCalendar.get(Calendar.YEAR) == yesterdayCalendar.get(Calendar.YEAR)
-                && todayCalendar.get(Calendar.DAY_OF_YEAR) - 1 == yesterdayCalendar.get(Calendar.DAY_OF_YEAR)) {
+        //fix a bug 2016.1.1 sleep result got error
+        if((todaySleep.getDate()-yesterdaySleep.getDate()) == 24*60*60*1000)
+        {
             return true;
         }
         return false;
