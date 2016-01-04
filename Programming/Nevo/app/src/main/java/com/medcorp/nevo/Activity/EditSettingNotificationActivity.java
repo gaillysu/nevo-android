@@ -1,5 +1,6 @@
 package com.medcorp.nevo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,9 @@ public class EditSettingNotificationActivity extends BaseActivity{
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
 
+    private boolean isON;
+    private int color;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +44,9 @@ public class EditSettingNotificationActivity extends BaseActivity{
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle("Facebook");
+        color = getIntent().getIntExtra("color",0);
+        isON = getIntent().getBooleanExtra("isOn",false);
+        setTitle(getIntent().getStringExtra("name"));
     }
 
     @Override

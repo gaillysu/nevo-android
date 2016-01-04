@@ -31,10 +31,14 @@
         android:dividerHeight="2dp"
         android:visibility="visible"
         />
+    <LinearLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
         android:background="#EFEFEF">
         <TextView
             android:layout_width="match_parent"

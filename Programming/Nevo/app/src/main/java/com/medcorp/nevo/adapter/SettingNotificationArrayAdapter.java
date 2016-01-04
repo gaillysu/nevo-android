@@ -5,15 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationNameVisitor;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationIconVisitor;
 import com.medcorp.nevo.view.customfontview.RobotoTextView;
 
 import java.util.List;
@@ -45,11 +43,36 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         RobotoTextView  notificationLabel = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_name);
         RobotoTextView  notificationValue = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_color);
         ImageView   notificationImage = (ImageView) itemView.findViewById(R.id.activity_setting_notification_image);
-        NotificationColorGetter getter = new NotificationColorGetter(context);
+
+        NotificationIconVisitor iconGetter = new NotificationIconVisitor(context);
+        NotificationNameVisitor nameGetter = new NotificationNameVisitor(context);
+        NotificationColorGetter colorGetter = new NotificationColorGetter(context);
+
         Notification notification = listNotification.get(position);
-        notificationLabel.setText(notification.getTag());
-        notificationValue.setText("" + notification.accept(getter).getColor());
-        //notificationImage.setImageDrawable();
+
+        notificationImage.setImageDrawable(notification.accept(iconGetter));
+        notificationLabel.setText(notification.accept(nameGetter));
+        notificationValue.setText(convertLEDColor2Clock(notification.accept(colorGetter).getTag()));
+
         return itemView;
+    }
+
+    String convertLEDColor2Clock(String color)
+    {
+        //if(color.equals("RED")) return context.getString(R.string._2_clock);
+        //if(color.equals("BLUE")) return context.getString(R.string._4_clock);
+        //if(color.equals("LIGHT_GREEN")) return context.getString(R.string._6_clock);
+        //if(color.equals("YELLOW")) return context.getString(R.string._8_clock);
+        //if(color.equals("ORANGE")) return context.getString(R.string._10_clock);
+        //if(color.equals("GREEN")) return context.getString(R.string._12_clock);
+
+        if(color.equals("RED")) return color + " - 2 o'clock";
+        if(color.equals("BLUE")) return color + " - 4 o'clock";
+        if(color.equals("LIGHT_GREEN")) return color + " - 6 o'clock";
+        if(color.equals("YELLOW")) return color + " - 8 o'clock";
+        if(color.equals("ORANGE")) return color + " - 10 o'clock";
+        if(color.equals("GREEN")) return color + " - 12 o'clock";
+
+        return color;
     }
 }

@@ -12,16 +12,23 @@ import android.widget.ListView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.SettingNotificationArrayAdapter;
+import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
 import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationNameVisitor;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,17 +63,39 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setTitle("Notifications");
 
         listActiveNotification = new ArrayList<Notification>();
-        listActiveNotification.add(new TelephoneNotification());
-        listActiveNotification.add(new SmsNotification());
-        listActiveNotification.add(new EmailNotification());
+        listInActiveNotification = new ArrayList<Notification>();
+
+        Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
+        NotificationColorGetter getter = new NotificationColorGetter(this);
+        NotificationDataHelper dataHelper = new NotificationDataHelper(this);
+        Notification applicationNotification = new TelephoneNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new SmsNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new EmailNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new FacebookNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new CalendarNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new WeChatNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        //applicationNotification = new WhatsappNotification();
+        //applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+
+        for (Notification notification: applicationNotificationColorMap.keySet()) {
+            if(notification.isOn()){
+                listActiveNotification.add(notification);
+            }
+            else{
+                listInActiveNotification.add(notification);
+            }
+        }
+
         activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this,listActiveNotification);
         activeListView.setAdapter(activeNotificationArrayAdapter);
         activeListView.setOnItemClickListener(this);
 
-        listInActiveNotification = new ArrayList<Notification>();
-        listInActiveNotification.add(new FacebookNotification());
-        listInActiveNotification.add(new CalendarNotification());
-        listInActiveNotification.add(new WhatsappNotification());
         inactiveNotificationArrayAdapter = new SettingNotificationArrayAdapter(this,listInActiveNotification);
         inactiveListView.setAdapter(inactiveNotificationArrayAdapter);
         inactiveListView.setOnItemClickListener(this);
@@ -75,13 +104,23 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this,EditSettingNotificationActivity.class);
-        if (view.getId() == activeListView.getId())
-        {
-            //intent.put
-        }
-        if (view.getId() == inactiveListView.getId())
-        {
 
+        NotificationColorGetter getter = new NotificationColorGetter(this);
+        NotificationNameVisitor nameGetter = new NotificationNameVisitor(this);
+
+        if (parent.getId() == activeListView.getId())
+        {
+            Notification applicationNotification = listActiveNotification.get(position);
+            intent.putExtra("isOn",applicationNotification.isOn());
+            intent.putExtra("nameNotification",applicationNotification.accept(nameGetter));
+            intent.putExtra("colorNotification",applicationNotification.accept(getter).getColor());
+        }
+        if (parent.getId() == inactiveListView.getId())
+        {
+            Notification applicationNotification = listInActiveNotification.get(position);
+            intent.putExtra("isOn",applicationNotification.isOn());
+            intent.putExtra("name",applicationNotification.accept(nameGetter));
+            intent.putExtra("color",applicationNotification.accept(getter).getColor());
         }
         startActivityForResult(intent,0);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -95,5 +134,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
