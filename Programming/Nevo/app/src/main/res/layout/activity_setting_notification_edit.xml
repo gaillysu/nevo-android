@@ -1,8 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
     <include layout="@layout/toolbar"/>
+
+    <RelativeLayout android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp">
+        <com.medcorp.nevo.view.customfontview.RobotoTextView
+            android:id="@+id/activity_setting_notification_edit_enable_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            roboto:bold="true"
+            android:text = "Allow notifications"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+        <Switch
+            android:shadowColor="@color/colorPrimary"
+            android:id="@+id/activity_setting_notification_edit_onoff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:focusable="false" />
+    </RelativeLayout>
+
+    <LinearLayout android:layout_height="2dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="60dp"
+        android:background="@color/list_item_devider"/>
+
+    <RelativeLayout
+        android:id ="@+id/activity_setting_notification_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center"
+        >
+        <ImageView
+            android:id ="@+id/activity_setting_notification_edit_image"
+            android:src="@drawable/yellow_dot"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true"
+            android:background="@color/transparent">
+
+            <com.medcorp.nevo.view.customfontview.RobotoTextView
+                android:id="@+id/activity_setting_notification_edit_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Notification"
+                roboto:bold="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <com.medcorp.nevo.view.customfontview.RobotoTextView
+                android:id="@+id/activity_setting_notification_edit_color_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                roboto:light ="true"
+                android:text="Yellow LED - 6 o'Clock"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout android:layout_height="2dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="60dp"
+        android:background="@color/list_item_devider"/>
 
 </LinearLayout>

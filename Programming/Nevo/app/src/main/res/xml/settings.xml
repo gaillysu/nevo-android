@@ -29,7 +29,9 @@
             android:data="http://support.nevowatch.com/support/home" />
     </PreferenceScreen>
 
-    <PreferenceScreen android:title="About">
+    <PreferenceScreen android:title="About"
+        android:key="about_key">
+
     </PreferenceScreen>
 
 </PreferenceScreen>

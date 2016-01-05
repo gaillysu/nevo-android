@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,7 +31,7 @@ public class SettingsFragment extends BaseObservableFragment{
                 .add(R.id.fragment_settings_frame_layout, settingsImplFragment)
                 .addToBackStack(settingsImplFragmentName)
                 .commit();
-
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -87,6 +88,12 @@ public class SettingsFragment extends BaseObservableFragment{
     @Override
     public void onSyncEnd() {
 
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(false);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
     }
 
 }

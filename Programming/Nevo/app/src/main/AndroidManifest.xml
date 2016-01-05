@@ -95,6 +95,11 @@
             android:name=".activity.EditSettingNotificationActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".activity.SettingAboutActivity"
+            android:screenOrientation="portrait"/>
+
+
         <service
             android:name=".ble.ble.NevoBTService"
             android:enabled="true" />

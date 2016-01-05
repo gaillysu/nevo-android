@@ -209,6 +209,9 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     {
         syncController.setAlarm(list);
     }
+    public void setNotification() {
+        syncController.setNotification();
+    }
 
     public void forgetDevice() {
         syncController.forgetDevice();

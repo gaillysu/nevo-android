@@ -22,8 +22,10 @@ import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorSaver;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationNameVisitor;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
+import com.medcorp.nevo.ble.notification.NevoNotificationListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,29 +63,35 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle("Notifications");
+        NevoNotificationListener.getNotificationAccessPermission(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         listActiveNotification = new ArrayList<Notification>();
         listInActiveNotification = new ArrayList<Notification>();
 
-        Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
-        NotificationColorGetter getter = new NotificationColorGetter(this);
+        List<Notification> allNotifications = new ArrayList<Notification>();
         NotificationDataHelper dataHelper = new NotificationDataHelper(this);
-        Notification applicationNotification = new TelephoneNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new SmsNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new EmailNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new FacebookNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new CalendarNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new WeChatNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        //applicationNotification = new WhatsappNotification();
-        //applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
 
-        for (Notification notification: applicationNotificationColorMap.keySet()) {
+        Notification applicationNotification = new TelephoneNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new SmsNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new EmailNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new FacebookNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new CalendarNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new WeChatNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
+        //applicationNotification = new WhatsappNotification();
+        //allNotifications.add(dataHelper.getState(applicationNotification));
+
+        for (Notification notification: allNotifications) {
             if(notification.isOn()){
                 listActiveNotification.add(notification);
             }
@@ -91,7 +99,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 listInActiveNotification.add(notification);
             }
         }
-
         activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this,listActiveNotification);
         activeListView.setAdapter(activeNotificationArrayAdapter);
         activeListView.setOnItemClickListener(this);
@@ -104,25 +111,18 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this,EditSettingNotificationActivity.class);
-
-        NotificationColorGetter getter = new NotificationColorGetter(this);
-        NotificationNameVisitor nameGetter = new NotificationNameVisitor(this);
-
+        Notification applicationNotification = null;
         if (parent.getId() == activeListView.getId())
         {
-            Notification applicationNotification = listActiveNotification.get(position);
-            intent.putExtra("isOn",applicationNotification.isOn());
-            intent.putExtra("nameNotification",applicationNotification.accept(nameGetter));
-            intent.putExtra("colorNotification",applicationNotification.accept(getter).getColor());
+             applicationNotification = listActiveNotification.get(position);
         }
-        if (parent.getId() == inactiveListView.getId())
-        {
-            Notification applicationNotification = listInActiveNotification.get(position);
-            intent.putExtra("isOn",applicationNotification.isOn());
-            intent.putExtra("name",applicationNotification.accept(nameGetter));
-            intent.putExtra("color",applicationNotification.accept(getter).getColor());
+        if (parent.getId() == inactiveListView.getId()) {
+             applicationNotification = listInActiveNotification.get(position);
         }
-        startActivityForResult(intent,0);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("notification", applicationNotification);
+        intent.putExtras(bundle);
+        startActivity(intent);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
@@ -134,10 +134,5 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 }

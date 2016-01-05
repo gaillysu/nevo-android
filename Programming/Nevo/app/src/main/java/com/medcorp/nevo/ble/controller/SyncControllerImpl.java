@@ -177,6 +177,30 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     }
 
+    @Override
+    public void setNotification() {
+        Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
+        NotificationColorGetter getter = new NotificationColorGetter(mContext);
+        NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
+        Notification applicationNotification = new TelephoneNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new SmsNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new EmailNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new FacebookNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new CalendarNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new WeChatNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+        applicationNotification = new WhatsappNotification();
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
+
+        sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
+
+    }
+
     /**
      * This listener is called when new data is received
      */
@@ -228,26 +252,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     // set Local Notification setting to Nevo, when nevo 's battery removed, the
                     // Steps count is 0, and all notification is off, because Notification is very
                     // important for user, so here need use local's setting sync with nevo
-
-                    Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
-                    NotificationColorGetter getter = new NotificationColorGetter(mContext);
-                    NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
-                    Notification applicationNotification = new TelephoneNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                    applicationNotification = new SmsNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                    applicationNotification = new EmailNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                    applicationNotification = new FacebookNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                    applicationNotification = new CalendarNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                    applicationNotification = new WeChatNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-                    applicationNotification = new WhatsappNotification();
-                    applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-
-                    sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
+                    setNotification();
                 }
                 else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                 {

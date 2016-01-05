@@ -22,6 +22,7 @@ import com.medcorp.nevo.ble.model.packet.SensorData;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.util.Preferences;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -367,7 +368,10 @@ import java.util.TimerTask;
      */
     private void sendNotification(boolean connected)
     {
-       // Sorry, this feature isn't ready for prime time, I won't publish it
+        if(!Preferences.getLinklossNotification(mContext))
+        {
+            return;
+        }
         NotificationManager nftm = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         int icon = R.drawable.ic_launcher;
         String  title = connected?mContext.getResources().getString(R.string.notification_connect_title):mContext.getResources().getString(R.string.notification_disconnect_title);
@@ -375,7 +379,7 @@ import java.util.TimerTask;
         long when = System.currentTimeMillis();
 
         Notification notification = new Notification.Builder(mContext).setContentTitle(title).setContentText(content).build();
-        //notification.defaults = Notification.DEFAULT_VIBRATE;
+        notification.defaults = Notification.DEFAULT_VIBRATE;
         //use hardcode message ID
         nftm.notify(connected?1:2, notification);
 

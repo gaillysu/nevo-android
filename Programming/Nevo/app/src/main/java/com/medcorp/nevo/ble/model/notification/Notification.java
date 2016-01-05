@@ -3,10 +3,12 @@ package com.medcorp.nevo.ble.model.notification;
 
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitable;
 
+import java.io.Serializable;
+
 /**
  * Created by Karl on 9/30/15.
  */
-public abstract  class Notification implements NotificationVisitable {
+public abstract  class Notification implements NotificationVisitable,Serializable {
 
     private boolean  state;
     public abstract String getTag();

@@ -30,4 +30,17 @@ public class Preferences {
             preferences= context.getSharedPreferences("Nevo_Shared_Preferences",Context.MODE_PRIVATE);
         }
     }
+
+    public static boolean getLinklossNotification(Context context)
+    {
+        init(context);
+        return preferences.getBoolean("link_loss_enable",false);
+    }
+    public static void saveLinklossNotification(Context context,boolean isEnable)
+    {
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("link_loss_enable",isEnable);
+        editor.commit();
+    }
 }
