@@ -124,7 +124,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
                                     color = colors[which];
                                     colorImage.setImageDrawable(convertLEDColor2Drawable(color));
                                     colorLabel.setText(convertLEDColor2Clock(color));
-                                    notification.accept(new NotificationColorSaver(EditSettingNotificationActivity.this,convertLEDColor2Object(color)));
+                                    notification.accept(new NotificationColorSaver(EditSettingNotificationActivity.this, convertLEDColor2Object(color)));
                                     getModel().setNotification();
                                 }
                                 return true;
@@ -151,22 +151,22 @@ public class EditSettingNotificationActivity extends BaseActivity{
     {
         //TODO add these strings
         if(color.equals("RED")) {
-            return color + " - 2 o'clock";
+            return "Red LED" + " - 2 o'clock";
         }
         if(color.equals("BLUE")) {
-            return color + " - 4 o'clock";
+            return "Blue LED" + " - 4 o'clock";
         }
         if(color.equals("LIGHT_GREEN")) {
-            return color + " - 6 o'clock";
+            return "Light Green LED" + " - 6 o'clock";
         }
         if(color.equals("YELLOW")) {
-            return color + " - 8 o'clock";
+            return "Yellow LED" + " - 8 o'clock";
         }
         if(color.equals("ORANGE")) {
-            return color + " - 10 o'clock";
+            return "Orange LED" + " - 10 o'clock";
         }
         if(color.equals("GREEN")) {
-            return color + " - 12 o'clock";
+            return "Green LED" + " - 12 o'clock";
         }
 
         return color;

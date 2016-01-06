@@ -52,8 +52,12 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
 
         notificationImage.setImageDrawable(notification.accept(iconGetter));
         notificationLabel.setText(notification.accept(nameGetter));
-        notificationValue.setText(convertLEDColor2Clock(notification.accept(colorGetter).getTag()));
-
+        if(notification.isOn()) {
+            notificationValue.setText(convertLEDColor2Clock(notification.accept(colorGetter).getTag()));
+        }
+        else {
+            notificationValue.setText("Deactivated");
+        }
         return itemView;
     }
 
@@ -67,22 +71,22 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         //if(color.equals("GREEN")) return context.getString(R.string._12_clock);
 
         if(color.equals("RED")) {
-            return color + " - 2 o'clock";
+            return "Red LED" + " - 2 o'clock";
         }
         if(color.equals("BLUE")) {
-            return color + " - 4 o'clock";
+            return "Blue LED" + " - 4 o'clock";
         }
         if(color.equals("LIGHT_GREEN")) {
-            return color + " - 6 o'clock";
+            return "Light Green LED" + " - 6 o'clock";
         }
         if(color.equals("YELLOW")) {
-            return color + " - 8 o'clock";
+            return "Yellow LED" + " - 8 o'clock";
         }
         if(color.equals("ORANGE")) {
-            return color + " - 10 o'clock";
+            return "Orange LED" + " - 10 o'clock";
         }
         if(color.equals("GREEN")) {
-            return color + " - 12 o'clock";
+            return "Green LED" + " - 12 o'clock";
         }
 
         return color;
