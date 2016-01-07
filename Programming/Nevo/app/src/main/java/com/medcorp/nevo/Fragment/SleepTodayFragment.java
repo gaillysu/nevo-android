@@ -16,15 +16,24 @@ import butterknife.ButterKnife;
 import com.medcorp.nevo.R;
 
 import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
+import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
+import com.medcorp.nevo.model.Sleep;
+import com.medcorp.nevo.model.SleepData;
+import com.medcorp.nevo.util.SleepDataHandler;
+import com.medcorp.nevo.util.SleepSorter;
 import com.medcorp.nevo.view.SleepDataView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.medcorp.nevo.fragment.base.BaseFragment;
 
@@ -108,7 +117,29 @@ public class SleepTodayFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         refresh();
-        JSONObject sleepAnalysisResult = DatabaseHelper.getInstance(getContext()).getSleepZone(new Date());
+        JSONObject sleepAnalysisResult = new JSONObject();
+        SleepDatabaseHelper helper = new SleepDatabaseHelper(getContext());
+        List<Sleep> sleepList = new ArrayList<Sleep>();
+        Date today = getModel().getDateFromDate(new Date());
+        Date yesterday = new Date(today.getTime()-24*60*60*1000);
+        Optional<Sleep> todaySleep = helper.get(0,today);
+        Optional<Sleep> yesterdaySleep = helper.get(0,yesterday);
+        if(yesterdaySleep.notEmpty())
+        {
+            sleepList.add(yesterdaySleep.get());
+        }
+        if(todaySleep.notEmpty())
+        {
+            sleepList.add(todaySleep.get());
+        }
+        SleepDataHandler handler = new SleepDataHandler(sleepList);
+        List<SleepData> sleepDataList = handler.getSleepData();
+        //have today sleep, use it.
+        if(!sleepDataList.isEmpty())
+        {
+            SleepData todaySleepData = sleepDataList.get(sleepDataList.size()-1);
+            sleepAnalysisResult = todaySleepData.toJSONObject();
+        }
         setProgressBar(sleepAnalysisResult);
         try {
             setDashboard(new Dashboard((int)(sleepAnalysisResult.getLong("endDateTime")-sleepAnalysisResult.getLong("startDateTime"))

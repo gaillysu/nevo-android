@@ -41,6 +41,11 @@ public class SleepDataHandler {
         int wake = 0;
         long sleepStart = 0;
         long sleepEnd = 0;
+
+        List<Integer> wakeTimeList = new ArrayList<Integer>();
+        List<Integer> lightTimeList = new ArrayList<Integer>();
+        List<Integer> deepTimeList = new ArrayList<Integer>();
+
         try {
             JSONArray hourlyLight = new JSONArray(todaySleep.getHourlyLight());
             for (int i = 0; i < 18 && hourlyLight.length() > 18; i++) {
@@ -57,11 +62,14 @@ public class SleepDataHandler {
                 wake += Integer.parseInt(hourlyWake.getString(i));
             }
             JSONArray hourlySleep = new JSONArray(todaySleep.getHourlySleep());
+            int start = 0;
+            int end = 17;
             for (int i = 0; i < 18 && hourlySleep.length() > 18; i++) {
                 int theMinutes = Integer.parseInt(hourlySleep.getString(i));
                 if(theMinutes>0)
                 {
                     sleepStart = todaySleep.getDate() + ((i+1)*60-theMinutes)*60*1000;
+                    start = i;
                     break;
                 }
             }
@@ -70,15 +78,26 @@ public class SleepDataHandler {
                 if(theMinutes>0)
                 {
                     sleepEnd = todaySleep.getDate() + (i*60+theMinutes)*60*1000;
+                    end = i;
                     break;
                 }
             }
+            for(int i=start;i<=end;i++)
+            {
+                wakeTimeList.add(Integer.parseInt(hourlyWake.getString(i)));
+                lightTimeList.add(Integer.parseInt(hourlyLight.getString(i)));
+                deepTimeList.add(Integer.parseInt(hourlyDeep.getString(i)));
+            }
+
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return new SleepData(deepSleep, lightSleep, wake, todaySleep.getCreatedDate(),sleepStart,sleepEnd);
+        SleepData sleepData = new SleepData(deepSleep, lightSleep, wake, todaySleep.getCreatedDate(),sleepStart,sleepEnd);
+        sleepData.setHourlyWake(wakeTimeList.toString());
+        sleepData.setHourlyLight(lightTimeList.toString());
+        sleepData.setHourlyDeep(deepTimeList.toString());
+        return sleepData;
     }
 
     private boolean sleptToday(Sleep sleep) {
@@ -125,6 +144,9 @@ public class SleepDataHandler {
         int wake = 0;
         long sleepStart = 0;
         long sleepEnd = 0;
+        List<Integer> wakeTimeList = new ArrayList<Integer>();
+        List<Integer> lightTimeList = new ArrayList<Integer>();
+        List<Integer> deepTimeList = new ArrayList<Integer>();
         try {
             JSONArray hourlyLight = new JSONArray(yesterdaySleep.getHourlyLight());
             for (int i = 18; i < hourlyLight.length(); i++) {
@@ -141,11 +163,14 @@ public class SleepDataHandler {
                 wake += Integer.parseInt(hourlyWake.getString(i));
             }
             JSONArray hourlySleep = new JSONArray(yesterdaySleep.getHourlySleep());
+            int start = 18;
+            int end = 23;
             for (int i = 18; i < hourlySleep.length(); i++) {
                 int theMinutes = Integer.parseInt(hourlySleep.getString(i));
                 if(theMinutes>0)
                 {
                     sleepStart = yesterdaySleep.getDate() + ((i+1)*60-theMinutes)*60*1000;
+                    start = i;
                     break;
                 }
             }
@@ -154,8 +179,15 @@ public class SleepDataHandler {
                 if(theMinutes>0)
                 {
                     sleepEnd = yesterdaySleep.getDate() + (i*60+theMinutes)*60*1000;
+                    end = i;
                     break;
                 }
+            }
+            for(int i=start;i<=end;i++)
+            {
+                wakeTimeList.add(Integer.parseInt(hourlyWake.getString(i)));
+                lightTimeList.add(Integer.parseInt(hourlyLight.getString(i)));
+                deepTimeList.add(Integer.parseInt(hourlyDeep.getString(i)));
             }
 
         } catch (JSONException e) {
@@ -163,7 +195,11 @@ public class SleepDataHandler {
         }
         int totalSleep = lightSleep + deepSleep + wake;
         if(totalSleep > 0) {
-            return new SleepData(deepSleep, lightSleep, wake, yesterdaySleep.getDate(),sleepStart,sleepEnd);
+            SleepData sleepData = new SleepData(deepSleep, lightSleep, wake, yesterdaySleep.getDate(),sleepStart,sleepEnd);
+            sleepData.setHourlyWake(wakeTimeList.toString());
+            sleepData.setHourlyLight(lightTimeList.toString());
+            sleepData.setHourlyDeep(deepTimeList.toString());
+            return sleepData;
         }else{
             return new SleepData(0, 0, 0, yesterdaySleep.getDate(),0,0);
         }
@@ -173,7 +209,46 @@ public class SleepDataHandler {
         if (yesterday.getTotalSleep() == 0){
             return today;
         }
-        return new SleepData((today.getDeepSleep() + yesterday.getDeepSleep()), (today.getLightSleep() + yesterday.getLightSleep()), (today.getAwake() + yesterday.getAwake()),today.getDate(),yesterday.getSleepStart(),today.getSleepEnd());
+        SleepData sleepData = new  SleepData((today.getDeepSleep() + yesterday.getDeepSleep()), (today.getLightSleep() + yesterday.getLightSleep()), (today.getAwake() + yesterday.getAwake()),today.getDate(),yesterday.getSleepStart(),today.getSleepEnd());
+        List<Integer> wakeTimeList = new ArrayList<Integer>();
+        List<Integer> lightTimeList = new ArrayList<Integer>();
+        List<Integer> deepTimeList = new ArrayList<Integer>();
+
+        try {
+            JSONArray   hourlyWake = new JSONArray(yesterday.getHourlyWake());
+            for (int i = 0; i < hourlyWake.length(); i++) {
+                wakeTimeList.add(Integer.parseInt(hourlyWake.getString(i)));
+            }
+            hourlyWake = new JSONArray(today.getHourlyWake());
+            for (int i = 0; i < hourlyWake.length(); i++) {
+                wakeTimeList.add(Integer.parseInt(hourlyWake.getString(i)));
+            }
+
+            JSONArray   hourlyLight = new JSONArray(yesterday.getHourlyLight());
+            for (int i = 0; i < hourlyLight.length(); i++) {
+                lightTimeList.add(Integer.parseInt(hourlyLight.getString(i)));
+            }
+            hourlyLight = new JSONArray(today.getHourlyLight());
+            for (int i = 0; i < hourlyLight.length(); i++) {
+                lightTimeList.add(Integer.parseInt(hourlyLight.getString(i)));
+            }
+
+            JSONArray   hourlyDeep = new JSONArray(yesterday.getHourlyDeep());
+            for (int i = 0; i < hourlyDeep.length(); i++) {
+                deepTimeList.add(Integer.parseInt(hourlyDeep.getString(i)));
+            }
+            hourlyDeep = new JSONArray(today.getHourlyDeep());
+            for (int i = 0; i < hourlyDeep.length(); i++) {
+                deepTimeList.add(Integer.parseInt(hourlyDeep.getString(i)));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sleepData.setHourlyWake(wakeTimeList.toString());
+        sleepData.setHourlyLight(lightTimeList.toString());
+        sleepData.setHourlyDeep(deepTimeList.toString());
+        return sleepData;
     }
 
     public List<SleepData> getSleepData() {

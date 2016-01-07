@@ -1,5 +1,8 @@
 package com.medcorp.nevo.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Karl on 11/27/15.
  */
@@ -11,6 +14,9 @@ public class SleepData {
     private long date;
     private long sleepStart;
     private long sleepEnd;
+    private String hourlyWake;
+    private String hourlyLight;
+    private String hourlyDeep;
 
     public SleepData(int deepSleep, int lightSleep, int awake, long date) {
         this.deepSleep = deepSleep;
@@ -78,5 +84,47 @@ public class SleepData {
 
     public void setSleepEnd(long sleepEnd) {
         this.sleepEnd = sleepEnd;
+    }
+
+    public String getHourlyWake() {
+        return hourlyWake;
+    }
+
+    public void setHourlyWake(String hourlyWake) {
+        this.hourlyWake = hourlyWake;
+    }
+
+    public String getHourlyLight() {
+        return hourlyLight;
+    }
+
+    public void setHourlyLight(String hourlyLight) {
+        this.hourlyLight = hourlyLight;
+    }
+
+    public String getHourlyDeep() {
+        return hourlyDeep;
+    }
+
+    public void setHourlyDeep(String hourlyDeep) {
+        this.hourlyDeep = hourlyDeep;
+    }
+
+    public JSONObject toJSONObject()
+    {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("sleepWakeDuration",getAwake());
+            json.put("sleepLightDuration",getLightSleep());
+            json.put("sleepDeepDuration",getDeepSleep());
+            json.put("startDateTime",getSleepStart());
+            json.put("endDateTime",getSleepEnd());
+            json.put("mergeHourlyWakeTime",getHourlyWake());
+            json.put("mergeHourlyLightTime",getHourlyLight());
+            json.put("mergeHourlyDeepTime",getHourlyDeep());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 }
