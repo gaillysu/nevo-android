@@ -90,6 +90,16 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     protected void onResume() {
         super.onResume();
         getModel().observableActivity(this);
+        if(!getModel().isWatchConnected())
+        {
+            getModel().startConnectToWatch(false);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getModel().observableActivity(null);
     }
 
     @Override
