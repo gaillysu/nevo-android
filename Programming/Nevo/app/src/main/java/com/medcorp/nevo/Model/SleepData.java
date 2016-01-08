@@ -114,6 +114,7 @@ public class SleepData {
     {
         JSONObject json = new JSONObject();
         try {
+            json.put("sleepDuration",getTotalSleep());
             json.put("sleepWakeDuration",getAwake());
             json.put("sleepLightDuration",getLightSleep());
             json.put("sleepDeepDuration",getDeepSleep());

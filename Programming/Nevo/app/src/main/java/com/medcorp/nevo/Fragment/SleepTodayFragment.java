@@ -142,7 +142,7 @@ public class SleepTodayFragment extends BaseFragment {
         }
         setProgressBar(sleepAnalysisResult);
         try {
-            setDashboard(new Dashboard((int)(sleepAnalysisResult.getLong("endDateTime")-sleepAnalysisResult.getLong("startDateTime"))
+            setDashboard(new Dashboard(sleepAnalysisResult.getInt("sleepDuration")
                     ,sleepAnalysisResult.getInt("sleepDeepDuration")
                     ,sleepAnalysisResult.getInt("sleepLightDuration")
                     ,sleepAnalysisResult.getLong("startDateTime")
@@ -191,7 +191,7 @@ public class SleepTodayFragment extends BaseFragment {
 
         Dashboard(int sleepDuration,int sleepDeepDuration,int sleepLightDuration,long sleepStart,long sleepEnd,int sleepWakeDuration)
         {
-            this.sleepDuration = sleepDuration/60000;
+            this.sleepDuration = sleepDuration;
             this.sleepDeepDuration = sleepDeepDuration;
             this.sleepLightDuration = sleepLightDuration;
             this.sleepStart = sleepStart;
