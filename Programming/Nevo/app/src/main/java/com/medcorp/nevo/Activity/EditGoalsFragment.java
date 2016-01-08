@@ -67,6 +67,7 @@ public class EditGoalsFragment extends BasePreferencesFragment{
         presetPreferences.setOnPreferenceClickListener(presetPrefClickListener);
         labelPreferences = (EditTextPreference) findPreference("fragment_edit_preset_label");
         labelPreferences.setTitle(preset.getLabel());
+        labelPreferences.setText(preset.getLabel());
         labelPreferences.setOnPreferenceChangeListener(labelPrefListener);
         deletePreferences = findPreference("fragment_edit_preset_delete");
         deletePreferences.setOnPreferenceClickListener(deletePrefClickListener);
