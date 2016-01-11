@@ -50,6 +50,9 @@ public class SleepDataView extends View {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
     final float SWEEP_INC = 1;
+    enum SLEEPSTATUS{
+        ACTIVITY,WAKE,LIGHT,DEEP
+    }
 
     List<Float> sleepDegree = new ArrayList<Float>();
     List<Paint> sleepColor = new ArrayList<Paint>();
@@ -148,7 +151,7 @@ public class SleepDataView extends View {
                 String[] hhmm = new SimpleDateFormat("HH:mm").format(new Date(startsleep)).split(":");
 
                 //calculator the start degree:0~360
-                start = ( ((Integer.parseInt(hhmm[0]))%12)*60 + Integer.parseInt(hhmm[1]))/2.0f;
+                start = ( ((Integer.parseInt(hhmm[0]))%12)*60 )/2.0f;
                 if(((Integer.parseInt(hhmm[0]))%12)>=3) start = start - 90;
                 else {
                     start = start + 270;
@@ -190,73 +193,63 @@ public class SleepDataView extends View {
                     sleepDegree.clear();
                     sleepColor.clear();
 
-                    int last = 1;//values3[0] > 0 ? 3 : (values2[0] > 0 ? 2 : 1);
+                    //if user 's sleep had got broken sometimes, after have a rest and restart one new sleep.
+                    //so the circle view should display the rest time as "blank" color
+                    //for let the graph keep good continuity,I follow this rule to draw the circle
+                    //the sleep order is active/wake/light/deep ,please see @lastHourlySleepStatus
+                    SLEEPSTATUS lastHourlySleepStatus = SLEEPSTATUS.ACTIVITY;
+
                     for (int j = 0; j < values1.length; j++)
                     {
-                        //sleep got broken, stop draw graph (one round only draw 12hrs)
-                        if((values1[j] + values2[j] + values3[j]) == 0) break;//last = 1;
-
-                        start = start%360;
-
-                        if(((int)start)%30==0 && (values1[j] + values2[j] + values3[j]) < 60 && j!=values1.length-1)
+                        if(lastHourlySleepStatus == SLEEPSTATUS.ACTIVITY)
                         {
-                            start  = start +  (60-(values1[j] + values2[j] + values3[j]))/2.0f;
-                            sleepDegree.add((60-(values1[j] + values2[j] + values3[j]))/2.0f);
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
                             sleepColor.add(mPaints[3]);
-                        }
-
-                        if(last == 1)
-                        {
-                            //order is wake/light/deep
-                            start  = start + values1[j]/2.0f;
                             sleepDegree.add(values1[j]/2.0f);
                             sleepColor.add(mPaints[0]);
-
-                            start = start + values2[j]/2.0f;
                             sleepDegree.add(values2[j]/2.0f);
                             sleepColor.add(mPaints[1]);
-
-                            start = start + values3[j]/2.0f;
                             sleepDegree.add(values3[j]/2.0f);
                             sleepColor.add(mPaints[2]);
-
-                            last = values3[j]>0?3:(values2[j]>0?2:1);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
-                        else if(last == 2)
+                        else if(lastHourlySleepStatus == SLEEPSTATUS.WAKE)
                         {
-                            //order is light/deep/wake
-                            start  = start + values2[j]/2.0f;
-                            sleepDegree.add(values2[j]/2.0f);
-                            sleepColor.add(mPaints[1]);
-
-                            start  = start + values3[j]/2.0f;
-                            sleepDegree.add(values3[j]/2.0f);
-                            sleepColor.add(mPaints[2]);
-
-                            start  = start + values1[j]/2.0f;
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepColor.add(mPaints[3]);
                             sleepDegree.add(values1[j]/2.0f);
                             sleepColor.add(mPaints[0]);
-
-                            last = values1[j]>0?1:(values3[j]>0?3:2);
-                        }
-                        else if(last == 3)
-                        {
-                            //order is deep/light/wake
-                            start  = start + values3[j]/2.0f;
-                            sleepDegree.add(values3[j]/2.0f);
-                            sleepColor.add(mPaints[2]);
-
-                            start  = start + values2[j]/2.0f;
                             sleepDegree.add(values2[j]/2.0f);
                             sleepColor.add(mPaints[1]);
-
-
-                            start  = start + values1[j]/2.0f;
+                            sleepDegree.add(values3[j]/2.0f);
+                            sleepColor.add(mPaints[2]);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                        }
+                        else if(lastHourlySleepStatus == SLEEPSTATUS.LIGHT)
+                        {
+                            sleepDegree.add(values2[j]/2.0f);
+                            sleepColor.add(mPaints[1]);
+                            sleepDegree.add(values3[j]/2.0f);
+                            sleepColor.add(mPaints[2]);
                             sleepDegree.add(values1[j]/2.0f);
                             sleepColor.add(mPaints[0]);
-
-                            last = values1[j]>0?1:(values2[j]>0?2:3);
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepColor.add(mPaints[3]);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
+                        else if(lastHourlySleepStatus == SLEEPSTATUS.DEEP)
+                        {
+                            sleepDegree.add(values3[j]/2.0f);
+                            sleepColor.add(mPaints[2]);
+                            sleepDegree.add(values2[j]/2.0f);
+                            sleepColor.add(mPaints[1]);
+                            sleepDegree.add(values1[j]/2.0f);
+                            sleepColor.add(mPaints[0]);
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepColor.add(mPaints[3]);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                        }
+
                     }//end for
                     start = initstart;
                     int i =0;
