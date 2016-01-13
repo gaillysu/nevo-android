@@ -228,17 +228,12 @@ public class OTAActivity extends BaseActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(bHelpMode)
-        {
-            return;
-        }
-        if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
-        {
-            if(mUpdateSuccess)
-               mNevoOtaController.reset(true);
-            else
-               mNevoOtaController.switch2SyncController();
-        }
+        //whenever we exit OTA screen, we should let syncController get incharge of the connectionController object
+        if(mUpdateSuccess)
+            mNevoOtaController.reset(true);
+        else
+            mNevoOtaController.switch2SyncController();
+
     }
 
     @Override
