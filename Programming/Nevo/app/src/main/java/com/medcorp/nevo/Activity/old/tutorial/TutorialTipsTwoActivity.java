@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.old.OldMainActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.R;
@@ -33,7 +34,7 @@ public class TutorialTipsTwoActivity extends BaseActivity {
         findViewById(R.id.t2_tips_finish_Button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(TutorialTipsTwoActivity.this, OldMainActivity.class);
+                Intent it = new Intent(TutorialTipsTwoActivity.this, MainActivity.class);
                 it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(it);

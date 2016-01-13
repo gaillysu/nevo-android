@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.old.OldMainActivity;
 import com.medcorp.nevo.activity.old.OTAActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -23,7 +24,7 @@ public class TutorialOneActivity extends BaseActivity implements View.OnClickLis
 
         if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
         {
-            startActivity(new Intent(this, OldMainActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
