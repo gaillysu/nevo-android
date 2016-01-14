@@ -55,6 +55,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingMenu("Goals",R.drawable.setting_goals,false));
         listMenu.add(new SettingMenu("Support",R.drawable.setting_support,false));
         listMenu.add(new SettingMenu("About",R.drawable.setting_about,false));
+        listMenu.add(new SettingMenu("Forget watch",R.drawable.setting_about,false));
         settingAdapter = new SettingMenuAdapter(getContext(),listMenu);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
@@ -161,6 +162,10 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             getActivity().startActivity(intent);
             getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             setEnterTransition(new Fade().setDuration(300));
+        }
+        else if(position == 7)
+        {
+           getModel().forgetDevice();
         }
     }
 }

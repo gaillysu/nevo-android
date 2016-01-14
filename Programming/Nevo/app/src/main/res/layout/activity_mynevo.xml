@@ -19,9 +19,22 @@
         android:background="@color/white"
         android:id="@+id/activity_mynevo_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:divider="@drawable/alarm_list_view_devider"
         android:dividerHeight="2dp"
         android:visibility="visible"
         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EFEFEF" >
+        <TextView
+            android:id="@+id/activity_mynevo_notice_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:text = "To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes.
+You will not receive notifications on nevo when disconnected."/>
+    </RelativeLayout>
 </LinearLayout>

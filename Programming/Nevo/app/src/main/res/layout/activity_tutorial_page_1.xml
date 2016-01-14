@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <com.medcorp.nevo.view.customfontview.RobotoTextView
+            android:id="@+id/activity_tutorial_page1_start_textview"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="50dp"
+            roboto:bold="true"
+            android:textSize="36sp"
+            android:text="Let\'s get started!"/>
+
+        <com.medcorp.nevo.view.customfontview.RobotoTextView
+            android:id="@+id/activity_tutorial_page1_notice_textview"
+            android:layout_below="@id/activity_tutorial_page1_start_textview"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="5dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            roboto:thin="true"
+            android:text="Use your nevo watch to set, track and analyse your personal health and fitness data."/>
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tutorial_nevo_1"
+            />
+
+        <com.medcorp.nevo.view.customfontview.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Activate your nevo"
+            android:textAllCaps="false"
+            android:id="@+id/nextTextView"
+            android:background="@drawable/outline_fill_button"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="60dp"/>
+
+</RelativeLayout>

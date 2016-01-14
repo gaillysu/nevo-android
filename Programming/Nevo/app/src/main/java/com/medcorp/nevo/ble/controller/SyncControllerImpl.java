@@ -650,7 +650,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     @Override
     public void onException(NevoException e) {
-        e.accept(this);
+        //e.accept(this);
         if(mOnSyncControllerListener.notEmpty()){
             mOnSyncControllerListener.get().connectionStateChanged(false);
         }
