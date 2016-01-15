@@ -30,18 +30,15 @@
             android:id="@+id/activity_setting_notification_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Whatsapp"
-            roboto:bold="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textSize="16sp"
+            roboto:bold="true"/>
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
-        android:id="@+id/activity_setting_notification_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        roboto:light ="true"
-        android:text="Yellow LED - 6 o'Clock"/>
+        <com.medcorp.nevo.view.customfontview.RobotoTextView
+            android:id="@+id/activity_setting_notification_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/list_item_sub_text" />
     </LinearLayout>
 
 </RelativeLayout>

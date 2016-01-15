@@ -16,8 +16,7 @@
             android:id="@+id/activity_setting_notification_edit_enable_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            roboto:bold="true"
+            android:textSize="16sp"
             android:text = "Allow notifications"
             android:layout_centerVertical="true"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
@@ -29,7 +28,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:focusable="false" />
-        <LinearLayout android:layout_height="2dp"
+
+        <LinearLayout android:layout_height="1dp"
             android:layout_width="match_parent"
             android:layout_marginRight="60dp"
             android:layout_alignParentBottom="true"
@@ -37,15 +37,14 @@
 
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id ="@+id/activity_setting_notification_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <ImageView
             android:id ="@+id/activity_setting_notification_edit_image"
             android:src="@drawable/yellow_dot"
@@ -66,21 +65,20 @@
                 android:id="@+id/activity_setting_notification_edit_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="Notification"
-                roboto:bold="true"
+
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:id="@+id/activity_setting_notification_edit_color_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                roboto:light ="true"
-                android:text="Yellow LED - 6 o'Clock"/>
+                android:textSize="14sp"
+                roboto:light ="true" />
         </LinearLayout>
 
-        <LinearLayout android:layout_height="2dp"
+        <LinearLayout android:layout_height="1dp"
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="60dp"
