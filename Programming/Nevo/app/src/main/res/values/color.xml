@@ -22,6 +22,8 @@
     <color name="tab_selected_background_color">#6D6D6D</color>
     <color name="tab_unselected_font_color">#FDFDB3</color>
     <color name="list_item_devider">#E5E5EA</color>
+    <color name="list_item_header_text_color">#6F6F6F</color>
+    <color name="list_item_sub_text">#757575</color>
 
 
 </resources>

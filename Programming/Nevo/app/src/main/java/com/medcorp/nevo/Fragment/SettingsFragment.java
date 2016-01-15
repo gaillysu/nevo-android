@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -40,11 +41,13 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     ListView settingListView;
 
     private List<SettingMenu> listMenu;
+
     private SettingMenuAdapter settingAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
         listMenu = new ArrayList<SettingMenu>();
@@ -128,17 +131,11 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position == 1)
         {
-            Intent intent = new Intent(getActivity(), SettingNotificationActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
+            startActivity(SettingNotificationActivity.class);
         }
         else if(position == 2)
         {
-            Intent intent = new Intent(getActivity(), MyNevoActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
+            startActivity(MyNevoActivity.class);
         }
         else if(position == 3)
         {
@@ -146,10 +143,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         else if(position == 4)
         {
-            Intent intent = new Intent(getActivity(), GoalsActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
+            startActivity(GoalsActivity.class);
         }
         else if(position == 5)
         {
@@ -158,10 +152,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         else if(position == 6)
         {
-            Intent intent = new Intent(getActivity(), SettingAboutActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
+            startActivity(SettingAboutActivity.class);
         }
         else if(position == 7)
         {

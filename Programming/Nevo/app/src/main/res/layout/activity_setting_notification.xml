@@ -12,10 +12,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textSize="23sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             android:text = "Active Notifications"
-            android:textColor="@color/customBlack"
+            android:textColor="@color/list_item_header_text_color"
             android:background="@color/transparent"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/notification_list_view_devider"
-        android:dividerHeight="2dp"
+        android:dividerHeight="1dp"
         android:visibility="visible"
         />
     <LinearLayout
@@ -43,10 +43,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textSize="23sp"
+            android:textSize="17sp"
             android:textStyle="bold"
             android:text = "Inactive Notifications"
-            android:textColor="@color/customBlack"
+            android:textColor="@color/list_item_header_text_color"
             android:background="@color/transparent"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@drawable/notification_list_view_devider"
-        android:dividerHeight="2dp"
+        android:dividerHeight="1dp"
         android:visibility="visible"
         />
 </LinearLayout>

@@ -1,23 +1,18 @@
 package com.medcorp.nevo.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
-import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Steps;

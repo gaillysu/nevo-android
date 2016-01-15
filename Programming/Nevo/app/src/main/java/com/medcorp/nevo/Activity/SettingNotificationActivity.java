@@ -20,17 +20,10 @@ import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
-import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorSaver;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationNameVisitor;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 import com.medcorp.nevo.ble.notification.NevoNotificationListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,8 +44,8 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     private SettingNotificationArrayAdapter activeNotificationArrayAdapter;
     private SettingNotificationArrayAdapter inactiveNotificationArrayAdapter;
 
-    List<Notification> listActiveNotification;
-    List<Notification> listInActiveNotification;
+    private List<Notification> activeNotificationList;
+    private List<Notification> inactiveNotificationList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,8 +63,8 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     protected void onResume() {
         super.onResume();
 
-        listActiveNotification = new ArrayList<Notification>();
-        listInActiveNotification = new ArrayList<Notification>();
+        activeNotificationList = new ArrayList<Notification>();
+        inactiveNotificationList = new ArrayList<Notification>();
 
         List<Notification> allNotifications = new ArrayList<Notification>();
         NotificationDataHelper dataHelper = new NotificationDataHelper(this);
@@ -93,17 +86,17 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
         for (Notification notification: allNotifications) {
             if(notification.isOn()){
-                listActiveNotification.add(notification);
+                activeNotificationList.add(notification);
             }
             else{
-                listInActiveNotification.add(notification);
+                inactiveNotificationList.add(notification);
             }
         }
-        activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this,listActiveNotification);
+        activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList);
         activeListView.setAdapter(activeNotificationArrayAdapter);
         activeListView.setOnItemClickListener(this);
 
-        inactiveNotificationArrayAdapter = new SettingNotificationArrayAdapter(this,listInActiveNotification);
+        inactiveNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, inactiveNotificationList);
         inactiveListView.setAdapter(inactiveNotificationArrayAdapter);
         inactiveListView.setOnItemClickListener(this);
     }
@@ -114,10 +107,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         Notification applicationNotification = null;
         if (parent.getId() == activeListView.getId())
         {
-             applicationNotification = listActiveNotification.get(position);
+             applicationNotification = activeNotificationList.get(position);
         }
         if (parent.getId() == inactiveListView.getId()) {
-             applicationNotification = listInActiveNotification.get(position);
+             applicationNotification = inactiveNotificationList.get(position);
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable("notification", applicationNotification);

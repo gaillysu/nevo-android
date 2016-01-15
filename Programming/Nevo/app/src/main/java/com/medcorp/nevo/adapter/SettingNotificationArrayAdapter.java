@@ -40,9 +40,9 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.activity_setting_notification_list_view_item, parent, false);
-        RobotoTextView  notificationLabel = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_name);
-        RobotoTextView  notificationValue = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_color);
-        ImageView   notificationImage = (ImageView) itemView.findViewById(R.id.activity_setting_notification_image);
+        RobotoTextView notificationLabel = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_name);
+        RobotoTextView notificationValue = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_color);
+        ImageView notificationImage = (ImageView) itemView.findViewById(R.id.activity_setting_notification_image);
 
         NotificationIconVisitor iconGetter = new NotificationIconVisitor(context);
         NotificationNameVisitor nameGetter = new NotificationNameVisitor(context);
@@ -61,15 +61,8 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         return itemView;
     }
 
-    String convertLEDColor2Clock(String color)
+    private String convertLEDColor2Clock(String color)
     {
-        //if(color.equals("RED")) return context.getString(R.string._2_clock);
-        //if(color.equals("BLUE")) return context.getString(R.string._4_clock);
-        //if(color.equals("LIGHT_GREEN")) return context.getString(R.string._6_clock);
-        //if(color.equals("YELLOW")) return context.getString(R.string._8_clock);
-        //if(color.equals("ORANGE")) return context.getString(R.string._10_clock);
-        //if(color.equals("GREEN")) return context.getString(R.string._12_clock);
-
         if(color.equals("RED")) {
             return "Red LED" + " - 2 o'clock";
         }
@@ -88,7 +81,6 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         if(color.equals("GREEN")) {
             return "Green LED" + " - 12 o'clock";
         }
-
         return color;
     }
 }

@@ -14,11 +14,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_new);
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
@@ -231,7 +232,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         showStateString("Initialize watch finished.",true);
     }
 
-
     private void showStateString(String strState,boolean dismiss)
     {
         if(snackbar != null)
@@ -241,7 +241,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
             }
         }
 
-        snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_INDEFINITE);
+        snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_LONG);
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setText(strState);

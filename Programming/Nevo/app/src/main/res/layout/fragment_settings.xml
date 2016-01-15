@@ -6,10 +6,12 @@
 
     <ListView
         android:background="@color/white"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:id="@+id/fragment_setting_list_view"
         android:layout_width="match_parent"
         android:divider="@drawable/notification_list_view_devider"
-        android:dividerHeight="2dp"
+        android:dividerHeight="1dp"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>

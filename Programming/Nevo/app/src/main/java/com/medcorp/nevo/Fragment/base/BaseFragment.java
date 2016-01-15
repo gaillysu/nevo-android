@@ -24,4 +24,6 @@ public abstract class BaseFragment extends Fragment{
     {
            return (BaseFragment) instantiate(context,tag,null);
     }
+
+
 }
