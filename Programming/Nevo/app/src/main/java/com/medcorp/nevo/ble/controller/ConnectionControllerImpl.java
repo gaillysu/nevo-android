@@ -76,9 +76,9 @@ import java.util.TimerTask;
         nevoBT.setOnExceptionListener(this);
         nevoBT.setOnDataReceivedListener(this);
         nevoBT.setOnFirmwareVersionListener(this);
-
+        //I remove it, when app starts, it will not auto connect watch,  my code will invoke @getModel().startConnectToWatch(boolean) function when need connect watch
         //This timer will retry to connect at given intervals
-        restartAutoReconnectTimer();
+        //restartAutoReconnectTimer();
     }
 
     private void restartAutoReconnectTimer() {

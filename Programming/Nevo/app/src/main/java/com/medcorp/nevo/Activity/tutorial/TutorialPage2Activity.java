@@ -1,7 +1,11 @@
 package com.medcorp.nevo.activity.tutorial;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -29,6 +33,16 @@ public class TutorialPage2Activity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_tutorial_page_2);
         ButterKnife.bind(this);
         nextTextView.setOnClickListener(this);
+        new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setMessage("Turn On Bluetooth To Allow “nevo” to Connect to Accessories")
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                    }
+                }).setCancelable(false).show();
+
     }
 
     @Override

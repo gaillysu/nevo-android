@@ -151,7 +151,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             connectionController.forgetSavedAddress();
         }
 
-        connectionController.connect();
+        connectionController.newScan();
 
     }
 
