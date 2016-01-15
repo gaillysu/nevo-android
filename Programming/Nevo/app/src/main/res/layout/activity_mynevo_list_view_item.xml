@@ -14,7 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="Test"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <RelativeLayout
@@ -27,8 +26,6 @@
         android:id="@+id/activity_mynevo_list_view_item_version_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        roboto:bold="false"
-        android:text="Test2"
         android:layout_centerVertical="true"
         android:textColor="@color/customGray"
         android:textSize="14sp"/>
@@ -41,7 +38,7 @@
         android:textColor="@color/customOrange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test3"
+        roboto:bold="true"
         android:textSize="14sp"/>
 
 
