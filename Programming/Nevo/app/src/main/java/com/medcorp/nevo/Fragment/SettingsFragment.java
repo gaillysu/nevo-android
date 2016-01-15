@@ -55,7 +55,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingMenu("Goals",R.drawable.setting_goals,false));
         listMenu.add(new SettingMenu("Support",R.drawable.setting_support,false));
         listMenu.add(new SettingMenu("About",R.drawable.setting_about,false));
-        listMenu.add(new SettingMenu("Forget watch",R.drawable.setting_about,false));
+        listMenu.add(new SettingMenu("Forget watch",R.drawable.setting_forget,false));
         settingAdapter = new SettingMenuAdapter(getContext(),listMenu);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
