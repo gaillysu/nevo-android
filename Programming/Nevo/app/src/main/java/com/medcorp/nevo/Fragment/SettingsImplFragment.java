@@ -35,32 +35,23 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
     private Preference.OnPreferenceClickListener goalsPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent intent = new Intent(getActivity(), GoalsActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
-            return true;
+            return startNextPreferencesActivity(GoalsActivity.class);
+
         }
     };
     private Preference.OnPreferenceClickListener myNevoPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent intent = new Intent(getActivity(), MyNevoActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
-            return true;
+            return startNextPreferencesActivity(MyNevoActivity.class);
+
         }
     };
 
     private Preference.OnPreferenceClickListener notificationPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent intent = new Intent(getActivity(), SettingNotificationActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
-            return true;
+            return startNextPreferencesActivity(SettingNotificationActivity.class);
+
         }
     };
     private Preference.OnPreferenceClickListener linklossPreferenceListener = new Preference.OnPreferenceClickListener() {
@@ -75,11 +66,7 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
     private Preference.OnPreferenceClickListener aboutPreferenceListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Intent intent = new Intent(getActivity(), SettingAboutActivity.class);
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            setEnterTransition(new Fade().setDuration(300));
-            return true;
+        return startNextPreferencesActivity(SettingAboutActivity.class);
         }
     };
 
@@ -88,10 +75,8 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
         public boolean onPreferenceClick(Preference preference) {
             ((ApplicationModel)getActivity().getApplication()).blinkWatch();
             return true;
-
         }
     };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,6 +105,14 @@ public class SettingsImplFragment extends PreferenceFragmentCompat {
         aboutPreference = findPreference("about_key");
         aboutPreference.setOnPreferenceClickListener(aboutPreferenceListener);
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    private boolean startNextPreferencesActivity(Class<?> cls){
+        Intent intent = new Intent(getActivity(),cls);
+        getActivity().startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+        setEnterTransition(new Fade().setDuration(300));
+        return true;
     }
 
 }
