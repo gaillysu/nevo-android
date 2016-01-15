@@ -46,8 +46,8 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+        super.onCreate(savedInstanceState);
         getWindow().setEnterTransition(new Explode());
         getWindow().setExitTransition(new Explode());
         setContentView(R.layout.activity_goals);
