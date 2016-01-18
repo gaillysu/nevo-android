@@ -20,6 +20,7 @@ import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.notification.NevoNotificationListener;
 
 import java.util.ArrayList;
@@ -81,8 +82,8 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         allNotifications.add(dataHelper.getState(applicationNotification));
         applicationNotification = new WeChatNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
-        //applicationNotification = new WhatsappNotification();
-        //allNotifications.add(dataHelper.getState(applicationNotification));
+        applicationNotification = new WhatsappNotification();
+        allNotifications.add(dataHelper.getState(applicationNotification));
 
         for (Notification notification: allNotifications) {
             if(notification.isOn()){

@@ -56,7 +56,7 @@ public class NotificationIconVisitor implements NotificationVisitor<Drawable> {
 
     @Override
     public Drawable visit(WhatsappNotification whatsappNotification) {
-        return context.getResources().getDrawable(R.drawable.wechart_notification);
+        return context.getResources().getDrawable(R.drawable.whatsapp_notification);
     }
 
     @Override
