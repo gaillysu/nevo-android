@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -20,11 +17,10 @@ import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.activity.SettingAboutActivity;
 import com.medcorp.nevo.activity.SettingNotificationActivity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
-import com.medcorp.nevo.application.ApplicationModel;
-import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.SettingMenu;
+import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,11 +131,19 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         else if(position == 2)
         {
-            startActivity(MyNevoActivity.class);
+            if(getModel().isWatchConnected()) {
+                startActivity(MyNevoActivity.class);
+            }else{
+                ToastHelper.showShortToast(getContext(),"No watch connected.");
+            }
         }
         else if(position == 3)
         {
-            getModel().blinkWatch();
+            if(getModel().isWatchConnected()) {
+                getModel().blinkWatch();
+            }else{
+                ToastHelper.showShortToast(getContext(),"No watch connected.");
+            }
         }
         else if(position == 4)
         {

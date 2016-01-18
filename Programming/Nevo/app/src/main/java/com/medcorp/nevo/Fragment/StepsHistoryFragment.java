@@ -1,21 +1,12 @@
 package com.medcorp.nevo.fragment;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -29,12 +20,11 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.base.BaseFragment;
-import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.StepsSorter;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,10 +39,19 @@ import butterknife.ButterKnife;
 public class StepsHistoryFragment extends BaseFragment implements OnChartValueSelectedListener {
 
     @Bind(R.id.fragment_steps_history_steps)
-    TextView steps;
+    TextView stepsTextView;
 
     @Bind(R.id.fragment_steps_history_bar)
     BarChart barChart;
+
+    @Bind((R.id.fragment_steps_history_goal))
+    TextView goalTextView;
+
+    @Bind((R.id.fragment_steps_history_progress))
+    TextView progressTextView;
+
+
+
 
     private BarDataSet dataSet;
     private List<Steps> stepsList;
@@ -133,7 +132,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         barChart.highlightValue(e.getXIndex(), dataSetIndex);
         Steps steps = stepsList.get(e.getXIndex());
-        setDashboard(new Dashboard(steps.getSteps(),steps.getDistance(),steps.getCalories(),steps.getWalkSteps(),steps.getWalkDistance(),steps.getWalkDuration(),steps.getRunSteps(),steps.getRunDistance(),steps.getRunDuration()));
+        setDashboard(new Dashboard(steps.getSteps(),steps.getGoal()));
     }
 
     @Override
@@ -143,28 +142,37 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
 
     private void setDashboard( Dashboard dashboard)
     {
-        steps.setText(dashboard.formatSteps(dashboard.steps));
+        stepsTextView.setText(dashboard.getSteps());
+        goalTextView.setText(dashboard.getGoal());
+        progressTextView.setText(dashboard.getProgress());
     }
 
     private class Dashboard{
-        int steps;
+        private int steps;
+        private int goal;
+        private double progress;
 
-        Dashboard(int steps,int distance,int calories,int walkSteps,int walkDistance,int walkDuration,int runSteps,int runDistance,int runDuration)
+        Dashboard(int steps, int goal)
         {
             this.steps = steps;
+            this.goal = goal;
+            progress =100.0 * steps/goal;
         }
-        String formatSteps(int steps)
+
+        String getSteps()
         {
             return steps + " steps";
         }
-        String formatDistance(int distanceMeter)
-        {
-            return distanceMeter/1000 + "KM";
+
+        String getProgress(){
+            DecimalFormat df = new DecimalFormat("#.0");
+
+            return df.format(progress)+"%";
         }
-        String formatConsume(int calories)
-        {
-            return calories/1000 + "KCal";
+        String getGoal(){
+            return goal+"";
         }
+
         String formatDuration(int durationMinute)
         {
             return durationMinute/60 + "h" + durationMinute%60 + "m";

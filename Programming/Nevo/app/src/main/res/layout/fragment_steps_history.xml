@@ -25,12 +25,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="3">
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:paddingTop="10dp"
                     android:layout_height="match_parent">
                     <com.medcorp.nevo.view.customfontview.RobotoTextView
@@ -39,7 +39,53 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Steps"/>
+                        android:text="goal"/>
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        android:textColor="@color/black"
+                        android:id="@+id/fragment_steps_history_goal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:text="@string/sleep_select_date"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0dp"
+                    android:paddingTop="10dp"
+                    android:layout_height="match_parent">
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:light="true"
+                        android:textColor="@color/customGray"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="progress"/>
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        android:textColor="@color/black"
+                        android:id="@+id/fragment_steps_history_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:text="@string/sleep_select_date"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0dp"
+                    android:paddingTop="10dp"
+                    android:layout_height="match_parent">
+                    <com.medcorp.nevo.view.customfontview.RobotoTextView
+                        roboto:light="true"
+                        android:textColor="@color/customGray"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="steps"/>
                     <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:textColor="@color/black"
                         android:id="@+id/fragment_steps_history_steps"
@@ -48,6 +94,7 @@
                         android:textSize="17sp"
                         android:text="@string/sleep_select_date"/>
                 </LinearLayout>
+
             </LinearLayout>
 
 
