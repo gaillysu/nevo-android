@@ -135,7 +135,7 @@ public class SleepTodayFragment extends BaseFragment {
         SleepDataHandler handler = new SleepDataHandler(sleepList);
         List<SleepData> sleepDataList = handler.getSleepData();
         //have today sleep, use it.
-        if(!sleepDataList.isEmpty())
+        if(!sleepDataList.isEmpty() && todaySleep.notEmpty())
         {
             SleepData todaySleepData = sleepDataList.get(sleepDataList.size()-1);
             sleepAnalysisResult = todaySleepData.toJSONObject();
