@@ -110,6 +110,12 @@
         <activity
             android:name=".activity.tutorial.TutorialPage5Activity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPageSuccessActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.tutorial.TutorialPageFailedActivity"
+            android:screenOrientation="portrait"/>
 
 
         <service

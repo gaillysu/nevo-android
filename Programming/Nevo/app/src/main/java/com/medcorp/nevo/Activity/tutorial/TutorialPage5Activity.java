@@ -1,18 +1,11 @@
 package com.medcorp.nevo.activity.tutorial;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.view.RoundProgressBar;
 
@@ -22,22 +15,7 @@ import butterknife.ButterKnife;
 /**
  * Created by gaillysu on 16/1/14.
  */
-public class TutorialPage5Activity extends BaseActivity implements ActivityObservable, View.OnClickListener{
-
-    @Bind(R.id.nextTextView)
-    TextView nextTextView;
-
-    @Bind(R.id.retryTextView)
-    TextView retryTextView;
-
-    @Bind(R.id.activity_tutorial_page5_searching_layout)
-    RelativeLayout searchingLayout;
-
-    @Bind(R.id.activity_tutorial_page5_search_failure_layout)
-    RelativeLayout searchFailureLayout;
-
-    @Bind(R.id.activity_tutorial_page5_search_success_layout)
-    RelativeLayout searchSuccessLayout;
+public class TutorialPage5Activity extends BaseActivity implements ActivityObservable{
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar  roundProgressBar;
@@ -51,11 +29,9 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
         setContentView(R.layout.activity_tutorial_page_5);
         ButterKnife.bind(this);
         getModel().observableActivity(this);
-        nextTextView.setOnClickListener(this);
-        retryTextView.setOnClickListener(this);
         if(getModel().isWatchConnected())
         {
-            initConnectedScreen();
+            startConnectedActivity();
         }
         else
         {
@@ -68,34 +44,12 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
     {
         searchIndex = 0;
         roundProgressBar.setProgress(2);
-        searchingLayout.setVisibility(View.VISIBLE);
-        searchSuccessLayout.setVisibility(View.GONE);
-        searchFailureLayout.setVisibility(View.GONE);
     }
-    private void initConnectedScreen()
+    private void startConnectedActivity()
     {
-        searchSuccessLayout.setVisibility(View.VISIBLE);
-        searchingLayout.setVisibility(View.GONE);
-        searchFailureLayout.setVisibility(View.GONE);
+        startActivity(TutorialPageSuccessActivity.class);
+        finish();
     }
-
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.nextTextView)
-        {
-            startActivity(new Intent(this, MainActivity.class));
-            overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
-            getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
-            finish();
-        }
-        else if(v.getId() == R.id.retryTextView)
-        {
-            initSearchScreen();
-            getModel().startConnectToWatch(true);
-
-        }
-    }
-
     @Override
     public void notifyDatasetChanged() {
 
@@ -106,16 +60,14 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                searchSuccessLayout.setVisibility(View.VISIBLE);
-                searchingLayout.setVisibility(View.GONE);
-                searchFailureLayout.setVisibility(View.GONE);
+                startConnectedActivity();
             }
         });
     }
 
     @Override
     public void notifyOnDisconnected() {
-        //DO NOTHING WHEN HAS GOT CONNECTED,MAINACTIVITY WILL CONTINUE CONNECT WATCH AGAIN
+        //DO NOTHING WHEN HAS GOT CONNECTED ,MAINACTIVITY WILL CONTINUE CONNECT WATCH AGAIN
     }
 
     @Override
@@ -149,9 +101,7 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                searchSuccessLayout.setVisibility(View.GONE);
-                searchingLayout.setVisibility(View.GONE);
-                searchFailureLayout.setVisibility(View.VISIBLE);
+                startActivity(TutorialPageFailedActivity.class);
             }
         });
     }

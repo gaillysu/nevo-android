@@ -33,11 +33,9 @@ public class TutorialPage1Activity extends BaseActivity implements View.OnClickL
             finish();
             return;
         }
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_tutorial_page_1);
         ButterKnife.bind(this);
-
         nextTextView.setOnClickListener(this);
     }
 

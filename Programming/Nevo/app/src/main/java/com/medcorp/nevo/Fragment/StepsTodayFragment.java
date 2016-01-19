@@ -165,7 +165,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
         }
         String formatSteps(int steps)
         {
-            return steps + " steps";
+            return steps + "";
         }
         String formatDistance(int distanceMeter)
         {

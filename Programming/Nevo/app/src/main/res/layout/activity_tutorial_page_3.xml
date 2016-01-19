@@ -12,22 +12,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="40dp"
         roboto:bold="true"
         android:textSize="36sp"
+        android:layout_marginTop="50dp"
         android:text="Set time"/>
 
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page3_notice_textview"
-        android:layout_below="@id/activity_tutorial_page3_start_textview"
+        android:layout_below="@+id/activity_tutorial_page3_start_textview"
         android:textColor="@color/black"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:paddingTop="5dp"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:gravity="center"
-        roboto:thin="true"
         android:text="Pull the crown out and turn to set the time on your nevo watch. Be aware that nevo doesn\’t syncs time with your phone."/>
 
     <ImageView
@@ -35,9 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/tutorial_nevo_settime"
-        />
+        android:id="@+id/activity_tutorial_page3_image" />
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
+    <com.medcorp.nevo.view.customfontview.RobotoButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -46,8 +45,10 @@
         android:id="@+id/nextTextView"
         android:background="@color/transparent"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="26sp"
+        roboto:light="true"
+        android:textSize="21sp"
         android:layout_alignParentBottom="true"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_marginBottom="60dp"/>
 
 </RelativeLayout>

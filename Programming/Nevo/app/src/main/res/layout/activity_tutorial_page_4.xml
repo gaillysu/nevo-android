@@ -12,22 +12,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="50dp"
+        android:gravity="center"
         roboto:bold="true"
         android:textSize="36sp"
+        android:layout_marginTop="50dp"
         android:text="Turn on nevo"/>
 
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page4_notice_textview"
         android:layout_below="@id/activity_tutorial_page4_start_textview"
         android:textColor="@color/black"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:paddingTop="5dp"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:gravity="center"
-        roboto:thin="true"
         android:text="Push and hold the third button, until the blue LED blinks."/>
 
     <ImageView
@@ -37,7 +37,7 @@
         android:background="@drawable/tutorial_nevo_bt_onoff"
         />
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
+    <com.medcorp.nevo.view.customfontview.RobotoButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -46,8 +46,10 @@
         android:id="@+id/nextTextView"
         android:background="@color/transparent"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="26sp"
+        android:textSize="21sp"
+        roboto:light="true"
         android:layout_alignParentBottom="true"
+        style="?android:attr/borderlessButtonStyle"
         android:layout_marginBottom="60dp"/>
 
 </RelativeLayout>

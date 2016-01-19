@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:roboto="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<!-- searching status-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     xmlns:android_custom="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_tutorial_page5_searching_layout"
     android:orientation="vertical"
     android:background="#F6F6F6"
     android:visibility="visible"
@@ -20,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="50dp"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
         roboto:bold="true"
         android:textSize="36sp"
         android:text="Searching"/>
@@ -29,13 +24,12 @@
         android:id="@+id/activity_tutorial_page5_searching_notice_textview"
         android:layout_below="@id/activity_tutorial_page5_start_searching_textview"
         android:textColor="@color/black"
-        android:layout_width="wrap_content"
+        android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:paddingTop="5dp"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:gravity="center"
-        roboto:thin="true"
         android:text="Keep nevo close to your phone"/>
 
     <ImageView
@@ -54,101 +48,3 @@
         android_custom:roundProgressColor="#fff5a41c"
         android_custom:textIsDisplayable="false"/>
 </RelativeLayout>
-    <!-- search got failure -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:roboto="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/activity_tutorial_page5_search_failure_layout"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:background="#4D4D4D"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
-            android:id="@+id/activity_tutorial_page5_search_failure_textview"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="60dp"
-            roboto:bold="true"
-            android:textSize="36sp"
-            android:text="Cannot connect"/>
-
-        <ImageView
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bluetooth_icon"
-            />
-
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Try Again"
-            android:textAllCaps="false"
-            android:id="@+id/retryTextView"
-            android:background="@drawable/outline_fill_button"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="70dp"/>
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
-            android:id="@+id/activity_tutorial_page5_search_failure_tip_textview"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:textSize="20sp"
-            android:gravity="center"
-            roboto:thin="true"
-            android:text="Make sure the blue LED on the nevo is blinking and try again."/>
-
-    </RelativeLayout>
-    <!-- search got success-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:roboto="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/activity_tutorial_page5_search_success_layout"
-        android:orientation="vertical"
-        android:background="#F6F6F6"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
-            android:id="@+id/activity_tutorial_page5_search_success_textview"
-            android:textColor="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="50dp"
-            roboto:bold="true"
-            android:textSize="36sp"
-            android:text="Connected"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/tutorial_nevo_link_success"
-            />
-
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Tap to continue"
-            android:textAllCaps="false"
-            android:id="@+id/nextTextView"
-            android:background="@drawable/outline_fill_button"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="60dp"/>
-
-    </RelativeLayout>
-</FrameLayout>

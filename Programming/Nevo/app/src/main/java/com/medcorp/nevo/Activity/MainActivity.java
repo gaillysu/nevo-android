@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends BaseActivity implements ActivityObservable, FragmentManager.OnBackStackChangedListener{
+public class MainActivity extends BaseActivity implements ActivityObservable, DrawerLayout.DrawerListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
         mainMenuNavigationSelectListener = new MainMenuNavigationSelectListener();
         navigationView.setNavigationItemSelectedListener(mainMenuNavigationSelectListener);
-        drawerLayout.setDrawerListener(new MainMenuDrawerListener());
+        drawerLayout.setDrawerListener(this);
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         mainMenuNavigationSelectListener.onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
@@ -79,12 +79,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         BaseObservableFragment fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
         activeFragment.set(fragment);
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.addOnBackStackChangedListener(this);
         fragmentManager.beginTransaction()
                 .add(R.id.activity_main_frame_layout, fragment)
                 .addToBackStack(StepsFragment.class.getName())
                 .commit();
-
     }
 
     @Override
@@ -131,7 +129,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void notifyOnConnected() {
-        showStateString("Got Connected",false);
+        showStateString("Found nevo!", false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnConnected();
@@ -140,7 +138,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void notifyOnDisconnected() {
-        showStateString("Got disconnected.",false);
+        showStateString("Nevo disconnected.",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnDisconnected();
@@ -158,6 +156,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void findWatchSuccess() {
+
         if(activeFragment.notEmpty())
         {
             activeFragment.get().findWatchSuccess();
@@ -167,7 +166,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onSearching() {
-        showStateString("Searching watch...",false);
+        showStateString("Searching for nevo...",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSearching();
@@ -176,7 +175,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onSearchSuccess() {
-        showStateString("Search watch success.",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSearchSuccess();
@@ -185,7 +183,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onSearchFailure() {
-        showStateString("Search watch got failure,please check phone and watch bluetooth",true);
+        showStateString("Could not find nevo.",true);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSearchFailure();
@@ -194,7 +192,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onConnecting() {
-        showStateString("Connecting watch...",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onConnecting();
@@ -205,7 +202,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     public void onSyncStart() {
         //big sync need about 7~8s
         bigsyncstart = true;
-        showStateString("Sync Data starting...",false);
+        showStateString("Syncing Data...",false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSyncStart();
@@ -215,7 +212,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
     @Override
     public void onSyncEnd() {
         bigsyncstart = false;
-        showStateString("Sync data finished.",true);
+        showStateString("Syncing data finished!",true);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSyncEnd();
@@ -224,12 +221,12 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
 
     @Override
     public void onInitializeStart() {
-        showStateString("Initialize watch starting...",false);
+
     }
 
     @Override
     public void onInitializeEnd() {
-        showStateString("Initialize watch finished.",true);
+
     }
 
     private void showStateString(String strState,boolean dismiss)
@@ -260,31 +257,21 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Fr
         }
     }
 
+
     @Override
-    public void onBackStackChanged() {
+    public void onDrawerSlide(View drawerView, float slideOffset) {}
+
+    @Override
+    public void onDrawerOpened(View drawerView) {}
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        setFragment(selectedMenuItem);
     }
 
-    private class MainMenuDrawerListener implements DrawerLayout.DrawerListener {
+    @Override
+    public void onDrawerStateChanged(int newState) {
 
-        @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-            setFragment(selectedMenuItem);
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-
-        }
     }
 
     @Override

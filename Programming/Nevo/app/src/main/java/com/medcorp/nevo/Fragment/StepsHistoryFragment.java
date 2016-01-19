@@ -161,7 +161,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
 
         String getSteps()
         {
-            return steps + " steps";
+            return steps + "";
         }
 
         String getProgress(){
@@ -169,6 +169,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
 
             return df.format(progress)+"%";
         }
+
         String getGoal(){
             return goal+"";
         }

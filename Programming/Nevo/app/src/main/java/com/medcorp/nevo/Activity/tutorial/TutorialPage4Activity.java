@@ -34,7 +34,7 @@ public class TutorialPage4Activity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         if(v.getId() == R.id.nextTextView)
         {
-            startActivity(new Intent(this, TutorialPage5Activity.class));
+            startActivity(TutorialPage5Activity.class);
             overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
             finish();
         }
