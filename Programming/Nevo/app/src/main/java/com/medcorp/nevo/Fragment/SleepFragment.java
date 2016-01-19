@@ -108,4 +108,9 @@ public class SleepFragment extends BaseObservableFragment{
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(currentItem);
     }
+
+    @Override
+    public void onRequestResponse(boolean success) {
+
+    }
 }

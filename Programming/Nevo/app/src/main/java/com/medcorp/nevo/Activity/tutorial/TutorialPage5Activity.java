@@ -180,4 +180,9 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
     public void onInitializeEnd() {
 
     }
+
+    @Override
+    public void onRequestResponse(boolean success) {
+
+    }
 }

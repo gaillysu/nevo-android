@@ -26,4 +26,6 @@ public interface FragmentObservable {
     public void onSyncStart();
 
     public void onSyncEnd();
+
+    public void onRequestResponse(boolean success);
 }

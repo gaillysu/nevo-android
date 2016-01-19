@@ -32,4 +32,6 @@ public interface ActivityObservable {
 
     public void onInitializeEnd();
 
+    public void onRequestResponse(boolean success);
+
 }

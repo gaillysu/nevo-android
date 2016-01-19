@@ -54,11 +54,10 @@ public interface SyncController {
      */
 	public void setGoal(Goal goal);
     /*
-    input hour:0~23
-          minute:0~59
-          enable : true or false
+    input @list: MAX 3 Alarm array
+          @init: if true means by syncController invoked to do init sync, false means invoked by application to set value
      */
-	public void setAlarm(List<Alarm> list);
+	public void setAlarm(List<Alarm> list,boolean init);
     /*
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
      */
@@ -98,6 +97,10 @@ public interface SyncController {
 
     void sendRequest(final SensorRequest request);
 
-    public void setNotification();
+    /**
+     *
+     * @param init ,if true means by syncController invoked to do init sync, false means invoked by application to set value
+     */
+    public void setNotification(boolean init);
 
 }

@@ -344,6 +344,11 @@ public class OldMainActivity extends ActionBarActivity implements NavigationDraw
 
     }
 
+    @Override
+    public void onRequestResponse(boolean success) {
+
+    }
+
 
     public static class PlaceholderFragment {
         private static final String POSTITION = "position";

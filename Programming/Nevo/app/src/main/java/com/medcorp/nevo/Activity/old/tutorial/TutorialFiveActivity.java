@@ -140,6 +140,11 @@ public class TutorialFiveActivity extends BaseActivity implements View.OnClickLi
 
     }
 
+    @Override
+    public void onRequestResponse(boolean success) {
+
+    }
+
 
     public class myAnimationListener implements Animation.AnimationListener{
 

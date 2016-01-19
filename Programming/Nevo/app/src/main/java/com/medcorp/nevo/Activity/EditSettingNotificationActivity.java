@@ -95,7 +95,6 @@ public class EditSettingNotificationActivity extends BaseActivity{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 notification.setState(isChecked);
                 helper.saveState(notification);
-                getModel().setNotification();
             }
         });
 
@@ -125,7 +124,6 @@ public class EditSettingNotificationActivity extends BaseActivity{
                                     colorImage.setImageDrawable(convertLEDColor2Drawable(color));
                                     colorLabel.setText(convertLEDColor2Clock(color));
                                     notification.accept(new NotificationColorSaver(EditSettingNotificationActivity.this, convertLEDColor2Object(color)));
-                                    getModel().setNotification();
                                 }
                                 return true;
                             }

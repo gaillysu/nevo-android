@@ -123,6 +123,11 @@ public class StepsFragment extends BaseObservableFragment{
     }
 
     @Override
+    public void onRequestResponse(boolean success) {
+
+    }
+
+    @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.add_menu).setVisible(false);
