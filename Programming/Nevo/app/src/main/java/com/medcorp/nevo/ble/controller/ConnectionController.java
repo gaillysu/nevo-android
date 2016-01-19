@@ -52,6 +52,10 @@ public interface ConnectionController {
     public boolean isConnected();
 
     /**
+     * when user forget this watch, call disconnect()
+     */
+    public void disconnect();
+    /**
      Forgets the currently saved address.
      Next time connect is called, we will have to scan for nearby devices
      */

@@ -266,6 +266,18 @@ import java.util.TimerTask;
     }
 
     @Override
+    public void disconnect() {
+        //stop autoconnect timer
+        if(mAutoReconnectTimer!=null)
+        {
+            mAutoReconnectTimer.cancel();
+            mAutoReconnectTimer=null;
+        }
+        //disconnect it
+        nevoBT.disconnect();
+    }
+
+    @Override
     public void forgetSavedAddress() {
         //save it for OTA using, add if() for avoid many times invoke "forgetSavedAddress"
         if(!getSaveAddress().equals(""))  mSavedAddress = getSaveAddress();

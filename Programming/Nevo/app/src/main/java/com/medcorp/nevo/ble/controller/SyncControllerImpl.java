@@ -642,6 +642,14 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
     @Override
     public void forgetDevice() {
+        //step1:disconnect
+        if(connectionController.isConnected())
+        {
+            connectionController.disconnect();
+        }
+        //step2:unpair this watch from system bluetooth setting
+        connectionController.unPairDevice();
+        //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
         //when forget the watch, force a big sync when got connected again

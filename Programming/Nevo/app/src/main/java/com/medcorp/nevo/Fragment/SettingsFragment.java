@@ -1,5 +1,7 @@
 package com.medcorp.nevo.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.activity.SettingAboutActivity;
 import com.medcorp.nevo.activity.SettingNotificationActivity;
+import com.medcorp.nevo.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
@@ -160,7 +163,17 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         else if(position == 7)
         {
-           getModel().forgetDevice();
+            new AlertDialog.Builder(this.getActivity(), AlertDialog.THEME_HOLO_LIGHT)
+                    .setMessage("Are you sure?")
+                    .setPositiveButton(android.R.string.no, null)
+                    .setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getModel().forgetDevice();
+                            startActivity(new Intent(SettingsFragment.this.getContext(),TutorialPage1Activity.class));
+                            SettingsFragment.this.getActivity().finish();
+                        }
+                    }).setCancelable(false).show();
         }
     }
 }
