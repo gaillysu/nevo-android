@@ -208,7 +208,7 @@ public class AlarmFragment extends BaseFragment implements View.OnClickListener,
         onOff = AlarmFragment.getClockStateFromPreference(2,getActivity());
         list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
 
-        getModel().getSyncController().setAlarm(list);
+        getModel().getSyncController().setAlarm(list,false);
     }
     public void setClock(int index,final String time){
         switch (index){

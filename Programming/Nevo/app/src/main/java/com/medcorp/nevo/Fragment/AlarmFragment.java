@@ -15,15 +15,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.EditAlarmActivity;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.AlarmArrayAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
+import com.medcorp.nevo.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends BaseObservableFragment implements  TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener {
+public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
@@ -43,14 +48,13 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
     private AlarmArrayAdapter alarmArrayAdapter;
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         alarmList = new ArrayList<>();
-        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), getModel(), alarmList);
+        alarmArrayAdapter = new AlarmArrayAdapter(getContext(),alarmList,this);
         alarmListView.setAdapter(alarmArrayAdapter);
         alarmListView.setOnItemClickListener(this);
         refreshListView();
@@ -134,6 +138,12 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
     }
 
     @Override
+    public void onRequestResponse(boolean success) {
+        String resultString = success?"Alarm Synced":"Error Syncing Alarm";
+        ((MainActivity)getActivity()).showStateString(resultString,false);
+    }
+
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         final Alarm alarm = new Alarm(hourOfDay,minute,false,"");
         new MaterialDialog.Builder(getActivity())
@@ -179,5 +189,57 @@ public class AlarmFragment extends BaseObservableFragment implements  TimePicker
             alarmArrayAdapter.notifyDataSetChanged();
             alarmListView.invalidate();
         }
+    }
+
+    @Override
+    public void onAlarmSwitch(Switch alarmSwitch, Alarm alarm) {
+        if(!getModel().isWatchConnected()){
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(),"No watch connected.");
+            return;
+        }
+        boolean isChecked = alarmSwitch.isChecked();
+        if (isChecked && getAlarmEnableCount() == 3) {
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(), "This alarm can't be activied over MAX 3.");
+            return;
+        }
+        alarm.setEnable(isChecked);
+        getModel().updateAlarm(alarm);
+
+        List<Alarm> alarmSettingList = new ArrayList<Alarm>();
+        //step1: add this alarm
+        alarmSettingList.add(alarm);
+        //step2:, find other 2 alarms that is enabled.
+        List<Alarm> alarmRemainsList = new ArrayList<Alarm>();
+        for (int i = 0; i < alarmList.size(); i++) {
+            Alarm theAlarm = alarmList.get(i);
+            if (theAlarm.getId() != alarm.getId()) {
+                alarmRemainsList.add(alarmList.get(i));
+            }
+        }
+        for (Alarm thisAlarm : alarmRemainsList) {
+            if (thisAlarm.isEnable() && alarmSettingList.size() < 3) {
+                alarmSettingList.add(thisAlarm);
+            }
+        }
+        //step3:check  alarmSettingList.size() == 3 ?
+        ////build 1 or 2 invaild alarm to add alarmSettingList
+        if (alarmSettingList.size() == 1) {
+            alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
+            alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
+        } else if (alarmSettingList.size() == 2) {
+            alarmSettingList.add(new Alarm(0,0,false,"unknown"));
+        }
+        getModel().setAlarm(alarmSettingList);
+        ((MainActivity)getActivity()).showStateString("Syncing Alarm...",false);
+    }
+    private int getAlarmEnableCount(){
+        int count = 0;
+        for(Alarm alarm:alarmList)
+        {
+            if(alarm.isEnable()) count++;
+        }
+        return count;
     }
 }

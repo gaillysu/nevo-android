@@ -16,6 +16,8 @@ import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
+import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
+import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
@@ -73,6 +75,10 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
             }
             else if((byte) 0xF0 == packet.getHeader()) {
                 observableActivity.get().findWatchSuccess();
+            }
+            else if((byte) SetAlarmNevoRequest.HEADER == packet.getHeader()
+                    || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()) {
+                observableActivity.get().onRequestResponse(true);
             }
         }
     }
@@ -207,10 +213,10 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
     public void setAlarm(List<Alarm> list)
     {
-        syncController.setAlarm(list);
+        syncController.setAlarm(list,false);
     }
     public void setNotification() {
-        syncController.setNotification();
+        syncController.setNotification(false);
     }
 
     public void forgetDevice() {

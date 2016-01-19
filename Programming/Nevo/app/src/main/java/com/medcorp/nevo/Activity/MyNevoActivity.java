@@ -216,4 +216,9 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
 
     }
 
+    @Override
+    public void onRequestResponse(boolean success) {
+
+    }
+
 }

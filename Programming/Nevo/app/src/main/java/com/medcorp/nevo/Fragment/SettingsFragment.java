@@ -119,6 +119,12 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onSyncEnd() {
 
     }
+
+    @Override
+    public void onRequestResponse(boolean success) {
+
+    }
+
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -170,7 +176,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             getModel().forgetDevice();
-                            startActivity(new Intent(SettingsFragment.this.getContext(),TutorialPage1Activity.class));
+                            startActivity(new Intent(SettingsFragment.this.getContext(), TutorialPage1Activity.class));
                             SettingsFragment.this.getActivity().finish();
                         }
                     }).setCancelable(false).show();

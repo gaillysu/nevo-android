@@ -229,7 +229,15 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     }
 
-    private void showStateString(String strState,boolean dismiss)
+    @Override
+    public void onRequestResponse(boolean success) {
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onRequestResponse(success);
+        }
+    }
+
+    public void showStateString(String strState,boolean dismiss)
     {
         if(snackbar != null)
         {

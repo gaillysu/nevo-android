@@ -114,6 +114,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     private long mLastPressAkey = 0;
     private boolean mEnableTestMode = false;
     private boolean mSyncAllFlag = false;
+    private boolean initAlarm = true;
+    private boolean initNotification = true;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -178,7 +180,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public void setNotification() {
+    public void setNotification(boolean init) {
+        initNotification = init;
         Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
         NotificationColorGetter getter = new NotificationColorGetter(mContext);
         NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
@@ -252,29 +255,45 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     // set Local Notification setting to Nevo, when nevo 's battery removed, the
                     // Steps count is 0, and all notification is off, because Notification is very
                     // important for user, so here need use local's setting sync with nevo
-                    setNotification();
+                    setNotification(true);
                 }
                 else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
-                    List<Alarm> list = new ArrayList<Alarm>();
+                    if(initNotification)
+                    {
+                        List<Alarm> list = new ArrayList<Alarm>();
 
-                    String[] strAlarm = TimePickerView.getAlarmFromPreference(0,mContext).split(":");
-                    Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
-                    list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+                        String[] strAlarm = TimePickerView.getAlarmFromPreference(0, mContext).split(":");
+                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
+                        list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
 
-                    strAlarm = TimePickerView.getAlarmFromPreference(1,mContext).split(":");
-                    onOff = AlarmFragment.getClockStateFromPreference(1,mContext);
-                    list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
+                        strAlarm = TimePickerView.getAlarmFromPreference(1, mContext).split(":");
+                        onOff = AlarmFragment.getClockStateFromPreference(1, mContext);
+                        list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
 
-                    strAlarm = TimePickerView.getAlarmFromPreference(2,mContext).split(":");
-                    onOff = AlarmFragment.getClockStateFromPreference(2,mContext);
-                    list.add(new Alarm(Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff,""));
-                    setAlarm(list);
+                        strAlarm = TimePickerView.getAlarmFromPreference(2, mContext).split(":");
+                        onOff = AlarmFragment.getClockStateFromPreference(2, mContext);
+                        list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
+                        setAlarm(list, true);
+                    }
+                    else
+                    {
+                        //call setNotification() by application, here reset it true
+                        initNotification = true;
+                    }
                 }
                 else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
-                    //start sync data, nevo-->phone
-                    syncActivityData();
+                    if(initAlarm)
+                    {
+                        //start sync data, nevo-->phone
+                        syncActivityData();
+                    }
+                    else
+                    {
+                        //call setAlarm() by application, here reset it true
+                        initAlarm = true;
+                    }
                 }
                 else if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
@@ -589,7 +608,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public void setAlarm(List<Alarm> list) {
+    public void setAlarm(List<Alarm> list,boolean init) {
+        initAlarm = init;
         sendRequest(new SetAlarmNevoRequest(mContext,list));
     }
 
