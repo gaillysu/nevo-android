@@ -8,10 +8,10 @@
         android:id="@+id/activity_goals_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/alarm_list_view_devider"
-        android:dividerHeight="2dp"
-        android:visibility="gone"
-        />
+        android:divider="@drawable/alarm_list_view_divider"
+        android:dividerHeight="1dp"
+        android:visibility="gone"/>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" android:id="@+id/activity_goals_fragment_layout"/>

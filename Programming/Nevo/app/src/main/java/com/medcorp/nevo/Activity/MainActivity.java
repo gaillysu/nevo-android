@@ -9,11 +9,13 @@ import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +40,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends BaseActivity implements ActivityObservable, DrawerLayout.DrawerListener {
+public class MainActivity extends BaseActivity implements ActivityObservable, DrawerLayout.DrawerListener, FragmentManager.OnBackStackChangedListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -79,10 +81,13 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         BaseObservableFragment fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
         activeFragment.set(fragment);
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .add(R.id.activity_main_frame_layout, fragment)
-                .addToBackStack(StepsFragment.class.getName())
-                .commit();
+        fragmentManager.addOnBackStackChangedListener(this);
+        if(fragmentManager.getBackStackEntryCount() == 0) {
+            fragmentManager.beginTransaction()
+                    .add(R.id.activity_main_frame_layout, fragment)
+                    .commit();
+        }
+        Log.w("Karl", "Back stack changed, current count is = " + fragmentManager.getBackStackEntryCount());
     }
 
     @Override
@@ -129,6 +134,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void notifyOnConnected() {
+        //TODO Strings.xml
         showStateString("Found nevo!", false);
         if(activeFragment.notEmpty())
         {
@@ -138,6 +144,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void notifyOnDisconnected() {
+        //TODO Strings.xml
         showStateString("Nevo disconnected.",false);
         if(activeFragment.notEmpty())
         {
@@ -166,6 +173,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSearching() {
+        if (!getModel().isBluetoothOn()){
+            showStateString("Bluetooth is disabled. Enable Bluetooth.",false);
+            return;
+        }
         showStateString("Searching for nevo...",false);
         if(activeFragment.notEmpty())
         {
@@ -192,8 +203,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onConnecting() {
-        if(activeFragment.notEmpty())
-        {
+        if(activeFragment.notEmpty()) {
             activeFragment.get().onConnecting();
         }
     }
@@ -203,8 +213,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         //big sync need about 7~8s
         bigsyncstart = true;
         showStateString("Syncing Data...",false);
-        if(activeFragment.notEmpty())
-        {
+        if(activeFragment.notEmpty()) {
             activeFragment.get().onSyncStart();
         }
     }
@@ -213,8 +222,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     public void onSyncEnd() {
         bigsyncstart = false;
         showStateString("Syncing data finished!",true);
-        if(activeFragment.notEmpty())
-        {
+        if(activeFragment.notEmpty()) {
             activeFragment.get().onSyncEnd();
         }
     }
@@ -299,8 +307,12 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
-                fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
-                break;
+                if(fragmentManager.getBackStackEntryCount() >= 1) {
+                    fragmentManager.popBackStack();
+                }else{
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+                return;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
 
@@ -315,10 +327,17 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         activeFragment.set(fragment);
         {
             fragment.setEnterTransition(new Fade().setDuration(300));
-            fragmentManager.beginTransaction()
-                    .replace(R.id.activity_main_frame_layout, fragment)
-                    .commit();
+            FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                        fragmentTransaction.addToBackStack("");
+            }
+            fragmentTransaction.commit();
         }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Log.w("Karl","Back stack changed, current count is = " +  fragmentManager.getBackStackEntryCount());
     }
 
     private class MainMenuNavigationSelectListener implements NavigationView.OnNavigationItemSelectedListener {
@@ -335,11 +354,12 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else if(fragmentManager.getBackStackEntryCount() > 1) {
+        }else if(fragmentManager.getBackStackEntryCount() >= 1) {
             fragmentManager.popBackStack();
-        }else if(fragmentManager.getBackStackEntryCount() == 1) {
+            Log.w("Karl","Pop it");
+        }else if(fragmentManager.getBackStackEntryCount() == 0) {
             super.onBackPressed();
-            finish();
+            Log.w("Karl", "back pressed");
         }else{
              super.onBackPressed();
         }

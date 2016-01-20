@@ -14,7 +14,6 @@
         android:summary="Set label for alarm"
         android:title="Label" />
 
-
     <Preference
         android:key="fragment_edit_alarm_delete"
         android:title="Delete alarm"
