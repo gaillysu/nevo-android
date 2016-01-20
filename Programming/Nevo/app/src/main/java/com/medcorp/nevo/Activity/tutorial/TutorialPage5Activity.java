@@ -28,6 +28,11 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_tutorial_page_5);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getModel().observableActivity(this);
         if(getModel().isWatchConnected())
         {

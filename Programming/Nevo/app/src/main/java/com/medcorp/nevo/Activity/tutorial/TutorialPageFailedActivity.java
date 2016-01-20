@@ -6,6 +6,7 @@ import android.view.WindowManager;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -19,7 +20,7 @@ public class TutorialPageFailedActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_tutorial_page_failed);
-
+        ButterKnife.bind(this);
     }
 
 
