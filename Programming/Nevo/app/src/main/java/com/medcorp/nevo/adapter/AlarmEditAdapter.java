@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TableLayout;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.model.Alarm;
@@ -49,21 +50,25 @@ public class AlarmEditAdapter extends BaseAdapter {
 
         RobotoTextView title = (RobotoTextView)itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
         RobotoTextView summary = (RobotoTextView)itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
+        RobotoTextView delete = (RobotoTextView)itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
+
         if(position == 0)
         {
             title.setText(alarm.toString());
+            //TODO save to Strings.xml
             summary.setText("Set a different time");
         }
         else if(position == 1)
         {
             title.setText(alarm.getLabel());
+            //TODO save to Strings.xml
             summary.setText("Set label for alarm");
         }
         else if(position == 2)
         {
+            summary.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
-            summary.setTextColor(Color.BLACK);
-            summary.setText("Delete alarm");
+            delete.setVisibility(View.VISIBLE);
         }
 
         return itemView;

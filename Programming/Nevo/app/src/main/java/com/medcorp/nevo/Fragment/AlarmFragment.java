@@ -47,7 +47,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private List<Alarm> alarmList;
     private AlarmArrayAdapter alarmArrayAdapter;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         setHasOptionsMenu(true);
         return view;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -104,7 +102,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void findWatchSuccess() {
-
     }
 
     @Override
@@ -238,7 +235,9 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         int count = 0;
         for(Alarm alarm:alarmList)
         {
-            if(alarm.isEnable()) count++;
+            if(alarm.isEnable()){
+                count++;
+            }
         }
         return count;
     }

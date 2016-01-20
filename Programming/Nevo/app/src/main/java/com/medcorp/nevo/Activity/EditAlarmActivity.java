@@ -45,6 +45,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
+        //TODO save keys to XML
         alarm = getModel().getAlarmById(bundle.getInt("Alarm_ID"));
         listView.setAdapter(new AlarmEditAdapter(this,alarm));
         listView.setOnItemClickListener(this);
@@ -66,9 +67,11 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         switch (item.getItemId()) {
             case R.id.done_menu:
                 if(getModel().updateAlarm(alarm)){
+                    //TODO save to Strings.xml
                     ToastHelper.showShortToast(this, "Saved alarm!");
                     finish();
                 }else{
+                    //TODO save to Strings.xml
                     ToastHelper.showShortToast(this,"Couldn't save the alarm.!");
                 }
                 return true;
@@ -80,14 +83,13 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 0)
-        {
+        if(position == 0){
             Dialog alarmDialog = new TimePickerDialog(this, R.style.NevoDialogStyle, timeSetListener, alarm.getHour(), alarm.getMinute(), true);
+            //TODO save to Strings.xml
             alarmDialog.setTitle("Edit Alarm");
             alarmDialog.show();
-        }
-        else if(position == 1)
-        {
+        }else if(position == 1){
+            //TODO save to Strings.xml
             new MaterialDialog.Builder(EditAlarmActivity.this)
                     .title("Edit Alarm")
                     .content("Label your alarm.")
@@ -101,12 +103,12 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                         }
                     }).negativeText("Cancel")
                     .show();
-        }
-        else if(position == 2)
-        {
+        }else if(position == 2){
             if(!getModel().deleteAlarm(alarm)){
+                //TODO save to Strings.xml
                 ToastHelper.showShortToast(EditAlarmActivity.this, "Failed to delete alarm");
             }else{
+                //TODO save to Strings.xml
                 ToastHelper.showShortToast(EditAlarmActivity.this, "Deleted alarm!");
             }
             finish();
@@ -119,6 +121,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             alarm.setHour(hourOfDay);
             alarm.setMinute(minute);
             if(!getModel().updateAlarm(alarm)){
+                //TODO save to Strings.xml
                 ToastHelper.showShortToast(EditAlarmActivity.this, "Failed to change alarm");
             }else{
                 listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this,alarm));

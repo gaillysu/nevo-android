@@ -100,11 +100,12 @@ public class EditSettingNotificationActivity extends BaseActivity{
 
         colorImage.setImageDrawable(convertLEDColor2Drawable(color));
         colorLabel.setText(convertLEDColor2Clock(color));
+        //TODO  add to Strings.xml
         colorLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<String> stringList = new ArrayList<String>();
-                //TODO: add strings
+
                 stringList.add("2 o'clock (red)");
                 stringList.add("4 o'clock (blue)");
                 stringList.add("6 o'clock (light green)");
@@ -147,7 +148,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
 
     String convertLEDColor2Clock(String color)
     {
-        //TODO add these strings
+        //TODO  add to Strings.xml && refactor Code
         if(color.equals("RED")) {
             return "Red LED" + " - 2 o'clock";
         }
@@ -172,6 +173,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
 
     Drawable convertLEDColor2Drawable(String color)
     {
+
         if(color.equals("RED")) {
             return  getDrawable(R.drawable.red_dot);
         }

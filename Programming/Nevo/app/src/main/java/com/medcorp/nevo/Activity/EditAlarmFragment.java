@@ -34,6 +34,7 @@ public class EditAlarmFragment extends BasePreferencesFragment{
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.edit_alarm);
         Bundle bundle =  getArguments();
+        //TODO save keys to XML
         alarm = getModel().getAlarmById(bundle.getInt("Alarm_ID"));
         getAppCompatActivity().supportInvalidateOptionsMenu();
         setHasOptionsMenu(true);
@@ -67,6 +68,7 @@ public class EditAlarmFragment extends BasePreferencesFragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //TODO save keys to XML
         alarmPreferences = findPreference("fragment_edit_alarm_edit_alarm");
         alarmPreferences.setTitle(alarm.toString());
         alarmPreferences.setOnPreferenceClickListener(alarmPrefClickListener);
@@ -81,8 +83,8 @@ public class EditAlarmFragment extends BasePreferencesFragment{
     Preference.OnPreferenceClickListener alarmPrefClickListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            Log.w("Karl","On Alarm pref click");
             Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, timeSetListener, alarm.getHour(), alarm.getMinute(), true);
+            //TODO save to Strings.xml
             alarmDialog.setTitle("Add Alarm");
             alarmDialog.show();
             return true;
@@ -103,8 +105,10 @@ public class EditAlarmFragment extends BasePreferencesFragment{
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if(!getModel().deleteAlarm(alarm)){
+                //TODO save to Strings.xml
                 ToastHelper.showShortToast(getContext(), "Failed to delete alarm");
             }else{
+                //TODO save to Strings.xml
                 ToastHelper.showShortToast(getContext(), "Deleted alarm!");
             }
             getAppCompatActivity().finish();
@@ -118,6 +122,7 @@ public class EditAlarmFragment extends BasePreferencesFragment{
             alarm.setHour(hourOfDay);
             alarm.setMinute(minute);
             if(!getModel().updateAlarm(alarm)){
+                //TODO save to Strings.xml
                 ToastHelper.showShortToast(getContext(), "Failed to change alarm");
             }else{
                 alarmPreferences.setTitle(alarm.toString());

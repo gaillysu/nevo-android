@@ -49,21 +49,24 @@ public class PresetEditAdapter extends BaseAdapter {
 
         RobotoTextView title = (RobotoTextView)itemView.findViewById(R.id.activity_preset_edit_list_view_item_title_label);
         RobotoTextView summary = (RobotoTextView)itemView.findViewById(R.id.activity_preset_edit_list_view_item_summary_label);
+        RobotoTextView delete = (RobotoTextView)itemView.findViewById(R.id.activity_preset_edit_list_view_item_delete_label);
         if(position == 0)
         {
+            //TODO save to Strings.xml
             title.setText(preset.getSteps()+"");
             summary.setText("Set new goal");
         }
         else if(position == 1)
         {
+            //TODO save to Strings.xml
             title.setText(preset.getLabel());
             summary.setText("Set label for goal");
         }
         else if(position == 2)
         {
+            summary.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
-            summary.setTextColor(Color.BLACK);
-            summary.setText("Delete goal");
+            delete.setVisibility(View.VISIBLE);
         }
 
         return itemView;

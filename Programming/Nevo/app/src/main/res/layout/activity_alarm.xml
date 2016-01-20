@@ -9,8 +9,8 @@
         android:id="@+id/activity_edit_alarm_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/alarm_list_view_devider"
-        android:dividerHeight="2dp"
+        android:divider="@drawable/alarm_list_view_divider"
+        android:dividerHeight="1dp"
         android:visibility="visible"
         />
 </LinearLayout>
