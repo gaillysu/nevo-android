@@ -125,6 +125,7 @@
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    roboto:light="true"
                     android:text="Light sleep"/>
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:id="@+id/fragment_sleep_today_light"

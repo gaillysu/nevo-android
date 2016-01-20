@@ -56,6 +56,13 @@ public class StepsFragment extends BaseObservableFragment{
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // TODO add to Strings.xml
+        getAppCompatActivity().setTitle("Steps");
+    }
+
     public void setOnStepsListener(OnStepsListener onStepsListener) {
         this.onStepsListener = onStepsListener;
     }

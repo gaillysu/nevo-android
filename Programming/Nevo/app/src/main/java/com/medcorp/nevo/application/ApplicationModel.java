@@ -2,6 +2,7 @@ package com.medcorp.nevo.application;
 
 import android.annotation.TargetApi;
 import android.app.Application;
+import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
 import android.util.Log;
 
@@ -66,6 +67,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void packetReceived(NevoPacket packet) {
+
         if(observableActivity.notEmpty()) {
             if (packet.getHeader() == (byte) GetStepsGoalNevoRequest.HEADER) {
                 observableActivity.get().notifyDatasetChanged();
@@ -213,7 +215,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
     public void setAlarm(List<Alarm> list)
     {
-        syncController.setAlarm(list,false);
+        syncController.setAlarm(list, false);
     }
     public void setNotification() {
         syncController.setNotification(false);
@@ -305,6 +307,14 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     public boolean deleteAlarm(Preset preset){
         return  presetsDatabaseHelper.remove(preset.getId(), null);
+    }
+
+    public boolean isBluetoothOn(){
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter.isEnabled()){
+            return true;
+        }
+        return false;
     }
 
 
