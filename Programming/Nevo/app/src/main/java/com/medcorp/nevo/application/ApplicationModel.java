@@ -316,6 +316,4 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
         return false;
     }
-
-
 }
