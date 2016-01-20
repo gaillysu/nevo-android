@@ -4,6 +4,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/toolbar"/>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +23,7 @@
         android:src="@drawable/firmware_clock"/>
     </RelativeLayout>
 
-    <ListView
+    <com.medcorp.nevo.view.ListViewForScrollView
         android:background="@color/white"
         android:id="@+id/activity_mynevo_list_view"
         android:layout_width="match_parent"
@@ -42,4 +49,6 @@
             android:text = "To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes.
 You will not receive notifications on nevo when disconnected."/>
     </RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
