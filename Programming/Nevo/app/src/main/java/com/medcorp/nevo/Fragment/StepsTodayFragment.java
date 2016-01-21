@@ -113,18 +113,15 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
         View view = inflater.inflate(R.layout.fragment_steps_today, container, false);
         ButterKnife.bind(this, view);
         int dailySteps = 0;
-        int dailyGoal =  7000;//default goal which comes from nevo, when run app firstly
+        int dailyGoal =  7000;
+        // default goal which comes from nevo, when run app firstly
         Steps steps =  getModel().getDailySteps(0, getModel().getDateFromDate(new Date()));
-        if(steps != null)
-        {
+        if(steps != null) {
              dailySteps = steps.getSteps();
              dailyGoal =  steps.getGoal();
-        }
-        else
-        {
+        } else {
             Preset preset = getModel().getPresetById(Preferences.getPresetId(getContext()));
-            if(preset!=null)
-            {
+            if(preset!=null) {
                 dailyGoal = preset.getSteps();
             }
         }
