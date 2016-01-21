@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.PersistableBundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -16,7 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -308,12 +306,9 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
             case R.id.nav_steps_fragment:
                 if(fragmentManager.getBackStackEntryCount() >= 1) {
                     fragmentManager.popBackStack();
-                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount()-1);
+                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
                     activeFragment.set(fragment);
-                }else{
-                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
-
                 return;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
