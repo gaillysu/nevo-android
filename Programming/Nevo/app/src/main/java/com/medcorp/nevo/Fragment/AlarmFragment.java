@@ -66,6 +66,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         switch (item.getItemId()){
             case R.id.add_menu:
                 Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
+                //TODO put into Strings.xml
                 alarmDialog.setTitle("Add Alarm");
                 alarmDialog.show();
                 break;
@@ -142,6 +143,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        //TODO put into Strings.xml
         final Alarm alarm = new Alarm(hourOfDay,minute,false,"");
         new MaterialDialog.Builder(getActivity())
                 .title("Add Alarm")
@@ -163,6 +165,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getContext(), EditAlarmActivity.class);
         Bundle bundle = new Bundle();
+        //TODO put into keys.xml
         bundle.putInt("Alarm_ID", alarmList.get(position).getId());
         i.putExtras(bundle);
         SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
@@ -192,12 +195,14 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public void onAlarmSwitch(Switch alarmSwitch, Alarm alarm) {
         if(!getModel().isWatchConnected()){
             alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            //TODO put into Strings.xml
             ToastHelper.showShortToast(getContext(),"No watch connected.");
             return;
         }
         boolean isChecked = alarmSwitch.isChecked();
         if (isChecked && getAlarmEnableCount() == 3) {
             alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            //TODO put into Strings.xml
             ToastHelper.showShortToast(getContext(), "This alarm can't be activied over MAX 3.");
             return;
         }
@@ -223,12 +228,14 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //step3:check  alarmSettingList.size() == 3 ?
         ////build 1 or 2 invaild alarm to add alarmSettingList
         if (alarmSettingList.size() == 1) {
+            //TODO put into Strings.xml
             alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
             alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
         } else if (alarmSettingList.size() == 2) {
             alarmSettingList.add(new Alarm(0,0,false,"unknown"));
         }
         getModel().setAlarm(alarmSettingList);
+        //TODO put into Strings.xml
         ((MainActivity)getActivity()).showStateString("Syncing Alarm...",false);
     }
     private int getAlarmEnableCount(){

@@ -50,6 +50,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
         listMenu = new ArrayList<SettingMenu>();
+        //TODO put into Strings.xml
         listMenu.add(new SettingMenu("Link loss notification",R.drawable.setting_linkloss,true));
         listMenu.add(new SettingMenu("Notifications",R.drawable.setting_notfications,false));
         listMenu.add(new SettingMenu("My nevo",R.drawable.setting_mynevo,false));
@@ -143,6 +144,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             if(getModel().isWatchConnected()) {
                 startActivity(MyNevoActivity.class);
             }else{
+                //TODO put into Strings.xml
                 ToastHelper.showShortToast(getContext(),"No watch connected.");
             }
         }
@@ -151,6 +153,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             if(getModel().isWatchConnected()) {
                 getModel().blinkWatch();
             }else{
+                //TODO put into Strings.xml
                 ToastHelper.showShortToast(getContext(),"No watch connected.");
             }
         }
@@ -160,6 +163,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         else if(position == 5)
         {
+            //TODO put into config.xml
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://support.nevowatch.com/support/home"));
             getActivity().startActivity(intent);
         }
@@ -170,6 +174,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         else if(position == 7)
         {
             new AlertDialog.Builder(this.getActivity(), AlertDialog.THEME_HOLO_LIGHT)
+                    //TODO put into Strings.xml
                     .setMessage("Are you sure?")
                     .setPositiveButton(android.R.string.no, null)
                     .setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {

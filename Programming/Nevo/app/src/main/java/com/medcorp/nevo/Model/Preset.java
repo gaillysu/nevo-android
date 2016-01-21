@@ -53,7 +53,7 @@ public class Preset {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(label);
-        builder.append(": ");
+        builder.append(":");
         builder.append(steps);
         builder.append(" steps");
         return builder.toString();

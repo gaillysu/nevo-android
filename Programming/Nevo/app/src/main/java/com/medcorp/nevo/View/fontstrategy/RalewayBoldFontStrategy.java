@@ -14,6 +14,7 @@ public class RalewayBoldFontStrategy implements FontStrategy {
     private Typeface tf;
     public RalewayBoldFontStrategy(Context context) {
         tf = Typeface.createFromAsset(context.getAssets(),
+                //TODO put into config.xml
                 "font/Raleway-Bold.ttf");
     }
 

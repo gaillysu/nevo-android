@@ -3,7 +3,7 @@
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="5">
+    android:weightSum="6">
 
     <com.github.mikephil.charting.charts.BarChart
         android:layout_weight="4"
@@ -22,10 +22,11 @@
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_gravity="center_horizontal"
@@ -45,7 +46,7 @@
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -56,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="progress"/>
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_history_progress"
@@ -68,7 +70,7 @@
         <LinearLayout
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -79,6 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="steps"/>
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_history_steps"

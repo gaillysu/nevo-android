@@ -6,6 +6,7 @@ package com.medcorp.nevo.ble.util;
 
 
 public class Constants {
+    //TODO best to do in core_keys.xml
     public static final String PREF_NAME = "NevoPrefs";
     public static final String SAVE_MAC_ADDRESS = "savemacaddress";
     public static final String LAST_SYNC = "last_sync";

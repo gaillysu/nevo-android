@@ -28,6 +28,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         SharedPreferences.Editor sharedPreferences = getSharedPreferences(Constants.PREF_NAME, 0).edit();
         sharedPreferences.putBoolean(Constants.FIRST_FLAG, false);
         sharedPreferences.commit();
+        //TODO put in Strings.xml & keys.xml
         if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean("preset",false))
         {
             getModel().addPreset(new Preset("Light", true, 7000));

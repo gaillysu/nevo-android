@@ -44,8 +44,10 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        //TODO put in Strings.xml
         setTitle("Edit Goals");
         Bundle bundle = getIntent().getExtras();
+        //TODO put in Keys.xml
         preset = getModel().getPresetById(bundle.getInt("Preset_ID"));
         presetListView.setVisibility(View.VISIBLE);
         presetListView.setOnItemClickListener(this);
@@ -66,6 +68,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position == 0)
         {
+            //TODO put in Strings.xml
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title("Edit Goal")
                     .content("input your goal.")
@@ -81,6 +84,7 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         }
         else if(position == 1)
         {
+            //TODO put in Strings.xml
             new MaterialDialog.Builder(EditGoalsActivity.this)
                     .title("Edit Goal")
                     .content("Label your goal.")
@@ -98,8 +102,10 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         else if(position == 2)
         {
             if(!getModel().deleteAlarm(preset)){
+                //TODO put in Strings.xml
                 ToastHelper.showShortToast(this, "Failed to delete goal");
             }else{
+                //TODO put in Strings.xml
                 ToastHelper.showShortToast(this, "Deleted goal!");
             }
             setResult(-1);
@@ -112,10 +118,12 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         switch (item.getItemId()) {
             case R.id.done_menu:
                 if(getModel().updatePreset(preset)){
+                    //TODO put in Strings.xml
                     ToastHelper.showShortToast(EditGoalsActivity.this, "Saved Goal!");
                     EditGoalsActivity.this.setResult(1);
                     EditGoalsActivity.this.finish();
                 }else{
+                    //TODO put in Strings.xml
                     ToastHelper.showShortToast(EditGoalsActivity.this,"Couldn't save the goal.!");
                 }
                 return true;

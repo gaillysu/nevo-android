@@ -55,6 +55,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        //TODO put in Strings.xml
         setTitle("Goals");
         presetListView.setVisibility(View.VISIBLE);
         presetList = getModel().getAllPreset();
@@ -70,6 +71,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         Intent intent = new Intent(this,EditGoalsActivity.class);
         preset =  presetList.get(position);
         Bundle bundle = new Bundle();
+        //TODO put in keys.xml
         bundle.putInt("Preset_ID", preset.getId());
         bundle.putString("Preset_Label", preset.getLabel());
         bundle.putInt("Preset_Steps", preset.getSteps());
@@ -106,6 +108,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
+                //TODO put in Strings.xml
                 new MaterialDialog.Builder(GoalsActivity.this)
                         .title("Add Goal")
                         .content("Input your goal.")

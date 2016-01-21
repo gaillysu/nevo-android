@@ -29,6 +29,7 @@ public class EditGoalsFragment extends BasePreferencesFragment{
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.edit_preset);
         Bundle bundle =  getArguments();
+        //TODO put in keys.xml
         preset = getModel().getPresetById(bundle.getInt("Preset_ID"));
         getAppCompatActivity().supportInvalidateOptionsMenu();
         setHasOptionsMenu(true);
@@ -39,10 +40,12 @@ public class EditGoalsFragment extends BasePreferencesFragment{
         switch (item.getItemId()) {
             case R.id.done_menu:
                 if(getModel().updatePreset(preset)){
+                    //TODO put in Strings.xml
                     ToastHelper.showShortToast(getContext(),"Saved Goal!");
                     getAppCompatActivity().setResult(1);
                     getAppCompatActivity().finish();
                 }else{
+                    //TODO put in Strings.xml
                     ToastHelper.showShortToast(getContext(),"Couldn't save the goal.!");
                 }
                 return true;
@@ -62,6 +65,7 @@ public class EditGoalsFragment extends BasePreferencesFragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //TODO put in keys.xml
         presetPreferences = findPreference("fragment_edit_preset_value");
         presetPreferences.setTitle(preset.getSteps()+"");
         presetPreferences.setOnPreferenceClickListener(presetPrefClickListener);
@@ -78,6 +82,7 @@ public class EditGoalsFragment extends BasePreferencesFragment{
         @Override
         public boolean onPreferenceClick(Preference preference) {
             new MaterialDialog.Builder(getActivity())
+                    //TODO put in Strings.xml
                     .title("Edit Goal")
                     .content("input your goal.")
                     .inputType(InputType.TYPE_CLASS_NUMBER)
@@ -107,8 +112,10 @@ public class EditGoalsFragment extends BasePreferencesFragment{
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if(!getModel().deleteAlarm(preset)){
+                //TODO put in Strings.xml
                 ToastHelper.showShortToast(getContext(), "Failed to delete goal");
             }else{
+                //TODO put in Strings.xml
                 ToastHelper.showShortToast(getContext(), "Deleted goal!");
             }
             getAppCompatActivity().setResult(-1);

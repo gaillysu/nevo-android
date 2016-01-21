@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="5"
+    android:weightSum="6"
     android:background="@color/white">
 
     <RelativeLayout
@@ -13,8 +13,9 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="4">
-        <ImageView
 
+        <ImageView
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="30dp"
@@ -24,29 +25,30 @@
             android:src="@drawable/clockview600"/>
 
         <ImageView
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/HomeClockHour"
-            android:src="@drawable/clockview_hour"
-            android:visibility="visible"/>
+            android:src="@drawable/clockview_hour"/>
 
         <ImageView
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/HomeClockMinute"
-            android:src="@drawable/clockview_minute"
-            android:visibility="visible"/>
+            android:src="@drawable/clockview_minute"/>
 
         <com.medcorp.nevo.view.RoundProgressBar
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
             android:id="@+id/roundProgressBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -54,14 +56,13 @@
             android_custom:roundWidth="2dp"
             android_custom:roundProgressColor="#fff5a41c"
             android_custom:textIsDisplayable="false"/>
-
     </RelativeLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:weightSum="3">
         <LinearLayout
             android:layout_weight="1"
@@ -70,12 +71,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
                 android:text="goal"/>
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_today_goal"
@@ -91,12 +94,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
                 android:text="progress"/>
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:id="@+id/fragment_steps_today_progress"
                 android:textColor="@color/black"
@@ -112,12 +117,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
                 android:text="steps"/>
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_today_dailysteps"

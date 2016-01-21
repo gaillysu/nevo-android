@@ -183,7 +183,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public static void outPutDatabase(Context context)
     {
-        Log.v("DBTEST", "START");
+        //TODO best to put into config.xml
         File dbOut = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/nevowatch.db");
         File dbIn = new File("/data/data/"+context.getPackageName()+"/databases/nevowatch.db");
         try {
@@ -197,12 +197,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             in.close();
             out.flush();
             out.close();
-            Log.v("DBTEST", "end successfully,"+dbOut.getAbsolutePath());
         } catch (FileNotFoundException e) {
-            Log.v("DBTEST", e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.v("DBTEST", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -212,9 +209,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * @param string: [0, 2 ,3, 60, 23], start with '[', end with ']'
      * @return int[]{0,2,3,60,23}
      */
+    //TODO wtf is this?
     public static int[] string2IntArray(String string)
     {
-        //Log.i("DatabaseHelper","string2IntArray: "+string);
         String s = string;
         if(string.startsWith("[") && string.endsWith("]"))
             s = string.substring(1,string.length()-1);
@@ -469,7 +466,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     reststart = start + (13 * 60 - hourlySleepTime[12]) * 60 * 1000;
                     //list.get(0).setReststartDateTime(reststart);
                     //list.get(0).setRestendDateTime(restend);
-
+                    //TODO put into keys.xml or something
                     json.put("startRestDateTime",reststart);
                     json.put("endRestDateTime",restend);
                 }
@@ -488,6 +485,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 for(int k:values2) sleepLightDuration +=k;
                 for(int k:values3) sleepDeepDuration +=k;
             }
+            //TODO put into keys.xml or something
             json.put("sleepWakeDuration",sleepWakeDuration);
             json.put("sleepLightDuration",sleepLightDuration);
             json.put("sleepDeepDuration",sleepDeepDuration);
@@ -537,7 +535,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
-     *
      * @return all records of daily history, ordered by date ascending, such as Oct 18,19...
      */
     public List<DailyHistory> getAllDailyHistory()

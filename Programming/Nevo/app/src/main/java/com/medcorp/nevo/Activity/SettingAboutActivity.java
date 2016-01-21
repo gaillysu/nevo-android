@@ -26,6 +26,7 @@ public class SettingAboutActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        //TODO put in Strings.xml
         setTitle("About");
     }
 

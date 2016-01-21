@@ -75,6 +75,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sleep_history, container, false);
         ButterKnife.bind(this, view);
+        //TODO put into config.xml
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "font/Roboto-Bold.ttf");
         barChart.setDescription("");

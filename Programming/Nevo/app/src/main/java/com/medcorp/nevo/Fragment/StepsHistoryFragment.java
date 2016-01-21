@@ -63,6 +63,8 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         ButterKnife.bind(this, view);
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 "font/Roboto-Bold.ttf");
+        //TODO put into config.xml
+
         barChart.setDescription("");
         barChart.setNoDataTextDescription("");
         barChart.getLegend().setEnabled(false);
