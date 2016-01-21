@@ -139,6 +139,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     public void notifyOnDisconnected() {
         //TODO Strings.xml
+        if (!getModel().isBluetoothOn()){
+            showStateString("Bluetooth is disabled. Enable Bluetooth.",false);
+            return;
+        }
         showStateString("Nevo disconnected.",false);
         if(activeFragment.notEmpty())
         {

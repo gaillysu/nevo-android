@@ -158,10 +158,13 @@ public class NevoBTImpl implements NevoBT {
             if(onExceptionListener.notEmpty()) {
 				onExceptionListener.get().onException(e);
 			}
+			return;
         } catch (BluetoothDisabledException e) {
 			if(onExceptionListener.notEmpty()) {
 				onExceptionListener.get().onException(e);
 			}
+			//fix a bug: S4 got connected with nevo, if close S4 BT, the nevo can't get connected.
+			return;
         }
 
 		
