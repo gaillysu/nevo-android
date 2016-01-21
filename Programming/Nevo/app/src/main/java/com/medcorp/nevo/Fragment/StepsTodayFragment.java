@@ -112,11 +112,24 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_steps_today, container, false);
         ButterKnife.bind(this, view);
-        Preset preset = getModel().getPresetById(Preferences.getPresetId(getContext()));
-        if(preset!=null) {
-            //temporarily, we set the goal with the local saved value, but perhaps it is wrong, user can delete it, so the vale which comes from watch is always right, we should show watch's value.
-            goal.setText(""+preset.getSteps());
+        int dailySteps = 0;
+        int dailyGoal =  7000;//default goal which comes from nevo, when run app firstly
+        Steps steps =  getModel().getDailySteps(0, getModel().getDateFromDate(new Date()));
+        if(steps != null)
+        {
+             dailySteps = steps.getSteps();
+             dailyGoal =  steps.getGoal();
         }
+        else
+        {
+            Preset preset = getModel().getPresetById(Preferences.getPresetId(getContext()));
+            if(preset!=null)
+            {
+                dailyGoal = preset.getSteps();
+            }
+        }
+        setProgressBar((int) (100.0 * dailySteps / dailyGoal));
+        setDashboard(new Dashboard(dailySteps, dailyGoal, (int) (100.0 * dailySteps / dailyGoal), steps.getDistance(), dailySteps, steps.getCalories()));
         return view;
     }
 
