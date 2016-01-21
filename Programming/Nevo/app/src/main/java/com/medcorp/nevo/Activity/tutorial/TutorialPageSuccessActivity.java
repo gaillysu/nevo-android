@@ -30,9 +30,9 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         sharedPreferences.commit();
         if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean("preset",false))
         {
-            getModel().addPreset(new Preset("light", true, 7000));
-            getModel().addPreset(new Preset("heavy", true, 10000));
-            getModel().addPreset(new Preset("intensive", true, 20000));
+            getModel().addPreset(new Preset("Light", true, 7000));
+            getModel().addPreset(new Preset("Moderate", true, 10000));
+            getModel().addPreset(new Preset("Heavy", true, 20000));
             getModel().addAlarm(new Alarm(8, 0, false, "Weekly days"));
             getModel().addAlarm(new Alarm(9, 0, false, "Weekend"));
             sharedPreferences.putBoolean("preset", true);
