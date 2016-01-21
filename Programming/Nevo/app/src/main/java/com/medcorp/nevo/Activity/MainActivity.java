@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
 
@@ -38,7 +41,8 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends BaseActivity implements ActivityObservable, DrawerLayout.DrawerListener{
+public class MainActivity extends BaseActivity implements ActivityObservable, DrawerLayout.DrawerListener,NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener
+{
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -53,7 +57,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     CoordinatorLayout coordinatorLayout;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private MainMenuNavigationSelectListener mainMenuNavigationSelectListener;
     private MenuItem selectedMenuItem;
     private Optional<BaseObservableFragment> activeFragment;
     private FragmentManager fragmentManager;
@@ -70,19 +73,19 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
-        mainMenuNavigationSelectListener = new MainMenuNavigationSelectListener();
-        navigationView.setNavigationItemSelectedListener(mainMenuNavigationSelectListener);
+        navigationView.setNavigationItemSelectedListener(this);
         drawerLayout.setDrawerListener(this);
         MenuItem firstItem = navigationView.getMenu().getItem(0);
-        mainMenuNavigationSelectListener.onNavigationItemSelected(firstItem);
+        onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
         setTitle(selectedMenuItem.getTitle());
         BaseObservableFragment fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
         activeFragment.set(fragment);
         fragmentManager = getSupportFragmentManager();
+        fragmentManager.addOnBackStackChangedListener(this);
         if(fragmentManager.getBackStackEntryCount() == 0) {
             fragmentManager.beginTransaction()
-                    .add(R.id.activity_main_frame_layout, fragment)
+                    .replace(R.id.activity_main_frame_layout, fragment)
                     .commit();
         }
     }
@@ -312,7 +315,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
                 return;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
-
                 break;
             case R.id.nav_sleep_fragment:
                 fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
@@ -321,25 +323,25 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                 break;
         }
+        if(activeFragment.get().getClass().getName().equals(fragment.getClass().getName())){
+            return;
+        }
         activeFragment.set(fragment);
         {
             fragment.setEnterTransition(new Fade().setDuration(300));
             FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
             if (fragmentManager.getBackStackEntryCount() == 0) {
-                        fragmentTransaction.addToBackStack("");
+                        fragmentTransaction.addToBackStack(fragment.getClass().getName());
             }
             fragmentTransaction.commit();
         }
     }
 
-    private class MainMenuNavigationSelectListener implements NavigationView.OnNavigationItemSelectedListener {
-
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
-            selectedMenuItem = item;
-            drawerLayout.closeDrawers();
-            return true;
-        }
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        selectedMenuItem = item;
+        drawerLayout.closeDrawers();
+        return true;
     }
 
     @Override
@@ -348,6 +350,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
             drawerLayout.closeDrawer(GravityCompat.START);
         }else if(fragmentManager.getBackStackEntryCount() >= 1) {
             fragmentManager.popBackStack();
+            MenuItem item = navigationView.getMenu().getItem(0);
+            selectedMenuItem = item;
+            item.setChecked(true);
+            activeFragment.set((BaseObservableFragment) fragmentManager.getFragments().get(0));
         }else if(fragmentManager.getBackStackEntryCount() == 0) {
             super.onBackPressed();
         }else{
@@ -360,5 +366,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         getMenuInflater().inflate(R.menu.menu_add, menu);
         getMenuInflater().inflate(R.menu.menu_choose_goal, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Log.w("Karl", "On backstack changed. current =  " + fragmentManager.getBackStackEntryCount());
     }
 }
