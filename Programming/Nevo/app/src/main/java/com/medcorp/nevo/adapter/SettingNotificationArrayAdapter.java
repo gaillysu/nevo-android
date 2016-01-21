@@ -56,11 +56,13 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
             notificationValue.setText(convertLEDColor2Clock(notification.accept(colorGetter).getTag()));
         }
         else {
+            //TODO put in Strings.xml
             notificationValue.setText("Deactivated");
         }
         return itemView;
     }
 
+    //TODO please fix this.
     private String convertLEDColor2Clock(String color)
     {
         if(color.equals("RED")) {

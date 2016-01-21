@@ -34,6 +34,7 @@ public class TutorialPage2Activity extends BaseActivity implements View.OnClickL
         ButterKnife.bind(this);
         nextTextView.setOnClickListener(this);
         new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                //TODO put in Strings.xml
                 .setMessage("Turn On Bluetooth To Allow “nevo” to Connect to Accessories")
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton("Settings", new DialogInterface.OnClickListener() {

@@ -16,17 +16,20 @@ public class Preferences {
     public static void savePreset(Context context, Preset preset){
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
+        //TODO put into keys.xml if it is still used
         editor.putInt("steps_preset_id", preset.getId());
         editor.commit();
     }
 
     public static int getPresetId(Context context){
         init(context);
+        //TODO put into keys.xml if it is still used
         return preferences.getInt("steps_preset_id", -1);
     }
 
     private static void init(Context context){
         if (preferences == null){
+            //TODO put into keys.xml if it is still used
             preferences= context.getSharedPreferences("Nevo_Shared_Preferences",Context.MODE_PRIVATE);
         }
     }
@@ -34,12 +37,14 @@ public class Preferences {
     public static boolean getLinklossNotification(Context context)
     {
         init(context);
+        //TODO put into keys.xml if it is still used
         return preferences.getBoolean("link_loss_enable",false);
     }
     public static void saveLinklossNotification(Context context,boolean isEnable)
     {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
+        //TODO put into keys.xml if it is still used
         editor.putBoolean("link_loss_enable",isEnable);
         editor.commit();
     }

@@ -164,6 +164,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSearching() {
+        //TODO put in Strings.xml
         if (!getModel().isBluetoothOn()){
             showStateString("Bluetooth is disabled. Enable Bluetooth.",false);
             return;
@@ -185,6 +186,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSearchFailure() {
+        //TODO put in Strings.xml
         showStateString("Could not find nevo.",true);
         if(activeFragment.notEmpty())
         {
@@ -203,6 +205,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     public void onSyncStart() {
         //big sync need about 7~8s
         bigSynncStart = true;
+        //TODO put in Strings.xml
         showStateString("Syncing Data...",false);
         if(activeFragment.notEmpty()) {
             activeFragment.get().onSyncStart();
@@ -212,6 +215,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     public void onSyncEnd() {
         bigSynncStart = false;
+        //TODO put in Strings.xml
         showStateString("Syncing data finished!",true);
         if(activeFragment.notEmpty()) {
             activeFragment.get().onSyncEnd();
@@ -300,9 +304,12 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
             case R.id.nav_steps_fragment:
                 if(fragmentManager.getBackStackEntryCount() >= 1) {
                     fragmentManager.popBackStack();
+                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount()-1);
+                    activeFragment.set(fragment);
                 }else{
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
+
                 return;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());

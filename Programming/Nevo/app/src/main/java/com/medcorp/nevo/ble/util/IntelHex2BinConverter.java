@@ -48,7 +48,6 @@ public class IntelHex2BinConverter {
             final byte semicollon = hex[pointer++];
 
             // Validate - each line of the file must have a semicollon as a firs char
-            //  NSLog(@"semicollon = %hhu  binLength = %d",semicollon,binLength);
             if (semicollon != ':')
             {
                 return 0;

@@ -48,9 +48,6 @@
             android:layout_height="315dp"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.18"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentBottom="false"
             android:layout_marginTop="0dp" >
 
             <com.medcorp.nevo.view.RoundProgressBar

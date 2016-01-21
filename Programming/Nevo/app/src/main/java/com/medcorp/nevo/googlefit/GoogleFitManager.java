@@ -39,6 +39,7 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         this.activity = baseActivity;
         credential = GoogleAccountCredential.usingOAuth2(activity, Arrays.asList(Scopes.FITNESS_ACTIVITY_READ_WRITE, Scopes.FITNESS_BODY_READ_WRITE));
         Tasks task = new Tasks.Builder(AndroidHttp.newCompatibleTransport(), GsonFactory.getDefaultInstance(), credential)
+                //TODO put into Strings.xml
                 .setApplicationName("Nevo Watch")
                 .build();
         build();
@@ -97,25 +98,31 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
             try {
                 result.startResolutionForResult(activity, REQUEST_OAUTH);
             } catch (IntentSender.SendIntentException e) {
+                //TODO put into Strings.xml
                 ToastHelper.showShortToast(activity,"Couldn't login, try again later");
             }
         } else {
+            //TODO put into Strings.xml
             ToastHelper.showShortToast(activity,"Connecting to Google Account Failed");
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        //TODO put into Strings.xml
         ToastHelper.showShortToast(activity,"Google Account Connected");
     }
 
     @Override
     public void onConnectionSuspended(int result) {
         if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+            //TODO put into Strings.xml
             ToastHelper.showShortToast(activity,"Network Connection Lost");
         } else if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+            //TODO put into Strings.xml
             ToastHelper.showShortToast(activity,"Google Play Service Disconnected");
         }else{
+            //TODO put into Strings.xml
             ToastHelper.showShortToast(activity,"Unknown Network Error Occured");
         }
     }

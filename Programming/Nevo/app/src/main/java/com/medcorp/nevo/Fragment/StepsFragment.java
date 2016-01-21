@@ -161,6 +161,7 @@ public class StepsFragment extends BaseObservableFragment{
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
                 new MaterialDialog.Builder(getContext())
+                        //TODO put into Strings.xml
                         .title("Goal")
                         .items(cs)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {

@@ -12,12 +12,14 @@
         android:paddingTop="20dp"
         android:paddingRight="20dp"
         android:paddingLeft="20dp">
+
+        <!-- TODO put into Strings.xml -->
         <com.medcorp.nevo.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_notification_edit_enable_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text = "Allow notifications"
+            android:text ="Allow notifications"
             android:layout_centerVertical="true"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
         <Switch
@@ -61,13 +63,13 @@
             android:layout_alignParentLeft="true"
             android:background="@color/transparent">
 
+            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:id="@+id/activity_setting_notification_edit_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:text="Notification"
-
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <com.medcorp.nevo.view.customfontview.RobotoTextView

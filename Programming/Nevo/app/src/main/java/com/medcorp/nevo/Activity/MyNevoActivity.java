@@ -43,6 +43,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        //TODO put in Strings.xml
         setTitle("My Nevo");
         String app_version = "";
         try {
@@ -64,6 +65,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         checkVersion();
     }
 
+    //TODO This method should not be in here.
     private void checkVersion()
     {
         List<String> firmwareURLs = new ArrayList<String>();

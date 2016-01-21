@@ -3,28 +3,28 @@
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="5"
+    android:weightSum="6"
     >
     <com.github.mikephil.charting.charts.BarChart
         android:layout_weight="4"
         android:background="@color/customBlack"
         android:id="@+id/fragment_sleep_history_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
     </com.github.mikephil.charting.charts.BarChart>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="center"
         android:weightSum="2"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp">
+        android:layout_weight="2">
+
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="3">
             <LinearLayout
@@ -32,13 +32,15 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     roboto:light="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sleep duration"/>
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_sleepduration"
@@ -52,7 +54,8 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_gravity="center_horizontal"
@@ -60,6 +63,7 @@
                     android:layout_height="wrap_content"
                     roboto:light="true"
                     android:text="Deep sleep"/>
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_deep"
@@ -73,13 +77,15 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     roboto:light="true"
                     android:text="Light sleep"/>
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:id="@+id/fragment_sleep_history_light"
                     android:textColor="@color/black"
@@ -92,9 +98,8 @@
 
         <LinearLayout
             android:layout_weight="1"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="3">
             <LinearLayout
@@ -102,13 +107,15 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     roboto:light="true"
                     android:text="Sleep time"/>
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_start"
@@ -122,13 +129,15 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     roboto:light="true"
                     android:layout_height="wrap_content"
                     android:text="Wake time"/>
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_wake"
@@ -142,13 +151,15 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     roboto:light="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Wake Duration"/>
+                <!-- TODO put into Strings.xml -->
                 <com.medcorp.nevo.view.customfontview.RobotoTextView
                     android:textColor="@color/black"
                     android:id="@+id/fragment_sleep_history_wakeduration"
@@ -157,10 +168,6 @@
                     android:textSize="17sp"
                     android:text="--"/>
             </LinearLayout>
-
         </LinearLayout>
-
-
     </LinearLayout>
-
 </LinearLayout>

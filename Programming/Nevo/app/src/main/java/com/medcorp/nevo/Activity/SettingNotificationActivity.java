@@ -56,6 +56,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        //TODO put in Strings.xml
         setTitle("Notifications");
         NevoNotificationListener.getNotificationAccessPermission(this);
     }
@@ -114,6 +115,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
              applicationNotification = inactiveNotificationList.get(position);
         }
         Bundle bundle = new Bundle();
+        //TODO put in Keys.xml
         bundle.putSerializable("notification", applicationNotification);
         intent.putExtras(bundle);
         startActivity(intent);

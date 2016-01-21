@@ -59,10 +59,12 @@ public class MyNevoAdapter extends BaseAdapter {
         ImageView image = (ImageView)itemView.findViewById(R.id.activity_mynevo_list_view_item_update_image);
         if(position == 0)
         {
+            //TODO put in Strings.xml
             title.setText("Firmware");
             values.setText(mynevo.getBle_firmware_version() + "/" + mynevo.getMcu_firmware_version());
             if(mynevo.isAvailable_version())
             {
+                //TODO put in Strings.xml
                 infomation.setText("New version available");
                 image.setVisibility(View.VISIBLE);
                 image.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +89,7 @@ public class MyNevoAdapter extends BaseAdapter {
         {
             infomation.setVisibility(View.INVISIBLE);
             image.setVisibility(View.INVISIBLE);
+            //TODO put in Strings.xml
             title.setText("Battery");
             String str_battery="Battery low";
             if(mynevo.getBattery_level()==2)
@@ -103,6 +106,7 @@ public class MyNevoAdapter extends BaseAdapter {
         {
             infomation.setVisibility(View.INVISIBLE);
             image.setVisibility(View.INVISIBLE);
+            //TODO put in Strings.xml
             title.setText("Application");
             values.setText(mynevo.getApp_version());
         }

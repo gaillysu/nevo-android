@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.medcorp.nevo.R;
 
-import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
 import com.medcorp.nevo.util.SleepDataHandler;
-import com.medcorp.nevo.util.SleepSorter;
 import com.medcorp.nevo.view.SleepDataView;
 
 import org.json.JSONException;
@@ -31,7 +27,6 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -70,7 +65,7 @@ public class SleepTodayFragment extends BaseFragment {
     @Bind(R.id.HomeClockMinute)
     ImageView minImage;
 
-    private final int REFRESHINTERVAL = 10000;
+    private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable refreshTimerTask = new Runnable() {
         @Override
@@ -85,7 +80,7 @@ public class SleepTodayFragment extends BaseFragment {
         int mCurMin = mCalendar.get(Calendar.MINUTE);
         setMin((float) (mCurMin * 6));
         setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
-        mUiHandler.postDelayed(refreshTimerTask,REFRESHINTERVAL);
+        mUiHandler.postDelayed(refreshTimerTask, REFRESH_INTERVAL);
     }
     public void setHour(final float degree) {
         mUiHandler.post(new Runnable() {
@@ -142,6 +137,7 @@ public class SleepTodayFragment extends BaseFragment {
         }
         setProgressBar(sleepAnalysisResult);
         try {
+            //TODO put into keys.xml
             setDashboard(new Dashboard(sleepAnalysisResult.getInt("sleepDuration")
                     ,sleepAnalysisResult.getInt("sleepDeepDuration")
                     ,sleepAnalysisResult.getInt("sleepLightDuration")

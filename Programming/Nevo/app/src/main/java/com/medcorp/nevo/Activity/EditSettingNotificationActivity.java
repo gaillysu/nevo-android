@@ -67,6 +67,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
     RelativeLayout colorLayout;
 
     private String color;
+    //TODO make enum and not strings. Omg.
     private final String[] colors ={"RED","BLUE","LIGHT_GREEN","YELLOW","ORANGE","GREEN"};
     private NotificationDataHelper helper;
     private NotificationColorGetter getter;
@@ -84,7 +85,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
         helper = new NotificationDataHelper(this);
         getter = new NotificationColorGetter(this);
         nameGetter = new NotificationNameVisitor(this);
-
+        //TODO put in keys.xml
         notification = (Notification) getIntent().getSerializableExtra("notification");
         color = notification.accept(getter).getTag();
         setTitle(notification.accept(nameGetter));
@@ -129,6 +130,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
                                 return true;
                             }
                         })
+                                //TODO put in Strings.xml
                         .positiveText("Ok")
                         .negativeText("Cancel")
                         .show();
@@ -173,7 +175,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
 
     Drawable convertLEDColor2Drawable(String color)
     {
-
+        // TODO please.
         if(color.equals("RED")) {
             return  getDrawable(R.drawable.red_dot);
         }
@@ -207,7 +209,7 @@ public class EditSettingNotificationActivity extends BaseActivity{
     }
 
     NevoLed convertLEDColor2Object(String color){
-
+        // TODO please
         if(color.equals("RED")) {
             return new RedLed();
         }

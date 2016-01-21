@@ -52,6 +52,7 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
         Switch presetOnOff = (Switch) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
         final Preset preset = listPreset.get(position);
         presetLabel.setText(preset.getLabel());
+        //TODO put in Strings.xml
         presetValue.setText(preset.getSteps() + " steps");
         presetOnOff.setOnCheckedChangeListener(null);
         presetOnOff.setChecked(preset.isStatus());

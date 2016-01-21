@@ -14,6 +14,7 @@ public class RobotoFontStrategy implements FontStrategy {
     private Typeface tf;
     public RobotoFontStrategy(Context context) {
         tf = Typeface.createFromAsset(context.getAssets(),
+                //TODO put into config.xml
                 "font/Roboto-Regular.ttf");
     }
 

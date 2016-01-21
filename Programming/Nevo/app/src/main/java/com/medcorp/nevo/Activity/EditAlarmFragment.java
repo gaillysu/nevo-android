@@ -50,9 +50,11 @@ public class EditAlarmFragment extends BasePreferencesFragment{
         switch (item.getItemId()) {
             case R.id.done_menu:
                 if(getModel().updateAlarm(alarm)){
+                    //TODO put in Strings.xml
                     ToastHelper.showShortToast(getContext(),"Saved alarm!");
                     getAppCompatActivity().finish();
                 }else{
+                    //TODO put in Strings.xml
                     ToastHelper.showShortToast(getContext(),"Couldn't save the alarm.!");
                 }
                 return true;

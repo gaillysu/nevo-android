@@ -53,7 +53,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.w("Karl", "On create app model");
         observableActivity = new Optional<>();
         syncController = new SyncControllerImpl(this);
         syncController.setSyncControllerListenser(this);

@@ -77,6 +77,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         back2settings.setOnClickListener(this);
         back2settings.setVisibility(View.INVISIBLE);
         back2settings.setText(R.string.re_upgrade);
+        //TODO put in Strings.xml
         back2settings.setTag(new ButtonTag("retry"));
 
         mNevoOtaController = getModel().getOtaController();
@@ -93,6 +94,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
     private void showAlertDialog()
     {
+        //TODO put in Strings.xml
         new MaterialDialog.Builder(this)
                 .title("Do not exit this screen")
                 .content("Please follow the instructions and wait untill the update has been finished.")
@@ -180,6 +182,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
     @Override
     public void onPrepareOTA(Constants.DfuFirmwareTypes which) {
+        //TODO put in Strings.xml
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -195,10 +198,12 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
+
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
             if(errorMsg !="" && isConnected )
             {
                 back2settings.setText(R.string.re_upgrade);
+                //TODO put in Strings.xml
                 back2settings.setTag(new ButtonTag("retry"));
                 back2settings.setVisibility(View.VISIBLE);
             }
@@ -234,6 +239,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
+                //TODO put in Strings.xml
                 infomationTextView.setText("Updating "  + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)? "BLE":"MCU") +  " ("+(currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
@@ -252,6 +258,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     roundProgressBar.setVisibility(View.INVISIBLE);
                     clockImage.setVisibility(View.INVISIBLE);
                     percentTextView.setText("");
+                    //TODO put in Strings.xml
                     infomationTextView.setText("Firmware updated");
 
                     back2settings.setText("Back to settings");
@@ -283,7 +290,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     hourImage.setVisibility(View.INVISIBLE);
                     minImage.setVisibility(View.INVISIBLE);
                     clockImage.setImageDrawable(getDrawable(R.drawable.firmware_clock_ble_button));
-
+                    //TODO put in Strings.xml
                     percentTextView.setText("Press the third button");
                     infomationTextView.setText("In order to reactivate the bluetooth Don’t exit this screen!");
                 }
@@ -302,6 +309,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
                 if(errorcode == OtaController.ERRORCODE.TIMEOUT)
                     //errorMsg = mContext.getString(R.string.update_error_timeout);
+                    //TODO put in Strings.xml
                     errorMsg = "Failed preparing update";
                 else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
                     errorMsg = mContext.getString(R.string.update_error_noconnect);
@@ -349,6 +357,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
     public void onClick(View v) {
         if(v.getId() == R.id.activity_dfu_back2settings_textview)
         {
+            //TODO put in Strings.xml. OMG this is so bad. Come on.
             if (v.getTag().toString().equals("back"))
             {
                 finish();
