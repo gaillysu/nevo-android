@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -53,8 +54,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
 
-    @Bind(R.id.overview_coordinator_layout)
-    CoordinatorLayout coordinatorLayout;
+    private View rootView;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MenuItem selectedMenuItem;
@@ -69,6 +69,8 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_new);
         activeFragment =  new Optional<>();
+        rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+
         getModel().observableActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -254,7 +256,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
             }
         }
 
-        snackbar = Snackbar.make(coordinatorLayout,"",Snackbar.LENGTH_LONG);
+        snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_LONG);
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setText(strState);
