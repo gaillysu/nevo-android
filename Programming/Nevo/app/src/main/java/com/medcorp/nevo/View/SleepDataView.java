@@ -49,7 +49,7 @@ public class SleepDataView extends View {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
-    final float SWEEP_INC = 1;
+    final float SWEEP_INC = 0.5f;
     enum SLEEPSTATUS{
         ACTIVITY,WAKE,LIGHT,DEEP
     }
