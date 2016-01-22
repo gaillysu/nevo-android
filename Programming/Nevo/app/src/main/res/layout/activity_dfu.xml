@@ -15,14 +15,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:textSize="23sp"
                 android:textColor="@color/white"
                 android:id="@+id/titleTextView"
-                android:text="Update"
+                android:text="@string/dfu_update"
                 android:background="@color/colorPrimary"
                 android:gravity="center" />
         </RelativeLayout>
@@ -98,13 +97,13 @@
                         android:gravity="center"
                         roboto:thin="true" />
 
-                    <!-- TODO put into Strings.xml && this should be a button but leave it for now.-->
+                    <!-- this should be a button but leave it for now.-->
                     <com.medcorp.nevo.view.customfontview.RobotoTextView
                         android:id="@+id/activity_dfu_back2settings_textview"
                         android:layout_width="220dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="Back to settings"
+                        android:text="@string/dfu_back_to_settings"
                         android:background="@drawable/outline_button"
                         android:textSize="18sp"
                         android:textAllCaps="false"

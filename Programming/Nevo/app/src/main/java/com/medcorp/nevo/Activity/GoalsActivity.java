@@ -1,32 +1,26 @@
 package com.medcorp.nevo.activity;
 
 import android.content.Intent;
-import android.os.Looper;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.transition.Explode;
-import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-
 import com.medcorp.nevo.adapter.PresetArrayAdapter;
 import com.medcorp.nevo.model.Preset;
-import com.medcorp.nevo.view.StepPickerView;
 
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 /**
@@ -55,8 +49,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //TODO put in Strings.xml
-        setTitle("Goals");
+        setTitle(R.string.steps_goal_title);
         presetListView.setVisibility(View.VISIBLE);
         presetList = getModel().getAllPreset();
         presetArrayAdapter = new PresetArrayAdapter(this,getModel(),presetList);
@@ -108,35 +101,33 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
-                //TODO put in Strings.xml
                 new MaterialDialog.Builder(GoalsActivity.this)
-                        .title("Add Goal")
-                        .content("Input your goal.")
+                        .title(R.string.goal_add)
+                        .content(R.string.goal_label_goal)
                         .inputType(InputType.TYPE_CLASS_NUMBER)
-                        .input("step goal", "7000", new MaterialDialog.InputCallback() {
+                        .input(getString(R.string.goal_step_goal), "", new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if(input.length()==0) return;
+                                if (input.length() == 0) return;
                                 preset.setSteps(Integer.parseInt(input.toString()));
                                 new MaterialDialog.Builder(GoalsActivity.this)
-                                        .title("Add Goal")
-                                        .content("Label your goal.")
+                                        .title(R.string.goal_add)
+                                        .content(R.string.goal_label_goal)
                                         .inputType(InputType.TYPE_CLASS_TEXT)
-                                        .input("goal name", "", new MaterialDialog.InputCallback() {
+                                        .input(getString(R.string.goal_name_goal), "", new MaterialDialog.InputCallback() {
                                             @Override
                                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                                if(input.length()==0) return;
+                                                if (input.length() == 0) return;
                                                 preset.setLabel(input.toString());
-                                                //save to database and refresh listview
                                                 getModel().addPreset(preset);
                                                 presetList = getModel().getAllPreset();
                                                 presetArrayAdapter.setDataset(presetList);
                                                 presetArrayAdapter.notifyDataSetChanged();
                                             }
-                                        }).negativeText("Cancel")
+                                        }).negativeText(R.string.goal_cancel)
                                         .show();
                             }
-                        }).negativeText("Cancel")
+                        }).negativeText(R.string.goal_cancel)
                         .show();
                 break;
             case android.R.id.home:

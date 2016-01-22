@@ -1,4 +1,4 @@
-package com.medcorp.nevo.util;
+package com.medcorp.nevo.view;
 
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;

@@ -71,14 +71,13 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!-- TODO put into Strings.xml -->
+
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
-                android:text="goal"/>
-            <!-- TODO put into Strings.xml -->
+                android:text="@string/steps_goal"/>
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_today_goal"
@@ -94,21 +93,18 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
-                android:text="progress"/>
-            <!-- TODO put into Strings.xml -->
+                android:text="@string/steps_progress"/>
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:id="@+id/fragment_steps_today_progress"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:text="0%"/>
+                android:textSize="17sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
@@ -117,21 +113,18 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!-- TODO put into Strings.xml -->
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
-                android:text="steps"/>
-            <!-- TODO put into Strings.xml -->
+                android:text="@string/steps_steps"/>
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
-                android:id="@+id/fragment_steps_today_dailysteps"
+                android:id="@+id/fragment_steps_today_daily_steps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17sp"
-                android:text="0"/>
+                android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

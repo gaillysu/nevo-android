@@ -34,47 +34,11 @@
 
         </activity>
         <activity
-            android:name=".activity.old.OldMainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-
-        <activity
             android:name=".activity.EditAlarmActivity"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name=".activity.old.tutorial.TutorialTwoActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.old.tutorial.TutorialSleepTrackingActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.old.tutorial.TutorialThreeActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.old.tutorial.TutorialFourActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.old.tutorial.TutorialFiveActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.old.tutorial.TutorialTipsOneActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.old.tutorial.TutorialTipsTwoActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.old.PaletteActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.old.OTAActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.old.HistoryActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.GoalsActivity"
@@ -116,15 +80,12 @@
         <activity
             android:name=".activity.tutorial.TutorialPageFailedActivity"
             android:screenOrientation="portrait"/>
-
-
         <service
             android:name=".ble.ble.NevoBTService"
             android:enabled="true" />
         <service
             android:name=".ble.controller.SyncControllerImpl$LocalService"
             android:enabled="true" />
-        <!--new feature for notification, based on API 18 -->
         <service
             android:name=".ble.notification.NevoNotificationListener"
             android:enabled="true"

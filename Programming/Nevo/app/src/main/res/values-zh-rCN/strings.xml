@@ -90,7 +90,7 @@
     <string name="update_error_nofounDFUservice">未发现升级服务,请稍候重试.</string>
     <string name="checking_firmware">正在检查版本号,请稍等</string>
     <string name="latest_update_on">最近更新</string>
-    <string name="my_nevo">我的nevo</string>
+    <string name="title_my_nevo">我的nevo</string>
     <string name="notification_connect_title">Nevo 已连接</string>
     <string name="notification_connect_content">您的手表已连接手机</string>
     <string name="notification_disconnect_title">Nevo 已断开</string>

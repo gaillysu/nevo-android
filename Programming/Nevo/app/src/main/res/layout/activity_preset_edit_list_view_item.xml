@@ -16,9 +16,8 @@
         android:textColor="@color/black"
         android:layout_centerVertical="true"
         android:visibility="gone"
-        android:text="Delete goal"
+        android:text="@string/goal_delete"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
-    <!-- TODO put into Strings.xml -->
 
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_preset_edit_list_view_item_title_label"

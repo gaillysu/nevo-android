@@ -59,8 +59,7 @@ public class StepsFragment extends BaseObservableFragment{
     @Override
     public void onResume() {
         super.onResume();
-        // TODO add to Strings.xml
-        getAppCompatActivity().setTitle("Steps");
+        getAppCompatActivity().setTitle(R.string.title_steps);
     }
 
     public void setOnStepsListener(OnStepsListener onStepsListener) {
@@ -161,8 +160,7 @@ public class StepsFragment extends BaseObservableFragment{
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
                 new MaterialDialog.Builder(getContext())
-                        //TODO put into Strings.xml
-                        .title("Goal")
+                        .title(R.string.goal)
                         .items(cs)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
@@ -175,8 +173,8 @@ public class StepsFragment extends BaseObservableFragment{
                                 return true;
                             }
                         })
-                        .positiveText("Ok")
-                        .negativeText("Cancel")
+                        .positiveText(R.string.goal_ok)
+                        .negativeText(R.string.goal_cancel)
                         .show();
                 break;
         }

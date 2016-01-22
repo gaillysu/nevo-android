@@ -59,13 +59,12 @@ public class MyNevoAdapter extends BaseAdapter {
         ImageView image = (ImageView)itemView.findViewById(R.id.activity_mynevo_list_view_item_update_image);
         if(position == 0)
         {
-            //TODO put in Strings.xml
-            title.setText("Firmware");
+            title.setText(R.string.my_nevo_firmware);
             values.setText(mynevo.getBle_firmware_version() + "/" + mynevo.getMcu_firmware_version());
             if(mynevo.isAvailable_version())
             {
-                //TODO put in Strings.xml
-                infomation.setText("New version available");
+                //TODO put in keys.xml
+                infomation.setText(R.string.my_nevo_new_version);
                 image.setVisibility(View.VISIBLE);
                 image.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -89,16 +88,15 @@ public class MyNevoAdapter extends BaseAdapter {
         {
             infomation.setVisibility(View.INVISIBLE);
             image.setVisibility(View.INVISIBLE);
-            //TODO put in Strings.xml
-            title.setText("Battery");
-            String str_battery="Battery low";
+            title.setText(R.string.my_nevo_battery);
+            String str_battery=context.getString(R.string.my_nevo_battery_low);
             if(mynevo.getBattery_level()==2)
             {
-                str_battery = "Battery full";
+                str_battery = context.getString(R.string.my_nevo_battery_full);
             }
             else if(mynevo.getBattery_level()==1)
             {
-                str_battery = "Battery half";
+                str_battery = context.getString(R.string.my_nevo_battery_half);
             }
             values.setText(str_battery);
         }
@@ -106,8 +104,7 @@ public class MyNevoAdapter extends BaseAdapter {
         {
             infomation.setVisibility(View.INVISIBLE);
             image.setVisibility(View.INVISIBLE);
-            //TODO put in Strings.xml
-            title.setText("Application");
+            title.setText(R.string.my_nevo_application);
             values.setText(mynevo.getApp_version());
         }
 

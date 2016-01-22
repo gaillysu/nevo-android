@@ -16,6 +16,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.tasks.Tasks;
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.view.ToastHelper;
 
@@ -39,7 +40,7 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         this.activity = baseActivity;
         credential = GoogleAccountCredential.usingOAuth2(activity, Arrays.asList(Scopes.FITNESS_ACTIVITY_READ_WRITE, Scopes.FITNESS_BODY_READ_WRITE));
         Tasks task = new Tasks.Builder(AndroidHttp.newCompatibleTransport(), GsonFactory.getDefaultInstance(), credential)
-                //TODO put into Strings.xml
+                //TODO put into keys.xml
                 .setApplicationName("Nevo Watch")
                 .build();
         build();
@@ -98,32 +99,26 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
             try {
                 result.startResolutionForResult(activity, REQUEST_OAUTH);
             } catch (IntentSender.SendIntentException e) {
-                //TODO put into Strings.xml
-                ToastHelper.showShortToast(activity,"Couldn't login, try again later");
+                ToastHelper.showShortToast(activity, R.string.google_fit_could_not_login);
             }
         } else {
-            //TODO put into Strings.xml
-            ToastHelper.showShortToast(activity,"Connecting to Google Account Failed");
+            ToastHelper.showShortToast(activity,R.string.google_fit_connecting);
         }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        //TODO put into Strings.xml
-        ToastHelper.showShortToast(activity,"Google Account Connected");
+        ToastHelper.showShortToast(activity,R.string.google_fit_connected);
     }
 
     @Override
     public void onConnectionSuspended(int result) {
         if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
-            //TODO put into Strings.xml
-            ToastHelper.showShortToast(activity,"Network Connection Lost");
+            ToastHelper.showShortToast(activity,R.string.google_fit_network_lost);
         } else if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
-            //TODO put into Strings.xml
-            ToastHelper.showShortToast(activity,"Google Play Service Disconnected");
+            ToastHelper.showShortToast(activity,R.string.google_fit_service_disconnected);
         }else{
-            //TODO put into Strings.xml
-            ToastHelper.showShortToast(activity,"Unknown Network Error Occured");
+            ToastHelper.showShortToast(activity,R.string.google_fit_unknown_network);
         }
     }
 
