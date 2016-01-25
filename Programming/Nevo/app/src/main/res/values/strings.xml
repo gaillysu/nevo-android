@@ -144,7 +144,7 @@
     <string name="notification">Notification</string>
     <string name="notification_led_red">Red LED</string>
     <string name="notification_led_blue">Blue LED</string>
-    <string name="notification_led_light">Light greed LED)</string>
+    <string name="notification_led_light">Light green LED</string>
     <string name="notification_led_yellow">Yellow LED</string>
     <string name="notification_led_orange">Orange LED</string>
     <string name="notification_led_green">Green LED</string>
