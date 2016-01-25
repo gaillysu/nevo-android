@@ -2,6 +2,7 @@ package com.medcorp.nevo.activity.tutorial;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,25 +36,28 @@ public class TutorialPage2Activity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_tutorial_page_2);
         ButterKnife.bind(this);
         nextTextView.setOnClickListener(this);
-        new MaterialDialog.Builder(this)
-                .content(R.string.tutorial_2_dialog_positive)
-                .positiveText(R.string.ok_button)
-                .negativeText(R.string.tutorial_2_dialog_negative)
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-                        startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-                    }
-                }).show();
+
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.nextTextView)
         {
-            startActivity(new Intent(this, TutorialPage3Activity.class));
-            overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
-            finish();
+            if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                startActivity(TutorialPage3Activity.class);
+                finish();
+            }else{
+                new MaterialDialog.Builder(this)
+                        .content(R.string.tutorial_2_dialog_positive)
+                        .positiveText(R.string.ok_button)
+                        .negativeText(R.string.tutorial_2_dialog_negative)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                            }
+                        }).show();
+            }
         }
     }
 }

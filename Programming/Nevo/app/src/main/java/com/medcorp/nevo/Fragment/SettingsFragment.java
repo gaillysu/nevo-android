@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
@@ -169,19 +171,21 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         {
             startActivity(SettingAboutActivity.class);
         }
-        else if(position == 7)
-        {
-            new AlertDialog.Builder(this.getActivity(), AlertDialog.THEME_HOLO_LIGHT)
-                    .setMessage(R.string.settings_sure)
-                    .setPositiveButton(android.R.string.no, null)
-                    .setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+        else if(position == 7) {
+            new MaterialDialog.Builder(getContext())
+                    .content(R.string.settings_sure)
+                    .negativeText(android.R.string.no)
+                    .positiveText(android.R.string.yes)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
                             getModel().forgetDevice();
                             startActivity(new Intent(SettingsFragment.this.getContext(), TutorialPage1Activity.class));
                             SettingsFragment.this.getActivity().finish();
                         }
-                    }).setCancelable(false).show();
+                    })
+                    .cancelable(false)
+                    .show();
         }
     }
 }

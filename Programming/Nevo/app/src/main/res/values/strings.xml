@@ -159,10 +159,10 @@
     <string name="tutorial_1_lets_activate">Activate your nevo</string>
 
     <string name="tutorial_2_title">Turn on Bluetooth</string>
-    <string name="tutorial_2_turn_bluetooth_on">Turn Bluetooth on</string>
+    <string name="tutorial_2_continue">Continue</string>
     <string name="tutorial_2_text">Tap the Settings button and turn Bluetooth on.</string>
     <string name="tutorial_2_dialog_negative">Settings</string>
-    <string name="tutorial_2_dialog_positive">Turn On Bluetooth To Allow “nevo” to Connect to Accessories</string>
+    <string name="tutorial_2_dialog_positive">Turn on Bluetooth in the settings to connect with nevo</string>
 
     <string name="tutorial_3_title">Set time</string>
     <string name="tutorial_3_text">Pull the crown out and turn to set the time on your nevo watch. Be aware that nevo doesn\’t syncs time with your phone.</string>

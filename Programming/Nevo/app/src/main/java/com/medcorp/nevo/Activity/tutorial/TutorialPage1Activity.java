@@ -1,5 +1,6 @@
 package com.medcorp.nevo.activity.tutorial;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,8 +44,13 @@ public class TutorialPage1Activity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         if(v.getId() == R.id.nextTextView)
         {
-            startActivity(new Intent(this, TutorialPage2Activity.class));
-            overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
+            Class<?> nextActivityClass;
+            if(BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                nextActivityClass = TutorialPage3Activity.class;
+            }else {
+                nextActivityClass = TutorialPage2Activity.class;
+            }
+            startActivity(nextActivityClass);
             finish();
         }
     }
