@@ -18,6 +18,7 @@ import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
+import com.medcorp.nevo.ble.model.request.SetGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
@@ -78,7 +79,8 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
                 observableActivity.get().findWatchSuccess();
             }
             else if((byte) SetAlarmNevoRequest.HEADER == packet.getHeader()
-                    || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()) {
+                    || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()
+                    || (byte) SetGoalNevoRequest.HEADER == packet.getHeader()) {
                 observableActivity.get().onRequestResponse(true);
             }
         }

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnStateListener;
@@ -43,6 +44,7 @@ public class StepsFragment extends BaseObservableFragment{
     TabLayout tabLayout;
 
     private OnStepsListener onStepsListener;
+    private boolean showSyncGoal;
 
     @Nullable
     @Override
@@ -130,7 +132,13 @@ public class StepsFragment extends BaseObservableFragment{
 
     @Override
     public void onRequestResponse(boolean success) {
-
+        //if this response comes from syncController init, ignore it, only for user set a new goal.
+        if(showSyncGoal)
+        {
+            showSyncGoal = false;
+            int id = success ? R.string.goal_synced : R.string.goal_error_sync;
+            ((MainActivity) getActivity()).showStateString(id, false);
+        }
     }
 
     @Override
@@ -146,6 +154,11 @@ public class StepsFragment extends BaseObservableFragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.choose_goal_menu:
+                if(!getModel().isWatchConnected())
+                {
+                    ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_no_watch,false);
+                    return false;
+                }
                 final List<Preset> presetList = getModel().getAllPreset();
                 List<String> stringList = new ArrayList<>();
                 final List<Preset> presetEnableList = new ArrayList<Preset>();
@@ -169,6 +182,8 @@ public class StepsFragment extends BaseObservableFragment{
                                 {
                                     getModel().setPreset(presetEnableList.get(which));
                                     Preferences.savePreset(getContext(), presetEnableList.get(which));
+                                    showSyncGoal = true;
+                                    ((MainActivity)getActivity()).showStateString(R.string.goal_syncing_message, false);
                                 }
                                 return true;
                             }

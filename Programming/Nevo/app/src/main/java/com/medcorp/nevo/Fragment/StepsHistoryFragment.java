@@ -152,13 +152,13 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
     private class Dashboard{
         private int steps;
         private int goal;
-        private double progress;
+        private int progress;
 
         Dashboard(int steps, int goal)
         {
             this.steps = steps;
             this.goal = goal;
-            progress =100.0 * steps/goal;
+            progress =(int)(100.0 * steps/goal);
         }
 
         String getSteps()
@@ -167,9 +167,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         }
 
         String getProgress(){
-            DecimalFormat df = new DecimalFormat("#.0");
-
-            return df.format(progress)+"%";
+            return progress + "%";
         }
 
         String getGoal(){

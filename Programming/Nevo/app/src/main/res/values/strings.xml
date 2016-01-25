@@ -216,6 +216,9 @@
     <string name="alarm_set_label_for_alarm">Set label for alarm</string>
     <string name="alarm_synced">Alarm Synced</string>
     <string name="alarm_error_sync">Error Syncing Alarm</string>
+    <string name="goal_syncing_message">Syncing Goal...</string>
+    <string name="goal_synced">Goal Synced</string>
+    <string name="goal_error_sync">Error Syncing Goal</string>
 
     <string name="goal">Goal</string>
     <string name="goal_ok">Ok</string>
