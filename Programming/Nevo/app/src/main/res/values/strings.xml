@@ -275,5 +275,4 @@
     <string name="google_fit_network_lost">Network Connection Lost</string>
     <string name="google_fit_service_disconnected">Google Play Service Disconnected</string>
     <string name="google_fit_unknown_network">Unknown Network Error Occurred</string>
->>>>>>> 9677f00d5ef17e00347599f8c9d4d862765ab3b6
 </resources>
