@@ -184,10 +184,10 @@
 
     <string name="sleep_sleep_duration">Sleep duration</string>
     <string name="sleep_sleep_time">Sleep time</string>
-    <string name="sleep_wake_time">Sleep duration</string>
+    <string name="sleep_wake_time">Wake time</string>
     <string name="sleep_deep_sleep">Deep sleep</string>
-    <string name="sleep_light_sleep">Sleep duration</string>
-    <string name="sleep_wake_duration">Sleep duration</string>
+    <string name="sleep_light_sleep">Light sleep</string>
+    <string name="sleep_wake_duration">Wake duration</string>
     <string name="sleep_empty">--</string>
 
     <string name="steps_goal_title">Goal</string>
