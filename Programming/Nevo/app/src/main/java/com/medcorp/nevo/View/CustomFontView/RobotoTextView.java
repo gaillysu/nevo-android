@@ -2,15 +2,10 @@ package com.medcorp.nevo.view.customfontview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.view.fontstrategy.FontStrategy;
-import com.medcorp.nevo.view.fontstrategy.RalewayFontStrategy;
 import com.medcorp.nevo.view.fontstrategy.RobotoBoldFontStrategy;
 import com.medcorp.nevo.view.fontstrategy.RobotoFontStrategy;
 import com.medcorp.nevo.view.fontstrategy.RobotoLightFontStrategy;

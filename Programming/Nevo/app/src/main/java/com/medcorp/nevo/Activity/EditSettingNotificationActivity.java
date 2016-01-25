@@ -101,21 +101,20 @@ public class EditSettingNotificationActivity extends BaseActivity{
 
         colorImage.setImageDrawable(convertLEDColor2Drawable(color));
         colorLabel.setText(convertLEDColor2Clock(color));
-        //TODO  add to Strings.xml
         colorLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<String> stringList = new ArrayList<String>();
 
-                stringList.add("2 o'clock (red)");
-                stringList.add("4 o'clock (blue)");
-                stringList.add("6 o'clock (light green)");
-                stringList.add("8 o'clock (yellow)");
-                stringList.add("10 o'clock (orange)");
-                stringList.add("12 o'clock (green)");
+                stringList.add(getString(R.string.notification_led_red));
+                stringList.add(getString(R.string.notification_led_blue));
+                stringList.add(getString(R.string.notification_led_light));
+                stringList.add(getString(R.string.notification_led_yellow));
+                stringList.add(getString(R.string.notification_led_orange));
+                stringList.add(getString(R.string.notification_led_green));
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
                 new MaterialDialog.Builder(EditSettingNotificationActivity.this)
-                        .title("Position")
+                        .title(R.string.notification_position)
                         .items(cs)
                         .itemsCallbackSingleChoice(convertLEDColor2Index(color), new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
@@ -130,9 +129,8 @@ public class EditSettingNotificationActivity extends BaseActivity{
                                 return true;
                             }
                         })
-                                //TODO put in Strings.xml
-                        .positiveText("Ok")
-                        .negativeText("Cancel")
+                        .positiveText(R.string.notification_ok)
+                        .negativeText(R.string.notification_cancel)
                         .show();
             }
         });
@@ -150,26 +148,25 @@ public class EditSettingNotificationActivity extends BaseActivity{
 
     String convertLEDColor2Clock(String color)
     {
-        //TODO  add to Strings.xml && refactor Code
+        //TODO refactor Code
         if(color.equals("RED")) {
-            return "Red LED" + " - 2 o'clock";
+            return getString(R.string.notification_led_red);
         }
         if(color.equals("BLUE")) {
-            return "Blue LED" + " - 4 o'clock";
+            return getString(R.string.notification_led_blue);
         }
         if(color.equals("LIGHT_GREEN")) {
-            return "Light Green LED" + " - 6 o'clock";
+            return getString(R.string.notification_led_light);
         }
         if(color.equals("YELLOW")) {
-            return "Yellow LED" + " - 8 o'clock";
+            return getString(R.string.notification_led_yellow);
         }
         if(color.equals("ORANGE")) {
-            return "Orange LED" + " - 10 o'clock";
+            return getString(R.string.notification_led_orange);
         }
         if(color.equals("GREEN")) {
-            return "Green LED" + " - 12 o'clock";
+            return getString(R.string.notification_led_green);
         }
-
         return color;
     }
 

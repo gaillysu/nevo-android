@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_search_failure_textview"
         android:textColor="@color/white"
@@ -16,7 +15,7 @@
         android:layout_marginTop="50dp"
         roboto:bold="true"
         android:textSize="36sp"
-        android:text="Cannot connect"/>
+        android:text="@string/tutorial_failed_title"/>
 
     <ImageView
         android:id="@+id/activity_tutorial_page6_image"
@@ -25,17 +24,15 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bluetooth_icon"/>
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoButton
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Try Again"
+        android:text="@string/tutorial_failed_try_again"
         android:id="@+id/retry_button"
         style="@style/TutorialButton"
         android:layout_below="@+id/activity_tutorial_page6_image"
         />
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:layout_below="@+id/retry_button"
         android:id="@+id/activity_tutorial_page5_search_failure_tip_textview"
@@ -51,6 +48,6 @@
         android:gravity="center"
         android:layout_alignStart="@+id/retry_button"
         android:layout_alignEnd="@+id/retry_button"
-        android:text="Make sure the blue LED on the nevo is blinking and try again."/>
+        android:text="@string/tutorial_failed_text"/>
 
 </RelativeLayout>

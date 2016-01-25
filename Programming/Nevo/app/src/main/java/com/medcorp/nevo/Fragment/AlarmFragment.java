@@ -66,8 +66,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         switch (item.getItemId()){
             case R.id.add_menu:
                 Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
-                //TODO put into Strings.xml
-                alarmDialog.setTitle("Add Alarm");
+                alarmDialog.setTitle(R.string.alarm_add);
                 alarmDialog.show();
                 break;
         }
@@ -137,26 +136,25 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onRequestResponse(boolean success) {
-        String resultString = success?"Alarm Synced":"Error Syncing Alarm";
-        ((MainActivity)getActivity()).showStateString(resultString,false);
+        int id = success ? R.string.alarm_synced : R.string.alarm_error_sync;
+        ((MainActivity)getActivity()).showStateString(id,false);
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        //TODO put into Strings.xml
         final Alarm alarm = new Alarm(hourOfDay,minute,false,"");
         new MaterialDialog.Builder(getActivity())
-                .title("Add Alarm")
-                .content("Label your alarm. ")
+                .title(R.string.alarm_add)
+                .content(R.string.alarm_label_alarm)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
-                .input("Alarm", "", new MaterialDialog.InputCallback() {
+                .input(getString(R.string.title_alarm), "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         alarm.setLabel(input.toString());
-                            getModel().addAlarm(alarm);
+                        getModel().addAlarm(alarm);
                         refreshListView();
                     }
-                }).negativeText("Cancel")
+                }).negativeText(R.string.alarm_cancel)
                 .show();
     }
 
@@ -195,15 +193,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public void onAlarmSwitch(Switch alarmSwitch, Alarm alarm) {
         if(!getModel().isWatchConnected()){
             alarmSwitch.setChecked(!alarmSwitch.isChecked());
-            //TODO put into Strings.xml
-            ToastHelper.showShortToast(getContext(),"No watch connected.");
+            ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
             return;
         }
         boolean isChecked = alarmSwitch.isChecked();
         if (isChecked && getAlarmEnableCount() == 3) {
             alarmSwitch.setChecked(!alarmSwitch.isChecked());
-            //TODO put into Strings.xml
-            ToastHelper.showShortToast(getContext(), "This alarm can't be activied over MAX 3.");
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_max_three_alarm);
             return;
         }
         alarm.setEnable(isChecked);
@@ -228,15 +224,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //step3:check  alarmSettingList.size() == 3 ?
         ////build 1 or 2 invaild alarm to add alarmSettingList
         if (alarmSettingList.size() == 1) {
-            //TODO put into Strings.xml
             alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
             alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
         } else if (alarmSettingList.size() == 2) {
             alarmSettingList.add(new Alarm(0,0,false,"unknown"));
         }
         getModel().setAlarm(alarmSettingList);
-        //TODO put into Strings.xml
-        ((MainActivity)getActivity()).showStateString("Syncing Alarm...",false);
+        ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);
     }
     private int getAlarmEnableCount(){
         int count = 0;

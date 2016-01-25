@@ -55,14 +55,12 @@ public class AlarmEditAdapter extends BaseAdapter {
         if(position == 0)
         {
             title.setText(alarm.toString());
-            //TODO save to Strings.xml
-            summary.setText("Set a different time");
+            summary.setText(context.getString(R.string.alarm_set_different_time));
         }
         else if(position == 1)
         {
             title.setText(alarm.getLabel());
-            //TODO save to Strings.xml
-            summary.setText("Set label for alarm");
+            summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
         }
         else if(position == 2)
         {

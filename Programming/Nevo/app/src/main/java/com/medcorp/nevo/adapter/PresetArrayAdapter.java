@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
@@ -52,7 +51,7 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
         Switch presetOnOff = (Switch) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
         final Preset preset = listPreset.get(position);
         presetLabel.setText(preset.getLabel());
-        //TODO put in Strings.xml
+        //TODO put in Strings incl format.xml
         presetValue.setText(preset.getSteps() + " steps");
         presetOnOff.setOnCheckedChangeListener(null);
         presetOnOff.setChecked(preset.isStatus());

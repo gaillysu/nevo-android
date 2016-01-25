@@ -56,8 +56,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //TODO put in Strings.xml
-        setTitle("Notifications");
+        setTitle(R.string.title_notifications);
         NevoNotificationListener.getNotificationAccessPermission(this);
     }
 
@@ -65,10 +64,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     protected void onResume() {
         super.onResume();
 
-        activeNotificationList = new ArrayList<Notification>();
-        inactiveNotificationList = new ArrayList<Notification>();
+        activeNotificationList = new ArrayList<>();
+        inactiveNotificationList = new ArrayList<>();
 
-        List<Notification> allNotifications = new ArrayList<Notification>();
+        List<Notification> allNotifications = new ArrayList<>();
         NotificationDataHelper dataHelper = new NotificationDataHelper(this);
 
         Notification applicationNotification = new TelephoneNotification();

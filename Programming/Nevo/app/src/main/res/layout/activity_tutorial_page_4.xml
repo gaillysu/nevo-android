@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page4_start_textview"
         android:textColor="@color/black"
@@ -17,9 +16,8 @@
         roboto:bold="true"
         android:textSize="36sp"
         android:layout_marginTop="50dp"
-        android:text="Turn on nevo"/>
+        android:text="@string/tutorial_4_title"/>
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page4_notice_textview"
         android:layout_below="@id/activity_tutorial_page4_start_textview"
@@ -30,7 +28,7 @@
         android:paddingTop="5dp"
         android:textSize="12sp"
         android:gravity="center"
-        android:text="Push and hold the third button, until the blue LED blinks."/>
+        android:text="@string/tutorial_4_text"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -39,12 +37,11 @@
         android:background="@drawable/tutorial_nevo_bt_onoff"
         />
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Next"
+        android:text="@string/tutorial_4_next"
         android:textAllCaps="false"
         android:id="@+id/nextTextView"
         android:background="@color/transparent"

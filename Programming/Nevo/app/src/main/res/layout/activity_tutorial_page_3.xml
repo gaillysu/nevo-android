@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page3_start_textview"
         android:textColor="@color/black"
@@ -16,9 +15,8 @@
         roboto:bold="true"
         android:textSize="36sp"
         android:layout_marginTop="50dp"
-        android:text="Set time"/>
+        android:text="@string/tutorial_3_title"/>
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page3_notice_textview"
         android:layout_below="@+id/activity_tutorial_page3_start_textview"
@@ -29,7 +27,7 @@
         android:paddingTop="5dp"
         android:textSize="12sp"
         android:gravity="center"
-        android:text="Pull the crown out and turn to set the time on your nevo watch. Be aware that nevo doesn\’t syncs time with your phone."/>
+        android:text="@string/tutorial_3_text"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -38,12 +36,11 @@
         android:background="@drawable/tutorial_nevo_settime"
         android:id="@+id/activity_tutorial_page3_image" />
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Next"
+        android:text="@string/tutorial_3_next"
         android:textAllCaps="false"
         android:id="@+id/nextTextView"
         android:background="@color/transparent"

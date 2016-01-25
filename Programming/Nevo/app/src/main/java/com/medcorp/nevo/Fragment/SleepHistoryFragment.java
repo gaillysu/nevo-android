@@ -47,7 +47,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
     BarChart barChart;
 
 
-    @Bind(R.id.fragment_sleep_history_sleepduration)
+    @Bind(R.id.fragment_sleep_history_sleep_duration)
     TextView sleepDuration;
 
     @Bind(R.id.fragment_sleep_history_deep)
@@ -62,7 +62,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
     @Bind(R.id.fragment_sleep_history_wake)
     TextView sleepEnd;
 
-    @Bind(R.id.fragment_sleep_history_wakeduration)
+    @Bind(R.id.fragment_sleep_history_wake_duration)
     TextView sleepWakeDuration;
 
 

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page2_start_textview"
         android:textColor="@color/white"
@@ -17,7 +16,7 @@
         roboto:bold="true"
         android:textSize="36sp"
         android:layout_marginTop="50dp"
-        android:text="Turn on Bluetooth"/>
+        android:text="@string/tutorial_2_title"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -27,16 +26,14 @@
         android:id="@+id/activity_tutorial_page2_image"
         />
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoButton
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Turn Bluetooth on"
+        android:text="@string/tutorial_2_turn_bluetooth_on"
         android:id="@+id/nextTextView"
         android:layout_below="@+id/activity_tutorial_page2_image"
         style="@style/TutorialButton" />
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:layout_below="@+id/nextTextView"
         android:id="@+id/activity_tutorial_page2_notice_textview"
@@ -52,6 +49,6 @@
         android:layout_marginBottom="10dp"
         android:textSize="12sp"
         android:gravity="center"
-        android:text="Tap the Settings button and turn Bluetooth on."/>
+        android:text="@string/tutorial_2_text"/>
 
 </RelativeLayout>

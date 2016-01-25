@@ -90,7 +90,7 @@
     <string name="update_error_nofounDFUservice">No found OTA service,please wait for few minutes and try again.</string>
     <string name="checking_firmware">Vérification de la version du firmware...</string>
     <string name="latest_update_on">Dernière mise à jour\nle</string>
-    <string name="my_nevo">Ma nevo</string>
+    <string name="title_my_nevo">Ma nevo</string>
     <string name="notification_connect_title">Nevo connected</string>
     <string name="notification_connect_content">your Nevo has got connected</string>
     <string name="notification_disconnect_title">Nevo disconnect</string>

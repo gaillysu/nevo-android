@@ -40,7 +40,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
     TextView goal_progress;
 
 
-    @Bind(R.id.fragment_steps_today_dailysteps)
+    @Bind(R.id.fragment_steps_today_daily_steps)
     TextView dailysteps;
 
     @Bind(R.id.HomeClockHour)

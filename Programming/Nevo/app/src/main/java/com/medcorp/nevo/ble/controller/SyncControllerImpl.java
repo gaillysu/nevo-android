@@ -75,13 +75,12 @@ import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.dao.IDailyHistory;
-import com.medcorp.nevo.fragment.old.AlarmFragment;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
-import com.medcorp.nevo.view.TimePickerView;
+import com.medcorp.nevo.util.Preferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -263,16 +262,16 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     {
                         List<Alarm> list = new ArrayList<Alarm>();
 
-                        String[] strAlarm = TimePickerView.getAlarmFromPreference(0, mContext).split(":");
-                        Boolean onOff = AlarmFragment.getClockStateFromPreference(0, mContext);
+                        String[] strAlarm = Preferences.getAlarmFromPreference(0, mContext).split(":");
+                        Boolean onOff = Preferences.getClockStateFromPreference(0, mContext);
                         list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
 
-                        strAlarm = TimePickerView.getAlarmFromPreference(1, mContext).split(":");
-                        onOff = AlarmFragment.getClockStateFromPreference(1, mContext);
+                        strAlarm = Preferences.getAlarmFromPreference(1, mContext).split(":");
+                        onOff = Preferences.getClockStateFromPreference(1, mContext);
                         list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
 
-                        strAlarm = TimePickerView.getAlarmFromPreference(2, mContext).split(":");
-                        onOff = AlarmFragment.getClockStateFromPreference(2, mContext);
+                        strAlarm = Preferences.getAlarmFromPreference(2, mContext).split(":");
+                        onOff = Preferences.getClockStateFromPreference(2, mContext);
                         list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
                         setAlarm(list, true);
                     }

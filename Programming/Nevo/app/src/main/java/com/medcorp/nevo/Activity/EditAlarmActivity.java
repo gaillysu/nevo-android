@@ -45,7 +45,6 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
-        //TODO save keys to XML
         alarm = getModel().getAlarmById(bundle.getInt("Alarm_ID"));
         listView.setAdapter(new AlarmEditAdapter(this,alarm));
         listView.setOnItemClickListener(this);
@@ -67,12 +66,10 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         switch (item.getItemId()) {
             case R.id.done_menu:
                 if(getModel().updateAlarm(alarm)){
-                    //TODO save to Strings.xml
-                    ToastHelper.showShortToast(this, "Saved alarm!");
+                    ToastHelper.showShortToast(this, R.string.alarm_saved);
                     finish();
                 }else{
-                    //TODO save to Strings.xml
-                    ToastHelper.showShortToast(this,"Couldn't save the alarm.!");
+                    ToastHelper.showShortToast(this,R.string.alarm_could_not_save);
                 }
                 return true;
             default:
@@ -85,31 +82,27 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position == 0){
             Dialog alarmDialog = new TimePickerDialog(this, R.style.NevoDialogStyle, timeSetListener, alarm.getHour(), alarm.getMinute(), true);
-            //TODO save to Strings.xml
-            alarmDialog.setTitle("Edit Alarm");
+            alarmDialog.setTitle(R.string.alarm_edit);
             alarmDialog.show();
         }else if(position == 1){
-            //TODO save to Strings.xml
             new MaterialDialog.Builder(EditAlarmActivity.this)
-                    .title("Edit Alarm")
-                    .content("Label your alarm.")
+                    .title(R.string.alarm_edit)
+                    .content(getString(R.string.alarm_label_alarm))
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("label name", alarm.getLabel(), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.alarm_label), alarm.getLabel(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            if(input.length()==0) return;
+                            if (input.length() == 0) return;
                             alarm.setLabel(input.toString());
                             listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
                         }
-                    }).negativeText("Cancel")
+                    }).negativeText(R.string.alarm_cancel)
                     .show();
         }else if(position == 2){
             if(!getModel().deleteAlarm(alarm)){
-                //TODO save to Strings.xml
-                ToastHelper.showShortToast(EditAlarmActivity.this, "Failed to delete alarm");
+                ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);
             }else{
-                //TODO save to Strings.xml
-                ToastHelper.showShortToast(EditAlarmActivity.this, "Deleted alarm!");
+                ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
             }
             finish();
         }
@@ -121,8 +114,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             alarm.setHour(hourOfDay);
             alarm.setMinute(minute);
             if(!getModel().updateAlarm(alarm)){
-                //TODO save to Strings.xml
-                ToastHelper.showShortToast(EditAlarmActivity.this, "Failed to change alarm");
+                ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);
             }else{
                 listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this,alarm));
             }

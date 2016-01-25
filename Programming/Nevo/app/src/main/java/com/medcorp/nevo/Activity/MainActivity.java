@@ -5,10 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -32,7 +30,6 @@ import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
-import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
 
@@ -61,7 +58,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     private Optional<BaseObservableFragment> activeFragment;
     private FragmentManager fragmentManager;
     private Snackbar snackbar=null;
-    private boolean bigSynncStart=false;
+    private boolean bigSyncStart =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +128,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void notifyOnConnected() {
-        //TODO Strings.xml
-        showStateString("Found nevo!", false);
+        showStateString(R.string.in_app_notification_found_nevo, false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnConnected();
@@ -141,12 +137,11 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void notifyOnDisconnected() {
-        //TODO Strings.xml
         if (!getModel().isBluetoothOn()){
-            showStateString("Bluetooth is disabled. Enable Bluetooth.",false);
+            showStateString(R.string.in_app_notification_bluetooth_disabled,false);
             return;
         }
-        showStateString("Nevo disconnected.",false);
+        showStateString(R.string.in_app_notification_nevo_disconnected,false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnDisconnected();
@@ -171,12 +166,11 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSearching() {
-        //TODO put in Strings.xml
         if (!getModel().isBluetoothOn()){
-            showStateString("Bluetooth is disabled. Enable Bluetooth.",false);
+            showStateString(R.string.in_app_notification_bluetooth_disabled,false);
             return;
         }
-        showStateString("Searching for nevo...",false);
+        showStateString(R.string.in_app_notification_searching,false);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSearching();
@@ -193,8 +187,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSearchFailure() {
-        //TODO put in Strings.xml
-        showStateString("Could not find nevo.",true);
+        showStateString(R.string.in_app_notification_could_not_find,true);
         if(activeFragment.notEmpty())
         {
             activeFragment.get().onSearchFailure();
@@ -211,9 +204,8 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     public void onSyncStart() {
         //big sync need about 7~8s
-        bigSynncStart = true;
-        //TODO put in Strings.xml
-        showStateString("Syncing Data...",false);
+        bigSyncStart = true;
+        showStateString(R.string.in_app_notification_syncing,false);
         if(activeFragment.notEmpty()) {
             activeFragment.get().onSyncStart();
         }
@@ -221,9 +213,8 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSyncEnd() {
-        bigSynncStart = false;
-        //TODO put in Strings.xml
-        showStateString("Syncing data finished!",true);
+        bigSyncStart = false;
+        showStateString(R.string.in_app_notification_synced,true);
         if(activeFragment.notEmpty()) {
             activeFragment.get().onSyncEnd();
         }
@@ -247,7 +238,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         }
     }
 
-    public void showStateString(String strState,boolean dismiss)
+    public void showStateString(int id,boolean dismiss)
     {
         if(snackbar != null)
         {
@@ -259,7 +250,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_LONG);
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
-        tv.setText(strState);
+        tv.setText(getString(id));
         snackbar.show();
 
         if(dismiss)
@@ -267,7 +258,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (bigSynncStart == false) {
+                    if (bigSyncStart == false) {
                         snackbar.dismiss();
                     }
                 }

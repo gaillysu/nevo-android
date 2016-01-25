@@ -1,9 +1,7 @@
 package com.medcorp.nevo.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +15,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.view.RoundProgressBar;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,8 +73,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         back2settings.setOnClickListener(this);
         back2settings.setVisibility(View.INVISIBLE);
         back2settings.setText(R.string.re_upgrade);
-        //TODO put in Strings.xml
-        back2settings.setTag(new ButtonTag("retry"));
+        back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
 
         mNevoOtaController = getModel().getOtaController();
         mNevoOtaController.switch2OtaController();
@@ -94,10 +89,9 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
     private void showAlertDialog()
     {
-        //TODO put in Strings.xml
         new MaterialDialog.Builder(this)
-                .title("Do not exit this screen")
-                .content("Please follow the instructions and wait untill the update has been finished.")
+                .title(R.string.dfu_update_title)
+                .content(R.string.dfu_update_content)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -110,8 +104,8 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                         finish();
                     }
                 })
-                .positiveText("Update")
-                .negativeText("Cancel")
+                .positiveText(R.string.dfu_update_positive)
+                .negativeText(R.string.dfu_update_negative)
                 .cancelable(false)
                 .show();
 
@@ -182,11 +176,10 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
     @Override
     public void onPrepareOTA(Constants.DfuFirmwareTypes which) {
-        //TODO put in Strings.xml
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                infomationTextView.setText("Prepare for update...");
+                infomationTextView.setText(R.string.dfu_update_prepare);
             }
         });
     }
@@ -200,11 +193,10 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
     public void connectionStateChanged(boolean isConnected) {
 
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
-            if(errorMsg !="" && isConnected )
+            if(errorMsg != "" && isConnected )
             {
                 back2settings.setText(R.string.re_upgrade);
-                //TODO put in Strings.xml
-                back2settings.setTag(new ButtonTag("retry"));
+                back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
                 back2settings.setVisibility(View.VISIBLE);
             }
         }
@@ -239,7 +231,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
-                //TODO put in Strings.xml
+                //TODO put in Strings.xml + format
                 infomationTextView.setText("Updating "  + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)? "BLE":"MCU") +  " ("+(currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
@@ -258,11 +250,9 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     roundProgressBar.setVisibility(View.INVISIBLE);
                     clockImage.setVisibility(View.INVISIBLE);
                     percentTextView.setText("");
-                    //TODO put in Strings.xml
-                    infomationTextView.setText("Firmware updated");
-
-                    back2settings.setText("Back to settings");
-                    back2settings.setTag(new ButtonTag("back"));
+                    infomationTextView.setText(R.string.dfu_firmware_updated);
+                    back2settings.setText(R.string.dfu_back_to_settings);
+                    back2settings.setTag(new ButtonTag(getString(R.string.dfu_back)));
                     back2settings.setVisibility(View.VISIBLE);
                     //show success text or image
                     mNevoOtaController.reset(false);
@@ -290,9 +280,8 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     hourImage.setVisibility(View.INVISIBLE);
                     minImage.setVisibility(View.INVISIBLE);
                     clockImage.setImageDrawable(getDrawable(R.drawable.firmware_clock_ble_button));
-                    //TODO put in Strings.xml
-                    percentTextView.setText("Press the third button");
-                    infomationTextView.setText("In order to reactivate the bluetooth Don’t exit this screen!");
+                    percentTextView.setText(R.string.dfu_press_third_button);
+                    infomationTextView.setText(R.string.dfu_press_third_button_description);
                 }
             }
         });
@@ -309,8 +298,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
                 if(errorcode == OtaController.ERRORCODE.TIMEOUT)
                     //errorMsg = mContext.getString(R.string.update_error_timeout);
-                    //TODO put in Strings.xml
-                    errorMsg = "Failed preparing update";
+                    errorMsg = getString(R.string.dfu_failed_preparing);
                 else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
                     errorMsg = mContext.getString(R.string.update_error_noconnect);
                 else if(errorcode == OtaController.ERRORCODE.CHECKSUMERROR)
@@ -357,12 +345,12 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
     public void onClick(View v) {
         if(v.getId() == R.id.activity_dfu_back2settings_textview)
         {
-            //TODO put in Strings.xml. OMG this is so bad. Come on.
-            if (v.getTag().toString().equals("back"))
+            //TODO OMG this is so bad. Come on. Change getString to some keys but not this. also dont work with tags.
+            if (v.getTag().toString().equals(getString(R.string.dfu_back)))
             {
                 finish();
             }
-            else if (v.getTag().toString().equals("retry") || v.getTag().toString().equals("continue"))
+            else if (v.getTag().toString().equals(getString(R.string.dfu_retry)) || v.getTag().toString().equals(getString(R.string.dfu_continue)))
             {
                 uploadPressed();
             }

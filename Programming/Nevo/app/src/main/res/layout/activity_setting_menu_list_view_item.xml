@@ -16,13 +16,12 @@
         android:layout_width="40dp"
         android:layout_height="40dp" />
 
-    <!-- TODO put into Strings.xml -->
     <com.medcorp.nevo.view.customfontview.RobotoTextView
         android:id="@+id/activity_setting_menu_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="Link loss notification"
+        android:text="@string/settings_link_loss"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/activity_setting_menu_image"
         android:background="@color/transparent"

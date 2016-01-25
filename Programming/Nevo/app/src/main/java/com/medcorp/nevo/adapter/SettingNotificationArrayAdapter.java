@@ -56,8 +56,7 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
             notificationValue.setText(convertLEDColor2Clock(notification.accept(colorGetter).getTag()));
         }
         else {
-            //TODO put in Strings.xml
-            notificationValue.setText("Deactivated");
+            notificationValue.setText(R.string.notification_deactivated);
         }
         return itemView;
     }
@@ -66,22 +65,22 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
     private String convertLEDColor2Clock(String color)
     {
         if(color.equals("RED")) {
-            return "Red LED" + " - 2 o'clock";
+            return context.getString(R.string.notification_led_red);
         }
         if(color.equals("BLUE")) {
-            return "Blue LED" + " - 4 o'clock";
+            return context.getString(R.string.notification_led_blue);
         }
         if(color.equals("LIGHT_GREEN")) {
-            return "Light Green LED" + " - 6 o'clock";
+            return context.getString(R.string.notification_led_light);
         }
         if(color.equals("YELLOW")) {
-            return "Yellow LED" + " - 8 o'clock";
+            return context.getString(R.string.notification_led_yellow);
         }
         if(color.equals("ORANGE")) {
-            return "Orange LED" + " - 10 o'clock";
+            return context.getString(R.string.notification_led_orange);
         }
         if(color.equals("GREEN")) {
-            return "Green LED" + " - 12 o'clock";
+            return context.getString(R.string.notification_led_green);
         }
         return color;
     }

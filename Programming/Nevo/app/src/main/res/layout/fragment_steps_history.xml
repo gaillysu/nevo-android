@@ -26,14 +26,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!-- TODO put into Strings.xml -->
+
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/customGray"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:light="true"
-                android:text="goal"/>
+                android:text="@string/steps_goal"/>
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_history_goal"
@@ -56,8 +56,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="progress"/>
-            <!-- TODO put into Strings.xml -->
+                android:text="@string/steps_progress"/>
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_history_progress"
@@ -80,8 +79,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="steps"/>
-            <!-- TODO put into Strings.xml -->
+                android:text="@string/steps_steps"/>
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:textColor="@color/black"
                 android:id="@+id/fragment_steps_history_steps"

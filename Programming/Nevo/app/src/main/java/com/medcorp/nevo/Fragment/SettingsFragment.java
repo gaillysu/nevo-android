@@ -50,15 +50,15 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
         listMenu = new ArrayList<SettingMenu>();
-        //TODO put into Strings.xml
-        listMenu.add(new SettingMenu("Link loss notification",R.drawable.setting_linkloss,true));
-        listMenu.add(new SettingMenu("Notifications",R.drawable.setting_notfications,false));
-        listMenu.add(new SettingMenu("My nevo",R.drawable.setting_mynevo,false));
-        listMenu.add(new SettingMenu("Find my watch",R.drawable.setting_findmywatch,false));
-        listMenu.add(new SettingMenu("Goals",R.drawable.setting_goals,false));
-        listMenu.add(new SettingMenu("Support",R.drawable.setting_support,false));
-        listMenu.add(new SettingMenu("About",R.drawable.setting_about,false));
-        listMenu.add(new SettingMenu("Forget watch",R.drawable.setting_forget,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_link_loss_notification),R.drawable.setting_linkloss,true));
+        listMenu.add(new SettingMenu(getString(R.string.settings_notifications),R.drawable.setting_notfications,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_my_nevo),R.drawable.setting_mynevo,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_find_my_watch),R.drawable.setting_findmywatch,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_goals),R.drawable.setting_goals,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_support),R.drawable.setting_support,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_about),R.drawable.setting_about,false));
+        listMenu.add(new SettingMenu(getString(R.string.settings_forget_watch),R.drawable.setting_forget,false));
+
         settingAdapter = new SettingMenuAdapter(getContext(),listMenu);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
@@ -144,8 +144,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             if(getModel().isWatchConnected()) {
                 startActivity(MyNevoActivity.class);
             }else{
-                //TODO put into Strings.xml
-                ToastHelper.showShortToast(getContext(),"No watch connected.");
+                ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
             }
         }
         else if(position == 3)
@@ -153,8 +152,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             if(getModel().isWatchConnected()) {
                 getModel().blinkWatch();
             }else{
-                //TODO put into Strings.xml
-                ToastHelper.showShortToast(getContext(),"No watch connected.");
+                ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
             }
         }
         else if(position == 4)
@@ -174,8 +172,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         else if(position == 7)
         {
             new AlertDialog.Builder(this.getActivity(), AlertDialog.THEME_HOLO_LIGHT)
-                    //TODO put into Strings.xml
-                    .setMessage("Are you sure?")
+                    .setMessage(R.string.settings_sure)
                     .setPositiveButton(android.R.string.no, null)
                     .setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override

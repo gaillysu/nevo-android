@@ -43,8 +43,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //TODO put in Strings.xml
-        setTitle("My Nevo");
+        setTitle(R.string.title_my_nevo);
         String app_version = "";
         try {
             app_version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;

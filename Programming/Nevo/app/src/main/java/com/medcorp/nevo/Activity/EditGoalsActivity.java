@@ -44,10 +44,8 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //TODO put in Strings.xml
-        setTitle("Edit Goals");
+        setTitle(R.string.goal_edit);
         Bundle bundle = getIntent().getExtras();
-        //TODO put in Keys.xml
         preset = getModel().getPresetById(bundle.getInt("Preset_ID"));
         presetListView.setVisibility(View.VISIBLE);
         presetListView.setOnItemClickListener(this);
@@ -68,10 +66,9 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(position == 0)
         {
-            //TODO put in Strings.xml
             new MaterialDialog.Builder(EditGoalsActivity.this)
-                    .title("Edit Goal")
-                    .content("input your goal.")
+                    .title(R.string.goal_edit)
+                    .content(R.string.goal_input)
                     .inputType(InputType.TYPE_CLASS_NUMBER)
                     .input("", ""+preset.getSteps(), new MaterialDialog.InputCallback() {
                         @Override
@@ -80,33 +77,30 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
                             preset.setSteps(Integer.parseInt(input.toString()));
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, preset));
                         }
-                    }).negativeText("Cancel").show();
+                    }).negativeText(R.string.goal_cancel).show();
         }
         else if(position == 1)
         {
-            //TODO put in Strings.xml
             new MaterialDialog.Builder(EditGoalsActivity.this)
-                    .title("Edit Goal")
-                    .content("Label your goal.")
+                    .title(R.string.goal_edit)
+                    .content(R.string.goal_label_goal)
                     .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("label name", preset.getLabel(), new MaterialDialog.InputCallback() {
+                    .input(getString(R.string.goal_label), preset.getLabel(), new MaterialDialog.InputCallback() {
                         @Override
                         public void onInput(MaterialDialog dialog, CharSequence input) {
-                            if(input.length()==0) return;
+                            if (input.length() == 0) return;
                             preset.setLabel(input.toString());
                             presetListView.setAdapter(new PresetEditAdapter(EditGoalsActivity.this, preset));
                         }
-                    }).negativeText("Cancel")
+                    }).negativeText(R.string.goal_cancel)
                     .show();
         }
         else if(position == 2)
         {
             if(!getModel().deleteAlarm(preset)){
-                //TODO put in Strings.xml
-                ToastHelper.showShortToast(this, "Failed to delete goal");
+                ToastHelper.showShortToast(this, R.string.goal_could_not_delete);
             }else{
-                //TODO put in Strings.xml
-                ToastHelper.showShortToast(this, "Deleted goal!");
+                ToastHelper.showShortToast(this, R.string.goal_deleted);
             }
             setResult(-1);
             finish();
@@ -118,13 +112,11 @@ public class EditGoalsActivity extends BaseActivity implements AdapterView.OnIte
         switch (item.getItemId()) {
             case R.id.done_menu:
                 if(getModel().updatePreset(preset)){
-                    //TODO put in Strings.xml
-                    ToastHelper.showShortToast(EditGoalsActivity.this, "Saved Goal!");
+                    ToastHelper.showShortToast(EditGoalsActivity.this, R.string.goal_saved);
                     EditGoalsActivity.this.setResult(1);
                     EditGoalsActivity.this.finish();
                 }else{
-                    //TODO put in Strings.xml
-                    ToastHelper.showShortToast(EditGoalsActivity.this,"Couldn't save the goal.!");
+                    ToastHelper.showShortToast(EditGoalsActivity.this,R.string.goal_could_not_save);
                 }
                 return true;
             case android.R.id.home:

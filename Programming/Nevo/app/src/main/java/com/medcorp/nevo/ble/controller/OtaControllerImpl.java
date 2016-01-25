@@ -1,14 +1,11 @@
 package com.medcorp.nevo.ble.controller;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.activity.old.OTAActivity;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.exception.BLEUnstableException;
 import com.medcorp.nevo.ble.exception.NevoException;

@@ -27,7 +27,6 @@ import java.util.List;
 public class SleepDataView extends View {
     private Paint mPaint;
     private int mRoundColor;
-    private int mRoundProgressColor;
     private int mTextColor;
     private int mWakeSleepColor;
     private int mLightSleepColor;
@@ -37,7 +36,6 @@ public class SleepDataView extends View {
     private int mMax;
     private int mProgress;
     private boolean mTextIsDisplayable;
-    private int mStyle;
     private JSONObject mSleepAnalysisResult = new JSONObject();
 
     public static final int STROKE = 0;
@@ -67,23 +65,16 @@ public class SleepDataView extends View {
 
     public SleepDataView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         mPaint = new Paint();
-
-
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs,
                 R.styleable.RoundProgressBar);
-
         //get custom attributes
         mRoundColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundColor, Color.RED);
-        mRoundProgressColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundProgressColor, Color.GREEN);
         mTextColor = mTypedArray.getColor(R.styleable.RoundProgressBar_textColor, Color.BLUE);
         mTextSize = mTypedArray.getDimension(R.styleable.RoundProgressBar_textSize, 60);
         mRoundWidth = mTypedArray.getDimension(R.styleable.RoundProgressBar_roundWidth, 5);
         mMax = mTypedArray.getInteger(R.styleable.RoundProgressBar_max, 100);
         mTextIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
-        mStyle = mTypedArray.getInt(R.styleable.RoundProgressBar_style, 0);
-
         mWakeSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepWakeColor, Color.GREEN);
         mLightSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepLightColor, Color.LTGRAY);
         mDeepSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepDeepColor, Color.BLUE);
@@ -280,18 +271,14 @@ public class SleepDataView extends View {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
         else
         {
             if(mTextIsDisplayable)
             canvas.drawText("----", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
-
         }
-
         //call invalidate to redraw again
         invalidate();
-
     }
 
     public synchronized void setProgress(int progress) {
@@ -305,7 +292,6 @@ public class SleepDataView extends View {
             this.mProgress = progress;
             postInvalidate();
         }
-
     }
 
     public synchronized void setSleepAnalysisResult(JSONObject result)

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <!-- TODO put into Strings.xml -->
         <com.medcorp.nevo.view.customfontview.RobotoTextView
             android:id="@+id/activity_tutorial_page1_start_textview"
             android:textColor="@color/black"
@@ -19,7 +18,6 @@
             android:textSize="36sp"
             android:text="Let\'s get started!"/>
 
-    <!-- TODO put into Strings.xml -->
         <com.medcorp.nevo.view.customfontview.RobotoTextView
             android:id="@+id/activity_tutorial_page1_notice_textview"
             android:layout_below="@id/activity_tutorial_page1_start_textview"
@@ -31,7 +29,7 @@
             android:gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:text="Use your nevo watch to set, track and analyse your personal health and fitness data."
+            android:text="@string/tutorial_1_text"
             />
 
         <ImageView
@@ -41,11 +39,10 @@
             android:background="@drawable/tutorial_nevo_1"
             android:id="@+id/imageView5" />
 
-    <!-- TODO put into Strings.xml -->
         <com.medcorp.nevo.view.customfontview.RobotoButton
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="Activate your nevo"
+            android:text="@string/tutorial_1_lets_activate"
             android:id="@+id/nextTextView"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="60dp"
