@@ -58,7 +58,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingMenu(getString(R.string.settings_find_my_watch),R.drawable.setting_findmywatch,false));
         listMenu.add(new SettingMenu(getString(R.string.settings_goals),R.drawable.setting_goals,false));
         listMenu.add(new SettingMenu(getString(R.string.settings_support),R.drawable.setting_support,false));
-        listMenu.add(new SettingMenu(getString(R.string.settings_about),R.drawable.setting_about,false));
         listMenu.add(new SettingMenu(getString(R.string.settings_forget_watch),R.drawable.setting_forget,false));
 
         settingAdapter = new SettingMenuAdapter(getContext(),listMenu);
@@ -167,11 +166,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://support.nevowatch.com/support/home"));
             getActivity().startActivity(intent);
         }
-        else if(position == 6)
-        {
-            startActivity(SettingAboutActivity.class);
-        }
-        else if(position == 7) {
+        else if(position == 6) {
             new MaterialDialog.Builder(getContext())
                     .content(R.string.settings_sure)
                     .negativeText(android.R.string.no)
