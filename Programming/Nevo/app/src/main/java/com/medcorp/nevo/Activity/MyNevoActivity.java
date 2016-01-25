@@ -61,7 +61,8 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         if (getModel().isWatchConnected()){
             getModel().getBatteryLevelOfWatch();
         }
-        checkVersion();
+        //we can't make sure that OTA is stable before passed enough testing, here firstly disable it
+        //checkVersion();
     }
 
     //TODO This method should not be in here.
