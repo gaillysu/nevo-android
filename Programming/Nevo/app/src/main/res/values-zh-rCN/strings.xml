@@ -20,7 +20,7 @@
     <string name="sportive_string">高</string>
     <string name="open_string">打开</string>
     <string name="close_string">关闭</string>
-    <string name="goal_steps">步数</string>
+    <string name="goal_steps">活动</string>
     <string name="time_picker">设置时间</string>
     <string name="nevoConnected">nevo未连接\n请打开手机蓝牙</string>
     <string name="pushHoldButton">然后长按第三个按钮3秒钟\n连接上你的手表\n如果仍有问题，请访问</string>

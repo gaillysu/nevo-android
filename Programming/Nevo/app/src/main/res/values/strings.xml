@@ -20,7 +20,7 @@
     <string name="sportive_string">Intensive</string>
     <string name="open_string">On</string>
     <string name="close_string">Off</string>
-    <string name="goal_steps">Steps</string>
+    <string name="goal_steps">Activity</string>
     <string name="time_picker">Set Alarm</string>
     <string name="nevoConnected">nevo is not connected\nEnable Bluetooth on phone</string>
     <string name="pushHoldButton">Then push and hold 3rd button\nto connect your watch\nIf the problem persists, please visit</string>
