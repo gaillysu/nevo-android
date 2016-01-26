@@ -252,7 +252,7 @@
     <string name="title_my_nevo">My nevo</string>
     <string name="title_about">About</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_steps">Steps</string>
+    <string name="title_steps">Activity</string>
 
     <string name="my_nevo_firmware">Firmware</string>
     <string name="my_nevo_new_version">New version available</string>
