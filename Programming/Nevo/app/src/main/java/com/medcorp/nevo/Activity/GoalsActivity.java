@@ -103,7 +103,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
             case R.id.add_menu:
                 new MaterialDialog.Builder(GoalsActivity.this)
                         .title(R.string.goal_add)
-                        .content(R.string.goal_label_goal)
+                        .content(R.string.goal_input)
                         .inputType(InputType.TYPE_CLASS_NUMBER)
                         .input(getString(R.string.goal_step_goal), "", new MaterialDialog.InputCallback() {
                             @Override

@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_sleep_fragment"
             android:icon="@drawable/ios_sleep"
-            android:title="Sleep" />
+            android:title="@string/title_section6" />
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/settings_section">

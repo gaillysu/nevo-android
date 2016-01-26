@@ -52,7 +52,7 @@ public class PresetEditAdapter extends BaseAdapter {
         RobotoTextView delete = (RobotoTextView)itemView.findViewById(R.id.activity_preset_edit_list_view_item_delete_label);
         if(position == 0)
         {
-            title.setText(preset.getSteps());
+            title.setText(preset.getSteps()+"");
             summary.setText(R.string.goal_input);
         }
         else if(position == 1)

@@ -46,8 +46,7 @@
             android:textSize="13sp"
             android:gravity="center"
             roboto:thin="true"
-            android:text = "To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes.
-You will not receive notifications on nevo when disconnected."/>
+            android:text = "@string/my_nevo_notice_message"/>
     </RelativeLayout>
     </LinearLayout>
     </ScrollView>

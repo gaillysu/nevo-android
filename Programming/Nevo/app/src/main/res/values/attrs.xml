@@ -25,8 +25,8 @@
     </declare-styleable>
 
     <array name="today_history_array">
-        <item>Today</item>
-        <item>History</item>
+        <item>@string/tab_title_today</item>
+        <item>@string/tab_title_History</item>
     </array>
 
     

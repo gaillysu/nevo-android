@@ -5,7 +5,7 @@
     <string name="title_section3">Alarm</string>
     <string name="title_section4">Notifications</string>
     <string name="title_section5">My nevo</string>
-    <string name="title_section6">Sleep History</string>
+    <string name="title_section6">Sleep</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -261,6 +261,7 @@
     <string name="my_nevo_battery_half">Battery half</string>
     <string name="my_nevo_battery_full">Battery full</string>
     <string name="my_nevo_application">Application</string>
+    <string name="my_nevo_notice_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes.You will not receive notifications on nevo when disconnected.</string>
 
     <string name="settings_link_loss_notification">Link loss notification</string>
     <string name="settings_notifications">Notifications</string>
@@ -278,4 +279,7 @@
     <string name="google_fit_network_lost">Network Connection Lost</string>
     <string name="google_fit_service_disconnected">Google Play Service Disconnected</string>
     <string name="google_fit_unknown_network">Unknown Network Error Occurred</string>
+
+    <string name="tab_title_today">Today</string>
+    <string name="tab_title_History">History</string>
 </resources>

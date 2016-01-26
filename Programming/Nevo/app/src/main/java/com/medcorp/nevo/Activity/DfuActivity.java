@@ -273,7 +273,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
 
                     back2settings.setText(getString(R.string.continue_button));
-                    back2settings.setTag(new ButtonTag("continue"));
+                    back2settings.setTag(new ButtonTag(getString(R.string.continue_button)));
                     back2settings.setVisibility(View.INVISIBLE);
 
                     roundProgressBar.setVisibility(View.INVISIBLE);
