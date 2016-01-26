@@ -246,7 +246,11 @@ public class SleepDataView extends View {
                     int i =0;
                     for(Float f:sleepDegree)
                     {
-                        canvas.drawArc(oval, start,sweep[i], false, sleepColor.get(i));
+                        //fix a bug that some phones like :Nexus 5x and xiaomi drawArc is wrong, but Nexus 5 and S4/s5 drawArc  well.
+                        if(sweep[i]>0)
+                        {
+                            canvas.drawArc(oval, start, sweep[i], false, sleepColor.get(i));
+                        }
                         start += f;
                         if (sweep[i] < f) {
                             sweep[i] += SWEEP_INC;
