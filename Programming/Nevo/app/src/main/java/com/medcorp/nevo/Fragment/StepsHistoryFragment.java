@@ -127,6 +127,12 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
                 barChart.moveViewToX(stepsList.size());
             }
         });
+        if(!stepsList.isEmpty())
+        {
+            barChart.highlightValue(stepsList.size()-1, 0);
+            Steps steps = stepsList.get(stepsList.size()-1);
+            setDashboard(new Dashboard(steps.getSteps(), steps.getGoal()));
+        }
         return view;
     }
 
