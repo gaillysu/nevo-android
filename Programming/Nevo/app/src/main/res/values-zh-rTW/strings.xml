@@ -249,7 +249,7 @@
     <string name="title_alarm">鬧鐘</string>
     <string name="title_about">關於</string>
     <string name="title_notifications">通知</string>
-    <string name="title_steps">步數</string>
+    <string name="title_steps">活動</string>
 
     <string name="my_nevo_firmware">固件版本</string>
     <string name="my_nevo_new_version">有新版本固件可用</string>
