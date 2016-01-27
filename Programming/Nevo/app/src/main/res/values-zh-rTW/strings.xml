@@ -262,6 +262,8 @@
 
     <string name="settings_link_loss_notification">連接斷開通知</string>
     <string name="settings_notifications">通知</string>
+    <string name="settings_notifications_active_title">已激活通知</string>
+    <string name="settings_notifications_inactive_title">未激活通知</string>
     <string name="settings_my_nevo">我的手錶</string>
     <string name="settings_find_my_watch">尋找手錶</string>
     <string name="settings_goals">目標</string>

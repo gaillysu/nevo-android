@@ -265,6 +265,8 @@
 
     <string name="settings_link_loss_notification">Link loss notification</string>
     <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_active_title">Active Notifications</string>
+    <string name="settings_notifications_inactive_title">Inactive Notifications</string>
     <string name="settings_my_nevo">My nevo</string>
     <string name="settings_find_my_watch">Find my watch</string>
     <string name="settings_goals">Goals</string>
