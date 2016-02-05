@@ -1,24 +1,18 @@
 package com.medcorp.nevo.adapter;
 
 import android.content.Context;
-import android.database.DataSetObserver;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.ListAdapter;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.view.customfontview.RobotoTextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +40,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm>{
         final Alarm alarm = alarmList.get(position);
         RobotoTextView alarmTimeTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_time);
         RobotoTextView alarmLabelTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_label);
-        Switch onOffSwitch = (Switch) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_switch);
+        SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_switch);
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
@@ -55,7 +49,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm>{
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onAlarmSwitchedListener.onAlarmSwitch((Switch) buttonView,alarm);
+                onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView,alarm);
             }
         });
         return itemView;

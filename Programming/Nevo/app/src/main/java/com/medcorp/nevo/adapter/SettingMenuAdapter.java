@@ -1,13 +1,13 @@
 package com.medcorp.nevo.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.model.SettingMenu;
@@ -42,9 +42,8 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingMenu> {
 
         ImageView menuImage = (ImageView) itemView.findViewById(R.id.activity_setting_menu_image);
         RobotoTextView menuNameTextView = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
-        Switch onOffSwitch = (Switch) itemView.findViewById(R.id.activity_setting_menu_switch);
-
-        menuImage.setImageDrawable(context.getDrawable(listMenu.get(position).getIcon()));
+        SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
+        menuImage.setImageResource(listMenu.get(position).getIcon());
         menuNameTextView.setText(listMenu.get(position).getTitle());
         if(listMenu.get(position).isWithSwitch())
         {

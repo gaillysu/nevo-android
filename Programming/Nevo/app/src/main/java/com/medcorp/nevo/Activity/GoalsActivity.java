@@ -42,8 +42,10 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
     public void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        getWindow().setEnterTransition(new Explode());
-        getWindow().setExitTransition(new Explode());
+        if(android.os.Build.VERSION.SDK_INT >= 21) {
+            getWindow().setEnterTransition(new Explode());
+            getWindow().setExitTransition(new Explode());
+        }
         setContentView(R.layout.activity_goals);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);

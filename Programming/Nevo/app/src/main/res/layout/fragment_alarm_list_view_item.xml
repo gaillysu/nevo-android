@@ -18,7 +18,7 @@
             android:textSize="65sp"
             roboto:thin="true"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
-        <Switch
+        <android.support.v7.widget.SwitchCompat
             android:shadowColor="@color/colorPrimary"
             android:id="@+id/fragment_alarmm_list_view_item_alarm_switch"
             android:layout_width="wrap_content"

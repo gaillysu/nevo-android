@@ -116,7 +116,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         hourImage.setVisibility(View.VISIBLE);
         minImage.setVisibility(View.VISIBLE);
         clockImage.setVisibility(View.VISIBLE);
-        clockImage.setImageDrawable(getDrawable(R.drawable.clockview600));
+        clockImage.setImageResource(R.drawable.clockview600);
 
         int hour = 11;
         int minute = 5;

@@ -913,7 +913,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             wl.release();
 
             //play build-in music  in Raw
-            PlayFromRawFile();
+            //TODO Sound is fine but not sound from dogs. Thanks.
+//            PlayFromRawFile();
         }
         private  void PlayFromRawFile()
         {

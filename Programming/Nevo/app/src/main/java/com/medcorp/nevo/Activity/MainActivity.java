@@ -321,7 +321,9 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         }
         activeFragment.set(fragment);
         {
-            fragment.setEnterTransition(new Fade().setDuration(300));
+            if(android.os.Build.VERSION.SDK_INT >= 19) {
+                fragment.setEnterTransition(new Fade().setDuration(300));
+            }
             FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
             if (fragmentManager.getBackStackEntryCount() == 0) {
                         fragmentTransaction.addToBackStack(fragment.getClass().getName());

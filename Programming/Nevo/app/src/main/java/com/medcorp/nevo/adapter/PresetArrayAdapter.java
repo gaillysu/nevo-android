@@ -1,12 +1,12 @@
 package com.medcorp.nevo.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
@@ -48,7 +48,7 @@ public class PresetArrayAdapter extends ArrayAdapter<Preset> {
         View itemView = inflater.inflate(R.layout.activity_goals_list_view_item, parent, false);
         RobotoTextView  presetLabel = (RobotoTextView)itemView.findViewById(R.id.activity_goals_list_view_item_goals_label);
         RobotoTextView  presetValue = (RobotoTextView)itemView.findViewById(R.id.activity_goals_list_view_item_goal_steps);
-        Switch presetOnOff = (Switch) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
+        SwitchCompat presetOnOff = (SwitchCompat) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
         final Preset preset = listPreset.get(position);
         presetLabel.setText(preset.getLabel());
         //TODO put in Strings incl format.xml
