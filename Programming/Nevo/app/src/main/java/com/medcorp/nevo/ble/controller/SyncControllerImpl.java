@@ -260,20 +260,32 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                 {
                     if(initNotification)
                     {
-                        List<Alarm> list = new ArrayList<Alarm>();
-
-                        String[] strAlarm = Preferences.getAlarmFromPreference(0, mContext).split(":");
-                        Boolean onOff = Preferences.getClockStateFromPreference(0, mContext);
-                        list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
-
-                        strAlarm = Preferences.getAlarmFromPreference(1, mContext).split(":");
-                        onOff = Preferences.getClockStateFromPreference(1, mContext);
-                        list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
-
-                        strAlarm = Preferences.getAlarmFromPreference(2, mContext).split(":");
-                        onOff = Preferences.getClockStateFromPreference(2, mContext);
-                        list.add(new Alarm(Integer.parseInt(strAlarm[0]), Integer.parseInt(strAlarm[1]), onOff, ""));
-                        setAlarm(list, true);
+                        List<Alarm> list = ((ApplicationModel) mContext).getAllAlarm();
+                        if(!list.isEmpty())
+                        {
+                            List<Alarm> customerAlarmList = new ArrayList<Alarm>();
+                            for(Alarm alarm: list)
+                            {
+                                if(alarm.isEnable())
+                                {
+                                    customerAlarmList.add(alarm);
+                                    if(customerAlarmList.size()>=SetAlarmNevoRequest.maxAlarmCount)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+                            if(customerAlarmList.isEmpty())
+                            {
+                                customerAlarmList.add(list.get(0));
+                            }
+                            setAlarm(customerAlarmList, true);
+                        }
+                        else
+                        {
+                            list.add(new Alarm(0,0, false, ""));
+                            setAlarm(list, true);
+                        }
                     }
                     else
                     {

@@ -9,7 +9,7 @@ import java.util.List;
 public class SetAlarmNevoRequest extends NevoRequest {
 
 	public  final static  byte HEADER = 0x41;
-	
+	public  final static int maxAlarmCount = 3;
 	private int[] mHour;
 	private int[] mMinute;
 	private boolean[] mEnable;
@@ -17,10 +17,10 @@ public class SetAlarmNevoRequest extends NevoRequest {
 	public SetAlarmNevoRequest(Context context, List<Alarm> list)
 	{
 		super(context);
-		mHour = new int[list.size()];
-		mMinute = new int[list.size()];
-		mEnable = new boolean[list.size()];
-        for (int i =0;i<list.size();i++)
+		mHour = new int[maxAlarmCount];
+		mMinute = new int[maxAlarmCount];
+		mEnable = new boolean[maxAlarmCount];
+        for (int i =0;i<list.size()&&i<maxAlarmCount;i++)
         {
             Alarm alarm = list.get(i);
             mHour[i]  = alarm.getHour();
