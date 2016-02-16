@@ -186,7 +186,7 @@
     <string name="sleep_deep_sleep">深睡</string>
     <string name="sleep_light_sleep">浅睡</string>
     <string name="sleep_wake_duration">醒着时长</string>
-    <string name="sleep_empty">--</string>
+    <string name="sleep_today_no_sleep_message">您没有使用手表测试您的睡眠</string>
 
     <string name="steps_goal_title">目标</string>
     <string name="steps_goal">目标</string>

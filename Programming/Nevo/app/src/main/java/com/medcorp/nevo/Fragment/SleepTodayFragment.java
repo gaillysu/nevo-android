@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -64,6 +65,12 @@ public class SleepTodayFragment extends BaseFragment {
 
     @Bind(R.id.HomeClockMinute)
     ImageView minImage;
+
+    @Bind(R.id.fragment_sleep_today_dashboard_layout)
+    LinearLayout dashboardLayout;
+
+    @Bind(R.id.fragment_sleep_today_nosleep)
+    TextView nosleepTextView;
 
     private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
@@ -130,22 +137,27 @@ public class SleepTodayFragment extends BaseFragment {
         SleepDataHandler handler = new SleepDataHandler(sleepList);
         List<SleepData> sleepDataList = handler.getSleepData();
         //have today sleep, use it.
-        if(!sleepDataList.isEmpty() && todaySleep.notEmpty())
-        {
-            SleepData todaySleepData = sleepDataList.get(sleepDataList.size()-1);
+        if(!sleepDataList.isEmpty() && todaySleep.notEmpty()) {
+            SleepData todaySleepData = sleepDataList.get(sleepDataList.size() - 1);
             sleepAnalysisResult = todaySleepData.toJSONObject();
+
+            setProgressBar(sleepAnalysisResult);
+            try {
+                //TODO put into keys.xml
+                setDashboard(new Dashboard(sleepAnalysisResult.getInt("sleepDuration")
+                        , sleepAnalysisResult.getInt("sleepDeepDuration")
+                        , sleepAnalysisResult.getInt("sleepLightDuration")
+                        , sleepAnalysisResult.getLong("startDateTime")
+                        , sleepAnalysisResult.getLong("endDateTime")
+                        , sleepAnalysisResult.getInt("sleepWakeDuration")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        setProgressBar(sleepAnalysisResult);
-        try {
-            //TODO put into keys.xml
-            setDashboard(new Dashboard(sleepAnalysisResult.getInt("sleepDuration")
-                    ,sleepAnalysisResult.getInt("sleepDeepDuration")
-                    ,sleepAnalysisResult.getInt("sleepLightDuration")
-                    ,sleepAnalysisResult.getLong("startDateTime")
-                    ,sleepAnalysisResult.getLong("endDateTime")
-                    ,sleepAnalysisResult.getInt("sleepWakeDuration")));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        else
+        {
+            dashboardLayout.setVisibility(View.GONE);
+            nosleepTextView.setVisibility(View.VISIBLE);
         }
     }
 

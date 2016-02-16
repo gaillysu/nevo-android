@@ -188,7 +188,7 @@
     <string name="sleep_deep_sleep">Deep sleep</string>
     <string name="sleep_light_sleep">Light sleep</string>
     <string name="sleep_wake_duration">Wake duration</string>
-    <string name="sleep_empty">--</string>
+    <string name="sleep_today_no_sleep_message">You didn\'t sleep with your nevo.</string>
 
     <string name="steps_goal_title">Goal</string>
     <string name="steps_goal">goal</string>
@@ -284,4 +284,5 @@
 
     <string name="tab_title_today">Today</string>
     <string name="tab_title_History">History</string>
+
 </resources>
