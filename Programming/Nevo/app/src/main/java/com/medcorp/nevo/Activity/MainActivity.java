@@ -1,5 +1,6 @@
 package com.medcorp.nevo.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -366,5 +367,14 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     public void onBackStackChanged() {
         Log.w("Karl", "On backstack changed. current =  " + fragmentManager.getBackStackEntryCount());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(activeFragment.notEmpty())
+        {
+            activeFragment.get().onActivityResult(requestCode,resultCode,data);
+        }
     }
 }

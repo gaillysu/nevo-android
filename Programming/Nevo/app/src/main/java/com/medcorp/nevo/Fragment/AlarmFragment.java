@@ -25,6 +25,7 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.EditAlarmActivity;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.AlarmArrayAdapter;
+import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.nevo.model.Alarm;
@@ -170,7 +171,17 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
         prefs.putString("fragment_edit_alarm_label", alarmList.get(position).getLabel());
         prefs.commit();
-        getAppCompatActivity().startActivity(i);
+        getAppCompatActivity().startActivityForResult(i, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //when delete (resultCode == -1) or update (resultCode == 1) the enable alarm, do alarm sync
+        if(resultCode!=0)
+        {
+            syncAlarmByEditor();
+        }
     }
 
     @Override
@@ -242,5 +253,38 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             }
         }
         return count;
+    }
+    private void syncAlarmByEditor()
+    {
+        if(!getModel().isWatchConnected()){
+            ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
+            return;
+        }
+        List<Alarm> list = getModel().getAllAlarm();
+        List<Alarm> customerAlarmList = new ArrayList<Alarm>();
+        if(!list.isEmpty())
+        {
+            for(Alarm alarm: list)
+            {
+                if(alarm.isEnable())
+                {
+                    customerAlarmList.add(alarm);
+                    if(customerAlarmList.size()>= SetAlarmNevoRequest.maxAlarmCount)
+                    {
+                        break;
+                    }
+                }
+            }
+            if(customerAlarmList.isEmpty())
+            {
+                customerAlarmList.add(list.get(0));
+            }
+        }
+        else
+        {
+            customerAlarmList.add(new Alarm(0, 0, false, ""));
+        }
+        getModel().setAlarm(customerAlarmList);
+        ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);
     }
 }
