@@ -49,7 +49,7 @@ public class TutorialPage2Activity extends BaseActivity implements View.OnClickL
             }else{
                 new MaterialDialog.Builder(this)
                         .content(R.string.tutorial_2_dialog_positive)
-                        .positiveText(R.string.ok_button)
+                        .positiveText(android.R.string.ok)
                         .negativeText(R.string.tutorial_2_dialog_negative)
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override

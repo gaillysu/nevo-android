@@ -5,21 +5,21 @@
         <item
             android:id="@+id/nav_steps_fragment"
             android:icon="@drawable/ios_steps"
-            android:title="@string/goal_steps" />
+            android:title="@string/menu_drawer_activity" />
         <item
             android:id="@+id/nav_alarm_fragment"
             android:icon="@drawable/ios_alarm"
-            android:title="@string/title_section3" />
+            android:title="@string/menu_drawer_alarm" />
         <item
             android:id="@+id/nav_sleep_fragment"
             android:icon="@drawable/ios_sleep"
-            android:title="@string/title_section6" />
+            android:title="@string/menu_drawer_sleep" />
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/settings_section">
         <item
             android:id="@+id/nav_settings_fragment"
             android:icon="@drawable/ios_setting"
-            android:title="@string/action_settings" />
+            android:title="@string/menu_drawer_settings" />
     </group>
 </menu>

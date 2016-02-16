@@ -25,37 +25,37 @@ public class NotificationNameVisitor implements NotificationVisitor<String> {
 
     @Override
     public String visit(CalendarNotification calendarNotification) {
-        return context.getResources().getString(R.string.calendar_string);
+        return context.getResources().getString(R.string.notification_calendar_title);
     }
 
     @Override
     public String visit(EmailNotification emailNotification) {
-        return context.getResources().getString(R.string.email_string);
+        return context.getResources().getString(R.string.notification_email_title);
     }
 
     @Override
     public String visit(FacebookNotification facebookNotification) {
-        return context.getResources().getString(R.string.facebook_string);
+        return context.getResources().getString(R.string.notification_facebook_title);
     }
 
     @Override
     public String visit(SmsNotification smsNotification) {
-        return context.getResources().getString(R.string.sms_string);
+        return context.getResources().getString(R.string.notification_sms_title);
     }
 
     @Override
     public String visit(TelephoneNotification telephoneNotification) {
-        return context.getResources().getString(R.string.call_string);
+        return context.getResources().getString(R.string.notification_call_title);
     }
 
     @Override
     public String visit(WeChatNotification weChatNotification) {
-        return context.getResources().getString(R.string.wechat_string);
+        return context.getResources().getString(R.string.notification_wechat_title);
     }
 
     @Override
     public String visit(WhatsappNotification whatsappNotification) {
-        return context.getResources().getString(R.string.whatsapp_string);
+        return context.getResources().getString(R.string.notification_whatsapp_title);
     }
 
     @Override
