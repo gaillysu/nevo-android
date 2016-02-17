@@ -29,9 +29,9 @@ import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.util.Preferences;
 
 import java.util.Date;
 import java.util.Timer;
@@ -62,8 +62,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 case TelephonyManager.CALL_STATE_RINGING:
                     NotificationDataHelper helper = new NotificationDataHelper(NevoNotificationListener.this);
                     if(helper.getState(new TelephoneNotification()).isOn()) {
-                        NotificationColorGetter getter = new NotificationColorGetter(NevoNotificationListener.this);
-                        sendNotification(new TelephoneNotification().accept(getter).getColor());
+                        sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification()).getHexColor());
                     }
                     break;
             }
@@ -86,7 +85,6 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         }
 
         Notification notification = statusBarNotification.getNotification();
-        NotificationColorGetter applicationColorGetter = new NotificationColorGetter(this);
         NotificationDataHelper helper = new NotificationDataHelper(this);
         if (notification != null) {
             //sms
@@ -97,7 +95,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                     ) {
                 //BLE keep-connect service will process this message
                 if(helper.getState(new SmsNotification()).isOn())
-                    sendNotification(new SmsNotification().accept(applicationColorGetter).getColor());
+                    sendNotification(Preferences.getNotificationColor(this, new SmsNotification()).getHexColor());
             }
 
             //email,native email or gmail client
@@ -109,32 +107,32 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                     || statusBarNotification.getPackageName().equals("com.outlook.Z7")){
                 //BLE keep-connect service will process this message
                 if(helper.getState(new EmailNotification()).isOn())
-                    sendNotification(new EmailNotification().accept(applicationColorGetter).getColor());
+                    sendNotification(Preferences.getNotificationColor(this, new EmailNotification()).getHexColor());
             }
             //calendar
             else if(statusBarNotification.getPackageName().equals("com.google.android.calendar")
                     || statusBarNotification.getPackageName().equals("com.android.calendar")){
                 //BLE keep-connect service will process this message
                 if(helper.getState(new CalendarNotification()).isOn())
-                    sendNotification(new CalendarNotification().accept(applicationColorGetter).getColor());
+                    sendNotification(Preferences.getNotificationColor(this, new CalendarNotification()).getHexColor());
             }
             //facebook
             else if(statusBarNotification.getPackageName().equals("com.facebook.katana")){
                 //BLE keep-connect service will process this message
                 if(helper.getState(new FacebookNotification()).isOn())
-                    sendNotification(new FacebookNotification().accept(applicationColorGetter).getColor());
+                    sendNotification(Preferences.getNotificationColor(this, new FacebookNotification()).getHexColor());
             }
             //wechat
             else if(statusBarNotification.getPackageName().equals("com.tencent.mm")){
                 //BLE keep-connect service will process this message
                 if(helper.getState(new WeChatNotification()).isOn())
-                    sendNotification(new WeChatNotification().accept(applicationColorGetter).getColor());
+                    sendNotification(Preferences.getNotificationColor(this, new WeChatNotification()).getHexColor());
             }
             //whatsapp
             else if(statusBarNotification.getPackageName().equals("com.whatsapp")){
                 //BLE keep-connect service will process this message
                 if(helper.getState(new WhatsappNotification()).isOn())
-                    sendNotification(new WhatsappNotification().accept(applicationColorGetter).getColor());
+                    sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification()).getHexColor());
             }
 
             else {

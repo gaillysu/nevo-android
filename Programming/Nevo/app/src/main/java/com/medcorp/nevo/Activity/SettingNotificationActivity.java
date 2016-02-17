@@ -2,7 +2,6 @@ package com.medcorp.nevo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,8 +53,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setContentView(R.layout.activity_setting_notification);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_notifications);
         NevoNotificationListener.getNotificationAccessPermission(this);
     }

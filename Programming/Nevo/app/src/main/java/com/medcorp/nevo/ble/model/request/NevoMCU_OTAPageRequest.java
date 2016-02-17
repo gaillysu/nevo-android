@@ -17,8 +17,8 @@ public  class NevoMCU_OTAPageRequest extends  NevoMCU_OTARequest{
     public NevoMCU_OTAPageRequest(Context context)
     {
         super(context);
-
     }
+
     public void addPacket(NevoMCU_OTAPacketRequest packet)
     {
         mPage.add(packet);

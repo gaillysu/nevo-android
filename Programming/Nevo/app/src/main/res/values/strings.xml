@@ -144,7 +144,7 @@
     <string name="notification">Notification</string>
     <string name="notification_led_red">Red LED</string>
     <string name="notification_led_blue">Blue LED</string>
-    <string name="notification_led_light">Light green LED</string>
+    <string name="notification_led_light_green">Light green LED</string>
     <string name="notification_led_yellow">Yellow LED</string>
     <string name="notification_led_orange">Orange LED</string>
     <string name="notification_led_green">Green LED</string>
@@ -274,6 +274,10 @@
     <string name="settings_about">About</string>
     <string name="settings_forget_watch">Forget watch</string>
     <string name="settings_sure">Are you sure?</string>
+    <string name="settings_other_apps">Connect to other apps</string>
+    <string name="settings_other_apps_short">Other apps</string>
+
+    <string name="settings_other_apps_google_fit">Google Fit</string>
 
     <string name="google_fit_could_not_login">Couldn\'t login, try again later</string>
     <string name="google_fit_connecting">Connecting to Google Account Failed</string>

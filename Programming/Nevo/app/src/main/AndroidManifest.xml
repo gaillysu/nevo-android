@@ -82,6 +82,9 @@
         <activity
             android:name=".activity.tutorial.TutorialPageFailedActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ConnectToOtherAppsActivity"
+            android:screenOrientation="portrait"/>
         <service
             android:name=".ble.ble.NevoBTService"
             android:enabled="true" />

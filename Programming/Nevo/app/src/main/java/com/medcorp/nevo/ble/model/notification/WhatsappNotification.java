@@ -1,5 +1,8 @@
 package com.medcorp.nevo.ble.model.notification;
 
+import com.medcorp.nevo.R;
+import com.medcorp.nevo.ble.model.color.LightGreenLed;
+import com.medcorp.nevo.ble.model.color.NevoLed;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
 /**
@@ -24,6 +27,21 @@ public class WhatsappNotification extends Notification {
     }
 
     @Override
+    public int getStringResource() {
+        return R.string.whatsapp_string;
+    }
+
+    @Override
+    public int getImageResource() {
+        return R.drawable.whatsapp_notification;
+    }
+
+    @Override
+    public NevoLed getDefaultColor() {
+        return new LightGreenLed();
+    }
+
+    @Override
     public String getTag() {
         return TAG;
     }
@@ -32,4 +50,5 @@ public class WhatsappNotification extends Notification {
     public <T> T accept(NotificationVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
 }

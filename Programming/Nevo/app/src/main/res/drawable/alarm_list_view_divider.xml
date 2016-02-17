@@ -4,7 +4,7 @@
     android:insetRight="20dp" >
 
     <shape>
-        <solid android:color="@color/list_item_devider" />
+        <solid android:color="@color/list_item_divider" />
         <corners android:radius="1.0dip" />
     </shape>
 

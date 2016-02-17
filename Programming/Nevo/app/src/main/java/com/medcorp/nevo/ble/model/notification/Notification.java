@@ -1,6 +1,7 @@
 package com.medcorp.nevo.ble.model.notification;
 
 
+import com.medcorp.nevo.ble.model.color.NevoLed;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitable;
 
 import java.io.Serializable;
@@ -13,6 +14,9 @@ public abstract  class Notification implements NotificationVisitable,Serializabl
     private boolean  state;
     public abstract String getTag();
     public abstract String getOnOffTag();
+    public abstract int getStringResource();
+    public abstract int getImageResource();
+    public abstract NevoLed getDefaultColor();
 
     public Notification(boolean state) {
         this.state = state;

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.os.Build;
-import android.util.Log;
 
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaController;
@@ -16,7 +15,6 @@ import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
-import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
@@ -28,7 +26,6 @@ import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
-import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
@@ -174,11 +171,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         this.observableActivity.set(observable);
     }
 
-    public void sendRequest(SensorRequest request)
-    {
-        syncController.sendRequest(request);
-    }
-
     public SyncController getSyncController(){return syncController;}
 
     public OtaController getOtaController(){return otaController;}
@@ -193,10 +185,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     public void blinkWatch(){
         syncController.findDevice();
-    }
-
-    public void getDailyInfo(boolean syncAll) {
-        syncController.getDailyTrackerInfo(syncAll);
     }
 
     public void getBatteryLevelOfWatch() {
@@ -218,9 +206,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     {
         syncController.setAlarm(list, false);
     }
-    public void setNotification() {
-        syncController.setNotification(false);
-    }
 
     public void forgetDevice() {
         syncController.forgetDevice();
@@ -230,9 +215,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll());
     }
 
-    public List<Sleep> getAllSleep(){
-        return sleepDatabaseHelper.convertToNormalList(sleepDatabaseHelper.getAll());
-    }
 
     public List<Alarm> getAllAlarm(){
         return alarmDatabaseHelper.convertToNormalList(alarmDatabaseHelper.getAll());
@@ -255,15 +237,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper.update(sleep);
     }
 
-    public Sleep getDailySleep(int userid,Date date)
-    {   Optional<Sleep> sleep = sleepDatabaseHelper.get(userid, date);
-        if(sleep.notEmpty()) {
-            return sleep.get();
-        }
-        return new Sleep(0);
-    }
-
-    public Date getDateFromDate(Date date)
+    public Date removeTimeFromDate(Date date)
     {
         Calendar calBeginning = new GregorianCalendar();
         calBeginning.setTime(date);
@@ -317,4 +291,5 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
         return false;
     }
+
 }

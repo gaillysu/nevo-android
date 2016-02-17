@@ -142,7 +142,7 @@
     <string name="notification">通知</string>
     <string name="notification_led_red">紅燈</string>
     <string name="notification_led_blue">藍燈</string>
-    <string name="notification_led_light">淺綠</string>
+    <string name="notification_led_light_green">淺綠</string>
     <string name="notification_led_yellow">黃燈</string>
     <string name="notification_led_orange">橙燈</string>
     <string name="notification_led_green">綠燈</string>

@@ -115,7 +115,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
         int dailySteps = 0;
         int dailyGoal =  7000;
         // default goal which comes from nevo, when run app firstly
-        Steps steps =  getModel().getDailySteps(0, getModel().getDateFromDate(new Date()));
+        Steps steps =  getModel().getDailySteps(0, getModel().removeTimeFromDate(new Date()));
         if(steps != null) {
              dailySteps = steps.getSteps();
              dailyGoal =  steps.getGoal();
@@ -133,7 +133,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
     @Override
     public void OnStepsChanged() {
 
-        Steps steps =  getModel().getDailySteps(0, getModel().getDateFromDate(new Date()));
+        Steps steps =  getModel().getDailySteps(0, getModel().removeTimeFromDate(new Date()));
         if(steps == null) {
             return;
         }

@@ -50,7 +50,6 @@ import com.medcorp.nevo.ble.model.notification.SmsNotification;
 import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
-import com.medcorp.nevo.ble.model.notification.visitor.NotificationColorGetter;
 import com.medcorp.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
@@ -182,23 +181,14 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     public void setNotification(boolean init) {
         initNotification = init;
         Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
-        NotificationColorGetter getter = new NotificationColorGetter(mContext);
         NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
         Notification applicationNotification = new TelephoneNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new SmsNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new EmailNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new FacebookNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new CalendarNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new WeChatNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-        applicationNotification = new WhatsappNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), applicationNotification.accept(getter).getColor());
-
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new SmsNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new EmailNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new FacebookNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new CalendarNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WeChatNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WhatsappNotification()).getHexColor());
         sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
 
     }
@@ -373,7 +363,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         //Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
                         //update steps/sleep tables
                         Steps steps = new Steps(history.getCreated());
-                        steps.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                        steps.setDate(((ApplicationModel) mContext).removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
 
                         steps.setSteps(history.getSteps());
                         steps.setCalories((int) history.getCalories());
@@ -402,7 +392,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
 
                             Sleep sleep = new Sleep(history.getCreated());
-                            sleep.setDate(((ApplicationModel) mContext).getDateFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                            sleep.setDate(((ApplicationModel) mContext).removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
                             sleep.setHourlySleep(history.getHourlySleepTime());
                             sleep.setHourlyWake(history.getHourlyWakeTime());
                             sleep.setHourlyLight(history.getHourlyLightTime());
@@ -476,7 +466,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     Date currentday = new Date();
                     Steps steps = new Steps(currentday.getTime());
 
-                    steps.setDate(((ApplicationModel) mContext).getDateFromDate(currentday).getTime());
+                    steps.setDate(((ApplicationModel) mContext).removeTimeFromDate(currentday).getTime());
 
                     DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
                     steps.setSteps(steppacket.getDailySteps());

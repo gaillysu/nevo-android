@@ -11,8 +11,18 @@ public class UnknownLed extends NevoLed{
     private final String TAG = "UNKNOWN";
 
     @Override
-    public int getColor() {
+    public int getHexColor() {
         return COLOR;
+    }
+
+    @Override
+    public int getStringResource() {
+        return 0;
+    }
+
+    @Override
+    public int getImageResource() {
+        return 0;
     }
 
     @Override

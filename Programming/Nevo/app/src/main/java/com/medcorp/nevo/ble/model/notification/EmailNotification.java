@@ -1,5 +1,8 @@
 package com.medcorp.nevo.ble.model.notification;
 
+import com.medcorp.nevo.R;
+import com.medcorp.nevo.ble.model.color.NevoLed;
+import com.medcorp.nevo.ble.model.color.YellowLed;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
 /**
@@ -26,6 +29,22 @@ public class EmailNotification extends Notification {
     @Override
     public String getOnOffTag() {
         return ON_OFF_TAG;
+    }
+
+    @Override
+    public int getStringResource() {
+        return R.string.email_string;
+    }
+
+    @Override
+    public int getImageResource() {
+        return R.drawable.email_notification;
+    }
+
+
+    @Override
+    public NevoLed getDefaultColor() {
+        return new YellowLed();
     }
 
     @Override
