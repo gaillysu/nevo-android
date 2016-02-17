@@ -1,123 +1,32 @@
 <resources>
     <string name="app_name">Nevo</string>
-    <string name="title_section1">歡迎</string>
-    <string name="title_section2">目標</string>
-    <string name="title_section3">鬧鐘</string>
-    <string name="title_section4">通知</string>
-    <string name="title_section5">My nevo</string>
-    <string name="title_section6">睡眠</string>
-    <string name="navigation_drawer_open">打开侧滑菜单</string>
-    <string name="navigation_drawer_close">关闭侧滑菜单</string>
-    <string name="action_example">Example action</string>
-    <string name="action_settings">設置</string>
-    <string name="clock">00:00</string>
-    <string name="ok_button">確定</string>
-    <string name="step_picker_title">設置目標</string>
-    <string name="message">沒有發現設備,請重試...</string>
-    <string name="warning">警告</string>
-    <string name="modarate_string">低</string>
-    <string name="intensive_string">中</string>
-    <string name="sportive_string">高</string>
-    <string name="open_string">開</string>
-    <string name="close_string">關</string>
-    <string name="goal_steps">活動</string>
-    <string name="time_picker">設置時間</string>
-    <string name="nevoConnected">nevo未連接\n請打開手機藍牙</string>
-    <string name="pushHoldButton">然後長按第三個按鈕3秒鐘\n連接上妳的手表\n如果仍有问题，请访问</string>
-    <string name="tutorial">激活我的nevo</string>
-    <string name="acheter">購買nevo!</string>
-    <string name="bluetoothEnabled">藍牙可用</string>
-    <string name="enableBluetoothPhone">打開藍牙</string>
-    <string name="next">下壹步</string>
-    <string name="back">後退</string>
-    <string name="finish">完成</string>
-    <string name="bluetoothIcon">向下滑動打開控制中心並點擊藍牙圖標</string>
-    <string name="watchBluetooth">打開妳手表上的藍牙</string>
-    <string name="longPushLED">長按第三個按鈕直到藍色的LED燈亮為止</string>
-    <string name="mconnect">連接</string>
-    <string name="connectButton">把nevo與手機相連</string>
-    <string name="placeConnect">把妳的nevo放在手機旁邊並點擊連接</string>
-    <string name="notifAccess">打開通知</string>
-    <string name="notifAccessMessage">你想讓nevo啟用你的​​通知麼?</string>
-    <string name="nevoURL">http://www.nevowatch.com</string>
-    <string name="call_string">電話</string>
-    <string name="sms_string">短信</string>
-    <string name="email_string">郵件</string>
-    <string name="facebook_string">Facebook</string>
-    <string name="calendar_string">日歷</string>
-    <string name="wechat_string">微信</string>
-    <string name="whatsapp_string">WhatsApp</string>
-    <string name="ble_not_supported">設備不支持藍牙4.0</string>
-    <string name="ble_deactivated">藍牙沒有打開</string>
-    <string name="ble_unstable">手機藍牙連接不穩定,可能是硬件問題。請先關閉再打開藍牙或者重啟手機</string>
-    <string name="ble_connecttimeout">如果網絡可用,請按"帮助"獲得解決方案</string>
-    <string name="ble_connecttimeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
-    <string name="ble_connection_timeout_title">藍牙連接超時</string>
-    <string name="ble_connection_timeout_cancel">取消</string>
-    <string name="ble_connection_timeout_help">幫助</string>
-    <string name="ble_notification_title">通知</string>
-    <string name="ble_notification_message">Nevo未綁定,請先連接Nevo再綁定它</string>
-    <string name="ble_command_timeout_title">藍牙通訊超時</string>
-    <string name="tutorial_one_title">設置手錶時間</string>
-    <string name="tutorial_one_message">拔出並旋轉手錶中間的按鈕以設置nevo的時間，nevo的時間需與手機的時間一致。</string>
-    <string name="tutorial_tips_one_tilte">超出藍芽連接範圍</string>
-    <string name="tutorial_tips_one_message">當手機遠離手錶超過2分鐘，為了省電，藍芽連接自動斷開。當藍芽連接斷開，你將收不到任何通知。</string>
-    <string name="tutorial_tips_two_title">藍芽重連</string>
-    <string name="tutorial_tips_two_message">通過持續按住nevo的第三個按鈕3秒，藍芽重新連接以接收通知。</string>
-    <string name="forget_device">忽略此設備</string>
-    <string name="mcu_version">MCU 版本:</string>
-    <string name="ble_version">Ble 版本:</string>
-    <string name="re_upgrade">重新升級</string>
-    <string name="FirmwareUpgrade">固件升級</string>
-    <string name="waiting">請稍等...</string>
-    <string name="Version">版本:</string>
-    <string name="attention">註意!</string>
-    <string name="otahelp">請不要中斷OTA升級.使用應用前,\n請先確認升級已完成.\n如果意外中斷,請重新升級,\n有時需要重新安裝電池或等待數分鐘,\n確保升級完成.</string>
-    <string name="latestversion">您已是最新版本!</string>
-    <string name="FirmwareAlertMessage">您的手表固件不是最新版本,您确认升级固件吗?</string>
-    <string name="UpdateSuccess1">升級成功</string>
-    <string name="UpdateSuccess2">升級成功.\n請打開手錶藍牙並重啟應用。双击主界面的錶盤,手錶彩色燈亮並且錶盤同時顯示彩色,工作正常。否者請重新連接手錶。</string>
-    <string name="currentFWversion">手錶當前固件版本:</string>
-    <string name="latestFWversion">您確認升級新的固件版本</string>
-    <string name="lastestSyncDate">上壹次升級時間\n</string>
-    <string name="update_error_lowbattery">电池电量低，禁止升级.</string>
-    <string name="update_error_timeout">升級超時.</string>
-    <string name="update_error_noconnect">請先連接Nevo.</string>
-    <string name="update_error_openfile">打開固件文件錯誤.</string>
-    <string name="update_error_checksum">校驗和錯誤.</string>
-    <string name="update_error_other">升級異常錯誤.</string>
-    <string name="connect_error_no_nevo_do_ota">Nevo沒有連接，不能升級</string>
-    <string name="update_error_nofounDFUservice">未發現升級服務,請稍候重試.</string>
-    <string name="checking_firmware">正在檢查版本號,請稍等</string>
-    <string name="latest_update_on">最近更新</string>
-    <string name="title_my_nevo">我的nevo</string>
-    <string name="notification_connect_title">Nevo 已連接</string>
-    <string name="notification_connect_content">您的手表已連接手機</string>
-    <string name="notification_disconnect_title">Nevo 已斷開</string>
-    <string name="notification_disconnect_content">您的手表已斷開連接手機</string>
-    <string name="install_google_app_title">请先安装谷歌服务</string>
-    <string name="install_google_app_content">\t\t\t\tNevo应用的运动历史数据需要用到\"谷歌健康\"应用来显示, 请您首先下载谷歌应用商店，并在商店搜索谷歌健康应用Google fit。使用前需要VPN连接网络并注册一个谷歌账户。您的详细运动数据将在记录显示在谷歌健康应用内。</string>
-    <!-- Success messages of OTA-->
-    <string name="update_ble_success_message">完成BLE升級後，請按手錶的第三個按鈕以重新開啟藍芽功能，並與電話連接。請確保電話與手錶配對成功以免影響升級過程。連接後輕觸「繼續」以進行MCU升級。</string>
-    <string name="update_mcu_success_message">完成MCU升級後，請開啟手錶的藍芽功能並與電話重新連接，「繼續」的訊息會彈出，請立即輕觸以避免升級超時。</string>
-    <string name="continue_button">繼續</string>
-    <string name="app_version">應用版本:</string>
-
-    <string name="light_sleep">淺睡:</string>
-    <string name="deep_sleep">深睡:</string>
-    <string name="total_sleep">總睡眠:</string>
-
-    <string name="sleep_no_data">無睡眠數據</string>
-    <string name="sleep_select_date">請選擇日期</string>
-
-    <string name="hours_and"> 小時 </string>
-    <string name="minutes"> 分鍾</string>
-
-    <string name="sleep_tracking">睡眠追蹤</string>
-    <string name="sleeptracking_instruction">按住第壹個按鈕3秒，激活睡眠跟蹤模式。在妳醒來後，再按第壹個按鈕3秒，激活運動模式，並連接手表以查看妳的睡眠記錄.</string>
+    <string name="menu_drawer_activity">活動</string>
+    <string name="menu_drawer_alarm">鬧鐘</string>
+    <string name="menu_drawer_sleep">睡眠</string>
+    <string name="menu_drawer_settings">設置</string>
 
     <string name="drawer_open">打開導航欄</string>
     <string name="drawer_close">關閉導航欄</string>
+
+    <string name="ble_not_supported">設備不支持藍牙4.0</string>
+    <string name="ble_deactivated">藍牙未開啟</string>
+    <string name="ble_unstable">手機藍牙連接不穩定,可能是硬件問題。請先關閉再打開藍牙或者重啟手機</string>
+    <string name="ble_connecttimeout">如果網絡可用,請按“幫助"獲得解決方案</string>
+    <string name="ble_notification_title">通知</string>
+    <string name="ble_notification_message">Nevo未綁定,請先連接Nevo再綁定它</string>
+    <string name="ble_connection_timeout_title">藍牙連接超時</string>
+    <string name="ble_connecttimeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
+    <string name="ble_command_timeout_title">藍牙通訊超時</string>
+    <string name="ble_connection_timeout_cancel">取消</string>
+    <string name="ble_connection_timeout_help">幫助</string>
+
+    <string name="notification_call_title">電話</string>
+    <string name="notification_sms_title">短信</string>
+    <string name="notification_email_title">郵件</string>
+    <string name="notification_facebook_title">Facebook</string>
+    <string name="notification_calendar_title">日曆</string>
+    <string name="notification_wechat_title">微信</string>
+    <string name="notification_whatsapp_title">WhatsApp</string>
 
     <!-- New App Strings from here -->
     <string name ="location_access_title">該應用需要位置訪問</string>
@@ -137,6 +46,17 @@
     <string name="dfu_press_third_button">按第三個按鈕</string>
     <string name="dfu_press_third_button_description">為了激活藍牙,請不退出這個屏幕!</string>
     <string name="dfu_failed_preparing">升級準備失敗.</string>
+    <string name="dfu_re_upgrade">重試</string>
+    <string name="dfu_continue_button">繼續</string>
+    <string name="dfu_connect_error_no_nevo_do_ota">Nevo沒有連接，不能升級</string>
+    <string name="dfu_checking_firmware">正在檢查版本號,請稍等...</string>
+    <string name="dfu_error_lowbattery">電池電量低，禁止升級.</string>
+    <string name="dfu_error_timeout">升級超時.</string>
+    <string name="dfu_error_noconnect">請先連接Nevo.</string>
+    <string name="dfu_error_openfile">打開固件文件錯誤.</string>
+    <string name="dfu_error_checksum">校驗和錯誤.</string>
+    <string name="dfu_error_nofounDFUservice">未發現升級服務,請稍候重試.</string>
+    <string name="dfu_error_other">升級異常錯誤.</string>
 
     <string name="notification_allow">允許通知</string>
     <string name="notification">通知</string>
@@ -150,7 +70,12 @@
     <string name="notification_ok">確定</string>
     <string name="notification_cancel">取消</string>
     <string name="notification_deactivated">未激活</string>
-    <string name="settings_link_loss">失聯通知</string>
+    <string name="notification_access_title">訪問通知</string>
+    <string name="notification_access_message">您允許該應用訪問通知嗎?</string>
+    <string name="notification_connect_title">Nevo 已連接</string>
+    <string name="notification_connect_content">您的手錶已連接手機</string>
+    <string name="notification_disconnect_title">Nevo 已斷開</string>
+    <string name="notification_disconnect_content">您的手錶已斷開連接手機</string>
 
     <string name="tutorial_1_title">讓我們開始!</string>
     <string name="tutorial_1_text">設置您的手錶，跟蹤和分析您的個人健康和健身數據.</string>
@@ -186,7 +111,8 @@
     <string name="sleep_deep_sleep">深睡</string>
     <string name="sleep_light_sleep">淺睡</string>
     <string name="sleep_wake_duration">醒着時長</string>
-    <string name="sleep_empty">--</string>
+    <string name="sleep_today_no_sleep_message">您沒有使用手錶測試您的睡眠</string>
+    <string name="sleep_select_date">請選擇日期</string>
 
     <string name="steps_goal_title">目標</string>
     <string name="steps_goal">目標</string>
@@ -247,6 +173,7 @@
     <string name="in_app_notification_max_three_alarm">手錶僅支持3個鬧鐘.</string>
 
     <string name="title_alarm">鬧鐘</string>
+    <string name="title_my_nevo">我的手錶</string>
     <string name="title_about">關於</string>
     <string name="title_notifications">通知</string>
     <string name="title_steps">活動</string>

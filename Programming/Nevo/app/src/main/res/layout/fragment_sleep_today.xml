@@ -62,6 +62,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/fragment_sleep_today_dashboard_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -93,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="@string/sleep_empty"/>
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
@@ -113,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="@string/sleep_empty"/>
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
@@ -133,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="@string/sleep_empty"/>
+                    />
             </LinearLayout>
         </LinearLayout>
 
@@ -163,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="@string/sleep_empty"/>
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
@@ -183,7 +184,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="@string/sleep_empty"/>
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_weight="1"
@@ -203,8 +204,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="@string/sleep_empty"/>
+                    />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <com.medcorp.nevo.view.customfontview.RobotoTextView
+        android:id="@+id/fragment_sleep_today_nosleep"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_weight="2"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:text="@string/sleep_today_no_sleep_message"/>
 </LinearLayout>

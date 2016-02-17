@@ -72,7 +72,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         mContext = this;
         back2settings.setOnClickListener(this);
         back2settings.setVisibility(View.INVISIBLE);
-        back2settings.setText(R.string.re_upgrade);
+        back2settings.setText(R.string.dfu_re_upgrade);
         back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
 
         mNevoOtaController = getModel().getOtaController();
@@ -144,14 +144,14 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         errorMsg="";
         if(!mNevoOtaController.isConnected())
         {
-            Log.e(TAG,mContext.getString(R.string.connect_error_no_nevo_do_ota));
+            Log.e(TAG,mContext.getString(R.string.dfu_connect_error_no_nevo_do_ota));
             onError(OtaController.ERRORCODE.NOCONNECTION);
             return;
         }
         if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
         {
             //check firmwareURLs is null, should hide the button
-            Log.e(TAG,mContext.getString(R.string.checking_firmware));
+            Log.e(TAG,mContext.getString(R.string.dfu_checking_firmware));
             onError(OtaController.ERRORCODE.NOFINISHREADVERSION);
             return;
         }
@@ -195,7 +195,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
             if(errorMsg != "" && isConnected )
             {
-                back2settings.setText(R.string.re_upgrade);
+                back2settings.setText(R.string.dfu_re_upgrade);
                 back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
                 back2settings.setVisibility(View.VISIBLE);
             }
@@ -272,8 +272,8 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     mNevoOtaController.reset(false);
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
 
-                    back2settings.setText(getString(R.string.continue_button));
-                    back2settings.setTag(new ButtonTag(getString(R.string.continue_button)));
+                    back2settings.setText(getString(R.string.dfu_continue_button));
+                    back2settings.setTag(new ButtonTag(getString(R.string.dfu_continue_button)));
                     back2settings.setVisibility(View.INVISIBLE);
 
                     roundProgressBar.setVisibility(View.INVISIBLE);
@@ -300,17 +300,17 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     //errorMsg = mContext.getString(R.string.update_error_timeout);
                     errorMsg = getString(R.string.dfu_failed_preparing);
                 else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
-                    errorMsg = mContext.getString(R.string.update_error_noconnect);
+                    errorMsg = mContext.getString(R.string.dfu_error_noconnect);
                 else if(errorcode == OtaController.ERRORCODE.CHECKSUMERROR)
-                    errorMsg = mContext.getString(R.string.update_error_checksum);
+                    errorMsg = mContext.getString(R.string.dfu_error_checksum);
                 else if(errorcode == OtaController.ERRORCODE.OPENFILEERROR)
-                    errorMsg = mContext.getString(R.string.update_error_openfile);
+                    errorMsg = mContext.getString(R.string.dfu_error_openfile);
                 else if (errorcode == OtaController.ERRORCODE.NODFUSERVICE)
-                    errorMsg = mContext.getString(R.string.update_error_nofounDFUservice);
+                    errorMsg = mContext.getString(R.string.dfu_error_nofounDFUservice);
                 else if (errorcode == OtaController.ERRORCODE.NOFINISHREADVERSION)
-                    errorMsg = mContext.getString(R.string.checking_firmware);
+                    errorMsg = mContext.getString(R.string.dfu_checking_firmware);
                 else
-                    errorMsg = mContext.getString(R.string.update_error_other);
+                    errorMsg = mContext.getString(R.string.dfu_error_other);
 
                 Log.e(TAG,errorMsg);
                 infomationTextView.setText(errorMsg);

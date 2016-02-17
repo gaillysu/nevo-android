@@ -434,7 +434,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     public void performDFUOnFile(String filename , DfuFirmwareTypes firmwareType)
     {
         if(!isConnected()) {
-            String errorMessage = mContext.getString(R.string.connect_error_no_nevo_do_ota);
+            String errorMessage = mContext.getString(R.string.dfu_connect_error_no_nevo_do_ota);
             Log.e(TAG,errorMessage);
             state = DFUControllerState.INIT;
             Toast.makeText(mContext,errorMessage,Toast.LENGTH_LONG).show();
