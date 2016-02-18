@@ -3,8 +3,10 @@ package com.medcorp.nevo.application;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Build;
-
+import android.os.Bundle;
+import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.OtaControllerImpl;
@@ -29,7 +31,9 @@ import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.util.Common;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -47,6 +51,9 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private AlarmDatabaseHelper alarmDatabaseHelper;
     private PresetsDatabaseHelper presetsDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
+    private boolean firmwareUpdateAlertDailog = false;
+    private int mcuFirmwareVersion = -1;//if it is -1, means mcu version hasn't be read
+    private int bleFirmwareVersion = -1;//if it is -1, means ble version hasn't be read
 
     @Override
     public void onCreate() {
@@ -98,7 +105,33 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+        //in tutorial steps, don't popup this alert dialog
+        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
+        {
+            int buildinSoftwareVersion = Common.getBuildinSoftwareVersion(this);
+            int buildinFirmwareVersion = Common.getBuildinFirmwareVersion(this);
+            if(whichfirmware == Constants.DfuFirmwareTypes.SOFTDEVICE)
+            {
+                mcuFirmwareVersion = Integer.parseInt(version);
+            }
+            if(whichfirmware == Constants.DfuFirmwareTypes.APPLICATION)
+            {
+                bleFirmwareVersion = Integer.parseInt(version);
+            }
+            //both MCU and BLE version all be read done. and make sure this dialog only popup once.
+            if(!firmwareUpdateAlertDailog && mcuFirmwareVersion>=0 && bleFirmwareVersion>=0
+                        && (mcuFirmwareVersion<buildinSoftwareVersion||bleFirmwareVersion<buildinFirmwareVersion))
+            {
+                firmwareUpdateAlertDailog = true;
 
+                Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("firmwares",(ArrayList<String>)Common.needOTAFirmwareURLs(this,mcuFirmwareVersion,bleFirmwareVersion));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtras(bundle);
+                ApplicationModel.this.startActivity(intent);
+            }
+        }
     }
 
     @Override
