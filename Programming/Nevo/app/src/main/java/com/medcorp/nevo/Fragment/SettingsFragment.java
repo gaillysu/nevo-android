@@ -1,8 +1,10 @@
 package com.medcorp.nevo.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -88,6 +90,13 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void findWatchSuccess() {
+        //when find out my nevo and receive nevo's response, let phone vibrator.
+        Vibrator vibrator = (Vibrator) getAppCompatActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        if(vibrator.hasVibrator())
+        {
+            vibrator.cancel();
+        }
+        vibrator.vibrate(1000);
     }
 
     @Override
