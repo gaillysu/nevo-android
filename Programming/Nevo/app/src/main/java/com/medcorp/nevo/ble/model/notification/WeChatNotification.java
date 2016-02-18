@@ -34,7 +34,7 @@ public class WeChatNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.wechat_string;
+        return R.string.notification_wechat_title;
     }
 
     @Override

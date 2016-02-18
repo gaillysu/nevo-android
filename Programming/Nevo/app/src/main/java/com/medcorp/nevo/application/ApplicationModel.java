@@ -26,17 +26,20 @@ import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.PresetsDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
+
 import com.medcorp.nevo.util.Common;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import com.medcorp.nevo.util.Preferences;
+
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -54,6 +57,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private boolean firmwareUpdateAlertDailog = false;
     private int mcuFirmwareVersion = -1;//if it is -1, means mcu version hasn't be read
     private int bleFirmwareVersion = -1;//if it is -1, means ble version hasn't be read
+    private GoogleFitManager googleFitManager;
 
     @Override
     public void onCreate() {
@@ -66,6 +70,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         presetsDatabaseHelper = new PresetsDatabaseHelper(this);
+        invokeGoogleFit();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -248,7 +253,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll());
     }
 
-
     public List<Alarm> getAllAlarm(){
         return alarmDatabaseHelper.convertToNormalList(alarmDatabaseHelper.getAll());
     }
@@ -270,17 +274,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper.update(sleep);
     }
 
-    public Date removeTimeFromDate(Date date)
-    {
-        Calendar calBeginning = new GregorianCalendar();
-        calBeginning.setTime(date);
-        calBeginning.set(Calendar.HOUR_OF_DAY, 0);
-        calBeginning.set(Calendar.MINUTE, 0);
-        calBeginning.set(Calendar.SECOND, 0);
-        calBeginning.set(Calendar.MILLISECOND, 0);
-        Date today = calBeginning.getTime();
-        return today;
-    }
 
     public Alarm addAlarm(Alarm alarm){
         return alarmDatabaseHelper.add(alarm).get();
@@ -325,4 +318,16 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return false;
     }
 
+    public void invokeGoogleFit() {
+        if (Preferences.isGoogleFitSet(this)) {
+            googleFitManager = new GoogleFitManager(this);
+            googleFitManager.connect();
+        }
+    }
+
+    public void disconnectGoogleFit(){
+        if (googleFitManager != null){
+            googleFitManager.disconnect();
+        }
+    }
 }

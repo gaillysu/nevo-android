@@ -28,7 +28,7 @@ public class WhatsappNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.whatsapp_string;
+        return R.string.notification_whatsapp_title;
     }
 
     @Override

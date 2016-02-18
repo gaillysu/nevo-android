@@ -33,7 +33,7 @@ public class EmailNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.email_string;
+        return R.string.notification_email_title;
     }
 
     @Override

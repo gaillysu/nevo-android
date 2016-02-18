@@ -33,7 +33,7 @@ public class SmsNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.sms_string;
+        return R.string.notification_sms_title;
     }
 
     @Override

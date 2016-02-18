@@ -33,7 +33,7 @@ public class FacebookNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.facebook_string;
+        return R.string.notification_facebook_title;
     }
 
     @Override
