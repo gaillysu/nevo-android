@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+
 import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaController;
@@ -26,19 +27,17 @@ import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.PresetsDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.googlefit.GoogleFitDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
-
 import com.medcorp.nevo.util.Common;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 import com.medcorp.nevo.util.Preferences;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -329,5 +328,9 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         if (googleFitManager != null){
             googleFitManager.disconnect();
         }
+    }
+
+    private void sendData(){
+        GoogleFitDataHandler dataHandler = new GoogleFitDataHandler(stepsDatabaseHelper.getAll());
     }
 }

@@ -15,11 +15,6 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessStatusCodes;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
-import com.google.android.gms.fitness.data.DataSource;
-import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Field;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -28,9 +23,6 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by karl-john on 20/11/15.
@@ -120,7 +112,6 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
     @Override
     public void onConnected(Bundle bundle) {
         ToastHelper.showLongToast(context, R.string.google_fit_connected);
-        new GoogleHistoryUpdateTask(this,null).execute(getData());
     }
 
     @Override
@@ -134,31 +125,6 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         }
     }
 
-    private DataSet getData(){
-        Calendar calendar = Calendar.getInstance();
-        Date now = new Date();
-        calendar.setTime(now);
-        long endTime = calendar.getTimeInMillis();
-        calendar.add(Calendar.HOUR_OF_DAY, -1);
-        long startTime = calendar.getTimeInMillis();
-
-        DataSource dataSource = new DataSource.Builder()
-                .setAppPackageName(context)
-                .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
-                .setName("nevo - step count")
-                .setType(DataSource.TYPE_RAW)
-                .build();
-
-        int stepCountDelta = 101;
-        DataSet dataSet = DataSet.create(dataSource);
-        DataPoint dataPoint = dataSet.createDataPoint();
-        dataPoint.getValue(Field.FIELD_STEPS).setInt(stepCountDelta);
-        dataPoint.setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-        dataSet.add(dataPoint);
-        return dataSet;
-    }
-
-
     public void setOnConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
         this.onConnectionFailedListener = onConnectionFailedListener;
     }
@@ -171,5 +137,3 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         return apiClient;
     }
 }
-
-
