@@ -41,7 +41,7 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         db = new StepsDatabaseHelper(getContext());
 
         //this is today's data, today format is YYYYMMDD 00:00:00
-        today = Common.getDateFromDate(new Date());
+        today = Common.removeTimeFromDate(new Date());
 
         //initialize sample data
         addSteps = new Steps(new Date().getTime(),today.getTime(),1000,800,200,500,10,"","","",0,0,0,10000,0,0,0,0,"");

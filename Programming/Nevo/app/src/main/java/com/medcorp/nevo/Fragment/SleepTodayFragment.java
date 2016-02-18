@@ -19,6 +19,7 @@ import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
+import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.SleepDataHandler;
 import com.medcorp.nevo.view.SleepDataView;
 
@@ -122,7 +123,7 @@ public class SleepTodayFragment extends BaseFragment {
         JSONObject sleepAnalysisResult = new JSONObject();
         SleepDatabaseHelper helper = new SleepDatabaseHelper(getContext());
         List<Sleep> sleepList = new ArrayList<Sleep>();
-        Date today = getModel().removeTimeFromDate(new Date());
+        Date today = Common.removeTimeFromDate(new Date());
         Date yesterday = new Date(today.getTime()-24*60*60*1000);
         Optional<Sleep> todaySleep = helper.get(0,today);
         Optional<Sleep> yesterdaySleep = helper.get(0,yesterday);

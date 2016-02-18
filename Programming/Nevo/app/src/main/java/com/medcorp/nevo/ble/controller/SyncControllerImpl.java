@@ -79,6 +79,7 @@ import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 
 import org.json.JSONException;
@@ -184,11 +185,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
         Notification applicationNotification = new TelephoneNotification();
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new SmsNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new EmailNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new EmailNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new FacebookNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new CalendarNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new CalendarNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WeChatNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WhatsappNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WhatsappNotification()).getHexColor());
         sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
 
     }
@@ -363,7 +364,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                         //Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
                         //update steps/sleep tables
                         Steps steps = new Steps(history.getCreated());
-                        steps.setDate(((ApplicationModel) mContext).removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                        steps.setDate(Common.removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
 
                         steps.setSteps(history.getSteps());
                         steps.setCalories((int) history.getCalories());
@@ -392,7 +393,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
 
                             Sleep sleep = new Sleep(history.getCreated());
-                            sleep.setDate(((ApplicationModel) mContext).removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                            sleep.setDate(Common.removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
                             sleep.setHourlySleep(history.getHourlySleepTime());
                             sleep.setHourlyWake(history.getHourlyWakeTime());
                             sleep.setHourlyLight(history.getHourlyLightTime());
@@ -466,7 +467,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                     Date currentday = new Date();
                     Steps steps = new Steps(currentday.getTime());
 
-                    steps.setDate(((ApplicationModel) mContext).removeTimeFromDate(currentday).getTime());
+                    steps.setDate(Common.removeTimeFromDate(currentday).getTime());
 
                     DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
                     steps.setSteps(steppacket.getDailySteps());

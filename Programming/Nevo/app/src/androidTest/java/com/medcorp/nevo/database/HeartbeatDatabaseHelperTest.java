@@ -40,7 +40,7 @@ public class HeartbeatDatabaseHelperTest extends AndroidTestCase {
         //set user ID as a login user
         loginUser = thisuser.get();
 
-        today = Common.getDateFromDate(new Date());
+        today = Common.removeTimeFromDate(new Date());
 
         db = new HeartbeatDatabaseHelper(getContext());
 
