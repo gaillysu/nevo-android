@@ -34,7 +34,7 @@ public class TelephoneNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.call_string;
+        return R.string.notification_call_title;
     }
 
     @Override

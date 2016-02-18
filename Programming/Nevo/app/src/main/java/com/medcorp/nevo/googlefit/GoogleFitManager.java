@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
@@ -14,6 +15,11 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
+import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -22,6 +28,9 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by karl-john on 20/11/15.
@@ -37,15 +46,13 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
     private Context context;
     private Activity activity;
 
-
-    public GoogleFitManager(Activity activity) {
-        this.context = activity;
+    public GoogleFitManager(Context context) {
+        this.context = context;
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(Scopes.FITNESS_ACTIVITY_READ_WRITE, Scopes.FITNESS_BODY_READ_WRITE));
         Tasks task = new Tasks.Builder(AndroidHttp.newCompatibleTransport(), GsonFactory.getDefaultInstance(), credential)
                 //TODO put into keys.xml
-                .setApplicationName("Nevo Watch")
+                .setApplicationName("nevo")
                 .build();
-        this.activity = activity;
         build();
     }
 
@@ -53,7 +60,6 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         apiClient = new GoogleApiClient.Builder(context)
                 .addApi(Fitness.HISTORY_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addConnectionCallbacks(getConnectionCallback())
                 .addOnConnectionFailedListener(getConnectionFailedListener())
                 .useDefaultAccount()
@@ -70,10 +76,6 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
 
     public boolean isConnected(){
         return apiClient.isConnected();
-    }
-
-    public boolean isConnecting(){
-        return apiClient.isConnecting();
     }
 
     private GoogleApiClient.OnConnectionFailedListener getConnectionFailedListener() {
@@ -95,12 +97,18 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         pendingResult.setResultCallback(callback);
     }
 
+    public void setActivityForResults(AppCompatActivity activity){
+        this.activity = activity;
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
                 result.getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
             try {
-                result.startResolutionForResult(activity, REQUEST_OAUTH);
+                if (activity != null) {
+                    result.startResolutionForResult(activity, REQUEST_OAUTH);
+                }
             } catch (IntentSender.SendIntentException e) {
                 ToastHelper.showShortToast(context, R.string.google_fit_could_not_login);
             }
@@ -111,7 +119,8 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
 
     @Override
     public void onConnected(Bundle bundle) {
-        ToastHelper.showShortToast(context,R.string.google_fit_connected);
+        ToastHelper.showLongToast(context, R.string.google_fit_connected);
+        new GoogleHistoryUpdateTask(this,null).execute(getData());
     }
 
     @Override
@@ -125,13 +134,30 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
         }
     }
 
-    private boolean sendSteps(){
-        return false;
+    private DataSet getData(){
+        Calendar calendar = Calendar.getInstance();
+        Date now = new Date();
+        calendar.setTime(now);
+        long endTime = calendar.getTimeInMillis();
+        calendar.add(Calendar.HOUR_OF_DAY, -1);
+        long startTime = calendar.getTimeInMillis();
+
+        DataSource dataSource = new DataSource.Builder()
+                .setAppPackageName(context)
+                .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                .setName("nevo - step count")
+                .setType(DataSource.TYPE_RAW)
+                .build();
+
+        int stepCountDelta = 101;
+        DataSet dataSet = DataSet.create(dataSource);
+        DataPoint dataPoint = dataSet.createDataPoint();
+        dataPoint.getValue(Field.FIELD_STEPS).setInt(stepCountDelta);
+        dataPoint.setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
+        dataSet.add(dataPoint);
+        return dataSet;
     }
 
-    private boolean sendSleep(){
-        return false;
-    }
 
     public void setOnConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
         this.onConnectionFailedListener = onConnectionFailedListener;
@@ -140,4 +166,10 @@ public class GoogleFitManager implements GoogleApiClient.OnConnectionFailedListe
     public void setConnectionCallbacks(GoogleApiClient.ConnectionCallbacks connectionCallbacks) {
         this.connectionCallbacks = connectionCallbacks;
     }
+
+    protected GoogleApiClient getApiClient() {
+        return apiClient;
+    }
 }
+
+

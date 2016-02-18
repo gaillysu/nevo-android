@@ -14,6 +14,7 @@ import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
 import com.medcorp.nevo.model.SettingsMenuItem;
+import com.medcorp.nevo.util.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 2/16/16.
  */
-public class ConnectToOtherAppsActivity extends BaseActivity implements OnCheckedChangeInListListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class ConnectToOtherAppsActivity extends BaseActivity implements OnCheckedChangeInListListener{
 
     @Bind(R.id.activity_connect_to_other_apps_list_view)
     ListView otherAppsListView;
@@ -38,7 +39,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         setContentView(R.layout.activity_connect_to_other_apps);
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
-        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.setting_goals,true));
+        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.setting_goals,Preferences.isGoogleFitSet(this)));
         SettingMenuAdapter settingAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingAdapter);
         setSupportActionBar(toolbar);
@@ -61,28 +62,12 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
         if(position == 0) {
             if(isChecked) {
-                GoogleFitManager manager = new GoogleFitManager(this);
-                manager.setConnectionCallbacks(this);
-                manager.setOnConnectionFailedListener(this);
-                manager.connect();
+                Preferences.setGoogleFit(this,true);
+                getModel().invokeGoogleFit();
             }else{
-
+                Preferences.setGoogleFit(this,false);
+                getModel().disconnectGoogleFit();
             }
         }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
     }
 }

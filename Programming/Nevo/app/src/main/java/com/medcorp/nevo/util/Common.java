@@ -14,7 +14,7 @@ public class Common {
      * @param date : YYYY/MM/DD HH:MM:SS
      * @return : YYYY/MM/DD 00:00:00
      */
-    static public Date getDateFromDate(Date date)
+    public static Date removeTimeFromDate(Date date)
     {
         Calendar calBeginning = new GregorianCalendar();
         calBeginning.setTime(date);
@@ -25,4 +25,5 @@ public class Common {
         Date today = calBeginning.getTime();
         return today;
     }
+
 }

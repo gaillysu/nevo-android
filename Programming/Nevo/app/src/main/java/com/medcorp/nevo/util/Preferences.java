@@ -40,8 +40,6 @@ public class Preferences {
         return preferences.getInt("steps_preset_id", -1);
     }
 
-
-
     public static boolean getLinklossNotification(Context context)
     {
         init(context);
@@ -54,6 +52,18 @@ public class Preferences {
         //TODO put into keys.xml if it is still used
         editor.putBoolean("link_loss_enable", isEnable).apply();
 
+    }
+
+    public static void setGoogleFit(Context context,boolean on){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        //TODO put into keys.xml if it is still used
+        editor.putBoolean("google_fit_status", on).apply();
+    }
+
+    public static boolean isGoogleFitSet(Context context){
+        init(context);
+        return preferences.getBoolean("google_fit_status",false);
     }
 
     public static void saveNotificationColor(Context context, Notification notification, NevoLed led){

@@ -855,7 +855,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                             .setPositiveButton(getResources().getString(R.string.ble_connection_timeout_help), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Uri uri = Uri.parse(getResources().getString(R.string.ble_connecttimeout_url));
+                                    Uri uri = Uri.parse(getResources().getString(R.string.ble_connect_timeout_url));
                                     Intent it = new Intent(Intent.ACTION_VIEW, uri);
                                     it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(it);

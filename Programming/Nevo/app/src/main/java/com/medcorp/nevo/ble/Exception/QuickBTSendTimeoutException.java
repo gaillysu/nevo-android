@@ -17,6 +17,6 @@ public class QuickBTSendTimeoutException extends NevoException{
 
     @Override
     public int getWarningMessageId() {
-        return R.string.ble_connecttimeout;
+        return R.string.ble_connect_timeout;
     }
 }

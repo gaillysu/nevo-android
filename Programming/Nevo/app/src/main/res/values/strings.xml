@@ -8,14 +8,14 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="ble_not_supported">Phone does not support Bluetooth 4.0</string>
-    <string name="ble_deactivated">Bluetooth now OFF, please turn ON Bluetooth in phone settings.</string>
+    <string name="ble_not_supported">Smartphone does not support BLE</string>
+    <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
     <string name="ble_unstable">Bluetooth connection is unstable, please turn Bluetooth OFF then ON in phone settings.</string>
-    <string name="ble_connecttimeout">If connected to the internet, press Help button for solutions</string>
+    <string name="ble_connect_timeout">If connected to the internet, press Help button for solutions</string>
     <string name="ble_notification_title">Notification</string>
-    <string name="ble_notification_message">No nevo paired, please first connect nevo and pair</string>
+    <string name="ble_notification_message">nevo is not paired, please pair first</string>
     <string name="ble_command_timeout_title">Bluetooth communication timeout</string>
-    <string name="ble_connecttimeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
+    <string name="ble_connect_timeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
     <string name="ble_connection_timeout_title">Bluetooth connection timeout</string>
     <string name="ble_connection_timeout_cancel">Cancel</string>
     <string name="ble_connection_timeout_help">Help</string>
@@ -28,9 +28,8 @@
     <string name="notification_wechat_title">WeChat</string>
     <string name="notification_whatsapp_title">WhatsApp</string>
 
-    <!-- New App Strings from here -->
     <string name ="location_access_title">This app needs location access</string>
-    <string name ="location_access_content">Please grant location access so this app can detect nevo.</string>
+    <string name ="location_access_content">Please grant location access so it can detect nevo.</string>
 
     <string name="dfu_update">Update</string>
     <string name="dfu_back_to_settings">Back to settings</string>
@@ -44,15 +43,15 @@
     <string name="dfu_continue">Continue</string>
     <string name="dfu_back">Back</string>
     <string name="dfu_press_third_button">Press the third button</string>
-    <string name="dfu_press_third_button_description">In order to reactivate the bluetooth Don’t exit this screen!</string>
-    <string name="dfu_failed_preparing">Failed preparing update</string>
+    <string name="dfu_press_third_button_description">Don’t exit this screen while reactivating your bluetooth!</string>
+    <string name="dfu_failed_preparing">Failed to prepare the update</string>
     <string name="dfu_re_upgrade">Try again</string>
     <string name="dfu_continue_button">Continue</string>
-    <string name="dfu_connect_error_no_nevo_do_ota">No nevo connected, can\'t perform OTA update</string>
+    <string name="dfu_connect_error_no_nevo_do_ota">nevo isn\'t connected, can\'t perform OTA update</string>
     <string name="dfu_checking_firmware">Checking firmware version, please wait...</string>
-    <string name="dfu_error_lowbattery">Low battery for update.</string>
-    <string name="dfu_error_timeout">Update Time out.</string>
-    <string name="dfu_error_noconnect">No nevo connected.</string>
+    <string name="dfu_error_lowbattery">Not enough battery to upgrade.</string>
+    <string name="dfu_error_timeout">Connection timed out</string>
+    <string name="dfu_error_noconnect">No nevo connected</string>
     <string name="dfu_error_openfile">Open Firmware file error.</string>
     <string name="dfu_error_checksum">Checksum error.</string>
     <string name="dfu_error_nofounDFUservice">No OTA service found, please wait for few minutes and try again.</string>
@@ -71,7 +70,7 @@
     <string name="notification_cancel">Cancel</string>
     <string name="notification_deactivated">Deactivated</string>
     <string name="notification_access_title">Notification Access</string>
-    <string name="notification_access_message">Do you want to enable notifications for nevo ?</string>
+    <string name="notification_access_message">Do you want to enable notifications for nevo?</string>
     <string name="notification_connect_title">Nevo connected</string>
     <string name="notification_connect_content">your Nevo has got connected</string>
     <string name="notification_disconnect_title">Nevo disconnect</string>
@@ -83,7 +82,7 @@
 
     <string name="tutorial_2_title">Turn on Bluetooth</string>
     <string name="tutorial_2_continue">Continue</string>
-    <string name="tutorial_2_text">Tap the Settings button and turn Bluetooth on.</string>
+    <string name="tutorial_2_text">Open your settings to activate before you continue.</string>
     <string name="tutorial_2_dialog_negative">Settings</string>
     <string name="tutorial_2_dialog_positive">Turn on Bluetooth in the settings to connect with nevo</string>
 
@@ -127,7 +126,7 @@
 
     <string name="alarm_add">Add alarm</string>
     <string name="alarm_saved">Saved alarm!</string>
-    <string name="alarm_could_not_save">Could not save the alarm!</string>
+    <string name="alarm_could_not_save">Could not save alarm!</string>
     <string name="alarm_edit">Edit Alarm</string>
     <string name="alarm_label_alarm">Label your alarm.</string>
     <string name="alarm_label">label name</string>
@@ -151,10 +150,10 @@
     <string name="goal_saved">Saved goal!</string>
     <string name="goal_step_goal">step goal</string>
     <string name="goal_name_goal">goal name</string>
-    <string name="goal_could_not_save">Could not save the goal!</string>
+    <string name="goal_could_not_save">Could not save goal!</string>
     <string name="goal_edit">Edit Goal</string>
     <string name="goal_input">Set your goal</string>
-    <string name="goal_label_goal">Label your goal.</string>
+    <string name="goal_label_goal">Label your goal</string>
     <string name="goal_label">label name</string>
     <string name="goal_deleted">Deleted goal!</string>
     <string name="goal_could_not_delete">Failed to delete goal</string>

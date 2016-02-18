@@ -34,7 +34,7 @@ public class CalendarNotification extends Notification {
 
     @Override
     public int getStringResource() {
-        return R.string.calendar_string;
+        return R.string.notification_calendar_title;
     }
 
     @Override
