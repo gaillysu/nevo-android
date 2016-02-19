@@ -204,10 +204,13 @@
 
     <string name="google_fit_could_not_login">Couldn\'t login, try again later</string>
     <string name="google_fit_connecting">Connecting to Google Account Failed</string>
-    <string name="google_fit_connected">Google Account Connected</string>
+    <string name="google_fit_logged_in">Logged in with Google Account</string>
     <string name="google_fit_network_lost">Network Connection Lost</string>
     <string name="google_fit_service_disconnected">Google Play Service Disconnected</string>
     <string name="google_fit_unknown_network">Unknown Network Error Occurred</string>
+    <string name="google_fit_synced">Synced data with Google fit complete.</string>
+    <string name="google_fit_sync_error">Error syncing data to Google Fit.</string>
+
 
     <string name="tab_title_today">Today</string>
     <string name="tab_title_History">History</string>

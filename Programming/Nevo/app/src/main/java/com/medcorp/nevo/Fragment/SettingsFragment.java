@@ -91,12 +91,13 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     @Override
     public void findWatchSuccess() {
         //when find out my nevo and receive nevo's response, let phone vibrator.
-        Vibrator vibrator = (Vibrator) getAppCompatActivity().getSystemService(Context.VIBRATOR_SERVICE);
-        if(vibrator.hasVibrator())
-        {
-            vibrator.cancel();
-        }
-        vibrator.vibrate(1000);
+        Log.w("Karl","Hello.");
+//        Vibrator vibrator = (Vibrator) getAppCompatActivity().getSystemService(Context.VIBRATOR_SERVICE);
+//        if(vibrator.hasVibrator())
+//        {
+//            vibrator.cancel();
+//        }
+//        vibrator.vibrate(1000);
     }
 
     @Override

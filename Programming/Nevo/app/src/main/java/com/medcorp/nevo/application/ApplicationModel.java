@@ -3,8 +3,8 @@ package com.medcorp.nevo.application;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
-import android.content.IntentSender;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResolvingResultCallbacks;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
@@ -34,7 +36,6 @@ import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
-import com.medcorp.nevo.googlefit.GoogleFitDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.nevo.listener.GoogleFitHistoryListener;
@@ -43,9 +44,8 @@ import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
-import com.medcorp.nevo.util.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.util.Common;
-import java.util.ArrayList;
+import com.medcorp.nevo.util.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.ToastHelper;
 
@@ -58,7 +58,7 @@ import java.util.List;
  */
 public class ApplicationModel extends Application  implements OnSyncControllerListener{
 
-    public final int REQUEST_OAUTH = 1001;
+    public final int GOOGLE_FIT_OATH_RESULT = 1001;
     private SyncController syncController;
     private OtaController  otaController;
     private StepsDatabaseHelper stepsDatabaseHelper;
@@ -331,10 +331,8 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return false;
     }
 
-    public void invokeGoogleFit(AppCompatActivity appCompatActivity) {
-        Log.w("Karl","Invoking Google fit.");
+    public void initGoogleFit(AppCompatActivity appCompatActivity) {
         if (Preferences.isGoogleFitSet(this)) {
-            Log.w("Karl","Google fit is activated.");
             googleFitManager = new GoogleFitManager(this,connectionCallbacks,onConnectionFailedListener);
             googleFitManager.setActivityForResults(appCompatActivity);
             googleFitManager.connect();
@@ -342,9 +340,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     }
 
     public void disconnectGoogleFit(){
-        Log.w("Karl","Disconnecting Google fit.");
         if (googleFitManager != null){
-            Log.w("Karl","Manager != null so we are trying to do it!.");
             googleFitManager.disconnect();
         }
     }
@@ -352,12 +348,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
         @Override
         public void onConnectionFailed(ConnectionResult result) {
-            Log.w("Karl","On connection FAILED?!?!?!!");
             if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
                     result.getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
                 try {
                     if (googleFitManager.getActivity()!= null) {
-                        result.startResolutionForResult(googleFitManager.getActivity(), REQUEST_OAUTH);
+                        result.startResolutionForResult(googleFitManager.getActivity(), GOOGLE_FIT_OATH_RESULT);
                     }
                 } catch (IntentSender.SendIntentException e) {
                     ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_could_not_login);
@@ -371,13 +366,10 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         @Override
         public void onConnected(Bundle bundle) {
-            Log.w("Karl", "On Connected!");
-            updateGoogleFit();
         }
 
         @Override
         public void onConnectionSuspended(int result) {
-            Log.w("Karl","On connection suspended!!");
             if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
                 ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_network_lost);
             } else if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
@@ -400,11 +392,10 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     };
 
-    private void updateGoogleFit(){
+    public void updateGoogleFit(){
         if(Preferences.isGoogleFitSet(this)) {
             GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
             new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getSteps());
         }
     }
-
 }

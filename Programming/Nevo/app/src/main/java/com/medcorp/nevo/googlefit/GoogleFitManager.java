@@ -2,6 +2,7 @@ package com.medcorp.nevo.googlefit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.common.Scopes;
@@ -11,10 +12,13 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.tasks.Tasks;
+import com.medcorp.nevo.R;
+import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.Arrays;
 
@@ -54,6 +58,9 @@ public class GoogleFitManager{
     }
 
     public void disconnect(){
+        if(apiClient == null){
+            build(null, null);
+        }
         apiClient.disconnect();
     }
 

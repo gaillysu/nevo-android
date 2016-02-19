@@ -35,7 +35,7 @@ public class SettingsMenuItem {
         return hasSwitch;
     }
 
-    public boolean isSwitchStatus() {
+    public boolean isSwitchOn() {
         return switchStatus;
     }
 }

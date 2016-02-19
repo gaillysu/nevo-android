@@ -201,7 +201,7 @@
 
     <string name="google_fit_could_not_login">不能登錄,請稍後重試</string>
     <string name="google_fit_connecting">連接谷歌賬戶失敗</string>
-    <string name="google_fit_connected">谷歌賬戶已連接成功</string>
+    <string name="google_fit_logged_in">谷歌賬戶已連接成功</string>
     <string name="google_fit_network_lost">網絡連接丟失</string>
     <string name="google_fit_service_disconnected">谷歌Play服務連接已中斷</string>
     <string name="google_fit_unknown_network">未知的網絡錯誤</string>
