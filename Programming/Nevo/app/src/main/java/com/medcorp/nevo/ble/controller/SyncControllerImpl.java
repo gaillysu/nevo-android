@@ -76,7 +76,7 @@ import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
-import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.model.GoalBase;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
@@ -605,7 +605,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public void setGoal(Goal goal) {
+    public void setGoal(GoalBase goal) {
         sendRequest(new SetGoalNevoRequest(mContext,goal));
     }
 

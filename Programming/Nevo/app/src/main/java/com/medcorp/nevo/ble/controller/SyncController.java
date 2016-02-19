@@ -3,10 +3,9 @@ package com.medcorp.nevo.ble.controller;
 import android.content.Context;
 
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.notification.Notification;
 import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.model.Alarm;
-import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.model.GoalBase;
 
 import java.util.List;
 
@@ -52,7 +51,7 @@ public interface SyncController {
     set Steps Goal
     inputL goal =  new NumberOfStepsGoal(XXXX)
      */
-	public void setGoal(Goal goal);
+	public void setGoal(GoalBase goal);
     /*
     input @list: MAX 3 Alarm array
           @init: if true means by syncController invoked to do init sync, false means invoked by application to set value

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
@@ -121,9 +121,9 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
              dailySteps = steps.getSteps();
              dailyGoal =  steps.getGoal();
         } else {
-            Preset preset = getModel().getPresetById(Preferences.getPresetId(getContext()));
-            if(preset!=null) {
-                dailyGoal = preset.getSteps();
+            Goal goal = getModel().getGoalById(Preferences.getPresetId(getContext()));
+            if(goal !=null) {
+                dailyGoal = goal.getSteps();
             }
         }
         setProgressBar((int) (100.0 * dailySteps / dailyGoal));

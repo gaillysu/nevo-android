@@ -23,20 +23,20 @@ import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
-import com.medcorp.nevo.database.entry.PresetsDatabaseHelper;
+import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 
 import com.medcorp.nevo.util.Common;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+
 import com.medcorp.nevo.util.Preferences;
 
 import java.util.Date;
@@ -52,7 +52,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
-    private PresetsDatabaseHelper presetsDatabaseHelper;
+    private GoalDatabaseHelper goalDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
     private boolean firmwareUpdateAlertDailog = false;
     private int mcuFirmwareVersion = -1;//if it is -1, means mcu version hasn't be read
@@ -69,7 +69,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
-        presetsDatabaseHelper = new PresetsDatabaseHelper(this);
+        goalDatabaseHelper = new GoalDatabaseHelper(this);
         invokeGoogleFit();
     }
 
@@ -237,8 +237,8 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return syncController.getFirmwareVersion();
     }
 
-    public void setPreset(Preset preset){
-        syncController.setGoal(new NumberOfStepsGoal(preset.getSteps()));
+    public void setGoal(Goal goal){
+        syncController.setGoal(new NumberOfStepsGoal(goal.getSteps()));
     }
     public void setAlarm(List<Alarm> list)
     {
@@ -291,23 +291,23 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
       return  alarmDatabaseHelper.remove(alarm.getId(), null);
     }
 
-    public List<Preset> getAllPreset(){
-        return presetsDatabaseHelper.convertToNormalList(presetsDatabaseHelper.getAll());
+    public List<Goal> getAllGoal(){
+        return goalDatabaseHelper.convertToNormalList(goalDatabaseHelper.getAll());
     }
-    public Preset addPreset(Preset preset){
-        return presetsDatabaseHelper.add(preset).get();
-    }
-
-    public boolean updatePreset(Preset preset) {
-        return presetsDatabaseHelper.update(preset);
+    public Goal addGoal(Goal goal){
+        return goalDatabaseHelper.add(goal).get();
     }
 
-    public Preset getPresetById(int id){
-        return presetsDatabaseHelper.get(id,null).isEmpty()?null:presetsDatabaseHelper.get(id,null).get();
+    public boolean updateGoal(Goal goal) {
+        return goalDatabaseHelper.update(goal);
     }
 
-    public boolean deleteAlarm(Preset preset){
-        return  presetsDatabaseHelper.remove(preset.getId(), null);
+    public Goal getGoalById(int id){
+        return goalDatabaseHelper.get(id,null).isEmpty()?null: goalDatabaseHelper.get(id,null).get();
+    }
+
+    public boolean deleteAlarm(Goal goal){
+        return  goalDatabaseHelper.remove(goal.getId(), null);
     }
 
     public boolean isBluetoothOn(){

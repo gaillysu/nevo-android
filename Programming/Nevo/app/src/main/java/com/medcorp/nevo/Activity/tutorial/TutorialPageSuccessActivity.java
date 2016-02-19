@@ -9,7 +9,7 @@ import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.model.Alarm;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,9 +31,9 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         //TODO keys.xml
         if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean("preset",false))
         {
-            getModel().addPreset(new Preset(getString(R.string.startup_goal_light), true, 7000));
-            getModel().addPreset(new Preset(getString(R.string.startup_goal_moderate), true, 10000));
-            getModel().addPreset(new Preset(getString(R.string.startup_goal_heavy), true, 20000));
+            getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
+            getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
+            getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
             getModel().addAlarm(new Alarm(8, 0, false, getString(R.string.startup_goal_weekly_days)));
             getModel().addAlarm(new Alarm(9, 0, false, getString(R.string.startup_goal_weekend)));
             sharedPreferences.putBoolean("preset", true);
