@@ -2,6 +2,7 @@ package com.medcorp.nevo.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -61,10 +62,13 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
         if(position == 0) {
+
             if(isChecked) {
+                Log.w("Karl", "Switching Google fit to on.");
                 Preferences.setGoogleFit(this,true);
-                getModel().invokeGoogleFit();
+                getModel().invokeGoogleFit(this);
             }else{
+                Log.w("Karl", "Switching Google fit to off.");
                 Preferences.setGoogleFit(this,false);
                 getModel().disconnectGoogleFit();
             }

@@ -16,6 +16,7 @@ import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.RoundProgressBar;
 
@@ -115,7 +116,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
         int dailySteps = 0;
         int dailyGoal =  7000;
         // default goal which comes from nevo, when run app firstly
-        Steps steps =  getModel().getDailySteps(0, getModel().removeTimeFromDate(new Date()));
+        Steps steps =  getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
         if(steps != null) {
              dailySteps = steps.getSteps();
              dailyGoal =  steps.getGoal();
@@ -133,7 +134,7 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
     @Override
     public void OnStepsChanged() {
 
-        Steps steps =  getModel().getDailySteps(0, getModel().removeTimeFromDate(new Date()));
+        Steps steps =  getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
         if(steps == null) {
             return;
         }

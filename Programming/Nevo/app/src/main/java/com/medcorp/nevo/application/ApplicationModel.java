@@ -3,8 +3,16 @@ package com.medcorp.nevo.application;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.content.IntentSender;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.OtaControllerImpl;
@@ -25,12 +33,16 @@ import com.medcorp.nevo.database.entry.PresetsDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
+import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
+import com.medcorp.nevo.listener.GoogleFitHistoryListener;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Preset;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.util.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.util.Preferences;
+import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.Date;
 import java.util.List;
@@ -38,8 +50,9 @@ import java.util.List;
 /**
  * Created by Karl on 10/15/15.
  */
-public class ApplicationModel extends Application  implements OnSyncControllerListener {
+public class ApplicationModel extends Application  implements OnSyncControllerListener{
 
+    public final int REQUEST_OAUTH = 1001;
     private SyncController syncController;
     private OtaController  otaController;
     private StepsDatabaseHelper stepsDatabaseHelper;
@@ -60,7 +73,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         presetsDatabaseHelper = new PresetsDatabaseHelper(this);
-        invokeGoogleFit();
+        updateGoogleFit();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -149,6 +162,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         {
             observableActivity.get().onSyncEnd();
         }
+        updateGoogleFit();
     }
 
     @Override
@@ -233,11 +247,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
         return new Steps(0);
     }
+
     public void saveDailySleep(Sleep sleep)
     {
         sleepDatabaseHelper.update(sleep);
     }
-
 
     public Alarm addAlarm(Alarm alarm){
         return alarmDatabaseHelper.add(alarm).get();
@@ -258,6 +272,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     public List<Preset> getAllPreset(){
         return presetsDatabaseHelper.convertToNormalList(presetsDatabaseHelper.getAll());
     }
+
     public Preset addPreset(Preset preset){
         return presetsDatabaseHelper.add(preset).get();
     }
@@ -282,16 +297,80 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return false;
     }
 
-    public void invokeGoogleFit() {
+    public void invokeGoogleFit(AppCompatActivity appCompatActivity) {
+        Log.w("Karl","Invoking Google fit.");
         if (Preferences.isGoogleFitSet(this)) {
-            googleFitManager = new GoogleFitManager(this);
+            Log.w("Karl","Google fit is activated.");
+            googleFitManager = new GoogleFitManager(this,connectionCallbacks,onConnectionFailedListener);
+            googleFitManager.setActivityForResults(appCompatActivity);
             googleFitManager.connect();
         }
     }
 
     public void disconnectGoogleFit(){
+        Log.w("Karl","Disconnecting Google fit.");
         if (googleFitManager != null){
+            Log.w("Karl","Manager != null so we are trying to do it!.");
             googleFitManager.disconnect();
         }
     }
+
+    GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
+        @Override
+        public void onConnectionFailed(ConnectionResult result) {
+            Log.w("Karl","On connection FAILED?!?!?!!");
+            if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
+                    result.getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
+                try {
+                    if (googleFitManager.getActivity()!= null) {
+                        result.startResolutionForResult(googleFitManager.getActivity(), REQUEST_OAUTH);
+                    }
+                } catch (IntentSender.SendIntentException e) {
+                    ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_could_not_login);
+                }
+            } else {
+                ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_connecting);
+            }
+        }
+    };
+
+    GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
+        @Override
+        public void onConnected(Bundle bundle) {
+            Log.w("Karl", "On Connected!");
+            updateGoogleFit();
+        }
+
+        @Override
+        public void onConnectionSuspended(int result) {
+            Log.w("Karl","On connection suspended!!");
+            if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+                ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_network_lost);
+            } else if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+                ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_service_disconnected);
+            }else{
+                ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_unknown_network);
+            }
+        }
+    };
+
+    private GoogleFitHistoryListener googleFitHistoryListener = new GoogleFitHistoryListener() {
+        @Override
+        public void onUpdateSuccess() {
+            ToastHelper.showLongToast(ApplicationModel.this,"Updated Google Fiterino Success");
+        }
+
+        @Override
+        public void onUpdateFailed() {
+            ToastHelper.showLongToast(ApplicationModel.this,"Updated Google Fiterino FAILED");
+        }
+    };
+
+    private void updateGoogleFit(){
+        if(Preferences.isGoogleFitSet(this)) {
+            GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
+            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getSteps());
+        }
+    }
+
 }
