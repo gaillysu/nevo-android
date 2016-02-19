@@ -3,12 +3,12 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
-import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.model.GoalBase;
 
 public class SetGoalNevoRequest extends NevoRequest {
 	public  final static  byte HEADER = 0x22;
-    private Goal mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
-	public SetGoalNevoRequest(Context context, Goal goal )
+    private GoalBase mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
+	public SetGoalNevoRequest(Context context, GoalBase goal )
 	{
 		super(context);
 		mGoal = goal;

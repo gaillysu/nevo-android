@@ -76,7 +76,7 @@ import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
-import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.model.GoalBase;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
@@ -185,11 +185,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
         Notification applicationNotification = new TelephoneNotification();
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new SmsNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new EmailNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new EmailNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new FacebookNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new CalendarNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new CalendarNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WeChatNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WhatsappNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WhatsappNotification()).getHexColor());
         sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
 
     }
@@ -605,7 +605,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public void setGoal(Goal goal) {
+    public void setGoal(GoalBase goal) {
         sendRequest(new SetGoalNevoRequest(mContext,goal));
     }
 

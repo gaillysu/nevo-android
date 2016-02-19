@@ -1,8 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.model.Goal;
+import com.medcorp.nevo.model.GoalBase;
 
-public class NumberOfStepsGoal implements Goal {
+public class NumberOfStepsGoal implements GoalBase {
 	
 	public static final int LOW = 7000;
 	public static final int MEDIUM = 10000;

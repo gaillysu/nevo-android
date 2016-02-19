@@ -17,7 +17,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.PresetArrayAdapter;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 
 import java.util.List;
 
@@ -34,9 +34,9 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
     @Bind(R.id.activity_goals_list_view)
     ListView presetListView;
 
-    List<Preset> presetList;
+    List<Goal> goalList;
     PresetArrayAdapter presetArrayAdapter;
-    Preset preset ;
+    Goal goal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,23 +53,23 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.steps_goal_title);
         presetListView.setVisibility(View.VISIBLE);
-        presetList = getModel().getAllPreset();
-        presetArrayAdapter = new PresetArrayAdapter(this,getModel(),presetList);
+        goalList = getModel().getAllGoal();
+        presetArrayAdapter = new PresetArrayAdapter(this,getModel(), goalList);
         presetListView.setAdapter(presetArrayAdapter);
         presetListView.setOnItemClickListener(this);
-        preset = new Preset("",false,7000);
+        goal = new Goal("",false,7000);
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this,EditGoalsActivity.class);
-        preset =  presetList.get(position);
+        goal =  goalList.get(position);
         Bundle bundle = new Bundle();
         //TODO put in keys.xml
-        bundle.putInt("Preset_ID", preset.getId());
-        bundle.putString("Preset_Label", preset.getLabel());
-        bundle.putInt("Preset_Steps", preset.getSteps());
+        bundle.putInt("Preset_ID", goal.getId());
+        bundle.putString("Preset_Label", goal.getLabel());
+        bundle.putInt("Preset_Steps", goal.getSteps());
         intent.putExtras(bundle);
         startActivityForResult(intent,0);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -81,8 +81,8 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         //delete or update the goal, refresh list
         if(resultCode!=0)
         {
-            presetList = getModel().getAllPreset();
-            presetArrayAdapter.setDataset(presetList);
+            goalList = getModel().getAllGoal();
+            presetArrayAdapter.setDataset(goalList);
             presetArrayAdapter.notifyDataSetChanged();
         }
     }
@@ -111,7 +111,7 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 if (input.length() == 0) return;
-                                preset.setSteps(Integer.parseInt(input.toString()));
+                                goal.setSteps(Integer.parseInt(input.toString()));
                                 new MaterialDialog.Builder(GoalsActivity.this)
                                         .title(R.string.goal_add)
                                         .content(R.string.goal_label_goal)
@@ -120,10 +120,10 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
                                             @Override
                                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                                 if (input.length() == 0) return;
-                                                preset.setLabel(input.toString());
-                                                getModel().addPreset(preset);
-                                                presetList = getModel().getAllPreset();
-                                                presetArrayAdapter.setDataset(presetList);
+                                                goal.setLabel(input.toString());
+                                                getModel().addGoal(goal);
+                                                goalList = getModel().getAllGoal();
+                                                presetArrayAdapter.setDataset(goalList);
                                                 presetArrayAdapter.notifyDataSetChanged();
                                             }
                                         }).negativeText(R.string.goal_cancel)

@@ -11,6 +11,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -70,6 +71,30 @@ public class GoogleFitManager{
         this.activity = activity;
     }
 
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        ToastHelper.showLongToast(context, R.string.google_fit_connected);
+    }
+
+    @Override
+    public void onConnectionSuspended(int result) {
+        if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+            ToastHelper.showShortToast(context,R.string.google_fit_network_lost);
+        } else if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+            ToastHelper.showShortToast(context,R.string.google_fit_service_disconnected);
+        }else{
+            ToastHelper.showShortToast(context,R.string.google_fit_unknown_network);
+        }
+    }
+
+    public void setOnConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
+        this.onConnectionFailedListener = onConnectionFailedListener;
+    }
+
+    public void setConnectionCallbacks(GoogleApiClient.ConnectionCallbacks connectionCallbacks) {
+        this.connectionCallbacks = connectionCallbacks;
+    }
 
     protected GoogleApiClient getApiClient() {
         return apiClient;

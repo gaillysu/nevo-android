@@ -5,7 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 /**
  * Created by Karl on 11/25/15.
  */
-public class PresetDAO {
+public class GoalDAO {
 
     public static final String iDString = "ID";
     @DatabaseField(generatedId = true)
@@ -22,6 +22,14 @@ public class PresetDAO {
     public static final String stepsString = "steps";
     @DatabaseField
     private int Steps;
+
+    public GoalDAO(){}
+    public GoalDAO(String label, boolean status, int steps)
+    {
+        this.Label = label;
+        this.Enabled=status;
+        this.Steps = steps;
+    }
 
     public static String getiDString() {
         return iDString;

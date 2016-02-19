@@ -11,7 +11,7 @@ import com.medcorp.nevo.ble.model.color.OrangeLed;
 import com.medcorp.nevo.ble.model.color.RedLed;
 import com.medcorp.nevo.ble.model.color.YellowLed;
 import com.medcorp.nevo.ble.model.notification.Notification;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 
 /**
  * Created by karl-john on 29/12/15.
@@ -27,11 +27,11 @@ public class Preferences {
         }
     }
 
-    public static void savePreset(Context context, Preset preset){
+    public static void savePreset(Context context, Goal goal){
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
         //TODO put into keys.xml if it is still used
-        editor.putInt("steps_preset_id", preset.getId()).apply();
+        editor.putInt("steps_preset_id", goal.getId()).apply();
     }
 
     public static int getPresetId(Context context){

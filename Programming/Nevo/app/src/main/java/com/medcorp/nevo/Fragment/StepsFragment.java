@@ -1,8 +1,5 @@
 package com.medcorp.nevo.fragment;
 
-import android.app.Dialog;
-import android.app.TimePickerDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -18,12 +15,9 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
-import com.medcorp.nevo.fragment.listener.OnStateListener;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
-import com.medcorp.nevo.fragment.base.BaseFragment;
-import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.util.Preferences;
 
 import java.util.ArrayList;
@@ -159,15 +153,15 @@ public class StepsFragment extends BaseObservableFragment{
                     ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_no_watch,false);
                     return false;
                 }
-                final List<Preset> presetList = getModel().getAllPreset();
+                final List<Goal> goalList = getModel().getAllGoal();
                 List<String> stringList = new ArrayList<>();
-                final List<Preset> presetEnableList = new ArrayList<Preset>();
+                final List<Goal> goalEnableList = new ArrayList<Goal>();
 
-                for (Preset preset : presetList){
-                    if(preset.isStatus())
+                for (Goal goal : goalList){
+                    if(goal.isStatus())
                     {
-                        stringList.add(preset.toString());
-                        presetEnableList.add(preset);
+                        stringList.add(goal.toString());
+                        goalEnableList.add(goal);
                     }
                 }
                 CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
@@ -180,8 +174,8 @@ public class StepsFragment extends BaseObservableFragment{
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 if(which>=0)
                                 {
-                                    getModel().setPreset(presetEnableList.get(which));
-                                    Preferences.savePreset(getContext(), presetEnableList.get(which));
+                                    getModel().setGoal(goalEnableList.get(which));
+                                    Preferences.savePreset(getContext(), goalEnableList.get(which));
                                     showSyncGoal = true;
                                     ((MainActivity)getActivity()).showStateString(R.string.goal_syncing_message, false);
                                 }

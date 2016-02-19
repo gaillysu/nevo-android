@@ -12,6 +12,7 @@ import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.adapter.MyNevoAdapter;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.MyNevo;
+import com.medcorp.nevo.util.Common;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,10 +63,9 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
             getModel().getBatteryLevelOfWatch();
         }
         //we can't make sure that OTA is stable before passed enough testing, here firstly disable it
-        //checkVersion();
+        checkVersion();
     }
 
-    //TODO This method should not be in here.
     private void checkVersion()
     {
         List<String> firmwareURLs = new ArrayList<String>();
@@ -77,59 +77,9 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
             return;
         }
 
-        String[]files;
         int  currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
         int  currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-        int buildinSoftwareVersion = 0;
-        int buildinFirmwareVersion = 0;
-
-        try {
-            files = getAssets().list("firmware");
-            for(String file:files)
-            {
-                if(file.contains(".hex"))
-                {
-                    int start  = file.toLowerCase().indexOf("_v");
-                    int end = file.toLowerCase().indexOf(".hex");
-                    String vString = file.substring(start+2,end);
-                    if(vString != null) buildinFirmwareVersion = Integer.parseInt(vString);
-                    if(currentFirmwareVersion < buildinFirmwareVersion )
-                    {
-                        firmwareURLs.add("firmware/" + file);
-                        break;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            files = getAssets().list("firmware");
-            for(String file:files)
-            {
-                if(file.contains(".bin"))
-                {
-                    int start  = file.toLowerCase().indexOf("_v");
-                    int end = file.toLowerCase().indexOf(".bin");
-                    String vString = file.substring(start+2,end);
-                    if(vString != null) buildinSoftwareVersion = Integer.parseInt(vString);
-                    if(currentSoftwareVersion < buildinSoftwareVersion )
-                    {
-                        //if MCU got broken, firstly update MCU
-                        if(currentSoftwareVersion == 0)
-                            firmwareURLs.add(0,"firmware/" + file);
-                        else
-                            firmwareURLs.add("firmware/" + file);
-                        break;
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        firmwareURLs = Common.needOTAFirmwareURLs(this,currentSoftwareVersion,currentFirmwareVersion);
         if(!firmwareURLs.isEmpty())
         {
             mynevo.setAvailable_version(true);

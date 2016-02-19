@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.IntentSender;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.OtaControllerImpl;
@@ -29,21 +31,25 @@ import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
-import com.medcorp.nevo.database.entry.PresetsDatabaseHelper;
+import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.googlefit.GoogleFitDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.nevo.listener.GoogleFitHistoryListener;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
-import com.medcorp.nevo.model.Preset;
+import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.GoogleFitStepsDataHandler;
+import com.medcorp.nevo.util.Common;
+import java.util.ArrayList;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.ToastHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,8 +64,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
-    private PresetsDatabaseHelper presetsDatabaseHelper;
+    private GoalDatabaseHelper goalDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
+    private boolean firmwareUpdateAlertDailog = false;
+    private int mcuFirmwareVersion = -1;//if it is -1, means mcu version hasn't be read
+    private int bleFirmwareVersion = -1;//if it is -1, means ble version hasn't be read
     private GoogleFitManager googleFitManager;
 
     @Override
@@ -72,6 +81,8 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
+        goalDatabaseHelper = new GoalDatabaseHelper(this);
+        invokeGoogleFit();
         presetsDatabaseHelper = new PresetsDatabaseHelper(this);
         updateGoogleFit();
     }
@@ -113,7 +124,33 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+        //in tutorial steps, don't popup this alert dialog
+        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
+        {
+            int buildinSoftwareVersion = Common.getBuildinSoftwareVersion(this);
+            int buildinFirmwareVersion = Common.getBuildinFirmwareVersion(this);
+            if(whichfirmware == Constants.DfuFirmwareTypes.SOFTDEVICE)
+            {
+                mcuFirmwareVersion = Integer.parseInt(version);
+            }
+            if(whichfirmware == Constants.DfuFirmwareTypes.APPLICATION)
+            {
+                bleFirmwareVersion = Integer.parseInt(version);
+            }
+            //both MCU and BLE version all be read done. and make sure this dialog only popup once.
+            if(!firmwareUpdateAlertDailog && mcuFirmwareVersion>=0 && bleFirmwareVersion>=0
+                        && (mcuFirmwareVersion<buildinSoftwareVersion||bleFirmwareVersion<buildinFirmwareVersion))
+            {
+                firmwareUpdateAlertDailog = true;
 
+                Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("firmwares",(ArrayList<String>)Common.needOTAFirmwareURLs(this,mcuFirmwareVersion,bleFirmwareVersion));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtras(bundle);
+                ApplicationModel.this.startActivity(intent);
+            }
+        }
     }
 
     @Override
@@ -215,8 +252,8 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         return syncController.getFirmwareVersion();
     }
 
-    public void setPreset(Preset preset){
-        syncController.setGoal(new NumberOfStepsGoal(preset.getSteps()));
+    public void setGoal(Goal goal){
+        syncController.setGoal(new NumberOfStepsGoal(goal.getSteps()));
     }
     public void setAlarm(List<Alarm> list)
     {
@@ -269,24 +306,23 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
       return  alarmDatabaseHelper.remove(alarm.getId(), null);
     }
 
-    public List<Preset> getAllPreset(){
-        return presetsDatabaseHelper.convertToNormalList(presetsDatabaseHelper.getAll());
+    public List<Goal> getAllGoal(){
+        return goalDatabaseHelper.convertToNormalList(goalDatabaseHelper.getAll());
+    }
+    public Goal addGoal(Goal goal){
+        return goalDatabaseHelper.add(goal).get();
     }
 
-    public Preset addPreset(Preset preset){
-        return presetsDatabaseHelper.add(preset).get();
+    public boolean updateGoal(Goal goal) {
+        return goalDatabaseHelper.update(goal);
     }
 
-    public boolean updatePreset(Preset preset) {
-        return presetsDatabaseHelper.update(preset);
+    public Goal getGoalById(int id){
+        return goalDatabaseHelper.get(id,null).isEmpty()?null: goalDatabaseHelper.get(id,null).get();
     }
 
-    public Preset getPresetById(int id){
-        return presetsDatabaseHelper.get(id,null).isEmpty()?null:presetsDatabaseHelper.get(id,null).get();
-    }
-
-    public boolean deleteAlarm(Preset preset){
-        return  presetsDatabaseHelper.remove(preset.getId(), null);
+    public boolean deleteAlarm(Goal goal){
+        return  goalDatabaseHelper.remove(goal.getId(), null);
     }
 
     public boolean isBluetoothOn(){

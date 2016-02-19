@@ -43,7 +43,7 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         db = new SleepDatabaseHelper(getContext());
 
         //this is today's data, today format is YYYYMMDD 00:00:00
-        today = Common.getDateFromDate(new Date());
+        today = Common.removeTimeFromDate(new Date());
 
         // sample data
         addSleep = new Sleep(new Date().getTime(), today.getTime(),480,60,360,60,"","","","",0,0,0,"");
