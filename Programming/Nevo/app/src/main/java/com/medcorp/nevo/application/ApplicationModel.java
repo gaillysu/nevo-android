@@ -82,8 +82,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
-        invokeGoogleFit();
-        presetsDatabaseHelper = new PresetsDatabaseHelper(this);
         updateGoogleFit();
     }
 
