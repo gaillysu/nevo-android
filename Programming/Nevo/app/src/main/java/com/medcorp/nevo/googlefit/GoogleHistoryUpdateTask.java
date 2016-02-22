@@ -27,13 +27,12 @@ public class GoogleHistoryUpdateTask extends AsyncTask<DataSet,Void,Boolean>{
     protected Boolean doInBackground(DataSet... dataSets) {
         DataSet dataSet = dataSets[0];
         if (googleApiClient == null || dataSet == null) {
-            Log.w("Karl", "DataSet was null or client was null while sending the data to GoogleFit");
             return false;
+
         }
 
         com.google.android.gms.common.api.Status insertStatus = Fitness.HistoryApi.insertData(googleApiClient, dataSet).await(1, TimeUnit.MINUTES);
         if (!insertStatus.isSuccess()) {
-            Log.w("Karl", "Inserting data in Google fit wasn't a success for some reason");
             return false;
         }
         return true;

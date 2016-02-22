@@ -10,7 +10,7 @@
 
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
-    <string name="ble_unstable">Bluetooth connection is unstable, please turn Bluetooth OFF then ON in phone settings.</string>
+    <string name="ble_unstable">Bluetooth connection is unstable, please keep the watch closer to the phone.</string>
     <string name="ble_connect_timeout">If connected to the internet, press Help button for solutions</string>
     <string name="ble_notification_title">Notification</string>
     <string name="ble_notification_message">nevo is not paired, please pair first</string>

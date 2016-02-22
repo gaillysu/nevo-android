@@ -12,8 +12,6 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResolvingResultCallbacks;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
@@ -37,6 +35,7 @@ import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
+import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
 import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.nevo.listener.GoogleFitHistoryListener;
 import com.medcorp.nevo.model.Alarm;
@@ -45,7 +44,7 @@ import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
-import com.medcorp.nevo.util.GoogleFitStepsDataHandler;
+import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.ToastHelper;
 
@@ -70,6 +69,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private int mcuFirmwareVersion = -1;//if it is -1, means mcu version hasn't be read
     private int bleFirmwareVersion = -1;//if it is -1, means ble version hasn't be read
     private GoogleFitManager googleFitManager;
+    private GoogleFitTaskCounter googleFitTaskCounter;
 
     @Override
     public void onCreate() {
@@ -82,6 +82,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
+        Log.w("Karl","On create");
         updateGoogleFit();
     }
 
@@ -333,8 +334,11 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
 
     public void initGoogleFit(AppCompatActivity appCompatActivity) {
         if (Preferences.isGoogleFitSet(this)) {
+            googleFitTaskCounter  = new GoogleFitTaskCounter(3);
             googleFitManager = new GoogleFitManager(this,connectionCallbacks,onConnectionFailedListener);
-            googleFitManager.setActivityForResults(appCompatActivity);
+            if (appCompatActivity != null) {
+                googleFitManager.setActivityForResults(appCompatActivity);
+            }
             googleFitManager.connect();
         }
     }
@@ -383,19 +387,32 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     private GoogleFitHistoryListener googleFitHistoryListener = new GoogleFitHistoryListener() {
         @Override
         public void onUpdateSuccess() {
-            ToastHelper.showLongToast(ApplicationModel.this,"Updated Google Fiterino Success");
+            googleFitTaskCounter.incrementSuccessAndFinish();
+            if (googleFitTaskCounter.allSucces()) {
+                ToastHelper.showLongToast(ApplicationModel.this, "Updated Google Fit");
+                googleFitTaskCounter.reset();
+            }
         }
 
         @Override
         public void onUpdateFailed() {
-            ToastHelper.showLongToast(ApplicationModel.this,"Updated Google Fiterino FAILED");
+            googleFitTaskCounter.incrementFinish();
+            if(googleFitTaskCounter.areTasksDone()) {
+                ToastHelper.showLongToast(ApplicationModel.this, "Couldn't updated Google Fit");
+                googleFitTaskCounter.reset();
+            }
         }
     };
 
     public void updateGoogleFit(){
+        Log.w("Karl", "trying Updating google fit");
         if(Preferences.isGoogleFitSet(this)) {
+            Log.w("Karl", "Google Fit Enabled. Updating google fit");
+            initGoogleFit(null);
             GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
-            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getSteps());
+            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getStepsDataSet());
+            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getCaloriesDataSet());
+            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getDistanceDataSet());
         }
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
-        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.setting_goals,Preferences.isGoogleFitSet(this)));
+        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.google_fit_small,Preferences.isGoogleFitSet(this)));
         settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
@@ -121,10 +122,12 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
             TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
             tv.setTextColor(Color.WHITE);
             if(resultCode == Activity.RESULT_OK){
+                Log.w("Karl", "Result = ok");
                 getModel().initGoogleFit(this);
                 getModel().updateGoogleFit();
                 tv.setText(R.string.google_fit_logged_in);
             }else{
+                Log.w("Karl", "Result = illegal?! :S ");
                 tv.setText(R.string.google_fit_could_not_login);
                 settingsAdapter.toggleSwitch(0, false);
             }

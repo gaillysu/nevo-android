@@ -47,6 +47,7 @@ public class GoogleFitManager{
         apiClient = new GoogleApiClient.Builder(context)
                 .addApi(Fitness.HISTORY_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ_WRITE))
                 .addConnectionCallbacks(connectionCallbacks)
                 .addOnConnectionFailedListener(onConnectionFailedListener)
                 .useDefaultAccount()
@@ -68,15 +69,9 @@ public class GoogleFitManager{
         return apiClient.isConnected();
     }
 
-    public void switchAccount(ResultCallback<Status> callback){
-        PendingResult<Status> pendingResult = apiClient.clearDefaultAccountAndReconnect();
-        pendingResult.setResultCallback(callback);
-    }
-
     public void setActivityForResults(AppCompatActivity activity){
         this.activity = activity;
     }
-
 
     protected GoogleApiClient getApiClient() {
         return apiClient;
