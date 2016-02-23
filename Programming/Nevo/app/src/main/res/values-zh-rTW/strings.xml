@@ -45,7 +45,7 @@
     <string name="dfu_back">返回</string>
     <string name="dfu_press_third_button">按第三個按鈕</string>
     <string name="dfu_press_third_button_description">為了激活藍牙,請不退出這個屏幕!</string>
-    <string name="dfu_failed_preparing">升級準備失敗.</string>
+    <string name="dfu_failed_preparing">升級準備失敗,請重试或重裝電池.</string>
     <string name="dfu_re_upgrade">重試</string>
     <string name="dfu_continue_button">繼續</string>
     <string name="dfu_connect_error_no_nevo_do_ota">Nevo沒有連接，不能升級</string>
@@ -57,6 +57,7 @@
     <string name="dfu_error_checksum">校驗和錯誤.</string>
     <string name="dfu_error_nofounDFUservice">未發現升級服務,請稍候重試.</string>
     <string name="dfu_error_other">升級異常錯誤.</string>
+    <string name="dfu_update_message">正在升級...</string>
 
     <string name="notification_allow">允許通知</string>
     <string name="notification">通知</string>

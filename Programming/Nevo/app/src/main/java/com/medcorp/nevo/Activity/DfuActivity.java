@@ -231,8 +231,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
-                //TODO put in Strings.xml + format
-                infomationTextView.setText("Updating "  + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)? "BLE":"MCU") +  " ("+(currentIndex + 1) + "/" + firmwareURLs.size() + ")");
+                infomationTextView.setText(getString(R.string.dfu_update_message)  + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)? "BLE":"MCU") +  " ("+(currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
     }

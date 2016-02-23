@@ -73,7 +73,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
-    public static int MAX_TIME = 35000;
+    public static final int MAX_TIME = 35000;
     private double lastprogress = 0.0;
     //added for MCU OTA
 
@@ -96,6 +96,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     //one page has 5 packets
     private static final int notificationPacketInterval = 5;
     private DFUControllerState state = DFUControllerState.INIT;
+    private DFUControllerState mcu_broken_state = DFUControllerState.INIT;
     private int firmwareDataBytesSent = 0;
     private double progress = 0.0;
     private int curpage = 0;
@@ -103,6 +104,45 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     private int checksum = 0;
     private boolean manualmode = false;
     //end added
+
+    /**
+     * this class is OTA timer:MAX_TIME seconds, when OTA is in progress that got broken, it will fire this timer
+     * and check whether the progress has got changed, if no change, it means OTA got stopped,for MCU OTA, it give
+     * a way that continue OTA from the broken point, or popup message to user how to do(retry or reinstall battery)
+     */
+    private class myOTATimerTask extends  TimerTask
+    {
+        @Override
+        public void run() {
+            Log.e(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() + ",lastprogress = " + lastprogress + ",progress = " + progress);
+            if (lastprogress == progress) //when no change happened, timeout
+            {
+                //when MCU got broken and got timeout(30s), reset mcu_broken_state
+                if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
+                {
+                    mcu_broken_state = DFUControllerState.INIT;
+                }
+                if (state == DFUControllerState.SEND_START_COMMAND
+                        && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
+                        && isConnected()) {
+                    Log.w(TAG, "* * * call SamsungS4Patch function * * *");
+                    SamsungS4Patch();
+                }
+                //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
+                else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION) {
+                    Log.w(TAG, "* * * call OTA timeout function for no found DFU service * * *");
+                    if (mOnOtaControllerListener.notEmpty())
+                        mOnOtaControllerListener.get().onError(ERRORCODE.NODFUSERVICE);
+                } else {
+                    Log.w(TAG, "* * * call OTA timeout function * * *");
+                    if (mOnOtaControllerListener.notEmpty())
+                        mOnOtaControllerListener.get().onError(ERRORCODE.TIMEOUT);
+                }
+            } else {
+                lastprogress = progress;
+            }
+        }
+    }
 
     public OtaControllerImpl(ApplicationModel context)
     {
@@ -445,36 +485,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         lastprogress = 0.0;
         progress = 0.0;
         mTimeoutTimer = new Timer();
-        mTimeoutTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (lastprogress == progress) //when no change happened, timeout
-                {
-                    if (MAX_TIME < 60000) MAX_TIME = MAX_TIME + 5000;
-                    Log.w(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected());
-                    String errorMessage = "Timeout,please try again";
-                    if (state == DFUControllerState.SEND_START_COMMAND
-                            && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
-                            && isConnected()) {
-                        Log.w(TAG, "* * * call SamsungS4Patch function * * *");
-                        SamsungS4Patch();
-                    }
-                    //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
-                    else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION) {
-                        Log.w(TAG, "* * * call OTA timeout function for no found DFU service * * *");
-                        if (mOnOtaControllerListener.notEmpty())
-                            mOnOtaControllerListener.get().onError(ERRORCODE.NODFUSERVICE);
-                    } else {
-                        Log.w(TAG, "* * * call OTA timeout function * * *");
-                        if (mOnOtaControllerListener.notEmpty())
-                            mOnOtaControllerListener.get().onError(ERRORCODE.TIMEOUT);
-                    }
-                } else {
-                    lastprogress = progress;
-                }
-
-            }
-        }, MAX_TIME, MAX_TIME);
+        mTimeoutTimer.schedule(new myOTATimerTask(),MAX_TIME, MAX_TIME);
 
         dfuFirmwareType = firmwareType;
         firmwareFile = filename;
@@ -562,7 +573,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         connectionController.setOnExceptionListener((OnExceptionListener) mContext.getSyncController());
         connectionController.setOnDataReceivedListener((OnDataReceivedListener)mContext.getSyncController());
         connectionController.setOnConnectListener((OnConnectListener)mContext.getSyncController());
-        connectionController.setOnFirmwareVersionListener((OnFirmwareVersionListener)mContext.getSyncController());
+        connectionController.setOnFirmwareVersionListener((OnFirmwareVersionListener) mContext.getSyncController());
     }
 
     /**
@@ -692,14 +703,33 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             {
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
-                    state = DFUControllerState.SEND_START_COMMAND;
-
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            connectionController.sendRequest(new NevoMCU_OTAStartRequest(mContext));
+                    //MCU got broken before timeout 30s, continue send current page(such as page No.5) to try again OTA
+                    if(mcu_broken_state == DFUControllerState.SEND_FIRMWARE_DATA
+                            || mcu_broken_state == DFUControllerState.WAIT_RECEIPT)
+                    {
+                        //reset it
+                        mcu_broken_state = DFUControllerState.INIT;
+                        state = DFUControllerState.SEND_FIRMWARE_DATA;
+                        //resend current page
+                        if(curpage>0)
+                        {
+                            curpage = curpage - 1;
+                            firmwareDataBytesSent = firmwareDataBytesSent-DFUCONTROLLER_PAGE_SIZE;
                         }
-                    },1000);
+                        MCU_sendFirmwareChunk();
+                    }
+                    else
+                    {
+                        //MCU got broken is more than 30s, app will get timeout and retry connect again,
+                        //when got connected, will send restart OTA cmd and retry do OTA from page No.0
+                        state = DFUControllerState.SEND_START_COMMAND;
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                connectionController.sendRequest(new NevoMCU_OTAStartRequest(mContext));
+                            }
+                        }, 1000);
+                    }
                 }
             }
             else
@@ -708,6 +738,27 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                 {
                     state = DFUControllerState.SEND_RECONNECT;
 
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionController.reconnect();
+                        }
+                    },1000);
+                }
+                else if(state == DFUControllerState.SEND_FIRMWARE_DATA
+                        || state == DFUControllerState.WAIT_RECEIPT)
+                {
+                    Log.e(TAG, "* * * MCU OTA got broken * * *" + "state = " + state + ",and reset OTA timer:" + MAX_TIME/1000 + "s" + ",lastprogress = "+lastprogress +",progress = "+progress);
+                    if(mTimeoutTimer!=null)
+                    {
+                        mTimeoutTimer.cancel();
+                        mTimeoutTimer = new Timer();
+                        mTimeoutTimer.schedule(new myOTATimerTask(), MAX_TIME, MAX_TIME);
+                        lastprogress = progress;
+                    }
+                    //keep state within 30s timeout
+                    mcu_broken_state = state;
+                    state = DFUControllerState.SEND_RECONNECT;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {

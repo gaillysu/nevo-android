@@ -44,7 +44,7 @@
     <string name="dfu_back">Back</string>
     <string name="dfu_press_third_button">Press the third button</string>
     <string name="dfu_press_third_button_description">Don’t exit this screen while reactivating your bluetooth!</string>
-    <string name="dfu_failed_preparing">Failed to prepare the update</string>
+    <string name="dfu_failed_preparing">Failed to prepare the update, please restart the BT of nevo or reinstall battery.</string>
     <string name="dfu_re_upgrade">Try again</string>
     <string name="dfu_continue_button">Continue</string>
     <string name="dfu_connect_error_no_nevo_do_ota">nevo isn\'t connected, can\'t perform OTA update</string>
@@ -56,6 +56,7 @@
     <string name="dfu_error_checksum">Checksum error.</string>
     <string name="dfu_error_nofounDFUservice">No OTA service found, please wait for few minutes and try again.</string>
     <string name="dfu_error_other">Update has exception.</string>
+    <string name="dfu_update_message">Updating...</string>
 
     <string name="notification_allow">Allow notifications</string>
     <string name="notification">Notification</string>
@@ -98,7 +99,7 @@
     <string name="tutorial_5_text">Keep nevo close to your phone</string>
 
     <string name="tutorial_failed_title">Cannot connect</string>
-    <string name="tutorial_failed_text">Make sure the blue LED on the nevo is blinking and try again.</string>
+    <string name="tutorial_failed_text">Make sure the blue LED on nevo is blinking and try again.</string>
     <string name="tutorial_failed_try_again">Try Again</string>
 
     <string name="tutorial_success_title">Connected</string>
@@ -185,7 +186,6 @@
     <string name="my_nevo_battery_full">Battery full</string>
     <string name="my_nevo_application">Application</string>
     <string name="my_nevo_notice_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes.You will not receive notifications on nevo when disconnected.</string>
-
     <string name="settings_link_loss_notification">Link loss notification</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_notifications_active_title">Active Notifications</string>
