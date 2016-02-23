@@ -10,7 +10,7 @@
 
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
-    <string name="ble_unstable">Bluetooth connection is unstable, please turn Bluetooth OFF then ON in phone settings.</string>
+    <string name="ble_unstable">Bluetooth connection is unstable, please keep the watch closer to the phone.</string>
     <string name="ble_connect_timeout">If connected to the internet, press Help button for solutions</string>
     <string name="ble_notification_title">Notification</string>
     <string name="ble_notification_message">nevo is not paired, please pair first</string>
@@ -204,10 +204,13 @@
 
     <string name="google_fit_could_not_login">Couldn\'t login, try again later</string>
     <string name="google_fit_connecting">Connecting to Google Account Failed</string>
-    <string name="google_fit_connected">Google Account Connected</string>
+    <string name="google_fit_logged_in">Logged in with Google Account</string>
     <string name="google_fit_network_lost">Network Connection Lost</string>
     <string name="google_fit_service_disconnected">Google Play Service Disconnected</string>
     <string name="google_fit_unknown_network">Unknown Network Error Occurred</string>
+    <string name="google_fit_synced">Synced data with Google fit complete.</string>
+    <string name="google_fit_sync_error">Error syncing data to Google Fit.</string>
+
 
     <string name="tab_title_today">Today</string>
     <string name="tab_title_History">History</string>

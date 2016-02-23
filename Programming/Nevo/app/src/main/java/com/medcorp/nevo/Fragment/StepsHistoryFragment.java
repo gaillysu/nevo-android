@@ -99,12 +99,14 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         Collections.sort(stepsList, new StepsSorter());
 
         int i = 0;
+
         for(Steps steps:stepsList)
         {
             yValue.add(new BarEntry(new float[]{steps.getSteps()}, i));
             xVals.add(sdf.format(new Date(steps.getDate())));
             i++;
         }
+
         if (stepsList.size() < 7) {
             barChart.setScaleMinima((.14f), 1f);
         }else{

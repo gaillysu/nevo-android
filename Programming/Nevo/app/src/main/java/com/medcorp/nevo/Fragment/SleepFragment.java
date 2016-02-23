@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.SleepFragmentPagerAdapter;
-import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,11 +33,15 @@ public class SleepFragment extends BaseObservableFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sleep, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
                 getActivity()));
         tabLayout.setupWithViewPager(viewPager);
         setHasOptionsMenu(true);
+        GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getModel().getAllSteps(),getContext());
+        dataHandler.getCaloriesDataSet();
+        dataHandler.getDistanceDataSet();
+        dataHandler.getStepsDataSet();
         return view;
     }
 
