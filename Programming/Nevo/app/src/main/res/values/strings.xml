@@ -181,9 +181,9 @@
     <string name="my_nevo_firmware">Firmware</string>
     <string name="my_nevo_new_version">New version available</string>
     <string name="my_nevo_battery">Battery</string>
-    <string name="my_nevo_battery_low">Battery low</string>
-    <string name="my_nevo_battery_half">Battery half</string>
-    <string name="my_nevo_battery_full">Battery full</string>
+    <string name="my_nevo_battery_low">Battery Low</string>
+    <string name="my_nevo_battery_half">Battery Sufficient</string>
+    <string name="my_nevo_battery_full">Battery Full</string>
     <string name="my_nevo_application">Application</string>
     <string name="my_nevo_notice_message">To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes.You will not receive notifications on nevo when disconnected.</string>
     <string name="settings_link_loss_notification">Link loss notification</string>
