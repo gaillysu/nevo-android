@@ -158,4 +158,14 @@ public class Common {
 
         return firmwareURLs;
     }
+
+    /**
+     *
+     * @param context
+     * @return all build-in firmware, first is BLE, then MCU
+     */
+    static public List<String> getAllBuildinFirmwareURLs(Context context)
+    {
+        return  needOTAFirmwareURLs(context,-1,-1);
+    }
 }
