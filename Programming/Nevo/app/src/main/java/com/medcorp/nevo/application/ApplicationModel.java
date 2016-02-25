@@ -3,6 +3,7 @@ package com.medcorp.nevo.application;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Build;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
@@ -124,10 +127,9 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
         //in tutorial steps, don't popup this alert dialog
-        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
+        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true)
+                && observableActivity.notEmpty())
         {
-            int buildinSoftwareVersion = Common.getBuildinSoftwareVersion(this);
-            int buildinFirmwareVersion = Common.getBuildinFirmwareVersion(this);
             if(whichfirmware == Constants.DfuFirmwareTypes.SOFTDEVICE)
             {
                 mcuFirmwareVersion = Integer.parseInt(version);
@@ -137,17 +139,38 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
                 bleFirmwareVersion = Integer.parseInt(version);
             }
             //both MCU and BLE version all be read done. and make sure this dialog only popup once.
-            if(!firmwareUpdateAlertDailog && mcuFirmwareVersion>=0 && bleFirmwareVersion>=0
-                        && (mcuFirmwareVersion<buildinSoftwareVersion||bleFirmwareVersion<buildinFirmwareVersion))
+            if(!firmwareUpdateAlertDailog && mcuFirmwareVersion>=0 && bleFirmwareVersion>=0)
             {
-                firmwareUpdateAlertDailog = true;
-
-                Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("firmwares",(ArrayList<String>)Common.needOTAFirmwareURLs(this,mcuFirmwareVersion,bleFirmwareVersion));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtras(bundle);
-                ApplicationModel.this.startActivity(intent);
+                final ArrayList<String> needOTAFirmwareList = (ArrayList<String>)Common.needOTAFirmwareURLs(this,mcuFirmwareVersion,bleFirmwareVersion);
+                if(!needOTAFirmwareList.isEmpty())
+                {
+                    new MaterialDialog.Builder((Context) observableActivity.get())
+                            .title(R.string.dfu_update_positive)
+                            .content(R.string.dfu_update_available)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    firmwareUpdateAlertDailog = true;
+                                    Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putStringArrayList("firmwares", needOTAFirmwareList);
+                                    bundle.putBoolean("backtosetting",false);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.putExtras(bundle);
+                                    ApplicationModel.this.startActivity(intent);
+                                }
+                            })
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    firmwareUpdateAlertDailog = true;
+                                }
+                            })
+                            .positiveText(R.string.dfu_update_positive)
+                            .negativeText(R.string.dfu_update_negative)
+                            .cancelable(false)
+                            .show();
+                }
             }
         }
     }

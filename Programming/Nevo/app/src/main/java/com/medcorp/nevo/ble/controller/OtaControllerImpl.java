@@ -117,26 +117,20 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             Log.e(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() + ",lastprogress = " + lastprogress + ",progress = " + progress);
             if (lastprogress == progress) //when no change happened, timeout
             {
-                //when MCU got broken and got timeout(30s), reset mcu_broken_state
-                if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
-                {
-                    mcu_broken_state = DFUControllerState.INIT;
-                }
+                ERRORCODE errorcode = ERRORCODE.TIMEOUT;
                 if (state == DFUControllerState.SEND_START_COMMAND
                         && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
                         && isConnected()) {
-                    Log.w(TAG, "* * * call SamsungS4Patch function * * *");
-                    SamsungS4Patch();
+                    Log.e(TAG, "* * * BLE OTA timeout by start command not get disconnected from watch* * *");
                 }
                 //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
                 else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION) {
-                    Log.w(TAG, "* * * call OTA timeout function for no found DFU service * * *");
-                    if (mOnOtaControllerListener.notEmpty())
-                        mOnOtaControllerListener.get().onError(ERRORCODE.NODFUSERVICE);
-                } else {
-                    Log.w(TAG, "* * * call OTA timeout function * * *");
-                    if (mOnOtaControllerListener.notEmpty())
-                        mOnOtaControllerListener.get().onError(ERRORCODE.TIMEOUT);
+                    Log.e(TAG, "* * * BLE OTA timeout by no found DFU service * * *");
+                    errorcode = ERRORCODE.NODFUSERVICE;
+                }
+                Log.e(TAG, "* * * call OTA timeout function * * * OTA type = " + (dfuFirmwareType == DfuFirmwareTypes.APPLICATION ?"BLE":"MCU") + ",ErrorCode = " + errorcode);
+                if (mOnOtaControllerListener.notEmpty()) {
+                     mOnOtaControllerListener.get().onError(errorcode);
                 }
             } else {
                 lastprogress = progress;
@@ -593,6 +587,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
         //reset it to INIT status !!!IMPORTANT!!!
         state = DFUControllerState.INIT;
+        mcu_broken_state = DFUControllerState.INIT;
 
         if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION )
         {
@@ -814,19 +809,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     public void onException(NevoException e) {
         //the exception got happened when do connection NEVO
         Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
-        if (mTimeoutTimer != null) {
-            mTimeoutTimer.cancel();
-            mTimeoutTimer = null;
-        }
-        if(e instanceof BLEUnstableException && getState()!= DFUControllerState.DISCOVERING)
-        {
-            Log.e(TAG,"happen " + e + ",due to DFU mode to normal mode, perhaps BLE is not stable,again auto reconnect it after 10s");
-            return;
-        }
         if(mOnOtaControllerListener.notEmpty()) {
             mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
         }
-
     }
 
     @Override

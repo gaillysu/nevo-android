@@ -18,6 +18,7 @@ import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.view.RoundProgressBar;
 
 import java.text.SimpleDateFormat;
@@ -63,13 +64,19 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
     private String  errorMsg="";
     private Context mContext;
     private boolean mUpdateSuccess = false;
-
+    private boolean manualMode = false;
+    private boolean  backtoSetting = false;
+    private boolean  isShowingAlertDialog = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dfu);
         ButterKnife.bind(this);
         mContext = this;
+        /*always light on screen */
+        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        initManualmodeAndtFirmwareList();
+        initNevoLogo();
         back2settings.setOnClickListener(this);
         back2settings.setVisibility(View.INVISIBLE);
         back2settings.setText(R.string.dfu_re_upgrade);
@@ -78,29 +85,38 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
         mNevoOtaController = getModel().getOtaController();
         mNevoOtaController.switch2OtaController();
         mNevoOtaController.setOnNevoOtaControllerListener(this);
-
-        /*always light on screen */
-        this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        initFirmwareList();
-        initNevoLogo();
-        showAlertDialog();
+        //when manual OTA mode, firstly connect it and find out OTA service 00001530-1212-efde-1523-785feabcd123
+        if(manualMode)
+        {
+            mNevoOtaController.setManualMode(true);
+            mNevoOtaController.setOtaMode(true,true);
+        }
+        else {
+            showAlertDialog();
+        }
     }
 
     private void showAlertDialog()
     {
+        if(isShowingAlertDialog){
+            return;
+        }
+        isShowingAlertDialog = true;
+
         new MaterialDialog.Builder(this)
                 .title(R.string.dfu_update_title)
                 .content(R.string.dfu_update_content)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
+                        isShowingAlertDialog = false;
                         uploadPressed();
                     }
                 })
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
+                        isShowingAlertDialog = false;
                         finish();
                     }
                 })
@@ -130,12 +146,21 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
             }
         });
     }
-    private void initFirmwareList()
+    private void initManualmodeAndtFirmwareList()
     {
         firmwareURLs = new ArrayList<String>();
         Bundle bundle = getIntent().getExtras();
-        firmwareURLs = bundle.getStringArrayList("firmwares");
+        manualMode = bundle.getBoolean("manualMode", false);
+        if(manualMode)
+        {
+            firmwareURLs = Common.getAllBuildinFirmwareURLs(this);
+        }
+        else
+        {
+            firmwareURLs = bundle.getStringArrayList("firmwares");
+        }
         currentIndex = 0;
+        backtoSetting = bundle.getBoolean("backtosetting",true);
     }
 
     private void uploadPressed()
@@ -191,19 +216,41 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-
-        if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT ) {
-            if(errorMsg != "" && isConnected )
+        if(!isConnected)
+        {
+            //when get disconnected between firmwares, hidden the retry/continue button until got connected and show it
+            if(currentIndex != firmwareURLs.size())
             {
-                back2settings.setText(R.string.dfu_re_upgrade);
-                back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
-                back2settings.setVisibility(View.VISIBLE);
+                back2settings.setVisibility(View.INVISIBLE);
             }
         }
-        if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET)
-                && isConnected)
+        else
         {
-            back2settings.setVisibility(View.VISIBLE);
+            if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
+            {
+                if (errorMsg != "")
+                {
+                    back2settings.setText(R.string.dfu_re_upgrade);
+                    back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
+                    back2settings.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    if (!manualMode || mUpdateSuccess)
+                    {
+                        back2settings.setVisibility(View.VISIBLE);
+                    }
+                }
+                //popup alert dialog for manual OTA mode when find out the OTA service
+                if (manualMode && currentIndex == 0)
+                {
+                    showAlertDialog();
+                }
+            }
+            else if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET))
+            {
+                back2settings.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -245,12 +292,14 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                 currentIndex = currentIndex + 1;
                 if (currentIndex == firmwareURLs.size()) {
                     mUpdateSuccess = true;
+                    //reset it to avoid again show the alertdialog when next connected in this screen
+                    manualMode = false;
 
                     roundProgressBar.setVisibility(View.INVISIBLE);
                     clockImage.setVisibility(View.INVISIBLE);
                     percentTextView.setText("");
                     infomationTextView.setText(R.string.dfu_firmware_updated);
-                    back2settings.setText(R.string.dfu_back_to_settings);
+                    back2settings.setText(backtoSetting?R.string.dfu_back_to_settings:R.string.dfu_back);
                     back2settings.setTag(new ButtonTag(getString(R.string.dfu_back)));
                     back2settings.setVisibility(View.VISIBLE);
                     //show success text or image
@@ -264,6 +313,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
                     if (enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)
                         mNevoOtaController.forGetDevice();
                 } else {
+                    mUpdateSuccess = true;
                     //unpair this watch, when reconnect it, repair it again, otherwiase, it will lead the cmd can't get response.
                     if (enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION) {
                         mNevoOtaController.forGetDevice();

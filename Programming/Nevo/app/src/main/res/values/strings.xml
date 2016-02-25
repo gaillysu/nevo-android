@@ -57,6 +57,7 @@
     <string name="dfu_error_nofounDFUservice">No OTA service found, please wait for few minutes and try again.</string>
     <string name="dfu_error_other">Update has exception.</string>
     <string name="dfu_update_message">Updating...</string>
+    <string name="dfu_update_available">An update is available for your watch.</string>
 
     <string name="notification_allow">Allow notifications</string>
     <string name="notification">Notification</string>

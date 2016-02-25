@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
 
 import butterknife.Bind;
@@ -20,6 +22,8 @@ public class TutorialPage4Activity extends BaseActivity implements View.OnClickL
 
     @Bind(R.id.nextTextView)
     TextView nextTextView;
+    @Bind(R.id.activity_tutorial_page4_open_bt_image)
+    ImageView openBtImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,19 @@ public class TutorialPage4Activity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_tutorial_page_4);
         ButterKnife.bind(this);
         nextTextView.setOnClickListener(this);
+        //if BLE or MCU got broken in OTA progress, press the third key will not open BT
+        //so we should give user a solution to update the nevo firmwares
+        //in this page, user long press the image, will enable user to continue do OTA
+        openBtImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(TutorialPage4Activity.this, DfuActivity.class);
+                intent.putExtra("manualMode",true);
+                intent.putExtra("backtosetting", false);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     @Override

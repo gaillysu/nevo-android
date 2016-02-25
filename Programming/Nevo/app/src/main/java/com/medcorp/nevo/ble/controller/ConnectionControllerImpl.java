@@ -190,8 +190,11 @@ import java.util.TimerTask;
         {
             //firstly connected this nevo: such as: first run app, forget this nevo
             boolean firstConnected = !hasSavedAddress();
-            setSaveAddress(address);
-
+            //only save address in normal mode,when BLE OTA in progress, the address will get changed, so don't save it forever.
+            if(!getOTAMode())
+            {
+                setSaveAddress(address);
+            }
             //http://stackoverflow.com/questions/21398766/android-ble-connection-time-interval
             //fix a bug:when BLE OTA done,need repair nevo, if not, must twice connect nevo that nevo can work fine, here use code do repair working or twice connection
             //call pairDevice() after every connected, if call it within connect() before startScan() invoke,

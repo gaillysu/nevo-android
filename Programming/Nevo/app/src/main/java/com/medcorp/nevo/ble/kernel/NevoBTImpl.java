@@ -142,13 +142,20 @@ public class NevoBTImpl implements NevoBT {
 
     @Override
 	public synchronized void startScan(final List<SupportedService> servicelist, final Optional<String> preferredAddress) {
-		if(isScanning) {Log.i(TAG,"Scanning......return ******");return;}
+		if(isScanning) {
+			Log.w(TAG,"Scanning......return ******");
+			return;
+		}
         //If we're already conected to this address, no need to go any further
-        if (preferredAddress.notEmpty() && isAlreadyConnected(preferredAddress.get()) ) {return;}
+        if (preferredAddress.notEmpty() && isAlreadyConnected(preferredAddress.get()) ) {
+			Log.w(TAG,"got connected this nevo.....return ******");
+			return;
+		}
 
         //Ok, so we're not connected to this address. If we're connected to another one, we should disconnect
         if (!isDisconnected()){
-			disconnect();
+			Log.w(TAG,"got connected another nevo.....return ******");
+			return;
 		}
 
 		//We check if bluetooth is enabled and/or if the device isn't ble capable

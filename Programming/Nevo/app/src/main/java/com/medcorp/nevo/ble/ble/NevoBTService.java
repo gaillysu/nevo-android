@@ -291,8 +291,8 @@ public class NevoBTService extends Service {
 		// if the device has a Gatt service, it means we are connected already first close it, and make a new connection
 		if(bluetoothGattMap.get(address)!=null)
 		{
-			bluetoothGattMap.get(address).close();
-			bluetoothGattMap.remove(address);
+			Log.w(NevoBT.TAG, "this device has got connected, disable reconnect it.");
+			return false;
 		}
 		final BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
 		if (device == null) {
