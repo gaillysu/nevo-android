@@ -186,7 +186,7 @@
     <string name="my_nevo_application">Anwendung</string>
     <string name="my_nevo_notice_message">Zum Schonen des Akkus wird der Bluetooth automatisch bei einem längeren Entfernt-sein vom Telefon für mehr als 2 Minuten getrennt. Nach der Trennung werden Sie keine Benachrichtigungen auf Nevo erhalten.</string>
 
-    <string name="settings_link_loss_notification">Benachrichtigung über Verbindungsverlust</string>
+    <string name="settings_link_loss_notification">Link-Verlustwarnung</string>
     <string name="settings_notifications">Benachrichtigungen</string>
     <string name="settings_notifications_active_title">Aktive Benachrichtigungen</string>
     <string name="settings_notifications_inactive_title">Inaktive Benachrichtigungen</string>
