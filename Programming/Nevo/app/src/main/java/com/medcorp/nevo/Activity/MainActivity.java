@@ -34,6 +34,7 @@ import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
 
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -68,7 +69,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         setContentView(R.layout.activity_main_new);
         activeFragment =  new Optional<>();
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
-
         getModel().observableActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
