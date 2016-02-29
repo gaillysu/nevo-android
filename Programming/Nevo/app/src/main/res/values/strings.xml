@@ -215,4 +215,14 @@
 
     <string name="tab_title_today">Today</string>
     <string name="tab_title_History">History</string>
+
+    <string name="help_take_thour">Take the thour</string>
+    <string name="help_track_sleep_title">Track your sleep</string>
+    <string name="help_track_sleep_message">To activate sleeping-mode, push and hold the first button, until the white LED blinks.</string>
+    <string name="help_track_sleep_goodmorning">Good morning</string>
+    <string name="help_track_sleep_goodmorningmessage">You just finished tracking your first night of sleep with your nevo. To start tracking your daily routine,
+push and hold the third button, untill the white LED blinks</string>
+    <string name="help_got_it">Got it!</string>
+
+
 </resources>
