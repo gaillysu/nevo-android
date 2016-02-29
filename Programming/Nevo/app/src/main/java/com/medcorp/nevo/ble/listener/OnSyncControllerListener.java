@@ -1,7 +1,8 @@
 package com.medcorp.nevo.ble.listener;
 
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
+
+import net.medcorp.library.ble.util.Constants;
 
 /**
  * Created by gaillysu on 15/4/1.

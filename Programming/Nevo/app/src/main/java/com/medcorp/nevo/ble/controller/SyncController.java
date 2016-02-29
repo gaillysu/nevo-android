@@ -3,9 +3,10 @@ package com.medcorp.nevo.ble.controller;
 import android.content.Context;
 
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.GoalBase;
+
+import net.medcorp.library.ble.model.request.RequestData;
 
 import java.util.List;
 
@@ -94,7 +95,7 @@ public interface SyncController {
      */
     public void  getDailyTrackerInfo(boolean syncAll);
 
-    void sendRequest(final SensorRequest request);
+    void sendRequest(final RequestData request);
 
     /**
      *

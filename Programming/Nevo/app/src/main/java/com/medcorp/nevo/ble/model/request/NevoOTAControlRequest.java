@@ -2,8 +2,6 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
-import com.medcorp.nevo.R;
-
 import java.util.UUID;
 
 
@@ -25,7 +23,7 @@ public  class NevoOTAControlRequest extends NevoOTARequest {
     @Override
     public UUID getInputCharacteristicUUID() {
         //for controll request, the input char. is the call back char.
-        return UUID.fromString(context.getString(R.string.NEVO_OTA_CALLBACK_CHARACTERISTIC));
+        return getInputCharacteristicUUID();
     }
 
     @Override

@@ -2,19 +2,22 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
-public class ReadDailyTrackerNevoRequest extends NevoRequest {
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+public class ReadDailyTrackerNevoRequest extends RequestData {
 	public  final static  byte HEADER = 0x25;
     // tracker no is 0~6
     private int mTrackerNo = 0;
 
     public ReadDailyTrackerNevoRequest(Context context, int trackerno)
     {
-        super(context);
+        super(new GattAttributesDataSourceImpl(context));
         mTrackerNo = trackerno;
     }
 	@Override
 	public byte[] getRawData() {
-
 		return null;
 	}
 
@@ -38,7 +41,6 @@ public class ReadDailyTrackerNevoRequest extends NevoRequest {
 
 	@Override
 	public byte getHeader() {
-
 		return HEADER;
 	}
 

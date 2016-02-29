@@ -2,16 +2,20 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
 /**
  * Created by gaillysu on 15/4/16.
  */
-public class TestModeNevoRequest extends NevoRequest{
+public class TestModeNevoRequest extends RequestData{
     public  final static  byte HEADER = (byte)0xF0;
     private int mLedpattern;
 
     public TestModeNevoRequest(Context context, int ledpattern, boolean motorOnOff)
     {
-        super(context);
+        super(new GattAttributesDataSourceImpl(context));
         if (motorOnOff)
         mLedpattern = ledpattern | SetNotificationNevoRequest.SetNortificationRequestValues.VIB_MOTOR;
         else

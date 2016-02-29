@@ -7,16 +7,7 @@ import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
-import com.medcorp.nevo.ble.exception.BLEUnstableException;
-import com.medcorp.nevo.ble.exception.NevoException;
-import com.medcorp.nevo.ble.listener.OnConnectListener;
-import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
-import com.medcorp.nevo.ble.listener.OnExceptionListener;
-import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
-import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoFirmwareData;
-import com.medcorp.nevo.ble.model.packet.NevoRawData;
-import com.medcorp.nevo.ble.model.packet.SensorData;
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.model.request.NevoMCU_OTAChecksumRequest;
 import com.medcorp.nevo.ble.model.request.NevoMCU_OTAPacketRequest;
 import com.medcorp.nevo.ble.model.request.NevoMCU_OTAPageRequest;
@@ -25,16 +16,28 @@ import com.medcorp.nevo.ble.model.request.NevoOTAControlRequest;
 import com.medcorp.nevo.ble.model.request.NevoOTAPacketFileSizeRequest;
 import com.medcorp.nevo.ble.model.request.NevoOTAPacketRequest;
 import com.medcorp.nevo.ble.model.request.NevoOTAStartRequest;
-import com.medcorp.nevo.ble.model.request.SensorRequest;
-import com.medcorp.nevo.ble.util.Constants.DFUControllerState;
-import com.medcorp.nevo.ble.util.Constants.DFUResponse;
-import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
-import com.medcorp.nevo.ble.util.Constants.DfuOperationStatus;
-import com.medcorp.nevo.ble.util.Constants.DfuOperations;
-import com.medcorp.nevo.ble.util.Constants.enumPacketOption;
-import com.medcorp.nevo.ble.util.IntelHex2BinConverter;
-import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+
+import net.medcorp.library.ble.controller.ConnectionController;
+import net.medcorp.library.ble.controller.OtaController;
+import net.medcorp.library.ble.exception.BaseBLEException;
+import net.medcorp.library.ble.listener.OnConnectListener;
+import net.medcorp.library.ble.listener.OnDataReceivedListener;
+import net.medcorp.library.ble.listener.OnExceptionListener;
+import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
+import net.medcorp.library.ble.listener.OnOtaControllerListener;
+import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.response.FirmwareData;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.model.response.ResponseData;
+import net.medcorp.library.ble.util.Constants;
+import net.medcorp.library.ble.util.Constants.DFUControllerState;
+import net.medcorp.library.ble.util.Constants.DfuFirmwareTypes;
+import net.medcorp.library.ble.util.Constants.DfuOperationStatus;
+import net.medcorp.library.ble.util.Constants.DfuOperations;
+import net.medcorp.library.ble.util.Constants.enumPacketOption;
+import net.medcorp.library.ble.util.IntelHex2BinConverter;
+import net.medcorp.library.ble.util.Optional;
+import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -52,16 +55,15 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     private ApplicationModel mContext;
 
-    private Optional<OnNevoOtaControllerListener> mOnOtaControllerListener = new Optional<OnNevoOtaControllerListener>();
+    private Optional<OnOtaControllerListener> mOnOtaControllerListener = new Optional<OnOtaControllerListener>();
     private ConnectionController connectionController;
 
-    private DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.APPLICATION ;
-    private List<NevoFirmwareData> mPacketsbuffer = new ArrayList<NevoFirmwareData>();
-    private List<NevoRawData> mNevoPacketsbuffer = new ArrayList<NevoRawData>();
+    private Constants.DfuFirmwareTypes dfuFirmwareType = Constants.DfuFirmwareTypes.APPLICATION ;
+    private List<FirmwareData> mPacketsbuffer = new ArrayList<FirmwareData>();
+    private List<MEDRawData> mNevoPacketsbuffer = new ArrayList<MEDRawData>();
 
-    private int uploadTimeInSeconds = 0;
     private String firmwareFile ;
-    private DFUResponse dfuResponse = new DFUResponse((byte)0, (byte)0, (byte)0);
+    private Constants.DFUResponse dfuResponse = new Constants.DFUResponse((byte)0, (byte)0, (byte)0);
 
     private int hexFileSize  = 0;
     private byte[] hexFileData ;
@@ -141,7 +143,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     public OtaControllerImpl(ApplicationModel context)
     {
         mContext = context;
-        connectionController = ConnectionController.Singleton.getInstance(context);
+        connectionController = ConnectionController.Singleton.getInstance(context,new GattAttributesDataSourceImpl(context));
         connectionController.connect();
     }
 
@@ -264,7 +266,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     //BLE OTA use the lower Queue: QueueType.NevoBT, pls see @NevoBTService.sendRequest
     //due to BLE OTA packets is not the regular packets which start with 00,FF
-    private void sendRequest(final SensorRequest request)
+    private void sendRequest(final RequestData request)
     {
         if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).post(new Runnable(){
@@ -428,7 +430,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         dfuResponse.setrequestedCode(data[1]);
         dfuResponse.setresponseStatus(data[2]);
     }
-    void processDFUResponse(NevoFirmwareData data)
+    void processDFUResponse(FirmwareData data)
     {
         Log.i(TAG,"processDFUResponse");
         setDFUResponseStruct(data.getRawData());
@@ -538,10 +540,13 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         connectionController.setOnConnectListener(this);
         connectionController.setOnFirmwareVersionListener(this);
     }
+
+
     /**
      * set hight level listener, it should be a activity (OTA controller view:Activity or one fragment)
      */
-    public void setOnNevoOtaControllerListener(OnNevoOtaControllerListener listener)
+    @Override
+    public void setOnOtaControllerListener(OnOtaControllerListener listener)
     {
         mOnOtaControllerListener.set(listener);
     }
@@ -610,7 +615,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     @Override
     public String getFirmwareVersion() {
-        return connectionController.getFirmwareVersion();
+        return connectionController.getBluetoothVersion();
     }
 
     @Override
@@ -787,26 +792,26 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     }
 
     @Override
-    public void onDataReceived(SensorData data) {
+    public void onDataReceived(ResponseData data) {
 
-        if (data.getType().equals(NevoFirmwareData.TYPE))
+        if (data.getType().equals(FirmwareData.TYPE))
         {
             if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION
-                    && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CALLBACK_CHARACTERISTIC))))
+                    && ((FirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CALLBACK_CHARACTERISTIC))))
             {
-                processDFUResponse((NevoFirmwareData) data);
+                processDFUResponse((FirmwareData) data);
             }
             else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE
-                    && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CHARACTERISTIC))))
+                    && ((FirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CHARACTERISTIC))))
             {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).next();
-                MCU_processDFUResponse((NevoFirmwareData) data);
+                MCU_processDFUResponse((FirmwareData) data);
             }
         }
     }
 
     @Override
-    public void onException(NevoException e) {
+    public void onException(BaseBLEException e) {
         //the exception got happened when do connection NEVO
         Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
         if(mOnOtaControllerListener.notEmpty()) {
@@ -934,7 +939,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     }
 
-    void MCU_processDFUResponse(NevoFirmwareData rawData)
+    void MCU_processDFUResponse(FirmwareData rawData)
     {
         Log.i(TAG,"didReceiveReceipt");
         mPacketsbuffer.add(rawData);

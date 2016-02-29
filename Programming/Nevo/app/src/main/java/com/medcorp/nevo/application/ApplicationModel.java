@@ -1,12 +1,10 @@
 package com.medcorp.nevo.application;
 
-import android.annotation.TargetApi;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,7 +17,6 @@ import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.ble.controller.OtaController;
 import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
@@ -31,13 +28,12 @@ import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
 import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
+import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
 import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.nevo.listener.GoogleFitHistoryListener;
@@ -47,9 +43,12 @@ import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
-import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.ToastHelper;
+
+import net.medcorp.library.ble.controller.OtaController;
+import net.medcorp.library.ble.util.Constants;
+import net.medcorp.library.ble.util.Optional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,19 +57,20 @@ import java.util.List;
 /**
  * Created by Karl on 10/15/15.
  */
-public class ApplicationModel extends Application  implements OnSyncControllerListener{
+public class ApplicationModel extends Application implements OnSyncControllerListener {
 
     public final int GOOGLE_FIT_OATH_RESULT = 1001;
     private SyncController syncController;
-    private OtaController  otaController;
+    private OtaController otaController;
     private StepsDatabaseHelper stepsDatabaseHelper;
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
     private GoalDatabaseHelper goalDatabaseHelper;
     private Optional<ActivityObservable> observableActivity;
     private boolean firmwareUpdateAlertDailog = false;
-    private int mcuFirmwareVersion = -1;//if it is -1, means mcu version hasn't be read
-    private int bleFirmwareVersion = -1;//if it is -1, means ble version hasn't be read
+    //if it is -1, means mcu version hasn't be read
+    private int mcuFirmwareVersion = -1;
+    private int bleFirmwareVersion = -1;
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
 
@@ -85,11 +85,9 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
-        Log.w("Karl","On create");
         updateGoogleFit();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void packetReceived(NevoPacket packet) {
 
@@ -111,7 +109,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void connectionStateChanged(boolean isConnected) {
         if(observableActivity.notEmpty()) {
@@ -123,7 +120,6 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
         //in tutorial steps, don't popup this alert dialog
@@ -372,7 +368,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     }
 
-    GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
+    private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
         @Override
         public void onConnectionFailed(ConnectionResult result) {
             if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
@@ -390,7 +386,7 @@ public class ApplicationModel extends Application  implements OnSyncControllerLi
         }
     };
 
-    GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
+    private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         @Override
         public void onConnected(Bundle bundle) {
         }

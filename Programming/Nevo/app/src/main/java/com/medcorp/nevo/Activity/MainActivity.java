@@ -26,7 +26,6 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
@@ -34,6 +33,7 @@ import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Battery;
 
+import net.medcorp.library.ble.util.Optional;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -204,7 +204,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
 
     @Override
     public void onSyncStart() {
-        //big sync need about 7~8s
         bigSyncStart = true;
         showStateString(R.string.in_app_notification_syncing,false);
         if(activeFragment.notEmpty()) {

@@ -2,15 +2,19 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
 import java.util.Calendar;
 import java.util.Date;
 
-public class SetRtcNevoRequest extends NevoRequest {
+public class SetRtcNevoRequest extends RequestData {
 
 	public  final static  byte HEADER = 0x01;
 
 	public SetRtcNevoRequest(Context context) {
-		super(context);
+		super(new GattAttributesDataSourceImpl(context));
 	}
 
 	@Override

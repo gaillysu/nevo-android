@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.ble.util.Constants;
+
+import net.medcorp.library.ble.util.Constants;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

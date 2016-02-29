@@ -1,6 +1,7 @@
 package com.medcorp.nevo.database.entry;
 
-import com.medcorp.nevo.ble.util.Optional;
+
+import net.medcorp.library.ble.util.Optional;
 
 import java.util.Date;
 import java.util.List;

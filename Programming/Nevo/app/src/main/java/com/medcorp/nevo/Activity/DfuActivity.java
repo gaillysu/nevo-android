@@ -14,12 +14,14 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.ble.controller.OtaController;
-import com.medcorp.nevo.ble.listener.OnNevoOtaControllerListener;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.view.RoundProgressBar;
+
+import net.medcorp.library.ble.controller.OtaController;
+import net.medcorp.library.ble.listener.OnOtaControllerListener;
+import net.medcorp.library.ble.model.response.ResponseData;
+import net.medcorp.library.ble.util.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * Created by gaillysu on 15/12/28.
  */
-public class DfuActivity extends BaseActivity implements OnNevoOtaControllerListener, View.OnClickListener {
+public class DfuActivity extends BaseActivity implements OnOtaControllerListener, View.OnClickListener {
 
     private static final String TAG="DfuActivity";
 
@@ -84,7 +86,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
 
         mNevoOtaController = getModel().getOtaController();
         mNevoOtaController.switch2OtaController();
-        mNevoOtaController.setOnNevoOtaControllerListener(this);
+        mNevoOtaController.setOnOtaControllerListener(this);
         //when manual OTA mode, firstly connect it and find out OTA service 00001530-1212-efde-1523-785feabcd123
         if(manualMode)
         {
@@ -210,7 +212,7 @@ public class DfuActivity extends BaseActivity implements OnNevoOtaControllerList
     }
 
     @Override
-    public void packetReceived(NevoPacket packet) {
+    public void packetReceived(ResponseData packet) {
 
     }
 

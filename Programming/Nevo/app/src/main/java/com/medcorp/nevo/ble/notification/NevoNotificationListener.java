@@ -5,7 +5,6 @@ package com.medcorp.nevo.ble.notification;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.ContentResolver;
@@ -19,9 +18,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.ConnectionController;
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
-import com.medcorp.nevo.ble.exception.NevoException;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
@@ -30,15 +28,18 @@ import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
 import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.util.Preferences;
+
+import net.medcorp.library.ble.controller.ConnectionController;
+import net.medcorp.library.ble.exception.BaseBLEException;
+import net.medcorp.library.ble.notification.NotificationCallback;
+import net.medcorp.library.ble.util.Optional;
 
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@TargetApi(18)
-public class NevoNotificationListener extends NotificationBaseListenerService implements NotificationCallback{
+public class NevoNotificationListener extends NotificationBaseListenerService implements NotificationCallback {
 
     static Optional<Date> lastNotification = new Optional<Date>();
 
@@ -159,7 +160,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                ConnectionController.Singleton.getInstance(NevoNotificationListener.this)
+                ConnectionController.Singleton.getInstance(NevoNotificationListener.this, new GattAttributesDataSourceImpl(NevoNotificationListener.this))
                         .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledcolor:0, count%2==0?true:false));
                 showNotification(count-1,ledcolor);
             }
@@ -173,9 +174,11 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         lastNotification.set(new Date());
 
         //when OTA doing,discard the notification
-        if(ConnectionController.Singleton.getInstance(this).getOTAMode()) return;
+        if(ConnectionController.Singleton.getInstance(this, new GattAttributesDataSourceImpl(this)).inOTAMode()){
+            return;
+        }
 
-        ConnectionController.Singleton.getInstance(this).connect();
+        ConnectionController.Singleton.getInstance(this, new GattAttributesDataSourceImpl(this)).connect();
 
         showNotification(LIGHTTIMES*2,ledcolor);
     }
@@ -207,11 +210,12 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
     }
 
     @Override
-    public void onErrorDetected(NevoException e) {
+    public void onErrorDetected(BaseBLEException e) {
         int titleID = R.string.ble_notification_title;
-        int msgID = e.getWarningMessageId();
+        // TODO replace this. This doesn't make sense.
+//        int msgID = e.getWarningMessageId();
         //unknown exception, discard it
-        getModel().getSyncController().showMessage(titleID,msgID);
+//        getModel().getSyncController().showMessage(titleID,msgID);
     }
 
     @Override

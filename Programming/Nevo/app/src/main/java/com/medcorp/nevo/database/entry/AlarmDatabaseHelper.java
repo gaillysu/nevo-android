@@ -2,10 +2,11 @@ package com.medcorp.nevo.database.entry;
 
 import android.content.Context;
 
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.AlarmDAO;
 import com.medcorp.nevo.model.Alarm;
+
+import net.medcorp.library.ble.util.Optional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -2,13 +2,13 @@ package com.medcorp.nevo.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.UserDatabaseHelper;
-import com.medcorp.nevo.database.entry.iEntryDatabaseHelper;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.User;
 import com.medcorp.nevo.util.Common;
+
+import net.medcorp.library.ble.util.Optional;
 
 import java.util.Date;
 

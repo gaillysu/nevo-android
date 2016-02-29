@@ -2,11 +2,14 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.model.Alarm;
+
+import net.medcorp.library.ble.model.request.RequestData;
 
 import java.util.List;
 
-public class SetAlarmNevoRequest extends NevoRequest {
+public class SetAlarmNevoRequest extends RequestData {
 
 	public  final static  byte HEADER = 0x41;
 	public  final static int maxAlarmCount = 3;
@@ -16,7 +19,7 @@ public class SetAlarmNevoRequest extends NevoRequest {
 	
 	public SetAlarmNevoRequest(Context context, List<Alarm> list)
 	{
-		super(context);
+		super(new GattAttributesDataSourceImpl(context));
 		mHour = new int[maxAlarmCount];
 		mMinute = new int[maxAlarmCount];
 		mEnable = new boolean[maxAlarmCount];

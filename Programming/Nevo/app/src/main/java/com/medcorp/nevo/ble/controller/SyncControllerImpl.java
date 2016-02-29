@@ -24,23 +24,11 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
-import com.medcorp.nevo.ble.exception.BLEConnectTimeoutException;
-import com.medcorp.nevo.ble.exception.BLENotSupportedException;
-import com.medcorp.nevo.ble.exception.BLEUnstableException;
-import com.medcorp.nevo.ble.exception.BluetoothDisabledException;
-import com.medcorp.nevo.ble.exception.NevoException;
-import com.medcorp.nevo.ble.exception.QuickBTSendTimeoutException;
-import com.medcorp.nevo.ble.exception.QuickBTUnBindNevoException;
-import com.medcorp.nevo.ble.exception.visitor.NevoExceptionVisitor;
-import com.medcorp.nevo.ble.listener.OnConnectListener;
-import com.medcorp.nevo.ble.listener.OnDataReceivedListener;
-import com.medcorp.nevo.ble.listener.OnExceptionListener;
-import com.medcorp.nevo.ble.listener.OnFirmwareVersionListener;
 import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
@@ -54,14 +42,11 @@ import com.medcorp.nevo.ble.model.packet.DailyStepsNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
 import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
 import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.packet.NevoRawData;
-import com.medcorp.nevo.ble.model.packet.SensorData;
 import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
 import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
 import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.medcorp.nevo.ble.model.request.SensorRequest;
 import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetCardioNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetGoalNevoRequest;
@@ -70,9 +55,6 @@ import com.medcorp.nevo.ble.model.request.SetProfileNevoRequest;
 import com.medcorp.nevo.ble.model.request.SetRtcNevoRequest;
 import com.medcorp.nevo.ble.model.request.TestModeNevoRequest;
 import com.medcorp.nevo.ble.model.request.WriteSettingNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
-import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.DailyHistory;
@@ -81,6 +63,26 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
+
+import net.medcorp.library.ble.controller.ConnectionController;
+import net.medcorp.library.ble.exception.BLEConnectTimeoutException;
+import net.medcorp.library.ble.exception.BLENotSupportedException;
+import net.medcorp.library.ble.exception.BLEUnstableException;
+import net.medcorp.library.ble.exception.BaseBLEException;
+import net.medcorp.library.ble.exception.BluetoothDisabledException;
+import net.medcorp.library.ble.exception.QuickBTSendTimeoutException;
+import net.medcorp.library.ble.exception.QuickBTUnBindException;
+import net.medcorp.library.ble.exception.visitor.BLEExceptionVisitor;
+import net.medcorp.library.ble.listener.OnConnectListener;
+import net.medcorp.library.ble.listener.OnDataReceivedListener;
+import net.medcorp.library.ble.listener.OnExceptionListener;
+import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
+import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.model.response.ResponseData;
+import net.medcorp.library.ble.util.Constants;
+import net.medcorp.library.ble.util.Optional;
+import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +96,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<Void>, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
+public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void>, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
     private final static String TAG = "SyncControllerImpl";
 
     private Context mContext;
@@ -105,7 +107,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
 
-    private List<NevoRawData> mPacketsbuffer = new ArrayList<NevoRawData>();
+    private List<MEDRawData> mPacketsbuffer = new ArrayList<MEDRawData>();
 
     private List<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
@@ -124,8 +126,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     {
         mContext = context;
 
-        connectionController = ConnectionController.Singleton.getInstance(context);
-
+        connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         connectionController.setOnExceptionListener(this);
         connectionController.setOnDataReceivedListener(this);
         connectionController.setOnConnectListener(this);
@@ -152,15 +153,15 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             connectionController.forgetSavedAddress();
         }
 
-        connectionController.newScan();
+        connectionController.scan();
 
     }
 
     //Each packets should go through this function. It will ensure that they are properly queued and sent in order.
     @Override
-    public void sendRequest(final SensorRequest request)
+    public void sendRequest(final RequestData request)
     {
-        if(connectionController.getOTAMode()) {
+        if(connectionController.inOTAMode()) {
             return;
         }
         if(!isConnected()) {
@@ -198,11 +199,11 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
      * This listener is called when new data is received
      */
     @Override
-    public void onDataReceived(SensorData data) {
+    public void onDataReceived(ResponseData data) {
 
-        if (data.getType().equals(NevoRawData.TYPE))
+        if (data.getType().equals(MEDRawData.TYPE))
         {
-            final NevoRawData nevoData = (NevoRawData) data;
+            final MEDRawData nevoData = (MEDRawData) data;
             mPacketsbuffer.add(nevoData);
 
             if((byte)0xFF == nevoData.getRawData()[0])
@@ -513,7 +514,6 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             mPacketsbuffer.clear();
         }
-
     }
 
     @Override
@@ -655,7 +655,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
 
     @Override
     public String getFirmwareVersion() {
-        return connectionController.getFirmwareVersion();
+        return connectionController.getBluetoothVersion();
     }
 
     @Override
@@ -679,7 +679,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public void onException(NevoException e) {
+    public void onException(BaseBLEException e) {
         //e.accept(this);
         if(mOnSyncControllerListener.notEmpty()){
             mOnSyncControllerListener.get().connectionStateChanged(false);
@@ -729,7 +729,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public Void visit(QuickBTUnBindNevoException e) {
+    public Void visit(QuickBTUnBindException e) {
         return null;
     }
 
@@ -739,7 +739,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
         //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
         if (mTimeOutcount  == 3) {
             mTimeOutcount = 0;
-            showMessage(e.getWarningMessageTitle(), e.getWarningMessageId());
+            //TODO fix this. exception shouldn't have the properties listed below.
+//            showMessage(e.getWarningMessageTitle(), e.getWarningMessageId());
         }
         return null;
     }
@@ -750,7 +751,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                //TODO fix this. exception shouldn't have the properties listed below.
+//                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e2) {
@@ -765,7 +767,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                //TODO fix this. exception shouldn't have the properties listed below.
+//                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e3) {
@@ -779,7 +782,8 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                //TODO fix this. exception shouldn't have the properties listed below.
+//                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e1) {
@@ -794,7 +798,7 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
     }
 
     @Override
-    public Void visit(NevoException e) {
+    public Void visit(BaseBLEException e) {
         return null;
     }
 
@@ -808,17 +812,17 @@ public class SyncControllerImpl implements SyncController, NevoExceptionVisitor<
                 if(intent.getAction().equals(Intent.ACTION_SCREEN_ON))
                 {
                     Log.i("LocalService","Screen On");
-                    if(!ConnectionController.Singleton.getInstance(context).isConnected())
+                    if(!ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).isConnected())
                     {
-                        ConnectionController.Singleton.getInstance(context).newScan();
+                        ConnectionController.Singleton.getInstance(context,new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
                 else if(intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED))
                 {
                     Log.i("LocalService","Low level BT connected");
-                    if(!ConnectionController.Singleton.getInstance(context).isConnected())
+                    if(!ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).isConnected())
                     {
-                        ConnectionController.Singleton.getInstance(context).newScan();
+                        ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
             }

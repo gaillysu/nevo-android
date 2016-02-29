@@ -2,11 +2,15 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
-public class SetProfileNevoRequest extends NevoRequest {
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+public class SetProfileNevoRequest extends RequestData {
 	public  final static  byte HEADER = 0x20;
 
 	public SetProfileNevoRequest(Context context) {
-		super(context);
+		super(new GattAttributesDataSourceImpl(context));
 	}
 
 	@Override

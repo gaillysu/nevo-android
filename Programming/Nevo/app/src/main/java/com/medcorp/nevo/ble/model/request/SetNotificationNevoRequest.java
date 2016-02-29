@@ -2,6 +2,7 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
@@ -12,9 +13,11 @@ import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
+import net.medcorp.library.ble.model.request.RequestData;
+
 import java.util.Map;
 
-public class SetNotificationNevoRequest extends NevoRequest {
+public class SetNotificationNevoRequest extends RequestData {
 	public  final static  byte HEADER = 0x02;
     public static class SetNortificationRequestValues {
         //default vibrator number is 3
@@ -51,11 +54,10 @@ public class SetNotificationNevoRequest extends NevoRequest {
 
     public SetNotificationNevoRequest(Context context, Map<Notification, Integer> applicationNotificationColorMap)
     {
-        super(context);
+        super(new GattAttributesDataSourceImpl(context));
         StateSaver stateSaver = new StateSaver(applicationNotificationColorMap);
         for (Notification applicationNotification: applicationNotificationColorMap.keySet()) {
             applicationNotification.accept(stateSaver);
-
         }
     }
 

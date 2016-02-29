@@ -6,7 +6,7 @@ package com.medcorp.nevo.ble.model.request;
 
 import android.content.Context;
 
-import com.medcorp.nevo.R;
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
@@ -17,10 +17,12 @@ import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
+import net.medcorp.library.ble.model.request.RequestData;
+
 import java.util.UUID;
 
 
-public class SendNotificationNevoRequest extends NevoRequest {
+public class SendNotificationNevoRequest extends RequestData {
 
     public  final static  byte HEADER = 0x60;
 
@@ -29,7 +31,7 @@ public class SendNotificationNevoRequest extends NevoRequest {
     int mNumber;
 
     public SendNotificationNevoRequest(Context context, Notification notification, int num) {
-        super(context);
+        super(new GattAttributesDataSourceImpl(context));
         this.notification = notification;
         mNumber = num;
         if(mNumber == 0) mNumber = 1;
@@ -37,7 +39,7 @@ public class SendNotificationNevoRequest extends NevoRequest {
 
     @Override
     public UUID getInputCharacteristicUUID() {
-        return UUID.fromString(context.getString(R.string.NEVO_NOTIFICATION_CHARACTERISTIC));
+        return getInputCharacteristicUUID();
     }
     @Override
     public byte[] getRawData() {

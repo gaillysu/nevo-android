@@ -1,6 +1,7 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.ble.util.HexUtils;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.util.HexUtils;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class DailyStepsNevoPacket extends NevoPacket {
 
-    public DailyStepsNevoPacket(List<NevoRawData> packets) {
+    public DailyStepsNevoPacket(List<MEDRawData> packets) {
         super(packets);
     }
 

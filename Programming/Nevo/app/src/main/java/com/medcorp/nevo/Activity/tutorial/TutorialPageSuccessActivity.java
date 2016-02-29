@@ -7,9 +7,10 @@ import android.view.WindowManager;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.ble.util.Constants;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Goal;
+
+import net.medcorp.library.ble.util.Constants;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -11,17 +11,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import com.medcorp.nevo.R;
-
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
+import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.SleepData;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.SleepDataHandler;
 import com.medcorp.nevo.view.SleepDataView;
+
+import net.medcorp.library.ble.util.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +31,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.medcorp.nevo.fragment.base.BaseFragment;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 /**

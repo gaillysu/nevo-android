@@ -2,9 +2,10 @@ package com.medcorp.nevo.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.nevo.ble.util.Optional;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.model.Goal;
+
+import net.medcorp.library.ble.util.Optional;
 
 /**
  * Created by gaillysu on 15/12/8.

@@ -1,6 +1,7 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.ble.util.HexUtils;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.util.HexUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by gaillysu on 15/4/1.
  */
 public class DailyTrackerNevoPacket extends NevoPacket {
-    public DailyTrackerNevoPacket(List<NevoRawData> packets) {
+    public DailyTrackerNevoPacket(List<MEDRawData> packets) {
         super(packets);
     }
 
@@ -27,7 +28,7 @@ public class DailyTrackerNevoPacket extends NevoPacket {
         int month = 0;
         int day = 0;
 
-        year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2],getPackets().get(0).getRawData()[3]});
+        year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2], getPackets().get(0).getRawData()[3]});
         month = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[4]});
         day   = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[5]});
 
