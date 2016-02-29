@@ -14,7 +14,6 @@ import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.MyNevo;
 import com.medcorp.nevo.util.Common;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +81,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         firmwareURLs = Common.needOTAFirmwareURLs(this,currentSoftwareVersion,currentFirmwareVersion);
         if(!firmwareURLs.isEmpty())
         {
-            mynevo.setAvailable_version(true);
+            mynevo.setAvailableVersion(true);
             mynevo.setFirmwareURLs(firmwareURLs);
             myNevoListView.setAdapter(new MyNevoAdapter(this, mynevo));
         }
@@ -119,7 +118,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
 
     @Override
     public void batteryInfoReceived(Battery battery) {
-        mynevo.setBattery_level((int)battery.getBatterylevel());
+        mynevo.setBatteryLevel((int) battery.getBatterylevel());
         myNevoListView.setAdapter(new MyNevoAdapter(this,mynevo));
     }
 
