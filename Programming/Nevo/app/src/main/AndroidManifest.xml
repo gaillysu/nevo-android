@@ -88,7 +88,9 @@
         <activity
             android:name=".activity.ConnectToOtherAppsActivity"
             android:screenOrientation="portrait"/>
-
+        <service
+            android:name="net.medcorp.library.ble.ble.MEDBTService"
+            android:enabled="true" />
         <service
             android:name=".ble.controller.SyncControllerImpl$LocalService"
             android:enabled="true" />
