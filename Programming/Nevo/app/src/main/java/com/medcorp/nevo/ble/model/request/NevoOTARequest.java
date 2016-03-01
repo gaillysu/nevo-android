@@ -22,17 +22,17 @@ public abstract  class NevoOTARequest extends RequestData {
 
 	@Override
 	public UUID getServiceUUID() {
-		return getServiceUUID();
+		return super.getOTAServiceUUID();
 	}
 
 	@Override
 	public UUID getCharacteristicUUID() {
-		return getCharacteristicUUID();
+		return super.getOTACallbackCharacteristicUUID();
 	}
 
 	@Override
 	public UUID getInputCharacteristicUUID() {
-		return getInputCharacteristicUUID();
+		return super.getOTAControlCharacteristicUUID();
 	}
 
 }

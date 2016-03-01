@@ -23,7 +23,7 @@ public  class NevoOTAControlRequest extends NevoOTARequest {
     @Override
     public UUID getInputCharacteristicUUID() {
         //for controll request, the input char. is the call back char.
-        return getInputCharacteristicUUID();
+        return super.getCharacteristicUUID();
     }
 
     @Override

@@ -22,16 +22,16 @@ public abstract  class NevoMCU_OTARequest extends RequestData {
 
     @Override
     public UUID getServiceUUID() {
-        return getServiceUUID();
+        return super.getServiceUUID();
     }
 
     @Override
     public UUID getCharacteristicUUID() {
-        return getOTACharacteristicUUID();
+        return super.getOTACharacteristicUUID();
     }
 
     @Override
     public UUID getInputCharacteristicUUID() {
-        return getOTACharacteristicUUID();
+        return super.getOTACharacteristicUUID();
     }
 }
