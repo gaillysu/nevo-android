@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 /**
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
@@ -13,8 +15,9 @@ public  class NevoMCU_OTAChecksumRequest extends  NevoMCU_OTARequest{
     private int mTotalpage;
     private int mChecksum;
 
-    public NevoMCU_OTAChecksumRequest(int totalpage, int checksum)
+    public NevoMCU_OTAChecksumRequest(Context context, int totalpage, int checksum)
     {
+        super(context);
         mTotalpage = totalpage;
         mChecksum = checksum;
     }

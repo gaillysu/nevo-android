@@ -1,9 +1,20 @@
 package com.medcorp.nevo.ble.model.request;
 
-public class GetStepsGoalNevoRequest extends NevoRequest {
+import android.content.Context;
 
-	public  final static  byte HEADER = 0x26;
-	@Override
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+public class GetStepsGoalNevoRequest extends RequestData {
+
+	public  final static byte HEADER = 0x26;
+
+        public GetStepsGoalNevoRequest(Context context) {
+                super(new GattAttributesDataSourceImpl(context));
+        }
+
+        @Override
 	public byte[] getRawData() {
 
 		return null;
@@ -29,7 +40,6 @@ public class GetStepsGoalNevoRequest extends NevoRequest {
 
 	@Override
 	public byte getHeader() {
-
 		return HEADER;
 	}
 

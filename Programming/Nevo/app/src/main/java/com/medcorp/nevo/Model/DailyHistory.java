@@ -1,7 +1,7 @@
-package com.medcorp.nevo.Model;
+package com.medcorp.nevo.model;
 
-import java.util.Date;
-import java.util.List;
+        import java.util.Date;
+        import java.util.List;
 
 /**
  * Created by Hugo on 8/4/15.
@@ -13,36 +13,38 @@ public class DailyHistory {
     private int mTotalSteps;
 
     //add new from v1.2.2, FW v18/v31, sleep tracker
-        //unit:cm->meter
-        int TotalDist;
-        List<Integer> HourlyDist;
-        //unit: cal->kcal
-        int TotalCalories;
-        List<Integer> HourlyCalories;
+    //unit:cm->meter
+    int TotalDist;
+    List<Integer> HourlyDist;
+    //unit: cal->kcal
+    int TotalCalories;
+    List<Integer> HourlyCalories;
 
-        int InactivityTime;
-        int TotalInZoneTime;
-        int TotalOutZoneTime;
-        //unit: minute
-        int TotalSleepTime;
-        List<Integer> HourlySleepTime;
-        int TotalWakeTime;
-        List<Integer> HourlyWakeTime;
-        int TotalLightTime;
-        List<Integer> HourlyLightTime;
-        int TotalDeepTime;
-        List<Integer> HourlDeepTime;
+    int InactivityTime;
+    int TotalInZoneTime;
+    int TotalOutZoneTime;
+    //unit: minute
+    int TotalSleepTime;
+    List<Integer> HourlySleepTime;
+    int TotalWakeTime;
+    List<Integer> HourlyWakeTime;
+    int TotalLightTime;
+    List<Integer> HourlyLightTime;
+    int TotalDeepTime;
+    List<Integer> HourlDeepTime;
     //end added
 
     public DailyHistory(Date date) {
         mDate = date;
     }
 
+
+
     public int getTotalSteps() {
         return mTotalSteps;
     }
     public void setTotalSteps(int TotalSteps) {
-         mTotalSteps = TotalSteps;
+        mTotalSteps = TotalSteps;
     }
 
     public List<Integer> getHourlySteps() {

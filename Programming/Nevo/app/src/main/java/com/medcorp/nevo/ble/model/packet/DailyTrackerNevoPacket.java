@@ -1,7 +1,7 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.ble.util.HexUtils;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.util.HexUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +15,7 @@ import java.util.List;
  * Created by gaillysu on 15/4/1.
  */
 public class DailyTrackerNevoPacket extends NevoPacket {
-    public DailyTrackerNevoPacket(ArrayList<NevoRawData> packets) {
+    public DailyTrackerNevoPacket(List<MEDRawData> packets) {
         super(packets);
     }
 
@@ -28,7 +28,7 @@ public class DailyTrackerNevoPacket extends NevoPacket {
         int month = 0;
         int day = 0;
 
-        year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2],getPackets().get(0).getRawData()[3]});
+        year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[2], getPackets().get(0).getRawData()[3]});
         month = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[4]});
         day   = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[5]});
 
@@ -358,6 +358,101 @@ public class DailyTrackerNevoPacket extends NevoPacket {
             HourlyDeepTime.add(i,hourlyDeepTime);
         }
         return HourlyDeepTime;
+    }
+
+    /**
+     *
+     * @return some day 's step goal setting
+     */
+    public int getStepsGoal()
+    {
+        int stepGoal = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[6],
+                getPackets().get(0).getRawData()[7],
+                getPackets().get(0).getRawData()[8],
+                getPackets().get(0).getRawData()[9]
+        });
+
+        return stepGoal;
+    }
+    /**
+     return History Daily walk steps
+     */
+    public int getDailyWalkSteps()
+    {
+        int dailySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[8],
+                getPackets().get(1).getRawData()[9],
+                getPackets().get(1).getRawData()[10],
+                getPackets().get(1).getRawData()[11]
+        });
+
+        return dailySteps;
+
+    }
+
+    /**
+     return History Daily run steps
+     */
+    public int getDailyRunSteps()
+    {
+        int dailySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[12],
+                getPackets().get(1).getRawData()[13],
+                getPackets().get(1).getRawData()[14],
+                getPackets().get(1).getRawData()[15]
+        });
+
+        return dailySteps;
+
+    }
+
+    public int getDailyWalkDistance()
+    {
+        int packetno = 2;
+        int offset = 6;
+        int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDist/100;
+    }
+    public int getDailyRunDistance()
+    {
+        int packetno = 2;
+        int offset = 10;
+        int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDist/100;
+    }
+
+    public int getDailyWalkDuration()
+    {
+        int packetno = 3;
+        int offset = 8;
+        int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDuration/60;
+    }
+
+    public int getDailyRunDuration()
+    {
+        int packetno = 3;
+        int offset = 4;
+        int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+
+        return dailyDuration/60;
     }
 
     //end added

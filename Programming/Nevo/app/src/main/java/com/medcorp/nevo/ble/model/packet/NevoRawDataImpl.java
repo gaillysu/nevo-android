@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Build;
 import android.util.Log;
 
+import net.medcorp.library.ble.model.response.MEDRawData;
+
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.UUID;
@@ -13,7 +15,7 @@ import java.util.UUID;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-/*package*/ class NevoRawDataImpl extends NevoRawData {
+/*package*/ class NevoRawDataImpl extends MEDRawData {
 
 
 

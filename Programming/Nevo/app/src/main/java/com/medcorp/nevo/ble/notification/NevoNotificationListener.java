@@ -5,7 +5,6 @@ package com.medcorp.nevo.ble.notification;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.ContentResolver;
@@ -13,28 +12,34 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.provider.Settings;
-import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.medcorp.nevo.Fragment.NotificationFragmentAdapter;
-import com.medcorp.nevo.PaletteActivity;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.controller.ConnectionController;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.kernel.QuickBTSendTimeoutException;
-import com.medcorp.nevo.ble.kernel.QuickBTUnBindNevoException;
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.request.LedLightOnOffNevoRequest;
-import com.medcorp.nevo.ble.util.Optional;
+import com.medcorp.nevo.util.Preferences;
+
+import net.medcorp.library.ble.controller.ConnectionController;
+import net.medcorp.library.ble.exception.BaseBLEException;
+import net.medcorp.library.ble.notification.NotificationCallback;
+import net.medcorp.library.ble.util.Optional;
 
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@TargetApi(18)
-public class NevoNotificationListener extends NotificationListenerService implements NotificationCallback{
+public class NevoNotificationListener extends NotificationBaseListenerService implements NotificationCallback {
 
     static Optional<Date> lastNotification = new Optional<Date>();
 
@@ -48,6 +53,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
 
     private CallStateListener mListener;
 
+
     // listen incoming call and then send led command to nevo watch
     class CallStateListener extends PhoneStateListener {
 
@@ -55,8 +61,10 @@ public class NevoNotificationListener extends NotificationListenerService implem
         public void onCallStateChanged(int state, String incomingNumber) {
             switch (state){
                 case TelephonyManager.CALL_STATE_RINGING:
-                    if(NotificationFragmentAdapter.getTypeNFState(NevoNotificationListener.this,NotificationFragmentAdapter.TELETYPE))
-                        sendNotification(PaletteActivity.getTypeChoosenColor(NevoNotificationListener.this,PaletteActivity.TELECHOOSENCOLOR));
+                    NotificationDataHelper helper = new NotificationDataHelper(NevoNotificationListener.this);
+                    if(helper.getState(new TelephoneNotification()).isOn()) {
+                        sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification()).getHexColor());
+                    }
                     break;
             }
         }
@@ -72,70 +80,65 @@ public class NevoNotificationListener extends NotificationListenerService implem
     }
 
     @Override
-    public void onNotificationPosted(StatusBarNotification arg0) {
-        if(arg0 == null) return;
+    public void onNotificationPosted(StatusBarNotification statusBarNotification) {
+        if(statusBarNotification == null) {
+            return;
+        }
 
-        Notification mNotification = arg0.getNotification();
-
-        if (mNotification != null) {
+        Notification notification = statusBarNotification.getNotification();
+        NotificationDataHelper helper = new NotificationDataHelper(this);
+        if (notification != null) {
             //sms
-            if(arg0.getPackageName().equals("com.google.android.talk")
-                    || arg0.getPackageName().equals("com.android.mms")
-                    || arg0.getPackageName().equals("com.google.android.apps.messaging")
-                    || arg0.getPackageName().equals("com.sonyericsson.conversations")
+            if(statusBarNotification.getPackageName().equals("com.google.android.talk")
+                    || statusBarNotification.getPackageName().equals("com.android.mms")
+                    || statusBarNotification.getPackageName().equals("com.google.android.apps.messaging")
+                    || statusBarNotification.getPackageName().equals("com.sonyericsson.conversations")
                     ) {
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.SMSTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.SMSCHOOSENCOLOR));
+                if(helper.getState(new SmsNotification()).isOn())
+                    sendNotification(Preferences.getNotificationColor(this, new SmsNotification()).getHexColor());
             }
 
             //email,native email or gmail client
-            else if(arg0.getPackageName().equals("com.android.email")
-                    || arg0.getPackageName().equals("com.google.android.email")
-                    || arg0.getPackageName().equals("com.google.android.gm")
-                    || arg0.getPackageName().equals("com.kingsoft.email")
-                    || arg0.getPackageName().equals("com.tencent.androidqqmail")
-                    || arg0.getPackageName().equals("com.outlook.Z7")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.android.email")
+                    || statusBarNotification.getPackageName().equals("com.google.android.email")
+                    || statusBarNotification.getPackageName().equals("com.google.android.gm")
+                    || statusBarNotification.getPackageName().equals("com.kingsoft.email")
+                    || statusBarNotification.getPackageName().equals("com.tencent.androidqqmail")
+                    || statusBarNotification.getPackageName().equals("com.outlook.Z7")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.EMAILTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.EMAILCHOOSENCOLOR));
+                if(helper.getState(new EmailNotification()).isOn())
+                    sendNotification(Preferences.getNotificationColor(this, new EmailNotification()).getHexColor());
             }
             //calendar
-            else if(arg0.getPackageName().equals("com.google.android.calendar")
-                    || arg0.getPackageName().equals("com.android.calendar")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.google.android.calendar")
+                    || statusBarNotification.getPackageName().equals("com.android.calendar")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.CALTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.CALCHOOSENCOLOR));
+                if(helper.getState(new CalendarNotification()).isOn())
+                    sendNotification(Preferences.getNotificationColor(this, new CalendarNotification()).getHexColor());
             }
             //facebook
-            else if(arg0.getPackageName().equals("com.facebook.katana")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.facebook.katana")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.FACETYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.FACECHOOSENCOLOR));
+                if(helper.getState(new FacebookNotification()).isOn())
+                    sendNotification(Preferences.getNotificationColor(this, new FacebookNotification()).getHexColor());
             }
             //wechat
-            else if(arg0.getPackageName().equals("com.tencent.mm")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.tencent.mm")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WEICHATTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WECHATCHOOSENCOLOR));
+                if(helper.getState(new WeChatNotification()).isOn())
+                    sendNotification(Preferences.getNotificationColor(this, new WeChatNotification()).getHexColor());
             }
             //whatsapp
-            else if(arg0.getPackageName().equals("com.whatsapp")){
-                Log.w(TAG, "Notification : " + arg0.getPackageName() + " : " + mNotification.number);
+            else if(statusBarNotification.getPackageName().equals("com.whatsapp")){
                 //BLE keep-connect service will process this message
-                if(NotificationFragmentAdapter.getTypeNFState(this,NotificationFragmentAdapter.WHATSTYPE))
-                    sendNotification(PaletteActivity.getTypeChoosenColor(this,PaletteActivity.WHATSAPPCHOOSENCOLOR));
+                if(helper.getState(new WhatsappNotification()).isOn())
+                    sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification()).getHexColor());
             }
 
             else {
-                Log.v(TAG, "Unknown Notification : "+arg0.getPackageName());
+                Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());
             }
-
         }
     }
 
@@ -157,8 +160,8 @@ public class NevoNotificationListener extends NotificationListenerService implem
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                ConnectionController.Singleton.getInstance(NevoNotificationListener.this)
-                        .sendRequest(new LedLightOnOffNevoRequest(count%2==0?ledcolor:0, count%2==0?true:false));
+                ConnectionController.Singleton.getInstance(NevoNotificationListener.this, new GattAttributesDataSourceImpl(NevoNotificationListener.this))
+                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledcolor:0, count%2==0?true:false));
                 showNotification(count-1,ledcolor);
             }
         },count%2==0?(count==LIGHTTIMES*2?0:500):1200); //first time should do right now, here have 0ms
@@ -171,9 +174,11 @@ public class NevoNotificationListener extends NotificationListenerService implem
         lastNotification.set(new Date());
 
         //when OTA doing,discard the notification
-        if(ConnectionController.Singleton.getInstance(this).getOTAMode()) return;
+        if(ConnectionController.Singleton.getInstance(this, new GattAttributesDataSourceImpl(this)).inOTAMode()){
+            return;
+        }
 
-        ConnectionController.Singleton.getInstance(this).connect();
+        ConnectionController.Singleton.getInstance(this, new GattAttributesDataSourceImpl(this)).connect();
 
         showNotification(LIGHTTIMES*2,ledcolor);
     }
@@ -186,7 +191,7 @@ public class NevoNotificationListener extends NotificationListenerService implem
         if (enabledNotificationListeners == null || !enabledNotificationListeners.contains(packageName))
         {
             // Let's ask the user to enable notifications
-            new AlertDialog.Builder(ctx).setTitle(R.string.notifAccess).setMessage(R.string.notifAccessMessage)
+            new AlertDialog.Builder(ctx).setTitle(R.string.notification_access_title).setMessage(R.string.notification_access_message)
                     .setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes, new AlertDialog.OnClickListener(){
 
                 @Override
@@ -197,32 +202,20 @@ public class NevoNotificationListener extends NotificationListenerService implem
                 }
 
             }).show();
-
-
         }
         else
         {
-            //  doSomethingThatRequiresNotificationAccessPermission();
-
-
+//              doSomethingThatRequiresNotificationAccessPermission();
         }
     }
 
     @Override
-    public void onErrorDetected(Exception e) {
+    public void onErrorDetected(BaseBLEException e) {
         int titleID = R.string.ble_notification_title;
-        int msgID = 0;
-        if (e instanceof QuickBTUnBindNevoException)
-            msgID = R.string.ble_notification_message;
-        else if  (e instanceof QuickBTSendTimeoutException)
-            msgID = R.string.ble_connecttimeout;
-        else
-        {
-            //unknown exception, discard it
-            return;
-        }
-
-        SyncController.Singleton.getInstance(null).showMessage(titleID,msgID);
+        // TODO replace this. This doesn't make sense.
+//        int msgID = e.getWarningMessageId();
+        //unknown exception, discard it
+//        getModel().getSyncController().showMessage(titleID,msgID);
     }
 
     @Override

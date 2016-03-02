@@ -1,6 +1,10 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.ble.ble.GattAttributes;
+import android.content.Context;
+
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
 
 import java.util.UUID;
 
@@ -10,20 +14,24 @@ import java.util.UUID;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public abstract  class NevoMCU_OTARequest extends NevoRequest {
+public abstract  class NevoMCU_OTARequest extends RequestData {
+
+    public NevoMCU_OTARequest(Context context) {
+        super(new GattAttributesDataSourceImpl(context));
+    }
 
     @Override
     public UUID getServiceUUID() {
-        return UUID.fromString(GattAttributes.NEVO_SERVICE);
+        return super.getServiceUUID();
     }
 
     @Override
     public UUID getCharacteristicUUID() {
-        return getOTACharacteristicUUID();
+        return super.getOTACharacteristicUUID();
     }
 
     @Override
     public UUID getInputCharacteristicUUID() {
-        return getOTACharacteristicUUID();
+        return super.getOTACharacteristicUUID();
     }
 }

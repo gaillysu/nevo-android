@@ -1,12 +1,14 @@
 package com.medcorp.nevo.ble.controller;
 
-import com.medcorp.nevo.Model.Alarm;
-import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.Model.Goal;
-
 import android.content.Context;
 
-import java.util.ArrayList;
+import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
+import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.model.GoalBase;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+import java.util.List;
 
 /**
  * this class define some functions for communication with Nevo,
@@ -29,19 +31,6 @@ import java.util.ArrayList;
  */
 public interface SyncController {
 
-	public  class Singleton {
-		private static  SyncControllerImpl sInstance = null;
-		public static SyncController getInstance(Context context) {
-			if(null == sInstance )
-			{
-				sInstance = new SyncControllerImpl(context);
-			} else {
-				sInstance.setContext(context);
-			}
-			return sInstance;
-		}
-	}
-	
     /*
     return SyncController 's Context , mostly it is a activity, such as MainActivity or OTA activity
      */
@@ -63,13 +52,12 @@ public interface SyncController {
     set Steps Goal
     inputL goal =  new NumberOfStepsGoal(XXXX)
      */
-	public void setGoal(Goal goal);
+	public void setGoal(GoalBase goal);
     /*
-    input hour:0~23
-          minute:0~59
-          enable : true or false
+    input @list: MAX 3 Alarm array
+          @init: if true means by syncController invoked to do init sync, false means invoked by application to set value
      */
-	public void setAlarm(ArrayList<Alarm> list);
+	public void setAlarm(List<Alarm> list,boolean init);
     /*
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
      */
@@ -107,9 +95,12 @@ public interface SyncController {
      */
     public void  getDailyTrackerInfo(boolean syncAll);
 
+    void sendRequest(final RequestData request);
+
     /**
-     * return my phone's battery level[0~100]
+     *
+     * @param init ,if true means by syncController invoked to do init sync, false means invoked by application to set value
      */
-    public int  getMyphoneBattery();
+    public void setNotification(boolean init);
 
 }

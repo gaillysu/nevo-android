@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#4D4D4D"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.medcorp.nevo.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page2_start_textview"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        roboto:bold="true"
+        android:textSize="36sp"
+        android:layout_marginTop="50dp"
+        android:text="@string/tutorial_2_title"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bluetooth_icon"
+        android:id="@+id/activity_tutorial_page2_image"
+        />
+
+    <com.medcorp.nevo.view.customfontview.RobotoButton
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/tutorial_2_continue"
+        android:id="@+id/nextTextView"
+        android:layout_below="@+id/activity_tutorial_page2_image"
+        style="@style/TutorialButton" />
+
+    <com.medcorp.nevo.view.customfontview.RobotoTextView
+        android:layout_below="@+id/nextTextView"
+        android:id="@+id/activity_tutorial_page2_notice_textview"
+        android:textColor="@color/white"
+        android:layout_alignStart="@+id/nextTextView"
+        android:layout_alignEnd="@+id/nextTextView"
+        android:paddingTop="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:text="@string/tutorial_2_text"/>
+
+</RelativeLayout>

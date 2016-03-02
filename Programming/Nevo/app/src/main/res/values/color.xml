@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="customOrange">#f5a41c</color>
-    <color name="customBlack">#2c2c2c</color>
+    <color name="customBlack">#2e335b</color>
     <color name="customGray">#bab9b6</color>
     <color name="customWhite">#f4f2f1</color>
     <color name="transparent">#00000000</color>
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
-    <color name="wake_sleep">#fff6d380</color>
-    <color name="light_sleep">#fff6d380</color>
-    <color name="deep_sleep">#fffcb400</color>
+    <color name="wake_sleep">#fffde69c</color>
+    <color name="light_sleep">#fffbc106</color>
+    <color name="deep_sleep">#fff9a001</color>
     <color name="history_data_black">#ff524e4e</color>
+
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#FFA000</color>
+    <color name="textColorPrimary">#333</color>
+    <color name="textColor">#333</color>
+    <color name="textColorPrimaryInverse">#FFF</color>
+    <color name="navigation_drawer_selected_background_color">#F2F2F2</color>
+    <color name="tab_selected_background_color">#6D6D6D</color>
+    <color name="tab_unselected_font_color">#FDFDB3</color>
+    <color name="list_item_divider">#E5E5EA</color>
+    <color name="list_item_header_text_color">#6F6F6F</color>
+    <color name="list_item_sub_text">#757575</color>
+
 
 </resources>

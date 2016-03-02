@@ -1,18 +1,21 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.Model.DailyHistory;
-import com.medcorp.nevo.ble.util.HexUtils;
+import com.medcorp.nevo.model.DailyHistory;
+
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.util.HexUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by gaillysu on 15/4/1.
  */
 public class DailyTrackerInfoNevoPacket extends NevoPacket {
-    public DailyTrackerInfoNevoPacket(ArrayList<NevoRawData> packets) {
+    public DailyTrackerInfoNevoPacket(List<MEDRawData> packets) {
         super(packets);
     }
 
@@ -20,9 +23,9 @@ public class DailyTrackerInfoNevoPacket extends NevoPacket {
      * return Tracker history summary infomation, MAX total 7 days(include Today)
      * the actually days is saved by [DailyHistory].count
      */
-    public ArrayList<DailyHistory> getDailyTrackerInfo(){
+    public List<DailyHistory> getDailyTrackerInfo(){
 
-        ArrayList<DailyHistory> days = new ArrayList<DailyHistory>();
+        List<DailyHistory> days = new ArrayList<DailyHistory>();
 
         int total = HexUtils.bytesToInt(new byte[]{getPackets().get(1).getRawData()[12]});
         int year = 0;

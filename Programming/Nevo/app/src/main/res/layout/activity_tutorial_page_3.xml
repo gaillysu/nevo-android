@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#F6F6F6"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.medcorp.nevo.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page3_start_textview"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        roboto:bold="true"
+        android:textSize="36sp"
+        android:layout_marginTop="50dp"
+        android:text="@string/tutorial_3_title"/>
+
+    <com.medcorp.nevo.view.customfontview.RobotoTextView
+        android:id="@+id/activity_tutorial_page3_notice_textview"
+        android:layout_below="@+id/activity_tutorial_page3_start_textview"
+        android:textColor="@color/black"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:text="@string/tutorial_3_text"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/tutorial_nevo_settime"
+        android:id="@+id/activity_tutorial_page3_image" />
+
+    <com.medcorp.nevo.view.customfontview.RobotoButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/tutorial_3_next"
+        android:textAllCaps="false"
+        android:id="@+id/nextTextView"
+        android:background="@color/transparent"
+        android:textColor="@color/colorPrimaryDark"
+        roboto:light="true"
+        android:textSize="21sp"
+        android:layout_alignParentBottom="true"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_marginBottom="60dp"/>
+
+</RelativeLayout>

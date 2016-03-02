@@ -7,43 +7,43 @@ import java.util.UUID;
  */
 public interface SensorRequest {
 
-	/**
-	 * @return the target service uuid
-	 */
-	UUID getServiceUUID();
+    /**
+     * @return the target service uuid
+     */
+    public UUID getServiceUUID();
 
-	/**
-	 * @return the target Output characteristic
-	 */
-	UUID getCharacteristicUUID();
+    /**
+     * @return the target Output characteristic
+     */
+    public UUID getCharacteristicUUID();
 
     /**
      * @return the target Input uuid, for setValue
      */
-    UUID getInputCharacteristicUUID();
+    public UUID getInputCharacteristicUUID();
 
     /**
      * @return the target Input uuid, for OTA write/callback
      */
-    UUID getOTACharacteristicUUID();
+    public UUID getOTACharacteristicUUID();
 
     /**
      * @return the target Input uuid, for sending Notification, SMS/Call/Email ,...etc
      */
-    UUID getNotificationCharacteristicUUID();
+    public UUID getNotificationCharacteristicUUID();
     /**
-	 * @return the raw data to be sent
-	 */
-	byte[] getRawData();
-	
+     * @return the raw data to be sent
+     */
+    public byte[] getRawData();
+
     /**
-	 * @return the raw data to be sent, more  packets
-	 */
-	byte[][] getRawDataEx();
-	
-	 /**
-		 * @return the command 's value
-	*/
-	byte  getHeader();
+     * @return the raw data to be sent, more  packets
+     */
+    public byte[][] getRawDataEx();
+
+    /**
+     * @return the command 's value
+     */
+    public byte  getHeader();
 
 }

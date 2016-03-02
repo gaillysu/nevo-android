@@ -1,7 +1,18 @@
 package com.medcorp.nevo.ble.model.request;
 
-public class WriteSettingNevoRequest extends NevoRequest {
+import android.content.Context;
+
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+public class WriteSettingNevoRequest extends RequestData {
 	public  final static  byte HEADER = 0x21;
+
+	public WriteSettingNevoRequest(Context context) {
+		super(new GattAttributesDataSourceImpl(context));
+	}
+
 	@Override
 	public byte[] getRawData() {
 		return null;

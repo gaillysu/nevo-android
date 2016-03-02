@@ -1,286 +1,290 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
-import android.content.Context;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.SwitchCompat;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.MainActivity;
-import com.medcorp.nevo.Model.Alarm;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.View.TimePickerView;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.activity.EditAlarmActivity;
+import com.medcorp.nevo.activity.MainActivity;
+import com.medcorp.nevo.adapter.AlarmArrayAdapter;
+import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
+import com.medcorp.nevo.fragment.base.BaseObservableFragment;
+import com.medcorp.nevo.fragment.listener.OnAlarmSwitchListener;
+import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.view.ToastHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
- * AlarmFragment, it works for setting alarm and turning alarm on or off.
+ * Created by karl-john on 11/12/15.
  */
-public class AlarmFragment extends Fragment implements View.OnClickListener, TimePickerView.TimePickerFragmentCallbacks,OnSyncControllerListener {
+public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener {
 
+    @Bind(R.id.fragment_alarm_list_view)
+    ListView alarmListView;
 
-    public static final String ALARMFRAGMENT = "AlarmFragment";
-    public static final int ALARMPOSITION = 3;
-    private TextView mClockTextView;
-    private ImageView mEditClockImage;
-    private Button mOnButton;
-    private Button mOffButton;
+    private List<Alarm> alarmList;
+    private AlarmArrayAdapter alarmArrayAdapter;
 
-    private TextView mClockTextView2;
-    private ImageView mEditClockImage2;
-    private Button mOnButton2;
-    private Button mOffButton2;
-
-    private TextView mClockTextView3;
-    private ImageView mEditClockImage3;
-    private Button mOnButton3;
-    private Button mOffButton3;
-
-    private static final String PREF_KEY_CLOCK_STATE = "clockState";
-    private static final String PREF_KEY_CLOCK_STATE2 = "clockState2";
-    private static final String PREF_KEY_CLOCK_STATE3 = "clockState3";
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_alarm, container, false);
+        ButterKnife.bind(this, view);
+        alarmList = new ArrayList<>();
+        alarmArrayAdapter = new AlarmArrayAdapter(getContext(),alarmList,this);
+        alarmListView.setAdapter(alarmArrayAdapter);
+        alarmListView.setOnItemClickListener(this);
+        refreshListView();
+        setHasOptionsMenu(true);
+        return view;
+    }
 
-        View rootView = inflater.inflate(R.layout.alarm_fragment, container, false);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_menu:
+                Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
+                alarmDialog.setTitle(R.string.alarm_add);
+                alarmDialog.show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        mClockTextView = (TextView) rootView.findViewById(R.id.clock_textView);
-        mClockTextView.setOnClickListener(this);
-        mEditClockImage = (ImageView) rootView.findViewById(R.id.edit_clock_imageButton);
-        mEditClockImage.setOnClickListener(this);
-        mOnButton =  (Button)rootView.findViewById(R.id.on_mode_button);
-        mOnButton.setOnClickListener(this);
-        mOffButton =  (Button)rootView.findViewById(R.id.off_mode_button);
-        mOffButton.setOnClickListener(this);
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.add_menu).setVisible(true);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
+    }
 
-        mClockTextView2 = (TextView) rootView.findViewById(R.id.clock_textView2);
-        mClockTextView2.setOnClickListener(this);
-        mEditClockImage2 = (ImageView) rootView.findViewById(R.id.edit_clock_imageButton2);
-        mEditClockImage2.setOnClickListener(this);
-        mOnButton2 =  (Button)rootView.findViewById(R.id.on_mode_button2);
-        mOnButton2.setOnClickListener(this);
-        mOffButton2 =  (Button)rootView.findViewById(R.id.off_mode_button2);
-        mOffButton2.setOnClickListener(this);
+    @Override
+    public void notifyDatasetChanged() {
 
-        mClockTextView3 = (TextView) rootView.findViewById(R.id.clock_textView3);
-        mClockTextView3.setOnClickListener(this);
-        mEditClockImage3 = (ImageView) rootView.findViewById(R.id.edit_clock_imageButton3);
-        mEditClockImage3.setOnClickListener(this);
-        mOnButton3 =  (Button)rootView.findViewById(R.id.on_mode_button3);
-        mOnButton3.setOnClickListener(this);
-        mOffButton3 =  (Button)rootView.findViewById(R.id.off_mode_button3);
-        mOffButton3.setOnClickListener(this);
+    }
+
+    @Override
+    public void notifyOnConnected() {
+
+    }
+
+    @Override
+    public void notifyOnDisconnected() {
+
+    }
+
+    @Override
+    public void batteryInfoReceived(Battery battery) {
+
+    }
+
+    @Override
+    public void findWatchSuccess() {
+    }
+
+    @Override
+    public void onSearching() {
+
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onSyncStart() {
+
+    }
+
+    @Override
+    public void onSyncEnd() {
+
+    }
+
+    @Override
+    public void onRequestResponse(boolean success) {
+        int id = success ? R.string.alarm_synced : R.string.alarm_error_sync;
+        ((MainActivity)getActivity()).showStateString(id,false);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        final Alarm alarm = new Alarm(hourOfDay,minute,false,"");
+        new MaterialDialog.Builder(getActivity())
+                .title(R.string.alarm_add)
+                .content(R.string.alarm_label_alarm)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
+                .input(getString(R.string.title_alarm), "", new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        alarm.setLabel(input.toString());
+                        getModel().addAlarm(alarm);
+                        refreshListView();
+                    }
+                }).negativeText(R.string.alarm_cancel)
+                .show();
+    }
 
 
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.clock_textView),
-                rootView.findViewById(R.id.on_mode_button),
-                rootView.findViewById(R.id.off_mode_button),
-                rootView.findViewById(R.id.clock_textView2),
-                rootView.findViewById(R.id.on_mode_button2),
-                rootView.findViewById(R.id.off_mode_button2),
-                rootView.findViewById(R.id.clock_textView3),
-                rootView.findViewById(R.id.on_mode_button3),
-                rootView.findViewById(R.id.off_mode_button3)
-        };
-        FontManager.changeFonts(viewArray,getActivity());
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent i = new Intent(getContext(), EditAlarmActivity.class);
+        Bundle bundle = new Bundle();
+        //TODO put into keys.xml
+        bundle.putInt("Alarm_ID", alarmList.get(position).getId());
+        i.putExtras(bundle);
+        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+        prefs.putString("fragment_edit_alarm_label", alarmList.get(position).getLabel());
+        prefs.commit();
+        getAppCompatActivity().startActivityForResult(i, 0);
+    }
 
-        return rootView;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //when delete (resultCode == -1) or update (resultCode == 1) the enable alarm, do alarm sync
+        if(resultCode!=0)
+        {
+            syncAlarmByEditor();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mClockTextView.setText(TimePickerView.getAlarmFromPreference(0,getActivity()));
-        lightClockState(0,AlarmFragment.getClockStateFromPreference(0,getActivity()));
-        mClockTextView2.setText(TimePickerView.getAlarmFromPreference(1,getActivity()));
-        lightClockState(1,AlarmFragment.getClockStateFromPreference(1,getActivity()));
-        mClockTextView3.setText(TimePickerView.getAlarmFromPreference(2,getActivity()));
-        lightClockState(2,AlarmFragment.getClockStateFromPreference(2,getActivity()));
+        refreshListView();
+
     }
 
-    private void lightClockState(int index,boolean enable){
-        if(enable){
-            if(index == 0) {
-                mOffButton.setTextColor(getResources().getColor(R.color.black));
-                mOnButton.setTextColor(getResources().getColor(R.color.white));
-                mOffButton.setSelected(false);
-                mOnButton.setSelected(true);
-            }
-            if(index == 1) {
-                mOffButton2.setTextColor(getResources().getColor(R.color.black));
-                mOnButton2.setTextColor(getResources().getColor(R.color.white));
-                mOffButton2.setSelected(false);
-                mOnButton2.setSelected(true);
-            }
-            if(index == 2) {
-                mOffButton3.setTextColor(getResources().getColor(R.color.black));
-                mOnButton3.setTextColor(getResources().getColor(R.color.white));
-                mOffButton3.setSelected(false);
-                mOnButton3.setSelected(true);
-            }
-        }else {
-            if(index == 0) {
-                mOffButton.setTextColor(getResources().getColor(R.color.white));
-                mOnButton.setTextColor(getResources().getColor(R.color.black));
-                mOffButton.setSelected(true);
-                mOnButton.setSelected(false);
-            }
-            if(index == 1) {
-                mOffButton2.setTextColor(getResources().getColor(R.color.white));
-                mOnButton2.setTextColor(getResources().getColor(R.color.black));
-                mOffButton2.setSelected(true);
-                mOnButton2.setSelected(false);
-            }
-            if(index == 2) {
-                mOffButton3.setTextColor(getResources().getColor(R.color.white));
-                mOnButton3.setTextColor(getResources().getColor(R.color.black));
-                mOffButton3.setSelected(true);
-                mOnButton3.setSelected(false);
-            }
+    private void refreshListView(){
+        if (alarmArrayAdapter != null && alarmListView != null ){
+            alarmList = getModel().getAllAlarm();
+            alarmArrayAdapter.clear();
+            alarmArrayAdapter.addAll(alarmList);
+            alarmArrayAdapter.notifyDataSetChanged();
+            alarmListView.invalidate();
         }
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.edit_clock_imageButton:
-            case R.id.clock_textView:
-                    mClockTextView.setClickable(false);
-                    mEditClockImage.setClickable(false);
-                    showTimePickerDialog(0);
-                break;
-            case R.id.on_mode_button:
-                lightClockState(0,true);
-                AlarmFragment.saveClockStateToPreference(0,getActivity(), true);
-                setAlarm();
-                break;
-            case R.id.off_mode_button:
-                lightClockState(0,false);
-                AlarmFragment.saveClockStateToPreference(0,getActivity(), false);
-                setAlarm();
-                break;
-            case R.id.edit_clock_imageButton2:
-            case R.id.clock_textView2:
-                mClockTextView2.setClickable(false);
-                mEditClockImage2.setClickable(false);
-                showTimePickerDialog(1);
-                break;
-            case R.id.on_mode_button2:
-                lightClockState(1,true);
-                AlarmFragment.saveClockStateToPreference(1,getActivity(), true);
-                setAlarm();
-                break;
-            case R.id.off_mode_button2:
-                lightClockState(1,false);
-                AlarmFragment.saveClockStateToPreference(1,getActivity(), false);
-                setAlarm();
-                break;
-            case R.id.edit_clock_imageButton3:
-            case R.id.clock_textView3:
-                mClockTextView3.setClickable(false);
-                mEditClockImage3.setClickable(false);
-                showTimePickerDialog(2);
-                break;
-            case R.id.on_mode_button3:
-                lightClockState(2,true);
-                AlarmFragment.saveClockStateToPreference(2,getActivity(), true);
-                setAlarm();
-                break;
-            case R.id.off_mode_button3:
-                lightClockState(2,false);
-                AlarmFragment.saveClockStateToPreference(2,getActivity(), false);
-                setAlarm();
-                break;
-            default:
-                break;
+    public void onAlarmSwitch(SwitchCompat alarmSwitch, Alarm alarm) {
+        if(!getModel().isWatchConnected()){
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
+            return;
         }
+        boolean isChecked = alarmSwitch.isChecked();
+        if (isChecked && getAlarmEnableCount() == 3) {
+            alarmSwitch.setChecked(!alarmSwitch.isChecked());
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_max_three_alarm);
+            return;
+        }
+        alarm.setEnable(isChecked);
+        getModel().updateAlarm(alarm);
 
+        List<Alarm> alarmSettingList = new ArrayList<Alarm>();
+        //step1: add this alarm
+        alarmSettingList.add(alarm);
+        //step2:, find other 2 alarms that is enabled.
+        List<Alarm> alarmRemainsList = new ArrayList<Alarm>();
+        for (int i = 0; i < alarmList.size(); i++) {
+            Alarm theAlarm = alarmList.get(i);
+            if (theAlarm.getId() != alarm.getId()) {
+                alarmRemainsList.add(alarmList.get(i));
+            }
+        }
+        for (Alarm thisAlarm : alarmRemainsList) {
+            if (thisAlarm.isEnable() && alarmSettingList.size() < 3) {
+                alarmSettingList.add(thisAlarm);
+            }
+        }
+        //step3:check  alarmSettingList.size() == 3 ?
+        ////build 1 or 2 invaild alarm to add alarmSettingList
+        if (alarmSettingList.size() == 1) {
+            alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
+            alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
+        } else if (alarmSettingList.size() == 2) {
+            alarmSettingList.add(new Alarm(0,0,false,"unknown"));
+        }
+        getModel().setAlarm(alarmSettingList);
+        ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);
     }
-
-    private void setAlarm()
+    private int getAlarmEnableCount(){
+        int count = 0;
+        for(Alarm alarm:alarmList)
+        {
+            if(alarm.isEnable()){
+                count++;
+            }
+        }
+        return count;
+    }
+    private void syncAlarmByEditor()
     {
-        ArrayList<Alarm> list = new ArrayList<Alarm>();
-
-        String[] strAlarm = TimePickerView.getAlarmFromPreference(0,getActivity()).split(":");
-        Boolean onOff = AlarmFragment.getClockStateFromPreference(0,getActivity());
-        list.add(new Alarm(0,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
-        strAlarm = TimePickerView.getAlarmFromPreference(1,getActivity()).split(":");
-        onOff = AlarmFragment.getClockStateFromPreference(1,getActivity());
-        list.add(new Alarm(1,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
-        strAlarm = TimePickerView.getAlarmFromPreference(2,getActivity()).split(":");
-        onOff = AlarmFragment.getClockStateFromPreference(2,getActivity());
-        list.add(new Alarm(2,Integer.parseInt(strAlarm[0]),Integer.parseInt(strAlarm[1]),onOff));
-
-        SyncController.Singleton.getInstance(getActivity()).setAlarm(list);
-    }
-    public void setClock(int index,final String time){
-        if(index == 0) mClockTextView.setText(time);
-        if(index == 1) mClockTextView2.setText(time);
-        if(index == 2) mClockTextView3.setText(time);
-        /*when user click Alarm on/off button , or select new Alarm time, all the three cases,need call mSyncController.setAlarm(...)*/
-        setAlarm();
-    }
-
-    /**
-     * Show Time in a dialog
-     * */
-    public void showTimePickerDialog(int index) {
-        DialogFragment newFragment = new TimePickerView();
-        Bundle bundle = new Bundle();
-        bundle.putInt("AlarmIndex", index);
-        newFragment.setArguments(bundle);
-        //mCurrentIndex
-        newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
-        mClockTextView.setClickable(true);
-        mEditClockImage.setClickable(true);
-    }
-
-    @Override
-    public void setClockTime(int index,String clockTime) {
-        setClock(index,clockTime);
-    }
-
-    public static void saveClockStateToPreference(int index,Context context, boolean value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(index == 0) pref.edit().putBoolean(PREF_KEY_CLOCK_STATE, value).apply();
-        if(index == 1) pref.edit().putBoolean(PREF_KEY_CLOCK_STATE2, value).apply();
-        if(index == 2) pref.edit().putBoolean(PREF_KEY_CLOCK_STATE3, value).apply();
-    }
-
-    public static Boolean getClockStateFromPreference(int index,Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(index == 0) return pref.getBoolean(PREF_KEY_CLOCK_STATE, false);
-        if(index == 1) return pref.getBoolean(PREF_KEY_CLOCK_STATE2, false);
-        if(index == 2) return pref.getBoolean(PREF_KEY_CLOCK_STATE3, false);
-        return false;
-    }
-
-    @Override
-    public void packetReceived(NevoPacket packet) {
-
-    }
-
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        ((MainActivity)getActivity()).replaceFragment(isConnected?AlarmFragment.ALARMPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected?AlarmFragment.ALARMFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
+        if(!getModel().isWatchConnected()){
+            ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
+            return;
+        }
+        List<Alarm> list = getModel().getAllAlarm();
+        List<Alarm> customerAlarmList = new ArrayList<Alarm>();
+        if(!list.isEmpty())
+        {
+            for(Alarm alarm: list)
+            {
+                if(alarm.isEnable())
+                {
+                    customerAlarmList.add(alarm);
+                    if(customerAlarmList.size()>= SetAlarmNevoRequest.maxAlarmCount)
+                    {
+                        break;
+                    }
+                }
+            }
+            if(customerAlarmList.isEmpty())
+            {
+                customerAlarmList.add(list.get(0));
+            }
+        }
+        else
+        {
+            customerAlarmList.add(new Alarm(0, 0, false, ""));
+        }
+        getModel().setAlarm(customerAlarmList);
+        ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);
     }
 }

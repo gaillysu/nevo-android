@@ -1,6 +1,8 @@
 package com.medcorp.nevo.ble.model.request;
 
 
+import android.content.Context;
+
 /**
  * Created by gaillysu on 15/6/8.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
@@ -9,8 +11,9 @@ package com.medcorp.nevo.ble.model.request;
 public  class NevoMCU_OTAPacketRequest extends  NevoMCU_OTARequest{
 
     private byte[] mPacket;
-    public NevoMCU_OTAPacketRequest(byte[] packet)
+    public NevoMCU_OTAPacketRequest(Context context,byte[] packet)
     {
+        super(context);
         mPacket = packet;
     }
 

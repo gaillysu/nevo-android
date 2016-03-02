@@ -1,4 +1,4 @@
-package com.medcorp.nevo.View;
+package com.medcorp.nevo.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.medcorp.nevo.History.database.DatabaseHelper;
+import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.R;
 
 import org.json.JSONException;
@@ -27,7 +27,6 @@ import java.util.List;
 public class SleepDataView extends View {
     private Paint mPaint;
     private int mRoundColor;
-    private int mRoundProgressColor;
     private int mTextColor;
     private int mWakeSleepColor;
     private int mLightSleepColor;
@@ -37,7 +36,6 @@ public class SleepDataView extends View {
     private int mMax;
     private int mProgress;
     private boolean mTextIsDisplayable;
-    private int mStyle;
     private JSONObject mSleepAnalysisResult = new JSONObject();
 
     public static final int STROKE = 0;
@@ -49,7 +47,10 @@ public class SleepDataView extends View {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
-    final float SWEEP_INC = 1;
+    final float SWEEP_INC = 0.5f;
+    enum SLEEPSTATUS{
+        ACTIVITY,WAKE,LIGHT,DEEP
+    }
 
     List<Float> sleepDegree = new ArrayList<Float>();
     List<Paint> sleepColor = new ArrayList<Paint>();
@@ -64,23 +65,16 @@ public class SleepDataView extends View {
 
     public SleepDataView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         mPaint = new Paint();
-
-
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs,
                 R.styleable.RoundProgressBar);
-
         //get custom attributes
         mRoundColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundColor, Color.RED);
-        mRoundProgressColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundProgressColor, Color.GREEN);
         mTextColor = mTypedArray.getColor(R.styleable.RoundProgressBar_textColor, Color.BLUE);
         mTextSize = mTypedArray.getDimension(R.styleable.RoundProgressBar_textSize, 60);
         mRoundWidth = mTypedArray.getDimension(R.styleable.RoundProgressBar_roundWidth, 5);
         mMax = mTypedArray.getInteger(R.styleable.RoundProgressBar_max, 100);
         mTextIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
-        mStyle = mTypedArray.getInt(R.styleable.RoundProgressBar_style, 0);
-
         mWakeSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepWakeColor, Color.GREEN);
         mLightSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepLightColor, Color.LTGRAY);
         mDeepSleepColor = mTypedArray.getColor(R.styleable.RoundProgressBar_sleepDeepColor, Color.BLUE);
@@ -148,7 +142,7 @@ public class SleepDataView extends View {
                 String[] hhmm = new SimpleDateFormat("HH:mm").format(new Date(startsleep)).split(":");
 
                 //calculator the start degree:0~360
-                start = ( ((Integer.parseInt(hhmm[0]))%12)*60 + Integer.parseInt(hhmm[1]))/2.0f;
+                start = ( ((Integer.parseInt(hhmm[0]))%12)*60 )/2.0f;
                 if(((Integer.parseInt(hhmm[0]))%12)>=3) start = start - 90;
                 else {
                     start = start + 270;
@@ -190,79 +184,73 @@ public class SleepDataView extends View {
                     sleepDegree.clear();
                     sleepColor.clear();
 
-                    int last = 1;//values3[0] > 0 ? 3 : (values2[0] > 0 ? 2 : 1);
+                    //if user 's sleep had got broken sometimes, after have a rest and restart one new sleep.
+                    //so the circle view should display the rest time as "blank" color
+                    //for let the graph keep good continuity,I follow this rule to draw the circle
+                    //the sleep order is active/wake/light/deep ,please see @lastHourlySleepStatus
+                    SLEEPSTATUS lastHourlySleepStatus = SLEEPSTATUS.ACTIVITY;
+
                     for (int j = 0; j < values1.length; j++)
                     {
-                        //sleep got broken, stop draw graph (one round only draw 12hrs)
-                        if((values1[j] + values2[j] + values3[j]) == 0) break;//last = 1;
-
-                        start = start%360;
-
-                        if(((int)start)%30==0 && (values1[j] + values2[j] + values3[j]) < 60 && j!=values1.length-1)
+                        if(lastHourlySleepStatus == SLEEPSTATUS.ACTIVITY)
                         {
-                            start  = start +  (60-(values1[j] + values2[j] + values3[j]))/2.0f;
-                            sleepDegree.add((60-(values1[j] + values2[j] + values3[j]))/2.0f);
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
                             sleepColor.add(mPaints[3]);
-                        }
-
-                        if(last == 1)
-                        {
-                            //order is wake/light/deep
-                            start  = start + values1[j]/2.0f;
                             sleepDegree.add(values1[j]/2.0f);
                             sleepColor.add(mPaints[0]);
-
-                            start = start + values2[j]/2.0f;
                             sleepDegree.add(values2[j]/2.0f);
                             sleepColor.add(mPaints[1]);
-
-                            start = start + values3[j]/2.0f;
                             sleepDegree.add(values3[j]/2.0f);
                             sleepColor.add(mPaints[2]);
-
-                            last = values3[j]>0?3:(values2[j]>0?2:1);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
-                        else if(last == 2)
+                        else if(lastHourlySleepStatus == SLEEPSTATUS.WAKE)
                         {
-                            //order is light/deep/wake
-                            start  = start + values2[j]/2.0f;
-                            sleepDegree.add(values2[j]/2.0f);
-                            sleepColor.add(mPaints[1]);
-
-                            start  = start + values3[j]/2.0f;
-                            sleepDegree.add(values3[j]/2.0f);
-                            sleepColor.add(mPaints[2]);
-
-                            start  = start + values1[j]/2.0f;
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepColor.add(mPaints[3]);
                             sleepDegree.add(values1[j]/2.0f);
                             sleepColor.add(mPaints[0]);
-
-                            last = values1[j]>0?1:(values3[j]>0?3:2);
-                        }
-                        else if(last == 3)
-                        {
-                            //order is deep/light/wake
-                            start  = start + values3[j]/2.0f;
-                            sleepDegree.add(values3[j]/2.0f);
-                            sleepColor.add(mPaints[2]);
-
-                            start  = start + values2[j]/2.0f;
                             sleepDegree.add(values2[j]/2.0f);
                             sleepColor.add(mPaints[1]);
-
-
-                            start  = start + values1[j]/2.0f;
+                            sleepDegree.add(values3[j]/2.0f);
+                            sleepColor.add(mPaints[2]);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                        }
+                        else if(lastHourlySleepStatus == SLEEPSTATUS.LIGHT)
+                        {
+                            sleepDegree.add(values2[j]/2.0f);
+                            sleepColor.add(mPaints[1]);
+                            sleepDegree.add(values3[j]/2.0f);
+                            sleepColor.add(mPaints[2]);
                             sleepDegree.add(values1[j]/2.0f);
                             sleepColor.add(mPaints[0]);
-
-                            last = values1[j]>0?1:(values2[j]>0?2:3);
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepColor.add(mPaints[3]);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
+                        else if(lastHourlySleepStatus == SLEEPSTATUS.DEEP)
+                        {
+                            sleepDegree.add(values3[j]/2.0f);
+                            sleepColor.add(mPaints[2]);
+                            sleepDegree.add(values2[j]/2.0f);
+                            sleepColor.add(mPaints[1]);
+                            sleepDegree.add(values1[j]/2.0f);
+                            sleepColor.add(mPaints[0]);
+                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepColor.add(mPaints[3]);
+                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                        }
+
                     }//end for
                     start = initstart;
                     int i =0;
                     for(Float f:sleepDegree)
                     {
-                        canvas.drawArc(oval, start,sweep[i], false, sleepColor.get(i));
+                        //fix a bug that some phones like :Nexus 5x and xiaomi drawArc is wrong, but Nexus 5 and S4/s5 drawArc  well.
+                        if(sweep[i]>0)
+                        {
+                            canvas.drawArc(oval, start, sweep[i], false, sleepColor.get(i));
+                        }
                         start += f;
                         if (sweep[i] < f) {
                             sweep[i] += SWEEP_INC;
@@ -287,17 +275,14 @@ public class SleepDataView extends View {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
         else
         {
+            if(mTextIsDisplayable)
             canvas.drawText("----", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
-
         }
-
         //call invalidate to redraw again
         invalidate();
-
     }
 
     public synchronized void setProgress(int progress) {
@@ -311,7 +296,6 @@ public class SleepDataView extends View {
             this.mProgress = progress;
             postInvalidate();
         }
-
     }
 
     public synchronized void setSleepAnalysisResult(JSONObject result)

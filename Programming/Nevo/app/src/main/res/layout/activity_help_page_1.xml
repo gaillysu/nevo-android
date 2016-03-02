@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:roboto="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/nevo_background_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/nevo_logo_image"
+            />
+        <com.medcorp.nevo.view.customfontview.RobotoButton
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/tutorial_1_lets_activate"
+            android:id="@+id/nextTextView"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            style="@style/TutorialButton"
+             />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="85dp"
+        android:background="@color/white"
+        />
+
+        <com.medcorp.nevo.view.customfontview.RobotoButton
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/help_take_thour"
+        android:id="@+id/thourTextView"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        style="@style/TakethourButton"
+        />
+
+</RelativeLayout>

@@ -1,17 +1,13 @@
 package com.medcorp.nevo.ble.controller;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.ble.ble.GattAttributes;
-import com.medcorp.nevo.ble.kernel.BLEUnstableException;
-import com.medcorp.nevo.ble.model.packet.NevoFirmwareData;
-import com.medcorp.nevo.ble.model.packet.NevoRawData;
-import com.medcorp.nevo.ble.model.packet.SensorData;
+import com.medcorp.nevo.application.ApplicationModel;
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.model.request.NevoMCU_OTAChecksumRequest;
 import com.medcorp.nevo.ble.model.request.NevoMCU_OTAPacketRequest;
 import com.medcorp.nevo.ble.model.request.NevoMCU_OTAPageRequest;
@@ -20,16 +16,28 @@ import com.medcorp.nevo.ble.model.request.NevoOTAControlRequest;
 import com.medcorp.nevo.ble.model.request.NevoOTAPacketFileSizeRequest;
 import com.medcorp.nevo.ble.model.request.NevoOTAPacketRequest;
 import com.medcorp.nevo.ble.model.request.NevoOTAStartRequest;
-import com.medcorp.nevo.ble.model.request.SensorRequest;
-import com.medcorp.nevo.ble.util.Constants.DFUControllerState;
-import com.medcorp.nevo.ble.util.Constants.DFUResponse;
-import com.medcorp.nevo.ble.util.Constants.DfuFirmwareTypes;
-import com.medcorp.nevo.ble.util.Constants.DfuOperationStatus;
-import com.medcorp.nevo.ble.util.Constants.DfuOperations;
-import com.medcorp.nevo.ble.util.Constants.enumPacketOption;
-import com.medcorp.nevo.ble.util.IntelHex2BinConverter;
-import com.medcorp.nevo.ble.util.Optional;
-import com.medcorp.nevo.ble.util.QueuedMainThreadHandler;
+
+import net.medcorp.library.ble.controller.ConnectionController;
+import net.medcorp.library.ble.controller.OtaController;
+import net.medcorp.library.ble.exception.BaseBLEException;
+import net.medcorp.library.ble.listener.OnConnectListener;
+import net.medcorp.library.ble.listener.OnDataReceivedListener;
+import net.medcorp.library.ble.listener.OnExceptionListener;
+import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
+import net.medcorp.library.ble.listener.OnOtaControllerListener;
+import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.response.FirmwareData;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.model.response.ResponseData;
+import net.medcorp.library.ble.util.Constants;
+import net.medcorp.library.ble.util.Constants.DFUControllerState;
+import net.medcorp.library.ble.util.Constants.DfuFirmwareTypes;
+import net.medcorp.library.ble.util.Constants.DfuOperationStatus;
+import net.medcorp.library.ble.util.Constants.DfuOperations;
+import net.medcorp.library.ble.util.Constants.enumPacketOption;
+import net.medcorp.library.ble.util.IntelHex2BinConverter;
+import net.medcorp.library.ble.util.Optional;
+import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -37,25 +45,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-/*package*/ class OtaControllerImpl implements OtaController,ConnectionController.Delegate {
+public class OtaControllerImpl implements OtaController, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
     private final static String TAG = "OtaControllerImpl";
 
-    Context mContext;
+    private ApplicationModel mContext;
 
-    private Optional<OnNevoOtaControllerListener> mOnOtaControllerListener = new Optional<OnNevoOtaControllerListener>();
-    private ConnectionController mConnectionController;
+    private Optional<OnOtaControllerListener> mOnOtaControllerListener = new Optional<OnOtaControllerListener>();
+    private ConnectionController connectionController;
 
-    private DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.APPLICATION ;
-    private ArrayList<NevoFirmwareData> mPacketsbuffer = new ArrayList<NevoFirmwareData>();
-    private ArrayList<NevoRawData> mNevoPacketsbuffer = new ArrayList<NevoRawData>();
+    private Constants.DfuFirmwareTypes dfuFirmwareType = Constants.DfuFirmwareTypes.APPLICATION ;
+    private List<FirmwareData> mPacketsbuffer = new ArrayList<FirmwareData>();
+    private List<MEDRawData> mNevoPacketsbuffer = new ArrayList<MEDRawData>();
 
-    private int uploadTimeInSeconds = 0;
     private String firmwareFile ;
-    private DFUResponse dfuResponse = new DFUResponse((byte)0, (byte)0, (byte)0);
+    private Constants.DFUResponse dfuResponse = new Constants.DFUResponse((byte)0, (byte)0, (byte)0);
 
     private int hexFileSize  = 0;
     private byte[] hexFileData ;
@@ -67,11 +75,10 @@ import java.util.UUID;
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
-    public static int MAX_TIME = 35000;
+    public static final int MAX_TIME = 35000;
     private double lastprogress = 0.0;
     //added for MCU OTA
 
-    private ConnectionController.Delegate mOldDelegate = null;
     /**
      MCU page struct: total 5 packets, as below:
 
@@ -91,32 +98,59 @@ import java.util.UUID;
     //one page has 5 packets
     private static final int notificationPacketInterval = 5;
     private DFUControllerState state = DFUControllerState.INIT;
+    private DFUControllerState mcu_broken_state = DFUControllerState.INIT;
     private int firmwareDataBytesSent = 0;
     private double progress = 0.0;
     private int curpage = 0;
     private int totalpage = 0;
     private int checksum = 0;
-    private boolean bHelpMode = false;
+    private boolean manualmode = false;
     //end added
 
-    /*package*/OtaControllerImpl(Context context,boolean helpmode)
+    /**
+     * this class is OTA timer:MAX_TIME seconds, when OTA is in progress that got broken, it will fire this timer
+     * and check whether the progress has got changed, if no change, it means OTA got stopped,for MCU OTA, it give
+     * a way that continue OTA from the broken point, or popup message to user how to do(retry or reinstall battery)
+     */
+    private class myOTATimerTask extends  TimerTask
+    {
+        @Override
+        public void run() {
+            Log.e(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() + ",lastprogress = " + lastprogress + ",progress = " + progress);
+            if (lastprogress == progress) //when no change happened, timeout
+            {
+                ERRORCODE errorcode = ERRORCODE.TIMEOUT;
+                if (state == DFUControllerState.SEND_START_COMMAND
+                        && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
+                        && isConnected()) {
+                    Log.e(TAG, "* * * BLE OTA timeout by start command not get disconnected from watch* * *");
+                }
+                //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
+                else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION) {
+                    Log.e(TAG, "* * * BLE OTA timeout by no found DFU service * * *");
+                    errorcode = ERRORCODE.NODFUSERVICE;
+                }
+                Log.e(TAG, "* * * call OTA timeout function * * * OTA type = " + (dfuFirmwareType == DfuFirmwareTypes.APPLICATION ?"BLE":"MCU") + ",ErrorCode = " + errorcode);
+                if (mOnOtaControllerListener.notEmpty()) {
+                     mOnOtaControllerListener.get().onError(errorcode);
+                }
+            } else {
+                lastprogress = progress;
+            }
+        }
+    }
+
+    public OtaControllerImpl(ApplicationModel context)
     {
         mContext = context;
-
-        mConnectionController = ConnectionController.Singleton.getInstance(context);
-
-        mOldDelegate = mConnectionController.setDelegate(this);
-        //help mode by press A/B key and install battery
-        bHelpMode = helpmode;
-        if(bHelpMode) mConnectionController.setOTAMode(true,true);
-        mConnectionController.connect();
-
-    }
-    /*package*/void setContext(Context context) {
-        if(context!=null)
-            mContext = context;
+        connectionController = ConnectionController.Singleton.getInstance(context,new GattAttributesDataSourceImpl(context));
+        connectionController.connect();
     }
 
+    public void setManualMode(boolean  manualmode)
+    {
+        this.manualmode = manualmode;
+    }
     //below function is defined for BLE OTA,
     //start package function
     void openFile(String filename){
@@ -197,7 +231,7 @@ import java.util.UUID;
             Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
            //Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
-            sendRequest(new NevoOTAPacketRequest(nextPacketData));
+            sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
             progress = 100.0;
             percentage = (int)(progress);
             Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
@@ -214,7 +248,7 @@ import java.util.UUID;
         Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
        // Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
-        sendRequest(new NevoOTAPacketRequest(nextPacketData));
+        sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
         progress = 100.0*writingPacketNumber * enumPacketOption.PACKET_SIZE.rawValue() / binFileSize;
         percentage = (int)progress;
 
@@ -232,27 +266,27 @@ import java.util.UUID;
 
     //BLE OTA use the lower Queue: QueueType.NevoBT, pls see @NevoBTService.sendRequest
     //due to BLE OTA packets is not the regular packets which start with 00,FF
-    private void sendRequest(final SensorRequest request)
+    private void sendRequest(final RequestData request)
     {
         if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).post(new Runnable(){
             @Override
             public void run() {
-                mConnectionController.sendRequest(request);
+                connectionController.sendRequest(request);
             }
         });
         else
-        mConnectionController.sendRequest(request);
+        connectionController.sendRequest(request);
     }
 
     void startSendingFile()
     {
         Log.i(TAG,"DFUOperationsdetails enablePacketNotification");
 
-        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
+        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
                                                                               ,(byte)enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
                                                                               ,0}));
-        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
 
         //wait 20ms
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -269,18 +303,18 @@ import java.util.UUID;
     void resetSystem()
     {
         Log.i(TAG,"DFUOperationsDetails resetSystem");
-        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.RESET_SYSTEM.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RESET_SYSTEM.rawValue()}));
     }
 
     void validateFirmware()
     {
         Log.i(TAG,"DFUOperationsDetails validateFirmware");
-        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
     }
     void activateAndReset()
     {
         Log.i(TAG,"DFUOperationsDetails activateAndReset");
-        sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
+        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
     }
     String responseErrorMessage(byte errorCode)
     {
@@ -396,7 +430,7 @@ import java.util.UUID;
         dfuResponse.setrequestedCode(data[1]);
         dfuResponse.setresponseStatus(data[2]);
     }
-    void processDFUResponse(NevoFirmwareData data)
+    void processDFUResponse(FirmwareData data)
     {
         Log.i(TAG,"processDFUResponse");
         setDFUResponseStruct(data.getRawData());
@@ -414,8 +448,8 @@ import java.util.UUID;
         if (dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
         {
             openFile(firmwareFile);
-            sendRequest(new NevoOTAControlRequest(new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue()}));
-            sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,true));
+            sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue()}));
+            sendRequest(new NevoOTAPacketFileSizeRequest(mContext,binFileSize,true));
         }
         else
         {
@@ -436,7 +470,7 @@ import java.util.UUID;
     public void performDFUOnFile(String filename , DfuFirmwareTypes firmwareType)
     {
         if(!isConnected()) {
-            String errorMessage = mContext.getString(R.string.connect_error_no_nevo_do_ota);
+            String errorMessage = mContext.getString(R.string.dfu_connect_error_no_nevo_do_ota);
             Log.e(TAG,errorMessage);
             state = DFUControllerState.INIT;
             Toast.makeText(mContext,errorMessage,Toast.LENGTH_LONG).show();
@@ -447,82 +481,49 @@ import java.util.UUID;
         lastprogress = 0.0;
         progress = 0.0;
         mTimeoutTimer = new Timer();
-        mTimeoutTimer.schedule(new TimerTask(){
-            @Override
-            public void run() {
-                if (lastprogress == progress) //when no change happened, timeout
-                {
-                    if(MAX_TIME<60000) MAX_TIME = MAX_TIME + 5000;
-                    Log.w(TAG,"* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() );
-                    String errorMessage = "Timeout,please try again";
-                   if (state == DFUControllerState.SEND_START_COMMAND
-                           && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
-                           && isConnected())
-                   {
-                       Log.w(TAG,"* * * call SamsungS4Patch function * * *");
-                       SamsungS4Patch();
-                   }
-                   //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
-                   else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
-                   {
-                       Log.w(TAG,"* * * call OTA timeout function for no found DFU service * * *");
-                       if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.NODFUSERVICE);
-                   }
-                   else
-                   {
-                       Log.w(TAG,"* * * call OTA timeout function * * *");
-                       if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.TIMEOUT);
-                   }
-                }
-                else
-                {
-                    lastprogress = progress;
-                }
+        mTimeoutTimer.schedule(new myOTATimerTask(),MAX_TIME, MAX_TIME);
 
-            }
-        },MAX_TIME,MAX_TIME);
-
-        mConnectionController.setDelegate(this);
         dfuFirmwareType = firmwareType;
         firmwareFile = filename;
         //Hex to bin and read it to buffer
         openFile(filename);
 
-        //by pass mode for doing OTA
-        /**
-        mConnectionController.setOTAMode(true ,false);
-        //state = DFUControllerState.SEND_START_COMMAND;
-        if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
-            mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
-        if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
-            mConnectionController.sendRequest(new NevoOTAStartRequest());
-         */
         //help mode for doing OTA
-        if(bHelpMode && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+        if(manualmode && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
         {
             state = DFUControllerState.SEND_FIRMWARE_DATA;
-            sendRequest(new NevoOTAControlRequest(new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
-            sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,false));
+            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
+            sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize,false));
         }
         //pair mode for doing OTA
         else
         {
             state = DFUControllerState.IDLE;
-            mConnectionController.setOTAMode(false, true);
+            connectionController.setOTAMode(false, true);
         }
+        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onPrepareOTA(firmwareType);
     }
 
-    public void SamsungS4Patch()
+    public void setOtaMode(boolean otaMode,boolean disConnect)
+    {
+        connectionController.setOTAMode(otaMode, disConnect);
+    }
+    /**
+     * patch for samsung S4 Ble OTA, send start ble OTA cmd 0x72, can't get disconnect after 7s
+     * so here add this patch function do it
+     * this patch will make a disconnect to nevo (normal OTA should be get disconnect from nevo )
+     */
+    private void SamsungS4Patch()
     {
         //app make a disconnect to nevo
-        mConnectionController.setOTAMode(true, true);
+        connectionController.setOTAMode(true, true);
     }
     /**
      * cancel OTA
      */
     public void cancelDFU()
     {
-        Log.i(TAG,"cancelDFU");
+        Log.i(TAG, "cancelDFU");
 
         if (dfuFirmwareType.rawValue() == DfuFirmwareTypes.APPLICATION.rawValue())
         { resetSystem();}
@@ -532,21 +533,27 @@ import java.util.UUID;
     /**
      * get in charge of ConnectionController
      */
-    public void setConnectControllerDelegate2Self()
+    public void switch2OtaController()
     {
-        mConnectionController.setDelegate(this);
+        connectionController.setOnExceptionListener(this);
+        connectionController.setOnDataReceivedListener(this);
+        connectionController.setOnConnectListener(this);
+        connectionController.setOnFirmwareVersionListener(this);
     }
+
+
     /**
      * set hight level listener, it should be a activity (OTA controller view:Activity or one fragment)
      */
-    public void setOnNevoOtaControllerListener(OnNevoOtaControllerListener listener)
+    @Override
+    public void setOnOtaControllerListener(OnOtaControllerListener listener)
     {
         mOnOtaControllerListener.set(listener);
     }
 
     @Override
     public Boolean isConnected() {
-        return mConnectionController.isConnected();
+        return connectionController.isConnected();
     }
 
     @Override
@@ -562,13 +569,12 @@ import java.util.UUID;
     @Override
     public  void switch2SyncController()
     {
-        mConnectionController.setDelegate(mOldDelegate);
+        connectionController.setOnExceptionListener((OnExceptionListener) mContext.getSyncController());
+        connectionController.setOnDataReceivedListener((OnDataReceivedListener)mContext.getSyncController());
+        connectionController.setOnConnectListener((OnConnectListener)mContext.getSyncController());
+        connectionController.setOnFirmwareVersionListener((OnFirmwareVersionListener) mContext.getSyncController());
     }
 
-    /*package*/ void destroy()
-    {
-        ConnectionController.Singleton.destroy();
-    }
     /**
      reset to normal mode "NevoProfile"
      parameter: switch2SyncController: true/false
@@ -586,41 +592,42 @@ import java.util.UUID;
         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
         //reset it to INIT status !!!IMPORTANT!!!
         state = DFUControllerState.INIT;
+        mcu_broken_state = DFUControllerState.INIT;
 
         if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION )
         {
-            mConnectionController.restoreSavedAddress();
+            connectionController.restoreSavedAddress();
         }
         if (switch2SyncController)
         {
-            mConnectionController.setDelegate(mOldDelegate);
+            switch2SyncController();
         }
-        if(bHelpMode)
+        if(manualmode)
         {
-            bHelpMode = false;
-            mConnectionController.forgetSavedAddress();
+            manualmode = false;
+            connectionController.forgetSavedAddress();
         }
 
         //disconnect and reconnect for reading new version
-        mConnectionController.setOTAMode(false, true);
+        connectionController.setOTAMode(false, true);
 
     }
 
     @Override
     public String getFirmwareVersion() {
-        return mConnectionController.getFirmwareVersion();
+        return connectionController.getBluetoothVersion();
     }
 
     @Override
     public String getSoftwareVersion() {
-        return mConnectionController.getSoftwareVersion();
+        return connectionController.getSoftwareVersion();
     }
 
     @Override
     public void forGetDevice()
     {
         //BLE OTA need repair NEVO, so here forget this nevo when OTA done.
-        mConnectionController.doUnPairDevice();
+        connectionController.unPairDevice();
     }
     //end public function
 
@@ -640,7 +647,7 @@ import java.util.UUID;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mConnectionController.sendRequest(new NevoOTAStartRequest());
+                            connectionController.sendRequest(new NevoOTAStartRequest(mContext));
                         }
                     },1000);
                 }
@@ -651,8 +658,8 @@ import java.util.UUID;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            sendRequest(new NevoOTAControlRequest(new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
-                            sendRequest(new NevoOTAPacketFileSizeRequest(binFileSize,false));
+                            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
+                            sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize,false));
                         }
                     },1000);
                 }
@@ -666,7 +673,7 @@ import java.util.UUID;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mConnectionController.reconnect();
+                            connectionController.reconnect();
                         }
                     },1000);
                 }
@@ -675,15 +682,15 @@ import java.util.UUID;
                 else if (state == DFUControllerState.SEND_START_COMMAND)
                 {
                     state = DFUControllerState.DISCOVERING;
-                    mConnectionController.setOTAMode(true,true);
+                    connectionController.setOTAMode(true, true);
 
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
                             //when switch to DFU mode, the MAC address has changed to another one
-                            mConnectionController.forgetSavedAddress();
-                            mConnectionController.connect();
+                            connectionController.forgetSavedAddress();
+                            connectionController.connect();
                         }
                     },1000);
                 }
@@ -696,14 +703,33 @@ import java.util.UUID;
             {
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
-                    state = DFUControllerState.SEND_START_COMMAND;
-
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mConnectionController.sendRequest(new NevoMCU_OTAStartRequest());
+                    //MCU got broken before timeout 30s, continue send current page(such as page No.5) to try again OTA
+                    if(mcu_broken_state == DFUControllerState.SEND_FIRMWARE_DATA
+                            || mcu_broken_state == DFUControllerState.WAIT_RECEIPT)
+                    {
+                        //reset it
+                        mcu_broken_state = DFUControllerState.INIT;
+                        state = DFUControllerState.SEND_FIRMWARE_DATA;
+                        //resend current page
+                        if(curpage>0)
+                        {
+                            curpage = curpage - 1;
+                            firmwareDataBytesSent = firmwareDataBytesSent-DFUCONTROLLER_PAGE_SIZE;
                         }
-                    },1000);
+                        MCU_sendFirmwareChunk();
+                    }
+                    else
+                    {
+                        //MCU got broken is more than 30s, app will get timeout and retry connect again,
+                        //when got connected, will send restart OTA cmd and retry do OTA from page No.0
+                        state = DFUControllerState.SEND_START_COMMAND;
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                connectionController.sendRequest(new NevoMCU_OTAStartRequest(mContext));
+                            }
+                        }, 1000);
+                    }
                 }
             }
             else
@@ -715,7 +741,28 @@ import java.util.UUID;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mConnectionController.reconnect();
+                            connectionController.reconnect();
+                        }
+                    },1000);
+                }
+                else if(state == DFUControllerState.SEND_FIRMWARE_DATA
+                        || state == DFUControllerState.WAIT_RECEIPT)
+                {
+                    Log.e(TAG, "* * * MCU OTA got broken * * *" + "state = " + state + ",and reset OTA timer:" + MAX_TIME/1000 + "s" + ",lastprogress = "+lastprogress +",progress = "+progress);
+                    if(mTimeoutTimer!=null)
+                    {
+                        mTimeoutTimer.cancel();
+                        mTimeoutTimer = new Timer();
+                        mTimeoutTimer.schedule(new myOTATimerTask(), MAX_TIME, MAX_TIME);
+                        lastprogress = progress;
+                    }
+                    //keep state within 30s timeout
+                    mcu_broken_state = state;
+                    state = DFUControllerState.SEND_RECONNECT;
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionController.reconnect();
                         }
                     },1000);
                 }
@@ -725,41 +772,58 @@ import java.util.UUID;
     }
 
     @Override
-    public void onDataReceived(SensorData data) {
+    public void onSearching() {
 
-        if (data.getType().equals(NevoFirmwareData.TYPE))
+    }
+
+    @Override
+    public void onSearchSuccess() {
+
+    }
+
+    @Override
+    public void onSearchFailure() {
+
+    }
+
+    @Override
+    public void onConnecting() {
+
+    }
+
+    @Override
+    public void onDataReceived(ResponseData data) {
+
+        if (data.getType().equals(FirmwareData.TYPE))
         {
             if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION
-                    && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC)))
+                    && ((FirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CALLBACK_CHARACTERISTIC))))
             {
-                processDFUResponse((NevoFirmwareData) data);
+                processDFUResponse((FirmwareData) data);
             }
             else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE
-                    && ((NevoFirmwareData)data).getUuid().equals(UUID.fromString(GattAttributes.NEVO_OTA_CHARACTERISTIC)))
+                    && ((FirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CHARACTERISTIC))))
             {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).next();
-                MCU_processDFUResponse((NevoFirmwareData) data);
+                MCU_processDFUResponse((FirmwareData) data);
             }
         }
     }
 
     @Override
-    public void onException(Exception e) {
+    public void onException(BaseBLEException e) {
         //the exception got happened when do connection NEVO
         Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
-        if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-        if(e instanceof BLEUnstableException && getState()!= DFUControllerState.DISCOVERING)
-        {
-            Log.e(TAG,"happen " + e + ",due to DFU mode to normal mode, perhaps BLE is not stable,again auto reconnect it after 10s");
-            return;
+        if(mOnOtaControllerListener.notEmpty()) {
+            mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
         }
-        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
-
     }
 
     @Override
     public void firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version) {
-    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+        if(mOnOtaControllerListener.notEmpty()) {
+            mOnOtaControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+        }
     }
     //end ConnectionController.Delegate interface
 
@@ -801,7 +865,7 @@ import java.util.UUID;
     void MCU_sendFirmwareChunk()
     {
         Log.i(TAG,"sendFirmwareData");
-        NevoMCU_OTAPageRequest Onepage = new NevoMCU_OTAPageRequest();
+        NevoMCU_OTAPageRequest Onepage = new NevoMCU_OTAPageRequest(mContext);
         for (int i = 0; i < notificationPacketInterval && firmwareDataBytesSent < binFileSize; i++)
         {
             int length = DFUCONTROLLER_MAX_PACKET_SIZE;
@@ -846,7 +910,7 @@ import java.util.UUID;
 
                 firmwareDataBytesSent += length;
             }
-            Onepage.addPacket(new NevoMCU_OTAPacketRequest(pagePacket));
+            Onepage.addPacket(new NevoMCU_OTAPacketRequest(mContext,pagePacket));
         }
         if(curpage < totalpage)
         {
@@ -867,14 +931,15 @@ import java.util.UUID;
             state = DFUControllerState.FINISHED;
             progress = 100.0;
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
-            sendRequest(new NevoMCU_OTAChecksumRequest(totalpage, checksum));
+            sendRequest(new NevoMCU_OTAChecksumRequest(mContext,totalpage, checksum));
             Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
             return;
         }
-        Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: "+ (curpage));
+        Log.i(TAG,"Sent " + (firmwareDataBytesSent) + " bytes, pageno: " + (curpage));
 
     }
-    void MCU_processDFUResponse(NevoFirmwareData rawData)
+
+    void MCU_processDFUResponse(FirmwareData rawData)
     {
         Log.i(TAG,"didReceiveReceipt");
         mPacketsbuffer.add(rawData);
@@ -930,6 +995,5 @@ import java.util.UUID;
         }
 
     }
-
     //end MCU OTA
 }

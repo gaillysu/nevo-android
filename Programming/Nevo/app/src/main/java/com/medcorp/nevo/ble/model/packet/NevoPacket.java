@@ -1,8 +1,9 @@
 package com.medcorp.nevo.ble.model.packet;
 
-import com.medcorp.nevo.ble.util.HexUtils;
+import net.medcorp.library.ble.model.response.MEDRawData;
+import net.medcorp.library.ble.util.HexUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by gaillysu on 15/4/1.
@@ -10,9 +11,9 @@ import java.util.ArrayList;
  */
 public class NevoPacket {
 
-    private ArrayList<NevoRawData> mPackets;
+    private List<MEDRawData> mPackets;
 
-    public NevoPacket(ArrayList<NevoRawData> packets)
+    public NevoPacket(List<MEDRawData> packets)
     {
         mPackets = packets;
     }
@@ -38,7 +39,7 @@ public class NevoPacket {
     {
         return mPackets.get(0).getRawData()[1];
     }
-    public ArrayList<NevoRawData> getPackets()
+    public List<MEDRawData> getPackets()
     {
         return mPackets;
     }

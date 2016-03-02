@@ -3,31 +3,43 @@ package com.medcorp.nevo.ble.model.request;
 /**
  * Created by gaillysu on 15/4/10.
  */
+
+import android.content.Context;
+
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+import com.medcorp.nevo.ble.model.notification.CalendarNotification;
+import com.medcorp.nevo.ble.model.notification.EmailNotification;
+import com.medcorp.nevo.ble.model.notification.FacebookNotification;
+import com.medcorp.nevo.ble.model.notification.Notification;
+import com.medcorp.nevo.ble.model.notification.SmsNotification;
+import com.medcorp.nevo.ble.model.notification.TelephoneNotification;
+import com.medcorp.nevo.ble.model.notification.WeChatNotification;
+import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
+import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
 import java.util.UUID;
 
-import com.medcorp.nevo.Model.Notification.NotificationType;
-import com.medcorp.nevo.ble.ble.GattAttributes;
 
-
-public class SendNotificationNevoRequest extends NevoRequest {
+public class SendNotificationNevoRequest extends RequestData {
 
     public  final static  byte HEADER = 0x60;
 
-    NotificationType  mType;
+    private Notification notification;
 
     int mNumber;
-    byte mID =0;
 
-    public SendNotificationNevoRequest(NotificationType type, int num) {
-        mType = type;
+    public SendNotificationNevoRequest(Context context, Notification notification, int num) {
+        super(new GattAttributesDataSourceImpl(context));
+        this.notification = notification;
         mNumber = num;
-
         if(mNumber == 0) mNumber = 1;
     }
 
     @Override
     public UUID getInputCharacteristicUUID() {
-        return UUID.fromString(GattAttributes.NEVO_NOTIFICATION_CHARACTERISTIC);
+        return getInputCharacteristicUUID();
     }
     @Override
     public byte[] getRawData() {
@@ -36,19 +48,7 @@ public class SendNotificationNevoRequest extends NevoRequest {
 
     @Override
     public byte[][] getRawDataEx() {
-        if(mType == NotificationType.Call)
-            mID = 3;
-        if(mType == NotificationType.SMS)
-            mID = 5;
-        if(mType == NotificationType.Email)
-            mID = 1;
-        if(mType == NotificationType.Calendar)
-            mID = 7;
-        if(mType == NotificationType.Facebook)
-            mID = 10;
-        if(mType == NotificationType.Wechat)
-            mID = 11;
-
+        int mID = notification.accept(new LedIdVisitor());
         return new byte[][] {
                     {0,HEADER,
                             (byte) (mID),
@@ -72,4 +72,46 @@ public class SendNotificationNevoRequest extends NevoRequest {
         return HEADER;
     }
 
+    private class LedIdVisitor implements NotificationVisitor<Integer> {
+
+        @Override
+        public Integer visit(CalendarNotification calendarNotification) {
+            return 7;
+        }
+
+        @Override
+        public Integer visit(EmailNotification emailNotification) {
+            return 1;
+        }
+
+        @Override
+        public Integer visit(FacebookNotification facebookNotification) {
+            return 10;
+        }
+
+        @Override
+        public Integer visit(SmsNotification smsNotification) {
+            return 5;
+        }
+
+        @Override
+        public Integer visit(TelephoneNotification telephoneNotification) {
+            return 3;
+        }
+
+        @Override
+        public Integer visit(WeChatNotification weChatNotification) {
+            return 11;
+        }
+
+        @Override
+        public Integer visit(WhatsappNotification whatsappNotification) {
+            return 11;
+        }
+
+        @Override
+        public Integer visit(Notification applicationNotification) {
+            return null;
+        }
+    }
 }

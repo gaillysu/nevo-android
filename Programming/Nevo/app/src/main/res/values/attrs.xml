@@ -3,17 +3,31 @@
     <declare-styleable name="RoundProgressBar">  
         <attr name="roundColor" format="color"/>
         <attr name="roundProgressColor" format="color"/>
-        <attr name="roundWidth" format="dimension"></attr>
+        <attr name="roundWidth" format="dimension"/>
         <attr name="textColor" format="color" />  
         <attr name="textSize" format="dimension" /> 
-        <attr name="max" format="integer"></attr> 
-        <attr name="textIsDisplayable" format="boolean"></attr>
+        <attr name="max" format="integer"/>
+        <attr name="textIsDisplayable" format="boolean"/>
         <attr name="style">
-            <enum name="STROKE" value="0"></enum>
-            <enum name="FILL" value="1"></enum>
+            <enum name="STROKE" value="0"/>
+            <enum name="FILL" value="1"/>
         </attr>
         <attr name="sleepWakeColor" format="color"/>
         <attr name="sleepLightColor" format="color"/>
         <attr name="sleepDeepColor" format="color"/>
-    </declare-styleable> 
+    </declare-styleable>
+
+
+    <declare-styleable name="CustomFontAttr">
+        <attr name="bold" format="boolean"/>
+        <attr name="light" format="boolean"/>
+        <attr name="thin" format= "boolean"/>
+    </declare-styleable>
+
+    <array name="today_history_array">
+        <item>@string/tab_title_today</item>
+        <item>@string/tab_title_History</item>
+    </array>
+
+
 </resources>

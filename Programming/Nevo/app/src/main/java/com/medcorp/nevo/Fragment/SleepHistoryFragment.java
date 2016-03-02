@@ -1,374 +1,205 @@
-package com.medcorp.nevo.Fragment;
+package com.medcorp.nevo.fragment;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.nevo.FontManager;
-import com.medcorp.nevo.History.database.DatabaseHelper;
-import com.medcorp.nevo.History.database.IDailyHistory;
-import com.medcorp.nevo.HistoryActivity;
-import com.medcorp.nevo.MainActivity;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.SleepTrackingTutorial;
-import com.medcorp.nevo.View.SleepDataView;
-import com.medcorp.nevo.ble.controller.OnSyncControllerListener;
-import com.medcorp.nevo.ble.controller.SyncController;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerInfoNevoPacket;
-import com.medcorp.nevo.ble.model.packet.DailyTrackerNevoPacket;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerInfoNevoRequest;
-import com.medcorp.nevo.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.medcorp.nevo.ble.util.Constants;
+import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
+import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.model.Sleep;
+import com.medcorp.nevo.model.SleepData;
+import com.medcorp.nevo.util.SleepDataHandler;
+import com.medcorp.nevo.util.SleepSorter;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+
 /**
- * WelcomeFragment aims to display current time and steps how many you took.
+ * Created by Karl on 12/10/15.
  */
-public class SleepHistoryFragment extends Fragment implements OnSyncControllerListener, View.OnClickListener {
+
+public class SleepHistoryFragment extends BaseFragment implements OnChartValueSelectedListener {
+
+    @Bind(R.id.fragment_sleep_history_bar)
+    BarChart barChart;
 
 
-    public static final String SLEEPHISTORYFRAGMENT = "SleepHistoryFragment";
-    public static final int SLEEPHISTORYPOSITION = 2;
-    private static final String PREF_CUR_STEP = "currentStep";
-    private ImageView mHourImage, mMinImage;
-    private SleepDataView mRoundProgressBar;
-    private TextView mTextView;
-    private int mCurHour, mCurMin, mTempMin = -1;
-    private long mLastTapTime = 0;
-    private ImageView mClockView;
-    private static boolean mIsVisible;
-    private final String FIRST_TIME_KEY = "sleep_history_first_time_key";;
-    private Context mCtx;
-    JSONObject sleepAnalysisResult;
-    private int TotalHistory;
-    private int currentHistory;
-    private boolean syncAllFlag = true;
-    private long startsleep;
-    private long endsleep;
+    @Bind(R.id.fragment_sleep_history_sleep_duration)
+    TextView sleepDuration;
 
-    private Handler  mUiHandler = new Handler(Looper.getMainLooper());
-    private Runnable mTimerTask = new Runnable() {
-        @Override
-        public void run() {
-            refreshTime();
-            mUiHandler.removeCallbacks(mTimerTask);
-            mUiHandler.postDelayed(mTimerTask,10000);
-        }
-    };
+    @Bind(R.id.fragment_sleep_history_deep)
+    TextView sleepDeepDuration;
 
-    private void refreshTime(){
-        final Calendar mCalendar = Calendar.getInstance();
-        mCurHour = mCalendar.get(Calendar.HOUR);
-        mCurMin = mCalendar.get(Calendar.MINUTE);
-        if (mCurMin != mTempMin) {
-            setMin((float) (mCurMin * 6));
-            setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
-            mTempMin = mCurMin;
-        }
-    }
+    @Bind(R.id.fragment_sleep_history_light)
+    TextView sleepLightDuration;
+
+    @Bind(R.id.fragment_sleep_history_start)
+    TextView sleepStart;
+
+    @Bind(R.id.fragment_sleep_history_wake)
+    TextView sleepEnd;
+
+    @Bind(R.id.fragment_sleep_history_wake_duration)
+    TextView sleepWakeDuration;
+
+
+    private BarDataSet dataSet;
+    private List<SleepData> sleepDataList;
+
+
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.sleephistory_fragment, container, false);
-        mCtx = getActivity();
-        if (this.firstTimeFragment()){
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mCtx).edit();
-            editor.putBoolean(FIRST_TIME_KEY,false);
-            editor.commit();
-            startSleepTrackingTutorial();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_sleep_history, container, false);
+        ButterKnife.bind(this, view);
+        //TODO put into config.xml
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+                "font/Roboto-Bold.ttf");
+        barChart.setDescription("");
+        barChart.setNoDataTextDescription("");
+        barChart.getLegend().setEnabled(false);
+        barChart.setOnChartValueSelectedListener(this);
+        barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(false);
+        barChart.setScaleEnabled(false);
+        barChart.setDrawValueAboveBar(false);
+        barChart.setDoubleTapToZoomEnabled(false);
+        barChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 80.0f);
+        barChart.setDragEnabled(true);
+        barChart.setDrawHighlightArrow(true);
+
+        YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setDrawGridLines(false);
+        yAxis.setEnabled(false);
+        yAxis = barChart.getAxisRight();
+        yAxis.setDrawGridLines(false);
+        yAxis.setEnabled(false);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setTextSize(10f);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setTypeface(tf);
+        SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
+        List<String> xVals = new ArrayList<String>();
+        List<BarEntry> yValue = new ArrayList<BarEntry>();
+
+        SleepDatabaseHelper helper = new SleepDatabaseHelper(getContext());
+        List<Sleep> sleepList = helper.convertToNormalList(helper.getAll());
+        SleepSorter sorter = new SleepSorter();
+        Collections.sort(sleepList, sorter);
+        SleepDataHandler handler = new SleepDataHandler(sleepList);
+        int i = 0;
+        sleepDataList = handler.getSleepData();
+        for (SleepData sleepData:sleepDataList) {
+            yValue.add(new BarEntry(new float[]{sleepData.getDeepSleep(),sleepData.getLightSleep(),sleepData.getAwake()}, i));
+            xVals.add(sdf.format(new Date(sleepData.getDate())));
+            i++;
         }
-        mIsVisible = true;
-        mHourImage = (ImageView) rootView.findViewById(R.id.HomeClockHour);
-        mMinImage = (ImageView) rootView.findViewById(R.id.HomeClockMinute);
-        mRoundProgressBar = (SleepDataView) rootView.findViewById(R.id.SleepDataViewBar);
-        mTextView = (TextView) rootView.findViewById(R.id.textView);
-        mClockView = (ImageView)rootView.findViewById(R.id.clock_imageView);
-        rootView.findViewById(R.id.sleeptracking_tutorial_button).setOnClickListener(this);
-        mClockView.setOnClickListener(this);
-        View [] viewArray = new View []{
-                rootView.findViewById(R.id.textView)
-        };
-        FontManager.changeFonts(viewArray,getActivity());
-
-        sleepAnalysisResult = DatabaseHelper.getInstance(mCtx).getSleepZone(new Date());
-        try {
-            startsleep = sleepAnalysisResult.getLong("startDateTime");
-            endsleep = sleepAnalysisResult.getLong("endDateTime");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (sleepDataList.size() < 7) {
+            barChart.setScaleMinima((.14f), 1f);
+        }else{
+            barChart.setScaleMinima((sleepDataList.size()/6f),1f);
         }
 
-        ImageView  history = (ImageView)rootView.findViewById(R.id.btnhistory);
-        history.setOnClickListener(this);
-        return rootView;
-    }
+        dataSet = new BarDataSet(yValue, "");
+        dataSet.setDrawValues(false);
+        dataSet.setColors(new int[]{getResources().getColor(R.color.deep_sleep), getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.wake_sleep)});
+        dataSet.setHighlightEnabled(true);
+        dataSet.setHighLightColor(getResources().getColor(R.color.white));
+        dataSet.setHighLightAlpha(100);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //only connected nevo ,can send this cmd, due to send cmd add a timeout feature
-        //when app start,syncController is connecting, send this cmd, will lead to  timeout
-        // and kill service, auto reconnect nevo after 10s, user can't accept waiting 10s
-        if (SyncController.Singleton.getInstance(getActivity()).isConnected()){
-            initLayout(true);
-            //if no today's sleep data, sync it now.
-            if(startsleep == 0 || endsleep ==0 || startsleep==endsleep)
-            {
-                //blank database, sync all data up to last 7 days
-                if (getDailyHistory(new Date()).isEmpty()) {
-                    TotalHistory = 0;
-                    currentHistory = 0;
-                    syncAllFlag = true;
-                    SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(syncAllFlag);
-                } else //only sync current day
-                {
-                    TotalHistory = 1;
-                    currentHistory = 0;
-                    syncAllFlag = false;
-                    SyncController.Singleton.getInstance(getActivity()).getDailyTrackerInfo(syncAllFlag);
-                }
-            }
-        }else {
-            initLayout(false);
-        }
-        refreshTime();
-        mUiHandler.postDelayed(mTimerTask, 10000);
-    }
+        List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        dataSets.add(dataSet);
+        BarData data = new BarData(xVals, dataSets);
+        barChart.setData(data);
+        barChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
 
-    private void initLayout(boolean connected){
-        if(connected){
-            Date startDate = new Date(startsleep);
-            Date endDate = new Date(endsleep);
-            long total = (endDate.getTime() - startDate.getTime())/1000/60;
-            if(total == 0)
-            {
-                setText("----");
-            }
-            else
-            {
-                //when user sleep got interrupted, calculate the total sleep time from every hour, not use "start-end"
-                try {
-                    int [] wakeTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyWakeTime"));
-                    int [] lightSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyLightTime"));
-                    int [] deepSleepTimes = DatabaseHelper.string2IntArray(sleepAnalysisResult.getString("mergeHourlyDeepTime"));
-                    total = 0;
-                    for (int k = 0; k < wakeTimes.length; k++)total +=wakeTimes[k];
-                    for (int k = 0; k < wakeTimes.length; k++)total +=lightSleepTimes[k];
-                    for (int k = 0; k < wakeTimes.length; k++)total +=deepSleepTimes[k];
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                setText(""+ (total>=60?(total/60 + "h "):"") + (total%60) + "min");
-            }
-            setProgressBar();
-            //SyncController.Singleton.getInstance(getActivity()).getStepsAndGoal();
-        }else {
-            setText("----");
-            setProgressBar();
-        }
-    }
-
-    public void setHour(final float degree) {
-        mUiHandler.post(new Runnable() {
+        barChart.postOnAnimation(new Runnable() {
             @Override
             public void run() {
-                mHourImage.setRotation(degree);
-                if (mHourImage.getVisibility()==View.GONE){
-                    mHourImage.setVisibility(View.VISIBLE);
-                }
-
+                barChart.moveViewToX(sleepDataList.size());
             }
         });
-    }
-
-    public void setMin(final float degree) {
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mMinImage.setRotation(degree);
-                if (mMinImage.getVisibility()==View.GONE){
-                    mMinImage.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
-
-    public void setText(final String str){
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mTextView.setText(str);
-            }
-        });
-    }
-
-    public void setProgressBar(){
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mRoundProgressBar.setSleepAnalysisResult(sleepAnalysisResult);
-            }
-        });
-    }
-
-    public static void saveCurStepToPreference(Context context, int value) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(PREF_CUR_STEP, value).apply();
-    }
-
-    public static int getCurStepFromPreference(Context context) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt(PREF_CUR_STEP, 0);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void packetReceived(NevoPacket packet) {
-        if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == packet.getHeader())
+        if(sleepDataList.size()>0)
         {
-            DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
-            TotalHistory = infopacket.getDailyTrackerInfo().size();
+            barChart.highlightValue(sleepDataList.size() - 1, 0);
+            SleepData sleepData = sleepDataList.get(sleepDataList.size() - 1);
+            setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
         }
-        else if((byte) ReadDailyTrackerNevoRequest.HEADER == packet.getHeader()) {
-            DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
-            currentHistory++;
-            if(currentHistory == TotalHistory)
-            {
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //refresh data after 1s for save local database done.
-                        //showGraph();
-                        sleepAnalysisResult = DatabaseHelper.getInstance(mCtx).getSleepZone(new Date());
-                        initLayout(true);
-                        //end refresh
-                    }
-                },1000);
-            }
-        }
-        //double click get response within 2s, blink clock image once
-        //use 2s, get rid of notification's response
-        else if(((byte)0xF0 == packet.getHeader() && (System.currentTimeMillis() - mLastTapTime) < 2000)
-                || ((byte)0xF1 == packet.getHeader() && (byte)0x02 == packet.getPackets().get(0).getRawData()[2]))
-        {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(mIsVisible) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600_color));
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //perhaps 2s later, the fragment got destory!!!!
-                            if (mIsVisible && getActivity()!=null) mClockView.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.clockview600));
-                        }
-                    }, 3000);
-                }
-            });
-        }
+        return view;
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected)
-            initLayout(false);
-        ((MainActivity)getActivity()).replaceFragment(isConnected? SleepHistoryFragment.SLEEPHISTORYPOSITION:ConnectAnimationFragment.CONNECTPOSITION, isConnected? SleepHistoryFragment.SLEEPHISTORYFRAGMENT:ConnectAnimationFragment.CONNECTFRAGMENT);
-    }
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        barChart.highlightValue(e.getXIndex(), dataSetIndex);
+        SleepData sleepData = sleepDataList.get(e.getXIndex());
+        setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mUiHandler.removeCallbacks(mTimerTask);
+    public void onNothingSelected() {
+
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mIsVisible = false;
-    }
-
-    /**
-     * return one day's History
-     * @param from
-     * @return
-     */
-    List<IDailyHistory> getDailyHistory(Date from)
+    public void setDashboard(final Dashboard dashboard)
     {
-        List<Long> days = new ArrayList<Long>();
-        //set theDay from 00:00:00
-        Calendar calBeginning = new GregorianCalendar();
-        calBeginning.setTime(from);
-        calBeginning.set(Calendar.HOUR_OF_DAY, 0);
-        calBeginning.set(Calendar.MINUTE, 0);
-        calBeginning.set(Calendar.SECOND, 0);
-        calBeginning.set(Calendar.MILLISECOND, 0);
-        Date theday = calBeginning.getTime();
-        days.add(theday.getTime());
-        try {
-            return DatabaseHelper.getInstance(mCtx).getDailyHistoryDao().queryBuilder().orderBy("created", false).where().in("created",days).query();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        sleepDuration.setText(dashboard.formatDuration(dashboard.sleepDuration));
+        sleepDeepDuration.setText(dashboard.formatDuration(dashboard.sleepDeepDuration));
+        sleepLightDuration.setText(dashboard.formatDuration(dashboard.sleepLightDuration));
+        sleepStart.setText(dashboard.formatTimeStamp(dashboard.sleepStart));
+        sleepEnd.setText(dashboard.formatTimeStamp(dashboard.sleepEnd));
+        sleepWakeDuration.setText(dashboard.formatDuration(dashboard.sleepWakeDuration));
+    }
+
+    class Dashboard{
+        int sleepDuration;
+        int sleepDeepDuration;
+        int sleepLightDuration;
+        long sleepStart;
+        long sleepEnd;
+        int sleepWakeDuration;
+
+        Dashboard(int sleepDuration,int sleepDeepDuration,int sleepLightDuration,long sleepStart,long sleepEnd,int sleepWakeDuration)
+        {
+            this.sleepDuration = sleepDuration;
+            this.sleepDeepDuration = sleepDeepDuration;
+            this.sleepLightDuration = sleepLightDuration;
+            this.sleepStart = sleepStart;
+            this.sleepEnd = sleepEnd;
+            this.sleepWakeDuration = sleepWakeDuration;
         }
-        return new ArrayList<IDailyHistory>();
-    }
-
-    private boolean firstTimeFragment(){
-        SharedPreferences preferences  = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        return preferences.getBoolean(FIRST_TIME_KEY,true);
-    }
-
-    private void startSleepTrackingTutorial(){
-        Intent i = new Intent(mCtx, SleepTrackingTutorial.class);
-        getActivity().startActivity(i);
-        getActivity().overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sleeptracking_tutorial_button:
-                startSleepTrackingTutorial();
-                break;
-            case R.id.clock_imageView:
-                if ((System.currentTimeMillis() - mLastTapTime) > 2000)
-                    mLastTapTime = System.currentTimeMillis();
-                else {
-                    if (SyncController.Singleton.getInstance(getActivity()).isConnected()) {
-                        SyncController.Singleton.getInstance(getActivity()).findDevice();
-                    }
-                }
-                break;
-            case R.id.btnhistory:
-                Intent intent = new Intent(mCtx, HistoryActivity.class);
-                getActivity().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                break;
+        String formatDuration(int durationMinute)
+        {
+            return durationMinute/60 + "h" + durationMinute%60 + "m";
+        }
+        String formatTimeStamp(long timeStamp)
+        {
+            return new SimpleDateFormat("HH:mm").format(new Date(timeStamp));
         }
     }
-
 }

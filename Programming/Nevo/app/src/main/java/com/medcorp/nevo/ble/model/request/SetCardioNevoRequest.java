@@ -1,7 +1,18 @@
 package com.medcorp.nevo.ble.model.request;
 
-public class SetCardioNevoRequest extends NevoRequest {
+import android.content.Context;
+
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+public class SetCardioNevoRequest extends RequestData {
 	public  final static  byte HEADER = 0x23;
+
+	public SetCardioNevoRequest(Context context) {
+		super(new GattAttributesDataSourceImpl(context));
+	}
+
 	@Override
 	public byte[] getRawData() {
 		return null;

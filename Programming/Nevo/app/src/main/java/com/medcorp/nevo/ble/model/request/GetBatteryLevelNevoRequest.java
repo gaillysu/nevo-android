@@ -1,9 +1,20 @@
 package com.medcorp.nevo.ble.model.request;
 
-public class GetBatteryLevelNevoRequest extends NevoRequest {
+import android.content.Context;
+
+import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.RequestData;
+
+public class GetBatteryLevelNevoRequest extends RequestData {
 
 	public  final static  byte HEADER = 0x40;
-	@Override
+
+        public GetBatteryLevelNevoRequest(Context context) {
+                super(new GattAttributesDataSourceImpl(context));
+        }
+
+        @Override
 	public byte[] getRawData() {
 
 		return null;

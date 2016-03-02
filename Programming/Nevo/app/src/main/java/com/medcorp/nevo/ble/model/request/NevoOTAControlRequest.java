@@ -1,6 +1,6 @@
 package com.medcorp.nevo.ble.model.request;
 
-import com.medcorp.nevo.ble.ble.GattAttributes;
+import android.content.Context;
 
 import java.util.UUID;
 
@@ -14,15 +14,16 @@ public  class NevoOTAControlRequest extends NevoOTARequest {
 
     //save different control values, such  as cancel/reset/start...
     private byte[] mControlValues;
-    public NevoOTAControlRequest(byte[] ControlValues)
+    public NevoOTAControlRequest(Context context,byte[] ControlValues)
     {
+        super(context);
         mControlValues = ControlValues;
     }
 
     @Override
     public UUID getInputCharacteristicUUID() {
         //for controll request, the input char. is the call back char.
-        return UUID.fromString(GattAttributes.NEVO_OTA_CALLBACK_CHARACTERISTIC);
+        return super.getCharacteristicUUID();
     }
 
     @Override
