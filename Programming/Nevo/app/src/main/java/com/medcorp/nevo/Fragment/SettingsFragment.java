@@ -23,6 +23,7 @@ import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.activity.SettingNotificationActivity;
 import com.medcorp.nevo.activity.tutorial.TutorialPage1Activity;
+import com.medcorp.nevo.activity.tutorial.TutorialPageVideoActivity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
@@ -168,7 +169,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                         @Override
                         public void onClick(MaterialDialog dialog, DialogAction which) {
                             getModel().forgetDevice();
-                            startActivity(TutorialPage1Activity.class);
+                            startActivity(TutorialPageVideoActivity.class);
                             SettingsFragment.this.getActivity().finish();
                         }
                     })

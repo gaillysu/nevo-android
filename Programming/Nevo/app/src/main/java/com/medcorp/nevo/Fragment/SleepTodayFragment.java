@@ -1,5 +1,6 @@
 package com.medcorp.nevo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.OpenSleepTrackActivity;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Sleep;
@@ -70,8 +72,11 @@ public class SleepTodayFragment extends BaseFragment {
     @Bind(R.id.fragment_sleep_today_dashboard_layout)
     LinearLayout dashboardLayout;
 
-    @Bind(R.id.fragment_sleep_today_nosleep)
-    TextView nosleepTextView;
+    @Bind(R.id.gotoSleepButton)
+    TextView gotoSleepButton;
+
+    @Bind(R.id.no_sleep_today_layout)
+    LinearLayout nosleepLayout;
 
     private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
@@ -158,7 +163,13 @@ public class SleepTodayFragment extends BaseFragment {
         else
         {
             dashboardLayout.setVisibility(View.GONE);
-            nosleepTextView.setVisibility(View.VISIBLE);
+            nosleepLayout.setVisibility(View.VISIBLE);
+            gotoSleepButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().startActivity(new Intent(getActivity(),OpenSleepTrackActivity.class));
+                }
+            });
         }
     }
 

@@ -223,6 +223,5 @@
     <string name="help_track_sleep_goodmorningmessage">You just finished tracking your first night of sleep with your nevo. To start tracking your daily routine,
 push and hold the third button, untill the white LED blinks</string>
     <string name="help_got_it">Got it!</string>
-
-
+    <string name="help_goto_sleep">How to track you sleep?</string>
 </resources>

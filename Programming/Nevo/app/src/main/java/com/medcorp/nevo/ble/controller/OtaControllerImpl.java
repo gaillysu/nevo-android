@@ -283,9 +283,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     {
         Log.i(TAG,"DFUOperationsdetails enablePacketNotification");
 
-        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
-                                                                              ,(byte)enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
-                                                                              ,0}));
+        sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
+                , (byte) enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
+                , 0}));
         sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
 
         //wait 20ms
@@ -337,7 +337,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     }
     void processRequestedCode()
     {
-        Log.i(TAG,"processsRequestedCode");
+        Log.i(TAG, "processsRequestedCode");
 
         if (dfuResponse.getrequestedCode() == DfuOperations.START_DFU_REQUEST.rawValue()){
             Log.i(TAG, "Requested code is StartDFU now processing response status");
@@ -378,7 +378,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     }
     void processReceiveFirmwareResponseStatus()
     {
-        Log.i(TAG,"processReceiveFirmwareResponseStatus");
+        Log.i(TAG, "processReceiveFirmwareResponseStatus");
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"successfully received notification for whole File transfer");
             validateFirmware();
@@ -448,8 +448,8 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if (dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
         {
             openFile(firmwareFile);
-            sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.START_DFU_REQUEST.rawValue()}));
-            sendRequest(new NevoOTAPacketFileSizeRequest(mContext,binFileSize,true));
+            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue()}));
+            sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize, true));
         }
         else
         {
@@ -508,16 +508,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     {
         connectionController.setOTAMode(otaMode, disConnect);
     }
-    /**
-     * patch for samsung S4 Ble OTA, send start ble OTA cmd 0x72, can't get disconnect after 7s
-     * so here add this patch function do it
-     * this patch will make a disconnect to nevo (normal OTA should be get disconnect from nevo )
-     */
-    private void SamsungS4Patch()
-    {
-        //app make a disconnect to nevo
-        connectionController.setOTAMode(true, true);
-    }
+
     /**
      * cancel OTA
      */
@@ -783,7 +774,10 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     @Override
     public void onSearchFailure() {
-
+        Log.e(TAG," ********* onSearchFailure ********* " + "state:" + getState());
+        if(mOnOtaControllerListener.notEmpty()) {
+            mOnOtaControllerListener.get().onError(ERRORCODE.NOCONNECTION);
+        }
     }
 
     @Override

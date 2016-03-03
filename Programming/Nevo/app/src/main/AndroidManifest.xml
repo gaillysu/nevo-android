@@ -28,7 +28,7 @@
         android:label="@string/app_name">
 
         <activity
-            android:name=".activity.tutorial.TutorialPage1Activity"
+            android:name=".activity.tutorial.TutorialPageVideoActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
@@ -68,6 +68,9 @@
             android:name=".activity.SettingAboutActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.tutorial.TutorialPage1Activity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.tutorial.TutorialPage2Activity"
             android:screenOrientation="portrait"/>
         <activity
@@ -87,6 +90,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ConnectToOtherAppsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.OpenSleepTrackActivity"
             android:screenOrientation="portrait"/>
         <service
             android:name="net.medcorp.library.ble.ble.MEDBTService"
