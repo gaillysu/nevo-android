@@ -142,20 +142,17 @@ public class SleepTodayFragment extends BaseFragment {
         }
         SleepDataHandler handler = new SleepDataHandler(sleepList);
         List<SleepData> sleepDataList = handler.getSleepData();
-        //have today sleep, use it.
         if(!sleepDataList.isEmpty() && todaySleep.notEmpty()) {
             SleepData todaySleepData = sleepDataList.get(sleepDataList.size() - 1);
-            sleepAnalysisResult = todaySleepData.toJSONObject();
-
+            sleepAnalysisResult = todaySleepData.toJSONObject(getActivity());
             setProgressBar(sleepAnalysisResult);
             try {
-                //TODO put into keys.xml
-                setDashboard(new Dashboard(sleepAnalysisResult.getInt("sleepDuration")
-                        , sleepAnalysisResult.getInt("sleepDeepDuration")
-                        , sleepAnalysisResult.getInt("sleepLightDuration")
-                        , sleepAnalysisResult.getLong("startDateTime")
-                        , sleepAnalysisResult.getLong("endDateTime")
-                        , sleepAnalysisResult.getInt("sleepWakeDuration")));
+                setDashboard(new Dashboard(sleepAnalysisResult.getInt(getString(R.string.key_sleep_duration))
+                        , sleepAnalysisResult.getInt(getString(R.string.key_sleep_deep_duration))
+                        , sleepAnalysisResult.getInt(getString(R.string.key_sleep_light_duration))
+                        , sleepAnalysisResult.getLong(getString(R.string.key_sleep_start_time))
+                        , sleepAnalysisResult.getLong(getString(R.string.key_sleep_end_time))
+                        , sleepAnalysisResult.getInt(getString(R.string.key_sleep_wake_duration))));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

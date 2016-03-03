@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.medcorp.nevo.R;
+
 /**
  * Created by karl-john on 14/12/15.
  */
@@ -14,8 +16,7 @@ public class RobotoThinFontStrategy implements FontStrategy {
     private Typeface tf;
     public RobotoThinFontStrategy(Context context) {
         tf = Typeface.createFromAsset(context.getAssets(),
-                //TODO put into config.xml
-                "font/Roboto-Thin.ttf");
+                context.getString(R.string.font_roboto_thin_path));
     }
 
     @Override

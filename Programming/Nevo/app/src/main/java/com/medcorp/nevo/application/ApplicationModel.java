@@ -123,16 +123,16 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     }
 
     @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes firmwareTypes, String version) {
         //in tutorial steps, don't popup this alert dialog
         if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true)
                 && observableActivity.notEmpty())
         {
-            if(whichfirmware == Constants.DfuFirmwareTypes.SOFTDEVICE)
+            if(firmwareTypes == Constants.DfuFirmwareTypes.SOFTDEVICE)
             {
                 mcuFirmwareVersion = Integer.parseInt(version);
             }
-            if(whichfirmware == Constants.DfuFirmwareTypes.APPLICATION)
+            if(firmwareTypes == Constants.DfuFirmwareTypes.APPLICATION)
             {
                 bleFirmwareVersion = Integer.parseInt(version);
             }

@@ -63,7 +63,6 @@ public class MyNevoAdapter extends BaseAdapter {
             values.setText(mynevo.getBleFirmwareVersion() + "/" + mynevo.getMcuFirmwareVersion());
             if(mynevo.isAvailableVersion())
             {
-                //TODO put in keys.xml
                 infomation.setText(R.string.my_nevo_new_version);
                 image.setVisibility(View.VISIBLE);
                 image.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +70,7 @@ public class MyNevoAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Intent intent = new Intent(context, DfuActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putStringArrayList("firmwares",(ArrayList<String>)mynevo.getFirmwareURLs());
+                        bundle.putStringArrayList(context.getString(R.string.key_firmwares),(ArrayList<String>)mynevo.getFirmwareURLs());
                         intent.putExtras(bundle);
                         context.startActivity(intent);
                         ((MyNevoActivity)context).finish();

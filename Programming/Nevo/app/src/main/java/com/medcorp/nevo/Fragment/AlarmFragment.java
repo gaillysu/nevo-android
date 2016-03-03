@@ -16,9 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
@@ -165,11 +163,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getContext(), EditAlarmActivity.class);
         Bundle bundle = new Bundle();
-        //TODO put into keys.xml
-        bundle.putInt("Alarm_ID", alarmList.get(position).getId());
+        bundle.putInt(getString(R.string.key_alarm_id), alarmList.get(position).getId());
         i.putExtras(bundle);
         SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-        prefs.putString("fragment_edit_alarm_label", alarmList.get(position).getLabel());
+        prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());
         prefs.commit();
         getAppCompatActivity().startActivityForResult(i, 0);
     }

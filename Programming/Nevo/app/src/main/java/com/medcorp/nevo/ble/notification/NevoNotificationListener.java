@@ -88,7 +88,6 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         Notification notification = statusBarNotification.getNotification();
         NotificationDataHelper helper = new NotificationDataHelper(this);
         if (notification != null) {
-            //sms
             if(statusBarNotification.getPackageName().equals("com.google.android.talk")
                     || statusBarNotification.getPackageName().equals("com.android.mms")
                     || statusBarNotification.getPackageName().equals("com.google.android.apps.messaging")
@@ -97,46 +96,28 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 //BLE keep-connect service will process this message
                 if(helper.getState(new SmsNotification()).isOn())
                     sendNotification(Preferences.getNotificationColor(this, new SmsNotification()).getHexColor());
-            }
-
-            //email,native email or gmail client
-            else if(statusBarNotification.getPackageName().equals("com.android.email")
+            } else if(statusBarNotification.getPackageName().equals("com.android.email")
                     || statusBarNotification.getPackageName().equals("com.google.android.email")
                     || statusBarNotification.getPackageName().equals("com.google.android.gm")
                     || statusBarNotification.getPackageName().equals("com.kingsoft.email")
                     || statusBarNotification.getPackageName().equals("com.tencent.androidqqmail")
                     || statusBarNotification.getPackageName().equals("com.outlook.Z7")){
-                //BLE keep-connect service will process this message
                 if(helper.getState(new EmailNotification()).isOn())
                     sendNotification(Preferences.getNotificationColor(this, new EmailNotification()).getHexColor());
-            }
-            //calendar
-            else if(statusBarNotification.getPackageName().equals("com.google.android.calendar")
+            } else if(statusBarNotification.getPackageName().equals("com.google.android.calendar")
                     || statusBarNotification.getPackageName().equals("com.android.calendar")){
-                //BLE keep-connect service will process this message
                 if(helper.getState(new CalendarNotification()).isOn())
                     sendNotification(Preferences.getNotificationColor(this, new CalendarNotification()).getHexColor());
-            }
-            //facebook
-            else if(statusBarNotification.getPackageName().equals("com.facebook.katana")){
-                //BLE keep-connect service will process this message
+            } else if(statusBarNotification.getPackageName().equals("com.facebook.katana")){
                 if(helper.getState(new FacebookNotification()).isOn())
                     sendNotification(Preferences.getNotificationColor(this, new FacebookNotification()).getHexColor());
-            }
-            //wechat
-            else if(statusBarNotification.getPackageName().equals("com.tencent.mm")){
-                //BLE keep-connect service will process this message
+            } else if(statusBarNotification.getPackageName().equals("com.tencent.mm")){
                 if(helper.getState(new WeChatNotification()).isOn())
                     sendNotification(Preferences.getNotificationColor(this, new WeChatNotification()).getHexColor());
-            }
-            //whatsapp
-            else if(statusBarNotification.getPackageName().equals("com.whatsapp")){
-                //BLE keep-connect service will process this message
+            } else if(statusBarNotification.getPackageName().equals("com.whatsapp")){
                 if(helper.getState(new WhatsappNotification()).isOn())
                     sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification()).getHexColor());
-            }
-
-            else {
+            } else {
                 Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());
             }
         }
@@ -144,15 +125,13 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
 
     @Override
     public void onNotificationRemoved(StatusBarNotification arg0) {
-        //How do we remove incoming notifications from the watch ?
     }
 
     /**
-     *
      * @param count :the flash times, total light on times,should double it, means light on/off follow:1.2s on,0.5s off,1.2s on,0.5s off,1.2s on, then off by Nevo self
-     * @param ledcolor: which led light on
+     * @param ledColor: which led light on
      */
-    private void showNotification(final int count,final int ledcolor)
+    private void showNotification(final int count,final int ledColor)
     {
         if(count == 0) return;
 
@@ -161,12 +140,12 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
             @Override
             public void run() {
                 ConnectionController.Singleton.getInstance(NevoNotificationListener.this, new GattAttributesDataSourceImpl(NevoNotificationListener.this))
-                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledcolor:0, count%2==0?true:false));
-                showNotification(count-1,ledcolor);
+                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledColor:0, count%2==0));
+                showNotification(count-1,ledColor);
             }
         },count%2==0?(count==LIGHTTIMES*2?0:500):1200); //first time should do right now, here have 0ms
     }
-    void sendNotification(final int ledcolor) {
+    void sendNotification(final int ledColor) {
 
         //We can't accept notifications if we just received one X ms ago
         if(lastNotification.notEmpty() && new Date().getTime()-lastNotification.get().getTime() < TIME_BETWEEN_TWO_NOTIFS) return ;
@@ -180,7 +159,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
 
         ConnectionController.Singleton.getInstance(this, new GattAttributesDataSourceImpl(this)).connect();
 
-        showNotification(LIGHTTIMES*2,ledcolor);
+        showNotification(LIGHTTIMES*2,ledColor);
     }
 
     public static void getNotificationAccessPermission(final Context ctx) {
@@ -203,25 +182,16 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
 
             }).show();
         }
-        else
-        {
-//              doSomethingThatRequiresNotificationAccessPermission();
-        }
     }
 
     @Override
     public void onErrorDetected(BaseBLEException e) {
-        int titleID = R.string.ble_notification_title;
-        // TODO replace this. This doesn't make sense.
-//        int msgID = e.getWarningMessageId();
-        //unknown exception, discard it
-//        getModel().getSyncController().showMessage(titleID,msgID);
+        Log.w("Karl","Couldn't give notification due to bluetooth problems.");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //unregister PhoneStateListener
         mTm.listen(mListener, PhoneStateListener.LISTEN_NONE);
     }
 }

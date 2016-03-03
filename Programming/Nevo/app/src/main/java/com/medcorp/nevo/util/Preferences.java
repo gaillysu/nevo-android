@@ -3,6 +3,7 @@ package com.medcorp.nevo.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.ble.model.color.BlueLed;
 import com.medcorp.nevo.ble.model.color.GreenLed;
 import com.medcorp.nevo.ble.model.color.LightGreenLed;
@@ -22,48 +23,42 @@ public class Preferences {
 
     private static void init(Context context){
         if (preferences == null){
-            //TODO put into keys.xml if it is still used
-            preferences= context.getSharedPreferences("Nevo_Shared_Preferences",Context.MODE_PRIVATE);
+            preferences= context.getSharedPreferences(context.getString(R.string.key_prefs_nevo_shared_pref),Context.MODE_PRIVATE);
         }
     }
 
     public static void savePreset(Context context, Goal goal){
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        //TODO put into keys.xml if it is still used
-        editor.putInt("steps_preset_id", goal.getId()).apply();
+        editor.putInt(context.getString(R.string.key_prefs_step_preset_id), goal.getId()).apply();
     }
 
     public static int getPresetId(Context context){
         init(context);
-        //TODO put into keys.xml if it is still used
-        return preferences.getInt("steps_preset_id", -1);
+        return preferences.getInt(context.getString(R.string.key_prefs_step_preset_id), -1);
     }
 
     public static boolean getLinklossNotification(Context context)
     {
         init(context);
-        //TODO put into keys.xml if it is still used
-        return preferences.getBoolean("link_loss_enable", false);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_link_loss), false);
     }
     public static void saveLinklossNotification(Context context,boolean isEnable) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        //TODO put into keys.xml if it is still used
-        editor.putBoolean("link_loss_enable", isEnable).apply();
+        editor.putBoolean(context.getString(R.string.key_prefs_link_loss), isEnable).apply();
 
     }
 
     public static void setGoogleFit(Context context,boolean on){
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        //TODO put into keys.xml if it is still used
-        editor.putBoolean("google_fit_status", on).apply();
+        editor.putBoolean(context.getString(R.string.key_prefs_google_fit), on).apply();
     }
 
     public static boolean isGoogleFitSet(Context context){
         init(context);
-        return preferences.getBoolean("google_fit_status",false);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_google_fit),false);
     }
 
     public static void saveNotificationColor(Context context, Notification notification, NevoLed led){

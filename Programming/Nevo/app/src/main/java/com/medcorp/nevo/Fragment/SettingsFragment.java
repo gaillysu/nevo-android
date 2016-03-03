@@ -20,7 +20,7 @@ import com.medcorp.nevo.activity.ConnectToOtherAppsActivity;
 import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.activity.SettingNotificationActivity;
-import com.medcorp.nevo.activity.tutorial.TutorialPageVideoActivity;
+import com.medcorp.nevo.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
@@ -88,7 +88,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void findWatchSuccess() {
-
     }
 
     @Override
@@ -147,8 +146,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         } else if(position == 5){
             startActivity(ConnectToOtherAppsActivity.class);
         } else if(position == 6) {
-            //TODO put into config.xml
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://support.nevowatch.com/support/home"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
         } else if(position == 7) {
             new MaterialDialog.Builder(getContext())
@@ -159,7 +157,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                         @Override
                         public void onClick(MaterialDialog dialog, DialogAction which) {
                             getModel().forgetDevice();
-                            startActivity(TutorialPageVideoActivity.class);
+                            startActivity(TutorialPage1Activity.class);
                             SettingsFragment.this.getActivity().finish();
                         }
                     })
@@ -172,17 +170,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
         if (position == 0) {
             Preferences.saveLinklossNotification(getActivity(), isChecked);
-            Log.w("Karl", "Yeey");
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 }

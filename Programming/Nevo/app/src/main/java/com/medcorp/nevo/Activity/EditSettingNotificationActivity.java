@@ -71,8 +71,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Mat
         ledList.add(new LightGreenLed());
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
-        //TODO put in keys.xml
-        notification = (Notification) getIntent().getSerializableExtra("notification");
+        notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this,notification);
         setTitle(notification.getStringResource());
         onOffSwitch.setChecked(notification.isOn());

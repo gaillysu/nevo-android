@@ -75,7 +75,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         setContentView(R.layout.activity_dfu);
         ButterKnife.bind(this);
         mContext = this;
-        /*always light on screen */
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initManualmodeAndtFirmwareList();
         initNevoLogo();
@@ -87,7 +86,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         mNevoOtaController = getModel().getOtaController();
         mNevoOtaController.switch2OtaController();
         mNevoOtaController.setOnOtaControllerListener(this);
-        //when manual OTA mode, firstly connect it and find out OTA service 00001530-1212-efde-1523-785feabcd123
         if(manualMode)
         {
             mNevoOtaController.setManualMode(true);
@@ -128,7 +126,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 .show();
 
     }
-    //nevo fixed time : 11:05
+
     private void initNevoLogo()
     {
         hourImage.setVisibility(View.VISIBLE);
@@ -397,7 +395,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     public void onClick(View v) {
         if(v.getId() == R.id.activity_dfu_back2settings_textview)
         {
-            //TODO OMG this is so bad. Come on. Change getString to some keys but not this. also dont work with tags.
+            //TODO Change to multiple buttons please.
             if (v.getTag().toString().equals(getString(R.string.dfu_back)))
             {
                 finish();

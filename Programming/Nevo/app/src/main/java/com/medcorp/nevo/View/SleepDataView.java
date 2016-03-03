@@ -10,9 +10,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,10 +87,6 @@ public class SleepDataView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        /**
-         * draw outside circle
-         */
-
         int radius = (int) (Math.min(getWidth()/2,getHeight()/2) - mRoundWidth/2);
         mPaint.setColor(mRoundColor);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -98,9 +94,6 @@ public class SleepDataView extends View {
         mPaint.setAntiAlias(true);
         canvas.drawCircle(getWidth()/2, getHeight()/2, radius, mPaint);
 
-        /**
-         * draw mProgress
-         */
         mPaint.setStrokeWidth(0);
         mPaint.setColor(mTextColor);
         mPaint.setTextSize(mTextSize);
@@ -124,8 +117,7 @@ public class SleepDataView extends View {
 
         float start = 0;
         float end = 0;
-        float initstart = 0;
-        float initend = 0;
+        float initStart = 0;
 
         if(mSleepAnalysisResult.has("startDateTime") && mSleepAnalysisResult.has("endDateTime"))
         {
@@ -147,7 +139,7 @@ public class SleepDataView extends View {
                 else {
                     start = start + 270;
                 }
-                initstart = start;
+                initStart = start;
 
                 hhmm = new SimpleDateFormat("HH:mm").format(new Date(endsleep)).split(":");
                 end = ( ((Integer.parseInt(hhmm[0]))%12)*60 + Integer.parseInt(hhmm[1]))/2.0f;
@@ -155,27 +147,25 @@ public class SleepDataView extends View {
                 else {
                     end = end + 270;
                 }
-                initend = end;
+                initStart = end;
 
-                int [] values1 = DatabaseHelper.string2IntArray(mSleepAnalysisResult.getString("mergeHourlyWakeTime"));
-                int [] values2 = DatabaseHelper.string2IntArray(mSleepAnalysisResult.getString("mergeHourlyLightTime"));
-                int [] values3 = DatabaseHelper.string2IntArray(mSleepAnalysisResult.getString("mergeHourlyDeepTime"));
+                JSONArray hourlyWakeTime = new JSONArray(mSleepAnalysisResult.getString("mergeHourlyWakeTime"));
+                JSONArray hourlyLightTime = new JSONArray(mSleepAnalysisResult.getString("mergeHourlyLightTime"));
+                JSONArray hourlyDeepTime = new JSONArray(mSleepAnalysisResult.getString("mergeHourlyDeepTime"));
 
-                if(values1.length>0 && values2.length>0 && values3.length>0)
+                if(hourlyWakeTime.length() == 24 && hourlyLightTime.length() == 24 && hourlyDeepTime.length() == 24 )
                 {
-                    // normally, values1 + values2 + values3 = 60
-                    // but sometimes , values1 + values2 + values3 < 60 when user break sleep and continue sleep
                     long total = 0; //(endsleep - startsleep) / 1000 / 60;
-                    for(int k:values1) total+=k;
-                    for(int k:values2) total+=k;
-                    for(int k:values3) total+=k;
+                    int sleepTotal = 0;
+                    for(int k = 0; k < 24; k++){
+                        total+= hourlyWakeTime.getInt(k);
+                        total+= hourlyLightTime.getInt(k);
+                        total+= hourlyDeepTime.getInt(k);
+                        sleepTotal+= hourlyLightTime.getInt(k);
+                        sleepTotal+= hourlyDeepTime.getInt(k);
+                    }
 
-                    int sleeptotal = 0;
-                    for(int k:values2) sleeptotal+=k;
-                    for(int k:values3) sleeptotal+=k;
-
-                    //draw text
-                    percent = (int)(((float) sleeptotal / (float) total) * 100);
+                    percent = (int)(((float) sleepTotal / (float) total) * 100);
                     textWidth = mPaint.measureText(percent + "%");
                     if(mTextIsDisplayable)
                     canvas.drawText(percent + "%", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
@@ -190,59 +180,58 @@ public class SleepDataView extends View {
                     //the sleep order is active/wake/light/deep ,please see @lastHourlySleepStatus
                     SLEEPSTATUS lastHourlySleepStatus = SLEEPSTATUS.ACTIVITY;
 
-                    for (int j = 0; j < values1.length; j++)
+                    for (int j = 0; j < hourlyWakeTime.length(); j++)
                     {
                         if(lastHourlySleepStatus == SLEEPSTATUS.ACTIVITY)
                         {
-                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepDegree.add((60-hourlyWakeTime.getInt(j)-hourlyLightTime.getInt(j)-hourlyDeepTime.getInt(j))/2.0f);
                             sleepColor.add(mPaints[3]);
-                            sleepDegree.add(values1[j]/2.0f);
+                            sleepDegree.add(hourlyWakeTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[0]);
-                            sleepDegree.add(values2[j]/2.0f);
+                            sleepDegree.add(hourlyLightTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[1]);
-                            sleepDegree.add(values3[j]/2.0f);
+                            sleepDegree.add(hourlyDeepTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[2]);
-                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                            lastHourlySleepStatus = hourlyDeepTime.getInt(j)>0?SLEEPSTATUS.DEEP:(hourlyLightTime.getInt(j)>0?SLEEPSTATUS.LIGHT:(hourlyWakeTime.getInt(j)>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
                         else if(lastHourlySleepStatus == SLEEPSTATUS.WAKE)
                         {
-                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepDegree.add((60-hourlyWakeTime.getInt(j)-hourlyLightTime.getInt(j)-hourlyDeepTime.getInt(j))/2.0f);
                             sleepColor.add(mPaints[3]);
-                            sleepDegree.add(values1[j]/2.0f);
+                            sleepDegree.add(hourlyWakeTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[0]);
-                            sleepDegree.add(values2[j]/2.0f);
+                            sleepDegree.add(hourlyLightTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[1]);
-                            sleepDegree.add(values3[j]/2.0f);
+                            sleepDegree.add(hourlyDeepTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[2]);
-                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                            lastHourlySleepStatus = hourlyDeepTime.getInt(j)>0?SLEEPSTATUS.DEEP:(hourlyLightTime.getInt(j)>0?SLEEPSTATUS.LIGHT:(hourlyWakeTime.getInt(j)>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
                         else if(lastHourlySleepStatus == SLEEPSTATUS.LIGHT)
                         {
-                            sleepDegree.add(values2[j]/2.0f);
+                            sleepDegree.add(hourlyLightTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[1]);
-                            sleepDegree.add(values3[j]/2.0f);
+                            sleepDegree.add(hourlyDeepTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[2]);
-                            sleepDegree.add(values1[j]/2.0f);
+                            sleepDegree.add(hourlyWakeTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[0]);
-                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepDegree.add((60-hourlyWakeTime.getInt(j)-hourlyLightTime.getInt(j)-hourlyDeepTime.getInt(j))/2.0f);
                             sleepColor.add(mPaints[3]);
-                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                            lastHourlySleepStatus = hourlyDeepTime.getInt(j)>0?SLEEPSTATUS.DEEP:(hourlyLightTime.getInt(j)>0?SLEEPSTATUS.LIGHT:(hourlyWakeTime.getInt(j)>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
                         else if(lastHourlySleepStatus == SLEEPSTATUS.DEEP)
                         {
-                            sleepDegree.add(values3[j]/2.0f);
+                            sleepDegree.add(hourlyDeepTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[2]);
-                            sleepDegree.add(values2[j]/2.0f);
+                            sleepDegree.add(hourlyLightTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[1]);
-                            sleepDegree.add(values1[j]/2.0f);
+                            sleepDegree.add(hourlyWakeTime.getInt(j)/2.0f);
                             sleepColor.add(mPaints[0]);
-                            sleepDegree.add((60-values1[j]-values2[j]-values3[j])/2.0f);
+                            sleepDegree.add((60-hourlyWakeTime.getInt(j)-hourlyLightTime.getInt(j)-hourlyDeepTime.getInt(j))/2.0f);
                             sleepColor.add(mPaints[3]);
-                            lastHourlySleepStatus = values3[j]>0?SLEEPSTATUS.DEEP:(values2[j]>0?SLEEPSTATUS.LIGHT:(values1[j]>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
+                            lastHourlySleepStatus = hourlyDeepTime.getInt(j)>0?SLEEPSTATUS.DEEP:(hourlyLightTime.getInt(j)>0?SLEEPSTATUS.LIGHT:(hourlyWakeTime.getInt(j)>0?SLEEPSTATUS.WAKE:SLEEPSTATUS.ACTIVITY));
                         }
-
                     }//end for
-                    start = initstart;
+                    start = initStart;
                     int i =0;
                     for(Float f:sleepDegree)
                     {
@@ -260,18 +249,9 @@ public class SleepDataView extends View {
                 }
 
                 //start/end/total
-                Date startDate = new Date(startsleep);
-                Date endDate = new Date(endsleep);
-                long total = (endDate.getTime() - startDate.getTime())/1000/60;
                 mPaint.setColor(Color.WHITE);
                 mPaint.setTypeface(Typeface.DEFAULT);
                 mPaint.setTextSize(24f);
-
-                //canvas.drawText("St: "+new SimpleDateFormat("dd/MM HH:mm").format(startDate), oval.right-45,oval.top+30, mPaint);
-                //canvas.drawText("Ed: "+new SimpleDateFormat("dd/MM HH:mm").format(endDate), oval.right-45,oval.top+54, mPaint);
-                //canvas.drawText("Du: "+ (total>=60?(total/60 + "h "):"") + (total%60) + "min", oval.right-45,oval.top+78, mPaint);
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -281,21 +261,7 @@ public class SleepDataView extends View {
             if(mTextIsDisplayable)
             canvas.drawText("----", getWidth()/2 - textWidth / 2, getHeight()/2 + mTextSize /2 + 60, mPaint);
         }
-        //call invalidate to redraw again
         invalidate();
-    }
-
-    public synchronized void setProgress(int progress) {
-        if(progress < 0){
-            throw new IllegalArgumentException("mProgress not less than 0");
-        }
-        if(progress > mMax){
-            progress = mMax;
-        }
-        if(progress <= mMax){
-            this.mProgress = progress;
-            postInvalidate();
-        }
     }
 
     public synchronized void setSleepAnalysisResult(JSONObject result)
