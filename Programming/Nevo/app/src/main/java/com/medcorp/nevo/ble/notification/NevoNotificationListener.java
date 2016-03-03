@@ -88,7 +88,6 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         Notification notification = statusBarNotification.getNotification();
         NotificationDataHelper helper = new NotificationDataHelper(this);
         if (notification != null) {
-            //sms
             if(statusBarNotification.getPackageName().equals("com.google.android.talk")
                     || statusBarNotification.getPackageName().equals("com.android.mms")
                     || statusBarNotification.getPackageName().equals("com.google.android.apps.messaging")
@@ -129,11 +128,10 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
     }
 
     /**
-     *
      * @param count :the flash times, total light on times,should double it, means light on/off follow:1.2s on,0.5s off,1.2s on,0.5s off,1.2s on, then off by Nevo self
-     * @param ledcolor: which led light on
+     * @param ledColor: which led light on
      */
-    private void showNotification(final int count,final int ledcolor)
+    private void showNotification(final int count,final int ledColor)
     {
         if(count == 0) return;
 
@@ -142,12 +140,12 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
             @Override
             public void run() {
                 ConnectionController.Singleton.getInstance(NevoNotificationListener.this, new GattAttributesDataSourceImpl(NevoNotificationListener.this))
-                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledcolor:0, count%2==0?true:false));
-                showNotification(count-1,ledcolor);
+                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledColor:0, count%2==0));
+                showNotification(count-1,ledColor);
             }
         },count%2==0?(count==LIGHTTIMES*2?0:500):1200); //first time should do right now, here have 0ms
     }
-    void sendNotification(final int ledcolor) {
+    void sendNotification(final int ledColor) {
 
         //We can't accept notifications if we just received one X ms ago
         if(lastNotification.notEmpty() && new Date().getTime()-lastNotification.get().getTime() < TIME_BETWEEN_TWO_NOTIFS) return ;
@@ -161,7 +159,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
 
         ConnectionController.Singleton.getInstance(this, new GattAttributesDataSourceImpl(this)).connect();
 
-        showNotification(LIGHTTIMES*2,ledcolor);
+        showNotification(LIGHTTIMES*2,ledColor);
     }
 
     public static void getNotificationAccessPermission(final Context ctx) {
@@ -183,10 +181,6 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 }
 
             }).show();
-        }
-        else
-        {
-//              doSomethingThatRequiresNotificationAccessPermission();
         }
     }
 
