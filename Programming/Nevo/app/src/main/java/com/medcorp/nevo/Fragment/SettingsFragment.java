@@ -1,10 +1,8 @@
 package com.medcorp.nevo.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +20,6 @@ import com.medcorp.nevo.activity.ConnectToOtherAppsActivity;
 import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.activity.SettingNotificationActivity;
-import com.medcorp.nevo.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.nevo.activity.tutorial.TutorialPageVideoActivity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
@@ -91,14 +88,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void findWatchSuccess() {
-        //when find out my nevo and receive nevo's response, let phone vibrator.
-        Log.w("Karl","Hello.");
-//        Vibrator vibrator = (Vibrator) getAppCompatActivity().getSystemService(Context.VIBRATOR_SERVICE);
-//        if(vibrator.hasVibrator())
-//        {
-//            vibrator.cancel();
-//        }
-//        vibrator.vibrate(1000);
+
     }
 
     @Override
@@ -184,5 +174,15 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Preferences.saveLinklossNotification(getActivity(), isChecked);
             Log.w("Karl", "Yeey");
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

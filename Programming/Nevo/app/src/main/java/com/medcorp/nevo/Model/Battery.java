@@ -4,10 +4,12 @@ package com.medcorp.nevo.model;
  * Created by gaillysu on 15/11/24.
  */
 public class Battery {
-    byte  mBatterylevel;
-    public Battery(byte level)
-    {
-        this.mBatterylevel = level;
+
+    private byte batteryLevel;
+
+    public Battery(byte level) {
+        this.batteryLevel = level;
     }
-    public byte getBatterylevel() {return mBatterylevel;}
+
+    public byte getBatteryLevel() {return batteryLevel;}
 }

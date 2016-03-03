@@ -133,7 +133,6 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
 
     @Override
     public void OnStepsChanged() {
-
         Steps steps =  getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
         if(steps == null) {
             return;

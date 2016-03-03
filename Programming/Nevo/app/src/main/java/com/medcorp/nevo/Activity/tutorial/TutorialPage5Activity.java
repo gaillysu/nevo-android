@@ -12,7 +12,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.view.RoundProgressBar;
 
 import butterknife.Bind;
@@ -57,7 +56,7 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().observableActivity(this);
+        getModel().setObservableActivity(this);
         if(getModel().isWatchConnected())
         {
             startConnectedActivity();
@@ -79,10 +78,6 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
         startActivity(TutorialPageSuccessActivity.class);
         finish();
     }
-    @Override
-    public void notifyDatasetChanged() {
-
-    }
 
     @Override
     public void notifyOnConnected() {
@@ -97,16 +92,6 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
     @Override
     public void notifyOnDisconnected() {
         //DO NOTHING WHEN HAS GOT CONNECTED ,MAINACTIVITY WILL CONTINUE CONNECT WATCH AGAIN
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-
     }
 
     @Override
@@ -137,31 +122,6 @@ public class TutorialPage5Activity extends BaseActivity implements ActivityObser
 
     @Override
     public void onConnecting() {
-
-    }
-
-    @Override
-    public void onSyncStart() {
-
-    }
-
-    @Override
-    public void onSyncEnd() {
-
-    }
-
-    @Override
-    public void onInitializeStart() {
-
-    }
-
-    @Override
-    public void onInitializeEnd() {
-
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
 
     }
 }

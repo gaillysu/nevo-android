@@ -32,6 +32,11 @@ import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.event.BatteryEvent;
+import com.medcorp.nevo.event.ConnectionStateChangedEvent;
+import com.medcorp.nevo.event.FindWatchEvent;
+import com.medcorp.nevo.event.LittleSyncEvent;
+import com.medcorp.nevo.event.OnRequestResponse;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
@@ -49,6 +54,8 @@ import com.medcorp.nevo.view.ToastHelper;
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Optional;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,21 +97,20 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
 
     @Override
     public void packetReceived(NevoPacket packet) {
-
         if(observableActivity.notEmpty()) {
             if (packet.getHeader() == (byte) GetStepsGoalNevoRequest.HEADER) {
-                observableActivity.get().notifyDatasetChanged();
+                EventBus.getDefault().post(new LittleSyncEvent(true));
             }
             else if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader()) {
-                observableActivity.get().batteryInfoReceived(new Battery(packet.newBatteryLevelNevoPacket().getBatteryLevel()));
+                EventBus.getDefault().post(new BatteryEvent(new Battery(packet.newBatteryLevelNevoPacket().getBatteryLevel())));
             }
             else if((byte) 0xF0 == packet.getHeader()) {
-                observableActivity.get().findWatchSuccess();
+                EventBus.getDefault().post(new FindWatchEvent(true));
             }
             else if((byte) SetAlarmNevoRequest.HEADER == packet.getHeader()
                     || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()
                     || (byte) SetGoalNevoRequest.HEADER == packet.getHeader()) {
-                observableActivity.get().onRequestResponse(true);
+                EventBus.getDefault().post(new OnRequestResponse(true));
             }
         }
     }
@@ -112,11 +118,7 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     @Override
     public void connectionStateChanged(boolean isConnected) {
         if(observableActivity.notEmpty()) {
-            if (isConnected) {
-                observableActivity.get().notifyOnConnected();
-            } else {
-                observableActivity.get().notifyOnDisconnected();
-            }
+            EventBus.getDefault().post(new ConnectionStateChangedEvent(isConnected));
         }
     }
 
@@ -205,39 +207,25 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
 
     @Override
     public void onSyncStart() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onSyncStart();
-        }
+
     }
 
     @Override
     public void onSyncEnd() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onSyncEnd();
-        }
         updateGoogleFit();
     }
 
     @Override
     public void onInitializeStart() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onInitializeStart();
-        }
+
     }
 
     @Override
     public void onInitializeEnd() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onInitializeEnd();
-        }
+
     }
 
-
-    public void observableActivity(ActivityObservable observable)
+    public void setObservableActivity(ActivityObservable observable)
     {
         this.observableActivity.set(observable);
     }
@@ -424,7 +412,6 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     };
 
     public void updateGoogleFit(){
-        Log.w("Karl", "trying Updating google fit");
         if(Preferences.isGoogleFitSet(this)) {
             Log.w("Karl", "Google Fit Enabled. Updating google fit");
             initGoogleFit(null);

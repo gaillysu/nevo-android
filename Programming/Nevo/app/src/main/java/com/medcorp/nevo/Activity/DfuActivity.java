@@ -3,6 +3,7 @@ package com.medcorp.nevo.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +15,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.view.RoundProgressBar;
 
@@ -285,8 +285,9 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         });
     }
 
+
     @Override
-    public void onSuccessfulFileTranferred() {
+    public void onSuccessfulFileTranfered() {
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -330,7 +331,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                     roundProgressBar.setVisibility(View.INVISIBLE);
                     hourImage.setVisibility(View.INVISIBLE);
                     minImage.setVisibility(View.INVISIBLE);
-                    clockImage.setImageDrawable(getDrawable(R.drawable.firmware_clock_ble_button));
+                    clockImage.setImageDrawable(ContextCompat.getDrawable(DfuActivity.this,R.drawable.firmware_clock_ble_button));
                     percentTextView.setText(R.string.dfu_press_third_button);
                     infomationTextView.setText(R.string.dfu_press_third_button_description);
                 }

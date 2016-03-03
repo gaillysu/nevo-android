@@ -4,15 +4,20 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
+
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.adapter.MyNevoAdapter;
-import com.medcorp.nevo.model.Battery;
+import com.medcorp.nevo.event.BatteryEvent;
 import com.medcorp.nevo.model.MyNevo;
 import com.medcorp.nevo.util.Common;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +36,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
     @Bind(R.id.activity_mynevo_list_view)
     ListView myNevoListView;
 
-    private MyNevo mynevo;
+    private MyNevo myNevo;
     private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
     private final boolean available_version = false;//need check later
 
@@ -41,6 +46,7 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         setContentView(R.layout.activity_mynevo);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        getModel().setObservableActivity(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_my_nevo);
@@ -50,14 +56,27 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        mynevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,available_version,null);
-        myNevoListView.setAdapter(new MyNevoAdapter(this, mynevo));
+        myNevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,available_version,null);
+        myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getModel().observableActivity(this);
+
+        getModel().setObservableActivity(this);
         if (getModel().isWatchConnected()){
             getModel().getBatteryLevelOfWatch();
         }
@@ -68,7 +87,6 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
     private void checkVersion()
     {
         List<String> firmwareURLs = new ArrayList<String>();
-
         //check build-in firmwares
         //fill  list by build-in files or download files
         if(null == getModel().getWatchSoftware() || null == getModel().getWatchFirmware())
@@ -81,9 +99,9 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         firmwareURLs = Common.needOTAFirmwareURLs(this,currentSoftwareVersion,currentFirmwareVersion);
         if(!firmwareURLs.isEmpty())
         {
-            mynevo.setAvailableVersion(true);
-            mynevo.setFirmwareURLs(firmwareURLs);
-            myNevoListView.setAdapter(new MyNevoAdapter(this, mynevo));
+            myNevo.setAvailableVersion(true);
+            myNevo.setFirmwareURLs(firmwareURLs);
+            myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
         }
         //check network firmwares
 
@@ -101,10 +119,6 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         }
     }
 
-    @Override
-    public void notifyDatasetChanged() {
-
-    }
 
     @Override
     public void notifyOnConnected() {
@@ -116,16 +130,13 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
 
     }
 
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-        mynevo.setBatteryLevel((int) battery.getBatterylevel());
-        myNevoListView.setAdapter(new MyNevoAdapter(this,mynevo));
+    @Subscribe
+    public void onEvent(BatteryEvent batteryEvent){
+        myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
+        myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+        Log.w("Karl","Pretty coool");
     }
 
-    @Override
-    public void findWatchSuccess() {
-
-    }
 
     @Override
     public void onSearching() {
@@ -144,32 +155,5 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
 
     @Override
     public void onConnecting() {
-
     }
-
-    @Override
-    public void onSyncStart() {
-
-    }
-
-    @Override
-    public void onSyncEnd() {
-
-    }
-
-    @Override
-    public void onInitializeStart() {
-
-    }
-
-    @Override
-    public void onInitializeEnd() {
-
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
-
-    }
-
 }

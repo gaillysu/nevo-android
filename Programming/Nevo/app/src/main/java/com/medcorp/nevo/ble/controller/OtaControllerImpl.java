@@ -26,6 +26,7 @@ import net.medcorp.library.ble.listener.OnExceptionListener;
 import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
 import net.medcorp.library.ble.listener.OnOtaControllerListener;
 import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.response.DFUResponse;
 import net.medcorp.library.ble.model.response.FirmwareData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.model.response.ResponseData;
@@ -63,7 +64,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     private List<MEDRawData> mNevoPacketsbuffer = new ArrayList<MEDRawData>();
 
     private String firmwareFile ;
-    private Constants.DFUResponse dfuResponse = new Constants.DFUResponse((byte)0, (byte)0, (byte)0);
+    private DFUResponse dfuResponse = new DFUResponse((byte)0, (byte)0, (byte)0);
 
     private int hexFileSize  = 0;
     private byte[] hexFileData ;
@@ -401,7 +402,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"succesfully received notification for ValidateFirmware");
             activateAndReset();
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
         }
         else {
             Log.i(TAG,"Firmware validate failed, Error Status: "+ responseErrorMessage(dfuResponse.getresponseStatus()));
@@ -964,7 +965,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                         //Check sum match ,OTA over.
                         Log.i(TAG,"Checksum match ,OTA get success!");
                         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
+                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
                     }
                     else
                     {

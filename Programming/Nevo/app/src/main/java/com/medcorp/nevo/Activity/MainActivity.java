@@ -26,14 +26,18 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.event.OnSyncEndEvent;
+import com.medcorp.nevo.event.OnSyncStartEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
-import com.medcorp.nevo.model.Battery;
 
 import net.medcorp.library.ble.util.Optional;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,7 +73,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         setContentView(R.layout.activity_main_new);
         activeFragment =  new Optional<>();
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
-        getModel().observableActivity(this);
+        getModel().setObservableActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
@@ -93,7 +97,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().observableActivity(this);
+        getModel().setObservableActivity(this);
         if(!getModel().isWatchConnected())
         {
             getModel().startConnectToWatch(false);
@@ -103,7 +107,7 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getModel().observableActivity(null);
+        getModel().setObservableActivity(null);
     }
 
     @Override
@@ -119,13 +123,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void notifyDatasetChanged() {
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().notifyDatasetChanged();
-        }
-    }
 
     @Override
     public void notifyOnConnected() {
@@ -146,22 +143,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         if(activeFragment.notEmpty())
         {
             activeFragment.get().notifyOnDisconnected();
-        }
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().batteryInfoReceived(battery);
-        }
-    }
-
-    @Override
-    public void findWatchSuccess() {
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().findWatchSuccess();
         }
     }
 
@@ -199,42 +180,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     public void onConnecting() {
         if(activeFragment.notEmpty()) {
             activeFragment.get().onConnecting();
-        }
-    }
-
-    @Override
-    public void onSyncStart() {
-        bigSyncStart = true;
-        showStateString(R.string.in_app_notification_syncing,false);
-        if(activeFragment.notEmpty()) {
-            activeFragment.get().onSyncStart();
-        }
-    }
-
-    @Override
-    public void onSyncEnd() {
-        bigSyncStart = false;
-        showStateString(R.string.in_app_notification_synced,true);
-        if(activeFragment.notEmpty()) {
-            activeFragment.get().onSyncEnd();
-        }
-    }
-
-    @Override
-    public void onInitializeStart() {
-
-    }
-
-    @Override
-    public void onInitializeEnd() {
-
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().onRequestResponse(success);
         }
     }
 
@@ -375,5 +320,29 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         {
             activeFragment.get().onActivityResult(requestCode,resultCode,data);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(OnSyncEndEvent event){
+        bigSyncStart = false;
+        showStateString(R.string.in_app_notification_synced, true);
+    }
+
+    @Subscribe
+    public void onEvent(OnSyncStartEvent event){
+        bigSyncStart = true;
+        showStateString(R.string.in_app_notification_syncing,false);
     }
 }
