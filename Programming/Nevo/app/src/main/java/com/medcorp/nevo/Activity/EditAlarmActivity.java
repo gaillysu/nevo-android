@@ -3,15 +3,12 @@ package com.medcorp.nevo.activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
@@ -46,7 +43,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
-        alarm = getModel().getAlarmById(bundle.getInt("Alarm_ID"));
+        alarm = getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)));
         alarmOld = new Alarm(alarm.getHour(),alarm.getMinute(),alarm.isEnable(),alarm.getLabel());
         listView.setAdapter(new AlarmEditAdapter(this,alarm));
         listView.setOnItemClickListener(this);

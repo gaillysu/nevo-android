@@ -1,5 +1,9 @@
 package com.medcorp.nevo.model;
 
+import android.content.Context;
+
+import com.medcorp.nevo.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -110,20 +114,19 @@ public class SleepData {
         this.hourlyDeep = hourlyDeep;
     }
 
-    public JSONObject toJSONObject()
+    public JSONObject toJSONObject(Context context)
     {
         JSONObject json = new JSONObject();
         try {
-            //TODO put into keys.xml
-            json.put("sleepDuration",getTotalSleep());
-            json.put("sleepWakeDuration",getAwake());
-            json.put("sleepLightDuration",getLightSleep());
-            json.put("sleepDeepDuration",getDeepSleep());
-            json.put("startDateTime",getSleepStart());
-            json.put("endDateTime",getSleepEnd());
-            json.put("mergeHourlyWakeTime",getHourlyWake());
-            json.put("mergeHourlyLightTime",getHourlyLight());
-            json.put("mergeHourlyDeepTime",getHourlyDeep());
+            json.put(context.getString(R.string.key_sleep_duration),getTotalSleep());
+            json.put(context.getString(R.string.key_sleep_deep_duration),getAwake());
+            json.put(context.getString(R.string.key_sleep_light_duration),getLightSleep());
+            json.put(context.getString(R.string.key_sleep_start_time),getDeepSleep());
+            json.put(context.getString(R.string.key_sleep_end_time),getSleepStart());
+            json.put(context.getString(R.string.key_sleep_wake_duration),getSleepEnd());
+            json.put(context.getString(R.string.key_sleep_hourly_wake),getHourlyWake());
+            json.put(context.getString(R.string.key_sleep_hourly_light),getHourlyLight());
+            json.put(context.getString(R.string.key_sleep_hourly_deep),getHourlyDeep());
         } catch (JSONException e) {
             e.printStackTrace();
         }

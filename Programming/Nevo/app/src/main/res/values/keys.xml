@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="key_nevo">nevo</string>
+    <string name="key_notification">notification</string>
+    <string name="key_firmwares">firmwares</string>
+
+    <!-- preset keys -->
+    <string name="key_preset">preset</string>
+    <string name="key_preset_id">Preset_ID</string>
+    <string name="key_preset_label">Preset_Label</string>
+    <string name="key_preset_steps">Preset_Steps</string>
+
+    <!-- alarm keys -->
+    <string name="key_alarm_id">Alarm_ID</string>
+    <string name="key_alarm_label">alarm_label</string>
+
+    <!-- sleep keys -->
+    <string name="key_sleep_duration">sleepDuration</string>
+    <string name="key_sleep_deep_duration">sleepDeepDuration</string>
+    <string name="key_sleep_light_duration">sleepLightDuration</string>
+    <string name="key_sleep_start_time">startDateTime</string>
+    <string name="key_sleep_end_time">endDateTime</string>
+    <string name="key_sleep_wake_duration">sleepWakeDuration</string>
+    <string name="key_sleep_hourly_wake">mergeHourlyWakeTime</string>
+    <string name="key_sleep_hourly_light">mergeHourlyLightTime</string>
+    <string name="key_sleep_hourly_deep">mergeHourlyDeepTime</string>
+
+    <!-- preferences-->
+     <string name="key_prefs_nevo_shared_pref">Nevo_Shared_Preferences</string>
+    <string name="key_prefs_step_preset_id">steps_preset_id</string>
+    <string name="key_prefs_link_loss">link_loss_enable</string>
+    <string name="key_prefs_google_fit">google_fit_status</string>
+</resources>

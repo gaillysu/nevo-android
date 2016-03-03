@@ -29,15 +29,14 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         SharedPreferences.Editor sharedPreferences = getSharedPreferences(Constants.PREF_NAME, 0).edit();
         sharedPreferences.putBoolean(Constants.FIRST_FLAG, false);
         sharedPreferences.commit();
-        //TODO keys.xml
-        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean("preset",false))
+        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(getString(R.string.key_preset),false))
         {
             getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
             getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
             getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
             getModel().addAlarm(new Alarm(8, 0, false, getString(R.string.startup_goal_weekly_days)));
             getModel().addAlarm(new Alarm(9, 0, false, getString(R.string.startup_goal_weekend)));
-            sharedPreferences.putBoolean("preset", true);
+            sharedPreferences.putBoolean(getString(R.string.key_preset), true);
             sharedPreferences.commit();
         }
     }

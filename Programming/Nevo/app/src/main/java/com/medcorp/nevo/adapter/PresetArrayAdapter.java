@@ -51,8 +51,7 @@ public class PresetArrayAdapter extends ArrayAdapter<Goal> {
         SwitchCompat presetOnOff = (SwitchCompat) itemView.findViewById(R.id.activity_goals_list_view_item_goals_switch);
         final Goal goal = listGoal.get(position);
         presetLabel.setText(goal.getLabel());
-        //TODO put in Strings incl format.xml
-        presetValue.setText(goal.getSteps() + " steps");
+        presetValue.setText(goal.getSteps() + " " + context.getString(R.string.steps_steps));
         presetOnOff.setOnCheckedChangeListener(null);
         presetOnOff.setChecked(goal.isStatus());
         presetOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

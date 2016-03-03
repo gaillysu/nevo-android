@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.medcorp.nevo.R;
+
 /**
  * Created by karl-john on 14/12/15.
  */
@@ -14,8 +16,7 @@ public class RobotoLightFontStrategy implements FontStrategy {
     private Typeface tf;
     public RobotoLightFontStrategy(Context context) {
         tf = Typeface.createFromAsset(context.getAssets(),
-                //TODO put into config.xml
-                "font/Roboto-Light.ttf");
+                context.getString(R.string.font_roboto_light_path));
     }
 
     @Override

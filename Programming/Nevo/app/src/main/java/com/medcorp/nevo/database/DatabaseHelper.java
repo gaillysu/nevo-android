@@ -2,7 +2,6 @@ package com.medcorp.nevo.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -11,18 +10,13 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.database.dao.AlarmDAO;
+import com.medcorp.nevo.database.dao.GoalDAO;
 import com.medcorp.nevo.database.dao.HeartbeatDAO;
 import com.medcorp.nevo.database.dao.IDailyHistory;
-import com.medcorp.nevo.database.dao.GoalDAO;
 import com.medcorp.nevo.database.dao.SleepDAO;
 import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.database.dao.UserDAO;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -140,46 +134,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (goalsDAO == null)
             goalsDAO = getDao(GoalDAO.class);
         return goalsDAO;
-    }
-
-    public static void outPutDatabase(Context context)
-    {
-        //TODO best to put into config.xml
-        File dbOut = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/nevowatch.db");
-        File dbIn = new File("/data/data/"+context.getPackageName()+"/databases/nevowatch.db");
-        try {
-            FileInputStream in = new FileInputStream(dbIn);
-            FileOutputStream out = new FileOutputStream(dbOut);
-            byte[] buffer = new byte[1024];
-            int read;
-            while((read = in.read(buffer)) != -1){
-                out.write(buffer, 0, read);
-            }
-            in.close();
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @param string: [0, 2 ,3, 60, 23], start with '[', end with ']'
-     * @return int[]{0,2,3,60,23}
-     */
-    //TODO wtf is this?
-    public static int[] string2IntArray(String string)
-    {
-        String s = string;
-        if(string.startsWith("[") && string.endsWith("]"))
-            s = string.substring(1,string.length()-1);
-        else return new int[0];
-        String[] temp = s.split(",");
-        int[] ret = new int[temp.length];
-        for(int i=0;i<temp.length;i++) ret[i] =  Integer.parseInt(temp[i].trim());
-        return ret;
     }
 }

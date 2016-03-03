@@ -24,6 +24,7 @@ import android.os.PowerManager;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
@@ -107,9 +108,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
 
-    private List<MEDRawData> mPacketsbuffer = new ArrayList<MEDRawData>();
+    private List<MEDRawData> packetsbuffer = new ArrayList<MEDRawData>();
 
-    private List<DailyHistory> mSavedDailyHistory = new ArrayList<DailyHistory>();
+    private List<DailyHistory> savedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
     private long mLastPressAkey = 0;
@@ -204,18 +205,18 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if (data.getType().equals(MEDRawData.TYPE))
         {
             final MEDRawData nevoData = (MEDRawData) data;
-            mPacketsbuffer.add(nevoData);
+            packetsbuffer.add(nevoData);
 
             if((byte)0xFF == nevoData.getRawData()[0])
             {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
 
-                NevoPacket packet = new NevoPacket(mPacketsbuffer);
+                NevoPacket packet = new NevoPacket(packetsbuffer);
                 //if packets invaild, discard them, and reset buffer
                 if(!packet.isVaildPackets())
                 {
                     Log.e("Nevo Error","InVaild Packets Received!");
-                    mPacketsbuffer.clear();
+                    packetsbuffer.clear();
 
                     return;
                 }
@@ -302,9 +303,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 {
                     DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
                     mCurrentDay = 0;
-                    mSavedDailyHistory = infopacket.getDailyTrackerInfo();
-//                        Log.i("","History Total Days:" + mSavedDailyHistory.size() + ",Today is:" + new Date() );
-                    if(!mSavedDailyHistory.isEmpty()) {
+                    savedDailyHistory = infopacket.getDailyTrackerInfo();
+//                        Log.i("","History Total Days:" + savedDailyHistory.size() + ",Today is:" + new Date() );
+                    if(!savedDailyHistory.isEmpty()) {
                         mSyncAllFlag = true;
                         getDailyTracker(mCurrentDay);
                     }
@@ -313,59 +314,59 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 {
                     DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
 
-                    if(mSavedDailyHistory.isEmpty()) {
+                    if(savedDailyHistory.isEmpty()) {
                         mCurrentDay = 0;
-                        mSavedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
+                        savedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
                     }
-                    mSavedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + mSavedDailyHistory.get(mCurrentDay).getTotalSteps());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + mSavedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
+                    savedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
+                    savedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
+//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + savedDailyHistory.get(mCurrentDay).getTotalSteps());
+//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + savedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
 
-                    mSavedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
+                    savedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
+                    savedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalSleepTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + savedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
 
-                    mSavedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
+                    savedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
+                    savedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + mSavedDailyHistory.get(mCurrentDay).getTotalWakeTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + savedDailyHistory.get(mCurrentDay).getTotalWakeTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + savedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
 
-                    mSavedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
+                    savedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
+                    savedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + mSavedDailyHistory.get(mCurrentDay).getTotalLightTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + mSavedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + savedDailyHistory.get(mCurrentDay).getTotalLightTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + savedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
 
 
-                    mSavedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
+                    savedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
+                    savedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
 
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + mSavedDailyHistory.get(mCurrentDay).getTotalDeepTime());
-                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + mSavedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + savedDailyHistory.get(mCurrentDay).getTotalDeepTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + savedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
 
-                    mSavedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
-                    mSavedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
-                    mSavedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
+                    savedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
+                    savedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
+                    savedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
+                    savedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
 
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getTotalDist());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Disc (m):" + mSavedDailyHistory.get(mCurrentDay).getHourlyDist().toString());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getTotalCalories());
-//                        Log.i(mSavedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Calories (kcal):" + mSavedDailyHistory.get(mCurrentDay).getHourlyCalories().toString());
+//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + savedDailyHistory.get(mCurrentDay).getTotalDist());
+//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Disc (m):" + savedDailyHistory.get(mCurrentDay).getHourlyDist().toString());
+//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + savedDailyHistory.get(mCurrentDay).getTotalCalories());
+//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Calories (kcal):" + savedDailyHistory.get(mCurrentDay).getHourlyCalories().toString());
 
 
                     //save it to local database
                     //try {
-                        IDailyHistory history = new IDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+                        IDailyHistory history = new IDailyHistory(savedDailyHistory.get(mCurrentDay));
                         //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                        //Log.i(TAG, mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                        //Log.i(TAG, savedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
                         //update steps/sleep tables
                         Steps steps = new Steps(history.getCreated());
-                        steps.setDate(Common.removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                        steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
 
                         steps.setSteps(history.getSteps());
                         steps.setCalories((int) history.getCalories());
@@ -394,7 +395,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
 
                             Sleep sleep = new Sleep(history.getCreated());
-                            sleep.setDate(Common.removeTimeFromDate(mSavedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                            sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
                             sleep.setHourlySleep(history.getHourlySleepTime());
                             sleep.setHourlyWake(history.getHourlyWakeTime());
                             sleep.setHourlyLight(history.getHourlyLightTime());
@@ -417,13 +418,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     /*} catch (SQLException e) {
                         Log.w("Karl", "Crash");
                         e.printStackTrace();
-                        Log.i(TAG,mSavedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
+                        Log.i(TAG,savedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
                     }*/
 
                     //discard tutorial activity, only MainActivity can save data to Google git
-//                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(mSavedDailyHistory.get(mCurrentDay));
+//                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(savedDailyHistory.get(mCurrentDay));
                     mCurrentDay++;
-                    if(mCurrentDay < mSavedDailyHistory.size() && mSyncAllFlag)
+                    if(mCurrentDay < savedDailyHistory.size() && mSyncAllFlag)
                     {
                         getDailyTracker(mCurrentDay);
                     }
@@ -482,7 +483,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 //process done(such as save local db), then notify top layer to get or refresh screen
                 if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
-                mPacketsbuffer.clear();
+                packetsbuffer.clear();
             }
         }
 
@@ -504,7 +505,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     {
                         mOnSyncControllerListener.get().onInitializeStart();
                     }
-                    mPacketsbuffer.clear();
+                    packetsbuffer.clear();
                     setRtc();
                 }
             }, 2000);
@@ -512,7 +513,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         } else {
             if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
-            mPacketsbuffer.clear();
+            packetsbuffer.clear();
         }
     }
 
@@ -739,8 +740,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         //when reconnect is more than 3, popup message to user to reopen bluetooth or restart smartphone
         if (mTimeOutcount  == 3) {
             mTimeOutcount = 0;
-            //TODO fix this. exception shouldn't have the properties listed below.
-//            showMessage(e.getWarningMessageTitle(), e.getWarningMessageId());
+            showMessage(R.string.ble_connection_timeout_title, R.string.ble_connect_timeout);
         }
         return null;
     }
@@ -751,8 +751,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                //TODO fix this. exception shouldn't have the properties listed below.
-//                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.ble_not_supported, Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e2) {
@@ -767,8 +766,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                //TODO fix this. exception shouldn't have the properties listed below.
-//                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.ble_unstable, Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e3) {
@@ -782,8 +780,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                //TODO fix this. exception shouldn't have the properties listed below.
-//                    Toast.makeText(getContext(), e.getWarningMessageId(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.ble_deactivated, Toast.LENGTH_LONG).show();
                 }
             });
         } catch (Exception e1) {
@@ -898,11 +895,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 LocalService.this.findCellPhone();
             }
         }
-        //when nevo paired cellphone, press twice A key, will invoke "findCellPhone"
-        //start vibrate
-        //light screen on
-        //play music ???
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+
         private void findCellPhone()
         {
             Vibrator vibrator = (Vibrator) LocalService.this.getSystemService(Context.VIBRATOR_SERVICE);
@@ -919,10 +912,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.acquire();
             wl.release();
 
-            //play build-in music  in Raw
             //TODO Sound is fine but not sound from dogs. Thanks.
 //            PlayFromRawFile();
         }
+
         private  void PlayFromRawFile()
         {
             final MediaPlayer play = MediaPlayer.create(this, com.medcorp.nevo.R.raw.music);
@@ -938,7 +931,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             play.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    //music duration is 2s, repeat 3 times
                     if (System.currentTimeMillis() - currentTime < 6000)
                     {
                         play.start();

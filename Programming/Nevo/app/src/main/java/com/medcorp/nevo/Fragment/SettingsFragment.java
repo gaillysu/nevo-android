@@ -1,10 +1,8 @@
 package com.medcorp.nevo.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,14 +88,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void findWatchSuccess() {
-        //when find out my nevo and receive nevo's response, let phone vibrator.
-        Log.w("Karl","Hello.");
-//        Vibrator vibrator = (Vibrator) getAppCompatActivity().getSystemService(Context.VIBRATOR_SERVICE);
-//        if(vibrator.hasVibrator())
-//        {
-//            vibrator.cancel();
-//        }
-//        vibrator.vibrate(1000);
     }
 
     @Override
@@ -156,8 +146,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         } else if(position == 5){
             startActivity(ConnectToOtherAppsActivity.class);
         } else if(position == 6) {
-            //TODO put into config.xml
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://support.nevowatch.com/support/home"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
         } else if(position == 7) {
             new MaterialDialog.Builder(getContext())
@@ -181,7 +170,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
         if (position == 0) {
             Preferences.saveLinklossNotification(getActivity(), isChecked);
-            Log.w("Karl", "Yeey");
         }
     }
 }

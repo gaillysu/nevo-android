@@ -112,8 +112,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
              applicationNotification = inactiveNotificationList.get(position);
         }
         Bundle bundle = new Bundle();
-        //TODO put in Keys.xml
-        bundle.putSerializable("notification", applicationNotification);
+        bundle.putSerializable(getString(R.string.key_notification), applicationNotification);
         intent.putExtras(bundle);
         startActivity(intent);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

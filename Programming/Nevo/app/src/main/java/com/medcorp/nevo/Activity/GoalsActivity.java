@@ -66,10 +66,9 @@ public class GoalsActivity extends BaseActivity  implements AdapterView.OnItemCl
         Intent intent = new Intent(this,EditGoalsActivity.class);
         goal =  goalList.get(position);
         Bundle bundle = new Bundle();
-        //TODO put in keys.xml
-        bundle.putInt("Preset_ID", goal.getId());
-        bundle.putString("Preset_Label", goal.getLabel());
-        bundle.putInt("Preset_Steps", goal.getSteps());
+        bundle.putInt(getString(R.string.key_preset_id), goal.getId());
+        bundle.putString(getString(R.string.key_preset_label), goal.getLabel());
+        bundle.putInt(getString(R.string.key_preset_steps), goal.getSteps());
         intent.putExtras(bundle);
         startActivityForResult(intent,0);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

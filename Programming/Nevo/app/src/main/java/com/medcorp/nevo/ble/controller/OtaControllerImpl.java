@@ -26,10 +26,10 @@ import net.medcorp.library.ble.listener.OnExceptionListener;
 import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
 import net.medcorp.library.ble.listener.OnOtaControllerListener;
 import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.response.DFUResponse;
 import net.medcorp.library.ble.model.response.FirmwareData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.model.response.ResponseData;
-import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Constants.DFUControllerState;
 import net.medcorp.library.ble.util.Constants.DfuFirmwareTypes;
 import net.medcorp.library.ble.util.Constants.DfuOperationStatus;
@@ -58,12 +58,12 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     private Optional<OnOtaControllerListener> mOnOtaControllerListener = new Optional<OnOtaControllerListener>();
     private ConnectionController connectionController;
 
-    private Constants.DfuFirmwareTypes dfuFirmwareType = Constants.DfuFirmwareTypes.APPLICATION ;
+    private DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.APPLICATION ;
     private List<FirmwareData> mPacketsbuffer = new ArrayList<FirmwareData>();
     private List<MEDRawData> mNevoPacketsbuffer = new ArrayList<MEDRawData>();
 
     private String firmwareFile ;
-    private Constants.DFUResponse dfuResponse = new Constants.DFUResponse((byte)0, (byte)0, (byte)0);
+    private DFUResponse dfuResponse = new DFUResponse((byte)0, (byte)0, (byte)0);
 
     private int hexFileSize  = 0;
     private byte[] hexFileData ;
@@ -132,7 +132,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                 }
                 Log.e(TAG, "* * * call OTA timeout function * * * OTA type = " + (dfuFirmwareType == DfuFirmwareTypes.APPLICATION ?"BLE":"MCU") + ",ErrorCode = " + errorcode);
                 if (mOnOtaControllerListener.notEmpty()) {
-                     mOnOtaControllerListener.get().onError(errorcode);
+                    mOnOtaControllerListener.get().onError(errorcode);
                 }
             } else {
                 lastprogress = progress;
@@ -161,7 +161,6 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
             filetype = filename.substring(filename.length() - 3);
             Log.i(TAG,"selected file "+ filename+",extension is " + filetype);
-
             if (filetype.equals("hex"))
             {
                 byte[] buffer = new byte[16];
@@ -180,8 +179,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                 }
                 else {
                     Log.w(TAG,"Error: file is empty!");
-                    String errorMessage = "Error on openning file\n Message: file is empty or not exist";
-                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.OPENFILEERROR);
+                    if(mOnOtaControllerListener.notEmpty()){
+                        mOnOtaControllerListener.get().onError(ERRORCODE.OPENFILEERROR);
+                    }
                 }
                 bos.close();
                 is.close();
@@ -222,42 +222,42 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         int percentage = 0;
         for (int index = 0; index<enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue(); index++)
         {
-        if (writingPacketNumber > numberOfPackets-2) {
-            Log.i(TAG,"writing last packet");
+            if (writingPacketNumber > numberOfPackets-2) {
+                Log.i(TAG,"writing last packet");
 
-            byte[] nextPacketData = new byte[bytesInLastPacket];
-            System.arraycopy(binFileData,writingPacketNumber*enumPacketOption.PACKET_SIZE.rawValue(),nextPacketData,0,bytesInLastPacket);
+                byte[] nextPacketData = new byte[bytesInLastPacket];
+                System.arraycopy(binFileData,writingPacketNumber*enumPacketOption.PACKET_SIZE.rawValue(),nextPacketData,0,bytesInLastPacket);
+
+                Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
+                //Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
+
+                sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
+                progress = 100.0;
+                percentage = (int)(progress);
+                Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
+                if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage(percentage);
+                writingPacketNumber++;
+                if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
+                Log.i(TAG,"DFUOperations: onAllPacketsTransfered");
+                break;
+
+            }
+            byte[] nextPacketData = new byte[enumPacketOption.PACKET_SIZE.rawValue()];
+            System.arraycopy(binFileData,writingPacketNumber*enumPacketOption.PACKET_SIZE.rawValue(),nextPacketData,0,enumPacketOption.PACKET_SIZE.rawValue());
 
             Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
-           //Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
+            // Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
             sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
-            progress = 100.0;
-            percentage = (int)(progress);
-            Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
+            progress = 100.0*writingPacketNumber * enumPacketOption.PACKET_SIZE.rawValue() / binFileSize;
+            percentage = (int)progress;
+
+            Log.i(TAG,"DFUOperations: onTransferPercentage "+ percentage);
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage(percentage);
+
             writingPacketNumber++;
-            if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-            Log.i(TAG,"DFUOperations: onAllPacketsTransfered");
-            break;
 
         }
-        byte[] nextPacketData = new byte[enumPacketOption.PACKET_SIZE.rawValue()];
-        System.arraycopy(binFileData,writingPacketNumber*enumPacketOption.PACKET_SIZE.rawValue(),nextPacketData,0,enumPacketOption.PACKET_SIZE.rawValue());
-
-        Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
-       // Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
-
-        sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
-        progress = 100.0*writingPacketNumber * enumPacketOption.PACKET_SIZE.rawValue() / binFileSize;
-        percentage = (int)progress;
-
-        Log.i(TAG,"DFUOperations: onTransferPercentage "+ percentage);
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage(percentage);
-
-        writingPacketNumber++;
-
-    }
 
     }
 
@@ -269,14 +269,14 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     private void sendRequest(final RequestData request)
     {
         if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
-        QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).post(new Runnable(){
-            @Override
-            public void run() {
-                connectionController.sendRequest(request);
-            }
-        });
+            QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).post(new Runnable(){
+                @Override
+                public void run() {
+                    connectionController.sendRequest(request);
+                }
+            });
         else
-        connectionController.sendRequest(request);
+            connectionController.sendRequest(request);
     }
 
     void startSendingFile()
@@ -284,8 +284,8 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         Log.i(TAG,"DFUOperationsdetails enablePacketNotification");
 
         sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
-                                                                              ,(byte)enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
-                                                                              ,0}));
+                ,(byte)enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
+                ,0}));
         sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
 
         //wait 20ms
@@ -311,26 +311,28 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         Log.i(TAG,"DFUOperationsDetails validateFirmware");
         sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
     }
+
     void activateAndReset()
     {
         Log.i(TAG,"DFUOperationsDetails activateAndReset");
         sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
     }
+
     String responseErrorMessage(byte errorCode)
     {
         if (errorCode == DfuOperationStatus.OPERATION_FAILED_RESPONSE.rawValue())
-                 return new String("Operation Failed");
+            return new String("Operation Failed");
         else if(errorCode == DfuOperationStatus.OPERATION_INVALID_RESPONSE.rawValue())
-                return new String("Invalid Response");
+            return new String("Invalid Response");
 
         else if (errorCode == DfuOperationStatus.OPERATION_NOT_SUPPORTED_RESPONSE.rawValue())
-                return new String("Operation Not Supported");
+            return new String("Operation Not Supported");
 
         else if (errorCode == DfuOperationStatus.DATA_SIZE_EXCEEDS_LIMIT_RESPONSE.rawValue())
-                return new String("Data Size Exceeds");
+            return new String("Data Size Exceeds");
 
         else if (errorCode == DfuOperationStatus.CRC_ERROR_RESPONSE.rawValue())
-                return new String("CRC Error");
+            return new String("CRC Error");
 
         return new String("unknown Error");
 
@@ -363,16 +365,13 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"successfully received startDFU notification");
             startSendingFile();
-        }
-        else if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_NOT_SUPPORTED_RESPONSE.rawValue()) {
+        } else if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_NOT_SUPPORTED_RESPONSE.rawValue()) {
             Log.i(TAG,"device has old DFU. switching to old DFU ...");
             performOldDFUOnFile();
-        }
-
-        else {
-                Log.i(TAG,errorMessage);
-                if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.STARTDFUERROR);
-                resetSystem();
+        } else {
+            Log.i(TAG,errorMessage);
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.STARTDFUERROR);
+            resetSystem();
         }
 
     }
@@ -382,9 +381,6 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"successfully received notification for whole File transfer");
             validateFirmware();
-            //why call "activateAndReset" here, due to Ble validate Firmware done, will Close nevo BT
-            //before nevo BT closed, we must send Reset cmd 0x05 to nevo,that let nevo service get change from DFU to normal
-            //if no received before BT closed, nevo will keep DFU mode and the name also keep as "Nevo_DFU"
             activateAndReset();
         }
         else {
@@ -401,7 +397,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"succesfully received notification for ValidateFirmware");
             activateAndReset();
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
         }
         else {
             Log.i(TAG,"Firmware validate failed, Error Status: "+ responseErrorMessage(dfuResponse.getresponseStatus()));
@@ -877,7 +873,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                         (byte)((curpage>>8) & 0xFF),
                         (byte)(totalpage & 0xFF),
                         (byte)((totalpage>>8) & 0xFF),
-                    00,00,00,00,00,00,00,00,00,00,00,00,00,00};
+                        00,00,00,00,00,00,00,00,00,00,00,00,00,00};
             }
             else
             {
@@ -890,8 +886,8 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                     length = DFUCONTROLLER_PAGE_SIZE%DFUCONTROLLER_MAX_PACKET_SIZE;
                 }
 
-                 byte[] currentData = new byte[length];
-                 System.arraycopy(binFileData,firmwareDataBytesSent,currentData,0,length);
+                byte[] currentData = new byte[length];
+                System.arraycopy(binFileData,firmwareDataBytesSent,currentData,0,length);
 
                 //20 bytes, last packet of the page, remains 8 bytes,fill 0
                 byte [] fulldata = new byte[] {0,(byte)0x71,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -970,7 +966,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                         //Check sum match ,OTA over.
                         Log.i(TAG,"Checksum match ,OTA get success!");
                         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
+                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
                     }
                     else
                     {
