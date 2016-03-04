@@ -73,7 +73,6 @@ public class TutorialPage5Activity extends BaseActivity{
 
     @Subscribe
     public void onEvent(SearchEvent event){
-        Log.w("Karl", "On event = " + event.getStatus());
         switch (event.getStatus()) {
             case FAILED:   runOnUiThread(new Runnable() {
                 @Override
@@ -83,7 +82,6 @@ public class TutorialPage5Activity extends BaseActivity{
             });
                 break;
             case SEARCHING:
-                Log.w("Karl","Searching.");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

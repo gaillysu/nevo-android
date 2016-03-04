@@ -5,7 +5,7 @@ package com.medcorp.nevo.event;
  */
 public class FindWatchEvent {
 
-    private boolean success;
+    private final boolean success;
 
     public FindWatchEvent(boolean success){
             this.success = success;

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.SleepFragmentPagerAdapter;
-import com.medcorp.nevo.event.OnSyncEndEvent;
+import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 
@@ -68,11 +68,13 @@ public class SleepFragment extends BaseObservableFragment{
     }
 
     @Subscribe
-    public void onEvent(OnSyncEndEvent event){
-        int currentItem = viewPager.getCurrentItem();
-        viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
-                getActivity()));
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(currentItem);
+    public void onEvent(OnSyncEvent event){
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+            int currentItem = viewPager.getCurrentItem();
+            viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
+                    getActivity()));
+            tabLayout.setupWithViewPager(viewPager);
+            viewPager.setCurrentItem(currentItem);
+        }
     }
 }

@@ -122,12 +122,10 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
             TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
             tv.setTextColor(Color.WHITE);
             if(resultCode == Activity.RESULT_OK){
-                Log.w("Karl", "Result = ok");
                 getModel().initGoogleFit(this);
                 getModel().updateGoogleFit();
                 tv.setText(R.string.google_fit_logged_in);
             }else{
-                Log.w("Karl", "Result = illegal?! :S ");
                 tv.setText(R.string.google_fit_could_not_login);
                 settingsAdapter.toggleSwitch(0, false);
             }

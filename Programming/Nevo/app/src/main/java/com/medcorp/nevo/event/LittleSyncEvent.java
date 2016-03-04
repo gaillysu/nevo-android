@@ -5,7 +5,7 @@ package com.medcorp.nevo.event;
  */
 public class LittleSyncEvent {
 
-    private boolean success;
+    private final boolean success;
 
     public LittleSyncEvent(boolean success) {
         this.success = success;

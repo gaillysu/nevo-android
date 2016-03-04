@@ -15,7 +15,7 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
 import com.medcorp.nevo.event.LittleSyncEvent;
-import com.medcorp.nevo.event.OnSyncEndEvent;
+import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.event.RequestResponseEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
@@ -144,12 +144,14 @@ public class StepsFragment extends BaseObservableFragment{
     }
 
     @Subscribe
-    public void onEvent(OnSyncEndEvent event) {
-        int currentItem = viewPager.getCurrentItem();
-        StepsFragmentPagerAdapter adapter = new StepsFragmentPagerAdapter(getChildFragmentManager(),this);
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(currentItem);
+    public void onEvent(OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+            int currentItem = viewPager.getCurrentItem();
+            StepsFragmentPagerAdapter adapter = new StepsFragmentPagerAdapter(getChildFragmentManager(), this);
+            viewPager.setAdapter(adapter);
+            tabLayout.setupWithViewPager(viewPager);
+            viewPager.setCurrentItem(currentItem);
+        }
     }
 
     @Subscribe

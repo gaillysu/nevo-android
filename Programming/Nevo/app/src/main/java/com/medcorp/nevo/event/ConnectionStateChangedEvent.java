@@ -5,7 +5,7 @@ package com.medcorp.nevo.event;
  */
 public class ConnectionStateChangedEvent {
 
-    private boolean connected;
+    private final boolean connected;
 
     public ConnectionStateChangedEvent(boolean isConnected) {
         this.connected = isConnected;

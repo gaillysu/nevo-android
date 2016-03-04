@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,7 +23,7 @@ import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.event.FirmwareReceivedEvent;
-import com.medcorp.nevo.event.OnSyncEndEvent;
+import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
@@ -133,8 +132,10 @@ public class ApplicationModel extends Application {
 
 
     @Subscribe
-    public void onEvent(OnSyncEndEvent event){
-        updateGoogleFit();
+    public void onEvent(OnSyncEvent event){
+        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+            updateGoogleFit();
+        }
     }
 
     public SyncController getSyncController(){return syncController;}
@@ -320,7 +321,6 @@ public class ApplicationModel extends Application {
 
     public void updateGoogleFit(){
         if(Preferences.isGoogleFitSet(this)) {
-            Log.w("Karl", "Google Fit Enabled. Updating google fit");
             initGoogleFit(null);
             GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
             new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getStepsDataSet());
