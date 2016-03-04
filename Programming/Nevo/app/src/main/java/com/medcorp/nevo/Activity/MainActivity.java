@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_new);
+        setContentView(R.layout.activity_main);
         activeFragment =  new Optional<>();
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
