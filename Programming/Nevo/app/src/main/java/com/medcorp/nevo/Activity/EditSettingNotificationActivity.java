@@ -31,6 +31,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 /**
  * Created by gaillysu on 15/12/31.
@@ -64,7 +66,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Mat
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         helper = new NotificationDataHelper(this);
-
         ledList.add(new GreenLed());
         ledList.add(new RedLed());
         ledList.add(new BlueLed());
@@ -75,35 +76,32 @@ public class EditSettingNotificationActivity extends BaseActivity implements Mat
         selectedLed = Preferences.getNotificationColor(this,notification);
         setTitle(notification.getStringResource());
         onOffSwitch.setChecked(notification.isOn());
-
-        onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                notification.setState(isChecked);
-                helper.saveState(notification);
-            }
-        });
-
         colorImage.setImageDrawable(ContextCompat.getDrawable(this, selectedLed.getImageResource()));
         colorLabel.setText(getString(selectedLed.getStringResource()));
-        colorLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> stringList = new ArrayList<String>();
-                for (int i = 0; i < ledList.size(); i ++) {
-                    stringList.add(getString(ledList.get(i).getStringResource()));
-                }
-                CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
-                new MaterialDialog.Builder(EditSettingNotificationActivity.this)
-                        .title(R.string.notification_position)
-                        .items(cs)
-                        .itemsCallbackSingleChoice(getIndexFromLed(selectedLed), EditSettingNotificationActivity.this)
-                        .positiveText(R.string.notification_ok)
-                        .negativeText(R.string.notification_cancel)
-                        .show();
-            }
-        });
     }
+
+    @OnCheckedChanged(R.id.activity_setting_notification_edit_onoff)
+    public void notificationEditTriggered(CompoundButton buttonView, boolean isChecked){
+        notification.setState(isChecked);
+        helper.saveState(notification);
+    }
+
+    @OnClick(R.id.activity_setting_notification_edit_layout)
+    public void colorLayoutClicked(){
+        List<String> stringList = new ArrayList<String>();
+        for (int i = 0; i < ledList.size(); i ++) {
+            stringList.add(getString(ledList.get(i).getStringResource()));
+        }
+        CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
+        new MaterialDialog.Builder(EditSettingNotificationActivity.this)
+                .title(R.string.notification_position)
+                .items(cs)
+                .itemsCallbackSingleChoice(getIndexFromLed(selectedLed), EditSettingNotificationActivity.this)
+                .positiveText(R.string.notification_ok)
+                .negativeText(R.string.notification_cancel)
+                .show();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

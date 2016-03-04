@@ -39,7 +39,7 @@
     <string name="dfu_update_content">Suivez les instructions et patientez jusqu\'à ce que la mise à jour soit terminée.</string>
     <string name="dfu_update_positive">Mise à jour</string>
     <string name="dfu_update_negative">Annuler</string>
-    <string name="dfu_update_prepare">Préparation de la mise à jour...</string>
+    <string name="dfu_update_prepare">Préparation de la mise à jour&#8230;</string>
     <string name="dfu_firmware_updated">Firmware mis à jour</string>
     <string name="dfu_continue">Continuer</string>
     <string name="dfu_back">Retour</string>
@@ -49,7 +49,7 @@
     <string name="dfu_re_upgrade">Réessayez</string>
     <string name="dfu_continue_button">Continuer</string>
     <string name="dfu_connect_error_no_nevo_do_ota">Nevo n\'est pas connectée, impossible d\'effectuer la mise à jour OTA</string>
-    <string name="dfu_checking_firmware">Vérification de la version du firmware, patientez...</string>
+    <string name="dfu_checking_firmware">Vérification de la version du firmware, patientez&#8230;</string>
     <string name="dfu_error_lowbattery">Batterie trop faible pour la mise à niveau.</string>
     <string name="dfu_error_timeout">Connexion interrompue</string>
     <string name="dfu_error_noconnect">Aucune nevo connectée</string>
@@ -140,7 +140,7 @@
     <string name="alarm_set_label_for_alarm">Définir une étiquette pour l\'alarme</string>
     <string name="alarm_synced">Alarme Synchronisée</string>
     <string name="alarm_error_sync">Erreur Synchronisation Alarme</string>
-    <string name="goal_syncing_message">Synchronisation Objectif...</string>
+    <string name="goal_syncing_message">Synchronisation Objectif&#8230;</string>
     <string name="goal_synced">Objectif Synchronisé</string>
     <string name="goal_error_sync">Erreur Synchronisation Objectif</string>
 
@@ -164,10 +164,10 @@
     <string name="in_app_notification_found_nevo">Nevo trouvée !</string>
     <string name="in_app_notification_bluetooth_disabled">Le Bluetooth est désactivé. Activez-le.</string>
     <string name="in_app_notification_nevo_disconnected">Nevo déconnectée.</string>
-    <string name="in_app_notification_searching">Recherche de nevo en cours...</string>
+    <string name="in_app_notification_searching">Recherche de nevo en cours&#8230;</string>
     <string name="in_app_notification_could_not_find">Impossible de trouver nevo.</string>
-    <string name="in_app_notification_syncing">Synchronisation données...</string>
-    <string name="in_app_notification_syncing_alarm">Synchronisation alarme...</string>
+    <string name="in_app_notification_syncing">Synchronisation données&#8230;</string>
+    <string name="in_app_notification_syncing_alarm">Synchronisation alarme&#8230;</string>
     <string name="in_app_notification_synced">Synchronisation données terminée !</string>
     <string name="in_app_notification_no_watch">Aucune montre connectée.</string>
     <string name="in_app_notification_max_three_alarm">nevo ne gère que trois alarmes.</string>

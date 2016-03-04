@@ -38,7 +38,7 @@
     <string name="dfu_update_content">Please follow the instructions and wait until the update has been finished.</string>
     <string name="dfu_update_positive">Update</string>
     <string name="dfu_update_negative">Cancel</string>
-    <string name="dfu_update_prepare">Prepare for update...</string>
+    <string name="dfu_update_prepare">Prepare for update&#8230;</string>
     <string name="dfu_firmware_updated">Firmware updated</string>
     <string name="dfu_continue">Continue</string>
     <string name="dfu_back">Back</string>
@@ -48,7 +48,7 @@
     <string name="dfu_re_upgrade">Try again</string>
     <string name="dfu_continue_button">Continue</string>
     <string name="dfu_connect_error_no_nevo_do_ota">nevo isn\'t connected, can\'t perform OTA update</string>
-    <string name="dfu_checking_firmware">Checking firmware version, please wait...</string>
+    <string name="dfu_checking_firmware">Checking firmware version, please wait&#8230;</string>
     <string name="dfu_error_lowbattery">Not enough battery to upgrade.</string>
     <string name="dfu_error_timeout">Connection timed out</string>
     <string name="dfu_error_noconnect">No nevo connected</string>
@@ -56,7 +56,7 @@
     <string name="dfu_error_checksum">Checksum error.</string>
     <string name="dfu_error_nofounDFUservice">No OTA service found, please wait for few minutes and try again.</string>
     <string name="dfu_error_other">Couldn\'t update due to an error.</string>
-    <string name="dfu_update_message">Updating...</string>
+    <string name="dfu_update_message">Updating&#8230;</string>
     <string name="dfu_update_available">An update is available for your watch.</string>
 
     <string name="notification_allow">Allow notifications</string>
@@ -68,7 +68,7 @@
     <string name="notification_led_orange">Orange LED</string>
     <string name="notification_led_green">Green LED</string>
     <string name="notification_position">Position</string>
-    <string name="notification_ok">Ok</string>
+    <string name="notification_ok">OK</string>
     <string name="notification_cancel">Cancel</string>
     <string name="notification_deactivated">Deactivated</string>
     <string name="notification_access_title">Notification Access</string>
@@ -141,12 +141,12 @@
     <string name="alarm_set_label_for_alarm">Set label for alarm</string>
     <string name="alarm_synced">Alarm Synced</string>
     <string name="alarm_error_sync">Error Syncing Alarm</string>
-    <string name="goal_syncing_message">Syncing Goal...</string>
+    <string name="goal_syncing_message">Syncing Goal&#8230;</string>
     <string name="goal_synced">Goal Synced</string>
     <string name="goal_error_sync">Error Syncing Goal</string>
 
     <string name="goal">Goal</string>
-    <string name="goal_ok">Ok</string>
+    <string name="goal_ok">OK</string>
     <string name="goal_cancel">Cancel</string>
     <string name="goal_add">Add Goal</string>
     <string name="goal_saved">Saved goal!</string>
@@ -165,10 +165,10 @@
     <string name="in_app_notification_found_nevo">Found nevo!</string>
     <string name="in_app_notification_bluetooth_disabled">Bluetooth is disabled. Enable Bluetooth.</string>
     <string name="in_app_notification_nevo_disconnected">Nevo disconnected.</string>
-    <string name="in_app_notification_searching">Searching for nevo...</string>
+    <string name="in_app_notification_searching">Searching for nevo&#8230;</string>
     <string name="in_app_notification_could_not_find">Could not find nevo.</string>
-    <string name="in_app_notification_syncing">Syncing Data...</string>
-    <string name="in_app_notification_syncing_alarm">Syncing Alarm...</string>
+    <string name="in_app_notification_syncing">Syncing Data&#8230;</string>
+    <string name="in_app_notification_syncing_alarm">Syncing Alarm&#8230;</string>
     <string name="in_app_notification_synced">Syncing data finished!</string>
     <string name="in_app_notification_no_watch">No watch connected.</string>
     <string name="in_app_notification_max_three_alarm">nevo supports only three alarms.</string>
@@ -221,7 +221,7 @@
     <string name="help_track_sleep_message">To activate sleeping-mode, push and hold the first button, until the white LED blinks.</string>
     <string name="help_track_sleep_goodmorning">Good morning</string>
     <string name="help_track_sleep_good_morning_message">You just finished tracking your first night of sleep with your nevo. To start tracking your daily routine,
-push and hold the third button, untill the white LED blinks</string>
+push and hold the third button, until the white LED blinks</string>
     <string name="help_got_it">Got it!</string>
     <string name="help_goto_sleep">How to track you sleep?</string>
 </resources>

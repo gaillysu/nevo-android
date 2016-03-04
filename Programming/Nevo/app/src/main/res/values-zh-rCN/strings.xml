@@ -39,7 +39,7 @@
     <string name="dfu_update_content">请按照指示，等到更新已完成.</string>
     <string name="dfu_update_positive">升级</string>
     <string name="dfu_update_negative">取消</string>
-    <string name="dfu_update_prepare">准备升级...</string>
+    <string name="dfu_update_prepare">准备升级&#8230;</string>
     <string name="dfu_firmware_updated">固件升级完毕.</string>
     <string name="dfu_continue">继续</string>
     <string name="dfu_back">返回</string>
@@ -49,7 +49,7 @@
     <string name="dfu_re_upgrade">重试</string>
     <string name="dfu_continue_button">继续</string>
     <string name="dfu_connect_error_no_nevo_do_ota">Nevo没有连接，不能升级</string>
-    <string name="dfu_checking_firmware">正在检查版本号,请稍等...</string>
+    <string name="dfu_checking_firmware">正在检查版本号,请稍等&#8230;</string>
     <string name="dfu_error_lowbattery">电池电量低，禁止升级.</string>
     <string name="dfu_error_timeout">升级超时.</string>
     <string name="dfu_error_noconnect">请先连接Nevo.</string>
@@ -57,7 +57,7 @@
     <string name="dfu_error_checksum">校验和错误.</string>
     <string name="dfu_error_nofounDFUservice">未发现升级服务,请稍候重试.</string>
     <string name="dfu_error_other">升级异常错误.</string>
-    <string name="dfu_update_message">正在升级...</string>
+    <string name="dfu_update_message">正在升级&#8230;</string>
     <string name="dfu_update_available">有可升级的固件版本.</string>
 
     <string name="notification_allow">允许通知</string>
@@ -97,7 +97,7 @@
     <string name="tutorial_4_text">按住第三键3秒钟，直到蓝灯闪烁.</string>
     <string name="tutorial_4_next">下一步</string>
 
-    <string name="tutorial_5_title">正在搜索...</string>
+    <string name="tutorial_5_title">正在搜索&#8230;</string>
     <string name="tutorial_5_text">保持手表接近您的电话</string>
 
     <string name="tutorial_failed_title">连接手表失败</string>
@@ -142,7 +142,7 @@
     <string name="alarm_set_label_for_alarm">设置闹钟名字</string>
     <string name="alarm_synced">闹钟已同步</string>
     <string name="alarm_error_sync">同步闹钟错误</string>
-    <string name="goal_syncing_message">同步目标...</string>
+    <string name="goal_syncing_message">同步目标&#8230;</string>
     <string name="goal_synced">目标已同步</string>
     <string name="goal_error_sync">同步目标错误</string>
 
@@ -166,10 +166,10 @@
     <string name="in_app_notification_found_nevo">已连接手表!</string>
     <string name="in_app_notification_bluetooth_disabled">手机蓝牙已关闭,请打开蓝牙.</string>
     <string name="in_app_notification_nevo_disconnected">手表连接断开.</string>
-    <string name="in_app_notification_searching">正在搜索手表...</string>
+    <string name="in_app_notification_searching">正在搜索手表&#8230;</string>
     <string name="in_app_notification_could_not_find">不能发现手表.</string>
-    <string name="in_app_notification_syncing">正在同步手表...</string>
-    <string name="in_app_notification_syncing_alarm">正在同步闹钟...</string>
+    <string name="in_app_notification_syncing">正在同步手表&#8230;</string>
+    <string name="in_app_notification_syncing_alarm">正在同步闹钟&#8230;</string>
     <string name="in_app_notification_synced">同步手表结束!</string>
     <string name="in_app_notification_no_watch">没有连接手表.</string>
     <string name="in_app_notification_max_three_alarm">手表仅支持3个闹钟.</string>

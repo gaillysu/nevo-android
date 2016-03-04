@@ -18,5 +18,4 @@
     <string name="NEVO_OTA_SERVICE">00001530-1212-efde-1523-785feabcd123</string>
     <string name="NEVO_OTA_CONTROL_CHARACTERISTIC">00001532-1212-efde-1523-785feabcd123</string>
     <string name="NEVO_OTA_CALLBACK_CHARACTERISTIC">00001531-1212-efde-1523-785feabcd123</string>
-
 </resources>

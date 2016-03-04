@@ -38,7 +38,7 @@
     <string name="dfu_update_content">Bitte folgen Sie den Anweisungen und warten Sie, bis die Aktualisierung abgeschlossen ist.</string>
     <string name="dfu_update_positive">Aktualisieren</string>
     <string name="dfu_update_negative">Abbrechen</string>
-    <string name="dfu_update_prepare">Vorbereitung für die Aktualisierung ...</string>
+    <string name="dfu_update_prepare">Vorbereitung für die Aktualisierung&#8230;</string>
     <string name="dfu_firmware_updated">Firmware aktualisiert</string>
     <string name="dfu_continue">Weiter</string>
     <string name="dfu_back">Zurück</string>
@@ -48,7 +48,7 @@
     <string name="dfu_re_upgrade">Erneut versuchen</string>
     <string name="dfu_continue_button">Weiter</string>
     <string name="dfu_connect_error_no_nevo_do_ota">Nevo ist nicht verbunden, OTA-Aktualisierung kann nicht ausgeführt werden</string>
-    <string name="dfu_checking_firmware">Überprüfen der Firmware-Version, bitte warten ...</string>
+    <string name="dfu_checking_firmware">Überprüfen der Firmware-Version, bitte warten&#8230;</string>
     <string name="dfu_error_lowbattery">Nicht genug Batterie zum Aufrüsten.</string>
     <string name="dfu_error_timeout">Zeitüberschreitung der Verbindung</string>
     <string name="dfu_error_noconnect">Keine Nevo verbunden</string>
@@ -163,10 +163,10 @@
     <string name="in_app_notification_found_nevo">Nevo gefunden!</string>
     <string name="in_app_notification_bluetooth_disabled">Bluetooth ist deaktiviert. Bluetooth aktivieren.</string>
     <string name="in_app_notification_nevo_disconnected">Nevo wurde getrennt.</string>
-    <string name="in_app_notification_searching">Suche nach Nevo ...</string>
+    <string name="in_app_notification_searching">Suche nach Nevo&#8230;</string>
     <string name="in_app_notification_could_not_find">Nevo konnte nicht gefunden werden.</string>
-    <string name="in_app_notification_syncing">Synchronisieren der Daten ...</string>
-    <string name="in_app_notification_syncing_alarm">Synchronisieren des Alarms ...</string>
+    <string name="in_app_notification_syncing">Synchronisieren der Daten&#8230;</string>
+    <string name="in_app_notification_syncing_alarm">Synchronisieren des Alarms&#8230;</string>
     <string name="in_app_notification_synced">Synchronisieren der Daten abgeschlossen!</string>
     <string name="in_app_notification_no_watch">Keine Uhr verbunden.</string>
     <string name="in_app_notification_max_three_alarm">Nevo unterstützt nur drei Alarme.</string>
