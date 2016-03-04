@@ -2,7 +2,6 @@ package com.medcorp.nevo.ble.controller;
 
 import android.content.Context;
 
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.GoalBase;
 
@@ -41,7 +40,7 @@ public interface SyncController {
     input:forceScan, if true,do scanning before connect (will forget old UDID, and save new UUID when connected)
     if false, connect the saved UDID 's Nevo
      */
-	void startConnect(boolean forceScan,OnSyncControllerListener listenser);
+	void startConnect(boolean forceScan);
 
     /*
     return Nevo connect true or false
@@ -64,8 +63,6 @@ public interface SyncController {
     public void getStepsAndGoal();
 
     public void showMessage(int titleID, int msgID);
-
-    public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser);
 
     public String getFirmwareVersion();
     public String getSoftwareVersion();

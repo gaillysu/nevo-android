@@ -31,4 +31,8 @@
     <string name="key_prefs_step_preset_id">steps_preset_id</string>
     <string name="key_prefs_link_loss">link_loss_enable</string>
     <string name="key_prefs_google_fit">google_fit_status</string>
+
+    <!-- aid OTA -->
+    <string name="key_manual_mode">manualMode</string>
+    <string name="key_back_to_settings">backtosetting</string>
 </resources>

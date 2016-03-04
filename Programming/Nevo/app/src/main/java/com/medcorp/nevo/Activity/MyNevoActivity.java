@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.adapter.MyNevoAdapter;
 import com.medcorp.nevo.event.BatteryEvent;
 import com.medcorp.nevo.model.MyNevo;
@@ -28,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by gaillysu on 15/12/28.
  */
-public class MyNevoActivity  extends BaseActivity implements ActivityObservable {
+public class MyNevoActivity  extends BaseActivity{
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -46,7 +45,6 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         setContentView(R.layout.activity_mynevo);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        getModel().setObservableActivity(this);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.title_my_nevo);
@@ -61,26 +59,11 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-
-        getModel().setObservableActivity(this);
         if (getModel().isWatchConnected()){
             getModel().getBatteryLevelOfWatch();
         }
-        //we can't make sure that OTA is stable before passed enough testing, here firstly disable it
         checkVersion();
     }
 
@@ -119,15 +102,16 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
         }
     }
 
-
     @Override
-    public void notifyOnConnected() {
-
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void notifyOnDisconnected() {
-
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Subscribe
@@ -138,22 +122,4 @@ public class MyNevoActivity  extends BaseActivity implements ActivityObservable 
     }
 
 
-    @Override
-    public void onSearching() {
-
-    }
-
-    @Override
-    public void onSearchSuccess() {
-
-    }
-
-    @Override
-    public void onSearchFailure() {
-
-    }
-
-    @Override
-    public void onConnecting() {
-    }
 }

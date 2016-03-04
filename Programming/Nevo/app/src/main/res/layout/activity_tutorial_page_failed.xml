@@ -28,13 +28,13 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/tutorial_failed_try_again"
-        android:id="@+id/retry_button"
+        android:id="@+id/activity_tutorial_retry_button"
         style="@style/TutorialButton"
         android:layout_below="@+id/activity_tutorial_page6_image"
         />
 
     <com.medcorp.nevo.view.customfontview.RobotoTextView
-        android:layout_below="@+id/retry_button"
+        android:layout_below="@+id/activity_tutorial_retry_button"
         android:id="@+id/activity_tutorial_page5_search_failure_tip_textview"
         android:textColor="@color/white"
         android:layout_width="wrap_content"
@@ -46,8 +46,8 @@
         android:paddingRight="15dp"
         android:textSize="12sp"
         android:gravity="center"
-        android:layout_alignStart="@+id/retry_button"
-        android:layout_alignEnd="@+id/retry_button"
+        android:layout_alignStart="@+id/activity_tutorial_retry_button"
+        android:layout_alignEnd="@+id/activity_tutorial_retry_button"
         android:text="@string/tutorial_failed_text"/>
 
 </RelativeLayout>

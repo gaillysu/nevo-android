@@ -41,7 +41,7 @@ public class TutorialPageSuccessActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.next_button)
+    @OnClick(R.id.activity_tutorial_success_next_button)
     public void nextClicked(){
         startActivity(MainActivity.class);
         finish();

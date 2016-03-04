@@ -28,7 +28,7 @@
         android:paddingTop="5dp"
         android:textSize="12sp"
         android:gravity="center"
-        android:text="@string/help_track_sleep_goodmorningmessage"/>
+        android:text="@string/help_track_sleep_good_morning_message"/>
 
     <ImageView
         android:id ="@+id/activity_tutorial_page4_open_bt_image"
@@ -44,7 +44,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/help_got_it"
         android:textAllCaps="false"
-        android:id="@+id/nextTextView"
+        android:id="@+id/activity_help_3_got_it_button"
         android:background="@color/transparent"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="21sp"

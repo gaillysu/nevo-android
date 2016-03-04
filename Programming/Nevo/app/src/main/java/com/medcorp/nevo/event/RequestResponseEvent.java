@@ -3,11 +3,11 @@ package com.medcorp.nevo.event;
 /**
  * Created by karl-john on 3/3/16.
  */
-public class OnRequestResponse {
+public class RequestResponseEvent {
 
     private boolean success;
 
-    public OnRequestResponse(boolean success) {
+    public RequestResponseEvent(boolean success) {
         this.success = success;
     }
 

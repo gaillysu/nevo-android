@@ -24,11 +24,14 @@ import com.medcorp.nevo.activity.EditAlarmActivity;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.AlarmArrayAdapter;
 import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
+import com.medcorp.nevo.event.RequestResponseEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.nevo.model.Alarm;
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.view.ToastHelper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,65 +83,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         menu.findItem(R.id.choose_goal_menu).setVisible(false);
     }
 
-    @Override
-    public void notifyDatasetChanged() {
-
-    }
-
-    @Override
-    public void notifyOnConnected() {
-
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-    }
-
-    @Override
-    public void onSearching() {
-
-    }
-
-    @Override
-    public void onSearchSuccess() {
-
-    }
-
-    @Override
-    public void onSearchFailure() {
-
-    }
-
-    @Override
-    public void onConnecting() {
-
-    }
-
-    @Override
-    public void onSyncStart() {
-
-    }
-
-    @Override
-    public void onSyncEnd() {
-
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
-        int id = success ? R.string.alarm_synced : R.string.alarm_error_sync;
-        ((MainActivity)getActivity()).showStateString(id,false);
-    }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -283,5 +227,25 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         }
         getModel().setAlarm(customerAlarmList);
         ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);
+    }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(RequestResponseEvent event) {
+        int id = event.isSuccess() ? R.string.alarm_synced : R.string.alarm_error_sync;
+        ((MainActivity)getActivity()).showStateString(id,false);
     }
 }

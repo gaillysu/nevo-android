@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.medcorp.nevo.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.SettingsMenuItem;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.ToastHelper;
@@ -68,54 +66,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         settingListView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
         return view;
-    }
-
-    @Override
-    public void notifyDatasetChanged() {
-    }
-
-    @Override
-    public void notifyOnConnected() {
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-    }
-
-    @Override
-    public void findWatchSuccess() {
-    }
-
-    @Override
-    public void onSearching() {
-    }
-
-    @Override
-    public void onSearchSuccess() {
-    }
-
-    @Override
-    public void onSearchFailure() {
-    }
-
-    @Override
-    public void onConnecting() {
-    }
-
-    @Override
-    public void onSyncStart() {
-    }
-
-    @Override
-    public void onSyncEnd() {
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
     }
 
     @Override

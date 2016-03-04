@@ -30,16 +30,16 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/tutorial_2_continue"
-        android:id="@+id/nextTextView"
+        android:id="@+id/activity_tutorial_2_continue_button"
         android:layout_below="@+id/activity_tutorial_page2_image"
         style="@style/TutorialButton" />
 
     <com.medcorp.nevo.view.customfontview.RobotoTextView
-        android:layout_below="@+id/nextTextView"
+        android:layout_below="@+id/activity_tutorial_2_continue_button"
         android:id="@+id/activity_tutorial_page2_notice_textview"
         android:textColor="@color/white"
-        android:layout_alignStart="@+id/nextTextView"
-        android:layout_alignEnd="@+id/nextTextView"
+        android:layout_alignStart="@+id/activity_tutorial_2_continue_button"
+        android:layout_alignEnd="@+id/activity_tutorial_2_continue_button"
         android:paddingTop="5dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"

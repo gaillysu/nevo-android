@@ -2,7 +2,6 @@ package com.medcorp.nevo.application;
 
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -16,34 +15,22 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
-import com.medcorp.nevo.activity.observer.ActivityObservable;
 import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-import com.medcorp.nevo.ble.model.request.GetBatteryLevelNevoRequest;
-import com.medcorp.nevo.ble.model.request.GetStepsGoalNevoRequest;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
-import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
-import com.medcorp.nevo.ble.model.request.SetGoalNevoRequest;
-import com.medcorp.nevo.ble.model.request.SetNotificationNevoRequest;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
-import com.medcorp.nevo.event.BatteryEvent;
-import com.medcorp.nevo.event.ConnectionStateChangedEvent;
-import com.medcorp.nevo.event.FindWatchEvent;
-import com.medcorp.nevo.event.LittleSyncEvent;
-import com.medcorp.nevo.event.OnRequestResponse;
+import com.medcorp.nevo.event.FirmwareReceivedEvent;
+import com.medcorp.nevo.event.OnSyncEndEvent;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
 import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.nevo.listener.GoogleFitHistoryListener;
 import com.medcorp.nevo.model.Alarm;
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
@@ -56,6 +43,7 @@ import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,7 +52,7 @@ import java.util.List;
 /**
  * Created by Karl on 10/15/15.
  */
-public class ApplicationModel extends Application implements OnSyncControllerListener {
+public class ApplicationModel extends Application {
 
     public final int GOOGLE_FIT_OATH_RESULT = 1001;
     private SyncController syncController;
@@ -73,7 +61,6 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
     private GoalDatabaseHelper goalDatabaseHelper;
-    private Optional<ActivityObservable> observableActivity;
     private boolean firmwareUpdateAlertDailog = false;
     //if it is -1, means mcu version hasn't be read
     private int mcuFirmwareVersion = -1;
@@ -84,9 +71,8 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     @Override
     public void onCreate() {
         super.onCreate();
-        observableActivity = new Optional<>();
+        EventBus.getDefault().register(this);
         syncController = new SyncControllerImpl(this);
-        syncController.setSyncControllerListenser(this);
         otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper(this);
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
@@ -95,46 +81,18 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
         updateGoogleFit();
     }
 
-    @Override
-    public void packetReceived(NevoPacket packet) {
-        if(observableActivity.notEmpty()) {
-            if (packet.getHeader() == (byte) GetStepsGoalNevoRequest.HEADER) {
-                EventBus.getDefault().post(new LittleSyncEvent(true));
-            }
-            else if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader()) {
-                EventBus.getDefault().post(new BatteryEvent(new Battery(packet.newBatteryLevelNevoPacket().getBatteryLevel())));
-            }
-            else if((byte) 0xF0 == packet.getHeader()) {
-                EventBus.getDefault().post(new FindWatchEvent(true));
-            }
-            else if((byte) SetAlarmNevoRequest.HEADER == packet.getHeader()
-                    || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()
-                    || (byte) SetGoalNevoRequest.HEADER == packet.getHeader()) {
-                EventBus.getDefault().post(new OnRequestResponse(true));
-            }
-        }
-    }
-
-    @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(observableActivity.notEmpty()) {
-            EventBus.getDefault().post(new ConnectionStateChangedEvent(isConnected));
-        }
-    }
-
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes firmwareTypes, String version) {
+    @Subscribe
+    public void onEvent(FirmwareReceivedEvent event){
         //in tutorial steps, don't popup this alert dialog
-        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true)
-                && observableActivity.notEmpty())
+        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
         {
-            if(firmwareTypes == Constants.DfuFirmwareTypes.SOFTDEVICE)
+            if(event.getType() == Constants.DfuFirmwareTypes.SOFTDEVICE)
             {
-                mcuFirmwareVersion = Integer.parseInt(version);
+                mcuFirmwareVersion = Integer.parseInt(event.getVersion());
             }
-            if(firmwareTypes == Constants.DfuFirmwareTypes.APPLICATION)
+            if(event.getType() == Constants.DfuFirmwareTypes.APPLICATION)
             {
-                bleFirmwareVersion = Integer.parseInt(version);
+                bleFirmwareVersion = Integer.parseInt(event.getVersion());
             }
             //both MCU and BLE version all be read done. and make sure this dialog only popup once.
             if(!firmwareUpdateAlertDailog && mcuFirmwareVersion>=0 && bleFirmwareVersion>=0)
@@ -142,7 +100,7 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
                 final ArrayList<String> needOTAFirmwareList = (ArrayList<String>)Common.needOTAFirmwareURLs(this,mcuFirmwareVersion,bleFirmwareVersion);
                 if(!needOTAFirmwareList.isEmpty())
                 {
-                    new MaterialDialog.Builder((Context) observableActivity.get())
+                    new MaterialDialog.Builder(this)
                             .title(R.string.dfu_update_positive)
                             .content(R.string.dfu_update_available)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -173,61 +131,10 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
         }
     }
 
-    @Override
-    public void onSearching() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onSearching();
-        }
-    }
 
-    @Override
-    public void onSearchSuccess() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onSearchSuccess();
-        }
-    }
-
-    @Override
-    public void onSearchFailure() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onSearchFailure();
-        }
-    }
-
-    @Override
-    public void onConnecting() {
-        if(observableActivity.notEmpty())
-        {
-            observableActivity.get().onConnecting();
-        }
-    }
-
-    @Override
-    public void onSyncStart() {
-
-    }
-
-    @Override
-    public void onSyncEnd() {
+    @Subscribe
+    public void onEvent(OnSyncEndEvent event){
         updateGoogleFit();
-    }
-
-    @Override
-    public void onInitializeStart() {
-
-    }
-
-    @Override
-    public void onInitializeEnd() {
-
-    }
-
-    public void setObservableActivity(ActivityObservable observable)
-    {
-        this.observableActivity.set(observable);
     }
 
     public SyncController getSyncController(){return syncController;}
@@ -235,7 +142,7 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     public OtaController getOtaController(){return otaController;}
 
     public void startConnectToWatch(boolean forceScan) {
-        syncController.startConnect(forceScan, this);
+        syncController.startConnect(forceScan);
     }
 
     public boolean isWatchConnected() {
@@ -309,7 +216,7 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
     }
 
     public boolean deleteAlarm(Alarm alarm){
-      return  alarmDatabaseHelper.remove(alarm.getId(), null);
+        return  alarmDatabaseHelper.remove(alarm.getId(), null);
     }
 
     public List<Goal> getAllGoal(){
@@ -421,4 +328,5 @@ public class ApplicationModel extends Application implements OnSyncControllerLis
             new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getDistanceDataSet());
         }
     }
+
 }

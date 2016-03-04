@@ -25,9 +25,10 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.activity.observer.ActivityObservable;
+import com.medcorp.nevo.event.ConnectionStateChangedEvent;
 import com.medcorp.nevo.event.OnSyncEndEvent;
 import com.medcorp.nevo.event.OnSyncStartEvent;
+import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
@@ -45,7 +46,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends BaseActivity implements ActivityObservable, DrawerLayout.DrawerListener,NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener
+public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener
 {
 
     @Bind(R.id.main_toolbar)
@@ -73,7 +74,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
         setContentView(R.layout.activity_main_new);
         activeFragment =  new Optional<>();
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
-        getModel().setObservableActivity(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
@@ -97,17 +97,10 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     protected void onResume() {
         super.onResume();
-        getModel().setObservableActivity(this);
         if(!getModel().isWatchConnected())
         {
             getModel().startConnectToWatch(false);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        getModel().setObservableActivity(null);
     }
 
     @Override
@@ -121,66 +114,6 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void notifyOnConnected() {
-        showStateString(R.string.in_app_notification_found_nevo, false);
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().notifyOnConnected();
-        }
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-        if (!getModel().isBluetoothOn()){
-            showStateString(R.string.in_app_notification_bluetooth_disabled,false);
-            return;
-        }
-        showStateString(R.string.in_app_notification_nevo_disconnected,false);
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().notifyOnDisconnected();
-        }
-    }
-
-    @Override
-    public void onSearching() {
-        if (!getModel().isBluetoothOn()){
-            showStateString(R.string.in_app_notification_bluetooth_disabled,false);
-            return;
-        }
-        showStateString(R.string.in_app_notification_searching,false);
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().onSearching();
-        }
-    }
-
-    @Override
-    public void onSearchSuccess() {
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().onSearchSuccess();
-        }
-    }
-
-    @Override
-    public void onSearchFailure() {
-        showStateString(R.string.in_app_notification_could_not_find,true);
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().onSearchFailure();
-        }
-    }
-
-    @Override
-    public void onConnecting() {
-        if(activeFragment.notEmpty()) {
-            activeFragment.get().onConnecting();
-        }
     }
 
     public void showStateString(int id,boolean dismiss)
@@ -325,24 +258,53 @@ public class MainActivity extends BaseActivity implements ActivityObservable, Dr
     @Override
     protected void onStart() {
         super.onStart();
+        Log.w("Karl", "Eventbus initiated");
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
+        Log.w("Karl", "Eventbus stopped");
         super.onStop();
     }
 
     @Subscribe
     public void onEvent(OnSyncEndEvent event){
         bigSyncStart = false;
+        Log.w("Karl", "eventbus Syncing data finished");
         showStateString(R.string.in_app_notification_synced, true);
     }
 
     @Subscribe
     public void onEvent(OnSyncStartEvent event){
         bigSyncStart = true;
+        Log.w("Karl","eventbus Syncing data");
         showStateString(R.string.in_app_notification_syncing,false);
+    }
+
+    @Subscribe
+    public void onEvent(ConnectionStateChangedEvent event){
+        if (event.isConnected()){
+            showStateString(R.string.in_app_notification_found_nevo, false);
+        }else{
+            showStateString(R.string.in_app_notification_nevo_disconnected, false);
+        }
+    }
+
+
+
+    @Subscribe
+    public void onEvent(SearchEvent event) {
+        Log.w("Karl","eventbus onsearchevent");
+        if (!getModel().isBluetoothOn()) {
+            showStateString(R.string.in_app_notification_bluetooth_disabled, false);
+            return;
+        }
+        switch (event.getStatus()) {
+            case SEARCHING:
+                showStateString(R.string.in_app_notification_searching, false);
+                break;
+        }
     }
 }

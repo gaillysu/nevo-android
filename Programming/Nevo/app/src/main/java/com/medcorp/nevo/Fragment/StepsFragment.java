@@ -14,11 +14,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
+import com.medcorp.nevo.event.LittleSyncEvent;
+import com.medcorp.nevo.event.OnSyncEndEvent;
+import com.medcorp.nevo.event.RequestResponseEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnStepsListener;
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.util.Preferences;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,84 +60,13 @@ public class StepsFragment extends BaseObservableFragment{
     @Override
     public void onResume() {
         super.onResume();
+
         getAppCompatActivity().setTitle(R.string.title_steps);
     }
 
+
     public void setOnStepsListener(OnStepsListener onStepsListener) {
         this.onStepsListener = onStepsListener;
-    }
-
-    @Override
-    public void notifyDatasetChanged() {
-        if(onStepsListener != null) {
-            onStepsListener.OnStepsChanged();
-        }
-    }
-
-    @Override
-    public void notifyOnConnected() {
-
-    }
-
-    @Override
-    public void notifyOnDisconnected() {
-
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-
-    }
-
-    @Override
-    public void onSearching() {
-
-    }
-
-    @Override
-    public void onSearchSuccess() {
-
-    }
-
-    @Override
-    public void onSearchFailure() {
-
-    }
-
-    @Override
-    public void onConnecting() {
-
-    }
-
-    @Override
-    public void onSyncStart() {
-
-    }
-
-    @Override
-    public void onSyncEnd() {
-        //when big sync done, redraw the all fragments, instead of calling Adapter.notify function to refresh
-        int currentItem = viewPager.getCurrentItem();
-        StepsFragmentPagerAdapter adapter = new StepsFragmentPagerAdapter(getChildFragmentManager(),this);
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(currentItem);
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
-        //if this response comes from syncController init, ignore it, only for user set a new goal.
-        if(showSyncGoal)
-        {
-            showSyncGoal = false;
-            int id = success ? R.string.goal_synced : R.string.goal_error_sync;
-            ((MainActivity) getActivity()).showStateString(id, false);
-        }
     }
 
     @Override
@@ -189,4 +123,44 @@ public class StepsFragment extends BaseObservableFragment{
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(LittleSyncEvent event) {
+        if(onStepsListener != null) {
+            onStepsListener.OnStepsChanged();
+        }
+    }
+
+    @Subscribe
+    public void onEvent(OnSyncEndEvent event) {
+        int currentItem = viewPager.getCurrentItem();
+        StepsFragmentPagerAdapter adapter = new StepsFragmentPagerAdapter(getChildFragmentManager(),this);
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(currentItem);
+    }
+
+    @Subscribe
+    public void onEvent(RequestResponseEvent event) {
+        //if this response comes from syncController init, ignore it, only for user set a new goal.
+        if(showSyncGoal)
+        {
+            showSyncGoal = false;
+            int id = event.isSuccess() ? R.string.goal_synced : R.string.goal_error_sync;
+            ((MainActivity) getActivity()).showStateString(id, false);
+        }
+    }
+
 }

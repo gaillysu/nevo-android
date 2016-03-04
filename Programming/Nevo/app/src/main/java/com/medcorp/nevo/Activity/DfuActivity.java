@@ -30,11 +30,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by gaillysu on 15/12/28.
  */
-public class DfuActivity extends BaseActivity implements OnOtaControllerListener, View.OnClickListener {
+public class DfuActivity extends BaseActivity implements OnOtaControllerListener{
 
     private static final String TAG="DfuActivity";
 
@@ -67,7 +68,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     private Context mContext;
     private boolean mUpdateSuccess = false;
     private boolean manualMode = false;
-    private boolean  backtoSetting = false;
+    private boolean backToSetting = false;
     private boolean  isShowingAlertDialog = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initManualmodeAndtFirmwareList();
         initNevoLogo();
-        back2settings.setOnClickListener(this);
         back2settings.setVisibility(View.INVISIBLE);
         back2settings.setText(R.string.dfu_re_upgrade);
         back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
@@ -86,12 +86,10 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         mNevoOtaController = getModel().getOtaController();
         mNevoOtaController.switch2OtaController();
         mNevoOtaController.setOnOtaControllerListener(this);
-        if(manualMode)
-        {
+        if(manualMode) {
             mNevoOtaController.setManualMode(true);
             mNevoOtaController.setOtaMode(true,true);
-        }
-        else {
+        } else {
             showAlertDialog();
         }
     }
@@ -146,35 +144,28 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             }
         });
     }
-    private void initManualmodeAndtFirmwareList()
-    {
+    private void initManualmodeAndtFirmwareList() {
         firmwareURLs = new ArrayList<String>();
         Bundle bundle = getIntent().getExtras();
-        manualMode = bundle.getBoolean("manualMode", false);
-        if(manualMode)
-        {
+        manualMode = bundle.getBoolean(getString(R.string.key_manual_mode), false);
+        if(manualMode) {
             firmwareURLs = Common.getAllBuildinFirmwareURLs(this);
-        }
-        else
-        {
-            firmwareURLs = bundle.getStringArrayList("firmwares");
+        } else {
+            firmwareURLs = bundle.getStringArrayList(getString(R.string.key_firmwares));
         }
         currentIndex = 0;
-        backtoSetting = bundle.getBoolean("backtosetting",true);
+        backToSetting = bundle.getBoolean(getString(R.string.key_back_to_settings),true);
     }
 
-    private void uploadPressed()
-    {
+    private void uploadPressed() {
         mUpdateSuccess = false;
         errorMsg="";
-        if(!mNevoOtaController.isConnected())
-        {
+        if(!mNevoOtaController.isConnected()) {
             Log.e(TAG,mContext.getString(R.string.dfu_connect_error_no_nevo_do_ota));
             onError(OtaController.ERRORCODE.NOCONNECTION);
             return;
         }
-        if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 )
-        {
+        if (currentIndex >= firmwareURLs.size() || firmwareURLs.size() == 0 ) {
             //check firmwareURLs is null, should hide the button
             Log.e(TAG,mContext.getString(R.string.dfu_checking_firmware));
             onError(OtaController.ERRORCODE.NOFINISHREADVERSION);
@@ -182,12 +173,10 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         }
 
         String selectedFileURL = firmwareURLs.get(currentIndex);
-        if (selectedFileURL.contains(".bin"))
-        {
+        if (selectedFileURL.contains(".bin")) {
             enumFirmwareType = Constants.DfuFirmwareTypes.SOFTDEVICE;
         }
-        if (selectedFileURL.contains(".hex"))
-        {
+        if (selectedFileURL.contains(".hex")) {
             enumFirmwareType = Constants.DfuFirmwareTypes.APPLICATION;
         }
         initNevoLogo();
@@ -216,39 +205,27 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
 
     @Override
     public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected)
-        {
+        if(!isConnected) {
             //when get disconnected between firmwares, hidden the retry/continue button until got connected and show it
-            if(currentIndex != firmwareURLs.size())
-            {
+            if(currentIndex != firmwareURLs.size()) {
                 back2settings.setVisibility(View.INVISIBLE);
             }
-        }
-        else
-        {
-            if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT)
-            {
-                if (errorMsg != "")
-                {
+        } else {
+            if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT) {
+                if (errorMsg != "") {
                     back2settings.setText(R.string.dfu_re_upgrade);
                     back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
                     back2settings.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    if (!manualMode || mUpdateSuccess)
-                    {
+                } else {
+                    if (!manualMode || mUpdateSuccess) {
                         back2settings.setVisibility(View.VISIBLE);
                     }
                 }
                 //popup alert dialog for manual OTA mode when find out the OTA service
-                if (manualMode && currentIndex == 0)
-                {
+                if (manualMode && currentIndex == 0) {
                     showAlertDialog();
                 }
-            }
-            else if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET))
-            {
+            } else if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET)) {
                 back2settings.setVisibility(View.VISIBLE);
             }
         }
@@ -278,7 +255,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
-                infomationTextView.setText(getString(R.string.dfu_update_message)  + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)? "BLE":"MCU") +  " ("+(currentIndex + 1) + "/" + firmwareURLs.size() + ")");
+                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION) ? "BLE" : "MCU") + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
     }
@@ -300,7 +277,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                     clockImage.setVisibility(View.INVISIBLE);
                     percentTextView.setText("");
                     infomationTextView.setText(R.string.dfu_firmware_updated);
-                    back2settings.setText(backtoSetting?R.string.dfu_back_to_settings:R.string.dfu_back);
+                    back2settings.setText(backToSetting ?R.string.dfu_back_to_settings:R.string.dfu_back);
                     back2settings.setTag(new ButtonTag(getString(R.string.dfu_back)));
                     back2settings.setVisibility(View.VISIBLE);
                     //show success text or image
@@ -338,26 +315,26 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     }
 
     @Override
-    public void onError(final OtaController.ERRORCODE errorcode) {
+    public void onError(final OtaController.ERRORCODE errorCode) {
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mNevoOtaController.reset(false);
-
-                if(mUpdateSuccess) return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
-
-                if(errorcode == OtaController.ERRORCODE.TIMEOUT)
+                if(mUpdateSuccess){
+                    return; //fix a bug when BLE OTA done,connect it before BT off, it can't find any characteristics and throw exception
+                }
+                if(errorCode == OtaController.ERRORCODE.TIMEOUT)
                     //errorMsg = mContext.getString(R.string.update_error_timeout);
                     errorMsg = getString(R.string.dfu_failed_preparing);
-                else if(errorcode == OtaController.ERRORCODE.NOCONNECTION)
+                else if(errorCode == OtaController.ERRORCODE.NOCONNECTION)
                     errorMsg = mContext.getString(R.string.dfu_error_noconnect);
-                else if(errorcode == OtaController.ERRORCODE.CHECKSUMERROR)
+                else if(errorCode == OtaController.ERRORCODE.CHECKSUMERROR)
                     errorMsg = mContext.getString(R.string.dfu_error_checksum);
-                else if(errorcode == OtaController.ERRORCODE.OPENFILEERROR)
+                else if(errorCode == OtaController.ERRORCODE.OPENFILEERROR)
                     errorMsg = mContext.getString(R.string.dfu_error_openfile);
-                else if (errorcode == OtaController.ERRORCODE.NODFUSERVICE)
+                else if (errorCode == OtaController.ERRORCODE.NODFUSERVICE)
                     errorMsg = mContext.getString(R.string.dfu_error_nofounDFUservice);
-                else if (errorcode == OtaController.ERRORCODE.NOFINISHREADVERSION)
+                else if (errorCode == OtaController.ERRORCODE.NOFINISHREADVERSION)
                     errorMsg = mContext.getString(R.string.dfu_checking_firmware);
                 else
                     errorMsg = mContext.getString(R.string.dfu_error_other);
@@ -391,17 +368,13 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == R.id.activity_dfu_back2settings_textview)
-        {
+    @OnClick(R.id.activity_dfu_back2settings_textview)
+    public void backToSettingsClicked(com.medcorp.nevo.view.customfontview.RobotoButton button){
+        if(button.getId() == R.id.activity_dfu_back2settings_textview) {
             //TODO Change to multiple buttons please.
-            if (v.getTag().toString().equals(getString(R.string.dfu_back)))
-            {
+            if (button.getTag().toString().equals(getString(R.string.dfu_back))) {
                 finish();
-            }
-            else if (v.getTag().toString().equals(getString(R.string.dfu_retry)) || v.getTag().toString().equals(getString(R.string.dfu_continue)))
-            {
+            } else if (button.getTag().toString().equals(getString(R.string.dfu_retry)) || button.getTag().toString().equals(getString(R.string.dfu_continue))) {
                 uploadPressed();
             }
         }

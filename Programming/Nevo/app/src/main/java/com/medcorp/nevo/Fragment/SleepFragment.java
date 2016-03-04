@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.SleepFragmentPagerAdapter;
+import com.medcorp.nevo.event.OnSyncEndEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
-import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,69 +55,24 @@ public class SleepFragment extends BaseObservableFragment{
         menu.findItem(R.id.add_menu).setVisible(false);
     }
 
-
     @Override
-    public void notifyDatasetChanged() {
-
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void notifyOnConnected() {
-
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
-    @Override
-    public void notifyOnDisconnected() {
-
-    }
-
-    @Override
-    public void batteryInfoReceived(Battery battery) {
-
-    }
-
-    @Override
-    public void findWatchSuccess() {
-
-    }
-
-    @Override
-    public void onSearching() {
-
-    }
-
-    @Override
-    public void onSearchSuccess() {
-
-    }
-
-    @Override
-    public void onSearchFailure() {
-
-    }
-
-    @Override
-    public void onConnecting() {
-
-    }
-
-    @Override
-    public void onSyncStart() {
-
-    }
-
-    @Override
-    public void onSyncEnd() {
-        //calculate sleep result, need waiting big sync done, so here catch it and redraw all fragments
+    @Subscribe
+    public void onEvent(OnSyncEndEvent event){
         int currentItem = viewPager.getCurrentItem();
         viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
                 getActivity()));
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(currentItem);
-    }
-
-    @Override
-    public void onRequestResponse(boolean success) {
-
     }
 }

@@ -35,6 +35,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -72,11 +73,8 @@ public class SleepTodayFragment extends BaseFragment {
     @Bind(R.id.fragment_sleep_today_dashboard_layout)
     LinearLayout dashboardLayout;
 
-    @Bind(R.id.gotoSleepButton)
-    TextView gotoSleepButton;
-
     @Bind(R.id.no_sleep_today_layout)
-    LinearLayout nosleepLayout;
+    LinearLayout noSleepLayout;
 
     private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
@@ -132,12 +130,10 @@ public class SleepTodayFragment extends BaseFragment {
         Date yesterday = new Date(today.getTime()-24*60*60*1000);
         Optional<Sleep> todaySleep = helper.get(0,today);
         Optional<Sleep> yesterdaySleep = helper.get(0,yesterday);
-        if(yesterdaySleep.notEmpty())
-        {
+        if(yesterdaySleep.notEmpty()) {
             sleepList.add(yesterdaySleep.get());
         }
-        if(todaySleep.notEmpty())
-        {
+        if(todaySleep.notEmpty()) {
             sleepList.add(todaySleep.get());
         }
         SleepDataHandler handler = new SleepDataHandler(sleepList);
@@ -157,16 +153,9 @@ public class SleepTodayFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
-        else
-        {
+        else {
             dashboardLayout.setVisibility(View.GONE);
-            nosleepLayout.setVisibility(View.VISIBLE);
-            gotoSleepButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().startActivity(new Intent(getActivity(),OpenSleepTrackActivity.class));
-                }
-            });
+            noSleepLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -182,6 +171,11 @@ public class SleepTodayFragment extends BaseFragment {
                 sleepDataViewBar.setSleepAnalysisResult(sleepAnalysisResult);
             }
         });
+    }
+
+    @OnClick(R.id.fragment_sleep_today_how_to)
+    public void howToSleepClicked(){
+        startActivity(new Intent(getActivity(), OpenSleepTrackActivity.class));
     }
 
     public void setDashboard(final Dashboard dashboard)

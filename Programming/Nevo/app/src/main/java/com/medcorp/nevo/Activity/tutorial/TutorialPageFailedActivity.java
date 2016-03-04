@@ -14,7 +14,6 @@ import butterknife.OnClick;
  */
 public class TutorialPageFailedActivity extends BaseActivity{
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +22,7 @@ public class TutorialPageFailedActivity extends BaseActivity{
         ButterKnife.bind(this);
     }
 
-
-    @OnClick(R.id.retry_button)
+    @OnClick(R.id.activity_tutorial_retry_button)
     public void retryClicked(){
         finish();
     }

@@ -42,7 +42,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/tutorial_3_next"
         android:textAllCaps="false"
-        android:id="@+id/nextTextView"
+        android:id="@+id/activity_tutorial_3_next_button"
         android:background="@color/transparent"
         android:textColor="@color/colorPrimaryDark"
         roboto:light="true"

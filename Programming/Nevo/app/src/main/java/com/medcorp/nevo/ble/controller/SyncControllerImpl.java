@@ -30,7 +30,6 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
-import com.medcorp.nevo.ble.listener.OnSyncControllerListener;
 import com.medcorp.nevo.ble.model.notification.CalendarNotification;
 import com.medcorp.nevo.ble.model.notification.EmailNotification;
 import com.medcorp.nevo.ble.model.notification.FacebookNotification;
@@ -57,7 +56,18 @@ import com.medcorp.nevo.ble.model.request.SetRtcNevoRequest;
 import com.medcorp.nevo.ble.model.request.TestModeNevoRequest;
 import com.medcorp.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.medcorp.nevo.database.dao.IDailyHistory;
+import com.medcorp.nevo.event.BatteryEvent;
+import com.medcorp.nevo.event.ConnectionStateChangedEvent;
+import com.medcorp.nevo.event.FindWatchEvent;
+import com.medcorp.nevo.event.FirmwareReceivedEvent;
+import com.medcorp.nevo.event.InitializeEvent;
+import com.medcorp.nevo.event.LittleSyncEvent;
+import com.medcorp.nevo.event.OnSyncEndEvent;
+import com.medcorp.nevo.event.OnSyncStartEvent;
+import com.medcorp.nevo.event.RequestResponseEvent;
+import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.model.Alarm;
+import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.DailyHistory;
 import com.medcorp.nevo.model.GoalBase;
 import com.medcorp.nevo.model.Sleep;
@@ -82,9 +92,9 @@ import net.medcorp.library.ble.model.request.RequestData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.model.response.ResponseData;
 import net.medcorp.library.ble.util.Constants;
-import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,9 +116,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private ConnectionController connectionController;
 
-    private Optional<OnSyncControllerListener> mOnSyncControllerListener = new Optional<OnSyncControllerListener>();
 
-    private List<MEDRawData> packetsbuffer = new ArrayList<MEDRawData>();
+    private List<MEDRawData> packetsBuffer = new ArrayList<MEDRawData>();
 
     private List<DailyHistory> savedDailyHistory = new ArrayList<DailyHistory>();
     private int mCurrentDay = 0;
@@ -144,18 +153,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
 
     @Override
-    public void startConnect(boolean forceScan,
-                             OnSyncControllerListener listenser) {
-
-        setSyncControllerListenser(listenser);
-
+    public void startConnect(boolean forceScan) {
         if (forceScan)
         {
             connectionController.forgetSavedAddress();
         }
-
+        Log.w("Karl","start Connect.");
         connectionController.scan();
-
     }
 
     //Each packets should go through this function. It will ensure that they are properly queued and sent in order.
@@ -188,11 +192,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         Notification applicationNotification = new TelephoneNotification();
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new SmsNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new EmailNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new FacebookNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new FacebookNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new CalendarNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new WeChatNotification()).getHexColor());
+        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WeChatNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WhatsappNotification()).getHexColor());
-        sendRequest(new SetNotificationNevoRequest(mContext,applicationNotificationColorMap));
+        sendRequest(new SetNotificationNevoRequest(mContext, applicationNotificationColorMap));
 
     }
 
@@ -205,18 +209,18 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if (data.getType().equals(MEDRawData.TYPE))
         {
             final MEDRawData nevoData = (MEDRawData) data;
-            packetsbuffer.add(nevoData);
+            packetsBuffer.add(nevoData);
 
             if((byte)0xFF == nevoData.getRawData()[0])
             {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
 
-                NevoPacket packet = new NevoPacket(packetsbuffer);
+                NevoPacket packet = new NevoPacket(packetsBuffer);
                 //if packets invaild, discard them, and reset buffer
                 if(!packet.isVaildPackets())
                 {
                     Log.e("Nevo Error","InVaild Packets Received!");
-                    packetsbuffer.clear();
+                    packetsBuffer.clear();
 
                     return;
                 }
@@ -239,10 +243,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
                 else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
-                    if(mOnSyncControllerListener.notEmpty())
-                    {
-                        mOnSyncControllerListener.get().onInitializeEnd();
-                    }
+                    EventBus.getDefault().post(new InitializeEvent(InitializeEvent.INITIALIZE_STATUS.END));
                     //start sync notification, phone --> nevo
                     // set Local Notification setting to Nevo, when nevo 's battery removed, the
                     // Steps count is 0, and all notification is off, because Notification is very
@@ -304,7 +305,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
                     mCurrentDay = 0;
                     savedDailyHistory = infopacket.getDailyTrackerInfo();
-//                        Log.i("","History Total Days:" + savedDailyHistory.size() + ",Today is:" + new Date() );
                     if(!savedDailyHistory.isEmpty()) {
                         mSyncAllFlag = true;
                         getDailyTracker(mCurrentDay);
@@ -320,109 +320,90 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                     savedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
                     savedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Steps:" + savedDailyHistory.get(mCurrentDay).getTotalSteps());
 //                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + savedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
 
                     savedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
                     savedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
 
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + savedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + savedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
 
                     savedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
                     savedDailyHistory.get(mCurrentDay).setHourlyWakeTime(thispacket.getHourlyWakeTime());
 
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + savedDailyHistory.get(mCurrentDay).getTotalWakeTime());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + savedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Wake time:" + savedDailyHistory.get(mCurrentDay).getTotalWakeTime());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Wake time:" + savedDailyHistory.get(mCurrentDay).getHourlyWakeTime().toString());
 
                     savedDailyHistory.get(mCurrentDay).setTotalLightTime(thispacket.getTotalLightTime());
                     savedDailyHistory.get(mCurrentDay).setHourlyLightTime(thispacket.getHourlyLightTime());
 
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + savedDailyHistory.get(mCurrentDay).getTotalLightTime());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + savedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily light time:" + savedDailyHistory.get(mCurrentDay).getTotalLightTime());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly light time:" + savedDailyHistory.get(mCurrentDay).getHourlyLightTime().toString());
 
 
                     savedDailyHistory.get(mCurrentDay).setTotalDeepTime(thispacket.getTotalDeepTime());
                     savedDailyHistory.get(mCurrentDay).setHourlDeepTime(thispacket.getHourlDeepTime());
 
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + savedDailyHistory.get(mCurrentDay).getTotalDeepTime());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + savedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily deep time:" + savedDailyHistory.get(mCurrentDay).getTotalDeepTime());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly deep time:" + savedDailyHistory.get(mCurrentDay).getHourlDeepTime().toString());
 
                     savedDailyHistory.get(mCurrentDay).setTotalDist(thispacket.getTotalDist());
                     savedDailyHistory.get(mCurrentDay).setHourlyDist(thispacket.getHourlyDist());
                     savedDailyHistory.get(mCurrentDay).setTotalCalories(thispacket.getTotalCalories());
                     savedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
 
-//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Disc (m):" + savedDailyHistory.get(mCurrentDay).getTotalDist());
-//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Disc (m):" + savedDailyHistory.get(mCurrentDay).getHourlyDist().toString());
-//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Total Calories (kcal):" + savedDailyHistory.get(mCurrentDay).getTotalCalories());
-//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Calories (kcal):" + savedDailyHistory.get(mCurrentDay).getHourlyCalories().toString());
+                    IDailyHistory history = new IDailyHistory(savedDailyHistory.get(mCurrentDay));
+                    //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
+                    //Log.i(TAG, savedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
+                    //update steps/sleep tables
+                    Steps steps = new Steps(history.getCreated());
+                    steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
 
+                    steps.setSteps(history.getSteps());
+                    steps.setCalories((int) history.getCalories());
+                    steps.setDistance((int) history.getDistance());
+                    steps.setHourlyCalories(history.getHourlycalories());
+                    steps.setHourlyDistance(history.getHourlydistance());
+                    steps.setHourlySteps(history.getHourlysteps());
 
-                    //save it to local database
-                    //try {
-                        IDailyHistory history = new IDailyHistory(savedDailyHistory.get(mCurrentDay));
-                        //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                        //Log.i(TAG, savedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
-                        //update steps/sleep tables
-                        Steps steps = new Steps(history.getCreated());
-                        steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-
-                        steps.setSteps(history.getSteps());
-                        steps.setCalories((int) history.getCalories());
-                        steps.setDistance((int) history.getDistance());
-                        steps.setHourlyCalories(history.getHourlycalories());
-                        steps.setHourlyDistance(history.getHourlydistance());
-                        steps.setHourlySteps(history.getHourlysteps());
-
-                        steps.setGoal(thispacket.getStepsGoal());
-                        steps.setWalkSteps(thispacket.getDailyWalkSteps());
-                        steps.setRunSteps(thispacket.getDailyRunSteps());
-                        steps.setWalkDistance(thispacket.getDailyWalkDistance());
-                        steps.setRunDistance(thispacket.getDailyRunDistance());
-                        steps.setWalkDuration(thispacket.getDailyWalkDuration());
-                        steps.setRunDuration(thispacket.getDailyRunDuration());
-                        try {
-                            steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
-                        } catch (JSONException e) {
+                    steps.setGoal(thispacket.getStepsGoal());
+                    steps.setWalkSteps(thispacket.getDailyWalkSteps());
+                    steps.setRunSteps(thispacket.getDailyRunSteps());
+                    steps.setWalkDistance(thispacket.getDailyWalkDistance());
+                    steps.setRunDistance(thispacket.getDailyRunDistance());
+                    steps.setWalkDuration(thispacket.getDailyWalkDuration());
+                    steps.setRunDuration(thispacket.getDailyRunDuration());
+                    try {
+                        steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
+                    } catch (JSONException e) {
                         e.printStackTrace();
-                        }
+                    }
                     //update  the day 's "steps" table
-                        if(steps.getSteps() !=0) {
-                            ((ApplicationModel) mContext).saveDailySteps(steps);
+                    if(steps.getSteps() !=0) {
+                        ((ApplicationModel) mContext).saveDailySteps(steps);
+                    }
+                    if(history.getTotalSleepTime() != 0) {
+                        Sleep sleep = new Sleep(history.getCreated());
+                        sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                        sleep.setHourlySleep(history.getHourlySleepTime());
+                        sleep.setHourlyWake(history.getHourlyWakeTime());
+                        sleep.setHourlyLight(history.getHourlyLightTime());
+                        sleep.setHourlyDeep(history.getHourlDeepTime());
+                        sleep.setTotalSleepTime(history.getTotalSleepTime());
+                        sleep.setTotalWakeTime(history.getTotalWakeTime());
+                        sleep.setTotalLightTime(history.getTotalLightTime());
+                        sleep.setTotalDeepTime(history.getTotalDeepTime());
+                        //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
+                        sleep.setStart(0);
+                        sleep.setEnd(0);
+                        try {
+                            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        if(history.getTotalSleepTime() != 0) {
-
-
-                            Sleep sleep = new Sleep(history.getCreated());
-                            sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                            sleep.setHourlySleep(history.getHourlySleepTime());
-                            sleep.setHourlyWake(history.getHourlyWakeTime());
-                            sleep.setHourlyLight(history.getHourlyLightTime());
-                            sleep.setHourlyDeep(history.getHourlDeepTime());
-                            sleep.setTotalSleepTime(history.getTotalSleepTime());
-                            sleep.setTotalWakeTime(history.getTotalWakeTime());
-                            sleep.setTotalLightTime(history.getTotalLightTime());
-                            sleep.setTotalDeepTime(history.getTotalDeepTime());
-                            //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
-                            sleep.setStart(0);
-                            sleep.setEnd(0);
-                            try {
-                                sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            ((ApplicationModel) mContext).saveDailySleep(sleep);
-                            //end update
-                        }
-                    /*} catch (SQLException e) {
-                        Log.w("Karl", "Crash");
-                        e.printStackTrace();
-                        Log.i(TAG,savedDailyHistory.get(mCurrentDay).getDate().toString() + " Failure saved to database, "+e.toString());
-                    }*/
-
-                    //discard tutorial activity, only MainActivity can save data to Google git
-//                        if(mContext instanceof MainActivity) GoogleFitManager.getInstance(mContext,(Activity)mContext).saveDailyHistory(savedDailyHistory.get(mCurrentDay));
+                        ((ApplicationModel) mContext).saveDailySleep(sleep);
+                        //end update
+                    }
                     mCurrentDay++;
                     if(mCurrentDay < savedDailyHistory.size() && mSyncAllFlag)
                     {
@@ -471,19 +452,30 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
                     steps.setDate(Common.removeTimeFromDate(currentday).getTime());
 
-                    DailyStepsNevoPacket steppacket = packet.newDailyStepsNevoPacket();
-                    steps.setSteps(steppacket.getDailySteps());
-                    steps.setGoal(steppacket.getDailyStepsGoal());
+                    DailyStepsNevoPacket stepPacket = packet.newDailyStepsNevoPacket();
+                    steps.setSteps(stepPacket.getDailySteps());
+                    steps.setGoal(stepPacket.getDailyStepsGoal());
 
                     //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
-                    //steps.setCalories(...);
-                    //steps.setDistance(...);
                     ((ApplicationModel)mContext).saveDailySteps(steps);
                     //end save
                 }
                 //process done(such as save local db), then notify top layer to get or refresh screen
-                if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().packetReceived(packet);
-                packetsbuffer.clear();
+                if (packet.getHeader() == (byte) GetStepsGoalNevoRequest.HEADER) {
+                    EventBus.getDefault().post(new LittleSyncEvent(true));
+                }
+                else if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader()) {
+                    EventBus.getDefault().post(new BatteryEvent(new Battery(packet.newBatteryLevelNevoPacket().getBatteryLevel())));
+                }
+                else if((byte) 0xF0 == packet.getHeader()) {
+                    EventBus.getDefault().post(new FindWatchEvent(true));
+                }
+                else if((byte) SetAlarmNevoRequest.HEADER == packet.getHeader()
+                        || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()
+                        || (byte) SetGoalNevoRequest.HEADER == packet.getHeader()) {
+                    EventBus.getDefault().post(new RequestResponseEvent(true));
+                }
+                packetsBuffer.clear();
             }
         }
 
@@ -495,54 +487,47 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if(isConnected) {
             mEnableTestMode = false;
             mTimeOutcount = 0;
-            if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(true);
+            Log.w("Karl", "Eventbus connection state changed");
+            EventBus.getDefault().post(new ConnectionStateChangedEvent(true));
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(mOnSyncControllerListener.notEmpty())
-                    {
-                        mOnSyncControllerListener.get().onInitializeStart();
-                    }
-                    packetsbuffer.clear();
+                    packetsBuffer.clear();
                     setRtc();
                 }
             }, 2000);
 
         } else {
-            if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().connectionStateChanged(false);
+            Log.w("Karl", "Eventbus connection state changed");
+            EventBus.getDefault().post(new ConnectionStateChangedEvent(false));
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
-            packetsbuffer.clear();
+            packetsBuffer.clear();
         }
     }
 
     @Override
     public void onSearching() {
-        if(mOnSyncControllerListener.notEmpty()) {
-            mOnSyncControllerListener.get().onSearching();
-        }
+        EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.SEARCHING));
+        Log.w("Karl","Searching");
     }
 
     @Override
     public void onSearchSuccess() {
-        if(mOnSyncControllerListener.notEmpty()) {
-            mOnSyncControllerListener.get().onSearchSuccess();
-        }
+        EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.FOUND));
+        Log.w("Karl","onSearchSuccess");
     }
 
     @Override
     public void onSearchFailure() {
-        if(mOnSyncControllerListener.notEmpty()) {
-            mOnSyncControllerListener.get().onSearchFailure();
-        }
+        EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.FAILED));
+        Log.w("Karl","onSearchFailure");
     }
 
     @Override
     public void onConnecting() {
-        if(mOnSyncControllerListener.notEmpty()) {
-            mOnSyncControllerListener.get().onConnecting();
-        }
+        Log.w("Karl","onConnecting");
     }
 
     /**
@@ -551,21 +536,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
      The watch should be emptied after all data have been saved.
      */
     private void syncActivityData() {
-
+        Log.w("Karl","Are you atleast trying to sync?");
         long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
-        String lasttimezone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
+        String lastTimeZone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
         if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
-                || !TimeZone.getDefault().getID().equals(lasttimezone)     ) {
+                || !TimeZone.getDefault().getID().equals(lastTimeZone) ) {
             //We haven't synched for a while, let's sync now !
             Log.i(TAG,"*** Sync started ! ***");
-            if(mOnSyncControllerListener.notEmpty())
-            {
-                mOnSyncControllerListener.get().onSyncStart();
-            }
-        getDailyTrackerInfo(true);
-        }
-        else
-        {
+            EventBus.getDefault().post(new OnSyncStartEvent());
+
+            getDailyTrackerInfo(true);
+        } else {
             //here sync StepandGoal for good user experience
             Log.i(TAG,"*** Sync step count and goal ***");
             getStepsAndGoal();
@@ -573,14 +554,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     /**
-     When the sync process is finished, le't refresh the date of sync
+     When the sync process is finished, let's refresh the date of sync
      */
     private void syncFinished() {
         Log.i(TAG,"*** Sync finished ***");
-        if(mOnSyncControllerListener.notEmpty())
-        {
-            mOnSyncControllerListener.get().onSyncEnd();
-        }
+        EventBus.getDefault().post(new OnSyncEndEvent(true));
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
         //tell history to refresh
@@ -594,15 +572,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void  getDailyTrackerInfo(boolean syncAll)
     {
         if(syncAll){
-        sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
+            sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
         } else if(!mSyncAllFlag){
             getDailyTracker(0);
         }
     }
 
-    private void  getDailyTracker(int trackerno)
-    {
-        sendRequest(new ReadDailyTrackerNevoRequest(mContext, trackerno));
+    private void  getDailyTracker(int trackerNo) {
+        sendRequest(new ReadDailyTrackerNevoRequest(mContext, trackerNo));
     }
 
     @Override
@@ -645,11 +622,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Override
-    public void setSyncControllerListenser(OnSyncControllerListener syncControllerListenser) {
-        mOnSyncControllerListener.set(syncControllerListenser);
-    }
-
-    @Override
     public boolean isConnected() {
         return connectionController.isConnected();
     }
@@ -681,10 +653,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public void onException(BaseBLEException e) {
-        //e.accept(this);
-        if(mOnSyncControllerListener.notEmpty()){
-            mOnSyncControllerListener.get().connectionStateChanged(false);
-        }
+        EventBus.getDefault().post(new ConnectionStateChangedEvent(false));
     }
 
 
@@ -725,8 +694,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     };
 
     @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes whichfirmware, String version) {
-        if(mOnSyncControllerListener.notEmpty()) mOnSyncControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+    public void firmwareVersionReceived(Constants.DfuFirmwareTypes type, String version) {
+        EventBus.getDefault().post(new FirmwareReceivedEvent(type,version));
     }
 
     @Override
