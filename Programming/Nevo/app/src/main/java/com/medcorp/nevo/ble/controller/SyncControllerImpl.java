@@ -62,8 +62,7 @@ import com.medcorp.nevo.event.FindWatchEvent;
 import com.medcorp.nevo.event.FirmwareReceivedEvent;
 import com.medcorp.nevo.event.InitializeEvent;
 import com.medcorp.nevo.event.LittleSyncEvent;
-import com.medcorp.nevo.event.OnSyncEndEvent;
-import com.medcorp.nevo.event.OnSyncStartEvent;
+import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.event.RequestResponseEvent;
 import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.model.Alarm;
@@ -158,7 +157,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         {
             connectionController.forgetSavedAddress();
         }
-        Log.w("Karl","start Connect.");
         connectionController.scan();
     }
 
@@ -175,9 +173,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
             @Override
             public void run() {
-
                 Log.i(TAG, request.getClass().getName());
-
                 connectionController.sendRequest(request);
             }
         });
@@ -487,7 +483,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if(isConnected) {
             mEnableTestMode = false;
             mTimeOutcount = 0;
-            Log.w("Karl", "Eventbus connection state changed");
             EventBus.getDefault().post(new ConnectionStateChangedEvent(true));
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
@@ -500,7 +495,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             }, 2000);
 
         } else {
-            Log.w("Karl", "Eventbus connection state changed");
             EventBus.getDefault().post(new ConnectionStateChangedEvent(false));
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             packetsBuffer.clear();
@@ -510,24 +504,20 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public void onSearching() {
         EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.SEARCHING));
-        Log.w("Karl","Searching");
     }
 
     @Override
     public void onSearchSuccess() {
         EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.FOUND));
-        Log.w("Karl","onSearchSuccess");
     }
 
     @Override
     public void onSearchFailure() {
         EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.FAILED));
-        Log.w("Karl","onSearchFailure");
     }
 
     @Override
     public void onConnecting() {
-        Log.w("Karl","onConnecting");
     }
 
     /**
@@ -541,24 +531,19 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         String lastTimeZone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
         if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
                 || !TimeZone.getDefault().getID().equals(lastTimeZone) ) {
-            //We haven't synched for a while, let's sync now !
             Log.i(TAG,"*** Sync started ! ***");
-            EventBus.getDefault().post(new OnSyncStartEvent());
+            EventBus.getDefault().post(new OnSyncEvent(OnSyncEvent.SYNC_EVENT.STARTED));
 
             getDailyTrackerInfo(true);
         } else {
-            //here sync StepandGoal for good user experience
             Log.i(TAG,"*** Sync step count and goal ***");
             getStepsAndGoal();
         }
     }
 
-    /**
-     When the sync process is finished, let's refresh the date of sync
-     */
     private void syncFinished() {
         Log.i(TAG,"*** Sync finished ***");
-        EventBus.getDefault().post(new OnSyncEndEvent(true));
+        EventBus.getDefault().post(new OnSyncEvent(OnSyncEvent.SYNC_EVENT.STOPPED));
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
         //tell history to refresh

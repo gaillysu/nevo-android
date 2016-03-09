@@ -4,7 +4,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
 
@@ -118,8 +117,5 @@ public class MyNevoActivity  extends BaseActivity{
     public void onEvent(BatteryEvent batteryEvent){
         myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
         myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
-        Log.w("Karl","Pretty coool");
     }
-
-
 }

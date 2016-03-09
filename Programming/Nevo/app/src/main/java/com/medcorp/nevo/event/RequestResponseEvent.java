@@ -5,7 +5,7 @@ package com.medcorp.nevo.event;
  */
 public class RequestResponseEvent {
 
-    private boolean success;
+    private final boolean success;
 
     public RequestResponseEvent(boolean success) {
         this.success = success;

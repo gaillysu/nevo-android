@@ -11,4 +11,4 @@
     app:titleTextColor="@color/white"
     app:popupTheme="@style/NevoActionBar"
     app:theme="@style/NevoActionBar"
-    />
+/>

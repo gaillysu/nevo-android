@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -26,8 +27,7 @@ import android.widget.TextView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.event.ConnectionStateChangedEvent;
-import com.medcorp.nevo.event.OnSyncEndEvent;
-import com.medcorp.nevo.event.OnSyncStartEvent;
+import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
@@ -55,6 +55,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Bind(R.id.activity_main_drawer_layout)
     DrawerLayout drawerLayout;
 
+    @Bind(R.id.overview_coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
 
@@ -76,6 +79,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout.setDrawerListener(this);
@@ -125,7 +129,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             }
         }
 
-        snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_LONG);
+        snackbar = Snackbar.make(coordinatorLayout,"",Snackbar.LENGTH_LONG);
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setText(getString(id));
@@ -136,7 +140,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (bigSyncStart == false) {
+                    if (!bigSyncStart) {
                         snackbar.dismiss();
                     }
                 }
@@ -258,29 +262,27 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     protected void onStart() {
         super.onStart();
-        Log.w("Karl", "Eventbus initiated");
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
-        Log.w("Karl", "Eventbus stopped");
         super.onStop();
     }
 
     @Subscribe
-    public void onEvent(OnSyncEndEvent event){
-        bigSyncStart = false;
-        Log.w("Karl", "eventbus Syncing data finished");
-        showStateString(R.string.in_app_notification_synced, true);
-    }
-
-    @Subscribe
-    public void onEvent(OnSyncStartEvent event){
-        bigSyncStart = true;
-        Log.w("Karl","eventbus Syncing data");
-        showStateString(R.string.in_app_notification_syncing,false);
+    public void onEvent(OnSyncEvent event){
+        switch (event.getStatus()){
+            case STOPPED:
+                bigSyncStart = false;
+                showStateString(R.string.in_app_notification_synced, true);
+                break;
+            case STARTED:
+                bigSyncStart = true;
+                showStateString(R.string.in_app_notification_syncing,false);
+                break;
+        }
     }
 
     @Subscribe
@@ -292,11 +294,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         }
     }
 
-
-
     @Subscribe
     public void onEvent(SearchEvent event) {
-        Log.w("Karl","eventbus onsearchevent");
         if (!getModel().isBluetoothOn()) {
             showStateString(R.string.in_app_notification_bluetooth_disabled, false);
             return;
