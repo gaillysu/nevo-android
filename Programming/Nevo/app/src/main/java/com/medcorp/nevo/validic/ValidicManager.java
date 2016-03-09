@@ -25,6 +25,7 @@ public class ValidicManager {
     {
         this.context = context;
         spiceManager = new SpiceManager(JacksonSpringAndroidSpiceService.class);
+        startSpiceManager();
     }
 
     public String getOrganizationID(){
@@ -37,7 +38,9 @@ public class ValidicManager {
 
     public void startSpiceManager()
     {
-        spiceManager.start(context);
+        if(!spiceManager.isStarted()) {
+            spiceManager.start(context);
+        }
     }
     public void stopSpiceManager()
     {

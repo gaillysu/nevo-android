@@ -6,9 +6,41 @@ import java.io.Serializable;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class ValidicUserBase implements Serializable {
+public class ValidicUserBase{
         private String uid;
         private Profile profile;
         private String _id;
         private String access_token;
+
+        public String getUid() {
+                return uid;
+        }
+
+        public void setUid(String uid) {
+                this.uid = uid;
+        }
+
+        public Profile getProfile() {
+                return profile;
+        }
+
+        public void setProfile(Profile profile) {
+                this.profile = profile;
+        }
+
+        public String get_id() {
+                return _id;
+        }
+
+        public void set_id(String _id) {
+                this._id = _id;
+        }
+
+        public String getAccess_token() {
+                return access_token;
+        }
+
+        public void setAccess_token(String access_token) {
+                this.access_token = access_token;
+        }
 }

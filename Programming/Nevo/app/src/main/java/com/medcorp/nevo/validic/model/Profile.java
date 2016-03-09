@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class Profile implements Serializable {
+public class Profile{
     private String gender;
     private String location;
     private String birth_year;

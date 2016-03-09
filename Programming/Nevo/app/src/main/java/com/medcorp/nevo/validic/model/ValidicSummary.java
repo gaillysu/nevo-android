@@ -6,7 +6,7 @@ package com.medcorp.nevo.validic.model;
 public class ValidicSummary {
     int status;
     String message;
-    int result;
+    int results;
     long start_date;
     long end_date;
     int offset;
@@ -21,8 +21,8 @@ public class ValidicSummary {
         this.message = message;
     }
 
-    public void setResult(int result) {
-        this.result = result;
+    public void setResults(int results) {
+        this.results = results;
     }
 
     public void setStart_date(long start_date) {
@@ -53,8 +53,8 @@ public class ValidicSummary {
         return message;
     }
 
-    public int getResult() {
-        return result;
+    public int getResults() {
+        return results;
     }
 
     public long getStart_date() {
