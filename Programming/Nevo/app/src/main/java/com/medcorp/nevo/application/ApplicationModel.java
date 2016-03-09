@@ -36,7 +36,12 @@ import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
+import com.medcorp.nevo.validic.ValidicManager;
+import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.view.ToastHelper;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.util.Constants;
@@ -44,6 +49,7 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +73,7 @@ public class ApplicationModel extends Application {
     private int bleFirmwareVersion = -1;
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
+    private ValidicManager validicManager;
 
     @Override
     public void onCreate() {
@@ -79,6 +86,7 @@ public class ApplicationModel extends Application {
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         updateGoogleFit();
+        validicManager = new ValidicManager(this);
     }
 
     @Subscribe
@@ -329,4 +337,7 @@ public class ApplicationModel extends Application {
         }
     }
 
+    public ValidicManager getValidicManager() {
+        return validicManager;
+    }
 }
