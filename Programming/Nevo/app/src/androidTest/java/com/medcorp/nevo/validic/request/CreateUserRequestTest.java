@@ -19,13 +19,17 @@ public class CreateUserRequestTest extends AndroidTestCase {
     ValidicManager validicManager;
     CreateUserRequest createUserRequest;
     NevoUser nevoUser;
+    //it comes from user 's input
+    String pincode = "2364367";
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         validicManager = new ValidicManager(getContext());
         validicManager.startSpiceManager();
-        nevoUser = new NevoUser("123456",null/*new Profile("M","Shenzhen","2016",180f,75f)*/);
-        createUserRequest = new CreateUserRequest(nevoUser,validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+        nevoUser = new NevoUser();
+        //assume it is a logged in user
+        nevoUser.setUid("123456");
+        createUserRequest = new CreateUserRequest(nevoUser.getUid(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pincode);
         String body  = createUserRequest.buildRequestBody();
         String url = createUserRequest.buildRequestURL();
         Log.i(TAG,"url = " + url);

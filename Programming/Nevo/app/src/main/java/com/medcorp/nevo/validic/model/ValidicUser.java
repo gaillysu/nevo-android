@@ -10,6 +10,8 @@ public class ValidicUser{
         private String code;
         private String message;
         private ValidicUserBase user;
+        private String application;
+
 
         public String getCode() {
                 return code;
@@ -33,5 +35,13 @@ public class ValidicUser{
 
         public void setUser(ValidicUserBase user) {
                 this.user = user;
+        }
+
+        public String getApplication() {
+                return application;
+        }
+
+        public void setApplication(String application) {
+                this.application = application;
         }
 }

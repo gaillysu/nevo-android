@@ -5,15 +5,13 @@ import java.io.Serializable;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class NevoUser implements Serializable {
+public class NevoUser {
     private String uid;
-    private Profile profile;
-
-    public NevoUser(String uid,Profile profile)
-    {
-        this.uid = uid;
-        this.profile = profile;
-    }
+    private String token;
+    private String msg;
+    private int error;
+    private String referer;
+    private String state;
 
     public String getUid() {
         return uid;
@@ -23,11 +21,43 @@ public class NevoUser implements Serializable {
         this.uid = uid;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public String getToken() {
+        return token;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public int getError() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error = error;
+    }
+
+    public String getReferer() {
+        return referer;
+    }
+
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

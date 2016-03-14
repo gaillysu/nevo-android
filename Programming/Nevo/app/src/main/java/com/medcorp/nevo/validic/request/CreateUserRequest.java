@@ -6,6 +6,7 @@ import com.medcorp.nevo.validic.model.NevoUser;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -15,34 +16,37 @@ import org.springframework.http.ResponseEntity;
  */
 public class CreateUserRequest extends BaseRequest<ValidicUser>{
 
-    private NevoUser user;
+    private String nevouser_id;
     private String   access_token;
     private String   organization_id;
+    private String   pincode;
 
-    public CreateUserRequest(NevoUser user,String organization_id,String access_token) {
+    public CreateUserRequest(String nevouser_id,String organization_id,String access_token,String pincode) {
         super(ValidicUser.class);
-        this.user = user;
+        this.nevouser_id = nevouser_id;
         this.organization_id = organization_id;
         this.access_token = access_token;
+        this.pincode = pincode;
     }
 
     @Override
     public ValidicUser loadDataFromNetwork() throws Exception {
         ResponseEntity<ValidicUser> result =  getRestTemplate().postForEntity(buildRequestURL(),buildRequestBody(), ValidicUser.class);
-        return result.getBody();
+        return result!=null?result.getBody():null;
     }
 
     @Override
     public String buildRequestURL() {
-        return String.format("https://api.validic.com/v1/organizations/%s/users.json",organization_id);
+        return String.format("https://api.validic.com/v1/organizations/%s/authorization/new_user",organization_id);
     }
 
     @Override
     public String buildRequestBody() {
         JSONObject json = new JSONObject();
         try {
-            json.put("user",new Gson().toJson(user));
+            json.put("user",new JSONObject().put("uid",nevouser_id));
             json.put("access_token",access_token);
+            json.put("pin",pincode);
         } catch (JSONException e) {
             e.printStackTrace();
         }

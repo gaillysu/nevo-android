@@ -8,7 +8,6 @@ import java.io.Serializable;
  */
 public class ValidicUserBase{
         private String uid;
-        private Profile profile;
         private String _id;
         private String access_token;
 
@@ -18,14 +17,6 @@ public class ValidicUserBase{
 
         public void setUid(String uid) {
                 this.uid = uid;
-        }
-
-        public Profile getProfile() {
-                return profile;
-        }
-
-        public void setProfile(Profile profile) {
-                this.profile = profile;
         }
 
         public String get_id() {
