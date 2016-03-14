@@ -119,11 +119,11 @@ public class SleepData {
         JSONObject json = new JSONObject();
         try {
             json.put(context.getString(R.string.key_sleep_duration),getTotalSleep());
-            json.put(context.getString(R.string.key_sleep_deep_duration),getAwake());
+            json.put(context.getString(R.string.key_sleep_deep_duration),getDeepSleep());
             json.put(context.getString(R.string.key_sleep_light_duration),getLightSleep());
-            json.put(context.getString(R.string.key_sleep_start_time),getDeepSleep());
-            json.put(context.getString(R.string.key_sleep_end_time),getSleepStart());
-            json.put(context.getString(R.string.key_sleep_wake_duration),getSleepEnd());
+            json.put(context.getString(R.string.key_sleep_start_time),getSleepStart());
+            json.put(context.getString(R.string.key_sleep_end_time),getSleepEnd());
+            json.put(context.getString(R.string.key_sleep_wake_duration),getAwake());
             json.put(context.getString(R.string.key_sleep_hourly_wake),getHourlyWake());
             json.put(context.getString(R.string.key_sleep_hourly_light),getHourlyLight());
             json.put(context.getString(R.string.key_sleep_hourly_deep),getHourlyDeep());
