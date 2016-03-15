@@ -7,8 +7,8 @@ import java.io.Serializable;
  * Created by gaillysu on 16/3/8.
  */
 public class ValidicUserBase{
-        private String uid;
         private String _id;
+        private String uid;
         private String access_token;
 
         public String getUid() {

@@ -1,5 +1,7 @@
 package com.medcorp.nevo.validic.request;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.NevoUser;
@@ -10,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
 
 /**
  * Created by gaillysu on 16/3/8.
@@ -28,16 +32,18 @@ public class CreateUserRequest extends BaseRequest<ValidicUser>{
         this.access_token = access_token;
         this.pincode = pincode;
     }
-
+    // jackson
     @Override
     public ValidicUser loadDataFromNetwork() throws Exception {
-        ResponseEntity<ValidicUser> result =  getRestTemplate().postForEntity(buildRequestURL(),buildRequestBody(), ValidicUser.class);
-        return result!=null?result.getBody():null;
+        ValidicUser result =  getRestTemplate().postForObject(buildRequestURL(), buildRequestBody(), ValidicUser.class, new HashMap<String, Object>());
+        return result;
     }
 
     @Override
     public String buildRequestURL() {
-        return String.format("https://api.validic.com/v1/organizations/%s/authorization/new_user",organization_id);
+        String url = String.format("https://api.validic.com/v1/organizations/%s/authorization/new_user",organization_id);
+        Log.i(this.getClass().getSimpleName(),"buildRequestURL return:"+url);
+        return url;
     }
 
     @Override
@@ -50,6 +56,7 @@ public class CreateUserRequest extends BaseRequest<ValidicUser>{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.i(this.getClass().getSimpleName(),"buildRequestBody return:"+json.toString());
         return json.toString();
     }
 }

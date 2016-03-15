@@ -3,9 +3,11 @@ package com.medcorp.nevo.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +58,8 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
         menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.google_fit_small,Preferences.isGoogleFitSet(this)));
+        menuList.add(new SettingsMenuItem("Connect Validic",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Log in Validic",R.drawable.google_fit_small,false));
         settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
@@ -92,6 +96,30 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                 googleFitLogoutDialog.show();
             }
         }
+        if(position == 1) {
+            if(isChecked)
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://partner.validic.com/applications/47/test/marketplace"));
+                startActivity(intent);
+            }
+        }
+        if(position == 2) {
+            if(isChecked)
+            {
+                new MaterialDialog.Builder(this)
+                        .title("Input PIN code")
+                        .inputType(InputType.TYPE_CLASS_NUMBER)
+                        .input("pin code", "", new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                if (input.length() == 0) return;
+                                getModel().createValidicUser(input.toString());
+                            }
+                        }).negativeText(android.R.string.cancel)
+                        .show();
+            }
+        }
+
     }
 
     MaterialDialog.SingleButtonCallback positiveCallback = new MaterialDialog.SingleButtonCallback() {

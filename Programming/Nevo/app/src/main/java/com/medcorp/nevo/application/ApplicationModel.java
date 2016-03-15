@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.gson.Gson;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.ble.controller.OtaControllerImpl;
@@ -36,7 +38,11 @@ import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.validic.ValidicManager;
+import com.medcorp.nevo.validic.model.NevoUser;
+import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.request.CreateUserRequest;
+import com.medcorp.nevo.validic.request.NevoUserRegister;
 import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -48,7 +54,6 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,6 +78,7 @@ public class ApplicationModel extends Application {
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private ValidicManager validicManager;
+    private NevoUser  nevoUser;
 
     @Override
     public void onCreate() {
@@ -86,6 +92,21 @@ public class ApplicationModel extends Application {
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         updateGoogleFit();
         validicManager = new ValidicManager(this);
+        nevoUser = new NevoUser();
+        VerifyCredentialRequest request = new VerifyCredentialRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+        validicManager.startSpiceManager();
+        validicManager.performRequest(request, new RequestListener<VerifyCredentialModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.w("Karl","Failure?");
+                spiceException.printStackTrace();
+            }
+
+            @Override
+            public void onRequestSuccess(VerifyCredentialModel model) {
+                Log.w("Karl","Success, model = " + model.toString());
+            }
+        });
     }
 
     @Subscribe
@@ -339,5 +360,29 @@ public class ApplicationModel extends Application {
 
     public ValidicManager getValidicManager() {
         return validicManager;
+    }
+    public NevoUser getNevoUser(){
+        return nevoUser;
+    }
+    public void createValidicUser(String pinCode)
+    {
+        //if nevoUser.uid == null, assume A user "gaillysu" has logged in.
+        if(nevoUser.getUid()==null){
+            nevoUser.setUid("gaillysu");
+        }
+        CreateUserRequest createUserRequest = new CreateUserRequest(nevoUser.getUid(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pinCode);
+
+        validicManager.performRequest(createUserRequest, new RequestListener<ValidicUser>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
+                Log.e("ApplicationModel", "spiceException = " + spiceException.getLocalizedMessage());
+            }
+             @Override
+            public void onRequestSuccess(ValidicUser validicUser) {
+                String result = new Gson().toJson(validicUser);
+                Log.i("ApplicationModel", "ValidicUser = " + result);
+            }
+        });
     }
 }
