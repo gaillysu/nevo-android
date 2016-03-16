@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * Created by gaillysu on 16/3/14.
  */
-public class NevoUserLogin extends BaseRequest<NevoUser> {
+public class NevoUserLogin extends BaseSpringRequest<NevoUser> {
 
     private String email;
     private String password;

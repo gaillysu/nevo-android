@@ -2,10 +2,8 @@ package com.medcorp.nevo.validic.request;
 
 import com.google.gson.Gson;
 import com.medcorp.nevo.validic.model.ValidicRecord;
-import com.medcorp.nevo.validic.model.ValidicRecordModel;
 import com.medcorp.nevo.validic.model.ValidicRecordMoreModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,7 @@ import java.util.List;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class AddMoreRecordsRequest extends BaseRequest<ValidicRecordMoreModel>{
+public class AddMoreRecordsRequest extends BaseSpringRequest<ValidicRecordMoreModel> {
 
     private List<ValidicRecord> records;
     private String   organizationId;

@@ -50,6 +50,10 @@ import com.medcorp.nevo.validic.request.CreateUserRequest;
 import com.medcorp.nevo.validic.request.NevoUserLogin;
 import com.medcorp.nevo.validic.request.NevoUserRegister;
 import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
+import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
+import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
+import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
+import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -406,9 +410,19 @@ public class ApplicationModel extends Application {
         {
             nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
         }
-        CreateUserRequest createUserRequest = new CreateUserRequest(nevoUser.getToken(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pinCode);
 
-        validicManager.performRequest(createUserRequest, new RequestListener<ValidicUser>() {
+        CreateUserRequestObject object = new CreateUserRequestObject();
+        object.setPin(pinCode);
+        object.setAccess_token(validicManager.getOrganizationToken());
+        CreateUserRequestObjectUser user  = new CreateUserRequestObjectUser();
+        user.setUid("MYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDID");
+        object.setUser(user);
+        Gson gson = new Gson();
+
+        Log.w("Karl",gson.toJson(object).toString());
+        CreateUserRetroRequest request = new CreateUserRetroRequest(validicManager.getOrganizationID(), object);
+
+        validicManager.execute(request, new RequestListener<ValidicUser>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());

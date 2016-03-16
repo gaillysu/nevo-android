@@ -1,8 +1,6 @@
 package com.medcorp.nevo.validic.model;
 
 
-import java.io.Serializable;
-
 /**
  * Created by gaillysu on 16/3/8.
  */
@@ -11,7 +9,6 @@ public class ValidicUser{
         private String message;
         private ValidicUserBase user;
         private String application;
-
 
         public String getCode() {
                 return code;

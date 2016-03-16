@@ -2,23 +2,15 @@ package com.medcorp.nevo.validic.request;
 
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.medcorp.nevo.validic.ValidicManager;
-import com.medcorp.nevo.validic.model.NevoUser;
 import com.medcorp.nevo.validic.model.ValidicUser;
-import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
-
-import java.util.HashMap;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class CreateUserRequest extends BaseRequest<ValidicUser>{
+public class CreateUserRequest extends BaseSpringRequest<ValidicUser> {
 
     private String nevouser_id;
     private String   access_token;
@@ -32,11 +24,11 @@ public class CreateUserRequest extends BaseRequest<ValidicUser>{
         this.access_token = access_token;
         this.pincode = pincode;
     }
-    // jackson
+
     @Override
     public ValidicUser loadDataFromNetwork() throws Exception {
-        ValidicUser result =  getRestTemplate().postForObject(buildRequestURL(), buildRequestBody(), ValidicUser.class, new HashMap<String, Object>());
-        return result;
+        ValidicUser response = getRestTemplate().postForObject(buildRequestURL(), buildRequestBody(), ValidicUser.class);
+        return response;
     }
 
     @Override

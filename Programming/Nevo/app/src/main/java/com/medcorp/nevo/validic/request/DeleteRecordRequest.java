@@ -1,16 +1,12 @@
 package com.medcorp.nevo.validic.request;
 
-import android.support.annotation.NonNull;
-
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class DeleteRecordRequest extends BaseRequest<Void> {
+public class DeleteRecordRequest extends BaseSpringRequest<Void> {
 
     private String   organizationId;
     private String   organizationTokenKey;
