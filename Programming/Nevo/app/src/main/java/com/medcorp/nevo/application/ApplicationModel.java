@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -35,13 +36,18 @@ import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.NevoUser;
+import com.medcorp.nevo.validic.model.ValidicRecord;
+import com.medcorp.nevo.validic.model.ValidicRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.request.AddRecordRequest;
 import com.medcorp.nevo.validic.request.CreateUserRequest;
+import com.medcorp.nevo.validic.request.NevoUserLogin;
 import com.medcorp.nevo.validic.request.NevoUserRegister;
 import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.view.ToastHelper;
@@ -54,10 +60,14 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Karl on 10/15/15.
@@ -79,6 +89,8 @@ public class ApplicationModel extends Application {
     private GoogleFitTaskCounter googleFitTaskCounter;
     private ValidicManager validicManager;
     private NevoUser  nevoUser;
+    private final String DEFAULT_NEVO_USER_TOKEN = "a6b3e3fa8b8d9f59bb27fe4c11ed68df";
+    private final String DEFAULT_VALIDIC_USER_ID = "56e8c19b1147b14e3c000658";
 
     @Override
     public void onCreate() {
@@ -93,20 +105,7 @@ public class ApplicationModel extends Application {
         updateGoogleFit();
         validicManager = new ValidicManager(this);
         nevoUser = new NevoUser();
-        VerifyCredentialRequest request = new VerifyCredentialRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
-        validicManager.startSpiceManager();
-        validicManager.performRequest(request, new RequestListener<VerifyCredentialModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                Log.w("Karl","Failure?");
-                spiceException.printStackTrace();
-            }
-
-            @Override
-            public void onRequestSuccess(VerifyCredentialModel model) {
-                Log.w("Karl","Success, model = " + model.toString());
-            }
-        });
+        verifyValidicCredential();
     }
 
     @Subscribe
@@ -364,25 +363,126 @@ public class ApplicationModel extends Application {
     public NevoUser getNevoUser(){
         return nevoUser;
     }
-    public void createValidicUser(String pinCode)
+
+    private void processListener(final ResponseListener listener,final String jsonString,final boolean exception)
     {
-        //if nevoUser.uid == null, assume A user "gaillysu" has logged in.
-        if(nevoUser.getUid()==null){
-            nevoUser.setUid("gaillysu");
+        if(listener!=null && jsonString!=null) {
+            final Handler handler = new Handler(getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(exception) {
+                        listener.onException(jsonString);
+                    }
+                    else {
+                        listener.processResponse(jsonString);
+                    }
+                }
+            });
         }
-        CreateUserRequest createUserRequest = new CreateUserRequest(nevoUser.getUid(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pinCode);
+    }
+
+    public void verifyValidicCredential()
+    {
+        VerifyCredentialRequest request = new VerifyCredentialRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+        validicManager.performRequest(request, new RequestListener<VerifyCredentialModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.w("Karl","Failure?");
+                spiceException.printStackTrace();
+            }
+
+            @Override
+            public void onRequestSuccess(VerifyCredentialModel model) {
+                Log.w("Karl","Success, model = " + model.toString());
+            }
+        });
+    }
+    public void createValidicUser(String pinCode,final ResponseListener listener)
+    {
+        //TODO if nevoUser.uid == null, assume A user "Gaillysu@med-corp.net" has logged in.
+        //when Gaillysu logged in, he will obtain an unique access token,for example:
+        if(nevoUser.getToken() == null)
+        {
+            nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
+        }
+        CreateUserRequest createUserRequest = new CreateUserRequest(nevoUser.getToken(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pinCode);
 
         validicManager.performRequest(createUserRequest, new RequestListener<ValidicUser>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getLocalizedMessage());
+                String result = new Gson().toJson(spiceException);
+                processListener(listener, result,true);
             }
-             @Override
+
+            @Override
             public void onRequestSuccess(ValidicUser validicUser) {
                 String result = new Gson().toJson(validicUser);
                 Log.i("ApplicationModel", "ValidicUser = " + result);
+                //TODO here get status 200, update "validicID" field where the token == nevoUserToken in the "user" table
+                nevoUser.setValidicID(validicUser.getUser().get_id());
+                processListener(listener, result,false);
             }
         });
     }
+    public void nevoUserLogin(String email,String password,final ResponseListener listener)
+    {
+        //TODO here add a record in the user table with uid/token
+    }
+
+    public void addValidicRecord(int nevoUserID,Date date,final ResponseListener listener)
+    {
+        //TODO current app, no use the nevo User ID when save steps record, 0 menas it is a public user.(unlogged in user)
+        Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
+        ValidicRecord record = new ValidicRecord();
+        record.setSteps(steps.getSteps());
+        String utc_offset = new SimpleDateFormat("z").format(date).substring(3);//remove "GMT" starting
+        String timestamp  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date) + utc_offset;
+        record.setTimestamp(timestamp);
+        record.setUtc_offset(utc_offset);
+        record.setDistance(steps.getDistance());
+        record.setFloors(0);
+        record.setElevation(0);
+        record.setCalories_burned(steps.getCalories());
+        record.setActivity_id(steps.getiD());
+        //TODO here assume a default validic user has logged in
+        if(nevoUser.getValidicID()==null)
+        {
+            nevoUser.setValidicID(DEFAULT_VALIDIC_USER_ID);
+        }
+        AddRecordRequest addRecordRequest = new AddRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
+        validicManager.performRequest(addRecordRequest, new RequestListener<ValidicRecordModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
+                String result = new Gson().toJson(spiceException);
+                processListener(listener, result,true);
+            }
+
+            @Override
+            public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
+                Log.i("ApplicationModel", "validicRecordModel = " + validicRecordModel);
+                String result = new Gson().toJson(validicRecordModel);
+                processListener(listener, result,false);
+            }
+        });
+    }
+
+    public void updateValidicRecord()
+    {
+
+    }
+
+    public void getValidicRecord()
+    {
+
+    }
+
+    public void deleteValidicRecord()
+    {
+
+    }
+
 }
