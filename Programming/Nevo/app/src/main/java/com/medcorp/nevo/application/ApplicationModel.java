@@ -41,9 +41,10 @@ import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.NevoUser;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
-import com.medcorp.nevo.validic.request.CreateUserRequest;
-import com.medcorp.nevo.validic.request.NevoUserRegister;
-import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
+import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
+import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
+import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
+import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -93,19 +94,21 @@ public class ApplicationModel extends Application {
         updateGoogleFit();
         validicManager = new ValidicManager(this);
         nevoUser = new NevoUser();
-        VerifyCredentialRequest request = new VerifyCredentialRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+        VerifyCredentialsRetroRequest request = new VerifyCredentialsRetroRequest (validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+
         validicManager.startSpiceManager();
-        validicManager.performRequest(request, new RequestListener<VerifyCredentialModel>() {
+        validicManager.execute(request, new RequestListener<VerifyCredentialModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.w("Karl","Failure?");
+                Log.w("Karl","Fail!");
                 spiceException.printStackTrace();
             }
 
             @Override
-            public void onRequestSuccess(VerifyCredentialModel model) {
-                Log.w("Karl","Success, model = " + model.toString());
+            public void onRequestSuccess(VerifyCredentialModel verifyCredentialModel) {
+                Log.w("Karl","Success!");
             }
+
         });
     }
 
@@ -370,15 +373,25 @@ public class ApplicationModel extends Application {
         if(nevoUser.getUid()==null){
             nevoUser.setUid("gaillysu");
         }
-        CreateUserRequest createUserRequest = new CreateUserRequest(nevoUser.getUid(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pinCode);
+        CreateUserRequestObject object = new CreateUserRequestObject();
+        object.setPin(pinCode);
+        object.setAccess_token(validicManager.getOrganizationToken());
+        CreateUserRequestObjectUser user  = new CreateUserRequestObjectUser();
+        user.setUid("MYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDID");
+        object.setUser(user);
+        Gson gson = new Gson();
 
-        validicManager.performRequest(createUserRequest, new RequestListener<ValidicUser>() {
+        Log.w("Karl",gson.toJson(object).toString());
+        CreateUserRetroRequest request = new CreateUserRetroRequest(validicManager.getOrganizationID(), object);
+
+        validicManager.execute(request, new RequestListener<ValidicUser>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getLocalizedMessage());
             }
-             @Override
+
+            @Override
             public void onRequestSuccess(ValidicUser validicUser) {
                 String result = new Gson().toJson(validicUser);
                 Log.i("ApplicationModel", "ValidicUser = " + result);

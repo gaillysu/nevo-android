@@ -1,16 +1,11 @@
 package com.medcorp.nevo.validic.request;
 
-import com.google.gson.Gson;
 import com.medcorp.nevo.validic.model.ValidicReadRecordModel;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class getRecordRequest extends BaseRequest<ValidicReadRecordModel> {
+public class getRecordRequest extends BaseSpringRequest<ValidicReadRecordModel> {
 
     private String   organizationId;
     private String   organizationTokenKey;

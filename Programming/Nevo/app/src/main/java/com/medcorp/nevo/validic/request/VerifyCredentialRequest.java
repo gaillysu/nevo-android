@@ -1,16 +1,11 @@
 package com.medcorp.nevo.validic.request;
 
-import android.util.Log;
-
-import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
-import com.octo.android.robospice.request.springandroid.SpringAndroidSpiceRequest;
-import org.json.JSONObject;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class VerifyCredentialRequest extends BaseRequest<VerifyCredentialModel> {
+public class VerifyCredentialRequest extends BaseSpringRequest<VerifyCredentialModel> {
 
     private String   access_token;
     private String   organization_id;

@@ -1,12 +1,11 @@
 package com.medcorp.nevo.validic.request;
 
 import com.medcorp.nevo.validic.model.ValidicReadAllRecordsModel;
-import com.medcorp.nevo.validic.model.ValidicRecord;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class getAllRecordsRequest extends BaseRequest<ValidicReadAllRecordsModel>{
+public class getAllRecordsRequest extends BaseSpringRequest<ValidicReadAllRecordsModel> {
 
     private String   organizationId;
     private String   organizationTokenKey;

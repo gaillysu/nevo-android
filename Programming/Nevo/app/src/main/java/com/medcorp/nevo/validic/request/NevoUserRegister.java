@@ -1,11 +1,9 @@
 package com.medcorp.nevo.validic.request;
 
-import com.google.api.client.json.Json;
 import com.medcorp.nevo.validic.model.NevoUser;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,7 @@ import java.util.Date;
 /**
  * Created by gaillysu on 16/3/14.
  */
-public class NevoUserRegister extends BaseRequest<NevoUser> {
+public class NevoUserRegister extends BaseSpringRequest<NevoUser> {
 
     private String email;
     private String password;

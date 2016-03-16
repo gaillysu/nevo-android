@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class AddRecordRequest  extends BaseRequest<ValidicRecordModel>{
+public class AddRecordRequest  extends BaseSpringRequest<ValidicRecordModel> {
 
     private ValidicRecord record;
     private String   organizationId;

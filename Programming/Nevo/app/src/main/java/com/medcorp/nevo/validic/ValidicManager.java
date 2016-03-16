@@ -2,16 +2,11 @@ package com.medcorp.nevo.validic;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.validic.model.NevoUser;
-import com.medcorp.nevo.validic.model.Profile;
-import com.medcorp.nevo.validic.request.BaseRequest;
-import com.medcorp.nevo.validic.request.CreateUserRequest;
-import com.octo.android.robospice.JacksonSpringAndroidSpiceService;
+import com.medcorp.nevo.validic.request.BaseSpringRequest;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
+import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
@@ -24,7 +19,7 @@ public class ValidicManager {
     public ValidicManager(Context context)
     {
         this.context = context;
-        spiceManager = new SpiceManager(JacksonSpringAndroidSpiceService.class);
+        spiceManager = new SpiceManager(BaseRetroService.class);
         startSpiceManager();
     }
 
@@ -49,7 +44,11 @@ public class ValidicManager {
         }
     }
 
-    public <T> void performRequest(BaseRequest<T> request,RequestListener<T> response)
+    public void execute(SpiceRequest request, RequestListener listener){
+        spiceManager.execute(request, listener);
+    }
+
+    public <T> void performRequest(BaseSpringRequest<T> request,RequestListener<T> response)
     {
         spiceManager.execute(request, request.getClass().getName(),
                 10*DurationInMillis.ONE_SECOND, response);

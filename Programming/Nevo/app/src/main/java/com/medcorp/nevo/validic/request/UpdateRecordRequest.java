@@ -4,12 +4,11 @@ import com.medcorp.nevo.validic.model.ValidicRecordModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.http.ResponseEntity;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class UpdateRecordRequest extends BaseRequest<ValidicRecordModel> {
+public class UpdateRecordRequest extends BaseSpringRequest<ValidicRecordModel> {
 
     private String   organizationId;
     private String   organizationTokenKey;

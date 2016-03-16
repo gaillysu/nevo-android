@@ -7,9 +7,9 @@ import java.io.Serializable;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public abstract class BaseRequest<T> extends SpringAndroidSpiceRequest<T> {
+public abstract class BaseSpringRequest<T> extends SpringAndroidSpiceRequest<T> {
 
-    public BaseRequest(Class<T> clazz) {
+    public BaseSpringRequest(Class<T> clazz) {
         super(clazz);
     }
 
