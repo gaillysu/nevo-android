@@ -23,9 +23,14 @@ import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
 import com.medcorp.nevo.model.SettingsMenuItem;
+import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Preferences;
+import com.medcorp.nevo.validic.model.ValidicRecordModel;
+import com.medcorp.nevo.validic.model.ValidicUser;
+import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -60,6 +65,10 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.google_fit_small,Preferences.isGoogleFitSet(this)));
         menuList.add(new SettingsMenuItem("Connect Validic",R.drawable.google_fit_small,false));
         menuList.add(new SettingsMenuItem("Log in Validic",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Add record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Read record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Update record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Delete record",R.drawable.google_fit_small,false));
         settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
@@ -113,11 +122,34 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 if (input.length() == 0) return;
-                                getModel().createValidicUser(input.toString());
+                                getModel().createValidicUser(input.toString(),new ResponseListener<ValidicUser>() {
+
+                                    @Override
+                                    public void onRequestFailure(SpiceException spiceException) {
+                                        //refresh switch off
+                                        settingsAdapter.getItem(2).setSwitchStatus(false);
+                                        settingsAdapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onRequestSuccess(ValidicUser validicUser) {
+                                        //refresh switch on
+                                        settingsAdapter.getItem(2).setSwitchStatus(true);
+                                        settingsAdapter.notifyDataSetChanged();
+                                    }
+                                });
                             }
                         }).negativeText(android.R.string.cancel)
                         .show();
             }
+        }
+        if(position == 3 && isChecked)
+        {
+            getModel().addValidicRecord(0, new Date(),null);
+        }
+        if(position == 4 && isChecked)
+        {
+            getModel().addValidicRecord(0, new Date(),null);
         }
 
     }

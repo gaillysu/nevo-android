@@ -1,12 +1,17 @@
 package com.medcorp.nevo.validic.request;
 
+import com.medcorp.nevo.validic.model.DeleteRecordRequestObject;
+import com.medcorp.nevo.validic.model.ValidicDeleteRecordModel;
+import com.medcorp.nevo.validic.retrofit.Validic;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class DeleteRecordRequest extends BaseSpringRequest<Void> {
+public class DeleteRecordRequest extends RetrofitSpiceRequest<ValidicDeleteRecordModel,Validic> implements BaseRetroRequest<DeleteRecordRequestObject>{
 
     private String   organizationId;
     private String   organizationTokenKey;
@@ -14,28 +19,23 @@ public class DeleteRecordRequest extends BaseSpringRequest<Void> {
     private String   validicUserId;
 
     public DeleteRecordRequest(String   organizationId,String   organizationTokenKey,String validicUserId,String  validicRecordId) {
-        super(Void.class);
+        super(ValidicDeleteRecordModel.class,Validic.class);
         this.organizationId = organizationId;
         this.organizationTokenKey = organizationTokenKey;
         this.validicUserId = validicUserId;
         this.validicRecordId = validicRecordId;
     }
 
+
     @Override
-    public String buildRequestURL() {
-        return String.format("https://api.validic.com/v1/organizations/%s/users/%s/routine/%s.json",organizationId,validicUserId,validicRecordId);
+    public DeleteRecordRequestObject buildRequestBody() {
+        DeleteRecordRequestObject object = new DeleteRecordRequestObject();
+        object.setAccess_token(organizationTokenKey);
+        return object;
     }
 
     @Override
-    public String buildRequestBody() {
-        return null;
-    }
-
-    @Override
-    public Void loadDataFromNetwork() throws Exception {
-        Map<String,String> map = new HashMap<String, String>();
-        map.put("access_token",organizationTokenKey);
-        getRestTemplate().delete(buildRequestURL(),map);
-        return null;
+    public ValidicDeleteRecordModel loadDataFromNetwork() throws Exception {
+       return getService().deleteRecordRequest(buildRequestBody(),organizationId,validicUserId,validicRecordId);
     }
 }

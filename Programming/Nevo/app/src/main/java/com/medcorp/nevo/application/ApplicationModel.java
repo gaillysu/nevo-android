@@ -41,12 +41,18 @@ import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.NevoUser;
+import com.medcorp.nevo.validic.model.ValidicDeleteRecordModel;
+import com.medcorp.nevo.validic.model.ValidicReadAllRecordsModel;
+import com.medcorp.nevo.validic.model.ValidicReadRecordModel;
 import com.medcorp.nevo.validic.model.ValidicRecord;
 import com.medcorp.nevo.validic.model.ValidicRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
 import com.medcorp.nevo.validic.request.AddRecordRequest;
 import com.medcorp.nevo.validic.request.CreateUserRequest;
+import com.medcorp.nevo.validic.request.DeleteRecordRequest;
+import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
+import com.medcorp.nevo.validic.request.GetRecordRequest;
 import com.medcorp.nevo.validic.request.NevoUserLogin;
 import com.medcorp.nevo.validic.request.NevoUserRegister;
 import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
@@ -368,18 +374,18 @@ public class ApplicationModel extends Application {
         return nevoUser;
     }
 
-    private void processListener(final ResponseListener listener,final String jsonString,final boolean exception)
+    private void processListener(final ResponseListener listener,final Object result,final boolean exception)
     {
-        if(listener!=null && jsonString!=null) {
+        if(listener!=null && result!=null) {
             final Handler handler = new Handler(getMainLooper());
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     if(exception) {
-                        listener.onException(jsonString);
+                        listener.onRequestFailure((SpiceException)result);
                     }
                     else {
-                        listener.processResponse(jsonString);
+                        listener.onRequestSuccess(result);
                     }
                 }
             });
@@ -388,23 +394,23 @@ public class ApplicationModel extends Application {
 
     public void verifyValidicCredential()
     {
-        VerifyCredentialRequest request = new VerifyCredentialRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
-        validicManager.performRequest(request, new RequestListener<VerifyCredentialModel>() {
+        VerifyCredentialsRetroRequest request = new VerifyCredentialsRetroRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+        validicManager.execute(request, new RequestListener<VerifyCredentialModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.w("Karl","Failure?");
+                Log.w("Karl", "Failure?");
                 spiceException.printStackTrace();
             }
 
             @Override
             public void onRequestSuccess(VerifyCredentialModel model) {
-                Log.w("Karl","Success, model = " + model.toString());
+                Log.w("Karl", "Success, model = " + model.toString());
             }
         });
     }
     public void createValidicUser(String pinCode,final ResponseListener listener)
     {
-        //TODO if nevoUser.uid == null, assume A user "Gaillysu@med-corp.net" has logged in.
+        //TODO if nevoUser.uid == null, assume A user "gaillysu@med-corp.net" has logged in.
         //when Gaillysu logged in, he will obtain an unique access token,for example:
         if(nevoUser.getToken() == null)
         {
@@ -415,7 +421,7 @@ public class ApplicationModel extends Application {
         object.setPin(pinCode);
         object.setAccess_token(validicManager.getOrganizationToken());
         CreateUserRequestObjectUser user  = new CreateUserRequestObjectUser();
-        user.setUid("MYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDIDMYSUPERAWESOMECOMPLICATEDID");
+        user.setUid(nevoUser.getToken());
         object.setUser(user);
         Gson gson = new Gson();
 
@@ -426,18 +432,15 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
-                Log.e("ApplicationModel", "spiceException = " + spiceException.getLocalizedMessage());
-                String result = new Gson().toJson(spiceException);
-                processListener(listener, result,true);
+                processListener(listener, spiceException,true);
             }
 
             @Override
             public void onRequestSuccess(ValidicUser validicUser) {
-                String result = new Gson().toJson(validicUser);
-                Log.i("ApplicationModel", "ValidicUser = " + result);
+                Log.i("ApplicationModel", "ValidicUser = " + new Gson().toJson(validicUser));
                 //TODO here get status 200, update "validicID" field where the token == nevoUserToken in the "user" table
                 nevoUser.setValidicID(validicUser.getUser().get_id());
-                processListener(listener, result,false);
+                processListener(listener, validicUser,false);
             }
         });
     }
@@ -467,19 +470,19 @@ public class ApplicationModel extends Application {
             nevoUser.setValidicID(DEFAULT_VALIDIC_USER_ID);
         }
         AddRecordRequest addRecordRequest = new AddRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
-        validicManager.performRequest(addRecordRequest, new RequestListener<ValidicRecordModel>() {
+        validicManager.execute(addRecordRequest, new RequestListener<ValidicRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
-                String result = new Gson().toJson(spiceException);
-                processListener(listener, result,true);
+                processListener(listener, spiceException,true);
             }
 
             @Override
             public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
                 Log.i("ApplicationModel", "validicRecordModel = " + validicRecordModel);
-                String result = new Gson().toJson(validicRecordModel);
-                processListener(listener, result,false);
+                getNevoUser().setLastValidicRecordID(validicRecordModel.getRoutine().get_id());
+                //TODO update steps table where steps.Id = record.activity_id
+                processListener(listener, validicRecordModel,false);
             }
         });
     }
@@ -489,13 +492,55 @@ public class ApplicationModel extends Application {
 
     }
 
-    public void getValidicRecord()
+    public void getValidicRecord(String validicRecordId)
     {
+        GetRecordRequest  getRecordRequest = new GetRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
 
+        validicManager.execute(getRecordRequest, new RequestListener<ValidicReadRecordModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
+            }
+
+            @Override
+            public void onRequestSuccess(ValidicReadRecordModel validicReadRecordModel) {
+                Log.i("ApplicationModel", "validicReadRecordModel = " + validicReadRecordModel);
+            }
+        });
+    }
+
+    public void getAllValidicRecord()
+    {
+        GetAllRecordsRequest getAllRecordsRequest = new GetAllRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID());
+
+        validicManager.execute(getAllRecordsRequest, new RequestListener<ValidicReadAllRecordsModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
+            }
+
+            @Override
+            public void onRequestSuccess(ValidicReadAllRecordsModel validicReadAllRecordsModel) {
+                Log.i("ApplicationModel", "validicReadAllRecordsModel = " + validicReadAllRecordsModel);
+            }
+        });
     }
 
     public void deleteValidicRecord()
     {
+        DeleteRecordRequest deleteRecordRequest = new DeleteRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
+
+        validicManager.execute(deleteRecordRequest, new RequestListener<ValidicDeleteRecordModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
+            }
+
+            @Override
+            public void onRequestSuccess(ValidicDeleteRecordModel validicDeleteRecordModel) {
+                Log.i("ApplicationModel", "validicDeleteRecordModel = " + validicDeleteRecordModel);
+            }
+        });
 
     }
 

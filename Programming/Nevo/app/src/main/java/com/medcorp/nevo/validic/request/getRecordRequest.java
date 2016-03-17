@@ -1,19 +1,21 @@
 package com.medcorp.nevo.validic.request;
 
 import com.medcorp.nevo.validic.model.ValidicReadRecordModel;
+import com.medcorp.nevo.validic.retrofit.Validic;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class getRecordRequest extends BaseSpringRequest<ValidicReadRecordModel> {
+public class GetRecordRequest extends RetrofitSpiceRequest<ValidicReadRecordModel,Validic> {
 
     private String   organizationId;
     private String   organizationTokenKey;
     private String   validicUserId;
     private String   validicRecordId;
 
-    public getRecordRequest(String organizationId,String organizationTokenKey,String validicUserId,String validicRecordId) {
-        super(ValidicReadRecordModel.class);
+    public GetRecordRequest(String organizationId, String organizationTokenKey, String validicUserId, String validicRecordId) {
+        super(ValidicReadRecordModel.class,Validic.class);
 
         this.organizationId = organizationId;
         this.organizationTokenKey = organizationTokenKey;
@@ -22,17 +24,7 @@ public class getRecordRequest extends BaseSpringRequest<ValidicReadRecordModel> 
     }
 
     @Override
-    public String buildRequestURL() {
-        return String.format("https://api.validic.com/v1/organizations/%s/users/%s/fitness/%s.json?access_token=%s",organizationId,validicUserId,validicRecordId,organizationTokenKey);
-    }
-
-    @Override
-    public String buildRequestBody() {
-        return null;
-    }
-
-    @Override
     public ValidicReadRecordModel loadDataFromNetwork() throws Exception {
-        return getRestTemplate().getForObject(buildRequestURL(),ValidicReadRecordModel.class);
+        return getService().getRecordRequest(organizationId,validicUserId,validicRecordId,organizationTokenKey);
     }
 }

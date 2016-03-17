@@ -261,7 +261,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     }
 
     @Override
-    public void onSuccessfulFileTranferred() {
+    public void onSuccessfulFileTranfered() {
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -4,7 +4,7 @@ package com.medcorp.nevo.validic.model;
  * Created by gaillysu on 16/3/14.
  */
 public class ValidicRecordModelBase {
-   int _id;
+   String _id;
    String timestamp;
    String utc_offset;
    int steps;
@@ -16,11 +16,11 @@ public class ValidicRecordModelBase {
    String source_name;
    String last_updated;
 
- public int get_id() {
+ public String get_id() {
   return _id;
  }
 
- public void set_id(int _id) {
+ public void set_id(String _id) {
   this._id = _id;
  }
 

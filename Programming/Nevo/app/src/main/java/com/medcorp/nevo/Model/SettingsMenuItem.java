@@ -38,4 +38,8 @@ public class SettingsMenuItem {
     public boolean isSwitchOn() {
         return switchStatus;
     }
+
+    public void setSwitchStatus(boolean switchStatus) {
+        this.switchStatus = switchStatus;
+    }
 }
