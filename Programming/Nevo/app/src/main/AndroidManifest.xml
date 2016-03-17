@@ -125,6 +125,9 @@
         <meta-data
             android:name="UMENG_CHANNEL" android:value="Nevo_Android" >
         </meta-data>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="bf39954f177ecf7d9d8a5efe2e1d624856f03464" />
     </application>
 
 </manifest>

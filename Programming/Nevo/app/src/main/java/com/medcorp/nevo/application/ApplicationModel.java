@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
@@ -59,7 +60,6 @@ import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
 import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
-import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -70,14 +70,13 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Karl on 10/15/15.
@@ -105,6 +104,7 @@ public class ApplicationModel extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
