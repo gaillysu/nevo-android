@@ -493,7 +493,7 @@ public class ApplicationModel extends Application {
 
     }
 
-    public void getValidicRecord(String validicRecordId)
+    public void getValidicRecord()
     {
         GetRecordRequest  getRecordRequest = new GetRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
 

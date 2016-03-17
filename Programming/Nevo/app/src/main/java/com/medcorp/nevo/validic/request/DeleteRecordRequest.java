@@ -36,6 +36,6 @@ public class DeleteRecordRequest extends RetrofitSpiceRequest<ValidicDeleteRecor
 
     @Override
     public ValidicDeleteRecordModel loadDataFromNetwork() throws Exception {
-       return getService().deleteRecordRequest(buildRequestBody(),organizationId,validicUserId,validicRecordId);
+       return getService().deleteRecordRequest(buildRequestBody(),organizationId,validicUserId,validicRecordId,"application/json");
     }
 }

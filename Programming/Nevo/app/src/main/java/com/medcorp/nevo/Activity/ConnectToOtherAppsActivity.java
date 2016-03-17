@@ -142,15 +142,26 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                         .show();
             }
         }
+        //Add
         if(position == 3 && isChecked)
         {
             getModel().addValidicRecord(0, new Date(),null);
         }
+        //read
         if(position == 4 && isChecked)
         {
-            getModel().addValidicRecord(0, new Date(),null);
+            getModel().getValidicRecord();
         }
-
+        //update
+        if(position == 5 && isChecked)
+        {
+            getModel().updateValidicRecord();
+        }
+        //delete
+        if(position == 6 && isChecked)
+        {
+            getModel().deleteValidicRecord();
+        }
     }
 
     MaterialDialog.SingleButtonCallback positiveCallback = new MaterialDialog.SingleButtonCallback() {

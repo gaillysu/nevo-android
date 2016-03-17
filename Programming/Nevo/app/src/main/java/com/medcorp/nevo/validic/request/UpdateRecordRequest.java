@@ -1,6 +1,13 @@
 package com.medcorp.nevo.validic.request;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.medcorp.nevo.validic.model.StepsModel;
+import com.medcorp.nevo.validic.model.UpdateRecordRequestObject;
 import com.medcorp.nevo.validic.model.ValidicRecordModel;
+import com.medcorp.nevo.validic.retrofit.Validic;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +15,7 @@ import org.json.JSONObject;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class UpdateRecordRequest extends BaseSpringRequest<ValidicRecordModel> {
+public class UpdateRecordRequest extends RetrofitSpiceRequest<ValidicRecordModel,Validic> implements BaseRetroRequest<UpdateRecordRequestObject> {
 
     private String   organizationId;
     private String   organizationTokenKey;
@@ -17,7 +24,7 @@ public class UpdateRecordRequest extends BaseSpringRequest<ValidicRecordModel> {
     private int steps;
 
     public UpdateRecordRequest(String   organizationId,String   organizationTokenKey,String validicUserId,String  validicRecordId,int steps) {
-        super(ValidicRecordModel.class);
+        super(ValidicRecordModel.class,Validic.class);
         this.organizationId = organizationId;
         this.organizationTokenKey = organizationTokenKey;
         this.validicUserId = validicUserId;
@@ -25,27 +32,20 @@ public class UpdateRecordRequest extends BaseSpringRequest<ValidicRecordModel> {
         this.steps = steps;
     }
 
-    @Override
-    public String buildRequestURL() {
-        return String.format("https://api.validic.com/v1/organizations/%s/users/%s/routine/%s.json",organizationId,validicUserId,validicRecordId);
-    }
 
     @Override
-    public String buildRequestBody() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("routine",new JSONObject().put("steps",steps));
-            json.put("access_token",organizationTokenKey);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json.toString();
+    public UpdateRecordRequestObject buildRequestBody() {
+        UpdateRecordRequestObject object = new UpdateRecordRequestObject();
+        object.setAccess_token(organizationTokenKey);
+        StepsModel stepsModel = new StepsModel();
+        stepsModel.setSteps(steps);
+        object.setRoutine(stepsModel);
+        Log.i(this.getClass().getSimpleName(), "object: " + new Gson().toJson(object));
+        return object;
     }
 
     @Override
     public ValidicRecordModel loadDataFromNetwork() throws Exception {
-        getRestTemplate().put(buildRequestURL(),buildRequestBody(), ValidicRecordModel.class);
-        //TODO above put funtion() has no return object, here need read it again?
-        return  null;
+       return getService().updateRecordRequest(buildRequestBody(),organizationId,validicUserId,validicRecordId,"application/json");
     }
 }
