@@ -7,14 +7,16 @@ public class ValidicRecordModelBase {
    String _id;
    String timestamp;
    String utc_offset;
-   int steps;
-   float distance;
-   int floors;
-   float elevation;
-   int calories_burned;
+   double steps;
+   double distance;
+   double floors;
+   double elevation;
+   double calories_burned;
    String source;
    String source_name;
    String last_updated;
+   Boolean validated;
+   double water;
 
  public String get_id() {
   return _id;
@@ -40,43 +42,43 @@ public class ValidicRecordModelBase {
   this.utc_offset = utc_offset;
  }
 
- public int getSteps() {
+ public double getSteps() {
   return steps;
  }
 
- public void setSteps(int steps) {
+ public void setSteps(double steps) {
   this.steps = steps;
  }
 
- public float getDistance() {
+ public double getDistance() {
   return distance;
  }
 
- public void setDistance(float distance) {
+ public void setDistance(double distance) {
   this.distance = distance;
  }
 
- public int getFloors() {
+ public double getFloors() {
   return floors;
  }
 
- public void setFloors(int floors) {
+ public void setFloors(double floors) {
   this.floors = floors;
  }
 
- public float getElevation() {
+ public double getElevation() {
   return elevation;
  }
 
- public void setElevation(float elevation) {
+ public void setElevation(double elevation) {
   this.elevation = elevation;
  }
 
- public int getCalories_burned() {
+ public double getCalories_burned() {
   return calories_burned;
  }
 
- public void setCalories_burned(int calories_burned) {
+ public void setCalories_burned(double calories_burned) {
   this.calories_burned = calories_burned;
  }
 
@@ -102,5 +104,21 @@ public class ValidicRecordModelBase {
 
  public void setLast_updated(String last_updated) {
   this.last_updated = last_updated;
+ }
+
+ public Boolean getValidated() {
+  return validated;
+ }
+
+ public void setValidated(Boolean validated) {
+  this.validated = validated;
+ }
+
+ public double getWater() {
+  return water;
+ }
+
+ public void setWater(double water) {
+  this.water = water;
  }
 }

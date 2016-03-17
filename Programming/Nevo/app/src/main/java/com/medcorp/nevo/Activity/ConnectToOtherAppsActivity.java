@@ -150,12 +150,12 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //read
         if(position == 4 && isChecked)
         {
-            getModel().getValidicRecord();
+            getModel().getAllValidicRecord();
         }
         //update
         if(position == 5 && isChecked)
         {
-            getModel().updateValidicRecord();
+            getModel().updateValidicRecord(0,new Date(),null);
         }
         //delete
         if(position == 6 && isChecked)

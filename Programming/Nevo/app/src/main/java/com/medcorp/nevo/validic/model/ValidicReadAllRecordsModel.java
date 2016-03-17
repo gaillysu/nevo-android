@@ -5,7 +5,7 @@ package com.medcorp.nevo.validic.model;
  */
 public class ValidicReadAllRecordsModel {
     ValidicSummary summary;
-    ValidicRecordModelBase[] fitness;
+    ValidicRecordModelBase[] routine;
 
     public ValidicSummary getSummary() {
         return summary;
@@ -15,11 +15,11 @@ public class ValidicReadAllRecordsModel {
         this.summary = summary;
     }
 
-    public ValidicRecordModelBase[] getFitness() {
-        return fitness;
+    public ValidicRecordModelBase[] getRoutine() {
+        return routine;
     }
 
-    public void setFitness(ValidicRecordModelBase[] fitness) {
-        this.fitness = fitness;
+    public void setRoutine(ValidicRecordModelBase[] routine) {
+        this.routine = routine;
     }
 }

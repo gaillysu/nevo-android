@@ -56,6 +56,7 @@ import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
 import com.medcorp.nevo.validic.request.GetRecordRequest;
 import com.medcorp.nevo.validic.request.NevoUserLogin;
 import com.medcorp.nevo.validic.request.NevoUserRegister;
+import com.medcorp.nevo.validic.request.UpdateRecordRequest;
 import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
@@ -101,6 +102,8 @@ public class ApplicationModel extends Application {
     private NevoUser  nevoUser;
     private final String DEFAULT_NEVO_USER_TOKEN = "a6b3e3fa8b8d9f59bb27fe4c11ed68df";
     private final String DEFAULT_VALIDIC_USER_ID = "56e8c19b1147b14e3c000658";
+    private final String DEFAULT_VALIDIC_RECORD_ID = "56ea5f7d36c913062d000233";
+    private final String DEFAULT_VALIDIC_USER_TOKEN = "RyuWaZ5yVXixE3TTCEPg";
 
     @Override
     public void onCreate() {
@@ -116,6 +119,11 @@ public class ApplicationModel extends Application {
         updateGoogleFit();
         validicManager = new ValidicManager(this);
         nevoUser = new NevoUser();
+        //TODO here assume a default user gaillysu@med-corp.net has logged in, and has got connected to validic marketplace.
+        nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
+        nevoUser.setValidicID(DEFAULT_VALIDIC_USER_ID);
+        nevoUser.setLastValidicRecordID(DEFAULT_VALIDIC_RECORD_ID);
+        nevoUser.setValidicUserAccessToken(DEFAULT_VALIDIC_USER_TOKEN);
         verifyValidicCredential();
     }
 
@@ -411,13 +419,6 @@ public class ApplicationModel extends Application {
     }
     public void createValidicUser(String pinCode,final ResponseListener listener)
     {
-        //TODO if nevoUser.uid == null, assume A user "gaillysu@med-corp.net" has logged in.
-        //when Gaillysu logged in, he will obtain an unique access token,for example:
-        if(nevoUser.getToken() == null)
-        {
-            nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
-        }
-
         CreateUserRequestObject object = new CreateUserRequestObject();
         object.setPin(pinCode);
         object.setAccess_token(validicManager.getOrganizationToken());
@@ -441,6 +442,7 @@ public class ApplicationModel extends Application {
                 Log.i("ApplicationModel", "ValidicUser = " + new Gson().toJson(validicUser));
                 //TODO here get status 200, update "validicID" field where the token == nevoUserToken in the "user" table
                 nevoUser.setValidicID(validicUser.getUser().get_id());
+                nevoUser.setValidicUserAccessToken(validicUser.getUser().getAccess_token());
                 processListener(listener, validicUser,false);
             }
         });
@@ -457,7 +459,7 @@ public class ApplicationModel extends Application {
         ValidicRecord record = new ValidicRecord();
         record.setSteps(steps.getSteps());
         String utc_offset = new SimpleDateFormat("z").format(date).substring(3);//remove "GMT" starting
-        String timestamp  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date) + utc_offset;
+        String timestamp  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date) + "+00:00";
         record.setTimestamp(timestamp);
         record.setUtc_offset(utc_offset);
         record.setDistance(steps.getDistance());
@@ -465,16 +467,12 @@ public class ApplicationModel extends Application {
         record.setElevation(0);
         record.setCalories_burned(steps.getCalories());
         record.setActivity_id(steps.getiD());
-        //TODO here assume a default validic user has logged in
-        if(nevoUser.getValidicID()==null)
-        {
-            nevoUser.setValidicID(DEFAULT_VALIDIC_USER_ID);
-        }
+
         AddRecordRequest addRecordRequest = new AddRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
         validicManager.execute(addRecordRequest, new RequestListener<ValidicRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
+                spiceException.printStackTrace();
                 processListener(listener, spiceException,true);
             }
 
@@ -488,9 +486,22 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void updateValidicRecord()
+    public void updateValidicRecord(int nevoUserID,Date date,final ResponseListener listener)
     {
+        Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
+        UpdateRecordRequest updateRecordRequest = new UpdateRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID(),steps.getSteps());
+        validicManager.execute(updateRecordRequest, new RequestListener<ValidicRecordModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                spiceException.printStackTrace();
+                processListener(listener, spiceException,true);
+            }
 
+            @Override
+            public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
+                processListener(listener, validicRecordModel,false);
+            }
+        });
     }
 
     public void getValidicRecord()

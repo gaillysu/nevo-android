@@ -14,6 +14,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.DELETE;
@@ -31,16 +32,16 @@ public interface Validic {
     @POST("/organizations/{ORGANIZATION_ID}/users/{USER_ID}/routine.json")
     ValidicRecordModel addRecordRequest(@Body AddRecordRequestObject object, @Path("ORGANIZATION_ID") String organization, @Path("USER_ID") String user, @Header("Content-Type") String type );
 
-    @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/fitness/{VALIDIC_RECORD_ID}.json")
+    @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
     ValidicReadRecordModel getRecordRequest(@Path("ORGANIZATION_ID") String organization,@Path("VALIDIC_USER_ID") String user,@Path("VALIDIC_RECORD_ID") String recordId, @Query("access_token") String accessToken);
 
-    @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/fitness.json")
+    @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine.json")
     ValidicReadAllRecordsModel getAllRecordsRequest(@Path("ORGANIZATION_ID") String organization,@Path("VALIDIC_USER_ID") String user,@Query("access_token") String accessToken);
 
     @DELETE("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
     ValidicDeleteRecordModel deleteRecordRequest(@Body DeleteRecordRequestObject object,@Path("ORGANIZATION_ID") String organization,@Path("VALIDIC_USER_ID") String user,@Path("VALIDIC_RECORD_ID") String recordId, @Header("Content-Type") String type);
 
-    @POST("/organizations/{ORGANIZATION_ID}/users/{USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
+    @PUT("/organizations/{ORGANIZATION_ID}/users/{USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
     ValidicRecordModel updateRecordRequest(@Body UpdateRecordRequestObject object, @Path("ORGANIZATION_ID") String organization, @Path("USER_ID") String user, @Path("VALIDIC_RECORD_ID") String recordId, @Header("Content-Type") String type );
 
 }
