@@ -19,8 +19,6 @@ public class VerifyCredentialsRetroRequest extends RetrofitSpiceRequest<VerifyCr
 
     @Override
     public VerifyCredentialModel loadDataFromNetwork() throws Exception {
-
         return getService().verifyCredential(organization,token);
     }
-
 }
