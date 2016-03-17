@@ -27,13 +27,13 @@ public class GoogleFitManager{
     private Context context;
     private Activity activity;
 
-    public GoogleFitManager(Context context,GoogleApiClient.ConnectionCallbacks connectionCallbacks, GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener) {
+    public GoogleFitManager(Context context) {
         this.context = context;
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Arrays.asList(Scopes.FITNESS_ACTIVITY_READ_WRITE, Scopes.FITNESS_BODY_READ_WRITE));
         Tasks task = new Tasks.Builder(AndroidHttp.newCompatibleTransport(), GsonFactory.getDefaultInstance(), credential)
                 .setApplicationName(context.getString(R.string.key_nevo))
                 .build();
-        build(connectionCallbacks, onConnectionFailedListener);
+        build(new GoogleFitApiClientCallback(), new GoogleApiClientFailedListener());
     }
 
     private void build(GoogleApiClient.ConnectionCallbacks connectionCallbacks, GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener){
