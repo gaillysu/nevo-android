@@ -27,12 +27,14 @@ import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
 import com.medcorp.nevo.event.FirmwareReceivedEvent;
+import com.medcorp.nevo.event.GoogleApiClientConnectionFailedEvent;
+import com.medcorp.nevo.event.GoogleApiClientConnectionSuspendedEvent;
+import com.medcorp.nevo.event.GoogleFitUpdateEvent;
 import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
 import com.medcorp.nevo.googlefit.GoogleHistoryUpdateTask;
-import com.medcorp.nevo.listener.GoogleFitHistoryListener;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
@@ -50,13 +52,9 @@ import com.medcorp.nevo.validic.model.ValidicRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
 import com.medcorp.nevo.validic.request.AddRecordRequest;
-import com.medcorp.nevo.validic.request.CreateUserRequest;
 import com.medcorp.nevo.validic.request.DeleteRecordRequest;
 import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
 import com.medcorp.nevo.validic.request.GetRecordRequest;
-import com.medcorp.nevo.validic.request.NevoUserLogin;
-import com.medcorp.nevo.validic.request.NevoUserRegister;
-import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
 import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
@@ -147,8 +145,8 @@ public class ApplicationModel extends Application {
                                     firmwareUpdateAlertDailog = true;
                                     Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
                                     Bundle bundle = new Bundle();
-                                    bundle.putStringArrayList("firmwares", needOTAFirmwareList);
-                                    bundle.putBoolean("backtosetting",false);
+                                    bundle.putStringArrayList(getString(R.string.key_firmwares), needOTAFirmwareList);
+                                    bundle.putBoolean(getString(R.string.key_back_to_settings),false);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtras(bundle);
                                     ApplicationModel.this.startActivity(intent);
@@ -289,7 +287,7 @@ public class ApplicationModel extends Application {
     public void initGoogleFit(AppCompatActivity appCompatActivity) {
         if (Preferences.isGoogleFitSet(this)) {
             googleFitTaskCounter  = new GoogleFitTaskCounter(3);
-            googleFitManager = new GoogleFitManager(this,connectionCallbacks,onConnectionFailedListener);
+            googleFitManager = new GoogleFitManager(this);
             if (appCompatActivity != null) {
                 googleFitManager.setActivityForResults(appCompatActivity);
             }
@@ -303,74 +301,64 @@ public class ApplicationModel extends Application {
         }
     }
 
-    private GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
-        @Override
-        public void onConnectionFailed(ConnectionResult result) {
-            if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
-                    result.getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
-                try {
-                    if (googleFitManager.getActivity()!= null) {
-                        result.startResolutionForResult(googleFitManager.getActivity(), GOOGLE_FIT_OATH_RESULT);
-                    }
-                } catch (IntentSender.SendIntentException e) {
-                    ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_could_not_login);
+    @Subscribe
+    public void onEvent(GoogleApiClientConnectionFailedEvent event){
+        if (event.getConnectionResult().getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
+                event.getConnectionResult().getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
+            try {
+                if (googleFitManager.getActivity()!= null) {
+                    event.getConnectionResult().startResolutionForResult(googleFitManager.getActivity(), GOOGLE_FIT_OATH_RESULT);
                 }
-            } else {
-                ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_connecting);
+            } catch (IntentSender.SendIntentException e) {
+                ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_could_not_login);
             }
+        } else {
+            ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_connecting);
         }
-    };
+    }
 
-    private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
-        @Override
-        public void onConnected(Bundle bundle) {
+    @Subscribe
+    public void onEvent(GoogleApiClientConnectionSuspendedEvent event){
+        if (event.getState() == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+            ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_network_lost);
+        } else if (event.getState() == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+            ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_service_disconnected);
+        }else{
+            ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_unknown_network);
         }
+    }
 
-        @Override
-        public void onConnectionSuspended(int result) {
-            if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
-                ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_network_lost);
-            } else if (result == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
-                ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_service_disconnected);
-            }else{
-                ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_unknown_network);
-            }
-        }
-    };
-
-    private GoogleFitHistoryListener googleFitHistoryListener = new GoogleFitHistoryListener() {
-        @Override
-        public void onUpdateSuccess() {
+    @Subscribe
+    public void onEvent(GoogleFitUpdateEvent event){
+        if (event.isSuccess()){
             googleFitTaskCounter.incrementSuccessAndFinish();
             if (googleFitTaskCounter.allSucces()) {
                 ToastHelper.showLongToast(ApplicationModel.this, "Updated Google Fit");
                 googleFitTaskCounter.reset();
             }
-        }
-
-        @Override
-        public void onUpdateFailed() {
+        }else{
             googleFitTaskCounter.incrementFinish();
             if(googleFitTaskCounter.areTasksDone()) {
                 ToastHelper.showLongToast(ApplicationModel.this, "Couldn't updated Google Fit");
                 googleFitTaskCounter.reset();
             }
         }
-    };
+    }
 
     public void updateGoogleFit(){
         if(Preferences.isGoogleFitSet(this)) {
             initGoogleFit(null);
             GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
-            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getStepsDataSet());
-            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getCaloriesDataSet());
-            new GoogleHistoryUpdateTask(googleFitManager, googleFitHistoryListener).execute(dataHandler.getDistanceDataSet());
+            new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getStepsDataSet());
+            new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getCaloriesDataSet());
+            new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getDistanceDataSet());
         }
     }
 
     public ValidicManager getValidicManager() {
         return validicManager;
     }
+
     public NevoUser getNevoUser(){
         return nevoUser;
     }
@@ -542,7 +530,5 @@ public class ApplicationModel extends Application {
                 Log.i("ApplicationModel", "validicDeleteRecordModel = " + validicDeleteRecordModel);
             }
         });
-
     }
-
 }

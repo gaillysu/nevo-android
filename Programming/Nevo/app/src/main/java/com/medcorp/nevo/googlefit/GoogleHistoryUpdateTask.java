@@ -1,12 +1,13 @@
 package com.medcorp.nevo.googlefit;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataSet;
-import com.medcorp.nevo.listener.GoogleFitHistoryListener;
+import com.medcorp.nevo.event.GoogleFitUpdateEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,11 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class GoogleHistoryUpdateTask extends AsyncTask<DataSet,Void,Boolean>{
 
     private GoogleApiClient googleApiClient;
-    private GoogleFitHistoryListener googleFitHistoryListener;
 
-    public GoogleHistoryUpdateTask(GoogleFitManager googleFitManager, GoogleFitHistoryListener googleFitHistoryListener) {
+    public GoogleHistoryUpdateTask(GoogleFitManager googleFitManager) {
         this.googleApiClient = googleFitManager.getApiClient();
-        this.googleFitHistoryListener = googleFitHistoryListener;
     }
 
     @Override
@@ -42,9 +41,9 @@ public class GoogleHistoryUpdateTask extends AsyncTask<DataSet,Void,Boolean>{
     protected void onPostExecute(Boolean aBoolean) {
         super.onPostExecute(aBoolean);
         if (aBoolean) {
-            googleFitHistoryListener.onUpdateSuccess();
+            EventBus.getDefault().post(new GoogleFitUpdateEvent(true));
         }else{
-            googleFitHistoryListener.onUpdateFailed();
+            EventBus.getDefault().post(new GoogleFitUpdateEvent(false));
         }
     }
 }
