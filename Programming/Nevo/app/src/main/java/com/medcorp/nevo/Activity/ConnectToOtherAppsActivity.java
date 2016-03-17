@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +112,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 if (input.length() == 0) return;
-                                getModel().createValidicUser(input.toString());
+                                getModel().createValidicUser(input.toString(),null);
                             }
                         }).negativeText(android.R.string.cancel)
                         .show();

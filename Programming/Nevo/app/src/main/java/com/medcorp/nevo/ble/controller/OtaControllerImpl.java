@@ -26,11 +26,11 @@ import net.medcorp.library.ble.listener.OnExceptionListener;
 import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
 import net.medcorp.library.ble.listener.OnOtaControllerListener;
 import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.response.DFUResponse;
 import net.medcorp.library.ble.model.response.FirmwareData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.model.response.ResponseData;
 import net.medcorp.library.ble.util.Constants;
-import net.medcorp.library.ble.util.Constants.DFUResponse;
 import net.medcorp.library.ble.util.Constants.DFUControllerState;
 import net.medcorp.library.ble.util.Constants.DfuFirmwareTypes;
 import net.medcorp.library.ble.util.Constants.DfuOperationStatus;
@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+
+;
 
 public class OtaControllerImpl implements OtaController, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
     private final static String TAG = "OtaControllerImpl";
@@ -402,7 +404,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"succesfully received notification for ValidateFirmware");
             activateAndReset();
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
+            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
         }
         else {
             Log.i(TAG,"Firmware validate failed, Error Status: "+ responseErrorMessage(dfuResponse.getresponseStatus()));
@@ -965,7 +967,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                         //Check sum match ,OTA over.
                         Log.i(TAG,"Checksum match ,OTA get success!");
                         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
-                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranferred();
+                        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
                     }
                     else
                     {
