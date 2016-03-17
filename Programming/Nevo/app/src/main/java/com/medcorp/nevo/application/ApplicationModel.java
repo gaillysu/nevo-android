@@ -60,6 +60,7 @@ import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
 import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
+import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
