@@ -485,12 +485,12 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
-                processListener(listener, spiceException,true);
+                processListener(listener, spiceException, true);
             }
 
             @Override
             public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
-                processListener(listener, validicRecordModel,false);
+                processListener(listener, validicRecordModel, false);
             }
         });
     }
@@ -524,7 +524,11 @@ public class ApplicationModel extends Application {
 
             @Override
             public void onRequestSuccess(ValidicReadAllRecordsModel validicReadAllRecordsModel) {
-                Log.i("ApplicationModel", "validicReadAllRecordsModel = " + validicReadAllRecordsModel);
+                Log.i("ApplicationModel", "validicReadAllRecordsModel total: " + validicReadAllRecordsModel.getSummary().getResults());
+                if(validicReadAllRecordsModel.getSummary().getResults()> 0)
+                {
+                    getNevoUser().setLastValidicRecordID(validicReadAllRecordsModel.getRoutine()[0].get_id());
+                }
             }
         });
     }

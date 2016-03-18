@@ -1,5 +1,8 @@
 package com.medcorp.nevo.validic.request;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
 import com.medcorp.nevo.validic.model.DeleteRecordRequestObject;
 import com.medcorp.nevo.validic.model.ValidicDeleteRecordModel;
 import com.medcorp.nevo.validic.retrofit.Validic;
@@ -31,6 +34,7 @@ public class DeleteRecordRequest extends RetrofitSpiceRequest<ValidicDeleteRecor
     public DeleteRecordRequestObject buildRequestBody() {
         DeleteRecordRequestObject object = new DeleteRecordRequestObject();
         object.setAccess_token(organizationTokenKey);
+        Log.i(this.getClass().getSimpleName(), "object: " + new Gson().toJson(object));
         return object;
     }
 
