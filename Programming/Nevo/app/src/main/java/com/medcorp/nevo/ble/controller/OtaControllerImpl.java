@@ -19,18 +19,16 @@ import com.medcorp.nevo.ble.model.request.NevoOTAStartRequest;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.controller.OtaController;
-import net.medcorp.library.ble.exception.BaseBLEException;
-import net.medcorp.library.ble.listener.OnConnectListener;
-import net.medcorp.library.ble.listener.OnDataReceivedListener;
-import net.medcorp.library.ble.listener.OnExceptionListener;
-import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
+import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
+import net.medcorp.library.ble.event.BLEExceptionEvent;
+import net.medcorp.library.ble.event.BLEFirmwareVersionReceivedEvent;
+import net.medcorp.library.ble.event.BLEResponseDataEvent;
+import net.medcorp.library.ble.event.BLESearchEvent;
 import net.medcorp.library.ble.listener.OnOtaControllerListener;
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
+import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.model.response.DFUResponse;
 import net.medcorp.library.ble.model.response.FirmwareData;
-import net.medcorp.library.ble.model.response.MEDRawData;
-import net.medcorp.library.ble.model.response.ResponseData;
-import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Constants.DFUControllerState;
 import net.medcorp.library.ble.util.Constants.DfuFirmwareTypes;
@@ -42,6 +40,8 @@ import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.apache.commons.codec.binary.Hex;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,7 +52,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-public class OtaControllerImpl implements OtaController, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
+public class OtaControllerImpl implements OtaController  {
     private final static String TAG = "OtaControllerImpl";
 
     private ApplicationModel mContext;
@@ -60,9 +60,8 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     private Optional<OnOtaControllerListener> mOnOtaControllerListener = new Optional<OnOtaControllerListener>();
     private ConnectionController connectionController;
 
-    private Constants.DfuFirmwareTypes dfuFirmwareType = Constants.DfuFirmwareTypes.APPLICATION ;
+    private Constants.DfuFirmwareTypes dfuFirmwareType = DfuFirmwareTypes.BLUETOOTH ;
     private List<FirmwareData> mPacketsbuffer = new ArrayList<FirmwareData>();
-    private List<MEDRawData> mNevoPacketsbuffer = new ArrayList<MEDRawData>();
 
     private String firmwareFile ;
     private DFUResponse dfuResponse = new DFUResponse((byte)0, (byte)0, (byte)0);
@@ -123,16 +122,16 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             {
                 ERRORCODE errorcode = ERRORCODE.TIMEOUT;
                 if (state == DFUControllerState.SEND_START_COMMAND
-                        && dfuFirmwareType == DfuFirmwareTypes.APPLICATION
+                        && dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH
                         && isConnected()) {
                     Log.e(TAG, "* * * BLE OTA timeout by start command not get disconnected from watch* * *");
                 }
                 //when start Scan DFU service, perhaps get nothing with 20s, here need again scan it?
-                else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.APPLICATION) {
+                else if (state == DFUControllerState.DISCOVERING && dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH) {
                     Log.e(TAG, "* * * BLE OTA timeout by no found DFU service * * *");
                     errorcode = ERRORCODE.NODFUSERVICE;
                 }
-                Log.e(TAG, "* * * call OTA timeout function * * * OTA type = " + (dfuFirmwareType == DfuFirmwareTypes.APPLICATION ?"BLE":"MCU") + ",ErrorCode = " + errorcode);
+                Log.e(TAG, "* * * call OTA timeout function * * * OTA type = " + (dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH ?"BLE":"MCU") + ",ErrorCode = " + errorcode);
                 if (mOnOtaControllerListener.notEmpty()) {
                      mOnOtaControllerListener.get().onError(errorcode);
                 }
@@ -147,6 +146,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         mContext = context;
         connectionController = ConnectionController.Singleton.getInstance(context,new GattAttributesDataSourceImpl(context));
         connectionController.connect();
+        EventBus.getDefault().register(this);
     }
 
     public void setManualMode(boolean  manualmode)
@@ -216,7 +216,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         }
         Log.i(TAG,"Number of Packets "+ numberOfPackets + " Bytes in last Packet " + bytesInLastPacket);
         writingPacketNumber = 0;
-        dfuFirmwareType = DfuFirmwareTypes.APPLICATION;
+        dfuFirmwareType = DfuFirmwareTypes.BLUETOOTH;
 
     }
     void writeNextPacket()
@@ -268,9 +268,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     //BLE OTA use the lower Queue: QueueType.NevoBT, pls see @NevoBTService.sendRequest
     //due to BLE OTA packets is not the regular packets which start with 00,FF
-    private void sendRequest(final RequestData request)
+    private void sendRequest(final BLERequestData request)
     {
-        if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE)
+        if(dfuFirmwareType == DfuFirmwareTypes.MCU)
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).post(new Runnable(){
             @Override
             public void run() {
@@ -447,7 +447,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     }
     void performOldDFUOnFile()
     {
-        if (dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+        if (dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH)
         {
             openFile(firmwareFile);
             sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue()}));
@@ -491,10 +491,10 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         openFile(filename);
 
         //help mode for doing OTA
-        if(manualmode && dfuFirmwareType == DfuFirmwareTypes.APPLICATION)
+        if(manualmode && dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH)
         {
             state = DFUControllerState.SEND_FIRMWARE_DATA;
-            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
+            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
             sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize,false));
         }
         //pair mode for doing OTA
@@ -518,22 +518,11 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     {
         Log.i(TAG, "cancelDFU");
 
-        if (dfuFirmwareType.rawValue() == DfuFirmwareTypes.APPLICATION.rawValue())
+        if (dfuFirmwareType.rawValue() == DfuFirmwareTypes.BLUETOOTH.rawValue())
         { resetSystem();}
 
         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUCancelled();
     }
-    /**
-     * get in charge of ConnectionController
-     */
-    public void switch2OtaController()
-    {
-        connectionController.setOnExceptionListener(this);
-        connectionController.setOnDataReceivedListener(this);
-        connectionController.setOnConnectListener(this);
-        connectionController.setOnFirmwareVersionListener(this);
-    }
-
 
     /**
      * set hight level listener, it should be a activity (OTA controller view:Activity or one fragment)
@@ -559,14 +548,6 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     {
         this.state = state;
     }
-    @Override
-    public  void switch2SyncController()
-    {
-        connectionController.setOnExceptionListener((OnExceptionListener) mContext.getSyncController());
-        connectionController.setOnDataReceivedListener((OnDataReceivedListener)mContext.getSyncController());
-        connectionController.setOnConnectListener((OnConnectListener)mContext.getSyncController());
-        connectionController.setOnFirmwareVersionListener((OnFirmwareVersionListener) mContext.getSyncController());
-    }
 
     /**
      reset to normal mode "NevoProfile"
@@ -587,13 +568,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         state = DFUControllerState.INIT;
         mcu_broken_state = DFUControllerState.INIT;
 
-        if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION )
+        if(dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH )
         {
             connectionController.restoreSavedAddress();
-        }
-        if (switch2SyncController)
-        {
-            switch2SyncController();
         }
         if(manualmode)
         {
@@ -625,13 +602,12 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
     //end public function
 
     //start ConnectionController.Delegate interface
-    @Override
-    public void onConnectionStateChanged(boolean connected, String address) {
-        if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().connectionStateChanged(connected);
+    @Subscribe
+    public void onEvent(BLEConnectionStateChangedEvent event){
         //only BLE OTA run below code
-        if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION )
+        if(dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH )
         {
-            if (connected)
+            if (event.isConnected())
             {
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
@@ -651,7 +627,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.APPLICATION.rawValue()}));
+                            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
                             sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize,false));
                         }
                     },1000);
@@ -690,9 +666,9 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             }
         }
         //only MCU OTA run below code
-        else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE )
+        else if(dfuFirmwareType == DfuFirmwareTypes.MCU )
         {
-            if (connected)
+            if (event.isConnected())
             {
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
@@ -764,40 +740,27 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
 
     }
 
-    @Override
-    public void onSearching() {
-
-    }
-
-    @Override
-    public void onSearchSuccess() {
-
-    }
-
-    @Override
-    public void onSearchFailure() {
-        Log.e(TAG," ********* onSearchFailure ********* " + "state:" + getState());
-        if(mOnOtaControllerListener.notEmpty()) {
-            mOnOtaControllerListener.get().onError(ERRORCODE.NOCONNECTION);
+    @Subscribe
+    public void onEvent(BLESearchEvent eventData){
+        if (eventData.getSearchEvent() == BLESearchEvent.SEARCH_EVENT.ON_SEARCH_FAILURE){
+            if(mOnOtaControllerListener.notEmpty()) {
+                Log.e(TAG, " ********* onSearchFailure ********* " + "state:" + getState());
+                mOnOtaControllerListener.get().onError(ERRORCODE.NOCONNECTION);
+            }
         }
     }
 
-    @Override
-    public void onConnecting() {
-
-    }
-
-    @Override
-    public void onDataReceived(ResponseData data) {
-
+    @Subscribe
+    public void onEvent(BLEResponseDataEvent eventData){
+        BLEResponseData data = eventData.getData();
         if (data.getType().equals(FirmwareData.TYPE))
         {
-            if(dfuFirmwareType == DfuFirmwareTypes.APPLICATION
+            if(dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH
                     && ((FirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CALLBACK_CHARACTERISTIC))))
             {
                 processDFUResponse((FirmwareData) data);
             }
-            else if(dfuFirmwareType == DfuFirmwareTypes.SOFTDEVICE
+            else if(dfuFirmwareType == DfuFirmwareTypes.MCU
                     && ((FirmwareData)data).getUuid().equals(UUID.fromString(mContext.getString(R.string.NEVO_OTA_CHARACTERISTIC))))
             {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.OtaController).next();
@@ -806,19 +769,19 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
         }
     }
 
-    @Override
-    public void onException(BaseBLEException e) {
+    @Subscribe
+    public void onEvent(BLEExceptionEvent exceptionData){
         //the exception got happened when do connection NEVO
-        Log.e(TAG," ********* onException ********* " + e + ",state:" + getState());
+        Log.e(TAG, " ********* onException ********* " + exceptionData.getBleException() + ",state:" + getState());
         if(mOnOtaControllerListener.notEmpty()) {
             mOnOtaControllerListener.get().onError(ERRORCODE.EXCEPTION);
         }
     }
 
-    @Override
-    public void firmwareVersionReceived(DfuFirmwareTypes whichfirmware, String version) {
+    @Subscribe
+    public void onEvent(BLEFirmwareVersionReceivedEvent eventData){
         if(mOnOtaControllerListener.notEmpty()) {
-            mOnOtaControllerListener.get().firmwareVersionReceived(whichfirmware,version);
+            mOnOtaControllerListener.get().firmwareVersionReceived(eventData.getFirmwareTypes(),eventData.getVersion());
         }
     }
     //end ConnectionController.Delegate interface
@@ -843,7 +806,7 @@ public class OtaControllerImpl implements OtaController, OnExceptionListener, On
             curpage = 0;
             totalpage = binFileSize/DFUCONTROLLER_PAGE_SIZE;
             checksum = 0;
-            dfuFirmwareType = DfuFirmwareTypes.SOFTDEVICE;
+            dfuFirmwareType = DfuFirmwareTypes.MCU;
 
             for(byte b : binFileData ){
                 checksum = checksum + (int)(b);

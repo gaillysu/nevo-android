@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
  * Created by gaillysu on 15/4/16.
  */
-public class TestModeNevoRequest extends RequestData{
+public class TestModeNevoRequest extends BLERequestData {
     public  final static  byte HEADER = (byte)0xF0;
     private int mLedpattern;
 

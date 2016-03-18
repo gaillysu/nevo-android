@@ -1,14 +1,14 @@
 package com.medcorp.nevo.activity.tutorial;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.event.ConnectionStateChangedEvent;
-import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.view.RoundProgressBar;
+
+import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
+import net.medcorp.library.ble.event.BLESearchEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -72,16 +72,16 @@ public class TutorialPage5Activity extends BaseActivity{
     }
 
     @Subscribe
-    public void onEvent(SearchEvent event){
-        switch (event.getStatus()) {
-            case FAILED:   runOnUiThread(new Runnable() {
+    public void onEvent(BLESearchEvent event){
+        switch (event.getSearchEvent()) {
+            case ON_SEARCH_FAILURE:   runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     startActivity(TutorialPageFailedActivity.class);
                 }
             });
                 break;
-            case SEARCHING:
+            case ON_SEARCHING:
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -94,7 +94,7 @@ public class TutorialPage5Activity extends BaseActivity{
     }
 
     @Subscribe
-    public void onEvent(ConnectionStateChangedEvent event){
+    public void onEvent(BLEConnectionStateChangedEvent event){
         if (event.isConnected()){
             runOnUiThread(new Runnable() {
                 @Override

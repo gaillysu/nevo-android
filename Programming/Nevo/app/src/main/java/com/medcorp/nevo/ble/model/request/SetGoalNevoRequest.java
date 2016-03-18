@@ -6,9 +6,9 @@ import android.content.Context;
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.model.GoalBase;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
-public class SetGoalNevoRequest extends RequestData {
+public class SetGoalNevoRequest extends BLERequestData {
 	public  final static  byte HEADER = 0x22;
     private GoalBase mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
 	public SetGoalNevoRequest(Context context, GoalBase goal )

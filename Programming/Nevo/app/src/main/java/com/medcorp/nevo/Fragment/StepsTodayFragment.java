@@ -12,13 +12,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.event.LittleSyncEvent;
 import com.medcorp.nevo.fragment.base.BaseFragment;
-import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.RoundProgressBar;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -28,7 +31,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class StepsTodayFragment extends BaseFragment implements OnStepsListener {
+public class StepsTodayFragment extends BaseFragment {
 
     @Bind(R.id.roundProgressBar)
     RoundProgressBar roundProgressBar;
@@ -131,17 +134,19 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
         return view;
     }
 
-    @Override
-    public void OnStepsChanged() {
-        Steps steps =  getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
-        if(steps == null) {
-            return;
+    @Subscribe
+    public void onEvent(LittleSyncEvent event) {
+        if (event.isSuccess()) {
+            Steps steps = getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
+            if (steps == null) {
+                return;
+            }
+            int dailySteps = steps.getSteps();
+            int dailyGoal = steps.getGoal();
+            Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+            setProgressBar((int) (100.0 * dailySteps / dailyGoal));
+            setDashboard(new Dashboard(dailySteps, dailyGoal, (int) (100.0 * dailySteps / dailyGoal), steps.getDistance(), dailySteps, steps.getCalories()));
         }
-        int dailySteps = steps.getSteps();
-        int dailyGoal =  steps.getGoal();
-        Log.i("StepsTodayFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
-        setProgressBar((int) (100.0 * dailySteps / dailyGoal));
-        setDashboard(new Dashboard(dailySteps, dailyGoal, (int) (100.0 * dailySteps / dailyGoal), steps.getDistance(), dailySteps, steps.getCalories()));
     }
 
     @Override
@@ -185,5 +190,17 @@ public class StepsTodayFragment extends BaseFragment implements OnStepsListener 
         {
             return calories/1000 + "KCal";
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

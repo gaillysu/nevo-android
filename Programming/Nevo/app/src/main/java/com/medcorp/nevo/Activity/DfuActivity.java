@@ -20,7 +20,7 @@ import com.medcorp.nevo.view.RoundProgressBar;
 
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.listener.OnOtaControllerListener;
-import net.medcorp.library.ble.model.response.ResponseData;
+import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.util.Constants;
 
 import java.text.SimpleDateFormat;
@@ -61,7 +61,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     TextView back2settings;
 
     private OtaController mNevoOtaController ;
-    private Constants.DfuFirmwareTypes enumFirmwareType = Constants.DfuFirmwareTypes.APPLICATION;
+    private Constants.DfuFirmwareTypes enumFirmwareType = Constants.DfuFirmwareTypes.BLUETOOTH;
     private List<String> firmwareURLs;
     private int currentIndex;
     private String  errorMsg="";
@@ -84,7 +84,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
 
         mNevoOtaController = getModel().getOtaController();
-        mNevoOtaController.switch2OtaController();
         mNevoOtaController.setOnOtaControllerListener(this);
         if(manualMode) {
             mNevoOtaController.setManualMode(true);
@@ -174,10 +173,10 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
 
         String selectedFileURL = firmwareURLs.get(currentIndex);
         if (selectedFileURL.contains(".bin")) {
-            enumFirmwareType = Constants.DfuFirmwareTypes.SOFTDEVICE;
+            enumFirmwareType = Constants.DfuFirmwareTypes.MCU;
         }
         if (selectedFileURL.contains(".hex")) {
-            enumFirmwareType = Constants.DfuFirmwareTypes.APPLICATION;
+            enumFirmwareType = Constants.DfuFirmwareTypes.BLUETOOTH;
         }
         initNevoLogo();
         roundProgressBar.setProgress(0);
@@ -199,7 +198,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     }
 
     @Override
-    public void packetReceived(ResponseData packet) {
+    public void packetReceived(BLEResponseData packet) {
 
     }
 
@@ -255,7 +254,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
-                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION) ? "BLE" : "MCU") + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
+                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH) ? "BLE" : "MCU") + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
     }
@@ -287,12 +286,12 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                     String strDate = format.format(Calendar.getInstance().getTimeInMillis());
                     getSharedPreferences(OtaController.PREF_NAME, Context.MODE_PRIVATE).edit().putString(OtaController.SYNCDATE, strDate).commit();
                     //BLE OTA done, unPair nevo, due to the pair infomation has got destory in the smartphone side.
-                    if (enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION)
+                    if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH)
                         mNevoOtaController.forGetDevice();
                 } else {
                     mUpdateSuccess = true;
                     //unpair this watch, when reconnect it, repair it again, otherwiase, it will lead the cmd can't get response.
-                    if (enumFirmwareType == Constants.DfuFirmwareTypes.APPLICATION) {
+                    if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH) {
                         mNevoOtaController.forGetDevice();
                     }
                     mNevoOtaController.reset(false);

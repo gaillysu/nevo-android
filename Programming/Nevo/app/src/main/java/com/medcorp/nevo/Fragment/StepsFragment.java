@@ -14,11 +14,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.StepsFragmentPagerAdapter;
-import com.medcorp.nevo.event.LittleSyncEvent;
 import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.event.RequestResponseEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
-import com.medcorp.nevo.fragment.listener.OnStepsListener;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.util.Preferences;
 
@@ -42,7 +40,6 @@ public class StepsFragment extends BaseObservableFragment{
     @Bind(R.id.fragment_steps_tab_layout)
     TabLayout tabLayout;
 
-    private OnStepsListener onStepsListener;
     private boolean showSyncGoal;
 
     @Nullable
@@ -60,13 +57,7 @@ public class StepsFragment extends BaseObservableFragment{
     @Override
     public void onResume() {
         super.onResume();
-
         getAppCompatActivity().setTitle(R.string.title_steps);
-    }
-
-
-    public void setOnStepsListener(OnStepsListener onStepsListener) {
-        this.onStepsListener = onStepsListener;
     }
 
     @Override
@@ -75,8 +66,6 @@ public class StepsFragment extends BaseObservableFragment{
         menu.findItem(R.id.add_menu).setVisible(false);
         menu.findItem(R.id.choose_goal_menu).setVisible(true);
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -134,13 +123,6 @@ public class StepsFragment extends BaseObservableFragment{
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
-    }
-
-    @Subscribe
-    public void onEvent(LittleSyncEvent event) {
-        if(onStepsListener != null) {
-            onStepsListener.OnStepsChanged();
-        }
     }
 
     @Subscribe

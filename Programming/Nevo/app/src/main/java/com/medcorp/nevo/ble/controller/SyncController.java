@@ -5,7 +5,7 @@ import android.content.Context;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.GoalBase;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.List;
 
@@ -92,7 +92,7 @@ public interface SyncController {
      */
     public void  getDailyTrackerInfo(boolean syncAll);
 
-    void sendRequest(final RequestData request);
+    void sendRequest(final BLERequestData request);
 
     /**
      *

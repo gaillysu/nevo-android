@@ -17,12 +17,12 @@ import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.UUID;
 
 
-public class SendNotificationNevoRequest extends RequestData {
+public class SendNotificationNevoRequest extends BLERequestData {
 
     public  final static  byte HEADER = 0x60;
 

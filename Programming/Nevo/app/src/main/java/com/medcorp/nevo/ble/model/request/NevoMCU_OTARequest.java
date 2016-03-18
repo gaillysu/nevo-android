@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.UUID;
 
@@ -14,7 +14,7 @@ import java.util.UUID;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-public abstract  class NevoMCU_OTARequest extends RequestData {
+public abstract  class NevoMCU_OTARequest extends BLERequestData {
 
     public NevoMCU_OTARequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));

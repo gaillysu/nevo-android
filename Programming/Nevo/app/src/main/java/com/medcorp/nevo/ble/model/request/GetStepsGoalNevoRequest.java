@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
-public class GetStepsGoalNevoRequest extends RequestData {
+public class GetStepsGoalNevoRequest extends BLERequestData {
 
 	public  final static byte HEADER = 0x26;
 
