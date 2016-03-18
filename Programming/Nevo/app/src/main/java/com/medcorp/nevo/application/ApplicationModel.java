@@ -71,10 +71,12 @@ import net.medcorp.library.ble.util.Optional;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -446,15 +448,20 @@ public class ApplicationModel extends Application {
         Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
         ValidicRecord record = new ValidicRecord();
         record.setSteps(steps.getSteps());
-        String utc_offset = new SimpleDateFormat("z").format(date).substring(3);//remove "GMT" starting
-        String timestamp  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date) + "+00:00";
+
+        String utc_offset = new SimpleDateFormat("z").format(date).substring(3);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String timestamp  = sdf.format(date) + "+00:00";
+
+
         record.setTimestamp(timestamp);
         record.setUtc_offset(utc_offset);
         record.setDistance(steps.getDistance());
         record.setFloors(0);
         record.setElevation(0);
         record.setCalories_burned(steps.getCalories());
-        record.setActivity_id(steps.getiD());
+        record.setActivity_id(""+steps.getiD());
 
         AddRecordRequest addRecordRequest = new AddRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
         validicManager.execute(addRecordRequest, new RequestListener<ValidicRecordModel>() {

@@ -6,12 +6,12 @@ package com.medcorp.nevo.validic.model;
 public class ValidicRecord {
     String timestamp;
     String utc_offset;
-    int steps;
-    float distance;
-    int floors;
-    float elevation;
-    int calories_burned;
-    int activity_id;
+    double steps;
+    double distance;
+    double floors;
+    double elevation;
+    double calories_burned;
+    String activity_id;
 
     public String getTimestamp() {
         return timestamp;
@@ -29,51 +29,51 @@ public class ValidicRecord {
         this.utc_offset = utc_offset;
     }
 
-    public int getSteps() {
+    public double getSteps() {
         return steps;
     }
 
-    public void setSteps(int steps) {
+    public void setSteps(double steps) {
         this.steps = steps;
     }
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
-    public int getFloors() {
+    public double getFloors() {
         return floors;
     }
 
-    public void setFloors(int floors) {
+    public void setFloors(double floors) {
         this.floors = floors;
     }
 
-    public float getElevation() {
+    public double getElevation() {
         return elevation;
     }
 
-    public void setElevation(float elevation) {
+    public void setElevation(double elevation) {
         this.elevation = elevation;
     }
 
-    public int getCalories_burned() {
+    public double getCalories_burned() {
         return calories_burned;
     }
 
-    public void setCalories_burned(int calories_burned) {
+    public void setCalories_burned(double calories_burned) {
         this.calories_burned = calories_burned;
     }
 
-    public int getActivity_id() {
+    public String getActivity_id() {
         return activity_id;
     }
 
-    public void setActivity_id(int activity_id) {
+    public void setActivity_id(String activity_id) {
         this.activity_id = activity_id;
     }
 }
