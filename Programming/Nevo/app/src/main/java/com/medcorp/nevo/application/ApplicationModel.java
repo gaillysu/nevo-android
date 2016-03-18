@@ -26,7 +26,6 @@ import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
-import com.medcorp.nevo.event.FirmwareReceivedEvent;
 import com.medcorp.nevo.event.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.nevo.event.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.nevo.event.GoogleFitUpdateEvent;
@@ -55,10 +54,7 @@ import com.medcorp.nevo.validic.request.AddRecordRequest;
 import com.medcorp.nevo.validic.request.DeleteRecordRequest;
 import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
 import com.medcorp.nevo.validic.request.GetRecordRequest;
-import com.medcorp.nevo.validic.request.NevoUserLogin;
-import com.medcorp.nevo.validic.request.NevoUserRegister;
 import com.medcorp.nevo.validic.request.UpdateRecordRequest;
-import com.medcorp.nevo.validic.request.VerifyCredentialRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
 import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
@@ -68,6 +64,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import net.medcorp.library.ble.controller.OtaController;
+import net.medcorp.library.ble.event.BLEFirmwareVersionReceivedEvent;
 import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Optional;
 
@@ -129,15 +126,15 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onEvent(FirmwareReceivedEvent event){
+    public void onEvent(BLEFirmwareVersionReceivedEvent event){
         //in tutorial steps, don't popup this alert dialog
         if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
         {
-            if(event.getType() == Constants.DfuFirmwareTypes.SOFTDEVICE)
+            if(event.getFirmwareTypes() == Constants.DfuFirmwareTypes.MCU)
             {
                 mcuFirmwareVersion = Integer.parseInt(event.getVersion());
             }
-            if(event.getType() == Constants.DfuFirmwareTypes.APPLICATION)
+            if(event.getFirmwareTypes() == Constants.DfuFirmwareTypes.BLUETOOTH)
             {
                 bleFirmwareVersion = Integer.parseInt(event.getVersion());
             }
