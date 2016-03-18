@@ -38,7 +38,7 @@ public interface Validic {
     @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine.json")
     ValidicReadAllRecordsModel getAllRecordsRequest(@Path("ORGANIZATION_ID") String organization,@Path("VALIDIC_USER_ID") String user,@Query("access_token") String accessToken);
 
-    @DELETE("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
+    @DELETEWITHBODY("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
     ValidicDeleteRecordModel deleteRecordRequest(@Body DeleteRecordRequestObject object,@Path("ORGANIZATION_ID") String organization,@Path("VALIDIC_USER_ID") String user,@Path("VALIDIC_RECORD_ID") String recordId, @Header("Content-Type") String type);
 
     @PUT("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")

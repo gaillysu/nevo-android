@@ -452,8 +452,8 @@ public class ApplicationModel extends Application {
         ValidicRecord record = new ValidicRecord();
         record.setSteps(steps.getSteps());
 
-        String utc_offset = new SimpleDateFormat("z").format(date).substring(3);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        String utc_offset = "+00:00";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String timestamp  = sdf.format(date) + "+00:00";
 
