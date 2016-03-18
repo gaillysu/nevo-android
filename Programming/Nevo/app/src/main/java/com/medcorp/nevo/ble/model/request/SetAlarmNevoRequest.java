@@ -5,11 +5,11 @@ import android.content.Context;
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.nevo.model.Alarm;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.List;
 
-public class SetAlarmNevoRequest extends RequestData {
+public class SetAlarmNevoRequest extends BLERequestData {
 
 	public  final static  byte HEADER = 0x41;
 	public  final static int maxAlarmCount = 3;

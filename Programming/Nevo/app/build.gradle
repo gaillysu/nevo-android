@@ -67,11 +67,10 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     androidTestCompile 'junit:junit:4.12'
     compile 'com.android.support:design:23.2.0'
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
         transitive = true
     }
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.umeng.analytics:analytics:latest.integration'
     compile project(':library')
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'

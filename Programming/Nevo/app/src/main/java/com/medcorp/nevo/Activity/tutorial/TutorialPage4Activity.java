@@ -1,15 +1,9 @@
 package com.medcorp.nevo.activity.tutorial;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.view.WindowManager;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -32,22 +26,7 @@ public class TutorialPage4Activity extends BaseActivity {
         //if BLE or MCU got broken in OTA progress, press the third key will not open BT
         //so we should give user a solution to update the nevo firmwares
         //in this page, user long press the image, will enable user to continue do OTA
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (ActivityCompat.checkSelfPermission(TutorialPage4Activity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                new MaterialDialog.Builder(this)
-                        .title(R.string.location_access_title)
-                        .content(R.string.location_access_content)
-                        .positiveText(getString(android.R.string.ok))
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                ActivityCompat.requestPermissions(TutorialPage4Activity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                            }
-                        })
-                        .cancelable(false)
-                        .show();
-            }
-        }
+        askForPermission();
     }
 
     @OnLongClick(R.id.activity_tutorial_page4_open_bt_image)

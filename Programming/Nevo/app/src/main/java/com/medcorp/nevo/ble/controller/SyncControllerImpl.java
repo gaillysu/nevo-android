@@ -12,8 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -57,14 +55,11 @@ import com.medcorp.nevo.ble.model.request.TestModeNevoRequest;
 import com.medcorp.nevo.ble.model.request.WriteSettingNevoRequest;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.event.BatteryEvent;
-import com.medcorp.nevo.event.ConnectionStateChangedEvent;
 import com.medcorp.nevo.event.FindWatchEvent;
-import com.medcorp.nevo.event.FirmwareReceivedEvent;
 import com.medcorp.nevo.event.InitializeEvent;
 import com.medcorp.nevo.event.LittleSyncEvent;
 import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.event.RequestResponseEvent;
-import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Battery;
 import com.medcorp.nevo.model.DailyHistory;
@@ -75,6 +70,9 @@ import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
+import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
+import net.medcorp.library.ble.event.BLEExceptionEvent;
+import net.medcorp.library.ble.event.BLEResponseDataEvent;
 import net.medcorp.library.ble.exception.BLEConnectTimeoutException;
 import net.medcorp.library.ble.exception.BLENotSupportedException;
 import net.medcorp.library.ble.exception.BLEUnstableException;
@@ -83,17 +81,14 @@ import net.medcorp.library.ble.exception.BluetoothDisabledException;
 import net.medcorp.library.ble.exception.QuickBTSendTimeoutException;
 import net.medcorp.library.ble.exception.QuickBTUnBindException;
 import net.medcorp.library.ble.exception.visitor.BLEExceptionVisitor;
-import net.medcorp.library.ble.listener.OnConnectListener;
-import net.medcorp.library.ble.listener.OnDataReceivedListener;
-import net.medcorp.library.ble.listener.OnExceptionListener;
-import net.medcorp.library.ble.listener.OnFirmwareVersionListener;
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
+import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.model.response.MEDRawData;
-import net.medcorp.library.ble.model.response.ResponseData;
 import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,7 +101,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void>, OnExceptionListener, OnDataReceivedListener, OnConnectListener, OnFirmwareVersionListener {
+public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
 
     private Context mContext;
@@ -136,13 +131,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         mContext = context;
 
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
-        connectionController.setOnExceptionListener(this);
-        connectionController.setOnDataReceivedListener(this);
-        connectionController.setOnConnectListener(this);
-        connectionController.setOnFirmwareVersionListener(this);
-
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
+        EventBus.getDefault().register(this);
     }
 
     /*package*/void setContext(Context context) {
@@ -162,7 +153,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     //Each packets should go through this function. It will ensure that they are properly queued and sent in order.
     @Override
-    public void sendRequest(final RequestData request)
+    public void sendRequest(final BLERequestData request)
     {
         if(connectionController.inOTAMode()) {
             return;
@@ -196,12 +187,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     }
 
-    /**
-     * This listener is called when new data is received
-     */
-    @Override
-    public void onDataReceived(ResponseData data) {
-
+    @Subscribe
+    public void onEvent(BLEResponseDataEvent eventData) {
+        BLEResponseData data = eventData.getData();
         if (data.getType().equals(MEDRawData.TYPE))
         {
             final MEDRawData nevoData = (MEDRawData) data;
@@ -474,16 +462,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 packetsBuffer.clear();
             }
         }
-
     }
 
-    @Override
-    public void onConnectionStateChanged(boolean isConnected, String address) {
+    @Subscribe
+    public void onEvent(BLEConnectionStateChangedEvent stateChangedEvent) {
 
-        if(isConnected) {
+        if(stateChangedEvent.isConnected()) {
             mEnableTestMode = false;
             mTimeOutcount = 0;
-            EventBus.getDefault().post(new ConnectionStateChangedEvent(true));
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -495,29 +481,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             }, 2000);
 
         } else {
-            EventBus.getDefault().post(new ConnectionStateChangedEvent(false));
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             packetsBuffer.clear();
         }
-    }
-
-    @Override
-    public void onSearching() {
-        EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.SEARCHING));
-    }
-
-    @Override
-    public void onSearchSuccess() {
-        EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.FOUND));
-    }
-
-    @Override
-    public void onSearchFailure() {
-        EventBus.getDefault().post(new SearchEvent(SearchEvent.SEARCH_STATUS.FAILED));
-    }
-
-    @Override
-    public void onConnecting() {
     }
 
     /**
@@ -636,16 +602,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
     }
 
-    @Override
-    public void onException(BaseBLEException e) {
-        EventBus.getDefault().post(new ConnectionStateChangedEvent(false));
+    @Subscribe
+    public void onEvent(BLEExceptionEvent e) {
+        EventBus.getDefault().post(new BLEConnectionStateChangedEvent(false,""));
     }
-
 
     /**
      * ============The following block is used only to have a safe context in order to display a popup============
      */
-
     @Override
     public void showMessage(final int titleID, final int msgID) {
         if(mLocalService!=null && mVisible){
@@ -677,11 +641,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             mLocalService = (LocalService.LocalBinder)service;
         }
     };
-
-    @Override
-    public void firmwareVersionReceived(Constants.DfuFirmwareTypes type, String version) {
-        EventBus.getDefault().post(new FirmwareReceivedEvent(type,version));
-    }
 
     @Override
     public Void visit(QuickBTUnBindException e) {
@@ -738,7 +697,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
             });
         } catch (Exception e1) {
-
         }
         return null;
     }
@@ -782,8 +740,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         @Override
         public void onCreate() {
             super.onCreate();
-            registerReceiver(myReceiver,new IntentFilter(Intent.ACTION_SCREEN_ON));
-            registerReceiver(myReceiver,new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+            registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+            registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
         }
 
         @Override
@@ -858,40 +816,15 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             {
                 vibrator.cancel();
             }
-            vibrator.vibrate(pattern,-1);
+            vibrator.vibrate(pattern, -1);
 
             PowerManager pm = (PowerManager) LocalService.this.getSystemService(Context.POWER_SERVICE);
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP
-                    | PowerManager.SCREEN_BRIGHT_WAKE_LOCK,"bright");
+                    | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
             wl.acquire();
             wl.release();
 
             //TODO Sound is fine but not sound from dogs. Thanks.
-//            PlayFromRawFile();
-        }
-
-        private  void PlayFromRawFile()
-        {
-            final MediaPlayer play = MediaPlayer.create(this, com.medcorp.nevo.R.raw.music);
-            final long currentTime = System.currentTimeMillis();
-            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume , 0);
-            if(play.isPlaying())
-            {
-                play.stop();
-            }
-            play.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    if (System.currentTimeMillis() - currentTime < 6000)
-                    {
-                        play.start();
-                    }
-                }
-            });
-            play.start();
         }
     }
 }

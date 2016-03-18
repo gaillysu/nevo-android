@@ -42,6 +42,7 @@ public class CreateUserRequest extends BaseSpringRequest<ValidicUser> {
     public String buildRequestBody() {
         JSONObject json = new JSONObject();
         try {
+
             json.put("user",new JSONObject().put("uid",nevouser_id));
             json.put("access_token",access_token);
             json.put("pin",pincode);

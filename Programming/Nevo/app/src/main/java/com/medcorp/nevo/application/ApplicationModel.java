@@ -71,7 +71,6 @@ import net.medcorp.library.ble.util.Optional;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.security.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -453,7 +452,6 @@ public class ApplicationModel extends Application {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String timestamp  = sdf.format(date) + "+00:00";
-
 
         record.setTimestamp(timestamp);
         record.setUtc_offset(utc_offset);

@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
-public class ReadDailyTrackerNevoRequest extends RequestData {
+public class ReadDailyTrackerNevoRequest extends BLERequestData {
 	public  final static  byte HEADER = 0x25;
     // tracker no is 0~6
     private int mTrackerNo = 0;

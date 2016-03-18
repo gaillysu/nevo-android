@@ -13,11 +13,11 @@ import com.medcorp.nevo.ble.model.notification.WeChatNotification;
 import com.medcorp.nevo.ble.model.notification.WhatsappNotification;
 import com.medcorp.nevo.ble.model.notification.visitor.NotificationVisitor;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.Map;
 
-public class SetNotificationNevoRequest extends RequestData {
+public class SetNotificationNevoRequest extends BLERequestData {
 	public  final static  byte HEADER = 0x02;
     public static class SetNortificationRequestValues {
         //default vibrator number is 3

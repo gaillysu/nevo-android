@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.model.request.RequestData;
+import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class SetRtcNevoRequest extends RequestData {
+public class SetRtcNevoRequest extends BLERequestData {
 
 	public  final static  byte HEADER = 0x01;
 

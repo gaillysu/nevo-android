@@ -26,15 +26,15 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.event.ConnectionStateChangedEvent;
 import com.medcorp.nevo.event.OnSyncEvent;
-import com.medcorp.nevo.event.SearchEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 
+import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
+import net.medcorp.library.ble.event.BLESearchEvent;
 import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
@@ -286,7 +286,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     @Subscribe
-    public void onEvent(ConnectionStateChangedEvent event){
+    public void onEvent(BLEConnectionStateChangedEvent event){
         if (event.isConnected()){
             showStateString(R.string.in_app_notification_found_nevo, false);
         }else{
@@ -295,13 +295,14 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     @Subscribe
-    public void onEvent(SearchEvent event) {
+    public void onEvent(BLESearchEvent event) {
         if (!getModel().isBluetoothOn()) {
             showStateString(R.string.in_app_notification_bluetooth_disabled, false);
             return;
         }
-        switch (event.getStatus()) {
-            case SEARCHING:
+        switch (event.getSearchEvent()) {
+            case ON_SEARCHING:
+                askForPermission();
                 showStateString(R.string.in_app_notification_searching, false);
                 break;
         }
