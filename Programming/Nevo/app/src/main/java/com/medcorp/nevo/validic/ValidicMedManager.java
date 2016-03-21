@@ -4,30 +4,21 @@ import android.content.Context;
 
 import com.medcorp.nevo.R;
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.request.SpiceRequest;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class ValidicManager {
+public class ValidicMedManager {
     private Context context;
     private SpiceManager spiceManager;
 
-    public ValidicManager(Context context)
+    public ValidicMedManager(Context context)
     {
         this.context = context;
-        spiceManager = new SpiceManager(BaseRetroService.class);
+        spiceManager = new SpiceManager(BaseMedRetroService.class);
         startSpiceManager();
-    }
-
-    public String getOrganizationID(){
-        return context.getString(R.string.key_validic_organization_id);
-    }
-
-    public String getOrganizationToken(){
-        return context.getString(R.string.key_validic_organization_token);
     }
 
     public void startSpiceManager()

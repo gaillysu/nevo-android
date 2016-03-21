@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -16,14 +17,14 @@ import org.json.JSONObject;
 public class VerifyCredentialRequestTest extends AndroidTestCase {
     private static final String TAG = VerifyCredentialRequestTest.class.getSimpleName();
     ValidicManager validicManager;
-    VerifyCredentialRequest verifyCredentialRequest;
+    VerifyCredentialsRetroRequest verifyCredentialRequest;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         validicManager = new ValidicManager(getContext());
         validicManager.startSpiceManager();
-        verifyCredentialRequest = new VerifyCredentialRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
+        verifyCredentialRequest = new VerifyCredentialsRetroRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
     }
 
     @Override
@@ -34,7 +35,7 @@ public class VerifyCredentialRequestTest extends AndroidTestCase {
 
     public void testVerify()
     {
-        validicManager.performRequest(verifyCredentialRequest, new RequestListener<VerifyCredentialModel>() {
+        validicManager.execute(verifyCredentialRequest, new RequestListener<VerifyCredentialModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e(TAG, spiceException.toString());
@@ -42,7 +43,7 @@ public class VerifyCredentialRequestTest extends AndroidTestCase {
 
             @Override
             public void onRequestSuccess(VerifyCredentialModel jsonObject) {
-                Log.i(TAG,jsonObject.toString());
+                Log.i(TAG, jsonObject.toString());
             }
         });
     }

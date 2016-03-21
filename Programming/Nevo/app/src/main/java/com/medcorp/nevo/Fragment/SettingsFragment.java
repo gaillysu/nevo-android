@@ -125,7 +125,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         if(position == 8) {
             if(isChecked)
             {
-
+                //TODO this is test code
+                getModel().nevoUserLogin("gaillysu@med-corp","Ma314109",null);
             }
         }
     }

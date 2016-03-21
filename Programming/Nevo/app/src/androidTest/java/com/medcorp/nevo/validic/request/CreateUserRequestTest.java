@@ -8,6 +8,9 @@ import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.NevoUser;
 import com.medcorp.nevo.validic.model.Profile;
 import com.medcorp.nevo.validic.model.ValidicUser;
+import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
+import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
+import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -17,23 +20,22 @@ import com.octo.android.robospice.request.listener.RequestListener;
 public class CreateUserRequestTest extends AndroidTestCase {
     private static final String TAG = CreateUserRequestTest.class.getSimpleName();
     ValidicManager validicManager;
-    CreateUserRequest createUserRequest;
-    NevoUser nevoUser;
+    CreateUserRetroRequest createUserRequest;
     //it comes from user 's input
     String pincode = "2364367";
+    String uid = pincode;
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         validicManager = new ValidicManager(getContext());
         validicManager.startSpiceManager();
-        nevoUser = new NevoUser();
-        //assume it is a logged in user
-        nevoUser.setUid("123456");
-        createUserRequest = new CreateUserRequest(nevoUser.getUid(),validicManager.getOrganizationID(),validicManager.getOrganizationToken(),pincode);
-        String body  = createUserRequest.buildRequestBody();
-        String url = createUserRequest.buildRequestURL();
-        Log.i(TAG,"url = " + url);
-        Log.i(TAG,"body = " + body);
+        CreateUserRequestObject object = new CreateUserRequestObject();
+        object.setPin(pincode);
+        object.setAccess_token(validicManager.getOrganizationToken());
+        CreateUserRequestObjectUser user  = new CreateUserRequestObjectUser();
+        user.setUid(uid);
+        object.setUser(user);
+        createUserRequest = new CreateUserRetroRequest(validicManager.getOrganizationID(),object);
     }
 
     @Override
@@ -43,7 +45,7 @@ public class CreateUserRequestTest extends AndroidTestCase {
     }
     public void testCreateUser()
     {
-        validicManager.performRequest(createUserRequest, new RequestListener<ValidicUser>() {
+        validicManager.execute(createUserRequest, new RequestListener<ValidicUser>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e(TAG, spiceException.getMessage());
@@ -52,7 +54,7 @@ public class CreateUserRequestTest extends AndroidTestCase {
             @Override
             public void onRequestSuccess(ValidicUser validicUser) {
                 String result = new Gson().toJson(validicUser);
-                Log.i(TAG,result);
+                Log.i(TAG, result);
             }
         });
     }

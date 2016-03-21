@@ -42,7 +42,9 @@ import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.validic.ValidicManager;
+import com.medcorp.nevo.validic.ValidicMedManager;
 import com.medcorp.nevo.validic.model.NevoUser;
+import com.medcorp.nevo.validic.model.NevoUserModel;
 import com.medcorp.nevo.validic.model.ValidicDeleteRecordModel;
 import com.medcorp.nevo.validic.model.ValidicReadAllRecordsModel;
 import com.medcorp.nevo.validic.model.ValidicReadRecordModel;
@@ -54,6 +56,7 @@ import com.medcorp.nevo.validic.request.AddRecordRequest;
 import com.medcorp.nevo.validic.request.DeleteRecordRequest;
 import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
 import com.medcorp.nevo.validic.request.GetRecordRequest;
+import com.medcorp.nevo.validic.request.NevoUserLoginRequest;
 import com.medcorp.nevo.validic.request.UpdateRecordRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
@@ -98,7 +101,9 @@ public class ApplicationModel extends Application {
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private ValidicManager validicManager;
+    private ValidicMedManager validicMedManager;
     private NevoUser  nevoUser;
+    //TODO this is test code
     private final String DEFAULT_NEVO_USER_TOKEN = "a6b3e3fa8b8d9f59bb27fe4c11ed68df";
     private final String DEFAULT_VALIDIC_USER_ID = "56e8c19b1147b14e3c000658";
     private final String DEFAULT_VALIDIC_RECORD_ID = "56ea5f7d36c913062d000233";
@@ -117,6 +122,7 @@ public class ApplicationModel extends Application {
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         updateGoogleFit();
         validicManager = new ValidicManager(this);
+        validicMedManager = new ValidicMedManager(this);
         nevoUser = new NevoUser();
         //TODO here assume a default user gaillysu@med-corp.net has logged in, and has got connected to validic marketplace.
         nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
@@ -368,6 +374,11 @@ public class ApplicationModel extends Application {
         return validicManager;
     }
 
+    public ValidicMedManager getValidicMedManager() {
+        return validicMedManager;
+    }
+
+
     public NevoUser getNevoUser(){
         return nevoUser;
     }
@@ -438,7 +449,21 @@ public class ApplicationModel extends Application {
     }
     public void nevoUserLogin(String email,String password,final ResponseListener listener)
     {
-        //TODO here add a record in the user table with uid/token
+        NevoUserLoginRequest nevoUserLoginRequest = new NevoUserLoginRequest(email,password);
+
+        validicMedManager.execute(nevoUserLoginRequest, new RequestListener<NevoUserModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                spiceException.printStackTrace();
+                processListener(listener, spiceException, true);
+            }
+
+            @Override
+            public void onRequestSuccess(NevoUserModel nevoUserModel) {
+                processListener(listener, nevoUserModel,false);
+                Log.i("ApplicationModel","nevo user login: "+nevoUserModel.getState());
+            }
+        });
     }
 
     public void addValidicRecord(int nevoUserID,Date date,final ResponseListener listener)
