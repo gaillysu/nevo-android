@@ -31,7 +31,6 @@ public class StepsFragmentPagerAdapter extends FragmentPagerAdapter{
         switch (position){
             case 0:
                 StepsTodayFragment stepsTodayFragment = (StepsTodayFragment) StepsTodayFragment.instantiate(context,StepsTodayFragment.class.getName());
-                stepsFragment.setOnStepsListener(stepsTodayFragment);
                 return stepsTodayFragment;
             case 1:
                 return StepsHistoryFragment.instantiate(context, StepsHistoryFragment.class.getName());
