@@ -24,8 +24,11 @@ import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
 import com.medcorp.nevo.model.SettingsMenuItem;
+import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Preferences;
+import com.medcorp.nevo.validic.model.NevoUserModel;
 import com.medcorp.nevo.view.ToastHelper;
+import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +129,17 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             if(isChecked)
             {
                 //TODO this is test code
-                getModel().nevoUserLogin("gaillysu@med-corp","Ma314109",null);
+                getModel().nevoUserLogin("gaillysu@med-corp.net", "Ma314109", new ResponseListener<NevoUserModel>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+
+                    }
+
+                    @Override
+                    public void onRequestSuccess(NevoUserModel nevoUserModel) {
+                        ToastHelper.showLongToast(getContext(),nevoUserModel.getState());
+                    }
+                });
             }
         }
     }

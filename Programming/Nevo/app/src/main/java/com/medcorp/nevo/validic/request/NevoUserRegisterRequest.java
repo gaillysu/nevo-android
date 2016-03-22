@@ -51,6 +51,7 @@ public class NevoUserRegisterRequest extends RetrofitSpiceRequest<NevoUserModel,
 
     @Override
     public NevoUserModel loadDataFromNetwork() throws Exception {
-        return getService().registerNevoUser(buildRequestBody(),"application/x-www-form-urlencoded");
+        RegisterNevoUserRequestObject object = buildRequestBody();
+        return getService().registerNevoUser(object.getParams().getTime(),object.getParams().getCheck_key(),object.getUser(),object.getPassword());
     }
 }

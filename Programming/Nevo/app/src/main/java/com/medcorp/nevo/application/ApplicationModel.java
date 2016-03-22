@@ -383,18 +383,24 @@ public class ApplicationModel extends Application {
         return nevoUser;
     }
 
-    private void processListener(final ResponseListener listener,final Object result,final boolean exception)
+    private void processListener(final ResponseListener listener,final Object result)
     {
-        if(listener!=null && result!=null) {
+        if(result!=null) {
             final Handler handler = new Handler(getMainLooper());
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(exception) {
-                        listener.onRequestFailure((SpiceException)result);
+                    if(result instanceof SpiceException)
+                    {
+                        ToastHelper.showLongToast(ApplicationModel.this,((SpiceException) result).getCause().getLocalizedMessage());
                     }
-                    else {
-                        listener.onRequestSuccess(result);
+                    if(listener!=null)
+                    {
+                        if (result instanceof SpiceException) {
+                            listener.onRequestFailure((SpiceException) result);
+                        } else {
+                            listener.onRequestSuccess(result);
+                        }
                     }
                 }
             });
@@ -434,7 +440,7 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
-                processListener(listener, spiceException,true);
+                processListener(listener, spiceException);
             }
 
             @Override
@@ -443,7 +449,7 @@ public class ApplicationModel extends Application {
                 //TODO here get status 200, update "validicID" field where the token == nevoUserToken in the "user" table
                 nevoUser.setValidicID(validicUser.getUser().get_id());
                 nevoUser.setValidicUserAccessToken(validicUser.getUser().getAccess_token());
-                processListener(listener, validicUser,false);
+                processListener(listener, validicUser);
             }
         });
     }
@@ -455,12 +461,12 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
-                processListener(listener, spiceException, true);
+                processListener(listener, spiceException);
             }
 
             @Override
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                processListener(listener, nevoUserModel,false);
+                processListener(listener, nevoUserModel);
                 Log.i("ApplicationModel","nevo user login: "+nevoUserModel.getState());
             }
         });
@@ -473,10 +479,11 @@ public class ApplicationModel extends Application {
         ValidicRecord record = new ValidicRecord();
         record.setSteps(steps.getSteps());
 
-        String utc_offset = "+00:00";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'00:00:00");
+        String utc_offset = new SimpleDateFormat("z").format(date).substring(3);
+        Date theDay = Common.removeTimeFromDate(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:00:00+00:00");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String timestamp  = sdf.format(date) + "+00:00";
+        String timestamp  = sdf.format(theDay);
 
         record.setTimestamp(timestamp);
         record.setUtc_offset(utc_offset);
@@ -491,7 +498,7 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
-                processListener(listener, spiceException,true);
+                processListener(listener, spiceException);
             }
 
             @Override
@@ -499,7 +506,7 @@ public class ApplicationModel extends Application {
                 Log.i("ApplicationModel", "validicRecordModel = " + validicRecordModel);
                 getNevoUser().setLastValidicRecordID(validicRecordModel.getRoutine().get_id());
                 //TODO update steps table where steps.Id = record.activity_id
-                processListener(listener, validicRecordModel,false);
+                processListener(listener, validicRecordModel);
             }
         });
     }
@@ -512,12 +519,12 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
-                processListener(listener, spiceException, true);
+                processListener(listener, spiceException);
             }
 
             @Override
             public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
-                processListener(listener, validicRecordModel, false);
+                processListener(listener, validicRecordModel);
             }
         });
     }

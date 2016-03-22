@@ -1,21 +1,21 @@
 package com.medcorp.nevo.validic.retrofit;
 
-import com.medcorp.nevo.validic.model.RegisterNevoUserRequestObject;
-import com.medcorp.nevo.validic.model.LoginNevoUserRequestObject;
-import com.medcorp.nevo.validic.model.NevoUserModel;
 
-import retrofit.http.Body;
-import retrofit.http.Header;
+import com.medcorp.nevo.validic.model.NevoUserModel;
 import retrofit.http.POST;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 
 /**
  * Created by med on 16/3/21.
  */
 public interface MedCorp {
 
+    @FormUrlEncoded
     @POST("/api/account/register")
-    NevoUserModel registerNevoUser(@Body RegisterNevoUserRequestObject object, @Header("Content-Type") String type);
+    NevoUserModel registerNevoUser(@Field("params[time]") long time,@Field("params[check_key]") String check_key, @Field("user") String user, @Field("password") String password);
 
+    @FormUrlEncoded
     @POST("/api/account/login")
-    NevoUserModel loginNevoUser(@Body LoginNevoUserRequestObject object, @Header("Content-Type") String type);
+    NevoUserModel loginNevoUser(@Field("params[time]") long time,@Field("params[check_key]") String check_key, @Field("user") String user, @Field("password") String password);
 }

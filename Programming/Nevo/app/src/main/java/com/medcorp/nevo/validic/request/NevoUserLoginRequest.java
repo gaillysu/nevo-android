@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by gaillysu on 16/3/14.
@@ -50,6 +52,7 @@ public class NevoUserLoginRequest extends RetrofitSpiceRequest<NevoUserModel,Med
 
     @Override
     public NevoUserModel loadDataFromNetwork() throws Exception {
-        return getService().loginNevoUser(buildRequestBody(), "application/x-www-form-urlencoded");
+        LoginNevoUserRequestObject object = buildRequestBody();
+        return getService().loginNevoUser(object.getParams().getTime(),object.getParams().getCheck_key(),object.getUser(),object.getPassword());
     }
 }
