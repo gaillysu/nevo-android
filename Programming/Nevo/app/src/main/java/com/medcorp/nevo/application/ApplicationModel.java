@@ -22,6 +22,7 @@ import com.medcorp.nevo.ble.controller.OtaControllerImpl;
 import com.medcorp.nevo.ble.controller.SyncController;
 import com.medcorp.nevo.ble.controller.SyncControllerImpl;
 import com.medcorp.nevo.ble.model.request.NumberOfStepsGoal;
+import com.medcorp.nevo.cloudsync.CloudSyncManager;
 import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
@@ -52,12 +53,15 @@ import com.medcorp.nevo.validic.model.ValidicRecord;
 import com.medcorp.nevo.validic.model.ValidicRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecord;
+import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
 import com.medcorp.nevo.validic.request.AddRecordRequest;
 import com.medcorp.nevo.validic.request.DeleteRecordRequest;
 import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
 import com.medcorp.nevo.validic.request.GetRecordRequest;
 import com.medcorp.nevo.validic.request.NevoUserLoginRequest;
 import com.medcorp.nevo.validic.request.UpdateRecordRequest;
+import com.medcorp.nevo.validic.request.sleep.AddSleepRecordRequest;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
 import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
 import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
@@ -102,6 +106,7 @@ public class ApplicationModel extends Application {
     private GoogleFitTaskCounter googleFitTaskCounter;
     private ValidicManager validicManager;
     private ValidicMedManager validicMedManager;
+    private CloudSyncManager cloudSyncManager;
     private NevoUser  nevoUser;
     //TODO this is test code
     private final String DEFAULT_NEVO_USER_TOKEN = "a6b3e3fa8b8d9f59bb27fe4c11ed68df";
@@ -123,6 +128,7 @@ public class ApplicationModel extends Application {
         updateGoogleFit();
         validicManager = new ValidicManager(this);
         validicMedManager = new ValidicMedManager(this);
+        cloudSyncManager = new CloudSyncManager(this);
         nevoUser = new NevoUser();
         //TODO here assume a default user gaillysu@med-corp.net has logged in, and has got connected to validic marketplace.
         nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
@@ -254,6 +260,10 @@ public class ApplicationModel extends Application {
     public void saveDailySleep(Sleep sleep)
     {
         sleepDatabaseHelper.update(sleep);
+    }
+    public Optional<Sleep> getDailySleep(int userid,Date date)
+    {
+        return sleepDatabaseHelper.get(userid, date);
     }
 
     public Alarm addAlarm(Alarm alarm){
@@ -467,7 +477,7 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
                 processListener(listener, nevoUserModel);
-                Log.i("ApplicationModel","nevo user login: "+nevoUserModel.getState());
+                Log.i("ApplicationModel", "nevo user login: " + nevoUserModel.getState());
             }
         });
     }
@@ -583,4 +593,49 @@ public class ApplicationModel extends Application {
             }
         });
     }
+
+    //sleep operation functions:
+    public void addValidicSleepRecord(int nevoUserID,Date date,final ResponseListener listener)
+    {
+        Optional<Sleep> sleep = getDailySleep(nevoUserID,date);
+        if(sleep.isEmpty()) {
+            return;
+        }
+        ValidicSleepRecord record = new ValidicSleepRecord();
+        record.setActivity_id(""+sleep.get().getiD());
+        //validic sleep object , the value is  in seconds
+        record.setAwake(60*sleep.get().getTotalWakeTime());
+        record.setLight(60*sleep.get().getTotalLightTime());
+        record.setDeep(60*sleep.get().getTotalDeepTime());
+        record.setTotal_sleep(60*sleep.get().getTotalSleepTime());
+        //TODO how to caculate the woken times? by hourly wake time is not zero?
+        record.setTimes_woken(0);
+        //REM value is set 0, nevo doesn't give this data
+        record.setRem(0);
+
+        String utc_offset = new SimpleDateFormat("z").format(date).substring(3);
+        Date theDay = Common.removeTimeFromDate(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:00:00+00:00");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String timestamp  = sdf.format(theDay);
+        record.setTimestamp(timestamp);
+        record.setUtc_offset(utc_offset);
+
+        AddSleepRecordRequest addSleepRecordRequest = new AddSleepRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
+        validicManager.execute(addSleepRecordRequest, new RequestListener<ValidicSleepRecordModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                spiceException.printStackTrace();
+                processListener(listener, spiceException);
+            }
+            @Override
+            public void onRequestSuccess(ValidicSleepRecordModel validicSleepRecordModel) {
+                Log.i("ApplicationModel", "validicSleepRecordModel = " + validicSleepRecordModel);
+                //TODO update sleep table where sleep.Id = record.activity_id , it means that the day's sleep has been upload successfully, no need again sync it.
+                processListener(listener, validicSleepRecordModel);
+            }
+        });
+
+    }
+
 }

@@ -9,6 +9,8 @@ import com.medcorp.nevo.validic.model.ValidicReadRecordModel;
 import com.medcorp.nevo.validic.model.ValidicRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.model.sleep.AddSleepRecordRequestObject;
+import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -43,5 +45,11 @@ public interface Validic {
 
     @PUT("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
     ValidicRecordModel updateRecordRequest(@Body UpdateRecordRequestObject object, @Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Path("VALIDIC_RECORD_ID") String recordId, @Header("Content-Type") String type );
+
+    //sleep REST API
+    @POST("/organizations/{ORGANIZATION_ID}/users/{USER_ID}/sleep.json")
+    ValidicSleepRecordModel addSleepRecordRequest(@Body AddSleepRecordRequestObject object, @Path("ORGANIZATION_ID") String organization, @Path("USER_ID") String user, @Header("Content-Type") String type );
+
+
 
 }
