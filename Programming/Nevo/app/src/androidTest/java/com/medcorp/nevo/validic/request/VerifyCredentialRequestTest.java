@@ -5,11 +5,8 @@ import android.util.Log;
 
 import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
-import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-
-import org.json.JSONObject;
 
 /**
  * Created by gaillysu on 16/3/8.

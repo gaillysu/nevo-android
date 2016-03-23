@@ -1,6 +1,7 @@
-package com.medcorp.nevo.validic.retrofit;
+package com.medcorp.nevo.validic.request;
 
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.retrofit.Validic;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**

@@ -46,26 +46,26 @@ import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.ValidicMedManager;
 import com.medcorp.nevo.validic.model.NevoUser;
 import com.medcorp.nevo.validic.model.NevoUserModel;
-import com.medcorp.nevo.validic.model.ValidicDeleteRecordModel;
-import com.medcorp.nevo.validic.model.ValidicReadAllRecordsModel;
-import com.medcorp.nevo.validic.model.ValidicReadRecordModel;
-import com.medcorp.nevo.validic.model.ValidicRecord;
-import com.medcorp.nevo.validic.model.ValidicRecordModel;
+import com.medcorp.nevo.validic.model.routine.ValidicDeleteRoutineRecordModel;
+import com.medcorp.nevo.validic.model.routine.ValidicReadMoreRoutineRecordsModel;
+import com.medcorp.nevo.validic.model.routine.ValidicReadRoutineRecordModel;
+import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecord;
+import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecord;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
-import com.medcorp.nevo.validic.request.AddRecordRequest;
-import com.medcorp.nevo.validic.request.DeleteRecordRequest;
-import com.medcorp.nevo.validic.request.GetAllRecordsRequest;
-import com.medcorp.nevo.validic.request.GetRecordRequest;
+import com.medcorp.nevo.validic.request.routine.AddRoutineRecordRequest;
+import com.medcorp.nevo.validic.request.routine.DeleteRoutineRecordRequest;
+import com.medcorp.nevo.validic.request.routine.GetMoreRoutineRecordsRequest;
+import com.medcorp.nevo.validic.request.routine.GetRoutineRecordRequest;
 import com.medcorp.nevo.validic.request.NevoUserLoginRequest;
-import com.medcorp.nevo.validic.request.UpdateRecordRequest;
+import com.medcorp.nevo.validic.request.routine.UpdateRoutineRecordRequest;
 import com.medcorp.nevo.validic.request.sleep.AddSleepRecordRequest;
-import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
-import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
-import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
-import com.medcorp.nevo.validic.retrofit.VerifyCredentialsRetroRequest;
+import com.medcorp.nevo.validic.request.CreateUserRequestObject;
+import com.medcorp.nevo.validic.request.CreateUserRequestObjectUser;
+import com.medcorp.nevo.validic.request.CreateUserRetroRequest;
+import com.medcorp.nevo.validic.request.VerifyCredentialsRetroRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -486,7 +486,7 @@ public class ApplicationModel extends Application {
     {
         //TODO current app, no use the nevo User ID when save steps record, 0 menas it is a public user.(unlogged in user)
         Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
-        ValidicRecord record = new ValidicRecord();
+        ValidicRoutineRecord record = new ValidicRoutineRecord();
         record.setSteps(steps.getSteps());
 
         String utc_offset = new SimpleDateFormat("z").format(date).substring(3);
@@ -503,8 +503,8 @@ public class ApplicationModel extends Application {
         record.setCalories_burned(steps.getCalories());
         record.setActivity_id(""+steps.getiD());
 
-        AddRecordRequest addRecordRequest = new AddRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
-        validicManager.execute(addRecordRequest, new RequestListener<ValidicRecordModel>() {
+        AddRoutineRecordRequest addRecordRequest = new AddRoutineRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
+        validicManager.execute(addRecordRequest, new RequestListener<ValidicRoutineRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
@@ -512,7 +512,7 @@ public class ApplicationModel extends Application {
             }
 
             @Override
-            public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
+            public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
                 Log.i("ApplicationModel", "validicRecordModel = " + validicRecordModel);
                 getNevoUser().setLastValidicRecordID(validicRecordModel.getRoutine().get_id());
                 //TODO update steps table where steps.Id = record.activity_id
@@ -524,8 +524,8 @@ public class ApplicationModel extends Application {
     public void updateValidicRecord(int nevoUserID,Date date,final ResponseListener listener)
     {
         Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
-        UpdateRecordRequest updateRecordRequest = new UpdateRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID(),steps.getSteps());
-        validicManager.execute(updateRecordRequest, new RequestListener<ValidicRecordModel>() {
+        UpdateRoutineRecordRequest updateRecordRequest = new UpdateRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID(),steps.getSteps());
+        validicManager.execute(updateRecordRequest, new RequestListener<ValidicRoutineRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
@@ -533,7 +533,7 @@ public class ApplicationModel extends Application {
             }
 
             @Override
-            public void onRequestSuccess(ValidicRecordModel validicRecordModel) {
+            public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
                 processListener(listener, validicRecordModel);
             }
         });
@@ -541,16 +541,16 @@ public class ApplicationModel extends Application {
 
     public void getValidicRecord()
     {
-        GetRecordRequest  getRecordRequest = new GetRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
+        GetRoutineRecordRequest getRecordRequest = new GetRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
 
-        validicManager.execute(getRecordRequest, new RequestListener<ValidicReadRecordModel>() {
+        validicManager.execute(getRecordRequest, new RequestListener<ValidicReadRoutineRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
             }
 
             @Override
-            public void onRequestSuccess(ValidicReadRecordModel validicReadRecordModel) {
+            public void onRequestSuccess(ValidicReadRoutineRecordModel validicReadRecordModel) {
                 Log.i("ApplicationModel", "validicReadRecordModel = " + validicReadRecordModel);
             }
         });
@@ -558,16 +558,16 @@ public class ApplicationModel extends Application {
 
     public void getAllValidicRecord()
     {
-        GetAllRecordsRequest getAllRecordsRequest = new GetAllRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID());
+        GetMoreRoutineRecordsRequest getAllRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID());
 
-        validicManager.execute(getAllRecordsRequest, new RequestListener<ValidicReadAllRecordsModel>() {
+        validicManager.execute(getAllRecordsRequest, new RequestListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
             }
 
             @Override
-            public void onRequestSuccess(ValidicReadAllRecordsModel validicReadAllRecordsModel) {
+            public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadAllRecordsModel) {
                 Log.i("ApplicationModel", "validicReadAllRecordsModel total: " + validicReadAllRecordsModel.getSummary().getResults());
                 if(validicReadAllRecordsModel.getSummary().getResults()> 0)
                 {
@@ -579,16 +579,16 @@ public class ApplicationModel extends Application {
 
     public void deleteValidicRecord()
     {
-        DeleteRecordRequest deleteRecordRequest = new DeleteRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
+        DeleteRoutineRecordRequest deleteRecordRequest = new DeleteRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRecordID());
 
-        validicManager.execute(deleteRecordRequest, new RequestListener<ValidicDeleteRecordModel>() {
+        validicManager.execute(deleteRecordRequest, new RequestListener<ValidicDeleteRoutineRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
             }
 
             @Override
-            public void onRequestSuccess(ValidicDeleteRecordModel validicDeleteRecordModel) {
+            public void onRequestSuccess(ValidicDeleteRoutineRecordModel validicDeleteRecordModel) {
                 Log.i("ApplicationModel", "validicDeleteRecordModel = " + validicDeleteRecordModel);
             }
         });

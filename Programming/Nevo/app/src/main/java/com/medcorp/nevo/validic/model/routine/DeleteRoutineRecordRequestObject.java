@@ -1,11 +1,11 @@
-package com.medcorp.nevo.validic.model;
+package com.medcorp.nevo.validic.model.routine;
 
 import com.google.gson.annotations.Expose;
 
 /**
  * Created by gaillysu on 16/3/17.
  */
-public class DeleteRecordRequestObject {
+public class DeleteRoutineRecordRequestObject {
     @Expose
     String access_token;
 

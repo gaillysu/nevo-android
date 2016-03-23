@@ -1,9 +1,9 @@
-package com.medcorp.nevo.validic.model;
+package com.medcorp.nevo.validic.model.routine;
 
 /**
  * Created by gaillysu on 16/3/14.
  */
-public class ValidicRecord {
+public class ValidicRoutineRecord {
     String timestamp;
     String utc_offset;
     double steps;

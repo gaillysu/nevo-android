@@ -1,4 +1,4 @@
-package com.medcorp.nevo.validic.retrofit;
+package com.medcorp.nevo.validic.request;
 
 import com.google.gson.annotations.Expose;
 

@@ -5,12 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.medcorp.nevo.validic.ValidicManager;
-import com.medcorp.nevo.validic.model.NevoUser;
-import com.medcorp.nevo.validic.model.Profile;
 import com.medcorp.nevo.validic.model.ValidicUser;
-import com.medcorp.nevo.validic.retrofit.CreateUserRequestObject;
-import com.medcorp.nevo.validic.retrofit.CreateUserRequestObjectUser;
-import com.medcorp.nevo.validic.retrofit.CreateUserRetroRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 

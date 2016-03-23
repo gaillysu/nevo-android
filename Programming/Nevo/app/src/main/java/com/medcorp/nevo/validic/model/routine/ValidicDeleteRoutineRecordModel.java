@@ -1,9 +1,9 @@
-package com.medcorp.nevo.validic.model;
+package com.medcorp.nevo.validic.model.routine;
 
 /**
  * Created by gaillysu on 16/3/17.
  */
-public class ValidicDeleteRecordModel {
+public class ValidicDeleteRoutineRecordModel {
     String code;
     String message;
 

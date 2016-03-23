@@ -1,22 +1,23 @@
-package com.medcorp.nevo.validic.model;
+package com.medcorp.nevo.validic.model.routine;
 
 import com.google.gson.annotations.Expose;
+import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecord;
 
 /**
  * Created by gaillysu on 16/3/17.
  */
-public class AddRecordRequestObject {
+public class AddRoutineRecordRequestObject {
     @Expose
-    ValidicRecord routine;
+    ValidicRoutineRecord routine;
 
     @Expose
     String access_token;
 
-    public ValidicRecord getRoutine() {
+    public ValidicRoutineRecord getRoutine() {
         return routine;
     }
 
-    public void setRoutine(ValidicRecord routine) {
+    public void setRoutine(ValidicRoutineRecord routine) {
         this.routine = routine;
     }
 

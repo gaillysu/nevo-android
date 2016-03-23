@@ -1,12 +1,12 @@
-package com.medcorp.nevo.validic.model;
+package com.medcorp.nevo.validic.model.routine;
 
 /**
  * Created by gaillysu on 16/3/14.
  */
-public class ValidicRecordModel {
+public class ValidicRoutineRecordModel {
     String code;
     String message;
-    ValidicRecordModelBase routine;
+    ValidicRoutineRecordModelBase routine;
 
     public String getCode() {
         return code;
@@ -24,11 +24,11 @@ public class ValidicRecordModel {
         this.message = message;
     }
 
-    public ValidicRecordModelBase getRoutine() {
+    public ValidicRoutineRecordModelBase getRoutine() {
         return routine;
     }
 
-    public void setRoutine(ValidicRecordModelBase routine) {
+    public void setRoutine(ValidicRoutineRecordModelBase routine) {
         this.routine = routine;
     }
 }
