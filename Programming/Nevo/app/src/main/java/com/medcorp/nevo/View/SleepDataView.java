@@ -147,17 +147,16 @@ public class SleepDataView extends View {
                 else {
                     end = end + 270;
                 }
-                initStart = end;
 
                 JSONArray hourlyWakeTime = new JSONArray(mSleepAnalysisResult.getString("mergeHourlyWakeTime"));
                 JSONArray hourlyLightTime = new JSONArray(mSleepAnalysisResult.getString("mergeHourlyLightTime"));
                 JSONArray hourlyDeepTime = new JSONArray(mSleepAnalysisResult.getString("mergeHourlyDeepTime"));
 
-                if(hourlyWakeTime.length() == 24 && hourlyLightTime.length() == 24 && hourlyDeepTime.length() == 24 )
+                if(hourlyWakeTime.length() >0 && hourlyLightTime.length() >0 && hourlyDeepTime.length() >0 )
                 {
                     long total = 0; //(endsleep - startsleep) / 1000 / 60;
                     int sleepTotal = 0;
-                    for(int k = 0; k < 24; k++){
+                    for(int k = 0; k < hourlyWakeTime.length(); k++){
                         total+= hourlyWakeTime.getInt(k);
                         total+= hourlyLightTime.getInt(k);
                         total+= hourlyDeepTime.getInt(k);
