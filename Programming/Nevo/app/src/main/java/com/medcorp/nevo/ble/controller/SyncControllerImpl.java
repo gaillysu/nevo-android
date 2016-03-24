@@ -285,12 +285,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 else if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
-                    DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
-                    mCurrentDay = 0;
-                    savedDailyHistory = infopacket.getDailyTrackerInfo();
-                    if(!savedDailyHistory.isEmpty()) {
-                        mSyncAllFlag = true;
-                        getDailyTracker(mCurrentDay);
+                    if(!mSyncAllFlag) {
+                        DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
+                        mCurrentDay = 0;
+                        savedDailyHistory = infopacket.getDailyTrackerInfo();
+                        if (!savedDailyHistory.isEmpty()) {
+                            mSyncAllFlag = true;
+                            getDailyTracker(mCurrentDay);
+                        }
                     }
                 }
                 else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
@@ -482,6 +484,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         } else {
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             packetsBuffer.clear();
+            mSyncAllFlag = false;
         }
     }
 
