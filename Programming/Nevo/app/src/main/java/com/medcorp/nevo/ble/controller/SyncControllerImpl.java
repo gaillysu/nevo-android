@@ -71,7 +71,6 @@ import com.medcorp.nevo.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
-import net.medcorp.library.ble.event.BLEExceptionEvent;
 import net.medcorp.library.ble.event.BLEResponseDataEvent;
 import net.medcorp.library.ble.exception.BLEConnectTimeoutException;
 import net.medcorp.library.ble.exception.BLENotSupportedException;
@@ -472,6 +471,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             mTimeOutcount = 0;
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
+            Log.w("Karl","SET RTC");
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -479,7 +479,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     setRtc();
                 }
             }, 2000);
-
         } else {
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             packetsBuffer.clear();
@@ -492,7 +491,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
      The watch should be emptied after all data have been saved.
      */
     private void syncActivityData() {
-        Log.w("Karl","Are you atleast trying to sync?");
         long lastSync = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getLong(Constants.LAST_SYNC, 0);
         String lastTimeZone = mContext.getSharedPreferences(Constants.PREF_NAME, 0).getString(Constants.LAST_SYNC_TIME_ZONE, "");
         if(Calendar.getInstance().getTimeInMillis()-lastSync > SYNC_INTERVAL
@@ -600,11 +598,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
         //when forget the watch, force a big sync when got connected again
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
-    }
-
-    @Subscribe
-    public void onEvent(BLEExceptionEvent e) {
-        EventBus.getDefault().post(new BLEConnectionStateChangedEvent(false,""));
     }
 
     /**
