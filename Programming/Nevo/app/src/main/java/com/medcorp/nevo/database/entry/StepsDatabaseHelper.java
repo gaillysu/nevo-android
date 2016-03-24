@@ -44,7 +44,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
         int result = -1;
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, object.getUserID()).and().eq(StepsDAO.fDate, object.getDate()).query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, object.getNevoUserID()).and().eq(StepsDAO.fDate, object.getDate()).query();
             if(stepsDAOList.isEmpty()) return add(object)!=null;
             StepsDAO daoobject = convertToDao(object);
             daoobject.setID(stepsDAOList.get(0).getID());
@@ -56,9 +56,9 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     }
 
     @Override
-    public boolean remove(int userId,Date date) {
+    public boolean remove(String userId,Date date) {
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userId).and().eq(StepsDAO.fDate,date.getTime()).query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fDate,date.getTime()).query();
             if(!stepsDAOList.isEmpty())
             {
                 return databaseHelper.getStepsDao().delete(stepsDAOList)>=0;
@@ -70,15 +70,15 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     }
 
     @Override
-    public List<Optional<Steps>> get(int userId) {
-        return null;
+    public List<Optional<Steps>> get(String userId) {
+        return getAll(userId);
     }
 
     @Override
-    public Optional<Steps>  get(int userId,Date date) {
+    public Optional<Steps>  get(String userId,Date date) {
         List<Optional<Steps> > stepsList = new ArrayList<Optional<Steps> >();
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fUserID, userId).and().eq(StepsDAO.fDate, date.getTime()).query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fDate, date.getTime()).query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 Optional<Steps> stepsOptional = new Optional<>();
                 stepsOptional.set(convertToNormal(stepsDAO));
@@ -91,10 +91,10 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     }
 
     @Override
-    public List<Optional<Steps> > getAll() {
+    public List<Optional<Steps> > getAll(String userId) {
         List<Optional<Steps> > stepsList = new ArrayList<Optional<Steps> >();
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 Optional<Steps> stepsOptional = new Optional<>();
                 stepsOptional.set(convertToNormal(stepsDAO));
@@ -108,7 +108,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     private StepsDAO convertToDao(Steps steps){
         StepsDAO stepsDao = new StepsDAO();
-        stepsDao.setUserID(steps.getUserID());
+        stepsDao.setNevoUserID(steps.getNevoUserID());
         stepsDao.setCreatedDate(steps.getCreatedDate());
         stepsDao.setDate(steps.getDate());
         stepsDao.setSteps(steps.getSteps());
@@ -128,12 +128,13 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         stepsDao.setNoActivityTime(steps.getNoActivityTime());
         stepsDao.setGoal(steps.getGoal());
         stepsDao.setRemarks(steps.getRemarks());
+        stepsDao.setValidicRecordID(steps.getValidicRecordID());
         return stepsDao;
     }
 
     private Steps convertToNormal(StepsDAO stepsDAO){
         Steps steps = new Steps(stepsDAO.getCreatedDate());
-        steps.setUserID(stepsDAO.getUserID());
+        steps.setNevoUserID(stepsDAO.getNevoUserID());
         steps.setiD(stepsDAO.getID());
         steps.setDate(stepsDAO.getDate());
         steps.setSteps(stepsDAO.getSteps());
@@ -153,6 +154,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         steps.setNoActivityTime(stepsDAO.getNoActivityTime());
         steps.setGoal(stepsDAO.getGoal());
         steps.setRemarks(stepsDAO.getRemarks());
+        steps.setValidicRecordID(stepsDAO.getValidicRecordID());
         return steps;
     }
 

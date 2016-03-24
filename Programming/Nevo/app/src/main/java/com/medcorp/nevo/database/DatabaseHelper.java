@@ -11,7 +11,6 @@ import com.j256.ormlite.table.TableUtils;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.database.dao.AlarmDAO;
 import com.medcorp.nevo.database.dao.GoalDAO;
-import com.medcorp.nevo.database.dao.HeartbeatDAO;
 import com.medcorp.nevo.database.dao.IDailyHistory;
 import com.medcorp.nevo.database.dao.SleepDAO;
 import com.medcorp.nevo.database.dao.StepsDAO;
@@ -25,13 +24,12 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "nevowatch.db";
-    private static final int DATABASE_VERSION = 4; // from 3 to 4, refactor table "Preset" to "Goal"
-
+    private static final int DATABASE_VERSION = 5; // from 3 to 4, refactor table "Preset" to "Goal"
+                                                   // from 4 to 5, fix table struct to save login data and Validic data.
     private  Dao<IDailyHistory,Integer> dailyhistoryDao = null;
     private  Dao<UserDAO,Integer> userDao = null;
     private  Dao<SleepDAO,Integer> sleepDao = null;
     private  Dao<StepsDAO,Integer> stepsDao = null;
-    private  Dao<HeartbeatDAO,Integer> heartbeatDAO = null;
     private  Dao<AlarmDAO,Integer> alarmDao = null;
     private  Dao<GoalDAO,Integer> goalsDAO = null;
     private  Context context;
@@ -60,7 +58,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, UserDAO.class);
             TableUtils.createTable(connectionSource, SleepDAO.class);
             TableUtils.createTable(connectionSource, StepsDAO.class);
-            TableUtils.createTable(connectionSource, HeartbeatDAO.class);
             TableUtils.createTable(connectionSource, AlarmDAO.class);
             TableUtils.createTable(connectionSource, GoalDAO.class);
         } catch (SQLException e) {
@@ -87,7 +84,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, UserDAO.class, true);
             TableUtils.dropTable(connectionSource, SleepDAO.class, true);
             TableUtils.dropTable(connectionSource, StepsDAO.class, true);
-            TableUtils.dropTable(connectionSource, HeartbeatDAO.class, true);
             TableUtils.dropTable(connectionSource, AlarmDAO.class, true);
             TableUtils.dropTable(connectionSource, GoalDAO.class, true);
             onCreate(sqliteDatabase, connectionSource);
@@ -118,11 +114,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return stepsDao;
     }
 
-    public Dao<HeartbeatDAO, Integer> getHeartbeatDao() throws SQLException {
-        if (heartbeatDAO == null)
-            heartbeatDAO = getDao(HeartbeatDAO.class);
-        return heartbeatDAO;
-    }
 
     public Dao<AlarmDAO, Integer> getAlarmDao() throws SQLException {
         if (alarmDao== null)

@@ -7,7 +7,9 @@ public class Sleep implements Comparable<Sleep>{
 
     private int iD;
 
-    private int userID;
+    private String validicRecordID;
+
+    private String nevoUserID;
 
     private final long createdDate;
 
@@ -62,10 +64,6 @@ public class Sleep implements Comparable<Sleep>{
         this.iD = iD;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
     public void setTotalSleepTime(int totalSleepTime) {
         this.totalSleepTime = totalSleepTime;
     }
@@ -112,10 +110,6 @@ public class Sleep implements Comparable<Sleep>{
 
     public int getiD() {
         return iD;
-    }
-
-    public int getUserID() {
-        return userID;
     }
 
     public long getCreatedDate() {
@@ -181,6 +175,22 @@ public class Sleep implements Comparable<Sleep>{
 
     public void setDate(long date) {
         this.date = date;
+    }
+
+    public String getValidicRecordID() {
+        return validicRecordID;
+    }
+
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
+    }
+
+    public String getNevoUserID() {
+        return nevoUserID;
+    }
+
+    public void setNevoUserID(String nevoUserID) {
+        this.nevoUserID = nevoUserID;
     }
 
     @Override

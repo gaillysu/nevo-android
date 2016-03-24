@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by karl-john on 17/11/15.
  */
-public class GoalDatabaseHelper implements iEntryDatabaseHelper<Goal> {
+public class GoalDatabaseHelper implements iSettingDatabaseHelper<Goal> {
 
     private DatabaseHelper databaseHelper;
 
@@ -55,7 +55,7 @@ public class GoalDatabaseHelper implements iEntryDatabaseHelper<Goal> {
     }
 
     @Override
-    public boolean remove(int presetId,Date date) {
+    public boolean remove(int presetId) {
         try {
             List<GoalDAO> goalDAOList = databaseHelper.getGoalDao().queryBuilder().where().eq(GoalDAO.iDString, presetId).query();
             if(!goalDAOList.isEmpty())
@@ -82,12 +82,6 @@ public class GoalDatabaseHelper implements iEntryDatabaseHelper<Goal> {
             e.printStackTrace();
         }
         return presetList;
-    }
-
-    @Override
-    public Optional<Goal> get(int presetId,Date date) {
-        List<Optional<Goal>> presetList = get(presetId);
-        return presetList.isEmpty()? new Optional<Goal>(): presetList.get(0);
     }
 
     @Override

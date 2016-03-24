@@ -119,7 +119,7 @@ public class StepsTodayFragment extends BaseFragment {
         int dailySteps = 0;
         int dailyGoal =  7000;
         // default goal which comes from nevo, when run app firstly
-        Steps steps =  getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
+        Steps steps =  getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
         if(steps != null) {
              dailySteps = steps.getSteps();
              dailyGoal =  steps.getGoal();
@@ -137,7 +137,7 @@ public class StepsTodayFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(0, Common.removeTimeFromDate(new Date()));
+            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
             if (steps == null) {
                 return;
             }

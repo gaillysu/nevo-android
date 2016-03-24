@@ -128,8 +128,8 @@ public class SleepTodayFragment extends BaseFragment {
         List<Sleep> sleepList = new ArrayList<Sleep>();
         Date today = Common.removeTimeFromDate(new Date());
         Date yesterday = new Date(today.getTime()-24*60*60*1000);
-        Optional<Sleep> todaySleep = helper.get(0,today);
-        Optional<Sleep> yesterdaySleep = helper.get(0,yesterday);
+        Optional<Sleep> todaySleep = helper.get(getModel().getNevoUser().getNevoUserID(),today);
+        Optional<Sleep> yesterdaySleep = helper.get(getModel().getNevoUser().getNevoUserID(),yesterday);
         if(yesterdaySleep.notEmpty()) {
             sleepList.add(yesterdaySleep.get());
         }

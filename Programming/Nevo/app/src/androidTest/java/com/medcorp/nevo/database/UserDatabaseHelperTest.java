@@ -40,10 +40,11 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
 
     public void testAdd()
     {
+        addUser.setNevoUserID("999");
         Optional<User> thisUser1 = db.add(addUser);
         assertEquals(false, thisUser1.isEmpty());
         assertEquals(true, thisUser1.get().getId() != -1);
-        Optional<User> thisUser2 = db.get(thisUser1.get().getId(),null);
+        Optional<User> thisUser2 = db.get(thisUser1.get().getNevoUserID(),null);
 
         assertEquals(addUser.getId(), thisUser2.get().getId());
         assertEquals(addUser.getFirstName(), thisUser2.get().getFirstName());
@@ -52,11 +53,12 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
     }
     public void testRemove()
     {
+        addUser.setNevoUserID("1000");
         Optional<User> thisUser1 = db.add(removeUser);
         assertEquals(false, thisUser1.isEmpty());
         assertEquals(true, thisUser1.get().getId()!= -1);
-        assertEquals(true, db.remove(thisUser1.get().getId(), null));
-        Optional<User> thisUser2 = db.get(thisUser1.get().getId(),null);
+        assertEquals(true, db.remove(thisUser1.get().getNevoUserID(), null));
+        Optional<User> thisUser2 = db.get(thisUser1.get().getNevoUserID(),null);
         assertEquals(true, thisUser2.isEmpty());
     }
 
@@ -64,6 +66,7 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
     {
 
         //add new user to update
+        updateUser.setNevoUserID("1001");
         Optional<User> updatedUser = db.add(updateUser);
         assertEquals(false, updatedUser.isEmpty());
         updateUser = updatedUser.get();
@@ -74,7 +77,7 @@ public class UserDatabaseHelperTest extends AndroidTestCase {
 
         assertEquals(true, db.update(updateUser));
 
-        Optional<User> thisUser2 = db.get(updateUser.getId(),null);
+        Optional<User> thisUser2 = db.get(updateUser.getNevoUserID(),null);
         assertEquals(false, thisUser2.isEmpty());
 
         assertEquals(updateUser.getId(),thisUser2.get().getId());

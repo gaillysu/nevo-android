@@ -38,7 +38,7 @@ public class GoalDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false,thisPreset1.isEmpty());
         addGoal = thisPreset1.get();
 
-        Optional<Goal> thisPreset2 = db.get(addGoal.getId(),null);
+        Optional<Goal> thisPreset2 = db.get(addGoal.getId()).get(0);
         assertEquals(false,thisPreset2.isEmpty());
 
         assertEquals(addGoal.getLabel(),thisPreset2.get().getLabel());
@@ -58,7 +58,7 @@ public class GoalDatabaseHelperTest extends AndroidTestCase {
 
         assertEquals(true, db.update(updateGoal));
 
-        Optional<Goal> thisPreset2 = db.get(updateGoal.getId(),null);
+        Optional<Goal> thisPreset2 = db.get(updateGoal.getId()).get(0);
         assertEquals(false,thisPreset2.isEmpty());
 
         assertEquals(thisPreset2.get().isStatus(), updateGoal.isStatus());
@@ -72,9 +72,9 @@ public class GoalDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false,thisPreset1.isEmpty());
         removeGoal = thisPreset1.get();
 
-        assertEquals(true,db.remove(removeGoal.getId(),null));
+        assertEquals(true,db.remove(removeGoal.getId()));
 
-        Optional<Goal> thisPreset2 = db.get(removeGoal.getId(),null);
+        Optional<Goal> thisPreset2 = db.get(removeGoal.getId()).get(0);
         assertEquals(true,thisPreset2.isEmpty());
 
     }

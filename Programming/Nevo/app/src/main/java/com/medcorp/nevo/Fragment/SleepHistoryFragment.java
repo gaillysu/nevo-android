@@ -108,7 +108,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         List<BarEntry> yValue = new ArrayList<BarEntry>();
 
         SleepDatabaseHelper helper = new SleepDatabaseHelper(getContext());
-        List<Sleep> sleepList = helper.convertToNormalList(helper.getAll());
+        List<Sleep> sleepList = helper.convertToNormalList(helper.getAll(getModel().getNevoUser().getNevoUserID()));
         SleepSorter sorter = new SleepSorter();
         Collections.sort(sleepList, sorter);
         SleepDataHandler handler = new SleepDataHandler(sleepList);

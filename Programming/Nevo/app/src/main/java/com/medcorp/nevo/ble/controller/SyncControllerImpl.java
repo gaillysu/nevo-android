@@ -344,7 +344,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //update steps/sleep tables
                     Steps steps = new Steps(history.getCreated());
                     steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-
+                    steps.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
                     steps.setSteps(history.getSteps());
                     steps.setCalories((int) history.getCalories());
                     steps.setDistance((int) history.getDistance());
@@ -382,6 +382,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
                         sleep.setStart(0);
                         sleep.setEnd(0);
+                        sleep.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
                         try {
                             sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
                         } catch (JSONException e) {
@@ -441,7 +442,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     DailyStepsNevoPacket stepPacket = packet.newDailyStepsNevoPacket();
                     steps.setSteps(stepPacket.getDailySteps());
                     steps.setGoal(stepPacket.getDailyStepsGoal());
-
+                    steps.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
                     //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
                     ((ApplicationModel)mContext).saveDailySteps(steps);
                     //end save

@@ -27,6 +27,7 @@ import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
 import com.medcorp.nevo.database.entry.GoalDatabaseHelper;
 import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
 import com.medcorp.nevo.database.entry.StepsDatabaseHelper;
+import com.medcorp.nevo.database.entry.UserDatabaseHelper;
 import com.medcorp.nevo.event.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.nevo.event.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.nevo.event.GoogleFitUpdateEvent;
@@ -39,6 +40,7 @@ import com.medcorp.nevo.model.Alarm;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.model.User;
 import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
@@ -58,6 +60,7 @@ import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicReadSleepRecordModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecord;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
+import com.medcorp.nevo.validic.request.NevoUserRegisterRequest;
 import com.medcorp.nevo.validic.request.routine.AddRoutineRecordRequest;
 import com.medcorp.nevo.validic.request.routine.DeleteRoutineRecordRequest;
 import com.medcorp.nevo.validic.request.routine.GetMoreRoutineRecordsRequest;
@@ -104,6 +107,7 @@ public class ApplicationModel extends Application {
     private SleepDatabaseHelper sleepDatabaseHelper;
     private AlarmDatabaseHelper alarmDatabaseHelper;
     private GoalDatabaseHelper goalDatabaseHelper;
+    private UserDatabaseHelper userDatabaseHelper;
     private boolean firmwareUpdateAlertDailog = false;
     //if it is -1, means mcu version hasn't be read
     private int mcuFirmwareVersion = -1;
@@ -113,12 +117,7 @@ public class ApplicationModel extends Application {
     private ValidicManager validicManager;
     private ValidicMedManager validicMedManager;
     private CloudSyncManager cloudSyncManager;
-    private NevoUser  nevoUser;
-    //TODO this is test code
-    private final String DEFAULT_NEVO_USER_TOKEN = "a6b3e3fa8b8d9f59bb27fe4c11ed68df";
-    private final String DEFAULT_VALIDIC_USER_ID = "56e8c19b1147b14e3c000658";
-    private final String DEFAULT_VALIDIC_RECORD_ID = "56ea5f7d36c913062d000233";
-    private final String DEFAULT_VALIDIC_USER_TOKEN = "RyuWaZ5yVXixE3TTCEPg";
+    private User  nevoUser;
 
     @Override
     public void onCreate() {
@@ -131,16 +130,13 @@ public class ApplicationModel extends Application {
         sleepDatabaseHelper = new SleepDatabaseHelper(this);
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
+        userDatabaseHelper = new UserDatabaseHelper(this);
         updateGoogleFit();
         validicManager = new ValidicManager(this);
         validicMedManager = new ValidicMedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
-        nevoUser = new NevoUser();
-        //TODO here assume a default user gaillysu@med-corp.net has logged in, and has got connected to validic marketplace.
-        nevoUser.setToken(DEFAULT_NEVO_USER_TOKEN);
-        nevoUser.setValidicID(DEFAULT_VALIDIC_USER_ID);
-        nevoUser.setLastValidicRoutineRecordID(DEFAULT_VALIDIC_RECORD_ID);
-        nevoUser.setValidicUserAccessToken(DEFAULT_VALIDIC_USER_TOKEN);
+        nevoUser = new User(0);
+        nevoUser.setNevoUserID("0"); //"0" means anonymous user login
         verifyValidicCredential();
     }
 
@@ -243,19 +239,23 @@ public class ApplicationModel extends Application {
     }
 
     public List<Steps> getAllSteps(){
-        return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll());
+        return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll(nevoUser.getNevoUserID()));
     }
 
     public List<Alarm> getAllAlarm(){
         return alarmDatabaseHelper.convertToNormalList(alarmDatabaseHelper.getAll());
     }
 
+    public void saveNevoUser(User user)
+    {
+        userDatabaseHelper.update(user);
+    }
     public void saveDailySteps(Steps steps)
     {
         stepsDatabaseHelper.update(steps);
     }
 
-    public Steps getDailySteps(int userid,Date date)
+    public Steps getDailySteps(String userid,Date date)
     {   Optional<Steps> steps = stepsDatabaseHelper.get(userid, Common.removeTimeFromDate(date));
         if (steps.notEmpty()) {
             return steps.get();
@@ -267,7 +267,7 @@ public class ApplicationModel extends Application {
     {
         sleepDatabaseHelper.update(sleep);
     }
-    public Optional<Sleep> getDailySleep(int userid,Date date)
+    public Optional<Sleep> getDailySleep(String userid,Date date)
     {
         return sleepDatabaseHelper.get(userid, Common.removeTimeFromDate(date));
     }
@@ -281,11 +281,11 @@ public class ApplicationModel extends Application {
     }
 
     public Alarm getAlarmById(int id){
-        return alarmDatabaseHelper.get(id,null).isEmpty()?null:alarmDatabaseHelper.get(id,null).get();
+        return alarmDatabaseHelper.get(id).isEmpty()?null:alarmDatabaseHelper.get(id).get(0).get();
     }
 
     public boolean deleteAlarm(Alarm alarm){
-        return  alarmDatabaseHelper.remove(alarm.getId(), null);
+        return  alarmDatabaseHelper.remove(alarm.getId());
     }
 
     public List<Goal> getAllGoal(){
@@ -300,11 +300,11 @@ public class ApplicationModel extends Application {
     }
 
     public Goal getGoalById(int id){
-        return goalDatabaseHelper.get(id,null).isEmpty()?null: goalDatabaseHelper.get(id,null).get();
+        return goalDatabaseHelper.get(id).isEmpty()?null: goalDatabaseHelper.get(id).get(0).get();
     }
 
     public boolean deleteAlarm(Goal goal){
-        return  goalDatabaseHelper.remove(goal.getId(), null);
+        return  goalDatabaseHelper.remove(goal.getId());
     }
 
     public boolean isBluetoothOn(){
@@ -397,7 +397,7 @@ public class ApplicationModel extends Application {
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
     }
-    public NevoUser getNevoUser(){
+    public User getNevoUser(){
         return nevoUser;
     }
 
@@ -443,11 +443,14 @@ public class ApplicationModel extends Application {
     }
     public void createValidicUser(String pinCode,final ResponseListener listener)
     {
+        if(!nevoUser.isLogin()){
+            return;
+        }
         CreateUserRequestObject object = new CreateUserRequestObject();
         object.setPin(pinCode);
         object.setAccess_token(validicManager.getOrganizationToken());
         CreateUserRequestObjectUser user  = new CreateUserRequestObjectUser();
-        user.setUid(nevoUser.getToken());
+        user.setUid(nevoUser.getNevoUserToken());
         object.setUser(user);
         Gson gson = new Gson();
 
@@ -464,13 +467,42 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestSuccess(ValidicUser validicUser) {
                 Log.i("ApplicationModel", "ValidicUser = " + new Gson().toJson(validicUser));
-                //TODO here get status 200, update "validicID" field where the token == nevoUserToken in the "user" table
-                nevoUser.setValidicID(validicUser.getUser().get_id());
-                nevoUser.setValidicUserAccessToken(validicUser.getUser().getAccess_token());
+                nevoUser.setValidicUserID(validicUser.getUser().get_id());
+                nevoUser.setValidicUserToken(validicUser.getUser().getAccess_token());
+                nevoUser.setIsConnectValidic(true);
+                saveNevoUser(nevoUser);
                 processListener(listener, validicUser);
             }
         });
     }
+
+    public void nevoUserRegister(String email,String password,final ResponseListener listener)
+    {
+        NevoUserRegisterRequest nevoUserRegisterRequest = new NevoUserRegisterRequest(email,password);
+
+        validicMedManager.execute(nevoUserRegisterRequest, new RequestListener<NevoUserModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                spiceException.printStackTrace();
+                processListener(listener, spiceException);
+            }
+
+            @Override
+            public void onRequestSuccess(NevoUserModel nevoUserModel) {
+                processListener(listener, nevoUserModel);
+                Log.i("ApplicationModel", "nevo user register: " + nevoUserModel.getState());
+                if(nevoUserModel.getState().equals("success"))
+                {
+                    nevoUser.setNevoUserID(nevoUserModel.getUid());
+                    nevoUser.setNevoUserToken(nevoUserModel.getToken());
+                    nevoUser.setIsLogin(true);
+                    //save to "user" local table
+                    saveNevoUser(nevoUser);
+                }
+            }
+        });
+    }
+
     public void nevoUserLogin(String email,String password,final ResponseListener listener)
     {
         NevoUserLoginRequest nevoUserLoginRequest = new NevoUserLoginRequest(email,password);
@@ -486,14 +518,26 @@ public class ApplicationModel extends Application {
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
                 processListener(listener, nevoUserModel);
                 Log.i("ApplicationModel", "nevo user login: " + nevoUserModel.getState());
+                if(nevoUserModel.getState().equals("success"))
+                {
+                    nevoUser.setNevoUserID(nevoUserModel.getUid());
+                    nevoUser.setNevoUserToken(nevoUserModel.getToken());
+                    nevoUser.setIsLogin(true);
+                }
             }
         });
     }
 
-    public void addValidicRoutineRecord(int nevoUserID, Date date, final ResponseListener listener)
+    public void addValidicRoutineRecord(String nevoUserID, Date date, final ResponseListener listener)
     {
-        //TODO current app, no use the nevo User ID when save steps record, 0 menas it is a public user.(unlogged in user)
-        Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        final Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
+        if(steps.getCreatedDate()==0)
+        {
+            return;
+        }
         ValidicRoutineRecord record = new ValidicRoutineRecord();
         record.setSteps(steps.getSteps());
 
@@ -511,28 +555,34 @@ public class ApplicationModel extends Application {
         record.setCalories_burned(steps.getCalories());
         record.setActivity_id(""+steps.getiD());
 
-        AddRoutineRecordRequest addRecordRequest = new AddRoutineRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
+        AddRoutineRecordRequest addRecordRequest = new AddRoutineRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicUserID());
         validicManager.execute(addRecordRequest, new RequestListener<ValidicRoutineRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
+                //TODO got 409/422 error, do update operation
                 processListener(listener, spiceException);
             }
 
             @Override
             public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
                 Log.i("ApplicationModel", "validicRecordModel = " + validicRecordModel);
-                getNevoUser().setLastValidicRoutineRecordID(validicRecordModel.getRoutine().get_id());
-                //TODO update steps table where steps.Id = record.activity_id
+                //save validic record ID to local database, for using cloud sync
+                steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
+                saveDailySteps(steps);
                 processListener(listener, validicRecordModel);
             }
         });
     }
 
-    public void updateValidicRoutineRecord(int nevoUserID, Date date, final ResponseListener listener)
+    public void updateValidicRoutineRecord(String nevoUserID, Date date, final ResponseListener listener)
     {
-        Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
-        UpdateRoutineRecordRequest updateRecordRequest = new UpdateRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRoutineRecordID(),steps.getSteps());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+
+        final Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
+        UpdateRoutineRecordRequest updateRecordRequest = new UpdateRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicRoutineRecordID(),steps.getSteps());
         validicManager.execute(updateRecordRequest, new RequestListener<ValidicRoutineRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -542,6 +592,9 @@ public class ApplicationModel extends Application {
 
             @Override
             public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
+                //save validic record ID to local database, for using cloud sync
+                steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
+                saveDailySteps(steps);
                 processListener(listener, validicRecordModel);
             }
         });
@@ -549,7 +602,10 @@ public class ApplicationModel extends Application {
 
     public void getValidicRoutineRecord()
     {
-        GetRoutineRecordRequest getRecordRequest = new GetRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRoutineRecordID());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        GetRoutineRecordRequest getRecordRequest = new GetRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicRoutineRecordID());
 
         validicManager.execute(getRecordRequest, new RequestListener<ValidicReadRoutineRecordModel>() {
             @Override
@@ -566,7 +622,10 @@ public class ApplicationModel extends Application {
 
     public void getMoreValidicRoutineRecord()
     {
-        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID());
 
         validicManager.execute(getMoreRecordsRequest, new RequestListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
@@ -587,7 +646,10 @@ public class ApplicationModel extends Application {
 
     public void deleteValidicRoutineRecord()
     {
-        DeleteRoutineRecordRequest deleteRecordRequest = new DeleteRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicRoutineRecordID());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        DeleteRoutineRecordRequest deleteRecordRequest = new DeleteRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicRoutineRecordID());
 
         validicManager.execute(deleteRecordRequest, new RequestListener<ValidicDeleteRoutineRecordModel>() {
             @Override
@@ -603,9 +665,12 @@ public class ApplicationModel extends Application {
     }
 
     //sleep operation functions:
-    public void addValidicSleepRecord(int nevoUserID,Date date,final ResponseListener listener)
+    public void addValidicSleepRecord(String nevoUserID,Date date,final ResponseListener listener)
     {
-        Optional<Sleep> sleep = getDailySleep(nevoUserID,date);
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        final Optional<Sleep> sleep = getDailySleep(nevoUserID,date);
         if(sleep.isEmpty()) {
             return;
         }
@@ -629,7 +694,7 @@ public class ApplicationModel extends Application {
         record.setTimestamp(timestamp);
         record.setUtc_offset(utc_offset);
 
-        AddSleepRecordRequest addSleepRecordRequest = new AddSleepRecordRequest(record,validicManager.getOrganizationID(),validicManager.getOrganizationToken(),nevoUser.getValidicID());
+        AddSleepRecordRequest addSleepRecordRequest = new AddSleepRecordRequest(record,validicManager.getOrganizationID(), validicManager.getOrganizationToken(),nevoUser.getValidicUserID());
         validicManager.execute(addSleepRecordRequest, new RequestListener<ValidicSleepRecordModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -640,7 +705,8 @@ public class ApplicationModel extends Application {
             public void onRequestSuccess(ValidicSleepRecordModel validicSleepRecordModel) {
                 Log.i("ApplicationModel", "validicSleepRecordModel = " + validicSleepRecordModel);
                 getNevoUser().setLastValidicSleepRecordID(validicSleepRecordModel.getSleep().get_id());
-                //TODO update sleep table where sleep.Id = record.activity_id , it means that the day's sleep has been upload successfully, no need again sync it.
+                sleep.get().setValidicRecordID(validicSleepRecordModel.getSleep().get_id());
+                saveDailySleep(sleep.get());
                 processListener(listener, validicSleepRecordModel);
             }
         });
@@ -648,7 +714,10 @@ public class ApplicationModel extends Application {
 
     public void getValidicSleepRecord()
     {
-        GetSleepRecordRequest getRecordRequest = new GetSleepRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicSleepRecordID());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        GetSleepRecordRequest getRecordRequest = new GetSleepRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicSleepRecordID());
 
         validicManager.execute(getRecordRequest, new RequestListener<ValidicReadSleepRecordModel>() {
             @Override
@@ -665,7 +734,10 @@ public class ApplicationModel extends Application {
 
     public void getMoreValidicSleepRecord()
     {
-        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID());
 
         validicManager.execute(getMoreRecordsRequest, new RequestListener<ValidicReadMoreSleepRecordsModel>() {
             @Override
@@ -686,7 +758,10 @@ public class ApplicationModel extends Application {
 
     public void deleteValidicSleepRecord()
     {
-        DeleteSleepRecordRequest deleteRecordRequest = new DeleteSleepRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicID(), getNevoUser().getLastValidicSleepRecordID());
+        if(!nevoUser.isConnectValidic()){
+            return;
+        }
+        DeleteSleepRecordRequest deleteRecordRequest = new DeleteSleepRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicSleepRecordID());
 
         validicManager.execute(deleteRecordRequest, new RequestListener<ValidicDeleteSleepRecordModel>() {
             @Override

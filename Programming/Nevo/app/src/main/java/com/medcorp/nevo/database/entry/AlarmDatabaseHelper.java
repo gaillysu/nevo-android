@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by karl-john on 17/11/15.
  */
-public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
+public class AlarmDatabaseHelper implements iSettingDatabaseHelper<Alarm> {
 
     private DatabaseHelper databaseHelper;
 
@@ -57,7 +57,7 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
     }
 
     @Override
-    public boolean remove(int alarmId,Date date) {
+    public boolean remove(int alarmId) {
         try {
             List<AlarmDAO> alarmDAOList = databaseHelper.getAlarmDao().queryBuilder().where().eq(AlarmDAO.iDString, alarmId).query();
             if(!alarmDAOList.isEmpty())
@@ -85,12 +85,6 @@ public class AlarmDatabaseHelper implements iEntryDatabaseHelper<Alarm> {
             e.printStackTrace();
         }
         return alarmList;
-    }
-
-    @Override
-    public Optional<Alarm> get(int alarmId,Date date) {
-        List<Optional<Alarm>> alarmList = get(alarmId);
-        return alarmList.isEmpty()?new Optional<Alarm>() : alarmList.get(0);
     }
 
     @Override

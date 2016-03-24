@@ -36,10 +36,10 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         loginUser = new User("Karl","Chow", 1, 946728000000l, 20, 70, 180, 946728000000l,"");
 
         Optional<User> thisuser = dbUser.add(loginUser);
-        assertEquals(false,thisuser.isEmpty());
+        assertEquals(false, thisuser.isEmpty());
         //set user ID as a login user
         loginUser.setId(thisuser.get().getId());
-
+        loginUser.setNevoUserID(thisuser.get().getId() + "");
         db = new SleepDatabaseHelper(getContext());
 
         //this is today's data, today format is YYYYMMDD 00:00:00
@@ -48,13 +48,13 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         // sample data
         addSleep = new Sleep(new Date().getTime(), today.getTime(),480,60,360,60,"","","","",0,0,0,"");
         //here must set which one owner this data
-        addSleep.setUserID(loginUser.getId());
+        addSleep.setNevoUserID(loginUser.getNevoUserID());
 
         updateSleep = new Sleep(new Date().getTime(), today.getTime(),490,60,370,60,"","","","",0,0,0,"");
-        updateSleep.setUserID(loginUser.getId());
+        updateSleep.setNevoUserID(loginUser.getNevoUserID());
 
         removeSleep = new Sleep(new Date().getTime(), today.getTime(),500,60,380,60,"","","","",0,0,0,"");
-        removeSleep.setUserID(loginUser.getId());
+        removeSleep.setNevoUserID(loginUser.getNevoUserID());
 
     }
 
@@ -70,7 +70,7 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false,thisSleep1.isEmpty());
 
         //read sample data
-        Optional<Sleep> thisSleep2 = db.get(loginUser.getId(),today);
+        Optional<Sleep> thisSleep2 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(false, thisSleep2.isEmpty());
 
         //compare data
@@ -90,7 +90,7 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         assertEquals(true, db.update(updateSleep));
 
         //read data
-        Optional<Sleep> thisSleep2 = db.get(loginUser.getId(),today);
+        Optional<Sleep> thisSleep2 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(false, thisSleep2.isEmpty());
 
         //compare data
@@ -104,15 +104,15 @@ public class SleepDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false, thisSleep1.isEmpty());
 
         //make sure it is saved ok
-        Optional<Sleep> thisSleep2 = db.get(loginUser.getId(),today);
+        Optional<Sleep> thisSleep2 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(false,thisSleep2.isEmpty());
         assertEquals(removeSleep.getTotalSleepTime(),thisSleep2.get().getTotalSleepTime());
 
         //remove it
-        assertEquals(true, db.remove(loginUser.getId(), today));
+        assertEquals(true, db.remove(loginUser.getNevoUserID(), today));
 
         //read it again,check result
-        Optional<Sleep> thisSleep3 = db.get(loginUser.getId(),today);
+        Optional<Sleep> thisSleep3 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(true, thisSleep3.isEmpty());
     }
 }

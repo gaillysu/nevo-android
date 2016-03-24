@@ -50,9 +50,9 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         removeSteps = new Steps(new Date().getTime(),today.getTime(),3000,2800,200,1500,30,"","","",0,0,0,10000,0,0,0,0,"");
 
         //set who owner these data.
-        addSteps.setUserID(loginUser.getId());
-        updateSteps.setUserID(loginUser.getId());
-        removeSteps.setUserID(loginUser.getId());
+        addSteps.setNevoUserID(loginUser.getNevoUserID());
+        updateSteps.setNevoUserID(loginUser.getNevoUserID());
+        removeSteps.setNevoUserID(loginUser.getNevoUserID());
 
     }
 
@@ -68,7 +68,7 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false,thisSteps1.isEmpty());
 
         //read today data
-        Optional<Steps> thisSteps2 = db.get(loginUser.getId(),today);
+        Optional<Steps> thisSteps2 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(false,thisSteps2.isEmpty());
 
         //compare data
@@ -87,7 +87,7 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         assertEquals(true, db.update(updateSteps));
 
         //read it again
-        Optional<Steps> thisSteps2 = db.get(loginUser.getId(),today);
+        Optional<Steps> thisSteps2 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(false,thisSteps2.isEmpty());
 
         //compare data
@@ -102,16 +102,16 @@ public class StepsDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false,thisSteps1.isEmpty());
 
         //check add result
-        Optional<Steps> thisSteps2 = db.get(loginUser.getId(),today);
+        Optional<Steps> thisSteps2 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(false,thisSteps2.isEmpty());
         assertEquals(removeSteps.getSteps(),thisSteps2.get().getSteps());
         assertEquals(removeSteps.getGoal(),thisSteps2.get().getGoal());
 
         //remove it
-        assertEquals(true,db.remove(loginUser.getId(),today));
+        assertEquals(true,db.remove(loginUser.getNevoUserID(),today));
 
         //read it again, check it exist in database.
-        Optional<Steps> thisSteps3 = db.get(loginUser.getId(),today);
+        Optional<Steps> thisSteps3 = db.get(loginUser.getNevoUserID(),today);
         assertEquals(true,thisSteps3.isEmpty());
     }
 }

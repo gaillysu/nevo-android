@@ -14,11 +14,18 @@ public class StepsDAO {
     private int ID;
 
     /**
+     * this is created by saving validic record
+     */
+    public static final String fValidicRecordID = "validicRecordID";
+    @DatabaseField
+    private String validicRecordID;
+
+    /**
      * which user ID
      */
-    public static final String fUserID = "UserID";
+    public static final String fNevoUserID = "nevoUserID";
     @DatabaseField
-    private int UserID;
+    private String nevoUserID;
 
     /**
      * created date
@@ -171,12 +178,12 @@ public class StepsDAO {
         this.ID = ID;
     }
 
-    public int getUserID() {
-        return UserID;
+    public String getNevoUserID() {
+        return nevoUserID;
     }
 
-    public void setUserID(int userID) {
-        UserID = userID;
+    public void setNevoUserID(String nevoUserID) {
+        this.nevoUserID = nevoUserID;
     }
 
     public long getCreatedDate() {
@@ -329,5 +336,13 @@ public class StepsDAO {
 
     public void setRunDuration(int runDuration) {
         RunDuration = runDuration;
+    }
+
+    public String getValidicRecordID() {
+        return validicRecordID;
+    }
+
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
     }
 }

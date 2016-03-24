@@ -4,7 +4,9 @@ public class Steps implements Comparable<Steps>{
 
     private int iD;
 
-    private int userID;
+    private String validicRecordID;
+
+    private String nevoUserID;
 
     private final long createdDate;
 
@@ -75,10 +77,6 @@ public class Steps implements Comparable<Steps>{
         this.iD = iD;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
     public void setDate(long date) {
         this.date = date;
     }
@@ -137,10 +135,6 @@ public class Steps implements Comparable<Steps>{
 
     public int getiD() {
         return iD;
-    }
-
-    public int getUserID() {
-        return userID;
     }
 
     public long getCreatedDate() {
@@ -235,6 +229,21 @@ public class Steps implements Comparable<Steps>{
         this.runDuration = runDuration;
     }
 
+    public String getValidicRecordID() {
+        return validicRecordID;
+    }
+
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
+    }
+
+    public String getNevoUserID() {
+        return nevoUserID;
+    }
+
+    public void setNevoUserID(String nevoUserID) {
+        this.nevoUserID = nevoUserID;
+    }
 
     @Override
     public int compareTo(Steps another) {

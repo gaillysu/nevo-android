@@ -46,7 +46,7 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public boolean update(User object) {
         int result = -1;
         try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, object.getId()).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserID, object.getNevoUserID()).query();
             if(userDAOList.isEmpty()){
                 return add(object)!=null;
             }
@@ -60,9 +60,9 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public boolean remove(int id,Date date) {
+    public boolean remove(String userId,Date date) {
         try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, id).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserID, userId).query();
             if(!userDAOList.isEmpty())
             {
                 return databaseHelper.getUserDao().delete(userDAOList)>=0;                
@@ -74,10 +74,10 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public List<Optional<User>> get(int userId) {
+    public List<Optional<User>> get(String userId) {
         List<Optional<User>> userList = new ArrayList<Optional<User>>();
         try {
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fID, userId).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserID, userId).query();
             for(UserDAO userDAO: userDAOList) {
                 Optional<User> userOptional = new Optional<>();
                 userOptional.set(convertToNormal(userDAO));
@@ -90,25 +90,14 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     }
 
     @Override
-    public Optional<User> get(int id,Date date) {
-        List<Optional<User>> userList = get(id);
+    public Optional<User> get(String userId,Date date) {
+        List<Optional<User>> userList = get(userId);
         return userList.isEmpty()?new Optional<User>(): userList.get(0);
     }
 
     @Override
-    public List<Optional<User>> getAll() {
-        List<Optional<User>> userList = new ArrayList<Optional<User>>();
-        try {
-            List<UserDAO> userDAOList  = databaseHelper.getUserDao().queryBuilder().query();
-            for(UserDAO userDAO: userDAOList) {
-                Optional<User> userOptional = new Optional<>();
-                userOptional.set(convertToNormal(userDAO));
-                userList.add(userOptional);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return userList;
+    public List<Optional<User>> getAll(String userId) {
+        return get(userId);
     }
 
     private UserDAO convertToDao(User user){
@@ -122,6 +111,11 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         userDAO.setFirstName(user.getFirstName());
         userDAO.setLastName(user.getLastName());
         userDAO.setSex(user.getSex());
+        userDAO.setNevoUserEmail(user.getNevoUserEmail());
+        userDAO.setNevoUserID(user.getNevoUserID());
+        userDAO.setNevoUserToken(user.getNevoUserToken());
+        userDAO.setValidicUserID(user.getValidicUserID());
+        userDAO.setValidicUserToken(user.getValidicUserToken());
         return userDAO;
     }
 
@@ -136,6 +130,11 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         user.setFirstName(userDAO.getFirstName());
         user.setLastName(userDAO.getLastName());
         user.setSex(userDAO.getSex());
+        user.setNevoUserEmail(userDAO.getNevoUserEmail());
+        user.setNevoUserID(userDAO.getNevoUserID());
+        user.setNevoUserToken(userDAO.getNevoUserToken());
+        user.setValidicUserID(userDAO.getValidicUserID());
+        user.setValidicUserToken(userDAO.getValidicUserToken());
         return user;
     }
 

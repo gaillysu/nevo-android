@@ -22,10 +22,27 @@ public class User {
 
     private String remarks;
 
+    private String nevoUserID;
+
+    private String nevoUserToken;
+
+    private String nevoUserEmail;
+
+    private String validicUserID;
+
+    private String validicUserToken;
+
+    private String lastValidicRoutineRecordID;
+
+    private String lastValidicSleepRecordID;
+
+    private boolean isLogin;
+
+    private boolean isConnectValidic;
+
     public User(long createdDate) {
         this.createdDate = createdDate;
     }
-
     public User(String firstName,String lastName,int sex, long birthday, int age, int weight, int height, long createdDate, String remarks) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -114,6 +131,78 @@ public class User {
 
     public void setBirthday(long birthday) {
         this.birthday = birthday;
+    }
+
+    public String getNevoUserID() {
+        return nevoUserID;
+    }
+
+    public void setNevoUserID(String nevoUserID) {
+        this.nevoUserID = nevoUserID;
+    }
+
+    public String getNevoUserToken() {
+        return nevoUserToken;
+    }
+
+    public void setNevoUserToken(String nevoUserToken) {
+        this.nevoUserToken = nevoUserToken;
+    }
+
+    public String getNevoUserEmail() {
+        return nevoUserEmail;
+    }
+
+    public void setNevoUserEmail(String nevoUserEmail) {
+        this.nevoUserEmail = nevoUserEmail;
+    }
+
+    public String getValidicUserID() {
+        return validicUserID;
+    }
+
+    public void setValidicUserID(String validicUserID) {
+        this.validicUserID = validicUserID;
+    }
+
+    public String getValidicUserToken() {
+        return validicUserToken;
+    }
+
+    public void setValidicUserToken(String validicUserToken) {
+        this.validicUserToken = validicUserToken;
+    }
+
+    public String getLastValidicRoutineRecordID() {
+        return lastValidicRoutineRecordID;
+    }
+
+    public void setLastValidicRoutineRecordID(String lastValidicRoutineRecordID) {
+        this.lastValidicRoutineRecordID = lastValidicRoutineRecordID;
+    }
+
+    public String getLastValidicSleepRecordID() {
+        return lastValidicSleepRecordID;
+    }
+
+    public void setLastValidicSleepRecordID(String lastValidicSleepRecordID) {
+        this.lastValidicSleepRecordID = lastValidicSleepRecordID;
+    }
+
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(boolean isLogin) {
+        this.isLogin = isLogin;
+    }
+
+    public boolean isConnectValidic() {
+        return isConnectValidic;
+    }
+
+    public void setIsConnectValidic(boolean isConnectValidic) {
+        this.isConnectValidic = isConnectValidic;
     }
 
     @Override
