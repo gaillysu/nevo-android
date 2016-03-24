@@ -60,13 +60,18 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
-        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit),R.drawable.google_fit_small,Preferences.isGoogleFitSet(this)));
-        menuList.add(new SettingsMenuItem("Connect Validic",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit_small, Preferences.isGoogleFitSet(this)));
+        //TODO test code for validic
+        menuList.add(new SettingsMenuItem("Connect Validic", R.drawable.google_fit_small, false));
         menuList.add(new SettingsMenuItem("Log in Validic",R.drawable.google_fit_small,false));
-        menuList.add(new SettingsMenuItem("Add record",R.drawable.google_fit_small,false));
-        menuList.add(new SettingsMenuItem("Read record",R.drawable.google_fit_small,false));
-        menuList.add(new SettingsMenuItem("Update record",R.drawable.google_fit_small,false));
-        menuList.add(new SettingsMenuItem("Delete record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Add step record", R.drawable.google_fit_small, false));
+        menuList.add(new SettingsMenuItem("Read step record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Update step record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Delete step record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Add sleep record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Read sleep record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Delete sleep record",R.drawable.google_fit_small,false));
+        menuList.add(new SettingsMenuItem("Cloud Sync",R.drawable.google_fit_small,false));
         settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
@@ -103,6 +108,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                 googleFitLogoutDialog.show();
             }
         }
+        //TODO this is test code
         if(position == 1) {
             if(isChecked)
             {
@@ -144,22 +150,42 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //Add
         if(position == 3 && isChecked)
         {
-            getModel().addValidicRecord(0, new Date(),null);
+            getModel().addValidicRoutineRecord(0, new Date(), null);
         }
         //read
         if(position == 4 && isChecked)
         {
-            getModel().getAllValidicRecord();
+            getModel().getMoreValidicRoutineRecord();
         }
         //update
         if(position == 5 && isChecked)
         {
-            getModel().updateValidicRecord(0,new Date(),null);
+            getModel().updateValidicRoutineRecord(0, new Date(), null);
         }
         //delete
         if(position == 6 && isChecked)
         {
-            getModel().deleteValidicRecord();
+            getModel().deleteValidicRoutineRecord();
+        }
+        //Add sleep
+        if(position == 7 && isChecked)
+        {
+            getModel().addValidicSleepRecord(0, new Date(), null);
+        }
+        //read sleep
+        if(position == 8 && isChecked)
+        {
+            getModel().getMoreValidicSleepRecord();
+        }
+        //delete sleep
+        if(position == 9 && isChecked)
+        {
+            getModel().deleteValidicSleepRecord();
+        }
+        //Cloud Sync
+        if(position == 10 && isChecked)
+        {
+            getModel().getCloudSyncManager().launchSync();
         }
     }
 
