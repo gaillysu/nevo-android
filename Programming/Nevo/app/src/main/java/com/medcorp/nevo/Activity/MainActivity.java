@@ -33,6 +33,7 @@ import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 
+import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
 import net.medcorp.library.ble.event.BLESearchEvent;
 import net.medcorp.library.ble.util.Optional;
@@ -295,11 +296,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     @Subscribe
-    public void onEvent(BLESearchEvent event) {
-        if (!getModel().isBluetoothOn()) {
+    public void onEvent(BLEBluetoothOffEvent event){
             showStateString(R.string.in_app_notification_bluetooth_disabled, false);
-            return;
-        }
+    }
+
+    @Subscribe
+    public void onEvent(BLESearchEvent event) {
         switch (event.getSearchEvent()) {
             case ON_SEARCHING:
                 askForPermission();
