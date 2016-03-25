@@ -42,7 +42,7 @@ public interface Validic {
     ValidicReadRoutineRecordModel getRoutineRecordRequest(@Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Path("VALIDIC_RECORD_ID") String recordId, @Query("access_token") String accessToken);
 
     @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine.json")
-    ValidicReadMoreRoutineRecordsModel getMoreRoutineRecordsRequest(@Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Query("access_token") String accessToken);
+    ValidicReadMoreRoutineRecordsModel getMoreRoutineRecordsRequest(@Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Query("access_token") String accessToken,@Query("start_date") String start_date,@Query("end_date") String end_date,@Query("expanded") int expanded);
 
     @DELETEWITHBODY("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/routine/{VALIDIC_RECORD_ID}.json")
     ValidicDeleteRoutineRecordModel deleteRoutineRecordRequest(@Body DeleteRoutineRecordRequestObject object, @Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Path("VALIDIC_RECORD_ID") String recordId, @Header("Content-Type") String type);
@@ -58,7 +58,7 @@ public interface Validic {
     ValidicReadSleepRecordModel getSleepRecordRequest(@Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Path("VALIDIC_RECORD_ID") String recordId, @Query("access_token") String accessToken);
 
     @GET("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/sleep.json")
-    ValidicReadMoreSleepRecordsModel getMoreSleepRecordsRequest(@Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Query("access_token") String accessToken);
+    ValidicReadMoreSleepRecordsModel getMoreSleepRecordsRequest(@Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Query("access_token") String accessToken,@Query("start_date") String start_date,@Query("end_date") String end_date,@Query("expanded") int expanded);
 
     @DELETEWITHBODY("/organizations/{ORGANIZATION_ID}/users/{VALIDIC_USER_ID}/sleep/{VALIDIC_RECORD_ID}.json")
     ValidicDeleteSleepRecordModel deleteSleepRecordRequest(@Body DeleteSleepRecordRequestObject object, @Path("ORGANIZATION_ID") String organization, @Path("VALIDIC_USER_ID") String user, @Path("VALIDIC_RECORD_ID") String recordId, @Header("Content-Type") String type);

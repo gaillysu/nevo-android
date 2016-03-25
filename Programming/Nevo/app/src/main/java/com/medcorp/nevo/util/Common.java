@@ -3,11 +3,13 @@ package com.medcorp.nevo.util;
 import android.content.Context;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by gaillysu on 15/12/8.
@@ -31,6 +33,14 @@ public class Common {
         return today;
     }
 
+    public static String getUTCTimestampFromLocalDate(Date localDate)
+    {
+        Date localMidnight = removeTimeFromDate(localDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:00:00+00:00");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String timestamp  = sdf.format(localMidnight);
+        return timestamp;
+    }
 
     /**
      *

@@ -523,6 +523,7 @@ public class ApplicationModel extends Application {
                     nevoUser.setNevoUserID(nevoUserModel.getUid());
                     nevoUser.setNevoUserToken(nevoUserModel.getToken());
                     nevoUser.setIsLogin(true);
+                    saveNevoUser(nevoUser);
                 }
             }
         });
@@ -600,32 +601,21 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void getValidicRoutineRecord()
+    public void getValidicRoutineRecord(Date date)
     {
-        if(!nevoUser.isConnectValidic()){
-            return;
-        }
-        GetRoutineRecordRequest getRecordRequest = new GetRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicRoutineRecordID());
-
-        validicManager.execute(getRecordRequest, new RequestListener<ValidicReadRoutineRecordModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
-            }
-
-            @Override
-            public void onRequestSuccess(ValidicReadRoutineRecordModel validicReadRecordModel) {
-                Log.i("ApplicationModel", "validicReadRecordModel = " + validicReadRecordModel);
-            }
-        });
+        getMoreValidicRoutineRecord(date,date);
     }
 
-    public void getMoreValidicRoutineRecord()
+    public void getMoreValidicRoutineRecord(Date startDate,Date endDate)
     {
         if(!nevoUser.isConnectValidic()){
             return;
         }
-        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID());
+
+        String start_timestamp = Common.getUTCTimestampFromLocalDate(startDate);
+        String end_timestamp = Common.getUTCTimestampFromLocalDate(endDate);
+
+        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),start_timestamp,end_timestamp);
 
         validicManager.execute(getMoreRecordsRequest, new RequestListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
@@ -717,32 +707,20 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void getValidicSleepRecord()
+    public void getValidicSleepRecord(Date date)
     {
-        if(!nevoUser.isConnectValidic()){
-            return;
-        }
-        GetSleepRecordRequest getRecordRequest = new GetSleepRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(), getNevoUser().getLastValidicSleepRecordID());
-
-        validicManager.execute(getRecordRequest, new RequestListener<ValidicReadSleepRecordModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                Log.e("ApplicationModel", "spiceException = " + spiceException.getCause());
-            }
-
-            @Override
-            public void onRequestSuccess(ValidicReadSleepRecordModel validicReadSleepRecordModel) {
-                Log.i("ApplicationModel", "validicReadSleepRecordModel = " + validicReadSleepRecordModel);
-            }
-        });
+        getMoreValidicSleepRecord(date,date);
     }
 
-    public void getMoreValidicSleepRecord()
+    public void getMoreValidicSleepRecord(Date startDate,Date endDate)
     {
         if(!nevoUser.isConnectValidic()){
             return;
         }
-        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID());
+        String start_timestamp = Common.getUTCTimestampFromLocalDate(startDate);
+        String end_timestamp = Common.getUTCTimestampFromLocalDate(endDate);
+
+        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),start_timestamp,end_timestamp);
 
         validicManager.execute(getMoreRecordsRequest, new RequestListener<ValidicReadMoreSleepRecordsModel>() {
             @Override

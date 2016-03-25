@@ -105,7 +105,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private Context mContext;
 
-    private static final int SYNC_INTERVAL = 1*30*60*1000; //every half hour , do sync when connected again
+    private static final int SYNC_INTERVAL = 0*30*60*1000; //every half hour , do sync when connected again
 
     private ConnectionController connectionController;
 

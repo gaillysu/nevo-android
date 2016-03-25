@@ -18,6 +18,16 @@ public class ValidicRoutineRecordModelBase {
    Boolean validated;
    double water;
 
+ String activity_id;
+
+ public String getActivity_id() {
+  return activity_id;
+ }
+
+ public void setActivity_id(String activity_id) {
+  this.activity_id = activity_id;
+ }
+
  public String get_id() {
   return _id;
  }
