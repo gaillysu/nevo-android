@@ -17,6 +17,15 @@ public class ValidicSleepRecordModelBase {
     String source_name;
     String last_updated;
     Boolean validated;
+    NevoHourlySleepData extras;
+
+    public NevoHourlySleepData getExtras() {
+        return extras;
+    }
+
+    public void setExtras(NevoHourlySleepData extras) {
+        this.extras = extras;
+    }
 
     public String get_id() {
         return _id;

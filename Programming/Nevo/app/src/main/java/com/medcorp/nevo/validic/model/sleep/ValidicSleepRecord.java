@@ -13,6 +13,15 @@ public class ValidicSleepRecord {
     double times_woken;
     double total_sleep;
     String activity_id;
+    NevoHourlySleepData extras;
+
+    public NevoHourlySleepData getExtras() {
+        return extras;
+    }
+
+    public void setExtras(NevoHourlySleepData extras) {
+        this.extras = extras;
+    }
 
     public String getTimestamp() {
         return timestamp;

@@ -55,6 +55,7 @@ import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecord;
 import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.model.sleep.NevoHourlySleepData;
 import com.medcorp.nevo.validic.model.sleep.ValidicDeleteSleepRecordModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicReadSleepRecordModel;
@@ -675,16 +676,21 @@ public class ApplicationModel extends Application {
             return;
         }
         ValidicSleepRecord record = new ValidicSleepRecord();
-        record.setActivity_id(""+sleep.get().getiD());
+        record.setActivity_id("" + sleep.get().getiD());
         //validic sleep object , the value is  in seconds
-        record.setAwake(60*sleep.get().getTotalWakeTime());
-        record.setLight(60*sleep.get().getTotalLightTime());
-        record.setDeep(60*sleep.get().getTotalDeepTime());
-        record.setTotal_sleep(60*sleep.get().getTotalSleepTime());
+        record.setAwake(60 * sleep.get().getTotalWakeTime());
+        record.setLight(60 * sleep.get().getTotalLightTime());
+        record.setDeep(60 * sleep.get().getTotalDeepTime());
+        record.setTotal_sleep(60 * sleep.get().getTotalSleepTime());
         //TODO how to caculate the woken times? by hourly wake time is not zero?
         record.setTimes_woken(0);
         //REM value is set 0, nevo doesn't give this data
         record.setRem(0);
+        NevoHourlySleepData nevoHourlySleepData = new NevoHourlySleepData();
+        nevoHourlySleepData.setHourlyWake(sleep.get().getHourlyWake());
+        nevoHourlySleepData.setHourlyLight(sleep.get().getHourlyLight());
+        nevoHourlySleepData.setHourlyDeep(sleep.get().getHourlyDeep());
+        record.setExtras(nevoHourlySleepData);
 
         String utc_offset = new SimpleDateFormat("z").format(date).substring(3);
         Date theDay = Common.removeTimeFromDate(date);
