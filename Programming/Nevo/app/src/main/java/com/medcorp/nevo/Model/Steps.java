@@ -4,7 +4,7 @@ public class Steps implements Comparable<Steps>{
 
     private int iD;
 
-    private String validicRecordID;
+    private String validicRecordID = "0";
 
     private String nevoUserID;
 
