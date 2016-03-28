@@ -10,8 +10,8 @@ public class SleepDAO {
      * field name and initialize value, Primary field
      */
     public static final String fID = "ID";
-    @DatabaseField(generatedId = true)
-    private int ID;
+    @DatabaseField(id = true)
+    private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     /**
      * this is created by saving validic record

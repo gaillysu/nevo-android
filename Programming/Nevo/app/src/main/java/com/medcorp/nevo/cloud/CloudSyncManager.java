@@ -52,7 +52,7 @@ public class CloudSyncManager {
         //step2:do loop mass read
         //every mass read is 100 days
         Date endDate = Common.removeTimeFromDate(new Date());
-        Date startDate = new Date(Common.removeTimeFromDate(endDate).getTime() - 99*24*60*60*1000);
+        Date startDate = new Date(endDate.getTime() - 99*24*60*60*1000l);
 
         getModel().getMoreValidicRoutineRecord(startDate, endDate, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override

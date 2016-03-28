@@ -3,6 +3,7 @@ package com.medcorp.nevo.util;
 import android.content.Context;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,8 +45,25 @@ public class Common {
 
     public static Date getLocalDateFromUTCTimestamp(String timestamp,String utc_offset)
     {
-        String localMidnight = timestamp.replace("+00:00",utc_offset);
-        Date date = new Date(localMidnight);
+        Date date = new Date();
+        String[] offsetArray = utc_offset.split(":");
+        long offset = Integer.parseInt(offsetArray[0].substring(1)) * 60 *60 *1000l;
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            date = sdf.parse(timestamp);
+            if(offsetArray[0].startsWith("+"))
+            {
+                date = new Date(sdf.parse(timestamp).getTime() + offset);
+            }
+            else
+            {
+                date = new Date(sdf.parse(timestamp).getTime() - offset);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return date;
     }
 

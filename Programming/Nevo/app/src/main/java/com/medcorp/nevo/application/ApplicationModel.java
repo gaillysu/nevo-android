@@ -298,7 +298,14 @@ public class ApplicationModel extends Application {
         steps.setSteps((int) routine.getSteps());
         steps.setNevoUserID(getNevoUser().getNevoUserID());
         steps.setValidicRecordID(routine.get_id());
-        steps.setGoal(routine.getExtras().getGoal());
+        if(routine.getExtras()!=null)
+        {
+            steps.setGoal(routine.getExtras().getGoal());
+        }
+        else
+        {
+            steps.setGoal(7000);
+        }
         saveDailySteps(steps);
     }
 
@@ -599,6 +606,12 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
+                if(spiceException.getCause().getLocalizedMessage().contains("409") || spiceException.getCause().getLocalizedMessage().contains("422"))
+                {
+                    //409:Activity is already taken
+                    //422:Timestamp is already taken
+                    updateValidicRoutineRecord(nevoUserID,date,listener);
+                }
                 processListener(listener, spiceException);
             }
 
@@ -610,12 +623,6 @@ public class ApplicationModel extends Application {
                     //save validic record ID to local database, for using cloud sync
                     steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
                     saveDailySteps(steps);
-                }
-                if(validicRecordModel.getCode().equals("409") || validicRecordModel.getCode().equals("422"))
-                {
-                   //409:Activity is already taken
-                   //422:Timestamp is already taken
-                    updateValidicRoutineRecord(nevoUserID,date,listener);
                 }
                 processListener(listener, validicRecordModel);
             }
@@ -755,6 +762,10 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
+                if(spiceException.getCause().getLocalizedMessage().contains("409")||spiceException.getCause().getLocalizedMessage().contains("422"))
+                {
+                    //DO NOTHING, sleep record can't be update
+                }
                 processListener(listener, spiceException);
             }
             @Override
@@ -764,10 +775,6 @@ public class ApplicationModel extends Application {
                 {
                     sleep.get().setValidicRecordID(validicSleepRecordModel.getSleep().get_id());
                     saveDailySleep(sleep.get());
-                }
-                if(validicSleepRecordModel.getCode().equals("409")||validicSleepRecordModel.getCode().equals("422"))
-                {
-                    //DO NOTHING, sleep record can't be update
                 }
                 processListener(listener, validicSleepRecordModel);
             }
