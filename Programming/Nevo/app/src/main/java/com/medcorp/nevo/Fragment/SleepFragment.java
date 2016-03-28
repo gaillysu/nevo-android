@@ -1,6 +1,8 @@
 package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -70,11 +72,16 @@ public class SleepFragment extends BaseObservableFragment{
     @Subscribe
     public void onEvent(OnSyncEvent event){
         if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
-            int currentItem = viewPager.getCurrentItem();
-            viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
-                    getActivity()));
-            tabLayout.setupWithViewPager(viewPager);
-            viewPager.setCurrentItem(currentItem);
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    int currentItem = viewPager.getCurrentItem();
+                    viewPager.setAdapter(new SleepFragmentPagerAdapter(getChildFragmentManager(),
+                            getActivity()));
+                    tabLayout.setupWithViewPager(viewPager);
+                    viewPager.setCurrentItem(currentItem);
+                }
+            });
         }
     }
 }
