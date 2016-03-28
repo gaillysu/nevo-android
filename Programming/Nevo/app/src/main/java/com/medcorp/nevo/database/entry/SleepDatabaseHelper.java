@@ -105,6 +105,19 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         return get(userId);
     }
 
+    public List<Sleep> getNeedSyncSleep(String userId) {
+        List<Sleep> sleepList = new ArrayList<Sleep>();
+        try {
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fValidicRecordID, "0").query();
+            for (SleepDAO sleepDAO: sleepDAOList) {
+                sleepList.add(convertToNormal(sleepDAO));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sleepList;
+    }
+
     private SleepDAO convertToDao(Sleep sleep){
         SleepDAO sleepDAO = new SleepDAO();
         sleepDAO.setNevoUserID(sleep.getNevoUserID());

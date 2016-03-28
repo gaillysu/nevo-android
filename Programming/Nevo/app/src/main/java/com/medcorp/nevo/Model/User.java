@@ -32,10 +32,6 @@ public class User {
 
     private String validicUserToken;
 
-    private String lastValidicRoutineRecordID;
-
-    private String lastValidicSleepRecordID;
-
     private boolean isLogin;
 
     private boolean isConnectValidic;
@@ -171,22 +167,6 @@ public class User {
 
     public void setValidicUserToken(String validicUserToken) {
         this.validicUserToken = validicUserToken;
-    }
-
-    public String getLastValidicRoutineRecordID() {
-        return lastValidicRoutineRecordID;
-    }
-
-    public void setLastValidicRoutineRecordID(String lastValidicRoutineRecordID) {
-        this.lastValidicRoutineRecordID = lastValidicRoutineRecordID;
-    }
-
-    public String getLastValidicSleepRecordID() {
-        return lastValidicSleepRecordID;
-    }
-
-    public void setLastValidicSleepRecordID(String lastValidicSleepRecordID) {
-        this.lastValidicSleepRecordID = lastValidicSleepRecordID;
     }
 
     public boolean isLogin() {

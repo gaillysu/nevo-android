@@ -12,6 +12,15 @@ public class ValidicRoutineRecord {
     double elevation;
     double calories_burned;
     String activity_id;
+    RoutineGoal extras;
+
+    public RoutineGoal getExtras() {
+        return extras;
+    }
+
+    public void setExtras(RoutineGoal extras) {
+        this.extras = extras;
+    }
 
     public String getTimestamp() {
         return timestamp;

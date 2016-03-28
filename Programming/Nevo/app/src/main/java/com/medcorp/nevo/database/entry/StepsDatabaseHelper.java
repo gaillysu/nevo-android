@@ -106,6 +106,31 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList;
     }
 
+    public List<Steps> getNeedSyncSteps(String userId)
+    {
+        List<Steps> stepsList = new ArrayList<Steps>();
+        try {
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fValidicRecordID, "0").query();
+            for(StepsDAO stepsDAO : stepsDAOList){
+                stepsList.add(convertToNormal(stepsDAO));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stepsList;
+    }
+
+    public boolean isFoundInLocalSteps(int activity_id)
+    {
+        try {
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fID, activity_id).query();
+            return !stepsDAOList.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private StepsDAO convertToDao(Steps steps){
         StepsDAO stepsDao = new StepsDAO();
         stepsDao.setNevoUserID(steps.getNevoUserID());

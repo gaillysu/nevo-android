@@ -100,6 +100,21 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         return get(userId);
     }
 
+    public Optional<User> getLoginUser()
+    {
+        Optional<User> userOptional = new Optional<>();
+        try {
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserIsLogin, true).query();
+            for(UserDAO userDAO: userDAOList) {
+                userOptional.set(convertToNormal(userDAO));
+                break;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userOptional;
+    }
+
     private UserDAO convertToDao(User user){
         UserDAO userDAO = new UserDAO();
         userDAO.setCreatedDate(user.getCreatedDate());
@@ -116,6 +131,8 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         userDAO.setNevoUserToken(user.getNevoUserToken());
         userDAO.setValidicUserID(user.getValidicUserID());
         userDAO.setValidicUserToken(user.getValidicUserToken());
+        userDAO.setNevoUserIsLogin(user.isLogin());
+        userDAO.setValidicUserIsConnected(user.isConnectValidic());
         return userDAO;
     }
 
@@ -135,6 +152,8 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         user.setNevoUserToken(userDAO.getNevoUserToken());
         user.setValidicUserID(userDAO.getValidicUserID());
         user.setValidicUserToken(userDAO.getValidicUserToken());
+        user.setIsLogin(userDAO.isNevoUserIsLogin());
+        user.setIsConnectValidic(userDAO.isValidicUserIsConnected());
         return user;
     }
 

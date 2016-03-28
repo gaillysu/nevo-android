@@ -42,6 +42,13 @@ public class Common {
         return timestamp;
     }
 
+    public static Date getLocalDateFromUTCTimestamp(String timestamp,String utc_offset)
+    {
+        String localMidnight = timestamp.replace("+00:00",utc_offset);
+        Date date = new Date(localMidnight);
+        return date;
+    }
+
     /**
      *
      * @param context

@@ -110,6 +110,30 @@ public class UserDAO {
     @DatabaseField
     private String validicUserToken;
 
+    public static final String fNevoUserIsLogin = "nevoUserIsLogin";
+    @DatabaseField
+    private boolean nevoUserIsLogin;
+
+    public static final String fValidicUserIsConnected = "validicUserIsConnected";
+    @DatabaseField
+    private boolean validicUserIsConnected;
+
+    public boolean isNevoUserIsLogin() {
+        return nevoUserIsLogin;
+    }
+
+    public void setNevoUserIsLogin(boolean nevoUserIsLogin) {
+        this.nevoUserIsLogin = nevoUserIsLogin;
+    }
+
+    public boolean isValidicUserIsConnected() {
+        return validicUserIsConnected;
+    }
+
+    public void setValidicUserIsConnected(boolean validicUserIsConnected) {
+        this.validicUserIsConnected = validicUserIsConnected;
+    }
+
     public int getID() {
         return ID;
     }

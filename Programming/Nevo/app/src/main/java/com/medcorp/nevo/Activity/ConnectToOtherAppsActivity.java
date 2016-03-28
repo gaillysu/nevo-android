@@ -155,7 +155,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //read
         if(position == 4 && isChecked)
         {
-            getModel().getMoreValidicRoutineRecord(new Date(),new Date());
+            getModel().getMoreValidicRoutineRecord(new Date(),new Date(),null);
         }
         //update
         if(position == 5 && isChecked)
@@ -165,7 +165,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //delete
         if(position == 6 && isChecked)
         {
-            getModel().deleteValidicRoutineRecord();
+            getModel().deleteValidicRoutineRecord(getModel().getNevoUser().getNevoUserID(), new Date(), null);
         }
         //Add sleep
         if(position == 7 && isChecked)
@@ -175,12 +175,12 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //read sleep
         if(position == 8 && isChecked)
         {
-            getModel().getMoreValidicSleepRecord(new Date(),new Date());
+            getModel().getMoreValidicSleepRecord(new Date(),new Date(),null);
         }
         //delete sleep
         if(position == 9 && isChecked)
         {
-            getModel().deleteValidicSleepRecord();
+            getModel().deleteValidicSleepRecord(getModel().getNevoUser().getNevoUserID(), new Date(), null);
         }
         //Cloud Sync
         if(position == 10 && isChecked)

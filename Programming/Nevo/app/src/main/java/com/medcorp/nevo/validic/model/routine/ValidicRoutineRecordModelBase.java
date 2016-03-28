@@ -19,6 +19,15 @@ public class ValidicRoutineRecordModelBase {
    double water;
 
  String activity_id;
+ RoutineGoal extras;
+
+ public RoutineGoal getExtras() {
+  return extras;
+ }
+
+ public void setExtras(RoutineGoal extras) {
+  this.extras = extras;
+ }
 
  public String getActivity_id() {
   return activity_id;
