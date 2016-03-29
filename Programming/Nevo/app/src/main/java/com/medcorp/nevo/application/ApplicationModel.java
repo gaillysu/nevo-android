@@ -682,7 +682,7 @@ public class ApplicationModel extends Application {
                 {
                     //409:Activity is already taken
                     //422:Timestamp is already taken
-                    //updateValidicRoutineRecord(nevoUserID,date,listener);
+                    updateValidicRoutineRecord(nevoUserID,date,listener);
                 }
                 processListener(listener, spiceException);
             }
@@ -708,25 +708,41 @@ public class ApplicationModel extends Application {
         }
 
         final Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
-        String validicRecordID = steps.getValidicRecordID();
-        if(validicRecordID.equals("0")) {
-            addValidicRoutineRecord(nevoUserID,date,listener);
-            return;
-        }
-        UpdateRoutineRecordRequest updateRecordRequest = new UpdateRoutineRecordRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),validicRecordID,steps.getSteps());
-        validicManager.execute(updateRecordRequest, new RequestListener<ValidicRoutineRecordModel>() {
+
+        getValidicRoutineRecord(date, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                spiceException.printStackTrace();
-                processListener(listener, spiceException);
+
             }
 
             @Override
-            public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
-                //save validic record ID to local database, for using cloud sync
-                steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
-                saveDailySteps(steps);
-                processListener(listener, validicRecordModel);
+            public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
+                if (validicReadMoreRoutineRecordsModel.getSummary().getResults() > 0) {
+                    String validicRecordID = validicReadMoreRoutineRecordsModel.getRoutine()[0].get_id();
+                    //if local data == cloud data, save record_id and return
+                    if(steps.getSteps()==validicReadMoreRoutineRecordsModel.getRoutine()[0].getSteps())
+                    {
+                        steps.setValidicRecordID(validicReadMoreRoutineRecordsModel.getRoutine()[0].get_id());
+                        saveDailySteps(steps);
+                        return;
+                    }
+                    UpdateRoutineRecordRequest updateRecordRequest = new UpdateRoutineRecordRequest(validicManager.getOrganizationID(), validicManager.getOrganizationToken(), getNevoUser().getValidicUserID(), validicRecordID, steps.getSteps());
+                    validicManager.execute(updateRecordRequest, new RequestListener<ValidicRoutineRecordModel>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+                            spiceException.printStackTrace();
+                            processListener(listener, spiceException);
+                        }
+
+                        @Override
+                        public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
+                            //save validic record ID to local database, for using cloud sync
+                            steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
+                            saveDailySteps(steps);
+                            processListener(listener, validicRecordModel);
+                        }
+                    });
+                }
             }
         });
     }
