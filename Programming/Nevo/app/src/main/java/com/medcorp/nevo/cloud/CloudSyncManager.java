@@ -38,6 +38,8 @@ import java.util.List;
 public class CloudSyncManager {
     private final String TAG = "CloudSyncManager";
     private Context context;
+    final long INTERVAL_DATE = 99 * 24 * 60 * 60 *1000l;
+    final long ONEDAY = 24 * 60 * 60 *1000l;
 
     public CloudSyncManager(Context context)
     {
@@ -55,9 +57,22 @@ public class CloudSyncManager {
         //step2:do loop mass read
         //every mass read is 100 days
         Date endDate = Common.removeTimeFromDate(new Date());
-        //start date is 2016.1.1
-        Date startDate = new Date(116,1,1);
+        Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
 
+        downloadSteps(startDate,endDate);
+
+        //step4:change table to "Sleep" and repeat step1,2,3
+        List<Sleep> sleepList = getModel().getNeedSyncSleep(getModel().getNevoUser().getNevoUserID());
+        for(Sleep sleep: sleepList)
+        {
+            getModel().addValidicSleepRecord(getModel().getNevoUser().getNevoUserID(), new Date(sleep.getDate()), null);
+        }
+
+        downloadSleep(startDate,endDate);
+    }
+
+    private void downloadSteps(final Date startDate, final Date endDate)
+    {
         getModel().getMoreValidicRoutineRecord(startDate, endDate, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -67,38 +82,30 @@ public class CloudSyncManager {
             @Override
             public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
                 //step3:check read result is empty or some records aren't found in local table "Steps" and save them
-                if(validicReadMoreRoutineRecordsModel.getSummary().getResults()>0)
-                {
-                    for(ValidicRoutineRecordModelBase routine:validicReadMoreRoutineRecordsModel.getRoutine())
-                    {
+                if (validicReadMoreRoutineRecordsModel.getSummary().getResults() > 0) {
+                    for (ValidicRoutineRecordModelBase routine : validicReadMoreRoutineRecordsModel.getRoutine()) {
                         int activity_id = Integer.parseInt(routine.getActivity_id());
                         // if activity_id not exist in local Steps table, save it
-                        if(!getModel().isFoundInLocalSteps(activity_id))
-                        {
+                        if (!getModel().isFoundInLocalSteps(activity_id)) {
                             //save it
                             getModel().saveStepsFromValidic(routine);
                         }
                     }
 
-                    if(validicReadMoreRoutineRecordsModel.getSummary().getNext() != null)
-                    {
+                    if (validicReadMoreRoutineRecordsModel.getSummary().getNext() != null) {
                         //TODO view next 100 records
+                        Date newEndDate = new Date(startDate.getTime() - ONEDAY);
+                        Date newStartDate = new Date(newEndDate.getTime() - INTERVAL_DATE);
+                        downloadSteps(newStartDate,newEndDate);
                     }
 
                 }
             }
         });
+    }
 
-        //step4:change table to "Sleep" and repeat step1,2,3
-        List<Sleep> sleepList = getModel().getNeedSyncSleep(getModel().getNevoUser().getNevoUserID());
-        for(Sleep sleep: sleepList)
-        {
-            getModel().addValidicSleepRecord(getModel().getNevoUser().getNevoUserID(), new Date(sleep.getDate()), null);
-        }
-
-        endDate = Common.removeTimeFromDate(new Date());
-        startDate = new Date(116,1,1);
-
+    private void downloadSleep(final Date startDate, final Date endDate)
+    {
         getModel().getMoreValidicSleepRecord(startDate, endDate, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -120,12 +127,13 @@ public class CloudSyncManager {
 
                     if (validicReadMoreSleepRecordsModel.getSummary().getNext() != null) {
                         //TODO view next 100 records
+                        Date newEndDate = new Date(startDate.getTime() - ONEDAY);
+                        Date newStartDate = new Date(newEndDate.getTime() - INTERVAL_DATE);
+                        downloadSleep(newStartDate, newEndDate);
                     }
 
                 }
             }
         });
-
-
     }
 }
