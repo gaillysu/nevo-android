@@ -72,7 +72,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     public List<Optional<Sleep>> get(String userId) {
         List<Optional<Sleep>> sleepList = new ArrayList<Optional<Sleep>>();
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, userId).query();
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).query();
             for (SleepDAO sleepDAO: sleepDAOList) {
                 Optional<Sleep> sleepOptional = new Optional<Sleep>();
                 sleepOptional.set(convertToNormal(sleepDAO));
@@ -108,7 +108,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     public List<Sleep> getNeedSyncSleep(String userId) {
         List<Sleep> sleepList = new ArrayList<Sleep>();
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fValidicRecordID, "0").query();
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fValidicRecordID, "0").query();
             for (SleepDAO sleepDAO: sleepDAOList) {
                 sleepList.add(convertToNormal(sleepDAO));
             }
@@ -118,8 +118,20 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         return sleepList;
     }
 
+    public boolean isFoundInLocalSleep(int activity_id)
+    {
+        try {
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fID, activity_id).query();
+            return !sleepDAOList.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private SleepDAO convertToDao(Sleep sleep){
         SleepDAO sleepDAO = new SleepDAO();
+        sleepDAO.setID(sleep.getiD());
         sleepDAO.setNevoUserID(sleep.getNevoUserID());
         sleepDAO.setCreatedDate(sleep.getCreatedDate());
         sleepDAO.setDate(sleep.getDate());

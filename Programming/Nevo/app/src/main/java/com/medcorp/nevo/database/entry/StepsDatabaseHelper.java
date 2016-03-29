@@ -94,7 +94,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     public List<Optional<Steps> > getAll(String userId) {
         List<Optional<Steps> > stepsList = new ArrayList<Optional<Steps> >();
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate,false).where().eq(StepsDAO.fNevoUserID, userId).query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 Optional<Steps> stepsOptional = new Optional<>();
                 stepsOptional.set(convertToNormal(stepsDAO));
@@ -110,7 +110,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     {
         List<Steps> stepsList = new ArrayList<Steps>();
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fValidicRecordID, "0").query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fValidicRecordID, "0").query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 stepsList.add(convertToNormal(stepsDAO));
             }
@@ -133,6 +133,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     private StepsDAO convertToDao(Steps steps){
         StepsDAO stepsDao = new StepsDAO();
+        stepsDao.setID(steps.getiD());
         stepsDao.setNevoUserID(steps.getNevoUserID());
         stepsDao.setCreatedDate(steps.getCreatedDate());
         stepsDao.setDate(steps.getDate());

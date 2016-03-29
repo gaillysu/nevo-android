@@ -5,11 +5,14 @@ import android.content.Context;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.database.DatabaseHelper;
 import com.medcorp.nevo.database.dao.StepsDAO;
+import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.validic.model.routine.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModelBase;
+import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
+import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModelBase;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import java.sql.SQLException;
@@ -52,7 +55,8 @@ public class CloudSyncManager {
         //step2:do loop mass read
         //every mass read is 100 days
         Date endDate = Common.removeTimeFromDate(new Date());
-        Date startDate = new Date(endDate.getTime() - 99*24*60*60*1000l);
+        //start date is 2016.1.1
+        Date startDate = new Date(116,1,1);
 
         getModel().getMoreValidicRoutineRecord(startDate, endDate, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
@@ -62,6 +66,7 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
+                //step3:check read result is empty or some records aren't found in local table "Steps" and save them
                 if(validicReadMoreRoutineRecordsModel.getSummary().getResults()>0)
                 {
                     for(ValidicRoutineRecordModelBase routine:validicReadMoreRoutineRecordsModel.getRoutine())
@@ -75,12 +80,52 @@ public class CloudSyncManager {
                         }
                     }
 
+                    if(validicReadMoreRoutineRecordsModel.getSummary().getNext() != null)
+                    {
+                        //TODO view next 100 records
+                    }
+
                 }
             }
         });
-        //step3:check read result is empty or some records aren't found in local table "Steps" and save them
 
         //step4:change table to "Sleep" and repeat step1,2,3
+        List<Sleep> sleepList = getModel().getNeedSyncSleep(getModel().getNevoUser().getNevoUserID());
+        for(Sleep sleep: sleepList)
+        {
+            getModel().addValidicSleepRecord(getModel().getNevoUser().getNevoUserID(), new Date(sleep.getDate()), null);
+        }
+
+        endDate = Common.removeTimeFromDate(new Date());
+        startDate = new Date(116,1,1);
+
+        getModel().getMoreValidicSleepRecord(startDate, endDate, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+
+            }
+
+            @Override
+            public void onRequestSuccess(ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel) {
+                //step3:check read result is empty or some records aren't found in local table "Sleep" and save them
+                if (validicReadMoreSleepRecordsModel.getSummary().getResults() > 0) {
+                    for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
+                        int activity_id = Integer.parseInt(sleep.getActivity_id());
+                        // if activity_id not exist in local Sleep table, save it
+                        if (!getModel().isFoundInLocalSleep(activity_id)) {
+                            //save it
+                            getModel().saveSleepFromValidic(sleep);
+                        }
+                    }
+
+                    if (validicReadMoreSleepRecordsModel.getSummary().getNext() != null) {
+                        //TODO view next 100 records
+                    }
+
+                }
+            }
+        });
+
 
     }
 }

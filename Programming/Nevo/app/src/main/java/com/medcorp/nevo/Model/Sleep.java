@@ -5,7 +5,7 @@ package com.medcorp.nevo.model;
  */
 public class Sleep implements Comparable<Sleep>{
 
-    private int iD;
+    private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     private String validicRecordID = "0";
 

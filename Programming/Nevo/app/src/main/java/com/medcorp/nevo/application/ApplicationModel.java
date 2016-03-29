@@ -63,6 +63,7 @@ import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicReadSleepRecordModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecord;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
+import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModelBase;
 import com.medcorp.nevo.validic.request.NevoUserRegisterRequest;
 import com.medcorp.nevo.validic.request.routine.AddRoutineRecordRequest;
 import com.medcorp.nevo.validic.request.routine.DeleteRoutineRecordRequest;
@@ -89,6 +90,9 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -289,6 +293,10 @@ public class ApplicationModel extends Application {
     {
         return stepsDatabaseHelper.isFoundInLocalSteps(activity_id);
     }
+    public boolean isFoundInLocalSleep(int activity_id)
+    {
+        return sleepDatabaseHelper.isFoundInLocalSleep(activity_id);
+    }
     public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine)
     {
         Date createDate = Common.getLocalDateFromUTCTimestamp(routine.getTimestamp(),routine.getUtc_offset());
@@ -298,6 +306,7 @@ public class ApplicationModel extends Application {
         steps.setSteps((int) routine.getSteps());
         steps.setNevoUserID(getNevoUser().getNevoUserID());
         steps.setValidicRecordID(routine.get_id());
+        steps.setiD(Integer.parseInt(routine.getActivity_id()));
         if(routine.getExtras()!=null)
         {
             steps.setGoal(routine.getExtras().getGoal());
@@ -308,6 +317,68 @@ public class ApplicationModel extends Application {
         }
         saveDailySteps(steps);
     }
+
+    public void saveSleepFromValidic(ValidicSleepRecordModelBase validicSleepRecord)
+    {
+        Date createDate = Common.getLocalDateFromUTCTimestamp(validicSleepRecord.getTimestamp(),validicSleepRecord.getUtc_offset());
+
+        Sleep sleep = new Sleep(createDate.getTime());
+        sleep.setiD(Integer.parseInt(validicSleepRecord.getActivity_id()));
+        sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
+        if(validicSleepRecord.getExtras()!=null)
+        {
+            int lightSleep = 0;
+            int deepSleep = 0;
+            int wake = 0;
+            List<Integer> hourlySleepList = new ArrayList<Integer>();
+
+            sleep.setHourlyWake(validicSleepRecord.getExtras().getHourlyWake());
+            sleep.setHourlyLight(validicSleepRecord.getExtras().getHourlyLight());
+            sleep.setHourlyDeep(validicSleepRecord.getExtras().getHourlyDeep());
+
+            try {
+                JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
+                for (int i = 0; i < hourlyWake.length(); i++) {
+                    wake += Integer.parseInt(hourlyWake.getString(i));
+                    hourlySleepList.add(Integer.parseInt(hourlyWake.getString(i)));
+                }
+
+                JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
+                for (int i = 0; i < hourlyLight.length(); i++) {
+                    lightSleep += Integer.parseInt(hourlyLight.getString(i));
+                    hourlySleepList.set(i,hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
+                }
+
+                JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
+                for (int i = 0; i <hourlyDeep.length(); i++) {
+                    deepSleep += Integer.parseInt(hourlyDeep.getString(i));
+                    hourlySleepList.set(i,hourlySleepList.get(i)+Integer.parseInt(hourlyDeep.getString(i)));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            sleep.setHourlySleep(hourlySleepList.toString());
+            sleep.setTotalSleepTime(wake+deepSleep+lightSleep);
+            sleep.setTotalWakeTime(wake);
+            sleep.setTotalLightTime(deepSleep);
+            sleep.setTotalDeepTime(lightSleep);
+        }
+        //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
+        sleep.setStart(0);
+        sleep.setEnd(0);
+        sleep.setNevoUserID(getNevoUser().getNevoUserID());
+        sleep.setValidicRecordID(validicSleepRecord.get_id());
+        try {
+            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        saveDailySleep(sleep);
+    }
+
 
     public List<Sleep> getNeedSyncSleep(String userid)
     {
@@ -610,7 +681,7 @@ public class ApplicationModel extends Application {
                 {
                     //409:Activity is already taken
                     //422:Timestamp is already taken
-                    updateValidicRoutineRecord(nevoUserID,date,listener);
+                    //updateValidicRoutineRecord(nevoUserID,date,listener);
                 }
                 processListener(listener, spiceException);
             }
