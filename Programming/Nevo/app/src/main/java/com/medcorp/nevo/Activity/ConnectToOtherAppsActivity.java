@@ -155,7 +155,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //read
         if(position == 4 && isChecked)
         {
-            getModel().getMoreValidicRoutineRecord(new Date(),new Date(),null);
+            getModel().getMoreValidicRoutineRecord(new Date(),new Date(),1,null);
         }
         //update
         if(position == 5 && isChecked)
@@ -175,7 +175,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         //read sleep
         if(position == 8 && isChecked)
         {
-            getModel().getMoreValidicSleepRecord(new Date(),new Date(),null);
+            getModel().getMoreValidicSleepRecord(new Date(),new Date(),1,null);
         }
         //delete sleep
         if(position == 9 && isChecked)

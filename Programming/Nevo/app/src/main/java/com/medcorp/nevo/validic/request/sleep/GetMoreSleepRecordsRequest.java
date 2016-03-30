@@ -14,18 +14,20 @@ public class GetMoreSleepRecordsRequest extends RetrofitSpiceRequest<ValidicRead
     private String   validicUserId;
     private String   start_timestamp;
     private String   end_timestamp;
+    private int      page;
 
-    public GetMoreSleepRecordsRequest(String organizationId, String organizationTokenKey, String validicUserId,String   start_timestamp,String   end_timestamp) {
+    public GetMoreSleepRecordsRequest(String organizationId, String organizationTokenKey, String validicUserId,String   start_timestamp,String   end_timestamp,int page) {
         super(ValidicReadMoreSleepRecordsModel.class,Validic.class);
         this.organizationId = organizationId;
         this.organizationTokenKey = organizationTokenKey;
         this.validicUserId = validicUserId;
         this.start_timestamp = start_timestamp;
         this.end_timestamp = end_timestamp;
+        this.page = page;
     }
 
     @Override
     public ValidicReadMoreSleepRecordsModel loadDataFromNetwork() throws Exception {
-        return getService().getMoreSleepRecordsRequest(organizationId, validicUserId, organizationTokenKey,start_timestamp,end_timestamp,1);
+        return getService().getMoreSleepRecordsRequest(organizationId, validicUserId, organizationTokenKey,start_timestamp,end_timestamp,1,page);
     }
 }

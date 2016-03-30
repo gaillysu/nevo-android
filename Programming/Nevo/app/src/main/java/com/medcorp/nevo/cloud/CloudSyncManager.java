@@ -31,15 +31,14 @@ import java.util.List;
  * START AN BACKGROUND TASK TO DO IT IS A GOOD IDEA.
  * how to have a cloud sync?
  * step1: sync local steps & sleep records if their Valid_record_ID is "0","0" is the default value in the steps/sleep local table
- * step2: read validic records between start_date = Date.now() - 100 and end_date =  Date.now()
+ * step2: read validic records between start_date = Date.now() - 365 and end_date =  Date.now(),every time get limit 100 records.
  * step3: check step2 return list, get those records that not found in local database, save them to local database.
- * step4: goto step2, change start_date = Date.now() - 200 and end_date = Date.now() - 100,do next read until step2 return empty records
+ * step4: goto step2, change the page number,read next page until step2 return summary.next is null
  */
 public class CloudSyncManager {
     private final String TAG = "CloudSyncManager";
     private Context context;
-    final long INTERVAL_DATE = 99 * 24 * 60 * 60 *1000l;
-    final long ONEDAY = 24 * 60 * 60 *1000l;
+    final long INTERVAL_DATE = 365 * 24 * 60 * 60 *1000l;//user can get all data in a year
 
     public CloudSyncManager(Context context)
     {
@@ -59,7 +58,7 @@ public class CloudSyncManager {
         Date endDate = Common.removeTimeFromDate(new Date());
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
 
-        downloadSteps(startDate,endDate);
+        downloadSteps(startDate,endDate,1);
 
         //step4:change table to "Sleep" and repeat step1,2,3
         List<Sleep> sleepList = getModel().getNeedSyncSleep(getModel().getNevoUser().getNevoUserID());
@@ -68,12 +67,12 @@ public class CloudSyncManager {
             getModel().addValidicSleepRecord(getModel().getNevoUser().getNevoUserID(), new Date(sleep.getDate()), null);
         }
 
-        downloadSleep(startDate,endDate);
+        downloadSleep(startDate,endDate,1);
     }
 
-    private void downloadSteps(final Date startDate, final Date endDate)
+    private void downloadSteps(final Date startDate, final Date endDate,final int page)
     {
-        getModel().getMoreValidicRoutineRecord(startDate, endDate, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
+        getModel().getMoreValidicRoutineRecord(startDate, endDate, page, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -92,11 +91,13 @@ public class CloudSyncManager {
                         }
                     }
 
-                    if (validicReadMoreRoutineRecordsModel.getSummary().getNext() != null) {
-                        //TODO view next 100 records
-                        Date newEndDate = new Date(startDate.getTime() - ONEDAY);
-                        Date newStartDate = new Date(newEndDate.getTime() - INTERVAL_DATE);
-                        downloadSteps(newStartDate,newEndDate);
+                    if (validicReadMoreRoutineRecordsModel.getSummary().getNext() != null)
+                    {
+                        String nextPageUrl = validicReadMoreRoutineRecordsModel.getSummary().getNext();
+                        int pageStart = nextPageUrl.indexOf("page=");
+                        int pageEnd =  nextPageUrl.substring(pageStart).indexOf("&");
+                        int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
+                        downloadSteps(startDate, endDate, nextPage);
                     }
 
                 }
@@ -104,9 +105,9 @@ public class CloudSyncManager {
         });
     }
 
-    private void downloadSleep(final Date startDate, final Date endDate)
+    private void downloadSleep(final Date startDate, final Date endDate,final int page)
     {
-        getModel().getMoreValidicSleepRecord(startDate, endDate, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
+        getModel().getMoreValidicSleepRecord(startDate, endDate, page, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -126,10 +127,12 @@ public class CloudSyncManager {
                     }
 
                     if (validicReadMoreSleepRecordsModel.getSummary().getNext() != null) {
-                        //TODO view next 100 records
-                        Date newEndDate = new Date(startDate.getTime() - ONEDAY);
-                        Date newStartDate = new Date(newEndDate.getTime() - INTERVAL_DATE);
-                        downloadSleep(newStartDate, newEndDate);
+
+                        String nextPageUrl = validicReadMoreSleepRecordsModel.getSummary().getNext();
+                        int pageStart = nextPageUrl.indexOf("page=");
+                        int pageEnd =  nextPageUrl.substring(pageStart).indexOf("&");
+                        int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
+                        downloadSleep(startDate, endDate, nextPage);
                     }
 
                 }

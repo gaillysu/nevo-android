@@ -749,10 +749,10 @@ public class ApplicationModel extends Application {
 
     public void getValidicRoutineRecord(Date date,final ResponseListener listener)
     {
-        getMoreValidicRoutineRecord(date, date, listener);
+        getMoreValidicRoutineRecord(date, date,1,listener);
     }
 
-    public void getMoreValidicRoutineRecord(Date startDate,Date endDate,final ResponseListener listener)
+    public void getMoreValidicRoutineRecord(Date startDate,Date endDate,int page,final ResponseListener listener)
     {
         if(!nevoUser.isConnectValidic()){
             return;
@@ -761,7 +761,7 @@ public class ApplicationModel extends Application {
         String start_timestamp = Common.getUTCTimestampFromLocalDate(startDate);
         String end_timestamp = Common.getUTCTimestampFromLocalDate(endDate);
 
-        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),start_timestamp,end_timestamp);
+        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),start_timestamp,end_timestamp,page);
 
         validicManager.execute(getMoreRecordsRequest, new RequestListener<ValidicReadMoreRoutineRecordsModel>() {
             @Override
@@ -871,10 +871,10 @@ public class ApplicationModel extends Application {
 
     public void getValidicSleepRecord(Date date,final ResponseListener listener)
     {
-        getMoreValidicSleepRecord(date,date,listener);
+        getMoreValidicSleepRecord(date,date,1,listener);
     }
 
-    public void getMoreValidicSleepRecord(Date startDate,Date endDate,final ResponseListener listener)
+    public void getMoreValidicSleepRecord(Date startDate,Date endDate,int page,final ResponseListener listener)
     {
         if(!nevoUser.isConnectValidic()){
             return;
@@ -882,7 +882,7 @@ public class ApplicationModel extends Application {
         String start_timestamp = Common.getUTCTimestampFromLocalDate(startDate);
         String end_timestamp = Common.getUTCTimestampFromLocalDate(endDate);
 
-        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),start_timestamp,end_timestamp);
+        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken(),getNevoUser().getValidicUserID(),start_timestamp,end_timestamp,page);
 
         validicManager.execute(getMoreRecordsRequest, new RequestListener<ValidicReadMoreSleepRecordsModel>() {
             @Override
