@@ -64,7 +64,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps),R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support),R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch),R.drawable.setting_forget));
-        listMenu.add(new SettingsMenuItem("Log in",R.drawable.setting_mynevo,false));
+        listMenu.add(new SettingsMenuItem("Log in",R.drawable.setting_mynevo,getModel().getNevoUser().isLogin()));
         settingAdapter = new SettingMenuAdapter(getContext(),listMenu, this);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
@@ -140,6 +140,10 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                         ToastHelper.showLongToast(getContext(),nevoUserModel.getState());
                     }
                 });
+            }
+            else {
+                getModel().getNevoUser().setIsLogin(false);
+                getModel().saveNevoUser(getModel().getNevoUser());
             }
         }
     }

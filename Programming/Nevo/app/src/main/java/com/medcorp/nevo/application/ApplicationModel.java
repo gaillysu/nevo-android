@@ -31,6 +31,7 @@ import com.medcorp.nevo.database.entry.UserDatabaseHelper;
 import com.medcorp.nevo.event.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.nevo.event.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.nevo.event.GoogleFitUpdateEvent;
+import com.medcorp.nevo.event.LittleSyncEvent;
 import com.medcorp.nevo.event.OnSyncEvent;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
@@ -208,6 +209,14 @@ public class ApplicationModel extends Application {
     public void onEvent(OnSyncEvent event){
         if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             updateGoogleFit();
+            getCloudSyncManager().launchSyncWeekly();
+        }
+    }
+
+    @Subscribe
+    public void onEvent(LittleSyncEvent event) {
+        if (event.isSuccess()) {
+            getCloudSyncManager().launchSyncDaily();
         }
     }
 
@@ -603,7 +612,6 @@ public class ApplicationModel extends Application {
 
             @Override
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                processListener(listener, nevoUserModel);
                 Log.i("ApplicationModel", "nevo user register: " + nevoUserModel.getState());
                 if(nevoUserModel.getState().equals("success"))
                 {
@@ -613,6 +621,7 @@ public class ApplicationModel extends Application {
                     //save to "user" local table
                     saveNevoUser(nevoUser);
                 }
+                processListener(listener, nevoUserModel);
             }
         });
     }
@@ -630,7 +639,6 @@ public class ApplicationModel extends Application {
 
             @Override
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                processListener(listener, nevoUserModel);
                 Log.i("ApplicationModel", "nevo user login: " + nevoUserModel.getState());
                 if(nevoUserModel.getState().equals("success"))
                 {
@@ -638,7 +646,10 @@ public class ApplicationModel extends Application {
                     nevoUser.setNevoUserToken(nevoUserModel.getToken());
                     nevoUser.setIsLogin(true);
                     saveNevoUser(nevoUser);
+                    getSyncController().getDailyTrackerInfo(true);
+                    getCloudSyncManager().launchSyncAll();
                 }
+                processListener(listener, nevoUserModel);
             }
         });
     }

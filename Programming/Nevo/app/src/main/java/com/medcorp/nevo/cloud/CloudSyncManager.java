@@ -46,7 +46,10 @@ public class CloudSyncManager {
     }
     private ApplicationModel getModel() {return (ApplicationModel)context;}
 
-    public void launchSync(){
+    /**
+     * when user login, invoke it
+     */
+    public void launchSyncAll(){
         //step1:read local table "Steps" with validicRecordID = "0"
          List<Steps> stepsList = getModel().getNeedSyncSteps(getModel().getNevoUser().getNevoUserID());
          for(Steps steps: stepsList)
@@ -130,7 +133,7 @@ public class CloudSyncManager {
 
                         String nextPageUrl = validicReadMoreSleepRecordsModel.getSummary().getNext();
                         int pageStart = nextPageUrl.indexOf("page=");
-                        int pageEnd =  nextPageUrl.substring(pageStart).indexOf("&");
+                        int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
                         int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
                         downloadSleep(startDate, endDate, nextPage);
                     }
@@ -139,4 +142,31 @@ public class CloudSyncManager {
             }
         });
     }
+
+    /**
+     * when today's steps got change, invoke it
+     */
+    public void launchSyncDaily()
+    {
+        getModel().addValidicRoutineRecord(getModel().getNevoUser().getNevoUserID(),new Date(),null);
+    }
+
+    /**
+     * when syncController big sync is done, invoke it
+     */
+    public void launchSyncWeekly()
+    {
+        List<Steps> stepsList = getModel().getNeedSyncSteps(getModel().getNevoUser().getNevoUserID());
+        for(Steps steps: stepsList)
+        {
+            getModel().addValidicRoutineRecord(getModel().getNevoUser().getNevoUserID(),new Date(steps.getDate()),null);
+        }
+
+        List<Sleep> sleepList = getModel().getNeedSyncSleep(getModel().getNevoUser().getNevoUserID());
+        for(Sleep sleep: sleepList)
+        {
+            getModel().addValidicSleepRecord(getModel().getNevoUser().getNevoUserID(), new Date(sleep.getDate()), null);
+        }
+    }
+
 }
