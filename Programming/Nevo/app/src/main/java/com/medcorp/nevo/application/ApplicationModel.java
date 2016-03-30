@@ -532,8 +532,7 @@ public class ApplicationModel extends Application {
                 public void run() {
                     if(result instanceof SpiceException)
                     {
-                        //ToastHelper.showLongToast(ApplicationModel.this,((SpiceException) result).getCause().getLocalizedMessage());
-                        Log.e("ApplicationModel",((SpiceException) result).getCause().getLocalizedMessage());
+                        Log.e("ApplicationModel","" +result);
                     }
                     if(listener!=null)
                     {
