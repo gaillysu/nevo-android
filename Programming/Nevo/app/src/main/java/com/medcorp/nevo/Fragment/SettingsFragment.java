@@ -121,7 +121,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     }
 
     @Override
-    public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
+    public void onCheckedChange(CompoundButton buttonView, boolean isChecked, final int position) {
         if (position == 0) {
             Preferences.saveLinklossNotification(getActivity(), isChecked);
         }
@@ -132,12 +132,16 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 getModel().nevoUserLogin("gaillysu@med-corp.net", "Ma314109", new ResponseListener<NevoUserModel>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-
+                        ToastHelper.showLongToast(getContext(),""+spiceException);
+                        listMenu.set(position, new SettingsMenuItem("Log in", R.drawable.setting_mynevo, false));
+                        settingAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onRequestSuccess(NevoUserModel nevoUserModel) {
                         ToastHelper.showLongToast(getContext(),nevoUserModel.getState());
+                        listMenu.set(position,new SettingsMenuItem("Log in",R.drawable.setting_mynevo,nevoUserModel.getState().equals("success")));
+                        settingAdapter.notifyDataSetChanged();
                     }
                 });
             }
