@@ -530,10 +530,6 @@ public class ApplicationModel extends Application {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if(result instanceof SpiceException)
-                    {
-                        Log.e("ApplicationModel","" +result);
-                    }
                     if(listener!=null)
                     {
                         if (result instanceof SpiceException) {
@@ -688,7 +684,8 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
-                if(spiceException.getCause().getLocalizedMessage().contains("409") || spiceException.getCause().getLocalizedMessage().contains("422"))
+                String causeString = spiceException.getCause()==null?"":spiceException.getCause().getLocalizedMessage()+"";
+                if(causeString.contains("409") || causeString.contains("422"))
                 {
                     //409:Activity is already taken
                     //422:Timestamp is already taken
@@ -700,7 +697,7 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
                 Log.i("ApplicationModel", "validicRecordModel = " + validicRecordModel);
-                if(validicRecordModel.getCode().equals("200") || validicRecordModel.getCode().equals("201"))
+                if (validicRecordModel.getCode().equals("200") || validicRecordModel.getCode().equals("201"))
                 {
                     //save validic record ID to local database, for using cloud sync
                     steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
@@ -860,7 +857,8 @@ public class ApplicationModel extends Application {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
-                if(spiceException.getCause().getLocalizedMessage().contains("409")||spiceException.getCause().getLocalizedMessage().contains("422"))
+                String causeString = spiceException.getCause()==null?"":spiceException.getCause().getLocalizedMessage()+"";
+                if(causeString.contains("409")||causeString.contains("422"))
                 {
                     //DO NOTHING, sleep record can't be update
                 }
