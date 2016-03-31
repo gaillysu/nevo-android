@@ -24,5 +24,6 @@
     <color name="list_item_header_text_color">#6F6F6F</color>
     <color name="list_item_sub_text">#757575</color>
 
+    <color name="baseBackground">#F6F6F6</color>
 
 </resources>

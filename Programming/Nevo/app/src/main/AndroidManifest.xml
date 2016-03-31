@@ -42,6 +42,14 @@
 
         </activity>
         <activity
+            android:name=".activity.login.LoginActivity"
+            android:theme="@style/AppTheme.Dark"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.login.SignupActivity"
+            android:theme="@style/AppTheme.Dark"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.EditAlarmActivity"
             android:screenOrientation="portrait"/>
 

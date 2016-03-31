@@ -589,6 +589,8 @@ public class ApplicationModel extends Application {
                 nevoUser.setValidicUserToken(validicUser.getUser().getAccess_token());
                 nevoUser.setIsConnectValidic(true);
                 saveNevoUser(nevoUser);
+                getSyncController().getDailyTrackerInfo(true);
+                getCloudSyncManager().launchSyncAll();
                 processListener(listener, validicUser);
             }
         });
@@ -615,6 +617,8 @@ public class ApplicationModel extends Application {
                     nevoUser.setIsLogin(true);
                     //save to "user" local table
                     saveNevoUser(nevoUser);
+                    getSyncController().getDailyTrackerInfo(true);
+                    getCloudSyncManager().launchSyncAll();
                 }
                 processListener(listener, nevoUserModel);
             }
@@ -651,7 +655,7 @@ public class ApplicationModel extends Application {
 
     public void addValidicRoutineRecord(final String nevoUserID, final Date date, final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
         final Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
@@ -710,7 +714,7 @@ public class ApplicationModel extends Application {
 
     public void updateValidicRoutineRecord(String nevoUserID, Date date, final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
 
@@ -761,7 +765,7 @@ public class ApplicationModel extends Application {
 
     public void getMoreValidicRoutineRecord(Date startDate,Date endDate,int page,final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
 
@@ -787,7 +791,7 @@ public class ApplicationModel extends Application {
 
     public void deleteValidicRoutineRecord(final String nevoUserID, final Date date, final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
         final Steps steps =  getDailySteps(nevoUserID, Common.removeTimeFromDate(date));
@@ -820,7 +824,7 @@ public class ApplicationModel extends Application {
     //sleep operation functions:
     public void addValidicSleepRecord(String nevoUserID,Date date,final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
         final Optional<Sleep> sleep = getDailySleep(nevoUserID,date);
@@ -884,7 +888,7 @@ public class ApplicationModel extends Application {
 
     public void getMoreValidicSleepRecord(Date startDate,Date endDate,int page,final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
         String start_timestamp = Common.getUTCTimestampFromLocalDate(startDate);
@@ -909,7 +913,7 @@ public class ApplicationModel extends Application {
 
     public void deleteValidicSleepRecord(final String nevoUserID, final Date date, final ResponseListener listener)
     {
-        if(!nevoUser.isConnectValidic()){
+        if(!nevoUser.isLogin()||!nevoUser.isConnectValidic()){
             return;
         }
         Optional<Sleep> sleep = getDailySleep(nevoUserID, date);

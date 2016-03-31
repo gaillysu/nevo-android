@@ -1,5 +1,6 @@
 package com.medcorp.nevo.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,16 +20,14 @@ import com.medcorp.nevo.activity.ConnectToOtherAppsActivity;
 import com.medcorp.nevo.activity.GoalsActivity;
 import com.medcorp.nevo.activity.MyNevoActivity;
 import com.medcorp.nevo.activity.SettingNotificationActivity;
+import com.medcorp.nevo.activity.login.LoginActivity;
 import com.medcorp.nevo.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
 import com.medcorp.nevo.model.SettingsMenuItem;
-import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Preferences;
-import com.medcorp.nevo.validic.model.NevoUserModel;
 import com.medcorp.nevo.view.ToastHelper;
-import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     private List<SettingsMenuItem> listMenu;
 
     private SettingMenuAdapter settingAdapter;
+
+    final private int REQUEST_LOGIN = 100;
 
     @Nullable
     @Override
@@ -126,28 +127,27 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Preferences.saveLinklossNotification(getActivity(), isChecked);
         }
         if(position == 8) {
-            if(isChecked)
-            {
-                //TODO this is test code
-                getModel().nevoUserLogin("gaillysu@med-corp.net", "Ma314109", new ResponseListener<NevoUserModel>() {
-                    @Override
-                    public void onRequestFailure(SpiceException spiceException) {
-                        ToastHelper.showLongToast(getContext(),""+spiceException);
-                        listMenu.set(position, new SettingsMenuItem("Log in", R.drawable.setting_mynevo, false));
-                        settingAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                        ToastHelper.showLongToast(getContext(),nevoUserModel.getState());
-                        listMenu.set(position,new SettingsMenuItem("Log in",R.drawable.setting_mynevo,nevoUserModel.getState().equals("success")));
-                        settingAdapter.notifyDataSetChanged();
-                    }
-                });
+            if(isChecked) {
+                getActivity().startActivityForResult(new Intent(getActivity(),LoginActivity.class), REQUEST_LOGIN);
             }
             else {
                 getModel().getNevoUser().setIsLogin(false);
                 getModel().saveNevoUser(getModel().getNevoUser());
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LOGIN) {
+            if(resultCode == Activity.RESULT_OK) {
+                listMenu.set(8, new SettingsMenuItem("Log in", R.drawable.setting_mynevo, true));
+                settingAdapter.notifyDataSetChanged();
+            }
+            else if(resultCode == Activity.RESULT_CANCELED) {
+                listMenu.set(8, new SettingsMenuItem("Log in", R.drawable.setting_mynevo, false));
+                settingAdapter.notifyDataSetChanged();
             }
         }
     }
