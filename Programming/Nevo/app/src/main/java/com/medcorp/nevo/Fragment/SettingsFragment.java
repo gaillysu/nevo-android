@@ -65,7 +65,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps),R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support),R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch),R.drawable.setting_forget));
-        listMenu.add(new SettingsMenuItem("Log in",R.drawable.setting_mynevo,getModel().getNevoUser().isLogin()));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_login),R.drawable.setting_mynevo,getModel().getNevoUser().isLogin()));
         settingAdapter = new SettingMenuAdapter(getContext(),listMenu, this);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
@@ -142,11 +142,11 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOGIN) {
             if(resultCode == Activity.RESULT_OK) {
-                listMenu.set(8, new SettingsMenuItem("Log in", R.drawable.setting_mynevo, true));
+                listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, true));
                 settingAdapter.notifyDataSetChanged();
             }
             else if(resultCode == Activity.RESULT_CANCELED) {
-                listMenu.set(8, new SettingsMenuItem("Log in", R.drawable.setting_mynevo, false));
+                listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, false));
                 settingAdapter.notifyDataSetChanged();
             }
         }

@@ -62,7 +62,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
         menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit_small, Preferences.isGoogleFitSet(this)));
-        menuList.add(new SettingsMenuItem("Validic",R.drawable.google_fit_small,getModel().getNevoUser().isConnectValidic()));
+        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_validic),R.drawable.google_fit_small,getModel().getNevoUser().isConnectValidic()));
         settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
@@ -89,27 +89,27 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                 getModel().initGoogleFit(this);
             }else{
                 googleFitLogoutDialog = new MaterialDialog.Builder(this)
-                        .title("Logout Google Play")
-                        .content("Do you want to disable Google Fit?")
-                        .positiveText("Logout")
-                        .negativeText("Cancel")
+                        .title(R.string.google_fit_log_out_title)
+                        .content(R.string.google_fit_log_out_message)
+                        .positiveText(R.string.google_fit_log_out)
+                        .negativeText(R.string.google_fit_cancel)
                         .onPositive(positiveCallback)
                         .onNegative(negativeCallback)
                         .build();
                 googleFitLogoutDialog.show();
             }
         }
-        //TODO this is test code
+
         if(position == 1) {
             if(isChecked)
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://partner.validic.com/applications/47/test/marketplace"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.validic_pin_code_url)));
                 startActivity(intent);
 
                 new MaterialDialog.Builder(this)
-                        .title("Input PIN code")
+                        .title(R.string.validic_pin_code_title)
                         .inputType(InputType.TYPE_CLASS_NUMBER)
-                        .input("pin code", "", new MaterialDialog.InputCallback() {
+                        .input(getString(R.string.validic_pin_code), "", new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 if (input.length() == 0) {

@@ -202,6 +202,8 @@
     <string name="settings_other_apps_short">Other apps</string>
 
     <string name="settings_other_apps_google_fit">Google Fit</string>
+    <string name="settings_other_apps_validic">Validic</string>
+    <string name="settings_login">Log in</string>
 
     <string name="google_fit_could_not_login">Couldn\'t login, try again later</string>
     <string name="google_fit_connecting">Connecting to Google Account Failed</string>
@@ -211,7 +213,31 @@
     <string name="google_fit_unknown_network">Unknown Network Error Occurred</string>
     <string name="google_fit_synced">Synced data with Google fit complete.</string>
     <string name="google_fit_sync_error">Error syncing data to Google Fit.</string>
+    <string name="google_fit_log_out_title">Log out Google Play</string>
+    <string name="google_fit_log_out_message">Do you want to disable Google Fit?</string>
+    <string name="google_fit_log_out">Log out</string>
+    <string name="google_fit_cancel">Cancel</string>
 
+    <string name="validic_pin_code_title">Input PIN code</string>
+    <string name="validic_pin_code">pin code</string>
+
+    <string name="log_in">Log in</string>
+    <string name="log_in_email">Email</string>
+    <string name="log_in_password">Password</string>
+    <string name="log_in_popup_message">Logging in...</string>
+    <string name="log_in_success">Login success</string>
+    <string name="log_in_failed">Login failed</string>
+
+    <string name="register_create_account">Create Account</string>
+    <string name="register_password_confirm">Confirm Password</string>
+    <string name="register_account_message">No account yet? Create one</string>
+    <string name="register_to_login">Already a member? Login</string>
+    <string name="register_success">Sign up success</string>
+    <string name="register_failed">Sign up failed</string>
+    <string name="register_popup_message">Creating Account...</string>
+    <string name="register_email_error">enter a valid email address</string>
+    <string name="register_password_error">between 4 and 10 alphanumeric characters</string>
+    <string name="register_password_confirm_error">confirm password failed</string>
 
     <string name="tab_title_today">Today</string>
     <string name="tab_title_History">History</string>

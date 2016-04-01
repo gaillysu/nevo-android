@@ -69,7 +69,7 @@ public class SignupActivity extends BaseActivity {
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Creating Account...");
+        progressDialog.setMessage(getString(R.string.register_popup_message));
         progressDialog.show();
 
         String email = _emailText.getText().toString();
@@ -97,7 +97,7 @@ public class SignupActivity extends BaseActivity {
 
 
     public void onSignupSuccess() {
-        Toast.makeText(getBaseContext(), "Sign up success", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
         getModel().saveNevoUser(getModel().getNevoUser());
@@ -106,7 +106,7 @@ public class SignupActivity extends BaseActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Sign up failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), R.string.register_failed, Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 
@@ -118,21 +118,21 @@ public class SignupActivity extends BaseActivity {
         String passwordConfirm = _passwordConfirmText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError(getString(R.string.register_email_error));
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {
             _passwordText.setError(null);
         }
 
         if(!passwordConfirm.equals(password)) {
-            _passwordText.setError("confirm password failed");
+            _passwordText.setError(getString(R.string.register_password_confirm_error));
             valid = false;
         }
 
