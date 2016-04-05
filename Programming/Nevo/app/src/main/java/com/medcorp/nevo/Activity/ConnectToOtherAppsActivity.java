@@ -103,6 +103,12 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         if(position == 1) {
             if(isChecked)
             {
+                if(!getModel().getNevoUser().isLogin()) {
+                    ToastHelper.showLongToast(this,getString(R.string.validic_enable_message));
+                    settingsAdapter.getItem(position).setSwitchStatus(false);
+                    settingsAdapter.notifyDataSetChanged();
+                    return;
+                }
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.validic_pin_code_url)));
                 startActivity(intent);
 

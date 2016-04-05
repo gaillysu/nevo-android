@@ -220,6 +220,7 @@
 
     <string name="validic_pin_code_title">Input PIN code</string>
     <string name="validic_pin_code">pin code</string>
+    <string name="validic_enable_message">Please login firstly</string>
 
     <string name="log_in">Log in</string>
     <string name="log_in_email">Email</string>

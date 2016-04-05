@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     NavigationView navigationView;
 
     private View rootView;
+    private TextView userView;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MenuItem selectedMenuItem;
@@ -97,6 +98,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     .replace(R.id.activity_main_frame_layout, fragment)
                     .commit();
         }
+
+        View headerView = navigationView.getHeaderView(0);
+        userView = (TextView) headerView.findViewById(R.id.navigation_header_textview);
     }
 
     @Override
@@ -154,7 +158,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void onDrawerSlide(View drawerView, float slideOffset) {}
 
     @Override
-    public void onDrawerOpened(View drawerView) {}
+    public void onDrawerOpened(View drawerView) {
+        userView.setText(getModel().getNevoUser().isLogin()?getModel().getNevoUser().getNevoUserEmail():"");
+    }
 
     @Override
     public void onDrawerClosed(View drawerView) {
