@@ -71,6 +71,17 @@ public class Preferences {
         return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
     }
 
+    public static void setProfileUnit(Context context,int unit){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("profile_unit", unit).apply();
+    }
+
+    public static int getProfileUnit(Context context){
+        init(context);
+        return preferences.getInt("profile_unit", 0);
+    }
+
     private static NevoLed distinguish(int ledColor){
         switch (ledColor){
             case 0x100000:

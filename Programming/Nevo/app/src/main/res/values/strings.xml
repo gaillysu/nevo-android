@@ -240,6 +240,18 @@
     <string name="register_password_error">between 4 and 10 alphanumeric characters</string>
     <string name="register_password_confirm_error">confirm password failed</string>
 
+    <string name="profile_title">Profile</string>
+    <string name="profile_input_height">Input height</string>
+    <string name="profile_set_height">Set height</string>
+    <string name="profile_input_weight">Input weight</string>
+    <string name="profile_set_weight">Set weight</string>
+    <string name="profile_input_gender">Select gender</string>
+    <string name="profile_set_gender">Set gender</string>
+    <string name="profile_input_age">Input age</string>
+    <string name="profile_set_age">Set age</string>
+    <string name="profile_input_unit">Select unit</string>
+    <string name="profile_set_unit">Set unit</string>
+
     <string name="tab_title_today">Today</string>
     <string name="tab_title_History">History</string>
 

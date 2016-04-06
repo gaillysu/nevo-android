@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
@@ -101,6 +102,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
         View headerView = navigationView.getHeaderView(0);
         userView = (TextView) headerView.findViewById(R.id.navigation_header_textview);
+        ImageView userImageView = (ImageView) headerView.findViewById(R.id.navigation_header_imageview);
+        userImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+            }
+        });
     }
 
     @Override

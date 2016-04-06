@@ -2,10 +2,12 @@ package com.medcorp.nevo.application;
 
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -48,38 +50,33 @@ import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.validic.ValidicManager;
 import com.medcorp.nevo.validic.ValidicMedManager;
 import com.medcorp.nevo.validic.model.NevoUserModel;
-import com.medcorp.nevo.validic.model.routine.RoutineGoal;
-import com.medcorp.nevo.validic.model.routine.RoutineModel;
-import com.medcorp.nevo.validic.model.routine.ValidicDeleteRoutineRecordModel;
-import com.medcorp.nevo.validic.model.routine.ValidicReadMoreRoutineRecordsModel;
-import com.medcorp.nevo.validic.model.routine.ValidicReadRoutineRecordModel;
-import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecord;
-import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModel;
 import com.medcorp.nevo.validic.model.ValidicUser;
 import com.medcorp.nevo.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.validic.model.routine.RoutineGoal;
+import com.medcorp.nevo.validic.model.routine.ValidicDeleteRoutineRecordModel;
+import com.medcorp.nevo.validic.model.routine.ValidicReadMoreRoutineRecordsModel;
+import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecord;
+import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModel;
 import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModelBase;
 import com.medcorp.nevo.validic.model.sleep.NevoHourlySleepData;
 import com.medcorp.nevo.validic.model.sleep.ValidicDeleteSleepRecordModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
-import com.medcorp.nevo.validic.model.sleep.ValidicReadSleepRecordModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecord;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
 import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModelBase;
-import com.medcorp.nevo.validic.request.NevoUserRegisterRequest;
-import com.medcorp.nevo.validic.request.routine.AddRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.routine.DeleteRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.routine.GetMoreRoutineRecordsRequest;
-import com.medcorp.nevo.validic.request.routine.GetRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.NevoUserLoginRequest;
-import com.medcorp.nevo.validic.request.routine.UpdateRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.sleep.AddSleepRecordRequest;
 import com.medcorp.nevo.validic.request.CreateUserRequestObject;
 import com.medcorp.nevo.validic.request.CreateUserRequestObjectUser;
 import com.medcorp.nevo.validic.request.CreateUserRetroRequest;
+import com.medcorp.nevo.validic.request.NevoUserLoginRequest;
+import com.medcorp.nevo.validic.request.NevoUserRegisterRequest;
 import com.medcorp.nevo.validic.request.VerifyCredentialsRetroRequest;
+import com.medcorp.nevo.validic.request.routine.AddRoutineRecordRequest;
+import com.medcorp.nevo.validic.request.routine.DeleteRoutineRecordRequest;
+import com.medcorp.nevo.validic.request.routine.GetMoreRoutineRecordsRequest;
+import com.medcorp.nevo.validic.request.routine.UpdateRoutineRecordRequest;
+import com.medcorp.nevo.validic.request.sleep.AddSleepRecordRequest;
 import com.medcorp.nevo.validic.request.sleep.DeleteSleepRecordRequest;
 import com.medcorp.nevo.validic.request.sleep.GetMoreSleepRecordsRequest;
-import com.medcorp.nevo.validic.request.sleep.GetSleepRecordRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -945,4 +942,9 @@ public class ApplicationModel extends Application {
         });
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 }

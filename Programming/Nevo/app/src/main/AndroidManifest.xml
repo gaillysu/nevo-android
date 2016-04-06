@@ -105,6 +105,9 @@
         <activity
             android:name=".activity.OpenSleepTrackActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:screenOrientation="portrait"/>
         <service
             android:name="net.medcorp.library.ble.ble.MEDBTService"
             android:enabled="true" />

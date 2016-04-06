@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="profile_gender">
+        <item>female</item>
+        <item>male</item>
+    </string-array>
+    <string-array name="profile_gender_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="profile_unit">
+        <item>Metric</item>
+        <item>Inch</item>
+    </string-array>
+    <string-array name="profile_unit_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
+</resources>
