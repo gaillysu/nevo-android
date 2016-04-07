@@ -28,13 +28,10 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     public Optional<User> add(User object) {
         Optional<User> userOptional = new Optional<>();
         try {
-            UserDAO res = databaseHelper.getUserDao().createIfNotExists(convertToDao(object));
-            if(res!=null)
+            int res = databaseHelper.getUserDao().create(convertToDao(object));
+            if(res>0)
             {
-                //here set the ID which comes from database
-                object.setId(res.getID());
-                userOptional.set(convertToNormal(res));
-
+                userOptional.set(object);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -104,11 +101,32 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
     {
         Optional<User> userOptional = new Optional<>();
         try {
+            //logged in nevo
             List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserIsLogin, true).query();
             for(UserDAO userDAO: userDAOList) {
                 userOptional.set(convertToNormal(userDAO));
-                break;
+                return userOptional;
             }
+            //logged in validic
+            userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fValidicUserIsConnected, true).query();
+            for(UserDAO userDAO: userDAOList) {
+                userOptional.set(convertToNormal(userDAO));
+                return userOptional;
+            }
+            //logged out nevo, but register nevo successfully
+            userDAOList = databaseHelper.getUserDao().queryBuilder().query();
+            for(UserDAO userDAO: userDAOList) {
+                if(userDAO.getNevoUserToken()!=null) {
+                    userOptional.set(convertToNormal(userDAO));
+                    return userOptional;
+                }
+            }
+            //anonymous user
+            if(!userDAOList.isEmpty()){
+                userOptional.set(convertToNormal(userDAOList.get(0)));
+                return userOptional;
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

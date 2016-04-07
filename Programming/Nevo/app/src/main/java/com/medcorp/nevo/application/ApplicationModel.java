@@ -638,6 +638,12 @@ public class ApplicationModel extends Application {
                 Log.i("ApplicationModel", "nevo user login: " + nevoUserModel.getState());
                 if(nevoUserModel.getState().equals("success"))
                 {
+                    //get the user's profile from local database
+                    List<Optional<User>> user = userDatabaseHelper.get(nevoUserModel.getUid());
+                    if(!user.isEmpty())
+                    {
+                        nevoUser = user.get(0).get();
+                    }
                     nevoUser.setNevoUserID(nevoUserModel.getUid());
                     nevoUser.setNevoUserToken(nevoUserModel.getToken());
                     nevoUser.setIsLogin(true);
