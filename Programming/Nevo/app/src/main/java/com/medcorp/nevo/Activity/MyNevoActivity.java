@@ -2,6 +2,8 @@ package com.medcorp.nevo.activity;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -114,8 +116,14 @@ public class MyNevoActivity  extends BaseActivity{
     }
 
     @Subscribe
-    public void onEvent(BatteryEvent batteryEvent){
-        myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
-        myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+    public void onEvent(final BatteryEvent batteryEvent){
+        //fix crash:  Only the original thread that created a view hierarchy can touch its views.
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
+                myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
+            }
+        });
     }
 }
