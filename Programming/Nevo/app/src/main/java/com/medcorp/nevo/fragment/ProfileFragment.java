@@ -103,21 +103,6 @@ public class ProfileFragment extends PreferenceFragmentCompat {
             }
         });
 
-        final String unitArray[] = getContext().getResources().getStringArray(R.array.profile_unit);
-        preferenceList = findPreference("fragment_edit_profile_unit");
-        preferenceList.setTitle(unitArray[Preferences.getProfileUnit(getContext())]);
-        preferenceList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object o) {
-                String value = o.toString();
-                if (value.isEmpty() || !value.matches("[0-9]+")) {
-                    return false;
-                }
-                preference.setTitle(unitArray[Integer.parseInt(value)]);
-                Preferences.setProfileUnit(getContext(), Integer.parseInt(value));
-                return true;
-            }
-        });
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -126,6 +111,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                getModel().saveNevoUser(getModel().getNevoUser());
                 getActivity().finish();
                 break;
         }

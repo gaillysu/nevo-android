@@ -211,7 +211,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
                 {
                     //setp2:start set user profile
-                    sendRequest(new SetProfileNevoRequest(mContext));
+                    sendRequest(new SetProfileNevoRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
                 }
                 else if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
                 {

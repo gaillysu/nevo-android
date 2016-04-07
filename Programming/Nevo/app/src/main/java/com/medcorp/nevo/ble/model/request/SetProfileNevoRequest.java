@@ -3,14 +3,18 @@ package com.medcorp.nevo.ble.model.request;
 import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+import com.medcorp.nevo.model.User;
+import com.medcorp.nevo.util.Preferences;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 public class SetProfileNevoRequest extends BLERequestData {
 	public  final static  byte HEADER = 0x20;
+	private User user;
 
-	public SetProfileNevoRequest(Context context) {
+	public SetProfileNevoRequest(Context context,User user) {
 		super(new GattAttributesDataSourceImpl(context));
+		this.user = user;
 	}
 
 	@Override
@@ -22,11 +26,10 @@ public class SetProfileNevoRequest extends BLERequestData {
 	@Override
 	public byte[][] getRawDataEx() {
 
-        int age = 35;
-        int height = 175; //cm
-        int weight = 77;  //kg
-        int sex = 1; //man:1,female:0
-        int unit = 1; //unit ???
+        int age = user.getAge();
+        int height = user.getHeight();
+        int weight = user.getWeight();
+        int sex = user.getSex();
 
 		return new byte[][] {
 				   {0,HEADER,

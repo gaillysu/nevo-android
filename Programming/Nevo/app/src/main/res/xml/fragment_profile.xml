@@ -36,14 +36,6 @@
         android:summary="@string/profile_set_age"
         android:title="18" />
 
-    <ListPreference
-        android:key="fragment_edit_profile_unit"
-        android:id="@+id/fragment_edit_profile_unit"
-        android:summary="@string/profile_set_unit"
-        android:entries="@array/profile_unit"
-        android:entryValues="@array/profile_unit_values"
-        android:dialogTitle="@string/profile_input_unit"
-        android:defaultValue="0"
-        android:title="metric" />
+
 
 </PreferenceScreen>

@@ -6,15 +6,15 @@ public class User {
 
     private long birthday;
 
-    private int age;
+    private int age = 18;
 
-    private int weight;
+    private int weight = 77;//kg
 
-    private int height;
+    private int height = 175;//cm
 
     private final long createdDate;
 
-    private int sex;
+    private int sex = 1;//gender,man:1,female:0
 
     private String firstName;
 
