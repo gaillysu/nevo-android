@@ -1,18 +1,18 @@
 package com.medcorp.nevo.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
@@ -37,7 +37,7 @@ import butterknife.OnClick;
 /**
  * Created by gaillysu on 15/12/31.
  */
-public class EditSettingNotificationActivity extends BaseActivity implements MaterialDialog.ListCallbackSingleChoice{
+public class EditSettingNotificationActivity extends BaseActivity {
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
 
@@ -93,15 +93,29 @@ public class EditSettingNotificationActivity extends BaseActivity implements Mat
             stringList.add(getString(ledList.get(i).getStringResource()));
         }
         CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
-        new MaterialDialog.Builder(EditSettingNotificationActivity.this)
-                .title(R.string.notification_position)
-                .items(cs)
-                .itemsCallbackSingleChoice(getIndexFromLed(selectedLed), EditSettingNotificationActivity.this)
-                .positiveText(R.string.notification_ok)
-                .negativeText(R.string.notification_cancel)
-                .show();
+        selectedLed = Preferences.getNotificationColor(this,notification);
+        new AlertDialog.Builder(EditSettingNotificationActivity.this)
+                    .setTitle(R.string.notification_position)
+                    .setSingleChoiceItems(cs, getIndexFromLed(selectedLed), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which >= 0) {
+                                selectedLed = ledList.get(which);
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.notification_cancel, null)
+                    .setPositiveButton(R.string.notification_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                                colorImage.setImageDrawable(ContextCompat.getDrawable(EditSettingNotificationActivity.this, selectedLed.getImageResource()));
+                                colorLabel.setText(getString(selectedLed.getStringResource()));
+                                Preferences.saveNotificationColor(EditSettingNotificationActivity.this, notification, selectedLed);
+                                dialog.dismiss();
+                        }
+                    })
+                    .show();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -120,18 +134,5 @@ public class EditSettingNotificationActivity extends BaseActivity implements Mat
             }
         }
         return -1;
-    }
-
-    @Override
-    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-        if(which>=0)
-        {
-            selectedLed = ledList.get(which);
-            colorImage.setImageDrawable(ContextCompat.getDrawable(EditSettingNotificationActivity.this, selectedLed.getImageResource()));
-            colorLabel.setText(getString(selectedLed.getStringResource()));
-            Preferences.saveNotificationColor(this,notification,selectedLed);
-            return true;
-        }
-        return false;
     }
 }
