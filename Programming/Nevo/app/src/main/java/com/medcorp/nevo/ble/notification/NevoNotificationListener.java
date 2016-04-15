@@ -93,6 +93,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                     || statusBarNotification.getPackageName().equals("com.google.android.apps.messaging")
                     || statusBarNotification.getPackageName().equals("com.sonyericsson.conversations")
                     || statusBarNotification.getPackageName().equals("com.htc.sense.mms")
+                    || statusBarNotification.getPackageName().equals("com.google.android.talk")
                     ) {
                 //BLE keep-connect service will process this message
                 if(helper.getState(new SmsNotification()).isOn())
