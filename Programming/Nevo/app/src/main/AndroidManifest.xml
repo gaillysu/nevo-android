@@ -126,10 +126,10 @@
             android:name="com.octo.android.robospice.JacksonSpringAndroidSpiceService"
             android:exported="false" />
         <service
-            android:name=".validic.BaseRetroService"
+            android:name=".network.validic.service.validic.BaseValidicRetroService"
             android:exported="false" />
         <service
-            android:name=".validic.BaseMedRetroService"
+            android:name=".network.validic.service.BaseMedRetroService"
             android:exported="false" />
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />

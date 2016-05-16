@@ -47,36 +47,36 @@ import com.medcorp.nevo.model.User;
 import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Common;
 import com.medcorp.nevo.util.Preferences;
-import com.medcorp.nevo.validic.ValidicManager;
-import com.medcorp.nevo.validic.ValidicMedManager;
-import com.medcorp.nevo.validic.model.NevoUserModel;
-import com.medcorp.nevo.validic.model.ValidicUser;
-import com.medcorp.nevo.validic.model.VerifyCredentialModel;
-import com.medcorp.nevo.validic.model.routine.RoutineGoal;
-import com.medcorp.nevo.validic.model.routine.ValidicDeleteRoutineRecordModel;
-import com.medcorp.nevo.validic.model.routine.ValidicReadMoreRoutineRecordsModel;
-import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecord;
-import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModel;
-import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModelBase;
-import com.medcorp.nevo.validic.model.sleep.NevoHourlySleepData;
-import com.medcorp.nevo.validic.model.sleep.ValidicDeleteSleepRecordModel;
-import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
-import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecord;
-import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModel;
-import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModelBase;
-import com.medcorp.nevo.validic.request.CreateUserRequestObject;
-import com.medcorp.nevo.validic.request.CreateUserRequestObjectUser;
-import com.medcorp.nevo.validic.request.CreateUserRetroRequest;
-import com.medcorp.nevo.validic.request.NevoUserLoginRequest;
-import com.medcorp.nevo.validic.request.NevoUserRegisterRequest;
-import com.medcorp.nevo.validic.request.VerifyCredentialsRetroRequest;
-import com.medcorp.nevo.validic.request.routine.AddRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.routine.DeleteRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.routine.GetMoreRoutineRecordsRequest;
-import com.medcorp.nevo.validic.request.routine.UpdateRoutineRecordRequest;
-import com.medcorp.nevo.validic.request.sleep.AddSleepRecordRequest;
-import com.medcorp.nevo.validic.request.sleep.DeleteSleepRecordRequest;
-import com.medcorp.nevo.validic.request.sleep.GetMoreSleepRecordsRequest;
+import com.medcorp.nevo.network.validic.manager.ValidicManager;
+import com.medcorp.nevo.network.med.manager.MedManager;
+import com.medcorp.nevo.network.med.model.NevoUserModel;
+import com.medcorp.nevo.network.validic.model.ValidicUser;
+import com.medcorp.nevo.network.validic.model.VerifyCredentialModel;
+import com.medcorp.nevo.network.validic.model.RoutineGoal;
+import com.medcorp.nevo.network.validic.model.ValidicDeleteRoutineRecordModel;
+import com.medcorp.nevo.network.validic.model.ValidicReadMoreRoutineRecordsModel;
+import com.medcorp.nevo.network.validic.model.ValidicRoutineRecord;
+import com.medcorp.nevo.network.validic.model.ValidicRoutineRecordModel;
+import com.medcorp.nevo.network.validic.model.ValidicRoutineRecordModelBase;
+import com.medcorp.nevo.network.validic.model.NevoHourlySleepData;
+import com.medcorp.nevo.network.validic.model.ValidicDeleteSleepRecordModel;
+import com.medcorp.nevo.network.validic.model.ValidicReadMoreSleepRecordsModel;
+import com.medcorp.nevo.network.validic.model.ValidicSleepRecord;
+import com.medcorp.nevo.network.validic.model.ValidicSleepRecordModel;
+import com.medcorp.nevo.network.validic.model.ValidicSleepRecordModelBase;
+import com.medcorp.nevo.network.validic.model.CreateUserRequestObject;
+import com.medcorp.nevo.network.validic.model.CreateUserRequestObjectUser;
+import com.medcorp.nevo.network.validic.request.user.CreateUserRetroRequest;
+import com.medcorp.nevo.network.med.model.NevoUserLoginRequest;
+import com.medcorp.nevo.network.med.model.NevoUserRegisterRequest;
+import com.medcorp.nevo.network.validic.request.VerifyCredentialsRetroRequest;
+import com.medcorp.nevo.network.validic.request.routine.AddRoutineRecordRequest;
+import com.medcorp.nevo.network.validic.request.routine.DeleteRoutineRecordRequest;
+import com.medcorp.nevo.network.validic.request.routine.GetMoreRoutineRecordsRequest;
+import com.medcorp.nevo.network.validic.request.routine.UpdateRoutineRecordRequest;
+import com.medcorp.nevo.network.validic.request.sleep.AddSleepRecordRequest;
+import com.medcorp.nevo.network.validic.request.sleep.DeleteSleepRecordRequest;
+import com.medcorp.nevo.network.validic.request.sleep.GetMoreSleepRecordsRequest;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -120,7 +120,7 @@ public class ApplicationModel extends Application {
     private GoogleFitManager googleFitManager;
     private GoogleFitTaskCounter googleFitTaskCounter;
     private ValidicManager validicManager;
-    private ValidicMedManager validicMedManager;
+    private MedManager validicMedManager;
     private CloudSyncManager cloudSyncManager;
     private User  nevoUser;
 
@@ -138,7 +138,7 @@ public class ApplicationModel extends Application {
         userDatabaseHelper = new UserDatabaseHelper(this);
         updateGoogleFit();
         validicManager = new ValidicManager(this);
-        validicMedManager = new ValidicMedManager(this);
+        validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         Optional<User> user = userDatabaseHelper.getLoginUser();
         if(user.isEmpty()) {
@@ -509,7 +509,7 @@ public class ApplicationModel extends Application {
         return validicManager;
     }
 
-    public ValidicMedManager getValidicMedManager() {
+    public MedManager getValidicMedManager() {
         return validicMedManager;
     }
 

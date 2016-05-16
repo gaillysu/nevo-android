@@ -3,20 +3,16 @@ package com.medcorp.nevo.cloud;
 import android.content.Context;
 
 import com.medcorp.nevo.application.ApplicationModel;
-import com.medcorp.nevo.database.DatabaseHelper;
-import com.medcorp.nevo.database.dao.StepsDAO;
 import com.medcorp.nevo.model.Sleep;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Common;
-import com.medcorp.nevo.validic.model.routine.ValidicReadMoreRoutineRecordsModel;
-import com.medcorp.nevo.validic.model.routine.ValidicRoutineRecordModelBase;
-import com.medcorp.nevo.validic.model.sleep.ValidicReadMoreSleepRecordsModel;
-import com.medcorp.nevo.validic.model.sleep.ValidicSleepRecordModelBase;
+import com.medcorp.nevo.network.validic.model.ValidicReadMoreRoutineRecordsModel;
+import com.medcorp.nevo.network.validic.model.ValidicRoutineRecordModelBase;
+import com.medcorp.nevo.network.validic.model.ValidicReadMoreSleepRecordsModel;
+import com.medcorp.nevo.network.validic.model.ValidicSleepRecordModelBase;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

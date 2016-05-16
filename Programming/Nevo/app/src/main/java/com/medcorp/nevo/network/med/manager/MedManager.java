@@ -1,0 +1,41 @@
+package com.medcorp.nevo.network.med.manager;
+
+import android.content.Context;
+
+import com.medcorp.nevo.network.med.service.BaseMedRetroService;
+import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.request.SpiceRequest;
+import com.octo.android.robospice.request.listener.RequestListener;
+
+/**
+ * Created by gaillysu on 16/3/8.
+ */
+public class MedManager {
+    private Context context;
+    private SpiceManager spiceManager;
+
+    public MedManager(Context context)
+    {
+        this.context = context;
+        spiceManager = new SpiceManager(BaseMedRetroService.class);
+        startSpiceManager();
+    }
+
+    public void startSpiceManager()
+    {
+        if(!spiceManager.isStarted()) {
+            spiceManager.start(context);
+        }
+    }
+    public void stopSpiceManager()
+    {
+        if(spiceManager!=null) {
+            spiceManager.shouldStop();
+        }
+    }
+
+    public void execute(SpiceRequest request, RequestListener listener){
+        spiceManager.execute(request, listener);
+    }
+
+}

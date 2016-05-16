@@ -2,7 +2,6 @@ package com.medcorp.nevo.activity.login;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +11,7 @@ import android.widget.Toast;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.network.listener.ResponseListener;
-import com.medcorp.nevo.validic.model.NevoUserModel;
-import com.medcorp.nevo.view.ToastHelper;
+import com.medcorp.nevo.network.med.model.NevoUserModel;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import butterknife.Bind;

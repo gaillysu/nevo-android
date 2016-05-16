@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.network.listener.ResponseListener;
-import com.medcorp.nevo.validic.model.NevoUserModel;
+import com.medcorp.nevo.network.med.model.NevoUserModel;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import butterknife.Bind;

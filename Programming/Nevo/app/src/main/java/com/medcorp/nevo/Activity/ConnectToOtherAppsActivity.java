@@ -24,12 +24,11 @@ import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
 import com.medcorp.nevo.model.SettingsMenuItem;
 import com.medcorp.nevo.network.listener.ResponseListener;
 import com.medcorp.nevo.util.Preferences;
-import com.medcorp.nevo.validic.model.ValidicUser;
+import com.medcorp.nevo.network.validic.model.ValidicUser;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
