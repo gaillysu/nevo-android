@@ -76,7 +76,6 @@ public class User {
         return id;
     }
 
-
     public int getAge() {
         return age;
     }
