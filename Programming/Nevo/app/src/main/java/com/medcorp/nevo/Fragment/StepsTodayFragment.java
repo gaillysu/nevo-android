@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.event.LittleSyncEvent;
+import com.medcorp.nevo.event.bluetooth.LittleSyncEvent;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Goal;
 import com.medcorp.nevo.model.Steps;

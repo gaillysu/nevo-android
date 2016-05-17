@@ -1,4 +1,4 @@
-package com.medcorp.nevo.event;
+package com.medcorp.nevo.event.google.api;
 
 import android.os.Bundle;
 

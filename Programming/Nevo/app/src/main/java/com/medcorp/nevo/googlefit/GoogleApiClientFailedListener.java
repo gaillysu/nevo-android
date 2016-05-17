@@ -2,7 +2,7 @@ package com.medcorp.nevo.googlefit;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.medcorp.nevo.event.GoogleApiClientConnectionFailedEvent;
+import com.medcorp.nevo.event.google.api.GoogleApiClientConnectionFailedEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

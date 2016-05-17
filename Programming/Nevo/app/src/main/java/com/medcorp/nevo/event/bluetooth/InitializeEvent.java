@@ -1,4 +1,4 @@
-package com.medcorp.nevo.event;
+package com.medcorp.nevo.event.bluetooth;
 
 /**
  * Created by karl-john on 4/3/16.

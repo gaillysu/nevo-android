@@ -3,8 +3,8 @@ package com.medcorp.nevo.googlefit;
 import android.os.Bundle;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.medcorp.nevo.event.GoogleApiClientConnectedEvent;
-import com.medcorp.nevo.event.GoogleApiClientConnectionSuspendedEvent;
+import com.medcorp.nevo.event.google.api.GoogleApiClientConnectedEvent;
+import com.medcorp.nevo.event.google.api.GoogleApiClientConnectionSuspendedEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

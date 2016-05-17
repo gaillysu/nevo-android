@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.adapter.SleepFragmentPagerAdapter;
-import com.medcorp.nevo.event.OnSyncEvent;
+import com.medcorp.nevo.event.bluetooth.OnSyncEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 

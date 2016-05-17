@@ -24,7 +24,7 @@ import com.medcorp.nevo.activity.EditAlarmActivity;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.adapter.AlarmArrayAdapter;
 import com.medcorp.nevo.ble.model.request.SetAlarmNevoRequest;
-import com.medcorp.nevo.event.RequestResponseEvent;
+import com.medcorp.nevo.event.bluetooth.RequestResponseEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.nevo.model.Alarm;

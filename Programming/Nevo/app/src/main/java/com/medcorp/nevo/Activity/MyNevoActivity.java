@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.MyNevoAdapter;
-import com.medcorp.nevo.event.BatteryEvent;
+import com.medcorp.nevo.event.bluetooth.BatteryEvent;
 import com.medcorp.nevo.model.MyNevo;
 import com.medcorp.nevo.util.Common;
 
