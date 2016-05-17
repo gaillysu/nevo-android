@@ -6,6 +6,7 @@ import android.util.Log;
 import com.medcorp.nevo.event.validic.ValidicAddRoutineRecordEvent;
 import com.medcorp.nevo.event.validic.ValidicAddSleepRecordEvent;
 import com.medcorp.nevo.event.validic.ValidicCreateUserEvent;
+import com.medcorp.nevo.event.validic.ValidicDeleteRoutineRecordEvent;
 import com.medcorp.nevo.event.validic.ValidicDeleteSleepRecordModelEvent;
 import com.medcorp.nevo.event.validic.ValidicException;
 import com.medcorp.nevo.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
@@ -79,21 +80,14 @@ public class CloudSyncManager {
      * when user login, invoke it
      */
     public void launchSyncAll(User user, List<Steps> stepsList, List<Sleep> sleepList){
-        //step1:read local table "Steps" with validicRecordID = "0"
-//         List<Steps> stepsList = getModel().getNeedSyncSteps(getModel().getNevoUser().getNevoUserID());
          for(Steps steps: stepsList)
          {
              addValidicRoutineRecord(user,steps,new Date(steps.getDate()),null);
          }
-        //step2:do loop mass read
-        //every mass read is 100 days
         Date endDate = Common.removeTimeFromDate(new Date());
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
 
         downloadSteps(user,startDate,endDate,1);
-
-        //step4:change table to "Sleep" and repeat step1,2,3
-//        List<Sleep> sleepList = getModel().getNeedSyncSleep(getModel().getNevoUser().getNevoUserID());
         for(Sleep sleep: sleepList)
         {
             addValidicSleepRecord(user, sleep, new Date(sleep.getDate()), null);
@@ -112,20 +106,8 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
-                //step3:check read result is empty or some records aren't found in local table "Steps" and save them
-
-                EventBus.getDefault().post(new ValidicReadMoreRoutineRecordsModelEvent(validicReadMoreRoutineRecordsModel));
-//                // TODO catch this event somewhere.
                 if (validicReadMoreRoutineRecordsModel.getSummary().getResults() > 0) {
-//                    for (ValidicRoutineRecordModelBase routine : validicReadMoreRoutineRecordsModel.getRoutine()) {
-//                        int activity_id = Integer.parseInt(routine.getActivity_id());
-//                        // if activity_id not exist in local Steps table, save it
-//                        if (!getModel().isFoundInLocalSteps(activity_id)) {
-//                            //save it
-//                            getModel().saveStepsFromValidic(routine);
-//                        }
-//                }
-
+                    EventBus.getDefault().post(new ValidicReadMoreRoutineRecordsModelEvent(validicReadMoreRoutineRecordsModel));
                     if (validicReadMoreRoutineRecordsModel.getSummary().getNext() != null) {
                         String nextPageUrl = validicReadMoreRoutineRecordsModel.getSummary().getNext();
                         int pageStart = nextPageUrl.indexOf("page=");
@@ -149,27 +131,15 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel) {
-                //step3:check read result is empty or some records aren't found in local table "Sleep" and save them
                 if (validicReadMoreSleepRecordsModel.getSummary().getResults() > 0) {
-                    // TODO get More.
-//                    for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
-//                        int activity_id = Integer.parseInt(sleep.getActivity_id());
-//                        // if activity_id not exist in local Sleep table, save it
-//                        if (!getModel().isFoundInLocalSleep(activity_id)) {
-//                            //save it
-//                            getModel().saveSleepFromValidic(sleep);
-//                        }
-//                    }
-
+                    EventBus.getDefault().post(new ValidicReadMoreSleepRecordsModelEvent(validicReadMoreSleepRecordsModel));
                     if (validicReadMoreSleepRecordsModel.getSummary().getNext() != null) {
-
                         String nextPageUrl = validicReadMoreSleepRecordsModel.getSummary().getNext();
                         int pageStart = nextPageUrl.indexOf("page=");
                         int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
                         int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
                         downloadSleep(user, startDate, endDate, nextPage);
                     }
-
                 }
             }
         });
@@ -218,17 +188,14 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicDeleteSleepRecordModel validicDeleteSleepRecordModel) {
-                EventBus.getDefault().post(new ValidicDeleteSleepRecordModelEvent(validicDeleteSleepRecordModel));
-                // TODO catch this event
-//                if(validicDeleteSleepRecordModel.getCode().equals("200") || validicDeleteSleepRecordModel.getCode().equals("201"))
-//                {
-//                    sleepDatabaseHelper.remove(user.getId(),date);
-//                }
-//                processListener(listener, validicDeleteSleepRecordModel);
+                if(validicDeleteSleepRecordModel.getCode().equals("200") || validicDeleteSleepRecordModel.getCode().equals("201"))
+                {
+                    EventBus.getDefault().post(new ValidicDeleteSleepRecordModelEvent(user.getId(),date));
+                }
+
             }
         });
     }
-
 
     public void getMoreValidicSleepRecord(User user, Date startDate,Date endDate,int page,final ResponseListener listener)
     {
@@ -255,8 +222,6 @@ public class CloudSyncManager {
         });
     }
 
-
-    //sleep operation functions:
     public void addValidicSleepRecord(final User user, final Sleep sleep, Date date,final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
@@ -294,21 +259,18 @@ public class CloudSyncManager {
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
                 String causeString = spiceException.getCause()==null?"":spiceException.getCause().getLocalizedMessage()+"";
-                if (causeString.contains("409")||causeString.contains("422"))
-                {
+                if (causeString.contains("409")||causeString.contains("422")) {
                     //DO NOTHING, sleep record can't be update
                 }
                 EventBus.getDefault().post(new ValidicException(spiceException));
             }
             @Override
             public void onRequestSuccess(ValidicSleepRecordModel validicSleepRecordModel) {
-                EventBus.getDefault().post(new ValidicAddSleepRecordEvent(validicSleepRecordModel));
-                // TODO catch this event/
-//                if(validicSleepRecordModel.getCode().equals("200")||validicSleepRecordModel.getCode().equals("201"))
-//                {
-//                    sleep.setValidicRecordID(validicSleepRecordModel.getSleep().get_id());
-//                    saveDailySleep(sleep);
-//                }
+                if(validicSleepRecordModel.getCode().equals("200")||validicSleepRecordModel.getCode().equals("201"))
+                {
+                    sleep.setValidicRecordID(validicSleepRecordModel.getSleep().get_id());
+                    EventBus.getDefault().post(new ValidicAddSleepRecordEvent(sleep));
+                }
             }
         });
     }
@@ -365,14 +327,12 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
-                EventBus.getDefault().post(new ValidicAddRoutineRecordEvent(validicRecordModel));
-                // todo Catch this.
-//                if (validicRecordModel.getCode().equals("200") || validicRecordModel.getCode().equals("201"))
-//                {
-//                    //save validic record ID to local database, for using cloud sync
-//                    steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
-//                    saveDailySteps(steps);
-//                }
+                if (validicRecordModel.getCode().equals("200") || validicRecordModel.getCode().equals("201"))
+                {
+                    //save validic record ID to local database, for using cloud sync
+                    steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
+                    EventBus.getDefault().post(new ValidicAddRoutineRecordEvent(steps));
+                }
             }
         });
     }
@@ -391,8 +351,6 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
-//                EventBus.getDefault().post(new ValidicUpdateRoutineRecordsModelEvent(validicReadMoreRoutineRecordsModel));
-                // TODO hmm this is kind of complicated
                 if (validicReadMoreRoutineRecordsModel.getSummary().getResults() > 0) {
                     String validicRecordID = validicReadMoreRoutineRecordsModel.getRoutine()[0].get_id();
                     //if local data == cloud data, save record_id and return
@@ -400,8 +358,6 @@ public class CloudSyncManager {
                     {
                         steps.setValidicRecordID(validicReadMoreRoutineRecordsModel.getRoutine()[0].get_id());
                         EventBus.getDefault().post(new ValidicUpdateRoutineRecordsModelEvent(steps));
-                        // TODO: 17/5/16 catch ths
-//                        saveDailySteps(steps);
                         return;
                     }
                     UpdateRoutineRecordRequest updateRecordRequest = new UpdateRoutineRecordRequest(validicManager.getOrganizationID(), validicManager.getOrganizationToken(), user.getValidicUserID(), validicRecordID, steps.getSteps());
@@ -417,8 +373,6 @@ public class CloudSyncManager {
 
                             steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
                             EventBus.getDefault().post(new ValidicUpdateRoutineRecordsModelEvent(steps));
-                            // TODO: 17/5/16 catch ths
-//                            saveDailySteps(steps);
                         }
                     });
                 }
@@ -478,9 +432,7 @@ public class CloudSyncManager {
 
                 if(validicDeleteRecordModel.getCode().equals("200") || validicDeleteRecordModel.getCode().equals("201"))
                 {
-                    // TODO event bus
-                    EventBus.getDefault().post(new ValidicDeleteRoutineRecordRequest(user.getId(), date));
-//                    stepsDatabaseHelper.remove(nevoUserID,date);
+                    EventBus.getDefault().post(new ValidicDeleteRoutineRecordEvent(user.getId(), date));
                 }
             }
         });
@@ -503,6 +455,7 @@ public class CloudSyncManager {
             }
         });
     }
+
     public void createValidicUser(final User nevoUser, String pinCode,final ResponseListener listener)
     {
         if(!nevoUser.isLogin()){
@@ -524,16 +477,10 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicUser validicUser) {
-
                 nevoUser.setValidicUserID(validicUser.getUser().get_id());
                 nevoUser.setValidicUserToken(validicUser.getUser().getAccess_token());
                 nevoUser.setIsConnectValidic(true);
                 EventBus.getDefault().post(new ValidicCreateUserEvent(nevoUser));
-//                 // TODO catch this stuff.
-//                saveNevoUser(nevoUser);
-//                getSyncController().getDailyTrackerInfo(true);
-//                getCloudSyncManager().launchSyncAll();
-//                processListener(listener, validicUser);
             }
         });
     }

@@ -1,22 +1,33 @@
 package com.medcorp.nevo.event.validic;
 
-import com.medcorp.nevo.network.validic.model.ValidicDeleteSleepRecordModel;
+import java.util.Date;
 
 /**
  * Created by karl-john on 17/5/16.
  */
 public class ValidicDeleteSleepRecordModelEvent {
-    private ValidicDeleteSleepRecordModel validicDeleteSleepRecordModel;
 
-    public ValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModel validicDeleteSleepRecordModel) {
-        this.validicDeleteSleepRecordModel = validicDeleteSleepRecordModel;
+    private int userId;
+    private Date date;
+
+    public ValidicDeleteSleepRecordModelEvent(int userId, Date date) {
+        this.userId = userId;
+        this.date = date;
     }
 
-    public ValidicDeleteSleepRecordModel getValidicDeleteSleepRecordModel() {
-        return validicDeleteSleepRecordModel;
+    public Date getDate() {
+        return date;
     }
 
-    public void setValidicDeleteSleepRecordModel(ValidicDeleteSleepRecordModel validicDeleteSleepRecordModel) {
-        this.validicDeleteSleepRecordModel = validicDeleteSleepRecordModel;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

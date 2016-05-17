@@ -1,15 +1,15 @@
-package com.medcorp.nevo.cloud;
+package com.medcorp.nevo.event.validic;
 
 import java.util.Date;
 
 /**
  * Created by karl-john on 17/5/16.
  */
-public class ValidicDeleteRoutineRecordRequest {
+public class ValidicDeleteRoutineRecordEvent {
     private int userId;
     private Date date;
 
-    public ValidicDeleteRoutineRecordRequest(int userId, Date date) {
+    public ValidicDeleteRoutineRecordEvent(int userId, Date date) {
         this.userId = userId;
         this.date = date;
     }

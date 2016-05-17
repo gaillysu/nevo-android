@@ -8,10 +8,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.eventbus.Subscribe;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.event.LoginEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +37,7 @@ public class LoginActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        EventBus.getDefault().register(this);
         ButterKnife.bind(this);
         if(getModel().getNevoUser().getNevoUserEmail()!=null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());

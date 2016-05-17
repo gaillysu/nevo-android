@@ -1,22 +1,22 @@
 package com.medcorp.nevo.event.validic;
 
-import com.medcorp.nevo.network.validic.model.ValidicSleepRecordModel;
+import com.medcorp.nevo.model.Sleep;
 
 /**
  * Created by karl-john on 17/5/16.
  */
 public class ValidicAddSleepRecordEvent {
-    private ValidicSleepRecordModel validicSleepRecordModel;
+    private Sleep sleep;
 
-    public ValidicAddSleepRecordEvent(ValidicSleepRecordModel validicSleepRecordModel) {
-        this.validicSleepRecordModel = validicSleepRecordModel;
+    public ValidicAddSleepRecordEvent(Sleep sleep) {
+        this.sleep = sleep;
     }
 
-    public ValidicSleepRecordModel getValidicSleepRecordModel() {
-        return validicSleepRecordModel;
+    public Sleep getSleep() {
+        return sleep;
     }
 
-    public void setValidicSleepRecordModel(ValidicSleepRecordModel validicSleepRecordModel) {
-        this.validicSleepRecordModel = validicSleepRecordModel;
+    public void setSleep(Sleep sleep) {
+        this.sleep = sleep;
     }
 }

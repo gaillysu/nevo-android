@@ -35,6 +35,15 @@ import com.medcorp.nevo.event.bluetooth.OnSyncEvent;
 import com.medcorp.nevo.event.google.api.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.nevo.event.google.api.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.nevo.event.google.fit.GoogleFitUpdateEvent;
+import com.medcorp.nevo.event.validic.ValidicAddRoutineRecordEvent;
+import com.medcorp.nevo.event.validic.ValidicAddSleepRecordEvent;
+import com.medcorp.nevo.event.validic.ValidicCreateUserEvent;
+import com.medcorp.nevo.event.validic.ValidicDeleteRoutineRecordEvent;
+import com.medcorp.nevo.event.validic.ValidicDeleteSleepRecordModelEvent;
+import com.medcorp.nevo.event.validic.ValidicException;
+import com.medcorp.nevo.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
+import com.medcorp.nevo.event.validic.ValidicReadMoreSleepRecordsModelEvent;
+import com.medcorp.nevo.event.validic.ValidicUpdateRoutineRecordsModelEvent;
 import com.medcorp.nevo.googlefit.GoogleFitManager;
 import com.medcorp.nevo.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.nevo.googlefit.GoogleFitTaskCounter;
@@ -49,6 +58,7 @@ import com.medcorp.nevo.network.med.manager.MedManager;
 import com.medcorp.nevo.network.med.model.NevoUserLoginRequest;
 import com.medcorp.nevo.network.med.model.NevoUserModel;
 import com.medcorp.nevo.network.med.model.NevoUserRegisterRequest;
+import com.medcorp.nevo.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.nevo.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.nevo.network.validic.model.ValidicSleepRecordModelBase;
 import com.medcorp.nevo.network.validic.model.ValidicUser;
@@ -563,5 +573,59 @@ public class ApplicationModel extends Application {
         getCloudSyncManager().createValidicUser(nevoUser,pin,responseListener);
     }
 
+    @Subscribe
+    public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent validicAddRoutineRecordEvent){
+        saveDailySteps(validicAddRoutineRecordEvent.getSteps());
+
+    }
+    @Subscribe
+    public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent validicAddSleepRecordEvent){
+        saveDailySleep(validicAddSleepRecordEvent.getSleep());
+    }
+    @Subscribe
+    public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent){
+        saveNevoUser(validicCreateUserEvent.getUser());
+        getSyncController().getDailyTrackerInfo(true);
+        getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()),getNeedSyncSleep(nevoUser.getNevoUserID()));
+    }
+    @Subscribe
+    public void onValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModelEvent validicDeleteSleepRecordModelEvent){
+        sleepDatabaseHelper.remove(validicDeleteSleepRecordModelEvent.getUserId()+"",validicDeleteSleepRecordModelEvent.getDate());
+    }
+    @Subscribe
+    public void onValidicException(ValidicException validicException){
+        Log.w("Karl","Exception occured!");
+        validicException.getException().printStackTrace();
+    }
+    @Subscribe
+    public void onValidicReadMoreRoutineRecordsModelEvent(ValidicReadMoreRoutineRecordsModelEvent validicReadMoreRoutineRecordsModelEvent){
+        for (ValidicRoutineRecordModelBase routine : validicReadMoreRoutineRecordsModelEvent.getValidicReadMoreRoutineRecordsModel().getRoutine()) {
+            int activity_id = Integer.parseInt(routine.getActivity_id());
+        // if activity_id not exist in local Steps table, save it
+            if (!isFoundInLocalSteps(activity_id)) {
+            saveStepsFromValidic(routine);
+            }
+        }
+    }
+    @Subscribe
+    public void onValidicReadMoreSleepRecordsModelEvent(ValidicReadMoreSleepRecordsModelEvent validicReadMoreSleepRecordsModelEvent){
+        ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel = validicReadMoreSleepRecordsModelEvent.getValidicReadMoreSleepRecordsModel();
+        for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
+            int activity_id = Integer.parseInt(sleep.getActivity_id());
+            //if activity_id not exist in local Sleep table, save it
+            if (isFoundInLocalSleep(activity_id)) {
+                saveSleepFromValidic(sleep);
+            }
+        }
+    }
+    @Subscribe
+    public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent validicUpdateRoutineRecordsModelEvent){
+        saveDailySteps(validicUpdateRoutineRecordsModelEvent.getSteps());
+
+    }
+    @Subscribe
+    public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent validicDeleteRoutineRecordEvent){
+        stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId()+"",validicDeleteRoutineRecordEvent.getDate());
+    }
 
 }
