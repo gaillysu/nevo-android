@@ -3,24 +3,24 @@ package com.medcorp.nevo.activity.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.common.eventbus.Subscribe;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.network.listener.ResponseListener;
-import com.medcorp.nevo.network.med.model.NevoUserModel;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.medcorp.nevo.event.LoginEvent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
-    private static final int REQUEST_SIGNUP = 0;
+    private static final int REQUEST_SIGN_UP = 0;
+    private ProgressDialog progressDialog;
 
     @Bind(R.id.input_email)
     EditText _emailText;
@@ -39,28 +39,16 @@ public class LoginActivity extends BaseActivity {
         if(getModel().getNevoUser().getNevoUserEmail()!=null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
         }
-        _loginButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
-
-        _signupLink.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-            }
-        });
     }
 
-    public void login() {
-        Log.d(TAG, "Login");
+    @OnClick(R.id.link_signup)
+    public void signUpAction(){
+        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+        startActivityForResult(intent, REQUEST_SIGN_UP);
+    }
 
+    @OnClick(R.id.btn_login)
+    public void loginAction(){
         if (!validate()) {
             onLoginFailed();
             return;
@@ -68,7 +56,7 @@ public class LoginActivity extends BaseActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+        progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
@@ -78,29 +66,28 @@ public class LoginActivity extends BaseActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        getModel().nevoUserLogin(email, password, new ResponseListener<NevoUserModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                progressDialog.dismiss();
-                onLoginFailed();
-            }
+        getModel().nevoUserLogin(email, password);
+    }
 
-            @Override
-            public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                progressDialog.dismiss();
-                if (nevoUserModel.getState().equals("success")) {
+    @Subscribe
+    public void onEvent(LoginEvent event) {
+        switch (event.getLoginStatus()){
+            case FAILED:
+
+                onLoginFailed();
+                break;
+            case SUCCESS:
                     onLoginSuccess();
-                } else {
-                    onLoginFailed();
-                }
-            }
-        });
+                break;
+
+        }
+        progressDialog.dismiss();
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
+        if (requestCode == REQUEST_SIGN_UP) {
             if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK, null);
                 this.finish();

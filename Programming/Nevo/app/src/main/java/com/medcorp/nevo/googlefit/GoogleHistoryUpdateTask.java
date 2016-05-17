@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataSet;
-import com.medcorp.nevo.event.GoogleFitUpdateEvent;
+import com.medcorp.nevo.event.google.fit.GoogleFitUpdateEvent;
 
 import org.greenrobot.eventbus.EventBus;
 

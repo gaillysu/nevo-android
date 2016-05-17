@@ -1,4 +1,4 @@
-package com.medcorp.nevo.event;
+package com.medcorp.nevo.event.bluetooth;
 
 import com.medcorp.nevo.model.Battery;
 

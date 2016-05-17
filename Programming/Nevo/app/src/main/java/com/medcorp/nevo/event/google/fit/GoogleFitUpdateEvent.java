@@ -1,4 +1,4 @@
-package com.medcorp.nevo.event;
+package com.medcorp.nevo.event.google.fit;
 
 /**
  * Created by karl-john on 17/3/16.

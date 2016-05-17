@@ -2,20 +2,18 @@ package com.medcorp.nevo.activity.login;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.common.eventbus.Subscribe;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.network.listener.ResponseListener;
-import com.medcorp.nevo.network.med.model.NevoUserModel;
-import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.medcorp.nevo.event.SignUpEvent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SignupActivity extends BaseActivity {
     private static final String TAG = "SignupActivity";
@@ -28,42 +26,30 @@ public class SignupActivity extends BaseActivity {
     EditText _passwordConfirmText;
     @Bind(R.id.btn_signup)
     Button _signupButton;
-    @Bind(R.id.link_login)
-    TextView _loginLink;
-    
+
+    private ProgressDialog progressDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-
-        _signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signup();
-            }
-        });
-
-        _loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
-                finish();
-            }
-        });
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
+    @OnClick(R.id.link_login)
+    public void loginLink(){
+        finish();
+    }
 
+    @OnClick(R.id.btn_signup)
+    public void signUpAction() {
         if (!validate()) {
             onSignupFailed();
             return;
         }
 
         _signupButton.setEnabled(false);
-
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
+        progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
@@ -73,34 +59,25 @@ public class SignupActivity extends BaseActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        getModel().nevoUserRegister(email, password, new ResponseListener<NevoUserModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                progressDialog.dismiss();
-                onSignupFailed();
-            }
-
-            @Override
-            public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                progressDialog.dismiss();
-                if(nevoUserModel.getState().equals("success")) {
-                    onSignupSuccess();
-                }
-                else {
-                    onSignupFailed();
-                }
-            }
-        });
+        getModel().nevoUserRegister(email, password);
     }
 
-
-    public void onSignupSuccess() {
-        Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_LONG).show();
-        _signupButton.setEnabled(true);
-        getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
-        getModel().saveNevoUser(getModel().getNevoUser());
-        setResult(RESULT_OK, null);
-        finish();
+    @Subscribe
+    public void onEvent(SignUpEvent event){
+        switch (event.getSignUpStatus()){
+            case FAILED:
+                onSignupFailed();
+                break;
+            case SUCCESS:
+                Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_LONG).show();
+                _signupButton.setEnabled(true);
+                getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
+                getModel().saveNevoUser(getModel().getNevoUser());
+                setResult(RESULT_OK, null);
+                finish();
+                break;
+        }
+        progressDialog.dismiss();
     }
 
     public void onSignupFailed() {
