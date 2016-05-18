@@ -1,5 +1,6 @@
 package com.medcorp.nevo.activity.tutorial;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -7,6 +8,8 @@ import android.view.WindowManager;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.DfuActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
+
+import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,7 +29,11 @@ public class TutorialPage4Activity extends BaseActivity {
         //if BLE or MCU got broken in OTA progress, press the third key will not open BT
         //so we should give user a solution to update the nevo firmwares
         //in this page, user long press the image, will enable user to continue do OTA
-        askForPermission();
+        PermissionRequestDialogBuilder builder =new PermissionRequestDialogBuilder(this);
+        builder.addPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        builder.setText(R.string.location_access_content);
+        builder.setTitle(R.string.location_access_title);
+        builder.askForPermission(this,1);
     }
 
     @OnLongClick(R.id.activity_tutorial_page4_open_bt_image)

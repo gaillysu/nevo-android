@@ -90,7 +90,6 @@ public class SignupActivity extends BaseActivity {
 
     public boolean validate() {
         boolean valid = true;
-
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String passwordConfirm = _passwordConfirmText.getText().toString();

@@ -8,8 +8,8 @@ public class ValidicRoutineRecord {
     String utc_offset;
     double steps;
     double distance;
-    double floors;
-    double elevation;
+    double floors = 0;
+    double elevation = 0 ;
     double calories_burned;
     String activity_id;
     RoutineGoal extras;

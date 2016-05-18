@@ -169,7 +169,7 @@ public class CloudSyncManager {
         }
     }
 
-    public void deleteValidicSleepRecord(final User user, final Sleep sleep, final Date date, final ResponseListener listener)
+    private void deleteValidicSleepRecord(final User user, final Sleep sleep, final Date date, final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -197,7 +197,7 @@ public class CloudSyncManager {
         });
     }
 
-    public void getMoreValidicSleepRecord(User user, Date startDate,Date endDate,int page,final ResponseListener listener)
+    private void getMoreValidicSleepRecord(User user, Date startDate,Date endDate,int page,final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -222,7 +222,7 @@ public class CloudSyncManager {
         });
     }
 
-    public void addValidicSleepRecord(final User user, final Sleep sleep, Date date,final ResponseListener listener)
+    private void addValidicSleepRecord(final User user, final Sleep sleep, Date date,final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -275,13 +275,13 @@ public class CloudSyncManager {
         });
     }
 
-    public void getValidicSleepRecord(User user, Date date,final ResponseListener listener)
+    private void getValidicSleepRecord(User user, Date date,final ResponseListener listener)
     {
         getMoreValidicSleepRecord(user, date, date, 1, listener);
     }
 
 
-    public void addValidicRoutineRecord(final User user, final Steps steps, final Date date, final ResponseListener listener)
+    private void addValidicRoutineRecord(final User user, final Steps steps, final Date date, final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -302,8 +302,6 @@ public class CloudSyncManager {
         record.setTimestamp(timestamp);
         record.setUtc_offset(utc_offset);
         record.setDistance(steps.getDistance());
-        record.setFloors(0);
-        record.setElevation(0);
         record.setCalories_burned(steps.getCalories());
         record.setActivity_id("" + steps.getiD());
         RoutineGoal goal = new RoutineGoal();
@@ -337,7 +335,7 @@ public class CloudSyncManager {
         });
     }
 
-    public void updateValidicRoutineRecord(final User user, final Steps steps, Date date, final ResponseListener listener)
+    private void updateValidicRoutineRecord(final User user, final Steps steps, Date date, final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -380,12 +378,12 @@ public class CloudSyncManager {
         });
     }
 
-    public void getValidicRoutineRecord(User user, Date date,final ResponseListener listener)
+    private void getValidicRoutineRecord(User user, Date date,final ResponseListener listener)
     {
         getMoreValidicRoutineRecord(user, date, date,1,listener);
     }
 
-    public void getMoreValidicRoutineRecord(User user, Date startDate, Date endDate, int page, final ResponseListener listener)
+    private void getMoreValidicRoutineRecord(User user, Date startDate, Date endDate, int page, final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -409,7 +407,7 @@ public class CloudSyncManager {
         });
     }
 
-    public void deleteValidicRoutineRecord(final User user, Steps steps, final Date date, final ResponseListener listener)
+    private void deleteValidicRoutineRecord(final User user, Steps steps, final Date date, final ResponseListener listener)
     {
         if(user.isLogin()||!user.isConnectValidic()){
             return;
@@ -429,7 +427,6 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(ValidicDeleteRoutineRecordModel validicDeleteRecordModel) {
-
                 if(validicDeleteRecordModel.getCode().equals("200") || validicDeleteRecordModel.getCode().equals("201"))
                 {
                     EventBus.getDefault().post(new ValidicDeleteRoutineRecordEvent(user.getId(), date));
@@ -439,13 +436,12 @@ public class CloudSyncManager {
     }
 
 
-    public void verifyValidicCredential()
+    private void verifyValidicCredential()
     {
         VerifyCredentialsRetroRequest request = new VerifyCredentialsRetroRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
         validicManager.execute(request, new RequestListener<VerifyCredentialModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.w("Karl", "Failure?");
                 spiceException.printStackTrace();
             }
 

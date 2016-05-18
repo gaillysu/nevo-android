@@ -129,8 +129,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         if(position == 8) {
             if(isChecked) {
                 getActivity().startActivityForResult(new Intent(getActivity(),LoginActivity.class), REQUEST_LOGIN);
-            }
-            else {
+            } else {
                 getModel().getNevoUser().setIsLogin(false);
                 getModel().saveNevoUser(getModel().getNevoUser());
             }

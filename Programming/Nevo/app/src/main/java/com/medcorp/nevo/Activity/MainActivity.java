@@ -1,5 +1,6 @@
 package com.medcorp.nevo.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
 import net.medcorp.library.ble.event.BLESearchEvent;
 import net.medcorp.library.ble.util.Optional;
+import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -109,6 +111,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 startActivity(new Intent(MainActivity.this,ProfileActivity.class));
             }
         });
+
     }
 
     @Override
@@ -272,6 +275,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         {
             activeFragment.get().onActivityResult(requestCode,resultCode,data);
         }
+        if (requestCode == 1){
+            Log.w("Karl","result code = " + resultCode);
+        }
     }
 
     @Override
@@ -318,7 +324,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void onEvent(BLESearchEvent event) {
         switch (event.getSearchEvent()) {
             case ON_SEARCHING:
-                askForPermission();
+                PermissionRequestDialogBuilder builder =new PermissionRequestDialogBuilder(this);
+                builder.addPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+                builder.setText(R.string.location_access_content);
+                builder.setTitle(R.string.location_access_title);
+                builder.askForPermission(this,1);
                 showStateString(R.string.in_app_notification_searching, false);
                 break;
         }

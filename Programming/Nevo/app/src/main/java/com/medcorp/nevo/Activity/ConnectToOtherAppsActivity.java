@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -23,8 +24,8 @@ import com.medcorp.nevo.adapter.SettingMenuAdapter;
 import com.medcorp.nevo.listener.OnCheckedChangeInListListener;
 import com.medcorp.nevo.model.SettingsMenuItem;
 import com.medcorp.nevo.network.listener.ResponseListener;
-import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.network.validic.model.ValidicUser;
+import com.medcorp.nevo.util.Preferences;
 import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
@@ -52,6 +53,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     private SettingMenuAdapter settingsAdapter;
 
     private MaterialDialog googleFitLogoutDialog;
+    private int validicPositionInList = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +94,15 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                         .content(R.string.google_fit_log_out_message)
                         .positiveText(R.string.google_fit_log_out)
                         .negativeText(R.string.google_fit_cancel)
-                        .onPositive(positiveCallback)
-                        .onNegative(negativeCallback)
+                        .onPositive(googleFitPositiveCallback)
+                        .onNegative(googleFitNegativeCallback)
                         .build();
                 googleFitLogoutDialog.show();
             }
         }
 
         if(position == 1) {
+            validicPositionInList = position;
             if(isChecked)
             {
                 if(!getModel().getNevoUser().isLogin()) {
@@ -114,45 +117,8 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                 new MaterialDialog.Builder(this)
                         .title(R.string.validic_pin_code_title)
                         .inputType(InputType.TYPE_CLASS_NUMBER)
-                        .input(getString(R.string.validic_pin_code), "", new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (input.length() == 0) {
-                                    settingsAdapter.getItem(position).setSwitchStatus(false);
-                                    settingsAdapter.notifyDataSetChanged();
-                                    return;
-                                }
-                                getModel().createValidicUser(input.toString(), new ResponseListener<ValidicUser>() {
-
-                                    @Override
-                                    public void onRequestFailure(SpiceException spiceException) {
-                                        //refresh switch off
-                                        ToastHelper.showLongToast(ConnectToOtherAppsActivity.this,spiceException.getCause().getLocalizedMessage());
-                                        settingsAdapter.getItem(position).setSwitchStatus(false);
-                                        settingsAdapter.notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onRequestSuccess(ValidicUser validicUser) {
-                                        //refresh switch on
-                                        ToastHelper.showLongToast(ConnectToOtherAppsActivity.this,validicUser.getMessage());
-                                        if (validicUser.getCode().equals("200") || validicUser.getCode().equals("201")) {
-                                            settingsAdapter.getItem(position).setSwitchStatus(true);
-                                        } else {
-                                            settingsAdapter.getItem(position).setSwitchStatus(false);
-                                        }
-                                        settingsAdapter.notifyDataSetChanged();
-                                    }
-                                });
-                            }
-                        }).negativeText(android.R.string.cancel)
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                settingsAdapter.getItem(position).setSwitchStatus(false);
-                                settingsAdapter.notifyDataSetChanged();
-                            }
-                        })
+                        .input(getString(R.string.validic_pin_code), "", validicPinCodeCallback).negativeText(android.R.string.cancel)
+                        .onNegative(validicNegativeCallback)
                         .cancelable(false)
                         .show();
             } else {
@@ -160,10 +126,49 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                 getModel().saveNevoUser(getModel().getNevoUser());
             }
         }
-
     }
 
-    MaterialDialog.SingleButtonCallback positiveCallback = new MaterialDialog.SingleButtonCallback() {
+    private MaterialDialog.InputCallback validicPinCodeCallback = new MaterialDialog.InputCallback() {
+        @Override
+        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+            if (input.length() == 0) {
+                settingsAdapter.getItem(validicPositionInList).setSwitchStatus(false);
+                settingsAdapter.notifyDataSetChanged();
+                return;
+            }
+            getModel().createValidicUser(input.toString(),validicUserResponseListener);
+        }
+    };
+
+    private MaterialDialog.SingleButtonCallback validicNegativeCallback = new MaterialDialog.SingleButtonCallback() {
+        @Override
+        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+            settingsAdapter.getItem(validicPositionInList).setSwitchStatus(false);
+            settingsAdapter.notifyDataSetChanged();
+        }
+    };
+
+    private ResponseListener<ValidicUser> validicUserResponseListener = new ResponseListener<ValidicUser>() {
+        @Override
+        public void onRequestFailure(SpiceException spiceException) {
+            ToastHelper.showLongToast(ConnectToOtherAppsActivity.this,spiceException.getCause().getLocalizedMessage());
+            settingsAdapter.getItem(validicPositionInList).setSwitchStatus(false);
+            settingsAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onRequestSuccess(ValidicUser validicUser) {
+            ToastHelper.showLongToast(ConnectToOtherAppsActivity.this,validicUser.getMessage());
+            if (validicUser.getCode().equals("200") || validicUser.getCode().equals("201")) {
+                settingsAdapter.getItem(validicPositionInList).setSwitchStatus(true);
+            } else {
+                settingsAdapter.getItem(validicPositionInList).setSwitchStatus(false);
+            }
+            settingsAdapter.notifyDataSetChanged();
+        }
+    };
+
+    private MaterialDialog.SingleButtonCallback googleFitPositiveCallback = new MaterialDialog.SingleButtonCallback() {
         @Override
         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
             Preferences.setGoogleFit(ConnectToOtherAppsActivity.this,false);
@@ -171,7 +176,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         }
     };
 
-    MaterialDialog.SingleButtonCallback negativeCallback = new MaterialDialog.SingleButtonCallback() {
+    private MaterialDialog.SingleButtonCallback googleFitNegativeCallback = new MaterialDialog.SingleButtonCallback() {
         @Override
         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
             if (googleFitLogoutDialog != null){
