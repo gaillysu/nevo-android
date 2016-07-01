@@ -1,6 +1,7 @@
 package com.medcorp.nevo.activity.login;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.activity.UserInfoActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.event.SignUpEvent;
 
@@ -32,9 +34,17 @@ public class SignupActivity extends BaseActivity {
     @Bind(R.id.btn_signup)
     Button _signupButton;
 
+    private EditText editTextFirstName;
+    private EditText editLastName;
+
+
+    private String firstName;
+    private String lastName;
     private ProgressDialog progressDialog;
     private RadioButton checkIsAgreeBt;
-    private boolean isAgree= false;
+    private boolean isAgree = false;
+    private String email;
+    private String password;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,8 +52,10 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        if(ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR){
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             checkIsAgreeBt = (RadioButton) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
+            editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
+            editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
             checkIsAgreeBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -55,7 +67,7 @@ public class SignupActivity extends BaseActivity {
     }
 
     @OnClick(R.id.link_login)
-    public void loginLink(){
+    public void loginLink() {
         finish();
     }
 
@@ -76,13 +88,21 @@ public class SignupActivity extends BaseActivity {
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-
-        getModel().nevoUserRegister(email, password);
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+            getModel().nevoUserRegister(email, password);
+        }else{
+            Intent intent = new Intent(this ,UserInfoActivity.class);
+            intent.putExtra("email",email);
+            intent.putExtra("password",password);
+            intent.putExtra("firstName",firstName);
+            intent.putExtra("lastName",lastName);
+            startActivity(intent);
+        }
     }
 
     @Subscribe
-    public void onEvent(SignUpEvent event){
-        switch (event.getSignUpStatus()){
+    public void onEvent(SignUpEvent event) {
+        switch (event.getSignUpStatus()) {
             case FAILED:
                 onSignupFailed();
                 break;
@@ -108,6 +128,21 @@ public class SignupActivity extends BaseActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String passwordConfirm = _passwordConfirmText.getText().toString();
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            firstName = editTextFirstName.getText().toString();
+            lastName = editLastName.getText().toString();
+            if (firstName.isEmpty()) {
+                valid = false;
+                editTextFirstName.setError(getString(R.string.register_input_first_is_empty));
+            } else {
+                editTextFirstName.setError(null);
+            }
+
+            if (!isAgree) {
+                valid = false;
+            }
+        }
+
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError(getString(R.string.register_email_error));
             valid = false;
@@ -122,7 +157,7 @@ public class SignupActivity extends BaseActivity {
             _passwordText.setError(null);
         }
 
-        if(!passwordConfirm.equals(password)) {
+        if (!passwordConfirm.equals(password)) {
             _passwordText.setError(getString(R.string.register_password_confirm_error));
             valid = false;
         }

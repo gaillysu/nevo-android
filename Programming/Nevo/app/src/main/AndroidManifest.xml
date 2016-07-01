@@ -142,6 +142,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bf39954f177ecf7d9d8a5efe2e1d624856f03464" />
+
+        //Lunar
+        <activity android:name=".activity.UserInfoActivity"/>
     </application>
 
 </manifest>

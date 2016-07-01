@@ -11,5 +11,6 @@
     <string name="register_account_message">Don\'t have  account ?\n Register here</string>
     <string name="register_create_account">Submit</string>
     <string name="log_in_email">E-mail</string>
+    <string name="register_input_first_is_empty">User name cannot be empty</string>
     <string name="register_terms_is_agree">I agree to the terms and conditions</string>
 </resources>
