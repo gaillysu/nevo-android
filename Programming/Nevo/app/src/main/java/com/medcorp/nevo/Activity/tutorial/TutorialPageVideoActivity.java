@@ -3,11 +3,14 @@ package com.medcorp.nevo.activity.tutorial;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.WindowManager;
 
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
 import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.activity.login.LoginActivity;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -30,6 +33,15 @@ public class TutorialPageVideoActivity extends BaseActivity{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome_page);
         ButterKnife.bind(this);
+
+        if(ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                  startActivity(LoginActivity.class);
+                }
+            },1500);
+        }
     }
 
     @OnClick(R.id.activity_welcome_next_button)

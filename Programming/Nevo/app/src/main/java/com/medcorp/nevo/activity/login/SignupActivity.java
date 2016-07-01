@@ -2,10 +2,13 @@ package com.medcorp.nevo.activity.login;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.event.SignUpEvent;
@@ -30,6 +33,8 @@ public class SignupActivity extends BaseActivity {
     Button _signupButton;
 
     private ProgressDialog progressDialog;
+    private RadioButton checkIsAgreeBt;
+    private boolean isAgree= false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,16 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
+        if(ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR){
+            checkIsAgreeBt = (RadioButton) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
+            checkIsAgreeBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkIsAgreeBt.setChecked(!checkIsAgreeBt.isChecked());
+                    isAgree = checkIsAgreeBt.isChecked();
+                }
+            });
+        }
     }
 
     @OnClick(R.id.link_login)
@@ -93,7 +108,6 @@ public class SignupActivity extends BaseActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String passwordConfirm = _passwordConfirmText.getText().toString();
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError(getString(R.string.register_email_error));
             valid = false;

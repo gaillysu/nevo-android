@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#54575A</color>
+    <color name="colorPrimaryDark">#54575A</color>
+    <color name="register_account_text_color">#7ED8D1</color>
+    <color name="input_account_shape_color">#3A3739</color>
+</resources>

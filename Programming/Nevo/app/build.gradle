@@ -40,6 +40,16 @@ android {
         }
     }
 
+
+    productFlavors{
+        lunar{
+            applicationId "com.medcorp.lunar"
+        }
+        nevo{
+
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/license.txt'
