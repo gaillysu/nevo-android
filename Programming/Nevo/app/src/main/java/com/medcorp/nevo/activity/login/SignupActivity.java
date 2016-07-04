@@ -3,10 +3,9 @@ package com.medcorp.nevo.activity.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.medcorp.ApplicationFlage;
@@ -41,8 +40,7 @@ public class SignupActivity extends BaseActivity {
     private String firstName;
     private String lastName;
     private ProgressDialog progressDialog;
-    private RadioButton checkIsAgreeBt;
-    private boolean isAgree = false;
+    private CheckBox checkIsAgreeBt;
     private String email;
     private String password;
 
@@ -53,16 +51,10 @@ public class SignupActivity extends BaseActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
-            checkIsAgreeBt = (RadioButton) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
+            checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
             editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
             editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
-            checkIsAgreeBt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkIsAgreeBt.setChecked(!checkIsAgreeBt.isChecked());
-                    isAgree = checkIsAgreeBt.isChecked();
-                }
-            });
+            checkIsAgreeBt.setChecked(false);
         }
     }
 
@@ -86,9 +78,11 @@ public class SignupActivity extends BaseActivity {
         progressDialog.setMessage(getString(R.string.register_popup_message));
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        email = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
+
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+
             getModel().nevoUserRegister(email, password);
         }else{
             Intent intent = new Intent(this ,UserInfoActivity.class);
@@ -107,7 +101,7 @@ public class SignupActivity extends BaseActivity {
                 onSignupFailed();
                 break;
             case SUCCESS:
-                Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), R.string.register_success, Toast.LENGTH_SHORT).show();
                 _signupButton.setEnabled(true);
                 getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
                 getModel().saveNevoUser(getModel().getNevoUser());
@@ -119,15 +113,16 @@ public class SignupActivity extends BaseActivity {
     }
 
     public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), R.string.register_failed, Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), R.string.register_failed, Toast.LENGTH_SHORT).show();
         _signupButton.setEnabled(true);
     }
 
     public boolean validate() {
         boolean valid = true;
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        email = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
         String passwordConfirm = _passwordConfirmText.getText().toString();
+
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             firstName = editTextFirstName.getText().toString();
             lastName = editLastName.getText().toString();
@@ -138,7 +133,7 @@ public class SignupActivity extends BaseActivity {
                 editTextFirstName.setError(null);
             }
 
-            if (!isAgree) {
+            if (!checkIsAgreeBt.isChecked()) {
                 valid = false;
             }
         }

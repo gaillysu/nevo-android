@@ -14,6 +14,7 @@
 
     <color name="colorPrimary">#FFC107</color>
     <color name="colorPrimaryDark">#FFA000</color>
+    <color name="user_info_sex_bg">#7ED8D1</color>
     <color name="textColorPrimary">#333</color>
     <color name="textColor">#333</color>
     <color name="textColorPrimaryInverse">#FFF</color>
@@ -25,5 +26,7 @@
     <color name="list_item_sub_text">#757575</color>
 
     <color name="baseBackground">#F6F6F6</color>
+    <color name="user_sex_text_normal_color">#95989A</color>
+    <color name="user_info_text_select_color">#FFFFFF</color>
 
 </resources>

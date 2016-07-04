@@ -33,31 +33,31 @@ public class LoginActivity extends BaseActivity {
     Button _loginButton;
     @Bind(R.id.link_signup)
     TextView _signupLink;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         EventBus.getDefault().register(this);
         ButterKnife.bind(this);
-        if(getModel().getNevoUser().getNevoUserEmail()!=null) {
+        if (getModel().getNevoUser().getNevoUserEmail() != null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
         }
     }
 
     @OnClick(R.id.link_signup)
-    public void signUpAction(){
-        if(ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+    public void signUpAction() {
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
             Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
             startActivityForResult(intent, REQUEST_SIGN_UP);
-        }else{
+        } else {
             startActivity(SignupActivity.class);
             finish();
         }
     }
 
     @OnClick(R.id.btn_login)
-    public void loginAction(){
+    public void loginAction() {
         if (!validate()) {
             onLoginFailed();
             return;
@@ -80,13 +80,13 @@ public class LoginActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(LoginEvent event) {
-        switch (event.getLoginStatus()){
+        switch (event.getLoginStatus()) {
             case FAILED:
 
                 onLoginFailed();
                 break;
             case SUCCESS:
-                    onLoginSuccess();
+                onLoginSuccess();
                 break;
 
         }

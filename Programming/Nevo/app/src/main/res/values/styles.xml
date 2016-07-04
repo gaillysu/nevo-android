@@ -17,6 +17,10 @@
 
     </style>
 
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/check_box_style</item>
+    </style>
+
     <style name="NevoActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="android:textColor">@color/white</item>
         <item name="android:colorPrimary">@color/white</item>

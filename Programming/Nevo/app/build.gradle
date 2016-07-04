@@ -90,6 +90,8 @@ dependencies {
         transitive = true;
     }
     compile 'com.android.support:multidex:1.0.0'
+    compile project(path: ':wheelPickLib')
+    compile project(':wheelPickLib')
 }
 
 repositories {
