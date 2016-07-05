@@ -3,9 +3,12 @@ package com.medcorp.nevo.activity.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.medcorp.ApplicationFlage;
@@ -32,6 +35,8 @@ public class SignupActivity extends BaseActivity {
     EditText _passwordConfirmText;
     @Bind(R.id.btn_signup)
     Button _signupButton;
+    @Bind(R.id.register_title)
+    RelativeLayout titleRegister;
 
     private EditText editTextFirstName;
     private EditText editLastName;
@@ -55,7 +60,24 @@ public class SignupActivity extends BaseActivity {
             editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
             editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
             checkIsAgreeBt.setChecked(false);
+        }else{
+            titleRegister.setVisibility(View.GONE);
         }
+    }
+
+    @OnClick(R.id.register_title_back_image_button)
+    public void backClick(){
+            finish();
+            startActivity(LoginActivity.class);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR){
+            backClick();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick(R.id.link_login)

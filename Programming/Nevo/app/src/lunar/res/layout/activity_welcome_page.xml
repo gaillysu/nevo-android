@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@drawable/nevo_background_image"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
-        <ImageView
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/nevo_logo_image"
-            />
-        <com.medcorp.nevo.view.customfontview.RobotoButton
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:visibility="gone"
-            android:text="@string/tutorial_1_lets_activate"
-            android:id="@+id/activity_welcome_next_button"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="100dp"
-            style="@style/TutorialButton"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="50dp"
+              android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:layout_marginBottom="85dp"
-        android:background="@color/white"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:background="@mipmap/nevo_logo_image"
+        />
 
-        <com.medcorp.nevo.view.customfontview.RobotoButton
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:src="@mipmap/lunar_watch_logo"
+        />
+
+
+    <com.medcorp.nevo.view.customfontview.RobotoButton
+        android:id="@+id/activity_welcome_take_tour_button"
+        style="@style/TakeTourButton"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="@string/help_take_tour"
-        android:visibility="gone"
-        android:id="@+id/activity_welcome_take_tour_button"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-        style="@style/TakeTourButton"/>
+        android:visibility="gone"/>
 
-</RelativeLayout>
+    <com.medcorp.nevo.view.customfontview.RobotoButton
+        android:id="@+id/activity_welcome_next_button"
+        style="@style/TutorialButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:visibility="gone"/>
+
+
+</LinearLayout>

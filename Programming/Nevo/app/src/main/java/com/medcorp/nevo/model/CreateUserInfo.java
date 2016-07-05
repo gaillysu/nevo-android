@@ -1,4 +1,4 @@
-package com.medcorp.lunar.modle;
+package com.medcorp.nevo.model;
 
 /**
  * Created by Administrator on 2016/7/4.

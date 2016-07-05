@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.medcorp.lunar.modle.CreateUserInfo;
+import com.medcorp.nevo.model.CreateUserInfo;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.login.SignupActivity;
@@ -181,5 +182,14 @@ public class UserInfoActivity extends BaseActivity {
                 .dateChose("60")
                 .build();
         pickerPopWin3.showPopWin(UserInfoActivity.this);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            backClick();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

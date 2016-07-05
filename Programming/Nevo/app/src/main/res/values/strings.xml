@@ -141,6 +141,10 @@
     <string name="user_info_user_birthday_error">Birthday may not be empty</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
+    <string name="register_input_first_is_empty">User name cannot be empty</string>
+
+
+
 
 
 

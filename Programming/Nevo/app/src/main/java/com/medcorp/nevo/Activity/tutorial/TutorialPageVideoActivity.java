@@ -39,6 +39,7 @@ public class TutorialPageVideoActivity extends BaseActivity{
                 @Override
                 public void run() {
                   startActivity(LoginActivity.class);
+                    finish();
                 }
             },1500);
         }
