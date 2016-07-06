@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#F6F6F6"
+    android:background="@color/baseBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/tutorial_nevo_bt_onoff"
+        android:src="@drawable/tutorial_nevo_bt_onoff"
         />
 
     <com.medcorp.nevo.view.customfontview.RobotoButton
@@ -46,7 +46,7 @@
         android:textAllCaps="false"
         android:id="@+id/activity_tutorial_4_next_button"
         android:background="@color/transparent"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/tutorial_next_text_color"
         android:textSize="21sp"
         roboto:light="true"
         android:layout_alignParentBottom="true"

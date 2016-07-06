@@ -126,22 +126,7 @@
     <string name="startup_goal_weekly_days">Weekly days</string>
     <string name="startup_goal_weekend">Weekend</string>
 
-    //Lunar
-    <string name="user_info_back_text">Back</string>
-    <string name="register_user_info_page_text">Register</string>
-    <string name="register_user_info_page_next_text">Next</string>
-    <string name="activity_user_info_title_above_text">Your information</string>
-    <string name="activity_user_info_text_dec_middle">Enter your information below.\n Don\'t worry, it is completely private to you and\n your phone.</string>
-    <string name="activity_user_info_text_our_text">Check our private policy</string>
-    <string name="activity_user_info_birthday">Date of Birt</string>
-    <string name="activity_user_info_height">Height</string>
-    <string name="activity_user_info_weight">Weight</string>
-    <string name="activity_user_info_man">Male</string>
-    <string name="activity_user_info_female">Female</string>
-    <string name="user_info_user_birthday_error">Birthday may not be empty</string>
-    <string name="user_info_user_height_error">Length may not be empty</string>
-    <string name="user_info_user_weight_error">Weight may not be empty</string>
-    <string name="register_input_first_is_empty">User name cannot be empty</string>
+
 
 
 

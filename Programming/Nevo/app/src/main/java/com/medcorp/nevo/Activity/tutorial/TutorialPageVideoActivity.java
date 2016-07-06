@@ -9,8 +9,6 @@ import android.view.WindowManager;
 import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
-import com.medcorp.nevo.activity.base.BaseActivity;
-import com.medcorp.nevo.activity.login.LoginActivity;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -20,7 +18,7 @@ import butterknife.OnClick;
 /**
  * Created by gaillysu on 16/1/14.
  */
-public class TutorialPageVideoActivity extends BaseActivity{
+public class TutorialPageVideoActivity extends com.medcorp.nevo.activity.base.BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +36,7 @@ public class TutorialPageVideoActivity extends BaseActivity{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                  startActivity(LoginActivity.class);
+                  startActivity(TutorialPage1Activity.class);
                     finish();
                 }
             },1500);

@@ -16,7 +16,8 @@
             android:id="@+id/register_title"
             layout="@layout/signup_title_layout"/>
 
-        <ImageView android:src="@drawable/nevo_logo_image"
+        <ImageView
+            android:src="@drawable/nevo_logo_image"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
