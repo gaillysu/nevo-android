@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.activity.login.LoginActivity;
 import com.medcorp.nevo.event.bluetooth.OnSyncEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
@@ -46,6 +47,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Karl on 12/10/15.
@@ -64,6 +66,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
+
 
     private View rootView;
     private TextView userView;
@@ -121,6 +124,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         {
             getModel().startConnectToWatch(false);
         }
+    }
+
+    @OnClick(R.id.navigation_header_spinner)
+    private void openLoginActivity(){
+        startActivity(LoginActivity.class);
+
     }
 
     @Override

@@ -28,8 +28,8 @@
     <string name="notification_wechat_title">WeChat</string>
     <string name="notification_whatsapp_title">WhatsApp</string>
 
-    <string name ="location_access_title">This app needs location access</string>
-    <string name ="location_access_content">Please grant location access so it can detect nevo.</string>
+    <string name="location_access_title">This app needs location access</string>
+    <string name="location_access_content">Please grant location access so it can detect nevo.</string>
 
     <string name="dfu_update">Update</string>
     <string name="dfu_back_to_settings">Back to settings</string>
@@ -118,20 +118,13 @@
     <string name="steps_goal_title">Goal</string>
     <string name="steps_goal">goal</string>
     <string name="steps_progress">progress</string>
-    <string name ="steps_steps">steps</string>
+    <string name="steps_steps">steps</string>
 
     <string name="startup_goal_light">Light</string>
     <string name="startup_goal_moderate">Moderate</string>
     <string name="startup_goal_heavy">Heavy</string>
     <string name="startup_goal_weekly_days">Weekly days</string>
     <string name="startup_goal_weekend">Weekend</string>
-
-
-
-
-
-
-
 
 
     <string name="alarm_add">Add alarm</string>
@@ -271,4 +264,22 @@
 push and hold the third button, until the white LED blinks</string>
     <string name="help_got_it">Got it!</string>
     <string name="help_goto_sleep">How to track you sleep?</string>
+
+
+    <!--lunar-->
+    <string name="user_info_back_text">Back</string>
+    <string name="register_user_info_page_text">Register</string>
+    <string name="register_user_info_page_next_text">Next</string>
+    <string name="activity_user_info_title_above_text">Your information</string>
+    <string name="activity_user_info_text_dec_middle">Enter your information below.\n Don\'t worry, it is completely private to you and\n your phone.</string>
+    <string name="activity_user_info_text_our_text">Check our private policy</string>
+    <string name="activity_user_info_birthday">Date of Birt</string>
+    <string name="activity_user_info_height">Height</string>
+    <string name="activity_user_info_weight">Weight</string>
+    <string name="activity_user_info_man">Male</string>
+    <string name="activity_user_info_female">Female</string>
+    <string name="user_info_user_birthday_error">Birthday may not be empty</string>
+    <string name="user_info_user_height_error">Length may not be empty</string>
+    <string name="user_info_user_weight_error">Weight may not be empty</string>
+    <string name="register_input_first_is_empty">User name cannot be empty</string>
 </resources>
