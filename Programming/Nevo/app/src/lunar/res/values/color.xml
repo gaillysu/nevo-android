@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#54575A</color>
-    <color name="colorPrimaryDark">#54575A</color>
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#3A3739</color>
     <color name="window_background_color">#54575A</color>
-    <color name="baseBackground">@color/colorPrimary</color>
+    <color name="baseBackground">#54575A</color>
     <color name="black">#ffffff</color>
     <color name="tutorial_next_text_color">#7ED8D1</color>
     <color name="tutorial_progress_bar_color">#7ED8D1</color>
+    <color name="colorPrimary">#54575A</color>
+    <color name="colorPrimaryDark">#54575A</color>
+    <color name="colorAccent">#54575A</color>
 </resources>

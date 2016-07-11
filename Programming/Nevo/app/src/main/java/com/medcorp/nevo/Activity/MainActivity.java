@@ -68,6 +68,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     NavigationView navigationView;
 
 
+    @Bind(R.id.drawable_left_show_user_name_tv)
+    TextView showUserFirstNameText;
+
     private View rootView;
     private TextView userView;
 
@@ -127,9 +130,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     @OnClick(R.id.navigation_header_spinner)
-    private void openLoginActivity(){
+    public void openLoginActivity(){
         startActivity(LoginActivity.class);
-
     }
 
     @Override
@@ -180,6 +182,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     public void onDrawerOpened(View drawerView) {
         userView.setText(getModel().getNevoUser().isLogin()?getModel().getNevoUser().getNevoUserEmail():"");
+        showUserFirstNameText.setText(getModel().getNevoUser().isLogin()?getModel().getNevoUser().getFirstName():"");
     }
 
     @Override

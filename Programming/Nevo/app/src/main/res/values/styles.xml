@@ -28,7 +28,7 @@
 
     <style name="NevoDialogStyle" parent="Base.V7.Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
