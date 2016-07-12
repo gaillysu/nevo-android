@@ -282,4 +282,14 @@ push and hold the third button, until the white LED blinks</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
     <string name="register_input_first_is_empty">User name cannot be empty</string>
+    <string name="forget_password_activity_title_dec">Forget Password</string>
+    <string name="forget_password_activity_page_dec">Don\'t worry.We get you \n covered.As long as \n you don\'t forget to your\n LunaR in the morning.</string>
+    <string name="forget_password_send_request_bt_text">SEND</string>
+    <string name="tips_user_account_password">Email must not be empty</string>
+    <string name="email_format_error">Invalid Email format</string>
+    <string name="forget_password_result_prompt">Check your inbox</string>
+    <string name="forget_password_result_email_address_text">A email has been sent to: </string>
+    <string name="forget_password_result_test_email_address">shaw@med-corp.com</string>
+    <string name="forget_password_result_prompt_user_check_email">Please open the link we\’ve\n sent and verify your e-mail ad-\ndress.</string>
+    <!--<lunar end>-->
 </resources>

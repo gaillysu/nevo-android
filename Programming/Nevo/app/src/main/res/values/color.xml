@@ -29,7 +29,7 @@
     <color name="baseBackground">#F6F6F6</color>
     <color name="user_sex_text_normal_color">#95989A</color>
     <color name="user_info_text_select_color">#FFFFFF</color>
-
+    <color name="tutorial_black">#ff000000</color>
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#3A3739</color>
 

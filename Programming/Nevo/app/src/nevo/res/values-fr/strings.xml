@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><resources>
+    <string name="app_name">Nevo</string>
+    <string name="menu_drawer_activity">Activité</string>
+    <string name="menu_drawer_alarm">Alarme</string>
+    <string name="menu_drawer_sleep">Sommeil</string>
+    <string name="menu_drawer_settings">Paramètres</string>
+
+    <string name="drawer_open">Ouvrir le menu de navigation</string>
+    <string name="drawer_close">Fermer le menu de navigation</string>
+
+    <string name="ble_not_supported">Smartphone incompatible avec BLE</string>
+    <string name="ble_deactivated">Le Bluetooth est désactivé, activez-le pour établir la connexion.</string>
+    <string name="ble_unstable">Connexion Bluetooth instable, placez la montre plus près du téléphone.</string>
+    <string name="ble_connect_timeout">Si vous êtes connecté à l\'Internet, appuyez sur le bouton Aide pour obtenir des solutions</string>
+    <string name="ble_notification_title">Notification</string>
+    <string name="ble_notification_message">Nevo n\'est pas appariée, appariez-la d\'abord</string>
+    <string name="ble_command_timeout_title">Délai de communication Bluetooth expiré</string>
+    <string name="ble_connect_timeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
+    <string name="ble_connection_timeout_title">Délai de connexion Bluetooth expiré</string>
+    <string name="ble_connection_timeout_cancel">Annuler</string>
+    <string name="ble_connection_timeout_help">Aide</string>
+
+    <string name="notification_call_title">Appel</string>
+    <string name="notification_sms_title">SMS</string>
+    <string name="notification_email_title">Email</string>
+    <string name="notification_facebook_title">Facebook</string>
+    <string name="notification_calendar_title">Calendrier</string>
+    <string name="notification_wechat_title">WeChat</string>
+    <string name="notification_whatsapp_title">WhatsApp</string>
+
+    <string name="location_access_title">Cette application doit accéder à la localisation</string>
+    <string name="location_access_content">Autorisez l\'accès à la localisation pour pouvoir détecter nevo.</string>
+
+    <string name="dfu_update_message">Mise à jour</string>
+    <string name="dfu_update">Mettre à jour</string>
+    <string name="dfu_back_to_settings">Retour aux paramètres</string>
+    <string name="dfu_retry">Réessayez</string>
+    <string name="dfu_update_title">Ne quittez pas cet écran</string>
+    <string name="dfu_update_content">Suivez les instructions et patientez jusqu\'à ce que la mise à jour soit terminée.</string>
+    <string name="dfu_update_positive">Mise à jour</string>
+    <string name="dfu_update_negative">Annuler</string>
+    <string name="dfu_update_prepare">Préparation de la mise à jour&#8230;</string>
+    <string name="dfu_firmware_updated">Firmware mis à jour</string>
+    <string name="dfu_continue">Continuer</string>
+    <string name="dfu_back">Retour</string>
+    <string name="dfu_press_third_button">Appuyez sur le troisième bouton</string>
+    <string name="dfu_press_third_button_description">Ne quittez pas cet écran pendant que votre bluetooth se réactive !</string>
+    <string name="dfu_failed_preparing">Impossible de préparer la mise à jour</string>
+    <string name="dfu_re_upgrade">Réessayez</string>
+    <string name="dfu_continue_button">Continuer</string>
+    <string name="dfu_connect_error_no_nevo_do_ota">Nevo n\'est pas connectée, impossible d\'effectuer la mise à jour OTA</string>
+    <string name="dfu_checking_firmware">Vérification de la version du firmware, patientez&#8230;</string>
+    <string name="dfu_error_lowbattery">Batterie trop faible pour la mise à niveau.</string>
+    <string name="dfu_error_timeout">Connexion interrompue</string>
+    <string name="dfu_error_noconnect">Aucune nevo connectée</string>
+    <string name="dfu_error_openfile">Erreur à l\'ouverture du fichier firmware.</string>
+    <string name="dfu_error_checksum">Erreur de checksum.</string>
+    <string name="dfu_error_nofounDFUservice">Service OTA non trouvé, attendez quelques minutes et réessayez.</string>
+    <string name="dfu_error_other">La mise à jour a rencontré une exception.</string>
+
+    <string name="notification_allow">Autoriser les notifications</string>
+    <string name="notification">Notification</string>
+    <string name="notification_led_red">LED rouge</string>
+    <string name="notification_led_blue">LED bleue</string>
+    <string name="notification_led_light_green">LED vert clair</string>
+    <string name="notification_led_yellow">LED jaune</string>
+    <string name="notification_led_orange">LED orange</string>
+    <string name="notification_led_green">LED verte</string>
+    <string name="notification_position">Position</string>
+    <string name="notification_ok">OK</string>
+    <string name="notification_cancel">Annuler</string>
+    <string name="notification_deactivated">Désactivé</string>
+    <string name="notification_access_title">Accès aux notifications</string>
+    <string name="notification_access_message">Voulez-vous activer les notifications pour nevo ?</string>
+    <string name="notification_connect_title">Nevo connectée</string>
+    <string name="notification_connect_content">votre Nevo s\'est connectée</string>
+    <string name="notification_disconnect_title">Déconnexion de Nevo</string>
+    <string name="notification_disconnect_content">votre Nevo s\'est déconnectée</string>
+
+    <string name="tutorial_1_title">Commençons !</string>
+    <string name="tutorial_1_text">Utilisez votre montre nevo pour paramétrer, suivre et analyser vos données personnelles de santé et de condition physique.</string>
+    <string name="tutorial_1_lets_activate">Activez votre nevo</string>
+
+    <string name="tutorial_2_title">Activer le Bluetooth</string>
+    <string name="tutorial_2_continue">Continuer</string>
+    <string name="tutorial_2_text">Ouvrez vos paramètres à activer avant de continuer.</string>
+    <string name="tutorial_2_dialog_negative">Paramètres</string>
+    <string name="tutorial_2_dialog_positive">Activez le Bluetooth dans les paramètres pour la connexion avec nevo</string>
+
+    <string name="tutorial_3_title">Régler l\'heure</string>
+    <string name="tutorial_3_text">Tirez la couronne et tournez pour régler l\'heure sur votre montre nevo. Notez que nevo ne synchronise pas l\'heure avec votre téléphone.</string>
+    <string name="tutorial_3_next">Suivant</string>
+
+    <string name="tutorial_4_title">Allumez nevo</string>
+    <string name="tutorial_4_text">Maintenez enfoncé le troisième bouton, jusqu\'à ce que la LED bleue clignote.</string>
+    <string name="tutorial_4_next">Suivant</string>
+
+    <string name="tutorial_5_title">Recherche en cours</string>
+    <string name="tutorial_5_text">Gardez nevo près de votre téléphone</string>
+
+    <string name="tutorial_failed_title">Connexion impossible</string>
+    <string name="tutorial_failed_text">Vérifiez que la LED bleue sur la nevo clignote et réessayez.</string>
+    <string name="tutorial_failed_try_again">Réessayer</string>
+
+    <string name="tutorial_success_title">Connecté</string>
+    <string name="tutorial_success_tap_to_continue">Tapez pour continuer</string>
+
+    <string name="sleep_sleep_duration">Durée du sommeil</string>
+    <string name="sleep_sleep_time">Heure du sommeil</string>
+    <string name="sleep_wake_time">Heure du réveil</string>
+    <string name="sleep_deep_sleep">Sommeil profond</string>
+    <string name="sleep_light_sleep">Sommeil léger</string>
+    <string name="sleep_wake_duration">Durée de l\'éveil</string>
+    <string name="sleep_today_no_sleep_message">Vous n\'avez pas dormi avec votre nevo.</string>
+    <string name="sleep_select_date">sélectionnez une date</string>
+
+    <string name="steps_goal_title">Objectif</string>
+    <string name="steps_goal">objectif</string>
+    <string name="steps_progress">avancement</string>
+    <string name="steps_steps">pas</string>
+
+    <string name="startup_goal_light">Léger</string>
+    <string name="startup_goal_moderate">Modéré</string>
+    <string name="startup_goal_heavy">Lourd</string>
+    <string name="startup_goal_weekly_days">Jours de semaine</string>
+    <string name="startup_goal_weekend">Weekend</string>
+
+    <string name="alarm_add">Ajouter une alarme</string>
+    <string name="alarm_saved">Alarme enregistrée !</string>
+    <string name="alarm_could_not_save">Impossible d\'enregistrer l\'alarme !</string>
+    <string name="alarm_edit">Modifier une alarme</string>
+    <string name="alarm_label_alarm">Étiquetez votre alarme.</string>
+    <string name="alarm_label">nom de l\'étiquette</string>
+    <string name="alarm_cancel">Annuler</string>
+    <string name="alarm_deleted">Alarme supprimée !</string>
+    <string name="alarm_could_not_delete">Impossible de supprimer l\'alarme</string>
+    <string name="alarm_could_not_change">Impossible de modifier l\'alarme</string>
+    <string name="alarm_delete">Supprimer une Alarme</string>
+    <string name="alarm_set_different_time">Définir une heure différente</string>
+    <string name="alarm_set_label_for_alarm">Définir une étiquette pour l\'alarme</string>
+    <string name="alarm_synced">Alarme Synchronisée</string>
+    <string name="alarm_error_sync">Erreur Synchronisation Alarme</string>
+    <string name="goal_syncing_message">Synchronisation Objectif&#8230;</string>
+    <string name="goal_synced">Objectif Synchronisé</string>
+    <string name="goal_error_sync">Erreur Synchronisation Objectif</string>
+
+    <string name="goal">Objectif</string>
+    <string name="goal_ok">OK</string>
+    <string name="goal_cancel">Annuler</string>
+    <string name="goal_add">Ajouter un Objectif</string>
+    <string name="goal_saved">Objectif enregistré !</string>
+    <string name="goal_step_goal">objectif de pas</string>
+    <string name="goal_name_goal">nom de l\'objectif</string>
+    <string name="goal_could_not_save">Impossible d\'enregistrer l\'objectif !</string>
+    <string name="goal_edit">Modifier l\'objectif</string>
+    <string name="goal_input">Définissez votre objectif</string>
+    <string name="goal_label_goal">Étiquetez votre objectif</string>
+    <string name="goal_label">nom de l\'étiquette</string>
+    <string name="goal_deleted">Objectif supprimé !</string>
+    <string name="goal_could_not_delete">Impossible de supprimer l\'objectif</string>
+    <string name="goal_could_not_change">Impossible de modifier l\'objectif</string>
+    <string name="goal_delete">Supprimer un Objectif</string>
+
+    <string name="in_app_notification_found_nevo">Nevo trouvée !</string>
+    <string name="in_app_notification_bluetooth_disabled">Le Bluetooth est désactivé. Activez-le.</string>
+    <string name="in_app_notification_nevo_disconnected">Nevo déconnectée.</string>
+    <string name="in_app_notification_searching">Recherche de nevo en cours&#8230;</string>
+    <string name="in_app_notification_could_not_find">Impossible de trouver nevo.</string>
+    <string name="in_app_notification_syncing">Synchronisation données&#8230;</string>
+    <string name="in_app_notification_syncing_alarm">Synchronisation alarme&#8230;</string>
+    <string name="in_app_notification_synced">Synchronisation données terminée !</string>
+    <string name="in_app_notification_no_watch">Aucune montre connectée.</string>
+    <string name="in_app_notification_max_three_alarm">nevo ne gère que trois alarmes.</string>
+
+    <string name="title_alarm">Alarme</string>
+    <string name="title_my_nevo">Ma nevo</string>
+    <string name="title_about">À propos</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_steps">Activité</string>
+
+    <string name="my_nevo_firmware">Firmware</string>
+    <string name="my_nevo_new_version">Nouvelle version disponible</string>
+    <string name="my_nevo_battery">Batterie</string>
+    <string name="my_nevo_battery_low">Batterie faible</string>
+    <string name="my_nevo_battery_half">Batterie à moitié pleine</string>
+    <string name="my_nevo_battery_full">Batterie pleine</string>
+    <string name="my_nevo_application">Application</string>
+    <string name="my_nevo_notice_message">Pour économiser l\'énergie de la batterie, le Bluetooth se déconnecte automatiquement lorsque vous êtes loin du téléphone pendant plus de 2 minutes. Vous ne recevrez plus de notifications sur nevo tant que vous êtes déconnecté.</string>
+
+    <string name="settings_link_loss_notification">Notification de perte de lien</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_active_title">Notifications actives</string>
+    <string name="settings_notifications_inactive_title">Notifications inactives</string>
+    <string name="settings_my_nevo">Ma nevo</string>
+    <string name="settings_find_my_watch">Trouver ma montre</string>
+    <string name="settings_goals">Objectifs</string>
+    <string name="settings_support">Assistance</string>
+    <string name="settings_about">À propos</string>
+    <string name="settings_forget_watch">Oublier la montre</string>
+    <string name="settings_sure">Vraiment ?</string>
+    <string name="settings_other_apps">Connecter à d\'autres applications</string>
+    <string name="settings_other_apps_short">Autres applications</string>
+
+    <string name="settings_other_apps_google_fit">Google Fit</string>
+
+    <string name="google_fit_could_not_login">Connexion impossible, réessayez plus tard</string>
+    <string name="google_fit_connecting">Connexion au compte Google impossible</string>
+    <string name="google_fit_logged_in">Connectée au compte Google</string>
+    <string name="google_fit_network_lost">Connexion réseau perdue</string>
+    <string name="google_fit_service_disconnected">Service Google Play déconnecté</string>
+    <string name="google_fit_unknown_network">Une erreur réseau inconnue est survenue</string>
+    <string name="google_fit_synced">Synchronisation des données avec Google Fit terminée.</string>
+    <string name="google_fit_sync_error">Erreur de synchronisation des données avec Google Fit.</string>
+
+
+    <string name="tab_title_today">Aujourd\'hui</string>
+    <string name="tab_title_History">Historique</string>
+
+</resources>
