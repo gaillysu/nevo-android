@@ -1,11 +1,15 @@
 package com.medcorp.nevo.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.activity.login.LoginActivity;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -14,17 +18,26 @@ import butterknife.OnClick;
  */
 public class ForgetPasswordResultActivity extends BaseActivity {
 
-
+    @Bind(R.id.forget_password_result_show_email_tx)
+    TextView showUserEmailAccountText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forget_password_result_page_layout);
         ButterKnife.bind(this);
+        showUserEmailAccountText.setText(getModel().getNevoUser().getNevoUserEmail());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+                startActivity(LoginActivity.class);
+            }
+        }, 1500);
     }
 
     @OnClick(R.id.back_page_image_button)
-    public void closePageClick(){
+    public void closePageClick() {
         finish();
     }
 }

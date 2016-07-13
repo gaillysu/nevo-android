@@ -23,7 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.medcorp.nevo.R;
@@ -47,13 +47,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener
-{
+public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -68,8 +66,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     NavigationView navigationView;
 
 
-    @Bind(R.id.drawable_left_show_user_name_tv)
-    TextView showUserFirstNameText;
+    private TextView showUserFirstNameText;
 
     private View rootView;
     private TextView userView;
@@ -78,20 +75,20 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private MenuItem selectedMenuItem;
     private Optional<BaseObservableFragment> activeFragment;
     private FragmentManager fragmentManager;
-    private Snackbar snackbar=null;
-    private boolean bigSyncStart =false;
+    private Snackbar snackbar = null;
+    private boolean bigSyncStart = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        activeFragment =  new Optional<>();
-        rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
+        activeFragment = new Optional<>();
+        rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         setSupportActionBar(toolbar);
         getSupportActionBar().setElevation(0);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout.setDrawerListener(this);
         MenuItem firstItem = navigationView.getMenu().getItem(0);
@@ -102,7 +99,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         activeFragment.set(fragment);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
-        if(fragmentManager.getBackStackEntryCount() == 0) {
+        if (fragmentManager.getBackStackEntryCount() == 0) {
             fragmentManager.beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment)
                     .commit();
@@ -110,11 +107,18 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
         View headerView = navigationView.getHeaderView(0);
         userView = (TextView) headerView.findViewById(R.id.navigation_header_textview);
-        ImageView userImageView = (ImageView) headerView.findViewById(R.id.navigation_header_imageview);
+        showUserFirstNameText = (TextView) headerView.findViewById(R.id.drawable_left_show_user_name_tv);
+        ImageButton userImageView = (ImageButton) headerView.findViewById(R.id.navigation_header_imageview);
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
+        });
+        headerView.findViewById(R.id.navigation_header_spinner).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(LoginActivity.class);
             }
         });
 
@@ -123,16 +127,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     protected void onResume() {
         super.onResume();
-        if(!getModel().isWatchConnected())
-        {
+        if (!getModel().isWatchConnected()) {
             getModel().startConnectToWatch(false);
         }
     }
 
-    @OnClick(R.id.navigation_header_spinner)
-    public void openLoginActivity(){
-        startActivity(LoginActivity.class);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -147,23 +146,20 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         return super.onOptionsItemSelected(item);
     }
 
-    public void showStateString(int id,boolean dismiss)
-    {
-        if(snackbar != null)
-        {
-            if(snackbar.isShown()) {
+    public void showStateString(int id, boolean dismiss) {
+        if (snackbar != null) {
+            if (snackbar.isShown()) {
                 snackbar.dismiss();
             }
         }
 
-        snackbar = Snackbar.make(coordinatorLayout,"",Snackbar.LENGTH_LONG);
+        snackbar = Snackbar.make(coordinatorLayout, "", Snackbar.LENGTH_LONG);
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setText(getString(id));
         snackbar.show();
 
-        if(dismiss)
-        {
+        if (dismiss) {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -177,12 +173,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
 
     @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {}
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+    }
 
     @Override
     public void onDrawerOpened(View drawerView) {
-        userView.setText(getModel().getNevoUser().isLogin()?getModel().getNevoUser().getNevoUserEmail():"");
-        showUserFirstNameText.setText(getModel().getNevoUser().isLogin()?getModel().getNevoUser().getFirstName():"");
+        userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
+        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
     }
 
     @Override
@@ -207,19 +204,19 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void setFragment(MenuItem item){
+    private void setFragment(MenuItem item) {
         setTitle(item.getTitle());
         BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
-                if(fragmentManager.getBackStackEntryCount() >= 1) {
+                if (fragmentManager.getBackStackEntryCount() >= 1) {
                     fragmentManager.popBackStack();
                     fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
                     activeFragment.set(fragment);
                 }
                 return;
             case R.id.nav_alarm_fragment:
-                fragment = AlarmFragment.instantiate(MainActivity.this,AlarmFragment.class.getName());
+                fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
                 break;
             case R.id.nav_sleep_fragment:
                 fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
@@ -228,17 +225,17 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                 break;
         }
-        if(activeFragment.get().getClass().getName().equals(fragment.getClass().getName())){
+        if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
             return;
         }
         activeFragment.set(fragment);
         {
-            if(android.os.Build.VERSION.SDK_INT >= 19) {
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
                 fragment.setEnterTransition(new Fade().setDuration(300));
             }
-            FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
             if (fragmentManager.getBackStackEntryCount() == 0) {
-                        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                fragmentTransaction.addToBackStack(fragment.getClass().getName());
             }
             fragmentTransaction.commit();
         }
@@ -253,18 +250,18 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else if(fragmentManager.getBackStackEntryCount() >= 1) {
+        } else if (fragmentManager.getBackStackEntryCount() >= 1) {
             fragmentManager.popBackStack();
             MenuItem item = navigationView.getMenu().getItem(0);
             selectedMenuItem = item;
             item.setChecked(true);
             activeFragment.set((BaseObservableFragment) fragmentManager.getFragments().get(0));
-        }else if(fragmentManager.getBackStackEntryCount() == 0) {
+        } else if (fragmentManager.getBackStackEntryCount() == 0) {
             super.onBackPressed();
-        }else{
-             super.onBackPressed();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -283,12 +280,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(activeFragment.notEmpty())
-        {
-            activeFragment.get().onActivityResult(requestCode,resultCode,data);
+        if (activeFragment.notEmpty()) {
+            activeFragment.get().onActivityResult(requestCode, resultCode, data);
         }
-        if (requestCode == 1){
-            Log.w("Karl","result code = " + resultCode);
+        if (requestCode == 1) {
+            Log.w("Karl", "result code = " + resultCode);
         }
     }
 
@@ -305,42 +301,42 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     @Subscribe
-    public void onEvent(OnSyncEvent event){
-        switch (event.getStatus()){
+    public void onEvent(OnSyncEvent event) {
+        switch (event.getStatus()) {
             case STOPPED:
                 bigSyncStart = false;
                 showStateString(R.string.in_app_notification_synced, true);
                 break;
             case STARTED:
                 bigSyncStart = true;
-                showStateString(R.string.in_app_notification_syncing,false);
+                showStateString(R.string.in_app_notification_syncing, false);
                 break;
         }
     }
 
     @Subscribe
-    public void onEvent(BLEConnectionStateChangedEvent event){
-        if (event.isConnected()){
+    public void onEvent(BLEConnectionStateChangedEvent event) {
+        if (event.isConnected()) {
             showStateString(R.string.in_app_notification_found_nevo, false);
-        }else{
+        } else {
             showStateString(R.string.in_app_notification_nevo_disconnected, false);
         }
     }
 
     @Subscribe
-    public void onEvent(BLEBluetoothOffEvent event){
-            showStateString(R.string.in_app_notification_bluetooth_disabled, false);
+    public void onEvent(BLEBluetoothOffEvent event) {
+        showStateString(R.string.in_app_notification_bluetooth_disabled, false);
     }
 
     @Subscribe
     public void onEvent(BLESearchEvent event) {
         switch (event.getSearchEvent()) {
             case ON_SEARCHING:
-                PermissionRequestDialogBuilder builder =new PermissionRequestDialogBuilder(this);
+                PermissionRequestDialogBuilder builder = new PermissionRequestDialogBuilder(this);
                 builder.addPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
                 builder.setText(R.string.location_access_content);
                 builder.setTitle(R.string.location_access_title);
-                builder.askForPermission(this,1);
+                builder.askForPermission(this, 1);
                 showStateString(R.string.in_app_notification_searching, false);
                 break;
         }

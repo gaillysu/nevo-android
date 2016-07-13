@@ -39,7 +39,7 @@ public class TutorialPageVideoActivity extends com.medcorp.nevo.activity.base.Ba
                   startActivity(TutorialPage1Activity.class);
                     finish();
                 }
-            },1500);
+            },1000);
         }
     }
 

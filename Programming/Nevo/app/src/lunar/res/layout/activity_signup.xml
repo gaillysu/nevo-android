@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+
         <include
             android:id="@+id/register_title"
             layout="@layout/signup_title_layout"/>
@@ -25,7 +26,6 @@
             android:paddingRight="50dp"
             android:paddingTop="38dp"
             >
-
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -87,7 +87,6 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-
                 android:layout_marginTop="8dp"
                 android:background="@drawable/shape_input_email_account_bg"
                 android:hint="@string/log_in_password"
@@ -101,7 +100,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-
                 android:background="@drawable/shape_input_email_account_bg"
                 android:hint="@string/register_password_confirm"
                 android:inputType="textPassword"
