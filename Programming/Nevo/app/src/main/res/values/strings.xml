@@ -291,5 +291,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="forget_password_result_email_address_text">A email has been sent to: </string>
     <string name="forget_password_result_test_email_address">shaw@med-corp.com</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we\’ve\n sent and verify your e-mail ad-\ndress.</string>
+    <string name="analysis_fragment_title_string">Analysis</string>
     <!--<lunar end>-->
 </resources>

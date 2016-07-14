@@ -13,9 +13,11 @@
     <color name="history_data_black">#ff524e4e</color>
     <color name="window_background_color">#FFFFFF</color>
     <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#FFC107</color>
     <color name="tutorial_next_text_color">#FFA000</color>
     <color name="tutorial_progress_bar_color">#fff5a41c</color>
     <color name="user_info_sex_bg">#7ED8D1</color>
+    <color name="fragment_steps_window_bg">@color/white</color>
     <color name="textColorPrimary">#333</color>
     <color name="textColor">#333</color>
     <color name="textColorPrimaryInverse">#FFF</color>

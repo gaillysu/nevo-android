@@ -19,6 +19,7 @@
         android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:scaleType="fitXY"
         android:layout_marginTop="25dp"
         android:background="@android:color/transparent"
         android:src="@drawable/user"

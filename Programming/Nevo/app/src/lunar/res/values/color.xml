@@ -9,5 +9,6 @@
     <color name="tutorial_progress_bar_color">#7ED8D1</color>
     <color name="colorPrimary">#54575A</color>
     <color name="colorPrimaryDark">#54575A</color>
-    <color name="colorAccent">#54575A</color>
+    <color name="colorAccent">#7ED8D1</color>
+    <color name="fragment_steps_window_bg">#54575A</color>
 </resources>

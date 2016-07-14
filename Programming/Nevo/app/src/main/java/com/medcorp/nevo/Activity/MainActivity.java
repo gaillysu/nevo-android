@@ -31,6 +31,7 @@ import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.login.LoginActivity;
 import com.medcorp.nevo.event.bluetooth.OnSyncEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
+import com.medcorp.nevo.fragment.AnalysisFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
@@ -121,6 +122,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 startActivity(LoginActivity.class);
             }
         });
+
+
+        // Add snackbar on Coordinator Layout
+        //        Snackbar snackbar = new Snackbar();
+        //        snackbar.setText("Hello Jason");
+        //        snackbar.show();
 
     }
 
@@ -217,6 +224,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 return;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
+                break;
+            case R.id.nav_analysis_fragment:
+                fragment = AnalysisFragment.instantiate(MainActivity.this , AnalysisFragment.class.getName());
                 break;
             case R.id.nav_sleep_fragment:
                 fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());

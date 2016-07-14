@@ -21,6 +21,15 @@
     <string name="tutorial_4_text">Push and hold the third button, until the \n blue LED blinks.</string>
     <string name="tutorial_5_title">Searching...</string>
     <string name="tutorial_failed_text">Make sure the blue LED on the LunaR is blinking\n and try again.</string>
+    <string name="in_app_notification_found_nevo">Found LunaR!</string>
+    <string name="in_app_notification_nevo_disconnected">LunaR disconnected.</string>
+    <string name="in_app_notification_searching">Searching for LunaR&#8230;</string>
+    <string name="in_app_notification_could_not_find">Could not find LunaR.</string>
+    <string name="in_app_notification_max_three_alarm">LunaR supports only three alarms.</string>
+    <string name="location_access_content">Please grant location access so it can detect lunar.</string>
+
+
+
 
     <!--lunar-->
     <string name="user_info_back_text">Back</string>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="6"
-    android:background="@color/white">
+    android:background="@color/fragment_steps_window_bg">
 
     <RelativeLayout
         android:layout_width="match_parent"
