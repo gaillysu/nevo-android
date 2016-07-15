@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:id="@+id/main_toolbar"
-    android:background="?attr/colorPrimary"
+    android:background="@color/tool_bar_bg_color"
     android:elevation="0dp"
     android:theme="@style/NevoTheme"
     app:titleTextColor="@color/white"

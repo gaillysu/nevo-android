@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         activeFragment = new Optional<>();
         rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         setSupportActionBar(toolbar);
@@ -92,14 +93,17 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout.setDrawerListener(this);
+
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
         setTitle(selectedMenuItem.getTitle());
+
         BaseObservableFragment fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
         activeFragment.set(fragment);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
+
         if (fragmentManager.getBackStackEntryCount() == 0) {
             fragmentManager.beginTransaction()
                     .replace(R.id.activity_main_frame_layout, fragment)

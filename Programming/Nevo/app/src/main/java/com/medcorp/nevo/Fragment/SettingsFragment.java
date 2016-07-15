@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.ConnectToOtherAppsActivity;
 import com.medcorp.nevo.activity.GoalsActivity;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by karl-john on 14/12/15.
  */
-public class SettingsFragment extends BaseObservableFragment implements AdapterView.OnItemClickListener, OnCheckedChangeInListListener{
+public class SettingsFragment extends BaseObservableFragment implements AdapterView.OnItemClickListener, OnCheckedChangeInListListener {
 
     @Bind(R.id.fragment_setting_list_view)
     ListView settingListView;
@@ -56,17 +57,22 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
         listMenu = new ArrayList<SettingsMenuItem>();
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification),R.drawable.setting_linkloss,Preferences.getLinklossNotification(getActivity())));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications),R.drawable.setting_notfications));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo),R.drawable.setting_mynevo));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch),R.drawable.setting_findmywatch));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_goals),R.drawable.setting_goals));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification), R.drawable.setting_linkloss, Preferences.getLinklossNotification(getActivity())));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_goals), R.drawable.setting_goals));
         //TODO change Icon
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps),R.drawable.setting_linkloss));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_support),R.drawable.setting_support));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch),R.drawable.setting_forget));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_login),R.drawable.setting_mynevo,getModel().getNevoUser().isLogin()));
-        settingAdapter = new SettingMenuAdapter(getContext(),listMenu, this);
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
+
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+            listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
+            listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
+        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
+        }
+        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
@@ -82,28 +88,28 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position == 1) {
+        if (position == 1) {
             startActivity(SettingNotificationActivity.class);
-        } else if(position == 2) {
-            if(getModel().isWatchConnected()) {
+        } else if (position == 2) {
+            if (getModel().isWatchConnected()) {
                 startActivity(MyNevoActivity.class);
-            }else{
-                ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
+            } else {
+                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
-        } else if(position == 3) {
-            if(getModel().isWatchConnected()) {
+        } else if (position == 3) {
+            if (getModel().isWatchConnected()) {
                 getModel().blinkWatch();
-            }else{
-                ToastHelper.showShortToast(getContext(),R.string.in_app_notification_no_watch);
+            } else {
+                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
-        } else if(position == 4) {
+        } else if (position == 4) {
             startActivity(GoalsActivity.class);
-        } else if(position == 5){
+        } else if (position == 5) {
             startActivity(ConnectToOtherAppsActivity.class);
-        } else if(position == 6) {
+        } else if (position == 6) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
-        } else if(position == 7) {
+        } else if (position == 7) {
             new MaterialDialog.Builder(getContext())
                     .content(R.string.settings_sure)
                     .negativeText(android.R.string.no)
@@ -126,12 +132,16 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         if (position == 0) {
             Preferences.saveLinklossNotification(getActivity(), isChecked);
         }
-        if(position == 8) {
-            if(isChecked) {
-                getActivity().startActivityForResult(new Intent(getActivity(),LoginActivity.class), REQUEST_LOGIN);
-            } else {
-                getModel().getNevoUser().setIsLogin(false);
-                getModel().saveNevoUser(getModel().getNevoUser());
+        if (position == 8) {
+            if (ApplicationFlage.FLAGE== ApplicationFlage.Flage.NEVO) {
+                if (isChecked) {
+                    getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
+                } else {
+                    getModel().getNevoUser().setIsLogin(false);
+                    getModel().saveNevoUser(getModel().getNevoUser());
+                }
+            }else if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.LUNAR){
+                //TODO
             }
         }
     }
@@ -140,11 +150,10 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOGIN) {
-            if(resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, true));
                 settingAdapter.notifyDataSetChanged();
-            }
-            else if(resultCode == Activity.RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, false));
                 settingAdapter.notifyDataSetChanged();
             }

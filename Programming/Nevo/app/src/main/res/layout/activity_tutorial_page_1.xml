@@ -37,6 +37,7 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/activity_tutorial_page1_notice_textview"
             android:background="@drawable/tutorial_nevo_1"/>
 
         <com.medcorp.nevo.view.customfontview.RobotoButton

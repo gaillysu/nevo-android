@@ -12,7 +12,10 @@
     <color name="deep_sleep">#fff9a001</color>
     <color name="history_data_black">#ff524e4e</color>
     <color name="window_background_color">#FFFFFF</color>
+    <color name="switch_slider_color">@color/colorPrimary</color>
     <color name="colorPrimary">#FFC107</color>
+    <color name="tool_bar_bg_color">@color/colorPrimary</color>
+    <color name="steps_fragment_title_color">@color/colorPrimary</color>
     <color name="colorPrimaryDark">#FFC107</color>
     <color name="tutorial_next_text_color">#FFA000</color>
     <color name="tutorial_progress_bar_color">#fff5a41c</color>
@@ -27,12 +30,12 @@
     <color name="list_item_divider">#E5E5EA</color>
     <color name="list_item_header_text_color">#6F6F6F</color>
     <color name="list_item_sub_text">#757575</color>
-
+    <color name="setting_fragment_text_color"></color>
     <color name="baseBackground">#F6F6F6</color>
     <color name="user_sex_text_normal_color">#95989A</color>
     <color name="user_info_text_select_color">#FFFFFF</color>
     <color name="tutorial_black">#ff000000</color>
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#3A3739</color>
-
+    <color name="setting_tint_color_icon">#FFA000</color>
 </resources>
