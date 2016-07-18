@@ -19,4 +19,5 @@
     <color name="list_item_divider">#2d2f34</color>
     <color name="profile_fragment_text_color">#FFFFFF</color>
     <color name="profile_fragment_text_right_color">#7ED8D1</color>
+    <color name="snackbar_bg_color">#7ED8D1</color>
 </resources>

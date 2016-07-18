@@ -169,52 +169,54 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setText(getString(id));
-        snackbar.show();
+            Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+            ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+            snackbar.show();
 
-        if (dismiss) {
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!bigSyncStart) {
-                        snackbar.dismiss();
+            if (dismiss) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!bigSyncStart) {
+                            snackbar.dismiss();
+                        }
                     }
-                }
-            }, 2000);
+                }, 2000);
+            }
         }
-    }
 
 
-    @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
-    }
+        @Override
+        public void onDrawerSlide (View drawerView,float slideOffset){
+        }
 
-    @Override
-    public void onDrawerOpened(View drawerView) {
-        userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
-        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
-    }
+        @Override
+        public void onDrawerOpened (View drawerView){
+            userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
+            showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
+        }
 
-    @Override
-    public void onDrawerClosed(View drawerView) {
-        setFragment(selectedMenuItem);
-    }
+        @Override
+        public void onDrawerClosed (View drawerView){
+            setFragment(selectedMenuItem);
+        }
 
-    @Override
-    public void onDrawerStateChanged(int newState) {
+        @Override
+        public void onDrawerStateChanged ( int newState){
 
-    }
+        }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        actionBarDrawerToggle.syncState();
-    }
+        @Override
+        protected void onPostCreate (Bundle savedInstanceState){
+            super.onPostCreate(savedInstanceState);
+            actionBarDrawerToggle.syncState();
+        }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        actionBarDrawerToggle.onConfigurationChanged(newConfig);
-    }
+        @Override
+        public void onConfigurationChanged (Configuration newConfig){
+            super.onConfigurationChanged(newConfig);
+            actionBarDrawerToggle.onConfigurationChanged(newConfig);
+        }
 
     private void setFragment(MenuItem item) {
         setTitle(item.getTitle());
