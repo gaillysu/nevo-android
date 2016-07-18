@@ -3,6 +3,7 @@ package com.medcorp.nevo.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,4 +25,15 @@ public class AnalysisFragment extends BaseObservableFragment {
 
         return view;
     }
+
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.choose_goal_menu).setVisible(false);
+        menu.findItem(R.id.add_menu).setVisible(false);
+    }
 }
+
+
+

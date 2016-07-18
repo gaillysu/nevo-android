@@ -26,6 +26,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.login.LoginActivity;
@@ -218,26 +219,47 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private void setFragment(MenuItem item) {
         setTitle(item.getTitle());
         BaseObservableFragment fragment = null;
-        switch (item.getItemId()) {
-            case R.id.nav_steps_fragment:
-                if (fragmentManager.getBackStackEntryCount() >= 1) {
-                    fragmentManager.popBackStack();
-                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
-                    activeFragment.set(fragment);
-                }
-                return;
-            case R.id.nav_alarm_fragment:
-                fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
-                break;
-            case R.id.nav_analysis_fragment:
-                fragment = AnalysisFragment.instantiate(MainActivity.this , AnalysisFragment.class.getName());
-                break;
-            case R.id.nav_sleep_fragment:
-                fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
-                break;
-            case R.id.nav_settings_fragment:
-                fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
-                break;
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            switch (item.getItemId()) {
+                case R.id.nav_steps_fragment:
+                    if (fragmentManager.getBackStackEntryCount() >= 1) {
+                        fragmentManager.popBackStack();
+                        fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
+                        activeFragment.set(fragment);
+                    }
+                    return;
+                case R.id.nav_alarm_fragment:
+                    fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
+                    break;
+                case R.id.nav_analysis_fragment:
+                    fragment = AnalysisFragment.instantiate(MainActivity.this, AnalysisFragment.class.getName());
+                    break;
+                case R.id.nav_sleep_fragment:
+                    fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
+                    break;
+                case R.id.nav_settings_fragment:
+                    fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+                    break;
+            }
+        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+            switch (item.getItemId()) {
+                case R.id.nav_steps_fragment:
+                    if (fragmentManager.getBackStackEntryCount() >= 1) {
+                        fragmentManager.popBackStack();
+                        fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
+                        activeFragment.set(fragment);
+                    }
+                    return;
+                case R.id.nav_alarm_fragment:
+                    fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
+                    break;
+                case R.id.nav_sleep_fragment:
+                    fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
+                    break;
+                case R.id.nav_settings_fragment:
+                    fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+                    break;
+            }
         }
         if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
             return;

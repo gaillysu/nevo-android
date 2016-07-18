@@ -16,4 +16,7 @@
     <color name="switch_slider_color">#7ed8d1</color>
     <color name="tool_bar_bg_color">#54575A</color>
     <color name="steps_fragment_title_color">#54575A</color>
+    <color name="list_item_divider">#2d2f34</color>
+    <color name="profile_fragment_text_color">#FFFFFF</color>
+    <color name="profile_fragment_text_right_color">#7ED8D1</color>
 </resources>

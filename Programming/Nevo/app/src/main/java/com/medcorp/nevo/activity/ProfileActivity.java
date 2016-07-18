@@ -5,8 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -34,7 +32,8 @@ public class ProfileActivity extends BaseActivity {
         setTitle(R.string.profile_title);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = ProfileFragment.instantiate(this,ProfileFragment.class.getName());
-        fragmentManager.beginTransaction().add(R.id.activity_profile_fragment_layout,fragment).addToBackStack(ProfileFragment.class.getName()).commit();
+        fragmentManager.beginTransaction().add(R.id.activity_profile_fragment_layout,
+                fragment).addToBackStack(ProfileFragment.class.getName()).commit();
     }
 
     @Override

@@ -72,6 +72,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
         }
+
         settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
@@ -110,20 +111,25 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
         } else if (position == 7) {
-            new MaterialDialog.Builder(getContext())
-                    .content(R.string.settings_sure)
-                    .negativeText(android.R.string.no)
-                    .positiveText(android.R.string.yes)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(MaterialDialog dialog, DialogAction which) {
-                            getModel().forgetDevice();
-                            startActivity(TutorialPage1Activity.class);
-                            SettingsFragment.this.getActivity().finish();
-                        }
-                    })
-                    .cancelable(false)
-                    .show();
+            if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.NEVO) {
+                new MaterialDialog.Builder(getContext())
+                        .content(R.string.settings_sure)
+                        .negativeText(android.R.string.no)
+                        .positiveText(android.R.string.yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                getModel().forgetDevice();
+                                startActivity(TutorialPage1Activity.class);
+                                SettingsFragment.this.getActivity().finish();
+                            }
+                        })
+                        .cancelable(false)
+                        .show();
+            }else if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.LUNAR){
+
+                //TODO
+            }
         }
     }
 
@@ -133,16 +139,12 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Preferences.saveLinklossNotification(getActivity(), isChecked);
         }
         if (position == 8) {
-            if (ApplicationFlage.FLAGE== ApplicationFlage.Flage.NEVO) {
                 if (isChecked) {
                     getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
                 } else {
                     getModel().getNevoUser().setIsLogin(false);
                     getModel().saveNevoUser(getModel().getNevoUser());
                 }
-            }else if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.LUNAR){
-                //TODO
-            }
         }
     }
 

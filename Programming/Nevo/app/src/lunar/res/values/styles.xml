@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <style name="NevoDialogStyle" parent="Base.V7.Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">#3a3739</item>
+        <item name="colorPrimaryDark">#3a3739</item>
+        <item name="colorAccent">#3a3739</item>
+    </style>
 </resources>
