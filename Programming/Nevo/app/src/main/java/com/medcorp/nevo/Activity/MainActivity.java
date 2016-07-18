@@ -169,54 +169,54 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setText(getString(id));
-            Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
-            ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
-            snackbar.show();
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+        snackbar.show();
 
-            if (dismiss) {
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!bigSyncStart) {
-                            snackbar.dismiss();
-                        }
+        if (dismiss) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!bigSyncStart) {
+                        snackbar.dismiss();
                     }
-                }, 2000);
-            }
+                }
+            }, 2000);
         }
+    }
 
 
-        @Override
-        public void onDrawerSlide (View drawerView,float slideOffset){
-        }
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+    }
 
-        @Override
-        public void onDrawerOpened (View drawerView){
-            userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
-            showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
-        }
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
+        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
+    }
 
-        @Override
-        public void onDrawerClosed (View drawerView){
-            setFragment(selectedMenuItem);
-        }
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        setFragment(selectedMenuItem);
+    }
 
-        @Override
-        public void onDrawerStateChanged ( int newState){
+    @Override
+    public void onDrawerStateChanged(int newState) {
 
-        }
+    }
 
-        @Override
-        protected void onPostCreate (Bundle savedInstanceState){
-            super.onPostCreate(savedInstanceState);
-            actionBarDrawerToggle.syncState();
-        }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        actionBarDrawerToggle.syncState();
+    }
 
-        @Override
-        public void onConfigurationChanged (Configuration newConfig){
-            super.onConfigurationChanged(newConfig);
-            actionBarDrawerToggle.onConfigurationChanged(newConfig);
-        }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
     private void setFragment(MenuItem item) {
         setTitle(item.getTitle());
@@ -252,6 +252,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                         activeFragment.set(fragment);
                     }
                     return;
+
                 case R.id.nav_alarm_fragment:
                     fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
                     break;
@@ -261,21 +262,28 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 case R.id.nav_settings_fragment:
                     fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                     break;
+                case R.id.nav_analysis_fragment:
+                    break;
             }
         }
-        if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
-            return;
-        }
-        activeFragment.set(fragment);
-        {
-            if (android.os.Build.VERSION.SDK_INT >= 19) {
-                fragment.setEnterTransition(new Fade().setDuration(300));
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO && item.getItemId() == R.id.nav_analysis_fragment) {
+            //TODO
+        } else {
+
+            if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
+                return;
             }
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
-            if (fragmentManager.getBackStackEntryCount() == 0) {
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
+            activeFragment.set(fragment);
+            {
+                if (android.os.Build.VERSION.SDK_INT >= 19) {
+                    fragment.setEnterTransition(new Fade().setDuration(300));
+                }
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
+                if (fragmentManager.getBackStackEntryCount() == 0) {
+                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                }
+                fragmentTransaction.commit();
             }
-            fragmentTransaction.commit();
         }
     }
 

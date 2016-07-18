@@ -30,7 +30,7 @@
     <color name="list_item_divider">#E5E5EA</color>
     <color name="list_item_header_text_color">#6F6F6F</color>
     <color name="list_item_sub_text">#757575</color>
-    <color name="setting_fragment_text_color"></color>
+    <color name="setting_fragment_text_color">#ff524e4e</color>
     <color name="baseBackground">#F6F6F6</color>
     <color name="user_sex_text_normal_color">#95989A</color>
     <color name="user_info_text_select_color">#FFFFFF</color>
@@ -38,5 +38,7 @@
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#3A3739</color>
     <color name="setting_tint_color_icon">#FFA000</color>
-    <color name="snackbar_bg_color"></color>
+    <color name="snackbar_bg_color">#6F6F6F</color>
+    <color name="profile_fragment_text_color">#FFFFFF</color>
+    <color name="profile_fragment_text_right_color">#7ED8D1</color>
 </resources>
