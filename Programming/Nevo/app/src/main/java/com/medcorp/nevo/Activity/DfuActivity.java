@@ -129,7 +129,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         hourImage.setVisibility(View.VISIBLE);
         minImage.setVisibility(View.VISIBLE);
         clockImage.setVisibility(View.VISIBLE);
-        clockImage.setImageResource(R.drawable.clockview600);
+        clockImage.setImageResource(R.drawable.lunar_watch_icon);
 
         int hour = 11;
         int minute = 5;

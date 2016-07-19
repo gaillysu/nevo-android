@@ -63,6 +63,7 @@ public class StepsFragment extends BaseObservableFragment {
         setHasOptionsMenu(true);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+
         return view;
     }
 

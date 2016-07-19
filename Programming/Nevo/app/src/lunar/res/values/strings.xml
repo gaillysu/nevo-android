@@ -28,7 +28,7 @@
     <string name="in_app_notification_could_not_find">Could not find LunaR.</string>
     <string name="in_app_notification_max_three_alarm">LunaR supports only three alarms.</string>
     <string name="location_access_content">Please grant location access so it can detect lunar.</string>
-
+    <string name="title_steps">Dashboard</string>
 
     <!--lunar-->
     <string name="user_info_back_text">Back</string>

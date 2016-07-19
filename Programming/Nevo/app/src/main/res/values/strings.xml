@@ -269,6 +269,8 @@ push and hold the third button, until the white LED blinks</string>
 
 
     <!--lunar-->
+    <string name="lunar_adapter_clock">Clock</string>
+    <string name="lunar_adapter_chart">Chart</string>
     <string name="user_info_back_text">Back</string>
     <string name="register_user_info_page_text">Register</string>
     <string name="register_user_info_page_next_text">Next</string>
@@ -308,5 +310,9 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_fragment_edit_first_name_edit_hint">First Name</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
+    <string name="lunar_fragment_calorie_text">CALORIE</string>
+    <string name="lunar_fragment_steps_text">STEPS</string>
+    <string name="lunar_fragment_activity_time_text">TIME</string>
+    <string name="lunar_fragment_distance_km_text">KM</string>
     <!--<lunar end>-->
 </resources>

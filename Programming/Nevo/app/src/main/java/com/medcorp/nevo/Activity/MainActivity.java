@@ -33,6 +33,7 @@ import com.medcorp.nevo.activity.login.LoginActivity;
 import com.medcorp.nevo.event.bluetooth.OnSyncEvent;
 import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.AnalysisFragment;
+import com.medcorp.nevo.fragment.LunarMainFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
@@ -53,7 +54,8 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
  */
-public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener, NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
+        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -79,6 +81,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private FragmentManager fragmentManager;
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
+    private BaseObservableFragment mainStepsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +103,19 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         firstItem.setChecked(true);
         setTitle(selectedMenuItem.getTitle());
 
-        BaseObservableFragment fragment = StepsFragment.instantiate(MainActivity.this, StepsFragment.class.getName());
-        activeFragment.set(fragment);
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+            mainStepsFragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
+        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
+        }
+
+        activeFragment.set(mainStepsFragment);
         fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
 
         if (fragmentManager.getBackStackEntryCount() == 0) {
             fragmentManager.beginTransaction()
-                    .replace(R.id.activity_main_frame_layout, fragment)
+                    .replace(R.id.activity_main_frame_layout, mainStepsFragment)
                     .commit();
         }
 
@@ -266,8 +274,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     break;
             }
         }
+
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO && item.getItemId() == R.id.nav_analysis_fragment) {
-            //TODO
+
+            return;
+
         } else {
 
             if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
@@ -278,7 +289,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 if (android.os.Build.VERSION.SDK_INT >= 19) {
                     fragment.setEnterTransition(new Fade().setDuration(300));
                 }
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().replace(R.id.activity_main_frame_layout, fragment);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().
+                        replace(R.id.activity_main_frame_layout, fragment);
+
                 if (fragmentManager.getBackStackEntryCount() == 0) {
                     fragmentTransaction.addToBackStack(fragment.getClass().getName());
                 }

@@ -37,14 +37,14 @@
             android:layout_height="262dp"
             android:layout_centerInParent = "true"
             android:id="@+id/clock_imageView"
-            android:src="@drawable/clockview600"/>
+            android:src="@drawable/lunar_watch_icon"/>
 
         <ImageView
             android:layout_width="262dp"
             android:layout_height="262dp"
             android:layout_centerInParent = "true"
             android:id="@+id/HomeClockHour"
-            android:src="@drawable/clockview_hour"
+            android:src="@drawable/lunar_clockview_hour"
             android:visibility="visible"/>
 
         <ImageView
@@ -52,7 +52,7 @@
             android:layout_height="262dp"
             android:layout_centerInParent = "true"
             android:id="@+id/HomeClockMinute"
-            android:src="@drawable/clockview_minute"
+            android:src="@drawable/lunar_clockview_minute"
             android:visibility="visible"/>
 
         <com.medcorp.nevo.view.RoundProgressBar
