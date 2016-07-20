@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -40,6 +41,11 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
     @Bind(R.id.activity_setting_notification_inactive_list_view)
     ListView inactiveListView;
+
+    @Bind(R.id.notification_active_title)
+    RelativeLayout active;
+    @Bind(R.id.inactive_notification_title)
+    RelativeLayout inactive;
 
     private SettingNotificationArrayAdapter activeNotificationArrayAdapter;
     private SettingNotificationArrayAdapter inactiveNotificationArrayAdapter;
@@ -91,6 +97,13 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 inactiveNotificationList.add(notification);
             }
         }
+
+        if(activeNotificationList.size()==0){
+            active.setVisibility(View.GONE);
+        }else if(inactiveNotificationList.size() == 0){
+            inactive.setVisibility(View.GONE);
+        }
+
         activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList);
         activeListView.setAdapter(activeNotificationArrayAdapter);
         activeListView.setOnItemClickListener(this);
@@ -104,13 +117,16 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this,EditSettingNotificationActivity.class);
         Notification applicationNotification = null;
+
         if (parent.getId() == activeListView.getId())
         {
              applicationNotification = activeNotificationList.get(position);
         }
+
         if (parent.getId() == inactiveListView.getId()) {
              applicationNotification = inactiveNotificationList.get(position);
         }
+
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.key_notification), applicationNotification);
         intent.putExtras(bundle);

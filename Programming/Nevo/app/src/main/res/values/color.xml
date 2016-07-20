@@ -22,6 +22,7 @@
     <color name="user_info_sex_bg">#7ED8D1</color>
     <color name="fragment_steps_window_bg">@color/white</color>
     <color name="textColorPrimary">#333</color>
+    <color name="notification_list_text_color">#000</color>
     <color name="textColor">#333</color>
     <color name="textColorPrimaryInverse">#FFF</color>
     <color name="navigation_drawer_selected_background_color">#F2F2F2</color>

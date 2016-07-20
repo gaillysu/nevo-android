@@ -4,6 +4,8 @@ package com.medcorp.nevo.network.med.retrofit;
 import com.medcorp.nevo.network.med.model.CreateUserModel;
 import com.medcorp.nevo.network.med.model.CreateUserObject;
 import com.medcorp.nevo.network.med.model.NevoUserModel;
+import com.medcorp.nevo.network.validic.model.RequestTokenBody;
+import com.medcorp.nevo.network.validic.model.RequestTokenResponse;
 
 import retrofit.http.Body;
 import retrofit.http.Field;
@@ -26,4 +28,7 @@ public interface MedCorp {
 
     @POST("/user/create")
     CreateUserModel userCreate(@Body CreateUserObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
+
+    @POST("/user/request_password_token")
+    RequestTokenResponse requestToken(@Body RequestTokenBody body, @Header("Authorization") String auth, @Header("Content-Type") String type);
 }

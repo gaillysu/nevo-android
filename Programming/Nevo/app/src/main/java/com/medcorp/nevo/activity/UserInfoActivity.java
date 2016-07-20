@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
+import com.medcorp.nevo.activity.login.LoginActivity;
 import com.medcorp.nevo.activity.login.SignupActivity;
 import com.medcorp.nevo.network.med.model.CreateUser;
 import com.medcorp.nevo.network.med.model.CreateUserModel;
@@ -103,7 +104,7 @@ public class UserInfoActivity extends BaseActivity {
                 @Override
                 public void onRequestSuccess(CreateUserModel createUserModel) {
                     progress.dismiss();
-                    startActivity(MainActivity.class);
+                    startActivity(LoginActivity.class);
                     finish();
                 }
             });
