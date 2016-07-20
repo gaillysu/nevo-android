@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Nevo</string>
+    <string name="token">Sfz1Nk9Qt3J0dt7jNOLX0x7VHaT83V8h</string>
     <string name="menu_drawer_activity">Activity</string>
     <string name="menu_drawer_alarm">Alarm</string>
     <string name="menu_drawer_sleep">Sleep</string>
@@ -268,6 +269,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="help_goto_sleep">How to track you sleep?</string>
 
 
+    <string name="network_wait_text">Please wait ...</string>
+
     <!--lunar-->
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
@@ -314,5 +317,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="lunar_fragment_steps_text">STEPS</string>
     <string name="lunar_fragment_activity_time_text">TIME</string>
     <string name="lunar_fragment_distance_km_text">KM</string>
+    <string name="my_nevo_new_update_available">NEW UPDATE AVAILABLE</string>
+    <string name="my_device_version_text">Watch Version</string>
     <!--<lunar end>-->
 </resources>

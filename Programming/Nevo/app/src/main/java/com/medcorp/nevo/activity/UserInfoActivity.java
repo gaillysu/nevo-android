@@ -1,5 +1,6 @@
 package com.medcorp.nevo.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +9,14 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.medcorp.nevo.model.CreateUserInfo;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.activity.login.SignupActivity;
+import com.medcorp.nevo.network.med.model.CreateUser;
+import com.medcorp.nevo.network.med.model.CreateUserModel;
+import com.medcorp.nevo.network.med.model.RequestCreateNewAccountRequest;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,8 +66,8 @@ public class UserInfoActivity extends BaseActivity {
 
     @OnClick(R.id.user_info_title_back_ll)
     public void backClick() {
-        finish();
         startActivity(SignupActivity.class);
+        finish();
     }
 
     @OnClick(R.id.register_info_activity_next_tv)
@@ -71,7 +76,7 @@ public class UserInfoActivity extends BaseActivity {
         String userHeight = tv_userHeight.getText().toString();
         String userWeight = tv_userWeight.getText().toString();
         if (!TextUtils.isEmpty(userBirthday) || !TextUtils.isEmpty(userHeight) || !TextUtils.isEmpty(userWeight)) {
-            CreateUserInfo userInfo = new CreateUserInfo();
+            CreateUser userInfo = new CreateUser();
             userInfo.setFirst_name(firstName);
             userInfo.setBirthday(userBirthday);
             userInfo.setEmail(email);
@@ -81,7 +86,28 @@ public class UserInfoActivity extends BaseActivity {
             userInfo.setPassword(password);
             userInfo.setSex(gender);
 
-            //TODO
+            final ProgressDialog progress = new ProgressDialog(this);
+            progress.setIndeterminate(false);
+            progress.setCancelable(false);
+            progress.setMessage(getString(R.string.network_wait_text));
+            progress.show();
+
+            getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo,getModel().getNetworkManage()
+                    .getAccessToken()), new RequestListener<CreateUserModel>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    progress.dismiss();
+                    spiceException.printStackTrace();
+                }
+
+                @Override
+                public void onRequestSuccess(CreateUserModel createUserModel) {
+                    progress.dismiss();
+                    startActivity(MainActivity.class);
+                    finish();
+                }
+            });
+
         } else {
             if (userBirthday.isEmpty()) {
                 tv_userBirth.setError(getString(R.string.user_info_user_birthday_error));

@@ -30,15 +30,25 @@
                     android:src="@drawable/firmware_clock"/>
             </RelativeLayout>
 
-            <com.medcorp.nevo.view.ListViewForScrollView
-                android:id="@+id/activity_mynevo_list_view"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:divider="@drawable/alarm_list_view_divider"
-                android:dividerHeight="1dp"
-                android:visibility="visible"
-                />
+                android:layout_height="wrap_content">
+                <include
+                    android:id="@+id/my_device_watch_version_news_layout_root"
+                    layout="@layout/app_is_lunar_my_device_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+                <com.medcorp.nevo.view.ListViewForScrollView
+                    android:id="@+id/activity_mynevo_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:divider="@drawable/alarm_list_view_divider"
+                    android:dividerHeight="1dp"
+                    />
+            </FrameLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -49,13 +59,13 @@
                     android:id="@+id/activity_mynevo_notice_label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:background="@color/window_background_color"
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:background="@color/window_background_color"
                     android:paddingTop="20dp"
-                    android:textColor="@color/profile_fragment_text_color"
                     android:text="@string/my_nevo_notice_message"
+                    android:textColor="@color/profile_fragment_text_color"
                     android:textSize="13sp"
                     roboto:thin="true"/>
             </RelativeLayout>

@@ -60,20 +60,20 @@ public class SignupActivity extends BaseActivity {
             editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
             editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
             checkIsAgreeBt.setChecked(false);
-        }else{
+        } else {
             titleRegister.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.register_title_back_image_button)
-    public void backClick(){
-            finish();
-            startActivity(LoginActivity.class);
+    public void backClick() {
+        finish();
+        startActivity(LoginActivity.class);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR){
+        if (keyCode == KeyEvent.KEYCODE_BACK && ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             backClick();
             return true;
         }
@@ -91,28 +91,25 @@ public class SignupActivity extends BaseActivity {
             onSignupFailed();
             return;
         }
-
-        _signupButton.setEnabled(false);
-        progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.register_popup_message));
-        progressDialog.show();
-
-        email = _emailText.getText().toString();
-        password = _passwordText.getText().toString();
-
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
-
+            _signupButton.setEnabled(false);
+            progressDialog = new ProgressDialog(SignupActivity.this,
+                    R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage(getString(R.string.register_popup_message));
+            progressDialog.show();
+            email = _emailText.getText().toString();
+            password = _passwordText.getText().toString();
             getModel().nevoUserRegister(email, password);
-        }else{
-            Intent intent = new Intent(this ,UserInfoActivity.class);
-            intent.putExtra("email",email);
-            intent.putExtra("password",password);
-            intent.putExtra("firstName",firstName);
-            intent.putExtra("lastName",lastName);
+        } else {
+            Intent intent = new Intent(this, UserInfoActivity.class);
+            intent.putExtra("email", email);
+            intent.putExtra("password", password);
+            intent.putExtra("firstName", firstName);
+            intent.putExtra("lastName", lastName);
             startActivity(intent);
+            finish();
         }
     }
 

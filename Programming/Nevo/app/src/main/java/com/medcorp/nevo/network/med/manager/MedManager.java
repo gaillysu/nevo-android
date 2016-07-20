@@ -2,6 +2,7 @@ package com.medcorp.nevo.network.med.manager;
 
 import android.content.Context;
 
+import com.medcorp.nevo.R;
 import com.medcorp.nevo.network.med.service.BaseMedRetroService;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.SpiceRequest;
@@ -36,6 +37,10 @@ public class MedManager {
 
     public void execute(SpiceRequest request, RequestListener listener){
         spiceManager.execute(request, listener);
+    }
+
+    public String getAccessToken(){
+        return context.getString(R.string.token);
     }
 
 }

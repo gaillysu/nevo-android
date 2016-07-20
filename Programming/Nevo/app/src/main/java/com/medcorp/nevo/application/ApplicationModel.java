@@ -201,6 +201,9 @@ public class ApplicationModel extends Application {
         }
     }
 
+    public MedManager getNetworkManage(){
+        return  validicMedManager;
+    }
     public SyncController getSyncController(){return syncController;}
 
     public OtaController getOtaController(){return otaController;}
@@ -368,6 +371,7 @@ public class ApplicationModel extends Application {
     }
 
 
+
     public List<Sleep> getNeedSyncSleep(String userid)
     {
         return sleepDatabaseHelper.getNeedSyncSleep(userid);
@@ -493,6 +497,7 @@ public class ApplicationModel extends Application {
     public User getNevoUser(){
         return nevoUser;
     }
+
 
 
     public void nevoUserRegister(String email,String password)

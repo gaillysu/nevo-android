@@ -1,9 +1,9 @@
-package com.medcorp.nevo.model;
+package com.medcorp.nevo.network.med.model;
 
 /**
- * Created by Administrator on 2016/7/4.
+ * Created by med on 16/4/29.
  */
-public class CreateUserInfo {
+public class CreateUser {
     private String first_name;
     private String last_name;
     private String email;

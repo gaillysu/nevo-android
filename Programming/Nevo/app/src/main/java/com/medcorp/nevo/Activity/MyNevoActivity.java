@@ -7,8 +7,12 @@ import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.MyNevoAdapter;
@@ -35,6 +39,15 @@ public class MyNevoActivity  extends BaseActivity{
 
     @Bind(R.id.activity_mynevo_list_view)
     ListView myNevoListView;
+    @Bind(R.id.my_device_watch_version_news_layout_root)
+    LinearLayout showMyDeviceNewsLayout;
+
+    @Bind(R.id.my_watch_version_tv)
+    TextView showFirmwerVersion;
+    @Bind(R.id.my_device_battery_tv)
+    TextView showWatchBattery;
+    @Bind(R.id.my_device_version_text)
+    TextView showWatchVersion;
 
     private MyNevo myNevo;
     private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
@@ -55,8 +68,16 @@ public class MyNevoActivity  extends BaseActivity{
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+
         myNevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,available_version,null);
-        myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+        if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.NEVO) {
+            showMyDeviceNewsLayout.setVisibility(View.GONE);
+            myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+        }else if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.LUNAR){
+            myNevoListView.setVisibility(View.GONE);
+            showMyDeviceNewsLayout.setVisibility(View.VISIBLE);
+            initLunarData();
+        }
     }
 
     @Override
@@ -125,5 +146,21 @@ public class MyNevoActivity  extends BaseActivity{
                 myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
             }
         });
+    }
+
+
+    private void initLunarData() {
+       showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
+        String str_battery=this.getString(R.string.my_nevo_battery_low);
+        if(myNevo.getBatteryLevel()==2)
+        {
+            str_battery = this.getString(R.string.my_nevo_battery_full);
+        }
+        else if(myNevo.getBatteryLevel()==1)
+        {
+            str_battery = this.getString(R.string.my_nevo_battery_half);
+        }
+        showWatchBattery.setText(str_battery);
+        showWatchVersion.setText(myNevo.getAppVersion());
     }
 }

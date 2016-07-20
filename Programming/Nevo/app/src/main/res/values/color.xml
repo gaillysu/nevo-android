@@ -39,6 +39,7 @@
     <color name="input_account_shape_color">#3A3739</color>
     <color name="setting_tint_color_icon">#FFA000</color>
     <color name="snackbar_bg_color">#6F6F6F</color>
+    <color name="my_device_right_show_version_text_color">#BCBCBC</color>
     <color name="profile_fragment_text_color">#FFFFFF</color>
     <color name="profile_fragment_text_right_color">#7ED8D1</color>
 </resources>
