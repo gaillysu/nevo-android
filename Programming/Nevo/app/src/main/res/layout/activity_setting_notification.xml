@@ -36,10 +36,11 @@
         android:visibility="visible"
         />
 
-    <LinearLayout
+    <View
+        android:id="@+id/split_line_ll"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/window_background_color"
+        android:layout_height="1dp"
+        android:background="@color/input_account_shape_color"
         />
 
     <RelativeLayout

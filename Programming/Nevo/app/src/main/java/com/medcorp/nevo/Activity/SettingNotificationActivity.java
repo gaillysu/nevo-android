@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by gaillysu on 15/12/31.
  */
-public class SettingNotificationActivity extends BaseActivity implements AdapterView.OnItemClickListener{
+public class SettingNotificationActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
 
@@ -46,6 +46,8 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
     RelativeLayout active;
     @Bind(R.id.inactive_notification_title)
     RelativeLayout inactive;
+    @Bind(R.id.split_line_ll)
+    View lineView;
 
     private SettingNotificationArrayAdapter activeNotificationArrayAdapter;
     private SettingNotificationArrayAdapter inactiveNotificationArrayAdapter;
@@ -89,18 +91,19 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         applicationNotification = new WhatsappNotification();
         allNotifications.add(dataHelper.getState(applicationNotification));
 
-        for (Notification notification: allNotifications) {
-            if(notification.isOn()){
+        for (Notification notification : allNotifications) {
+            if (notification.isOn()) {
                 activeNotificationList.add(notification);
-            }
-            else{
+            } else {
                 inactiveNotificationList.add(notification);
             }
         }
 
-        if(activeNotificationList.size()==0){
+        if (activeNotificationList.size() == 0) {
             active.setVisibility(View.GONE);
-        }else if(inactiveNotificationList.size() == 0){
+            lineView.setVisibility(View.GONE);
+        }
+        if (inactiveNotificationList.size() == 0) {
             inactive.setVisibility(View.GONE);
         }
 
@@ -115,16 +118,15 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(this,EditSettingNotificationActivity.class);
+        Intent intent = new Intent(this, EditSettingNotificationActivity.class);
         Notification applicationNotification = null;
 
-        if (parent.getId() == activeListView.getId())
-        {
-             applicationNotification = activeNotificationList.get(position);
+        if (parent.getId() == activeListView.getId()) {
+            applicationNotification = activeNotificationList.get(position);
         }
 
         if (parent.getId() == inactiveListView.getId()) {
-             applicationNotification = inactiveNotificationList.get(position);
+            applicationNotification = inactiveNotificationList.get(position);
         }
 
         Bundle bundle = new Bundle();
