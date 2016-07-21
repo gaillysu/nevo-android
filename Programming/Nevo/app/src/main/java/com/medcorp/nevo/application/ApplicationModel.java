@@ -107,7 +107,7 @@ public class ApplicationModel extends Application {
     private GoogleFitTaskCounter googleFitTaskCounter;
     private MedManager validicMedManager;
     private CloudSyncManager cloudSyncManager;
-    private User  nevoUser;
+    private User nevoUser;
 
     @Override
     public void onCreate() {
@@ -125,34 +125,28 @@ public class ApplicationModel extends Application {
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         Optional<User> user = userDatabaseHelper.getLoginUser();
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             nevoUser = new User(0);
             nevoUser.setNevoUserID("0"); //"0" means anonymous user login
-        }
-        else {
+        } else {
             nevoUser = user.get();
         }
     }
 
     @Subscribe
-    public void onEvent(BLEFirmwareVersionReceivedEvent event){
+    public void onEvent(BLEFirmwareVersionReceivedEvent event) {
         //in tutorial steps, don't popup this alert dialog
-        if(!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG,true))
-        {
-            if(event.getFirmwareTypes() == Constants.DfuFirmwareTypes.MCU)
-            {
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
+            if (event.getFirmwareTypes() == Constants.DfuFirmwareTypes.MCU) {
                 mcuFirmwareVersion = Integer.parseInt(event.getVersion());
             }
-            if(event.getFirmwareTypes() == Constants.DfuFirmwareTypes.BLUETOOTH)
-            {
+            if (event.getFirmwareTypes() == Constants.DfuFirmwareTypes.BLUETOOTH) {
                 bleFirmwareVersion = Integer.parseInt(event.getVersion());
             }
             //both MCU and BLE version all be read done. and make sure this dialog only popup once.
-            if(!firmwareUpdateAlertDailog && mcuFirmwareVersion>=0 && bleFirmwareVersion>=0)
-            {
-                final ArrayList<String> needOTAFirmwareList = (ArrayList<String>)Common.needOTAFirmwareURLs(this,mcuFirmwareVersion,bleFirmwareVersion);
-                if(!needOTAFirmwareList.isEmpty())
-                {
+            if (!firmwareUpdateAlertDailog && mcuFirmwareVersion >= 0 && bleFirmwareVersion >= 0) {
+                final ArrayList<String> needOTAFirmwareList = (ArrayList<String>) Common.needOTAFirmwareURLs(this, mcuFirmwareVersion, bleFirmwareVersion);
+                if (!needOTAFirmwareList.isEmpty()) {
                     new MaterialDialog.Builder(this)
                             .title(R.string.dfu_update_positive)
                             .content(R.string.dfu_update_available)
@@ -163,7 +157,7 @@ public class ApplicationModel extends Application {
                                     Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putStringArrayList(getString(R.string.key_firmwares), needOTAFirmwareList);
-                                    bundle.putBoolean(getString(R.string.key_back_to_settings),false);
+                                    bundle.putBoolean(getString(R.string.key_back_to_settings), false);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtras(bundle);
                                     ApplicationModel.this.startActivity(intent);
@@ -186,8 +180,8 @@ public class ApplicationModel extends Application {
 
 
     @Subscribe
-    public void onEvent(OnSyncEvent event){
-        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+    public void onEvent(OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             updateGoogleFit();
             getCloudSyncManager().launchSyncWeekly(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
         }
@@ -196,17 +190,22 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
-            final Steps steps =  getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
-            getCloudSyncManager().launchSyncDaily(nevoUser,steps);
+            final Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
+            getCloudSyncManager().launchSyncDaily(nevoUser, steps);
         }
     }
 
-    public MedManager getNetworkManage(){
-        return  validicMedManager;
+    public MedManager getNetworkManage() {
+        return validicMedManager;
     }
-    public SyncController getSyncController(){return syncController;}
 
-    public OtaController getOtaController(){return otaController;}
+    public SyncController getSyncController() {
+        return syncController;
+    }
+
+    public OtaController getOtaController() {
+        return otaController;
+    }
 
     public void startConnectToWatch(boolean forceScan) {
         syncController.startConnect(forceScan);
@@ -216,7 +215,7 @@ public class ApplicationModel extends Application {
         return syncController.isConnected();
     }
 
-    public void blinkWatch(){
+    public void blinkWatch() {
         syncController.findDevice();
     }
 
@@ -232,12 +231,11 @@ public class ApplicationModel extends Application {
         return syncController.getFirmwareVersion();
     }
 
-    public void setGoal(Goal goal){
+    public void setGoal(Goal goal) {
         syncController.setGoal(new NumberOfStepsGoal(goal.getSteps()));
     }
 
-    public void setAlarm(List<Alarm> list)
-    {
+    public void setAlarm(List<Alarm> list) {
         syncController.setAlarm(list, false);
     }
 
@@ -245,52 +243,48 @@ public class ApplicationModel extends Application {
         syncController.forgetDevice();
     }
 
-    public List<Steps> getAllSteps(){
+    public List<Steps> getAllSteps() {
         return stepsDatabaseHelper.convertToNormalList(stepsDatabaseHelper.getAll(nevoUser.getNevoUserID()));
     }
 
-    public List<Alarm> getAllAlarm(){
+    public List<Alarm> getAllAlarm() {
         return alarmDatabaseHelper.convertToNormalList(alarmDatabaseHelper.getAll());
     }
 
-    public void saveNevoUser(User user)
-    {
+    public void saveNevoUser(User user) {
         userDatabaseHelper.update(user);
     }
 
-    public void saveDailySteps(Steps steps)
-    {
+    public void saveDailySteps(Steps steps) {
         stepsDatabaseHelper.update(steps);
     }
 
-    public Steps getDailySteps(String userId,Date date)
-    {   Optional<Steps> steps = stepsDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+    public Steps getDailySteps(String userId, Date date) {
+        Optional<Steps> steps = stepsDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
         if (steps.notEmpty()) {
             return steps.get();
         }
         return new Steps(0);
     }
 
-    public void saveDailySleep(Sleep sleep)
-    {
+    public void saveDailySleep(Sleep sleep) {
         sleepDatabaseHelper.update(sleep);
     }
 
-    public List<Steps> getNeedSyncSteps(String userid)
-    {
+    public List<Steps> getNeedSyncSteps(String userid) {
         return stepsDatabaseHelper.getNeedSyncSteps(userid);
     }
-    public boolean isFoundInLocalSteps(int activity_id)
-    {
+
+    public boolean isFoundInLocalSteps(int activity_id) {
         return stepsDatabaseHelper.isFoundInLocalSteps(activity_id);
     }
-    public boolean isFoundInLocalSleep(int activity_id)
-    {
+
+    public boolean isFoundInLocalSleep(int activity_id) {
         return sleepDatabaseHelper.isFoundInLocalSleep(activity_id);
     }
-    public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine)
-    {
-        Date createDate = Common.getLocalDateFromUTCTimestamp(routine.getTimestamp(),routine.getUtc_offset());
+
+    public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine) {
+        Date createDate = Common.getLocalDateFromUTCTimestamp(routine.getTimestamp(), routine.getUtc_offset());
 
         Steps steps = new Steps(createDate.getTime());
         steps.setDate(Common.removeTimeFromDate(createDate).getTime());
@@ -298,26 +292,21 @@ public class ApplicationModel extends Application {
         steps.setNevoUserID(getNevoUser().getNevoUserID());
         steps.setValidicRecordID(routine.get_id());
         steps.setiD(Integer.parseInt(routine.getActivity_id()));
-        if(routine.getExtras()!=null)
-        {
+        if (routine.getExtras() != null) {
             steps.setGoal(routine.getExtras().getGoal());
-        }
-        else
-        {
+        } else {
             steps.setGoal(7000);
         }
         saveDailySteps(steps);
     }
 
-    public void saveSleepFromValidic(ValidicSleepRecordModelBase validicSleepRecord)
-    {
-        Date createDate = Common.getLocalDateFromUTCTimestamp(validicSleepRecord.getTimestamp(),validicSleepRecord.getUtc_offset());
+    public void saveSleepFromValidic(ValidicSleepRecordModelBase validicSleepRecord) {
+        Date createDate = Common.getLocalDateFromUTCTimestamp(validicSleepRecord.getTimestamp(), validicSleepRecord.getUtc_offset());
 
         Sleep sleep = new Sleep(createDate.getTime());
         sleep.setiD(Integer.parseInt(validicSleepRecord.getActivity_id()));
         sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
-        if(validicSleepRecord.getExtras()!=null)
-        {
+        if (validicSleepRecord.getExtras() != null) {
             int lightSleep = 0;
             int deepSleep = 0;
             int wake = 0;
@@ -337,13 +326,13 @@ public class ApplicationModel extends Application {
                 JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
                 for (int i = 0; i < hourlyLight.length(); i++) {
                     lightSleep += Integer.parseInt(hourlyLight.getString(i));
-                    hourlySleepList.set(i,hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
+                    hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
                 }
 
                 JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
-                for (int i = 0; i <hourlyDeep.length(); i++) {
+                for (int i = 0; i < hourlyDeep.length(); i++) {
                     deepSleep += Integer.parseInt(hourlyDeep.getString(i));
-                    hourlySleepList.set(i,hourlySleepList.get(i)+Integer.parseInt(hourlyDeep.getString(i)));
+                    hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyDeep.getString(i)));
                 }
 
             } catch (JSONException e) {
@@ -351,7 +340,7 @@ public class ApplicationModel extends Application {
             }
 
             sleep.setHourlySleep(hourlySleepList.toString());
-            sleep.setTotalSleepTime(wake+deepSleep+lightSleep);
+            sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
             sleep.setTotalWakeTime(wake);
             sleep.setTotalLightTime(deepSleep);
             sleep.setTotalDeepTime(lightSleep);
@@ -371,13 +360,11 @@ public class ApplicationModel extends Application {
     }
 
 
-
-    public List<Sleep> getNeedSyncSleep(String userid)
-    {
+    public List<Sleep> getNeedSyncSleep(String userid) {
         return sleepDatabaseHelper.getNeedSyncSleep(userid);
     }
 
-    public Alarm addAlarm(Alarm alarm){
+    public Alarm addAlarm(Alarm alarm) {
         return alarmDatabaseHelper.add(alarm).get();
     }
 
@@ -385,18 +372,19 @@ public class ApplicationModel extends Application {
         return alarmDatabaseHelper.update(alarm);
     }
 
-    public Alarm getAlarmById(int id){
-        return alarmDatabaseHelper.get(id).isEmpty()?null:alarmDatabaseHelper.get(id).get(0).get();
+    public Alarm getAlarmById(int id) {
+        return alarmDatabaseHelper.get(id).isEmpty() ? null : alarmDatabaseHelper.get(id).get(0).get();
     }
 
-    public boolean deleteAlarm(Alarm alarm){
-        return  alarmDatabaseHelper.remove(alarm.getId());
+    public boolean deleteAlarm(Alarm alarm) {
+        return alarmDatabaseHelper.remove(alarm.getId());
     }
 
-    public List<Goal> getAllGoal(){
+    public List<Goal> getAllGoal() {
         return goalDatabaseHelper.convertToNormalList(goalDatabaseHelper.getAll());
     }
-    public Goal addGoal(Goal goal){
+
+    public Goal addGoal(Goal goal) {
         return goalDatabaseHelper.add(goal).get();
     }
 
@@ -404,17 +392,17 @@ public class ApplicationModel extends Application {
         return goalDatabaseHelper.update(goal);
     }
 
-    public Goal getGoalById(int id){
-        return goalDatabaseHelper.get(id).isEmpty()?null: goalDatabaseHelper.get(id).get(0).get();
+    public Goal getGoalById(int id) {
+        return goalDatabaseHelper.get(id).isEmpty() ? null : goalDatabaseHelper.get(id).get(0).get();
     }
 
-    public boolean deleteAlarm(Goal goal){
-        return  goalDatabaseHelper.remove(goal.getId());
+    public boolean deleteAlarm(Goal goal) {
+        return goalDatabaseHelper.remove(goal.getId());
     }
 
-    public boolean isBluetoothOn(){
+    public boolean isBluetoothOn() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter.isEnabled()){
+        if (bluetoothAdapter.isEnabled()) {
             return true;
         }
         return false;
@@ -422,7 +410,7 @@ public class ApplicationModel extends Application {
 
     public void initGoogleFit(AppCompatActivity appCompatActivity) {
         if (Preferences.isGoogleFitSet(this)) {
-            googleFitTaskCounter  = new GoogleFitTaskCounter(3);
+            googleFitTaskCounter = new GoogleFitTaskCounter(3);
             googleFitManager = new GoogleFitManager(this);
             if (appCompatActivity != null) {
                 googleFitManager.setActivityForResults(appCompatActivity);
@@ -431,18 +419,18 @@ public class ApplicationModel extends Application {
         }
     }
 
-    public void disconnectGoogleFit(){
-        if (googleFitManager != null){
+    public void disconnectGoogleFit() {
+        if (googleFitManager != null) {
             googleFitManager.disconnect();
         }
     }
 
     @Subscribe
-    public void onEvent(GoogleApiClientConnectionFailedEvent event){
+    public void onEvent(GoogleApiClientConnectionFailedEvent event) {
         if (event.getConnectionResult().getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED ||
                 event.getConnectionResult().getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
             try {
-                if (googleFitManager.getActivity()!= null) {
+                if (googleFitManager.getActivity() != null) {
                     event.getConnectionResult().startResolutionForResult(googleFitManager.getActivity(), GOOGLE_FIT_OATH_RESULT);
                 }
             } catch (IntentSender.SendIntentException e) {
@@ -454,35 +442,35 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onEvent(GoogleApiClientConnectionSuspendedEvent event){
+    public void onEvent(GoogleApiClientConnectionSuspendedEvent event) {
         if (event.getState() == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
             ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_network_lost);
         } else if (event.getState() == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
-            ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_service_disconnected);
-        }else{
-            ToastHelper.showShortToast(ApplicationModel.this,R.string.google_fit_unknown_network);
+            ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_service_disconnected);
+        } else {
+            ToastHelper.showShortToast(ApplicationModel.this, R.string.google_fit_unknown_network);
         }
     }
 
     @Subscribe
-    public void onEvent(GoogleFitUpdateEvent event){
-        if (event.isSuccess()){
+    public void onEvent(GoogleFitUpdateEvent event) {
+        if (event.isSuccess()) {
             googleFitTaskCounter.incrementSuccessAndFinish();
             if (googleFitTaskCounter.allSucces()) {
                 ToastHelper.showLongToast(ApplicationModel.this, "Updated Google Fit");
                 googleFitTaskCounter.reset();
             }
-        }else{
+        } else {
             googleFitTaskCounter.incrementFinish();
-            if(googleFitTaskCounter.areTasksDone()) {
+            if (googleFitTaskCounter.areTasksDone()) {
                 ToastHelper.showLongToast(ApplicationModel.this, "Couldn't updated Google Fit");
                 googleFitTaskCounter.reset();
             }
         }
     }
 
-    public void updateGoogleFit(){
-        if(Preferences.isGoogleFitSet(this)) {
+    public void updateGoogleFit() {
+        if (Preferences.isGoogleFitSet(this)) {
             initGoogleFit(null);
             GoogleFitStepsDataHandler dataHandler = new GoogleFitStepsDataHandler(getAllSteps(), ApplicationModel.this);
             new GoogleHistoryUpdateTask(googleFitManager).execute(dataHandler.getStepsDataSet());
@@ -494,15 +482,14 @@ public class ApplicationModel extends Application {
     public CloudSyncManager getCloudSyncManager() {
         return cloudSyncManager;
     }
-    public User getNevoUser(){
+
+    public User getNevoUser() {
         return nevoUser;
     }
 
 
-
-    public void nevoUserRegister(String email,String password)
-    {
-        NevoUserRegisterRequest nevoUserRegisterRequest = new NevoUserRegisterRequest(email,password);
+    public void nevoUserRegister(String email, String password) {
+        NevoUserRegisterRequest nevoUserRegisterRequest = new NevoUserRegisterRequest(email, password);
 
         validicMedManager.execute(nevoUserRegisterRequest, new RequestListener<NevoUserModel>() {
             @Override
@@ -515,8 +502,7 @@ public class ApplicationModel extends Application {
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
 
                 Log.i("ApplicationModel", "nevo user register: " + nevoUserModel.getState());
-                if(nevoUserModel.getState().equals("success"))
-                {
+                if (nevoUserModel.getState().equals("success")) {
                     EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.SUCCESS));
                     nevoUser.setNevoUserID(nevoUserModel.getUid());
                     nevoUser.setNevoUserToken(nevoUserModel.getToken());
@@ -524,8 +510,8 @@ public class ApplicationModel extends Application {
                     //save to "user" local table
                     saveNevoUser(nevoUser);
                     getSyncController().getDailyTrackerInfo(true);
-                    getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()),getNeedSyncSleep(nevoUser.getNevoUserID()));
-                }else{
+                    getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
+                } else {
                     EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED));
                 }
 
@@ -533,9 +519,8 @@ public class ApplicationModel extends Application {
         });
     }
 
-    public void nevoUserLogin(String email,String password)
-    {
-        NevoUserLoginRequest nevoUserLoginRequest = new NevoUserLoginRequest(email,password);
+    public void nevoUserLogin(String email, String password) {
+        NevoUserLoginRequest nevoUserLoginRequest = new NevoUserLoginRequest(email, password);
 
         validicMedManager.execute(nevoUserLoginRequest, new RequestListener<NevoUserModel>() {
 
@@ -547,11 +532,10 @@ public class ApplicationModel extends Application {
 
             @Override
             public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                if(nevoUserModel.getState().equals("success"))
-                {
+                if (nevoUserModel.getState().equals("success")) {
                     //get the user's profile from local database
                     List<Optional<User>> user = userDatabaseHelper.get(nevoUserModel.getUid());
-                    if(!user.isEmpty()) {
+                    if (!user.isEmpty()) {
                         nevoUser = user.get(0).get();
                     }
                     nevoUser.setNevoUserID(nevoUserModel.getUid());
@@ -559,9 +543,9 @@ public class ApplicationModel extends Application {
                     nevoUser.setIsLogin(true);
                     saveNevoUser(nevoUser);
                     getSyncController().getDailyTrackerInfo(true);
-                    getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()),getNeedSyncSleep(nevoUser.getNevoUserID()));
+                    getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
                     EventBus.getDefault().post(new LoginEvent(LoginEvent.status.SUCCESS));
-                }else{
+                } else {
                     EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
                 }
             }
@@ -575,45 +559,51 @@ public class ApplicationModel extends Application {
     }
 
     public void createValidicUser(String pin, ResponseListener<ValidicUser> responseListener) {
-        getCloudSyncManager().createValidicUser(nevoUser,pin,responseListener);
+        getCloudSyncManager().createValidicUser(nevoUser, pin, responseListener);
     }
 
     @Subscribe
-    public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent validicAddRoutineRecordEvent){
+    public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent validicAddRoutineRecordEvent) {
         saveDailySteps(validicAddRoutineRecordEvent.getSteps());
 
     }
+
     @Subscribe
-    public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent validicAddSleepRecordEvent){
+    public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent validicAddSleepRecordEvent) {
         saveDailySleep(validicAddSleepRecordEvent.getSleep());
     }
+
     @Subscribe
-    public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent){
+    public void onValidicCreateUserEvent(ValidicCreateUserEvent validicCreateUserEvent) {
         saveNevoUser(validicCreateUserEvent.getUser());
         getSyncController().getDailyTrackerInfo(true);
-        getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()),getNeedSyncSleep(nevoUser.getNevoUserID()));
+        getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
     }
+
     @Subscribe
-    public void onValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModelEvent validicDeleteSleepRecordModelEvent){
-        sleepDatabaseHelper.remove(validicDeleteSleepRecordModelEvent.getUserId()+"",validicDeleteSleepRecordModelEvent.getDate());
+    public void onValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModelEvent validicDeleteSleepRecordModelEvent) {
+        sleepDatabaseHelper.remove(validicDeleteSleepRecordModelEvent.getUserId() + "", validicDeleteSleepRecordModelEvent.getDate());
     }
+
     @Subscribe
-    public void onValidicException(ValidicException validicException){
-        Log.w("Karl","Exception occured!");
+    public void onValidicException(ValidicException validicException) {
+        Log.w("Karl", "Exception occured!");
         validicException.getException().printStackTrace();
     }
+
     @Subscribe
-    public void onValidicReadMoreRoutineRecordsModelEvent(ValidicReadMoreRoutineRecordsModelEvent validicReadMoreRoutineRecordsModelEvent){
+    public void onValidicReadMoreRoutineRecordsModelEvent(ValidicReadMoreRoutineRecordsModelEvent validicReadMoreRoutineRecordsModelEvent) {
         for (ValidicRoutineRecordModelBase routine : validicReadMoreRoutineRecordsModelEvent.getValidicReadMoreRoutineRecordsModel().getRoutine()) {
             int activity_id = Integer.parseInt(routine.getActivity_id());
-        // if activity_id not exist in local Steps table, save it
+            // if activity_id not exist in local Steps table, save it
             if (!isFoundInLocalSteps(activity_id)) {
-            saveStepsFromValidic(routine);
+                saveStepsFromValidic(routine);
             }
         }
     }
+
     @Subscribe
-    public void onValidicReadMoreSleepRecordsModelEvent(ValidicReadMoreSleepRecordsModelEvent validicReadMoreSleepRecordsModelEvent){
+    public void onValidicReadMoreSleepRecordsModelEvent(ValidicReadMoreSleepRecordsModelEvent validicReadMoreSleepRecordsModelEvent) {
         ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel = validicReadMoreSleepRecordsModelEvent.getValidicReadMoreSleepRecordsModel();
         for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
             int activity_id = Integer.parseInt(sleep.getActivity_id());
@@ -623,14 +613,16 @@ public class ApplicationModel extends Application {
             }
         }
     }
+
     @Subscribe
-    public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent validicUpdateRoutineRecordsModelEvent){
+    public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent validicUpdateRoutineRecordsModelEvent) {
         saveDailySteps(validicUpdateRoutineRecordsModelEvent.getSteps());
 
     }
+
     @Subscribe
-    public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent validicDeleteRoutineRecordEvent){
-        stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId()+"",validicDeleteRoutineRecordEvent.getDate());
+    public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent validicDeleteRoutineRecordEvent) {
+        stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
     }
 
 }

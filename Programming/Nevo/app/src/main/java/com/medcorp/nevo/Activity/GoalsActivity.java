@@ -166,14 +166,16 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
         window.setContentView(stepsGoalView);
 
         final RadioGroup stepsGoalGroup = (RadioGroup) stepsGoalView.findViewById(R.id.steps_fragment_dialog_group);
-        stepsGoalView.findViewById(R.id.steps_fragment_cancel_steps_setting_button).setOnClickListener(new View.OnClickListener() {
+        stepsGoalView.findViewById(R.id.steps_fragment_cancel_steps_setting_button).
+                setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        stepsGoalView.findViewById(R.id.steps_fragment_setting_steps_goal_ok_button).setOnClickListener(new View.OnClickListener() {
+        stepsGoalView.findViewById(R.id.steps_fragment_setting_steps_goal_ok_button).
+                setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

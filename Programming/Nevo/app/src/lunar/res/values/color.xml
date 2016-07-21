@@ -23,4 +23,6 @@
     <color name="list_item_header_text_color">#FFFFFF</color>
     <color name="notification_list_text_color">#FFFFFF</color>
     <color name="list_item_sub_text">#FFF</color>
+    <color name="customGray">#FFFFFF</color>
+    <color name="tab_unselected_font_color">#BCBCBC</color>
 </resources>

@@ -36,7 +36,7 @@ public class TutorialPageVideoActivity extends com.medcorp.nevo.activity.base.Ba
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                  startActivity(MainActivity.class);
+                  startActivity(TutorialPage1Activity.class);
                     finish();
                 }
             },1000);

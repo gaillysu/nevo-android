@@ -15,6 +15,7 @@
             android:id="@+id/fragment_alarmm_list_view_item_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="65sp"
             roboto:thin="true"/>
@@ -37,6 +38,7 @@
         android:layout_below="@+id/fragment_alarm_list_view_item_alarm_time_wrapper"
         android:paddingBottom="25dp"
         android:paddingLeft="5dp"
+        android:textColor="@color/black"
         android:paddingTop="15dp"
         android:textSize="18sp"
         roboto:bold="true"/>

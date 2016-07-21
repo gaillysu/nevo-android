@@ -36,5 +36,17 @@
         <item>@string/lunar_adapter_chart</item>
     </array>
 
+    <array name="analysis_fragment_table_array">
+        <item>@string/analysis_fragment_table_steps</item>
+        <item>@string/analysis_fragment_table_sleep</item>
+        <item>@string/analysis_fragment_table_solar</item>
+    </array>
+
+    <array name="analysis_steps_child_fragment">
+        <item>@string/analysis_fragment_this_week_steps</item>
+        <item>@string/analysis_fragment_last_week_steps</item>
+        <item>@string/analysis_fragment_last_month_solar</item>
+    </array>
+
     <!--lunar end-->
 </resources>

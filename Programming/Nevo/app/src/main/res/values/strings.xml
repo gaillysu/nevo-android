@@ -322,5 +322,18 @@ push and hold the third button, until the white LED blinks</string>
     <string name="lunar_fragment_distance_km_text">KM</string>
     <string name="my_nevo_new_update_available">NEW UPDATE AVAILABLE</string>
     <string name="my_device_version_text">Watch Version</string>
+
+    <string name="analysis_fragment_table_steps">Steps</string>
+    <string name="analysis_fragment_table_sleep">Sleep</string>
+    <string name="analysis_fragment_table_solar">Solar</string>
+
+    <string name="analysis_fragment_this_week_steps">THIS WEEK</string>
+    <string name="analysis_fragment_last_week_steps">LAST WEEK</string>
+    <string name="analysis_fragment_last_month_solar">LAST 30 DAYS</string>
+    <string name="this_week_steps_identification_one">YOU</string>
+    <string name="this_week_steps_identification_average">AVERAGE</string>
+    <string name="this_week_steps_identification_two">AVERAGE:</string>
+    <string name="steps_fragment_total_steps">TOTAL:</string>
+
     <!--<lunar end>-->
 </resources>

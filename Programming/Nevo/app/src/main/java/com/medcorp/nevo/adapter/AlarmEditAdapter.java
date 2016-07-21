@@ -1,13 +1,10 @@
 package com.medcorp.nevo.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TableLayout;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.model.Alarm;
@@ -20,8 +17,7 @@ public class AlarmEditAdapter extends BaseAdapter {
     Context context;
     Alarm alarm;
 
-    public AlarmEditAdapter(Context context,Alarm alarm)
-    {
+    public AlarmEditAdapter(Context context, Alarm alarm) {
         super();
         this.context = context;
         this.alarm = alarm;
@@ -48,22 +44,17 @@ public class AlarmEditAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.activity_alarm_edit_list_view_item, parent, false);
 
-        RobotoTextView title = (RobotoTextView)itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
-        RobotoTextView summary = (RobotoTextView)itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
-        RobotoTextView delete = (RobotoTextView)itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
+        RobotoTextView title = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
+        RobotoTextView summary = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
+        RobotoTextView delete = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
 
-        if(position == 0)
-        {
+        if (position == 0) {
             title.setText(alarm.toString());
             summary.setText(context.getString(R.string.alarm_set_different_time));
-        }
-        else if(position == 1)
-        {
+        } else if (position == 1) {
             title.setText(alarm.getLabel());
             summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
-        }
-        else if(position == 2)
-        {
+        } else if (position == 2) {
             summary.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
             delete.setVisibility(View.VISIBLE);

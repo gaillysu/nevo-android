@@ -1,15 +1,23 @@
 package com.medcorp.nevo.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.medcorp.nevo.R;
+import com.medcorp.nevo.adapter.AnalysisFragmentPagerAdapter;
+import com.medcorp.nevo.event.bluetooth.OnSyncEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 
+import org.greenrobot.eventbus.Subscribe;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -17,15 +25,37 @@ import butterknife.ButterKnife;
  */
 public class AnalysisFragment extends BaseObservableFragment {
 
-    @Nullable
+    @Bind(R.id.analysis_fragment_indicator_tab)
+    TabLayout analysisTable;
+    @Bind(R.id.analysis_fragment_content_view_pager)
+    ViewPager analysisViewpager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.analysis_fragment_layout,container,false);
         ButterKnife.bind(this,view);
-
+        setHasOptionsMenu(true);
+        AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(),this);
+        analysisViewpager.setAdapter(adapter);
+        analysisTable.setupWithViewPager(analysisViewpager);
         return view;
     }
 
+    @Subscribe
+    public void onEvent(OnSyncEvent event) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    int currentItem = analysisViewpager.getCurrentItem();
+                    AnalysisFragmentPagerAdapter adapter = new AnalysisFragmentPagerAdapter(getChildFragmentManager(), AnalysisFragment.this);
+                    analysisViewpager.setAdapter(adapter);
+                    analysisTable.setupWithViewPager(analysisViewpager);
+                    analysisViewpager.setCurrentItem(currentItem);
+                }
+            });
+        }
+    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {

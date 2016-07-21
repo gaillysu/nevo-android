@@ -16,6 +16,7 @@ import com.medcorp.nevo.activity.login.SignupActivity;
 import com.medcorp.nevo.network.med.model.CreateUser;
 import com.medcorp.nevo.network.med.model.CreateUserModel;
 import com.medcorp.nevo.network.med.model.RequestCreateNewAccountRequest;
+import com.medcorp.nevo.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -99,6 +100,7 @@ public class UserInfoActivity extends BaseActivity {
                 public void onRequestFailure(SpiceException spiceException) {
                     progress.dismiss();
                     spiceException.printStackTrace();
+                    ToastHelper.showLongToast(UserInfoActivity.this,spiceException.getMessage());
                 }
 
                 @Override

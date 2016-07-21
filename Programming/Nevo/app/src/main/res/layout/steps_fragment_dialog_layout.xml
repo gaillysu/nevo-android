@@ -31,6 +31,7 @@
             android:paddingLeft="8dp"
             android:layout_marginTop="15dp"
             android:text="@string/steps_goal_one"
+            android:checked="true"
             android:textColor="@color/white"
             android:textSize="20sp"
             />
