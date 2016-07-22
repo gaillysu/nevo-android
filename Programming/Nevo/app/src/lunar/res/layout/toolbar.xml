@@ -15,8 +15,35 @@
         android:theme="@style/NevoTheme"
         app:popupTheme="@style/NevoActionBar"
         app:theme="@style/NevoActionBar"
+        android:gravity="center_horizontal"
         app:titleTextColor="@color/white">
 
+        <LinearLayout
+            android:id="@+id/lunar_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="67dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:id="@+id/lunar_tool_bar_title_date_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:src="@drawable/date_icon"/>
+
+            <TextView
+                android:id="@+id/lunar_tool_bar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                />
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <View

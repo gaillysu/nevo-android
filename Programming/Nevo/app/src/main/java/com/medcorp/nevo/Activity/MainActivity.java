@@ -48,6 +48,10 @@ import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -69,11 +73,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Bind(R.id.activity_main_navigation_view)
     NavigationView navigationView;
 
-
+    private TextView showDateText;
     private TextView showUserFirstNameText;
 
     private View rootView;
     private TextView userView;
+    private String currentTime;
+    private Date date;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MenuItem selectedMenuItem;
@@ -101,7 +107,20 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
-        setTitle(selectedMenuItem.getTitle());
+
+        SimpleDateFormat simple = new SimpleDateFormat("yyyy-mm-dd");
+        date = new Date(System.currentTimeMillis());
+        currentTime = simple.format(date);
+
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
+            showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+            showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + currentTime.split("-")[2] + " " +
+                    new SimpleDateFormat("MMM", Locale.US).format(date));
+        } else {
+            setTitle(selectedMenuItem.getTitle());
+        }
 
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
             mainStepsFragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
@@ -227,7 +246,20 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     }
 
     private void setFragment(MenuItem item) {
-        setTitle(item.getTitle());
+
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+            setTitle(item.getTitle());
+        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            if (item.getItemId() == R.id.nav_steps_fragment) {
+                showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + currentTime.split("-")[2] + " " +
+                        new SimpleDateFormat("MMM", Locale.US).format(date));
+            } else {
+                toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
+                showDateText.setText(item.getTitle());
+            }
+        }
+
         BaseObservableFragment fragment = null;
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             switch (item.getItemId()) {

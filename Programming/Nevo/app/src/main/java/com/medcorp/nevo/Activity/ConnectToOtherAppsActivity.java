@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.SettingMenuAdapter;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Karl on 2/16/16.
  */
-public class ConnectToOtherAppsActivity extends BaseActivity implements OnCheckedChangeInListListener{
+public class ConnectToOtherAppsActivity extends BaseActivity implements OnCheckedChangeInListListener {
 
     @Bind(R.id.activity_connect_to_other_apps_list_view)
     ListView otherAppsListView;
@@ -59,16 +60,22 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_to_other_apps);
-        rootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+        rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
         menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit_small, Preferences.isGoogleFitSet(this)));
-        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_validic),R.drawable.google_fit_small,getModel().getNevoUser().isConnectValidic()));
+        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_validic), R.drawable.google_fit_small, getModel().getNevoUser().isConnectValidic()));
         settingsAdapter = new SettingMenuAdapter(this, menuList, this);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.settings_other_apps_short);
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
+            TextView tv = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+            tv.setText(R.string.settings_other_apps_short);
+        } else {
+            setTitle(R.string.settings_other_apps_short);
+        }
     }
 
     @Override
@@ -84,11 +91,11 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, final int position) {
-        if(position == 0) {
-            if(isChecked) {
-                Preferences.setGoogleFit(this,true);
+        if (position == 0) {
+            if (isChecked) {
+                Preferences.setGoogleFit(this, true);
                 getModel().initGoogleFit(this);
-            }else{
+            } else {
                 googleFitLogoutDialog = new MaterialDialog.Builder(this)
                         .title(R.string.google_fit_log_out_title)
                         .content(R.string.google_fit_log_out_message)
@@ -101,12 +108,11 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
             }
         }
 
-        if(position == 1) {
+        if (position == 1) {
             validicPositionInList = position;
-            if(isChecked)
-            {
-                if(!getModel().getNevoUser().isLogin()) {
-                    ToastHelper.showLongToast(this,getString(R.string.validic_enable_message));
+            if (isChecked) {
+                if (!getModel().getNevoUser().isLogin()) {
+                    ToastHelper.showLongToast(this, getString(R.string.validic_enable_message));
                     settingsAdapter.getItem(position).setSwitchStatus(false);
                     settingsAdapter.notifyDataSetChanged();
                     return;
@@ -136,7 +142,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
                 settingsAdapter.notifyDataSetChanged();
                 return;
             }
-            getModel().createValidicUser(input.toString(),validicUserResponseListener);
+            getModel().createValidicUser(input.toString(), validicUserResponseListener);
         }
     };
 
@@ -151,14 +157,14 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     private ResponseListener<ValidicUser> validicUserResponseListener = new ResponseListener<ValidicUser>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            ToastHelper.showLongToast(ConnectToOtherAppsActivity.this,spiceException.getCause().getLocalizedMessage());
+            ToastHelper.showLongToast(ConnectToOtherAppsActivity.this, spiceException.getCause().getLocalizedMessage());
             settingsAdapter.getItem(validicPositionInList).setSwitchStatus(false);
             settingsAdapter.notifyDataSetChanged();
         }
 
         @Override
         public void onRequestSuccess(ValidicUser validicUser) {
-            ToastHelper.showLongToast(ConnectToOtherAppsActivity.this,validicUser.getMessage());
+            ToastHelper.showLongToast(ConnectToOtherAppsActivity.this, validicUser.getMessage());
             if (validicUser.getCode().equals("200") || validicUser.getCode().equals("201")) {
                 settingsAdapter.getItem(validicPositionInList).setSwitchStatus(true);
             } else {
@@ -171,7 +177,7 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     private MaterialDialog.SingleButtonCallback googleFitPositiveCallback = new MaterialDialog.SingleButtonCallback() {
         @Override
         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-            Preferences.setGoogleFit(ConnectToOtherAppsActivity.this,false);
+            Preferences.setGoogleFit(ConnectToOtherAppsActivity.this, false);
             getModel().disconnectGoogleFit();
         }
     };
@@ -179,10 +185,10 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     private MaterialDialog.SingleButtonCallback googleFitNegativeCallback = new MaterialDialog.SingleButtonCallback() {
         @Override
         public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
-            if (googleFitLogoutDialog != null){
-                if(googleFitLogoutDialog.isShowing()) {
+            if (googleFitLogoutDialog != null) {
+                if (googleFitLogoutDialog.isShowing()) {
                     googleFitLogoutDialog.dismiss();
-                    settingsAdapter.toggleSwitch(0,true);
+                    settingsAdapter.toggleSwitch(0, true);
                 }
             }
         }
@@ -191,15 +197,15 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(getModel().GOOGLE_FIT_OATH_RESULT == requestCode){
-            snackbar = Snackbar.make(rootView,"",Snackbar.LENGTH_LONG);
+        if (getModel().GOOGLE_FIT_OATH_RESULT == requestCode) {
+            snackbar = Snackbar.make(rootView, "", Snackbar.LENGTH_LONG);
             TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
             tv.setTextColor(Color.WHITE);
-            if(resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 getModel().initGoogleFit(this);
                 getModel().updateGoogleFit();
                 tv.setText(R.string.google_fit_logged_in);
-            }else{
+            } else {
                 tv.setText(R.string.google_fit_could_not_login);
                 settingsAdapter.toggleSwitch(0, false);
             }
