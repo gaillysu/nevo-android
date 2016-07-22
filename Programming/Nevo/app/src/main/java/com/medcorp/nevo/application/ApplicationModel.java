@@ -121,7 +121,6 @@ public class ApplicationModel extends Application {
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
-        updateGoogleFit();
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         Optional<User> user = userDatabaseHelper.getLoginUser();
@@ -131,6 +130,7 @@ public class ApplicationModel extends Application {
         } else {
             nevoUser = user.get();
         }
+        updateGoogleFit();
     }
 
     @Subscribe
