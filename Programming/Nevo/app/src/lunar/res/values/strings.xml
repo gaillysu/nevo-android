@@ -31,6 +31,8 @@
     <string name="title_steps">Dashboard</string>
     <string name="settings_my_nevo">My LunaR</string>
     <string name="my_nevo_notice_message"> To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes. You will not receive notifications on LunaR when disconnected.</string>
+    <string name="notification_access_message">Do you want to enable notifications for LunaR ?</string>
+
 
     <!--lunar-->
     <string name="user_info_back_text">Back</string>

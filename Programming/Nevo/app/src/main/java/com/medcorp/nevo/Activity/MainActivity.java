@@ -26,6 +26,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.datetimepicker.date.DatePickerDialog;
 import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -50,16 +51,18 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Karl on 12/10/15.
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
-        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
+        NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -88,6 +91,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
+
+    public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,5 +437,19 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 showStateString(R.string.in_app_notification_searching, false);
                 break;
         }
+    }
+
+
+    @OnClick(R.id.lunar_tool_bar)
+    public void showDateDialog() {
+        final Calendar calendar = Calendar.getInstance();
+        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show(getFragmentManager(), "calendarDialog");
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+
     }
 }

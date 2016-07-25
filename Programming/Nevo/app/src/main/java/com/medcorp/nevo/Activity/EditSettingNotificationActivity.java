@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.ble.datasource.NotificationDataHelper;
@@ -57,6 +58,7 @@ public class EditSettingNotificationActivity extends BaseActivity {
     private NotificationDataHelper helper;
     private Notification notification;
     private NevoLed selectedLed;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,48 +75,56 @@ public class EditSettingNotificationActivity extends BaseActivity {
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
         notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
-        selectedLed = Preferences.getNotificationColor(this,notification);
-        setTitle(notification.getStringResource());
+        selectedLed = Preferences.getNotificationColor(this, notification);
+
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+            title.setText(notification.getStringResource());
+        } else {
+            setTitle(notification.getStringResource());
+        }
+
         onOffSwitch.setChecked(notification.isOn());
         colorImage.setImageDrawable(ContextCompat.getDrawable(this, selectedLed.getImageResource()));
         colorLabel.setText(getString(selectedLed.getStringResource()));
     }
 
     @OnCheckedChanged(R.id.activity_setting_notification_edit_onoff)
-    public void notificationEditTriggered(CompoundButton buttonView, boolean isChecked){
+    public void notificationEditTriggered(CompoundButton buttonView, boolean isChecked) {
         notification.setState(isChecked);
         helper.saveState(notification);
     }
 
     @OnClick(R.id.activity_setting_notification_edit_layout)
-    public void colorLayoutClicked(){
+    public void colorLayoutClicked() {
         List<String> stringList = new ArrayList<String>();
-        for (int i = 0; i < ledList.size(); i ++) {
+        for (int i = 0; i < ledList.size(); i++) {
             stringList.add(getString(ledList.get(i).getStringResource()));
         }
         CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
-        selectedLed = Preferences.getNotificationColor(this,notification);
+        selectedLed = Preferences.getNotificationColor(this, notification);
         new AlertDialog.Builder(EditSettingNotificationActivity.this)
-                    .setTitle(R.string.notification_position)
-                    .setSingleChoiceItems(cs, getIndexFromLed(selectedLed), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which >= 0) {
-                                selectedLed = ledList.get(which);
-                            }
+                .setTitle(R.string.notification_position)
+                .setSingleChoiceItems(cs, getIndexFromLed(selectedLed), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which >= 0) {
+                            selectedLed = ledList.get(which);
                         }
-                    })
-                    .setNegativeButton(R.string.notification_cancel, null)
-                    .setPositiveButton(R.string.notification_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                                colorImage.setImageDrawable(ContextCompat.getDrawable(EditSettingNotificationActivity.this, selectedLed.getImageResource()));
-                                colorLabel.setText(getString(selectedLed.getStringResource()));
-                                Preferences.saveNotificationColor(EditSettingNotificationActivity.this, notification, selectedLed);
-                                dialog.dismiss();
-                        }
-                    })
-                    .show();
+                    }
+                })
+                .setNegativeButton(R.string.notification_cancel, null)
+                .setPositiveButton(R.string.notification_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        colorImage.setImageDrawable(ContextCompat.getDrawable(EditSettingNotificationActivity.this, selectedLed.getImageResource()));
+                        colorLabel.setText(getString(selectedLed.getStringResource()));
+                        Preferences.saveNotificationColor(EditSettingNotificationActivity.this, notification, selectedLed);
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     @Override

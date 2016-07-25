@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/tool_bar_bg_color"
         android:elevation="0dp"
         android:gravity="center_horizontal"
@@ -18,21 +18,14 @@
         app:theme="@style/NevoActionBar"
         app:titleTextColor="@color/white">
 
-        <LinearLayout
-            android:id="@+id/lunar_tool_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            >
+
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/lunar_tool_bar"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingRight="20dp"
-                android:gravity="center"
+                android:layout_gravity="center"
                 >
                 <ImageView
                     android:id="@+id/lunar_tool_bar_title_date_icon"
@@ -46,11 +39,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
+                    android:layout_marginLeft="3dp"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     />
             </LinearLayout>
-        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <View

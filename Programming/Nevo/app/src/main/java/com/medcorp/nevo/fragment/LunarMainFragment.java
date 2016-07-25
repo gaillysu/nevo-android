@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.medcorp.nevo.R;
@@ -20,7 +19,6 @@ import com.medcorp.nevo.adapter.LunarMainFragmentAdapter;
 import com.medcorp.nevo.event.bluetooth.RequestResponseEvent;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 import com.medcorp.nevo.model.Steps;
-import com.medcorp.nevo.model.User;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -38,15 +36,6 @@ public class LunarMainFragment extends BaseObservableFragment {
 
     @Bind(R.id.fragment_lunar_main_view_pager)
     ViewPager showWatchViewPage;
-    @Bind(R.id.lunar_fragment_show_user_consume_calories)
-    TextView showUserCosumeCalories;
-    @Bind(R.id.lunar_fragment_show_user_steps_distance_tv)
-    TextView showUserStepsDistance;
-    @Bind(R.id.lunar_fragment_show_user_activity_time_tv)
-    TextView showUserActivityTime;
-    @Bind(R.id.lunar_fragment_show_user_steps_tv)
-    TextView showUserSteps;
-
     private int[] stepsGoalArray = {4500, 6000, 8000, 10000};
     private int stepsGoalNumber;
     private boolean showSyncGoal;
@@ -56,45 +45,20 @@ public class LunarMainFragment extends BaseObservableFragment {
         View view = inflater.inflate(R.layout.lunar_main_fragment_layout, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        initData(new Date());
-
         LunarMainFragmentAdapter adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
         showWatchViewPage.setAdapter(adapter);
 
         return view;
     }
 
-    private void initData(Date date) {
-        User user = getModel().getNevoUser();
-        Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
-        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
-        showUserSteps.setText(steps.getSteps() + "");
-        showUserCosumeCalories.setText(steps.getCalories() + "");
-    }
-
-    private String formatTime(int walkDuration) {
-        StringBuffer activityTime = new StringBuffer();
-        if (walkDuration >= 60) {
-            if (walkDuration % 60 > 0) {
-                activityTime.append(walkDuration % 60 + "h");
-                activityTime.append(walkDuration - (walkDuration % 60 * 60) + "m");
-            }
-        } else {
-            activityTime.append(walkDuration + "m");
-        }
-
-        return activityTime.toString();
-    }
-
     @OnClick(R.id.lunar_main_fragment_left_arrow)
     public void leftClick() {
-        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem()-1);
+        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() - 1);
     }
 
     @OnClick(R.id.lunar_main_fragment_right_arrow)
     public void rightClick() {
-        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem()+1);
+        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() + 1);
     }
 
     @Override

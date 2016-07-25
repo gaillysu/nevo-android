@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.adapter.SettingNotificationArrayAdapter;
@@ -62,7 +64,14 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.title_notifications);
+
+        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+            title.setText(R.string.title_notifications);
+        } else {
+            setTitle(R.string.title_notifications);
+        }
         NevoNotificationListener.getNotificationAccessPermission(this);
     }
 

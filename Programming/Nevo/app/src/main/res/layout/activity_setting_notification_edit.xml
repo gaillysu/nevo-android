@@ -1,85 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:roboto="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/window_background_color">
+              xmlns:roboto="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/window_background_color"
+              android:orientation="vertical">
+
     <include layout="@layout/toolbar"/>
 
-    <RelativeLayout android:layout_height="80dp"
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:gravity="center"
-        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingLeft="20dp">
+        android:paddingTop="20dp">
 
         <com.medcorp.nevo.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_notification_edit_enable_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text ="@string/notification"
             android:layout_centerVertical="true"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:text="@string/notification"
+            android:textColor="@color/notification_list_text_color"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="16sp"/>
+
         <android.support.v7.widget.SwitchCompat
-            android:shadowColor="@color/colorPrimary"
             android:id="@+id/activity_setting_notification_edit_onoff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:focusable="false" />
+            android:focusable="false"
+            android:shadowColor="@color/colorPrimary"/>
 
-        <LinearLayout android:layout_height="1dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginRight="60dp"
+            android:layout_height="1dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginRight="60dp"
             android:background="@color/list_item_divider"/>
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id ="@+id/activity_setting_notification_edit_layout"
+        android:id="@+id/activity_setting_notification_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:gravity="center"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:gravity="center">
+        android:paddingRight="20dp">
 
         <ImageView
-            android:id ="@+id/activity_setting_notification_edit_image"
-            android:src="@drawable/yellow_dot"
+            android:id="@+id/activity_setting_notification_edit_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            android:src="@drawable/yellow_dot"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:background="@color/transparent">
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:orientation="vertical">
 
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:id="@+id/activity_setting_notification_edit_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
                 android:text="@string/notification"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                android:textColor="@color/notification_list_text_color"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="16sp"/>
 
             <com.medcorp.nevo.view.customfontview.RobotoTextView
                 android:id="@+id/activity_setting_notification_edit_color_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/notification_list_text_color"
                 android:textSize="14sp"
-                roboto:light ="true" />
+                roboto:light="true"/>
         </LinearLayout>
 
-        <LinearLayout android:layout_height="1dp"
+        <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="60dp"
             android:background="@color/list_item_divider"/>

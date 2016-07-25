@@ -3,5 +3,15 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/fragment_steps_history_bar"
+        android:layout_weight="1"
+        android:background="@color/customWhite"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp">
+    </com.github.mikephil.charting.charts.BarChart>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/lunar_fragment_main_content_news_layout"/>
 </LinearLayout>

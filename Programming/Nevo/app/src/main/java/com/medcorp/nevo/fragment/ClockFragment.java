@@ -7,11 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.model.Steps;
+import com.medcorp.nevo.model.User;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,6 +30,15 @@ public class ClockFragment extends BaseFragment {
 
     @Bind(R.id.HomeClockMinute)
     ImageView minImage;
+
+    @Bind(R.id.lunar_fragment_show_user_consume_calories)
+    TextView showUserCosumeCalories;
+    @Bind(R.id.lunar_fragment_show_user_steps_distance_tv)
+    TextView showUserStepsDistance;
+    @Bind(R.id.lunar_fragment_show_user_activity_time_tv)
+    TextView showUserActivityTime;
+    @Bind(R.id.lunar_fragment_show_user_steps_tv)
+    TextView showUserSteps;
 
     private final int REFRESHINTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
@@ -69,8 +82,31 @@ public class ClockFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout,container,false);
         ButterKnife.bind(this, clockFragmentContentView);
-
+        initData(new Date());
         return clockFragmentContentView;
+    }
+
+    private void initData(Date date) {
+        User user = getModel().getNevoUser();
+        Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
+        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
+        showUserSteps.setText(steps.getSteps() + "");
+        showUserCosumeCalories.setText(steps.getCalories() + "");
+    }
+
+    private String formatTime(int walkDuration) {
+        StringBuffer activityTime = new StringBuffer();
+        if (walkDuration >= 60) {
+            if (walkDuration % 60 > 0) {
+                activityTime.append(walkDuration % 60 + "h");
+                activityTime.append(walkDuration - (walkDuration % 60 * 60) + "m");
+            }
+        } else {
+            activityTime.append(walkDuration + "m");
+        }
+
+        return activityTime.toString();
     }
 
     @Override
