@@ -283,9 +283,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 case R.id.nav_analysis_fragment:
                     fragment = AnalysisFragment.instantiate(MainActivity.this, AnalysisFragment.class.getName());
                     break;
-                case R.id.nav_sleep_fragment:
-                    fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
-                    break;
                 case R.id.nav_settings_fragment:
                     fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                     break;
@@ -308,8 +305,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     break;
                 case R.id.nav_settings_fragment:
                     fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
-                    break;
-                case R.id.nav_analysis_fragment:
                     break;
             }
         }
@@ -448,7 +443,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
 
-
     }
 
     @Override
@@ -460,9 +454,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         try {
             selectDate = simple.parse(strDate);
         } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
+        }
         showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
     }

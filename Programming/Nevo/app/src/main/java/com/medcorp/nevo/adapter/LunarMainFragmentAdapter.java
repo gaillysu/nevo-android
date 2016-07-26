@@ -9,6 +9,7 @@ import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.ChartFragment;
 import com.medcorp.nevo.fragment.ClockFragment;
 import com.medcorp.nevo.fragment.LunarMainFragment;
+import com.medcorp.nevo.fragment.LunarMainSleepFragment;
 
 /**
  * Created by Administrator on 2016/7/19.
@@ -33,6 +34,9 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
             case 1:
                 ChartFragment chartFragment = (ChartFragment) ChartFragment.instantiate(context,ChartFragment.class.getName());
                 return chartFragment;
+            case 2:
+                LunarMainSleepFragment mainSleepFragment= (LunarMainSleepFragment) LunarMainSleepFragment.instantiate(context,LunarMainSleepFragment.class.getName());
+                return mainSleepFragment;
             default:
                 return null;
         }

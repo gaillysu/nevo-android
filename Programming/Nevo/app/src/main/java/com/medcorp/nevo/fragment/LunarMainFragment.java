@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.MainActivity;
@@ -103,7 +102,6 @@ public class LunarMainFragment extends BaseObservableFragment {
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         switch (checkedId) {
                             case R.id.radio_button_one:
-                                Toast.makeText(LunarMainFragment.this.getActivity(), "dsabfljha", Toast.LENGTH_SHORT).show();
                                 stepsGoalNumber = stepsGoalArray[0];
                                 break;
                             case R.id.radio_button_two:
