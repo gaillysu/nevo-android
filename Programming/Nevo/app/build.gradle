@@ -94,7 +94,7 @@ dependencies {
     compile project(':wheelPickLib')
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:design:24.0.0'
-    compile 'com.github.citux:datetimepicker:0.2.0'
+    compile 'jp.seesaa.android:datetimepicker:0.3.0'
 }
 
 repositories {

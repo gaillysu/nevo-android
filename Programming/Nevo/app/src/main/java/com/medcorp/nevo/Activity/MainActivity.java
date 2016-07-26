@@ -26,7 +26,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.datetimepicker.date.DatePickerDialog;
 import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
@@ -50,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -57,6 +57,7 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.seesaa.android.datetimepicker.date.DatePickerDialog;
 
 /**
  * Created by Karl on 12/10/15.
@@ -445,11 +446,24 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show(getFragmentManager(), "calendarDialog");
+        datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
+
+
     }
 
     @Override
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
 
+        SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
+            String strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
+        java.util.Date selectDate = null;
+        try {
+            selectDate = simple.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + dayOfMonth + " " +
+                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
     }
 }
