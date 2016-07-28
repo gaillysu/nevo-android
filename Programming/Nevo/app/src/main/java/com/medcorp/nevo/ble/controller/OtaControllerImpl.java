@@ -604,6 +604,9 @@ public class OtaControllerImpl implements OtaController  {
     //start ConnectionController.Delegate interface
     @Subscribe
     public void onEvent(BLEConnectionStateChangedEvent event){
+        if(mOnOtaControllerListener.notEmpty()) {
+            mOnOtaControllerListener.get().connectionStateChanged(event.isConnected());
+        }
         //only BLE OTA run below code
         if(dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH )
         {

@@ -203,32 +203,36 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     }
 
     @Override
-    public void connectionStateChanged(boolean isConnected) {
-        if(!isConnected) {
-            //when get disconnected between firmwares, hidden the retry/continue button until got connected and show it
-            if(currentIndex != firmwareURLs.size()) {
-                back2settings.setVisibility(View.INVISIBLE);
-            }
-        } else {
-            if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT) {
-                if (errorMsg != "") {
-                    back2settings.setText(R.string.dfu_re_upgrade);
-                    back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
-                    back2settings.setVisibility(View.VISIBLE);
+    public void connectionStateChanged(final boolean isConnected) {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(!isConnected) {
+                    //when get disconnected between firmwares, hidden the retry/continue button until got connected and show it
+                    if(currentIndex != firmwareURLs.size()) {
+                        back2settings.setVisibility(View.INVISIBLE);
+                    }
                 } else {
-                    if (!manualMode || mUpdateSuccess) {
+                    if(mNevoOtaController.getState() == Constants.DFUControllerState.INIT) {
+                        if (errorMsg != "") {
+                            back2settings.setText(R.string.dfu_re_upgrade);
+                            back2settings.setTag(new ButtonTag(getString(R.string.dfu_retry)));
+                            back2settings.setVisibility(View.VISIBLE);
+                        } else {
+                            if (!manualMode || mUpdateSuccess) {
+                                back2settings.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        //popup alert dialog for manual OTA mode when find out the OTA service
+                        if (manualMode && currentIndex == 0) {
+                            showAlertDialog();
+                        }
+                    } else if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET)) {
                         back2settings.setVisibility(View.VISIBLE);
                     }
                 }
-                //popup alert dialog for manual OTA mode when find out the OTA service
-                if (manualMode && currentIndex == 0) {
-                    showAlertDialog();
-                }
-            } else if((mNevoOtaController.getState() == Constants.DFUControllerState.SEND_RESET)) {
-                back2settings.setVisibility(View.VISIBLE);
             }
-        }
-
+        });
     }
 
     @Override
