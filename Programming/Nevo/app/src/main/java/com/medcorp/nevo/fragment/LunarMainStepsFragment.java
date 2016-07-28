@@ -39,7 +39,7 @@ public class LunarMainStepsFragment extends BaseFragment {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String date =   intent.getStringExtra("date");
+            String date = intent.getStringExtra("date");
             SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date changeDate = simple.parse(date);
@@ -51,16 +51,21 @@ public class LunarMainStepsFragment extends BaseFragment {
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container,  Bundle savedInstanceState) {
-        View lunarMainFragmentAdapterChart = inflater.inflate(R.layout.chart_fragment_lunar_main_fragment_adapter_layout,container,false);
-        ButterKnife.bind(this,lunarMainFragmentAdapterChart);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View lunarMainFragmentAdapterChart = inflater.inflate(R.layout.chart_fragment_lunar_main_fragment_adapter_layout, container, false);
+        ButterKnife.bind(this, lunarMainFragmentAdapterChart);
         initData(new Date());
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("changeSelectDate");
-        (this.getActivity()).registerReceiver(mBroadcastReceiver,intentFilter);
+        (this.getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
 
+        setData();
         return lunarMainFragmentAdapterChart;
+    }
+
+    private void setData() {
+
     }
 
     public void initData(Date date) {

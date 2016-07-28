@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private View rootView;
     private TextView userView;
     private String currentTime;
-    private Date date;
+    private java.util.Date date;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MenuItem selectedMenuItem;
@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
-    private java.util.Date userSelectDate;
+    private MenuItem selectItem;
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
@@ -117,15 +117,15 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         firstItem.setChecked(true);
 
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-mm-dd");
-        userSelectDate = new Date(System.currentTimeMillis());
-        currentTime = simple.format(userSelectDate);
+        date = new Date(System.currentTimeMillis());
+        currentTime = simple.format(date);
 
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
             showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
             showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + currentTime.split("-")[2] + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(userSelectDate));
+                    new SimpleDateFormat("MMM", Locale.US).format(date));
         } else {
             setTitle(selectedMenuItem.getTitle());
         }
@@ -310,22 +310,22 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         }
 
 
-            if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
-                return;
+        if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
+            return;
+        }
+        activeFragment.set(fragment);
+        {
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
+                fragment.setEnterTransition(new Fade().setDuration(300));
             }
-            activeFragment.set(fragment);
-            {
-                if (android.os.Build.VERSION.SDK_INT >= 19) {
-                    fragment.setEnterTransition(new Fade().setDuration(300));
-                }
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().
-                        replace(R.id.activity_main_frame_layout, fragment);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction().
+                    replace(R.id.activity_main_frame_layout, fragment);
 
-                if (fragmentManager.getBackStackEntryCount() == 0) {
-                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                }
-                fragmentTransaction.commit();
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                fragmentTransaction.addToBackStack(fragment.getClass().getName());
             }
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -432,14 +432,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @OnClick(R.id.lunar_tool_bar)
     public void showDateDialog() {
-        final Calendar calendar = Calendar.getInstance();
-        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
-
+        if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment && ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            final Calendar calendar = Calendar.getInstance();
+            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
+        }
     }
-
-
 
 
     @Override
@@ -452,10 +451,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             java.util.Date selectDate = simple.parse(strDate);
             showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
-            userSelectDate = selectDate;
-            Intent intent  =  new Intent();
+            date = selectDate;
+            Intent intent = new Intent();
             intent.setAction("changeSelectDate");
-            intent.putExtra("date",strDate);
+            intent.putExtra("date", strDate);
             sendBroadcast(intent);
         } catch (ParseException e) {
 

@@ -4,7 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/fragment_steps_history_bar"
+        android:id="@+id/lunar_main_fragment_steps_chart"
         android:layout_weight="1"
         android:background="@color/window_background_color"
         android:layout_width="fill_parent"
