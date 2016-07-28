@@ -1,5 +1,9 @@
 package com.medcorp.nevo.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,10 +15,11 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.base.BaseFragment;
-import com.medcorp.nevo.fragment.listener.ChangeDateListener;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.model.User;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/7/19.
  */
-public class ClockFragment extends BaseFragment implements ChangeDateListener{
+public class ClockFragment extends BaseFragment {
 
     @Bind(R.id.HomeClockHour)
     ImageView hourImage;
@@ -79,15 +84,33 @@ public class ClockFragment extends BaseFragment implements ChangeDateListener{
         });
     }
 
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+          String date =   intent.getStringExtra("date");
+            SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date changeDate = simple.parse(date);
+                initData(changeDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, clockFragmentContentView);
         initData(new Date());
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("changeSelectDate");
+        (this.getActivity()).registerReceiver(mBroadcastReceiver,intentFilter);
         return clockFragmentContentView;
     }
 
-    private void initData(Date date) {
+    public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
@@ -128,7 +151,8 @@ public class ClockFragment extends BaseFragment implements ChangeDateListener{
     }
 
     @Override
-    public void changeDate(Date date) {
-        initData(date);
+    public void onDestroyView() {
+        super.onDestroyView();
+        this.getActivity().unregisterReceiver(mBroadcastReceiver);
     }
 }
