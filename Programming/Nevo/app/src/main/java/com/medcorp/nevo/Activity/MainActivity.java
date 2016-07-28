@@ -1,6 +1,7 @@
 package com.medcorp.nevo.activity;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -38,6 +39,7 @@ import com.medcorp.nevo.fragment.SettingsFragment;
 import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
+import com.medcorp.nevo.fragment.listener.ChangeDateListener;
 
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
@@ -92,7 +94,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
-
+    private ChangeDateListener changeDateListener;
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
 
@@ -161,13 +163,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 startActivity(LoginActivity.class);
             }
         });
-
-
         // Add snackbar on Coordinator Layout
         //        Snackbar snackbar = new Snackbar();
         //        snackbar.setText("Hello Jason");
         //        snackbar.show();
-
     }
 
     @Override
@@ -259,6 +258,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             if (item.getItemId() == R.id.nav_steps_fragment) {
+                toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
                 showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + currentTime.split("-")[2] + " " +
                         new SimpleDateFormat("MMM", Locale.US).format(date));
             } else {
@@ -441,22 +441,31 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+//        datePickerDialog.setStyle(R.style.NevoDialogStyle,R.style.NevoTheme);
         datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
 
+    }
+
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        changeDateListener = (ChangeDateListener) fragment;
     }
 
     @Override
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
 
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
-            String strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
-        java.util.Date selectDate = null;
+        String strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
+
         try {
-            selectDate = simple.parse(strDate);
+            java.util.Date selectDate = simple.parse(strDate);
+            showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + dayOfMonth + " " +
+                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
+//            changeDateListener.changeDate(selectDate);
         } catch (ParseException e) {
 
         }
-        showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + dayOfMonth + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
     }
 }

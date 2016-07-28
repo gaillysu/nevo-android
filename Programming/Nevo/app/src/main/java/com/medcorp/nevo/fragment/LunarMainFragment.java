@@ -135,4 +135,7 @@ public class LunarMainFragment extends BaseObservableFragment {
             ((MainActivity) getActivity()).showStateString(id, false);
         }
     }
+
+
 }
+

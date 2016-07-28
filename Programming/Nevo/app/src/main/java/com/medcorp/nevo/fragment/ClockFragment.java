@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.base.BaseFragment;
+import com.medcorp.nevo.fragment.listener.ChangeDateListener;
 import com.medcorp.nevo.model.Steps;
 import com.medcorp.nevo.model.User;
 
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/7/19.
  */
-public class ClockFragment extends BaseFragment {
+public class ClockFragment extends BaseFragment implements ChangeDateListener{
 
     @Bind(R.id.HomeClockHour)
     ImageView hourImage;
@@ -49,7 +50,7 @@ public class ClockFragment extends BaseFragment {
         }
     };
 
-    private void refresh(){
+    private void refresh() {
         final Calendar mCalendar = Calendar.getInstance();
         int mCurHour = mCalendar.get(Calendar.HOUR);
         int mCurMin = mCalendar.get(Calendar.MINUTE);
@@ -79,8 +80,8 @@ public class ClockFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, clockFragmentContentView);
         initData(new Date());
         return clockFragmentContentView;
@@ -114,10 +115,20 @@ public class ClockFragment extends BaseFragment {
         super.onPause();
         mUiHandler.removeCallbacks(refreshTimerTask);
     }
+
     @Override
     public void onResume() {
         super.onResume();
         refresh();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void changeDate(Date date) {
+        initData(date);
+    }
 }

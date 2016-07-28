@@ -319,6 +319,10 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
     <string name="lunar_fragment_calorie_text">CALORIE</string>
     <string name="lunar_main_sleep_fragment_time_text">SLEEP TIME</string>
+    <string name="lunar_main_sleep_fragment_title_text">OVER ALL SLEEP TIME</string>
+    <string name="lunar_main_sleep_fragment_solar_title">SOLAR TIME</string>
+    <string name="lunar_main_sleep_staus_text_light">LIGHT SLEEP TIME </string>
+    <string name="lunar_main_sleep_staus_text_deep">DEEP SLEEP TIME</string>
     <string name="lunar_main_sleep_fragment_wake_time_text">WAKE TIME</string>
     <string name="lunar_main_sleep_fragment_sleep_dec">SLEEP QUALITY</string>
     <string name="lunar_main_sleep_fragment_duration">DURATION</string>
