@@ -90,7 +90,6 @@ public class LunarMainSleepFragment extends BaseFragment {
         return activityTime.toString();
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
