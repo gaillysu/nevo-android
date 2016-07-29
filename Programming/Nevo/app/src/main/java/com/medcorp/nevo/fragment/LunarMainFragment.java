@@ -38,17 +38,14 @@ public class LunarMainFragment extends BaseObservableFragment {
     private int[] stepsGoalArray = {4500, 6000, 8000, 10000};
     private int stepsGoalNumber;
     private boolean showSyncGoal;
-    private Date userSelectDate;
-    private  LunarMainFragmentAdapter adapter;
+    private LunarMainFragmentAdapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lunar_main_fragment_layout, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        if(userSelectDate == null){
-            userSelectDate = new Date(System.currentTimeMillis());
-        }
-        adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this ,userSelectDate);
+        adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
         showWatchViewPage.setAdapter(adapter);
 
         return view;
@@ -118,9 +115,9 @@ public class LunarMainFragment extends BaseObservableFragment {
                                 stepsGoalNumber = stepsGoalArray[3];
                                 break;
                         }
-                        upDataUserStepsGoal(stepsGoalNumber);
                     }
                 });
+                upDataUserStepsGoal(stepsGoalNumber);
             }
         });
     }

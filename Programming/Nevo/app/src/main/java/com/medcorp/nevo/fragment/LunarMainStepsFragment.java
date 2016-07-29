@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.fragment.base.BaseFragment;
 import com.medcorp.nevo.model.Steps;
@@ -18,12 +19,13 @@ import com.medcorp.nevo.model.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Administrator on 2016/7/19.
+ * Created by Jason on 2016/7/19.
  */
 public class LunarMainStepsFragment extends BaseFragment {
 
@@ -35,12 +37,15 @@ public class LunarMainStepsFragment extends BaseFragment {
     TextView showUserActivityTime;
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
+    @Bind(R.id.lunar_main_fragment_steps_chart)
+    BarChart hourlyBarChart;
+    private Steps steps;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String date = intent.getStringExtra("date");
-            SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
             try {
                 Date changeDate = simple.parse(date);
                 initData(changeDate);
@@ -60,17 +65,19 @@ public class LunarMainStepsFragment extends BaseFragment {
         intentFilter.addAction("changeSelectDate");
         (this.getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
 
-        setData();
+        modifyChart(hourlyBarChart);
         return lunarMainFragmentAdapterChart;
     }
 
-    private void setData() {
+    private void modifyChart(BarChart hourlyBarChart) {
+
 
     }
 
+
     public void initData(Date date) {
         User user = getModel().getNevoUser();
-        Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
+        steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
         showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
         showUserSteps.setText(steps.getSteps() + "");

@@ -6,12 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.medcorp.nevo.R;
-import com.medcorp.nevo.fragment.LunarMainStepsFragment;
 import com.medcorp.nevo.fragment.ClockFragment;
 import com.medcorp.nevo.fragment.LunarMainFragment;
 import com.medcorp.nevo.fragment.LunarMainSleepFragment;
-
-import java.util.Date;
+import com.medcorp.nevo.fragment.LunarMainStepsFragment;
 
 /**
  * Created by Administrator on 2016/7/19.
@@ -21,12 +19,10 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
     private LunarMainFragment clockFragment;
     private Context context;
     private String[] fragmentAdapterArray;
-    private Date userSelcetNewDate;
-    public LunarMainFragmentAdapter(FragmentManager fm, LunarMainFragment fragment , Date date) {
+    public LunarMainFragmentAdapter(FragmentManager fm, LunarMainFragment fragment) {
         super(fm);
         this.clockFragment = fragment;
         context = fragment.getContext();
-        this.userSelcetNewDate = date;
         fragmentAdapterArray = context.getResources().getStringArray(R.array.lunar_main_adapter_fragment);
     }
     @Override
