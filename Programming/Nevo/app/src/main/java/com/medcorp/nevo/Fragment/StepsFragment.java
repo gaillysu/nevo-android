@@ -51,8 +51,6 @@ public class StepsFragment extends BaseObservableFragment {
     TabLayout tabLayout;
 
     private boolean showSyncGoal;
-    private int[] stepsGoalArray = {4500, 6000, 8000, 10000};
-    private int stepsGoalNumber;
 
     @Nullable
     @Override
@@ -63,7 +61,6 @@ public class StepsFragment extends BaseObservableFragment {
         setHasOptionsMenu(true);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-
         return view;
     }
 
@@ -84,9 +81,7 @@ public class StepsFragment extends BaseObservableFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.choose_goal_menu:
-                if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
-                    ejectStepsGoalDialog();
-                } else {
+                {
                     if (!getModel().isWatchConnected()) {
                         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_no_watch, false);
                         return false;
@@ -127,54 +122,7 @@ public class StepsFragment extends BaseObservableFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void ejectStepsGoalDialog() {
-        final Dialog dialog = new AlertDialog.Builder(this.getActivity()).create();
-        dialog.show();
-        Window window = dialog.getWindow();
-        View stepsGoalView = View.inflate(this.getActivity(), R.layout.steps_fragment_dialog_layout, null);
-        window.setContentView(stepsGoalView);
 
-        final RadioGroup stepsGoalGroup = (RadioGroup) stepsGoalView.findViewById(R.id.steps_fragment_dialog_group);
-        stepsGoalView.findViewById(R.id.steps_fragment_cancel_steps_setting_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        stepsGoalView.findViewById(R.id.steps_fragment_setting_steps_goal_ok_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                stepsGoalGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        switch (checkedId) {
-                            case R.id.radio_button_one:
-                                Toast.makeText(StepsFragment.this.getActivity(), "dsabfljha", Toast.LENGTH_SHORT).show();
-                                stepsGoalNumber = stepsGoalArray[0];
-                                break;
-                            case R.id.radio_button_two:
-                                stepsGoalNumber = stepsGoalArray[1];
-                                break;
-                            case R.id.radio_button_three:
-                                stepsGoalNumber = stepsGoalArray[2];
-                                break;
-                            case R.id.radio_button_four:
-                                stepsGoalNumber = stepsGoalArray[3];
-                                break;
-                        }
-                        upDataUserStepsGoal(stepsGoalNumber);
-                    }
-                });
-            }
-        });
-    }
-
-    public void upDataUserStepsGoal(int stepsGoal) {
-        Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), new Date());
-        steps.setGoal(stepsGoal);
-    }
 
     @Override
     public void onStart() {

@@ -92,8 +92,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile project(path: ':wheelPickLib')
     compile project(':wheelPickLib')
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:design:24.0.0'
     compile 'jp.seesaa.android:datetimepicker:0.3.0'
 }
 

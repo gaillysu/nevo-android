@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
             showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-            showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + currentTime.split("-")[2] + " " +
+            showDateText.setText(currentTime.split("-")[2] + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(date));
         } else {
             setTitle(selectedMenuItem.getTitle());
@@ -259,7 +259,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             if (item.getItemId() == R.id.nav_steps_fragment) {
                 toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
-                showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + currentTime.split("-")[2] + " " +
+                showDateText.setText(currentTime.split("-")[2] + " " +
                         new SimpleDateFormat("MMM", Locale.US).format(date));
             } else {
                 toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
@@ -449,7 +449,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
         try {
             java.util.Date selectDate = simple.parse(strDate);
-            showDateText.setText(getString(R.string.lunar_title_bar_tv) + " " + dayOfMonth + " " +
+            showDateText.setText(dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
             date = selectDate;
             Intent intent = new Intent();
