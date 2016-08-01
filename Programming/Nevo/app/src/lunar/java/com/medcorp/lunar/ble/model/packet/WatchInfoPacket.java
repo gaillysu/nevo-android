@@ -1,7 +1,5 @@
 package com.medcorp.lunar.ble.model.packet;
 
-import com.medcorp.nevo.ble.model.packet.NevoPacket;
-
 import net.medcorp.library.ble.model.response.MEDRawData;
 
 import java.util.List;
@@ -9,7 +7,7 @@ import java.util.List;
 /**
  * Created by med on 16/7/25.
  */
-public class WatchInfoPacket extends NevoPacket {
+public class WatchInfoPacket extends LunarPacket {
     public WatchInfoPacket(List<MEDRawData> packets) {
         super(packets);
     }
