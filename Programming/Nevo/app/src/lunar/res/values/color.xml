@@ -5,6 +5,7 @@
     <color name="window_background_color">#54575A</color>
     <color name="baseBackground">#54575A</color>
     <color name="black">#ffffff</color>
+    <color name="customBlack">#7ED8D1</color>
     <color name="tutorial_next_text_color">#7ED8D1</color>
     <color name="tutorial_progress_bar_color">#7ED8D1</color>
     <color name="colorPrimary">#7ED8D1</color>

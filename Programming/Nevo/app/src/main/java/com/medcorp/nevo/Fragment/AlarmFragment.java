@@ -202,7 +202,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             return;
         }
         List<Alarm> list = getModel().getAllAlarm();
-        List<Alarm> customerAlarmList = new ArrayList<Alarm>();
+        List<Alarm> customerAlarmList = new ArrayList<>();
         if(!list.isEmpty())
         {
             for(Alarm alarm: list)

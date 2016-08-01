@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="customOrange">#f5a41c</color>
+    <color name="customOrange">#A08455</color>
     <color name="customBlack">#2e335b</color>
     <color name="customGray">#bab9b6</color>
     <color name="customWhite">#f4f2f1</color>
@@ -8,17 +8,17 @@
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
     <color name="wake_sleep">#fffde69c</color>
-    <color name="light_sleep">#fffbc106</color>
-    <color name="deep_sleep">#fff9a001</color>
+    <color name="light_sleep">#A08455</color>
+    <color name="deep_sleep">#A08455</color>
     <color name="history_data_black">#ff524e4e</color>
     <color name="window_background_color">#FFFFFF</color>
     <color name="switch_slider_color">@color/colorPrimary</color>
-    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimary">#A08455</color>
     <color name="tool_bar_bg_color">@color/colorPrimary</color>
     <color name="steps_fragment_title_color">@color/colorPrimary</color>
-    <color name="colorPrimaryDark">#FFC107</color>
-    <color name="tutorial_next_text_color">#FFA000</color>
-    <color name="tutorial_progress_bar_color">#fff5a41c</color>
+    <color name="colorPrimaryDark">#A08455</color>
+    <color name="tutorial_next_text_color">#A08455</color>
+    <color name="tutorial_progress_bar_color">#A08455</color>
     <color name="user_info_sex_bg">#7ED8D1</color>
     <color name="fragment_steps_window_bg">@color/white</color>
     <color name="textColorPrimary">#333</color>
@@ -39,7 +39,7 @@
     <color name="tutorial_black">#ff000000</color>
     <color name="register_account_text_color">#7ED8D1</color>
     <color name="input_account_shape_color">#3A3739</color>
-    <color name="setting_tint_color_icon">#FFA000</color>
+    <color name="setting_tint_color_icon">#A08455</color>
     <color name="snackbar_bg_color">#6F6F6F</color>
     <color name="my_device_right_show_version_text_color">#BCBCBC</color>
     <color name="profile_fragment_text_color">#FFFFFF</color>

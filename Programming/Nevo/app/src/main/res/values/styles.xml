@@ -16,9 +16,8 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowBackground">@color/window_background_color</item>
     </style>
-
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/check_box_style</item>
+        <item name="android:button">@drawable/radion_button_style</item>
     </style>
 
     <style name="StepsGoalDialogRadioBUttonStyle" parent="@android:style/Widget.CompoundButton.CheckBox">
@@ -29,16 +28,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:colorPrimary">@color/white</item>
     </style>
-    <!--<style name="MyDatePickerDialogStyle" parent="android:Theme.Material.Light.Dialog">-->
-        <!--<item name="android:datePickerStyle">@style/MyDatePickerStyle</item>-->
-    <!--</style>-->
-    <!--<style name="MyDatePickerStyle" parent="@android:style/Widget.Material.DatePicker">-->
-        <!--<item name="colorAccent">@color/colorPrimary</item>-->
-        <!--<item name="android:headerBackground">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimary</item>-->
-        <!--<item name="android:selectable">@color/colorPrimary</item>-->
-    <!--</style>-->
-
     <style name="NevoDialogStyle" parent="Base.V7.Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
@@ -90,6 +79,11 @@
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
         <item name="android:dividerHeight">2dp</item>
+    </style>
+
+    <style name="MyDatePIckerStyle" Parent="Base.Animation.AppCompat.Dialog.">
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:color">@color/colorPrimary</item>
     </style>
 
     <style name="TutorialButton">

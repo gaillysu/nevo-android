@@ -111,7 +111,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
         } else if (position == 7) {
-            if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.NEVO) {
+            if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
                 new MaterialDialog.Builder(getContext())
                         .content(R.string.settings_sure)
                         .negativeText(android.R.string.no)
@@ -126,9 +126,9 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                         })
                         .cancelable(false)
                         .show();
-            }else if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.LUNAR){
-
+            } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
                 //TODO
+                //her read about code
             }
         }
     }
@@ -139,12 +139,12 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Preferences.saveLinklossNotification(getActivity(), isChecked);
         }
         if (position == 8) {
-                if (isChecked) {
-                    getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
-                } else {
-                    getModel().getNevoUser().setIsLogin(false);
-                    getModel().saveNevoUser(getModel().getNevoUser());
-                }
+            if (isChecked) {
+                getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
+            } else {
+                getModel().getNevoUser().setIsLogin(false);
+                getModel().saveNevoUser(getModel().getNevoUser());
+            }
         }
     }
 

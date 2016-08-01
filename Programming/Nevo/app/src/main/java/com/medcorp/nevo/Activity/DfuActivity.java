@@ -144,7 +144,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         });
     }
     private void initManualmodeAndtFirmwareList() {
-        firmwareURLs = new ArrayList<String>();
+        firmwareURLs = new ArrayList<>();
         Bundle bundle = getIntent().getExtras();
         manualMode = bundle.getBoolean(getString(R.string.key_manual_mode), false);
         if(manualMode) {

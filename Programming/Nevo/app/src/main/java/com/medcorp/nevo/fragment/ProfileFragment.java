@@ -210,10 +210,11 @@ public class ProfileFragment extends PreferenceFragmentCompat {
 
         dialog.setNegativeButton(getString(R.string.notification_cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+               public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
+
         dialog.show();
     }
 
@@ -225,7 +226,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        userWeight.setText(dateDesc+"kg");
+                        userWeight.setText(dateDesc + "kg");
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
@@ -249,7 +250,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        userHeight.setText(dateDesc+"cm");
+                        userHeight.setText(dateDesc + "cm");
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
@@ -277,10 +278,10 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
                         try {
                             Date date = dateFormat.parse(dateDesc);
+                            birthdayText.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "-" + day + "-" + year);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        birthdayText.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "-" + day + "-" + year);
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
@@ -315,16 +316,16 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                 break;
             case R.id.profile_fragment_user_height_tv:
                 String height = userWeight.getText().toString();
-                if(height.contains("cm")){
-                    user.setHeight(new Integer(height.replace("cm","")).intValue());
+                if (height.contains("cm")) {
+                    user.setHeight(new Integer(height.replace("cm", "")).intValue());
                 }
                 break;
             case R.id.profile_fragment_user_weight_tv:
                 String weight = userWeight.getText().toString();
-                if(weight.contains("kg")){
+                if (weight.contains("kg")) {
                     //TODO未确定类型
-//                    user.setWeight(new Integer(weight.replace("kg","")).intValue());
-                    user.setWeight((int)Double.parseDouble(weight.replace("kg","")));
+                    //                    user.setWeight(new Integer(weight.replace("kg","")).intValue());
+                    user.setWeight((int) Double.parseDouble(weight.replace("kg", "")));
                 }
                 break;
         }
@@ -336,7 +337,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
         switch (item.getItemId()) {
             case android.R.id.home:
                 getModel().saveNevoUser(getModel().getNevoUser());
-                if(user != null) {
+                if (user != null) {
                     getModel().saveNevoUser(user);
                 }
                 getActivity().finish();
