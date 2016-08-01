@@ -3,27 +3,16 @@ package com.medcorp.lunar.ble.model.request;
 import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
-
-import net.medcorp.library.ble.datasource.GattAttributesDataSource;
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
  * Created by med on 16/7/25.
  */
-public class SetSunriseAndSunsetTime extends BLERequestData {
-    public  final static  byte HEADER = 0x28;
+public class FindWatchLunarRequest extends BLERequestData {
+    public  final static  byte HEADER = 0x0d;
 
-    private final byte sunriseHour;
-    private final byte sunriseMin;
-    private final byte sunsetHour;
-    private final byte sunsetMin;
-
-    public SetSunriseAndSunsetTime(Context context, byte sunriseHour, byte sunriseMin, byte sunsetHour, byte sunsetMin) {
+    public FindWatchLunarRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));
-        this.sunriseHour = sunriseHour;
-        this.sunriseMin = sunriseMin;
-        this.sunsetHour = sunsetHour;
-        this.sunsetMin = sunsetMin;
     }
 
     @Override
@@ -34,8 +23,8 @@ public class SetSunriseAndSunsetTime extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {       0,HEADER,sunriseHour,sunriseMin,
-                        sunsetHour,sunsetMin,0,0,
+                {       0,HEADER, (byte) 0xFF, (byte) 0xFF,
+                        0,0,0,0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0

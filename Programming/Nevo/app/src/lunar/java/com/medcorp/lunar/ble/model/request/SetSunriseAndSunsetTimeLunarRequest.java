@@ -10,15 +10,20 @@ import net.medcorp.library.ble.model.request.BLERequestData;
 /**
  * Created by med on 16/7/25.
  */
-public class NotificationRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x60;
-    final private byte categoryID;
-    final private byte numberAlert;
+public class SetSunriseAndSunsetTimeLunarRequest extends BLERequestData {
+    public  final static  byte HEADER = 0x0a;
 
-    public NotificationRequest(Context context, byte categoryID, byte numberAlert) {
+    private final byte sunriseHour;
+    private final byte sunriseMin;
+    private final byte sunsetHour;
+    private final byte sunsetMin;
+
+    public SetSunriseAndSunsetTimeLunarRequest(Context context, byte sunriseHour, byte sunriseMin, byte sunsetHour, byte sunsetMin) {
         super(new GattAttributesDataSourceImpl(context));
-        this.categoryID = categoryID;
-        this.numberAlert = numberAlert;
+        this.sunriseHour = sunriseHour;
+        this.sunriseMin = sunriseMin;
+        this.sunsetHour = sunsetHour;
+        this.sunsetMin = sunsetMin;
     }
 
     @Override
@@ -29,8 +34,8 @@ public class NotificationRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {       0,HEADER,categoryID,numberAlert,
-                        0,0,0,0,
+                {       0,HEADER,sunriseHour,sunriseMin,
+                        sunsetHour,sunsetMin,0,0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0

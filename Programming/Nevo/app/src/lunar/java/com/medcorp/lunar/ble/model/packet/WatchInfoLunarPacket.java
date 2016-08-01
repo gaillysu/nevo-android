@@ -7,8 +7,8 @@ import java.util.List;
 /**
  * Created by med on 16/7/25.
  */
-public class WatchInfoPacket extends LunarPacket {
-    public WatchInfoPacket(List<MEDRawData> packets) {
+public class WatchInfoLunarPacket extends LunarPacket {
+    public WatchInfoLunarPacket(List<MEDRawData> packets) {
         super(packets);
     }
 

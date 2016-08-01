@@ -3,16 +3,22 @@ package com.medcorp.lunar.ble.model.request;
 import android.content.Context;
 
 import com.medcorp.nevo.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.datasource.GattAttributesDataSource;
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
  * Created by med on 16/7/25.
  */
-public class FindWatchRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x44;
+public class NotificationLunarRequest extends BLERequestData {
+    public  final static  byte HEADER = 0x60;
+    final private byte categoryID;
+    final private byte numberAlert;
 
-    public FindWatchRequest(Context context) {
+    public NotificationLunarRequest(Context context, byte categoryID, byte numberAlert) {
         super(new GattAttributesDataSourceImpl(context));
+        this.categoryID = categoryID;
+        this.numberAlert = numberAlert;
     }
 
     @Override
@@ -23,7 +29,7 @@ public class FindWatchRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {       0,HEADER, (byte) 0xFF, (byte) 0xFF,
+                {       0,HEADER,categoryID,numberAlert,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0,
