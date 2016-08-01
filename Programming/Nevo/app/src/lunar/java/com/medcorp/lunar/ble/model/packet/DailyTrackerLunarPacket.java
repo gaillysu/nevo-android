@@ -16,6 +16,9 @@ import java.util.List;
  * Created by med on 16/7/29.
  */
 public class DailyTrackerLunarPacket extends LunarPacket {
+    final int HEADERLENGTH = 5;
+    final int HOURLYPACKETSNUMBER = 2;
+
     public DailyTrackerLunarPacket(List<MEDRawData> packets) {
         super(packets);
     }
@@ -70,8 +73,6 @@ public class DailyTrackerLunarPacket extends LunarPacket {
      */
     public ArrayList<Integer> getHourlySteps()
     {
-
-        int HEADERLENGTH = 5;
         int hourlySteps  = 0;
         ArrayList<Integer> HourlySteps = new ArrayList<Integer>();
 
@@ -79,17 +80,18 @@ public class DailyTrackerLunarPacket extends LunarPacket {
         for (int i = 0; i<24; i++)
         {
             hourlySteps = 0;
-
-            if (getPackets().get(HEADERLENGTH+i*3).getRawData()[18] != (byte)0xFF
-                    && getPackets().get(HEADERLENGTH+i*3).getRawData()[19] != (byte)0xFF
-                    && getPackets().get(HEADERLENGTH+i*3+1).getRawData()[2] != (byte)0xFF
-                    && getPackets().get(HEADERLENGTH+i*3+1).getRawData()[3] != (byte)0xFF)
+            int offset = 14;
+            if (getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset] != (byte)0xFF
+                    && getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset+1] != (byte)0xFF
+                    && getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset+2] != (byte)0xFF
+                    && getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset+3] != (byte)0xFF)
             {
-                hourlySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(HEADERLENGTH+i*3).getRawData()[18],
-                        getPackets().get(HEADERLENGTH+i*3).getRawData()[19]});
-
-                hourlySteps += HexUtils.bytesToInt(new byte[]{getPackets().get(HEADERLENGTH+i*3+1).getRawData()[2],
-                        getPackets().get(HEADERLENGTH+i*3+1).getRawData()[3]});
+                //get hourly walk steps
+                hourlySteps = HexUtils.bytesToInt(new byte[]{getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset],
+                        getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset+1]});
+                //get hourly run steps
+                hourlySteps += HexUtils.bytesToInt(new byte[]{getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset+2],
+                        getPackets().get(HEADERLENGTH+i*HOURLYPACKETSNUMBER).getRawData()[offset+3]});
 
 
             }
@@ -100,12 +102,15 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
     }
 
-    //new added from v1.2.2 for sleep tracker
+    /**
+     *
+     * @return daily total distance, unit is in "meter"
+     */
 
     public int getTotalDist() {
 
-        int packetno = 2;
-        int offset = 2;
+        int packetno = 1;
+        int offset = 16;
         int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1],
                 getPackets().get(packetno).getRawData()[offset+2],
@@ -116,16 +121,19 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
     }
 
+    /**
+     *
+     * @return every hour distance, unit is in "meter"
+     */
     public List<Integer> getHourlyDist() {
 
-        int HEADERLENGTH = 5;
         int hourlyDisc  = 0;
         ArrayList<Integer> HourlyDist = new ArrayList<Integer>();
 
         //get every hour Disc:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3;
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER;
             int offset = 2;
             hourlyDisc = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF
@@ -160,13 +168,18 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
     }
 
+    /**
+     *
+     * @return daily calories consuming, unit is "kcal"
+     */
     public int getTotalCalories() {
         int packetno = 2;
+        int offset = 10;
 
-        int dailyCalories = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[18],
-                getPackets().get(packetno).getRawData()[19],
-                getPackets().get(packetno + 1).getRawData()[2],
-                getPackets().get(packetno + 1).getRawData()[3]
+        int dailyCalories = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
         });
 
         return dailyCalories/1000;
@@ -175,14 +188,13 @@ public class DailyTrackerLunarPacket extends LunarPacket {
     public List<Integer> getHourlyCalories() {
 
         ArrayList<Integer> HourlyCalories = new ArrayList<Integer>();
-        int HEADERLENGTH = 5;
         int hourlyCalories =0;
 
         //get every hour Calories:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3;
-            int offset = 14;
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER;
+            int offset = 10;
 
             hourlyCalories = 0;
 
@@ -203,45 +215,13 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
     }
 
-    public int getInactivityTime() {
-        int packetno = 3;
-        int offset = 16;
-        int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
-                getPackets().get(packetno).getRawData()[offset+1],
-                getPackets().get(packetno).getRawData()[offset+2],
-                getPackets().get(packetno).getRawData()[offset+3]
-        });
-        return value;
-
-    }
-
-
-    public int getTotalInZoneTime() {
-        int packetno = 4;
-        int offset = 2;
-        int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
-                getPackets().get(packetno).getRawData()[offset+1],
-                getPackets().get(packetno).getRawData()[offset+2],
-                getPackets().get(packetno).getRawData()[offset+3]
-        });
-        return value;
-    }
-
-    public int getTotalOutZoneTime() {
-        int packetno = 4;
-        int offset = 6;
-        int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
-                getPackets().get(packetno).getRawData()[offset+1],
-                getPackets().get(packetno).getRawData()[offset+2],
-                getPackets().get(packetno).getRawData()[offset+3]
-        });
-        return value;
-    }
-
-
+    /**
+     *
+     * @return total sleep time in a day, unit is "minute"
+     */
     public int getTotalSleepTime() {
-        int packetno = 4;
-        int offset = 10;
+        int packetno = 3;
+        int offset = 12;
         int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1]
         });
@@ -251,15 +231,13 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
 
     public List<Integer> getHourlySleepTime() {
-
         ArrayList<Integer> HourlySleepTime = new ArrayList<Integer>();
-        int HEADERLENGTH = 6;
         int hourlySleepTime =0;
         //get every hour SleepTime:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3+1;
-            int offset = 18;
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER+1;
+            int offset = 6;
             hourlySleepTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
             {
@@ -271,8 +249,8 @@ public class DailyTrackerLunarPacket extends LunarPacket {
     }
 
     public int getTotalWakeTime() {
-        int packetno = 4;
-        int offset = 12;
+        int packetno = 3;
+        int offset = 14;
         int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1]
         });
@@ -283,13 +261,12 @@ public class DailyTrackerLunarPacket extends LunarPacket {
     public List<Integer> getHourlyWakeTime() {
 
         ArrayList<Integer> HourlyWakeTime = new ArrayList<Integer>();
-        int HEADERLENGTH = 6;
         int hourlyWakeTime =0;
         //get every hour wake Time:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3+1;
-            int offset = 19;
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER+1;
+            int offset = 7;
             hourlyWakeTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
             {
@@ -302,8 +279,8 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
 
     public int getTotalLightTime() {
-        int packetno = 4;
-        int offset = 14;
+        int packetno = 3;
+        int offset = 16;
         int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1]
         });
@@ -314,13 +291,12 @@ public class DailyTrackerLunarPacket extends LunarPacket {
     public List<Integer> getHourlyLightTime() {
 
         ArrayList<Integer> HourlyLightTime = new ArrayList<Integer>();
-        int HEADERLENGTH = 6;
         int hourlyLightTime =0;
         //get every hour wake Time:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3+2;
-            int offset = 2;
+            int packetno = HEADERLENGTH+i*3+1;
+            int offset = 8;
             hourlyLightTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
             {
@@ -333,8 +309,8 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
 
     public int getTotalDeepTime() {
-        int packetno = 4;
-        int offset = 16;
+        int packetno = 3;
+        int offset = 18;
         int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1]
         });
@@ -344,13 +320,12 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
     public List<Integer> getHourlDeepTime() {
         ArrayList<Integer> HourlyDeepTime = new ArrayList<Integer>();
-        int HEADERLENGTH = 5;
         int hourlyDeepTime =0;
         //get every hour deep Time:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3+2;
-            int offset = 3;
+            int packetno = HEADERLENGTH+i*3+1;
+            int offset = 9;
             hourlyDeepTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
             {
@@ -405,10 +380,14 @@ public class DailyTrackerLunarPacket extends LunarPacket {
 
     }
 
+    /**
+     * unit is "meter"
+     * @return
+     */
     public int getDailyWalkDistance()
     {
         int packetno = 2;
-        int offset = 6;
+        int offset = 2;
         int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1],
                 getPackets().get(packetno).getRawData()[offset+2],
@@ -420,7 +399,7 @@ public class DailyTrackerLunarPacket extends LunarPacket {
     public int getDailyRunDistance()
     {
         int packetno = 2;
-        int offset = 10;
+        int offset = 6;
         int dailyDist = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1],
                 getPackets().get(packetno).getRawData()[offset+2],
@@ -430,10 +409,27 @@ public class DailyTrackerLunarPacket extends LunarPacket {
         return dailyDist/100;
     }
 
+    /**
+     * unit is "minute"
+     * @return
+     */
     public int getDailyWalkDuration()
     {
-        int packetno = 3;
-        int offset = 8;
+        int packetno = 2;
+        int offset = 18;
+        int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno+1).getRawData()[2],
+                getPackets().get(packetno+1).getRawData()[3]
+        });
+
+        return dailyDuration/60;
+    }
+
+    public int getDailyRunDuration()
+    {
+        int packetno = 2;
+        int offset = 14;
         int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1],
                 getPackets().get(packetno).getRawData()[offset+2],
@@ -443,17 +439,36 @@ public class DailyTrackerLunarPacket extends LunarPacket {
         return dailyDuration/60;
     }
 
-    public int getDailyRunDuration()
-    {
+    /**
+     * total inactivity time per day(in minutes)
+     * @return
+     */
+    public int getInactivityTime() {
         int packetno = 3;
         int offset = 4;
-        int dailyDuration = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+        int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
                 getPackets().get(packetno).getRawData()[offset+1],
                 getPackets().get(packetno).getRawData()[offset+2],
                 getPackets().get(packetno).getRawData()[offset+3]
         });
+        return value/60;
 
-        return dailyDuration/60;
+    }
+
+    /**
+     *
+     * @return the harvesting of solar per day, unit is in minutes
+     */
+    public int getSolarHarvestingTime() {
+        int packetno = 3;
+        int offset = 8;
+        int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+        return value/60;
+
     }
 
     //end added
