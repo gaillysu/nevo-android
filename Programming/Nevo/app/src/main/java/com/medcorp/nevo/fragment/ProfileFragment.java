@@ -4,8 +4,6 @@ package com.medcorp.nevo.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,7 +15,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.application.ApplicationModel;
 import com.medcorp.nevo.model.User;
@@ -43,9 +40,9 @@ public class ProfileFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
-            addPreferencesFromResource(R.xml.fragment_profile);
-        }
+//        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+//            addPreferencesFromResource(R.xml.fragment_profile);
+//        }
         setHasOptionsMenu(true);
     }
 
@@ -57,70 +54,70 @@ public class ProfileFragment extends PreferenceFragmentCompat {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         user = getModel().getNevoUser();
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
-            EditTextPreference preference = (EditTextPreference) findPreference("fragment_edit_profile_height");
-            preference.setTitle(getModel().getNevoUser().getHeight() + "");
-            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    String value = o.toString();
-                    if (value.isEmpty() || !value.matches("[0-9]+")) {
-                        return false;
-                    }
-                    preference.setTitle(value);
-                    getModel().getNevoUser().setHeight(Integer.parseInt(value));
-                    return true;
-                }
-            });
-
-            preference = (EditTextPreference) findPreference("fragment_edit_profile_weight");
-            preference.setTitle(getModel().getNevoUser().getWeight() + "");
-            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    String value = o.toString();
-                    if (value.isEmpty() || !value.matches("[0-9]+")) {
-                        return false;
-                    }
-                    preference.setTitle(value);
-                    getModel().getNevoUser().setWeight(Integer.parseInt(value));
-                    return true;
-                }
-            });
-
-            preference = (EditTextPreference) findPreference("fragment_edit_profile_age");
-            preference.setTitle(getModel().getNevoUser().getAge() + "");
-            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    String value = o.toString();
-                    if (value.isEmpty() || !value.matches("[0-9]+")) {
-                        return false;
-                    }
-                    preference.setTitle(value);
-                    getModel().getNevoUser().setAge(Integer.parseInt(value));
-                    return true;
-                }
-            });
-
-            final String genderArray[] = getContext().getResources().getStringArray(R.array.profile_gender);
-            Preference preferenceList = findPreference("fragment_edit_profile_gender");
-            preferenceList.setTitle(genderArray[getModel().getNevoUser().getSex()]);
-            preferenceList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    String value = o.toString();
-                    if (value.isEmpty() || !value.matches("[0-9]+")) {
-                        return false;
-                    }
-                    preference.setTitle(genderArray[Integer.parseInt(value)]);
-                    getModel().getNevoUser().setSex(Integer.parseInt(value));
-                    return true;
-                }
-            });
-
-            return super.onCreateView(inflater, container, savedInstanceState);
-        } else {
+//        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+//            EditTextPreference preference = (EditTextPreference) findPreference("fragment_edit_profile_height");
+//            preference.setTitle(getModel().getNevoUser().getHeight() + "");
+//            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//                @Override
+//                public boolean onPreferenceChange(Preference preference, Object o) {
+//                    String value = o.toString();
+//                    if (value.isEmpty() || !value.matches("[0-9]+")) {
+//                        return false;
+//                    }
+//                    preference.setTitle(value);
+//                    getModel().getNevoUser().setHeight(Integer.parseInt(value));
+//                    return true;
+//                }
+//            });
+//
+//            preference = (EditTextPreference) findPreference("fragment_edit_profile_weight");
+//            preference.setTitle(getModel().getNevoUser().getWeight() + "");
+//            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//                @Override
+//                public boolean onPreferenceChange(Preference preference, Object o) {
+//                    String value = o.toString();
+//                    if (value.isEmpty() || !value.matches("[0-9]+")) {
+//                        return false;
+//                    }
+//                    preference.setTitle(value);
+//                    getModel().getNevoUser().setWeight(Integer.parseInt(value));
+//                    return true;
+//                }
+//            });
+//
+//            preference = (EditTextPreference) findPreference("fragment_edit_profile_age");
+//            preference.setTitle(getModel().getNevoUser().getAge() + "");
+//            preference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//                @Override
+//                public boolean onPreferenceChange(Preference preference, Object o) {
+//                    String value = o.toString();
+//                    if (value.isEmpty() || !value.matches("[0-9]+")) {
+//                        return false;
+//                    }
+//                    preference.setTitle(value);
+//                    getModel().getNevoUser().setAge(Integer.parseInt(value));
+//                    return true;
+//                }
+//            });
+//
+//            final String genderArray[] = getContext().getResources().getStringArray(R.array.profile_gender);
+//            Preference preferenceList = findPreference("fragment_edit_profile_gender");
+//            preferenceList.setTitle(genderArray[getModel().getNevoUser().getSex()]);
+//            preferenceList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//                @Override
+//                public boolean onPreferenceChange(Preference preference, Object o) {
+//                    String value = o.toString();
+//                    if (value.isEmpty() || !value.matches("[0-9]+")) {
+//                        return false;
+//                    }
+//                    preference.setTitle(genderArray[Integer.parseInt(value)]);
+//                    getModel().getNevoUser().setSex(Integer.parseInt(value));
+//                    return true;
+//                }
+//            });
+//
+//            return super.onCreateView(inflater, container, savedInstanceState);
+//        } else {
             View view = inflater.inflate(R.layout.profile_fragment_layout, container, false);
             final TextView firstName = (TextView) view.findViewById(R.id.profile_fragment_user_first_name_tv);
             final TextView lastName = (TextView) view.findViewById(R.id.profile_fragment_user_last_name_tv);
@@ -130,7 +127,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
             User user = getModel().getNevoUser();
             firstName.setText(user.getFirstName());
             lastName.setText(user.getLastName());
-            userBirthday.setText(new SimpleDateFormat("dd-MM-yyyy").format(new Date(user.getBirthday())));
+            userBirthday.setText(new SimpleDateFormat("dd-MM-yyyy").format(new Date(user.getBirthday())).replace("-",","));
             userHeight.setText(user.getHeight() + "cm");
             userWeight.setText(user.getWeight() + "kg");
             lastName.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +161,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                 }
             });
             return view;
-        }
+//        }
     }
 
     /**
@@ -278,7 +275,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
                         try {
                             Date date = dateFormat.parse(dateDesc);
-                            birthdayText.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "-" + day + "-" + year);
+                            birthdayText.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "," + day + "," + year);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -308,7 +305,8 @@ public class ProfileFragment extends PreferenceFragmentCompat {
             case R.id.profile_fragment_user_birthday_tv:
                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
                 try {
-                    Date date = sdf.parse(userWeight.getText().toString());
+                    String userBirthday = userWeight.getText().toString();
+                    Date date = sdf.parse(userBirthday.replace(",","-"));
                     user.setBirthday(date.getTime());
                 } catch (ParseException e) {
                     e.printStackTrace();

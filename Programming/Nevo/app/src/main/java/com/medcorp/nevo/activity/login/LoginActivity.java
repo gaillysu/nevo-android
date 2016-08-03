@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.ApplicationFlage;
 import com.medcorp.nevo.R;
 import com.medcorp.nevo.activity.base.BaseActivity;
 import com.medcorp.nevo.event.LoginEvent;
@@ -47,13 +46,13 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.link_signup)
     public void signUpAction() {
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
-            Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-            startActivityForResult(intent, REQUEST_SIGN_UP);
-        } else {
+//        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+//            Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+//            startActivityForResult(intent, REQUEST_SIGN_UP);
+//        } else {
             startActivity(SignupActivity.class);
             finish();
-        }
+//        }
     }
 
     @OnClick(R.id.btn_login)

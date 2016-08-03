@@ -11,29 +11,13 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="80dp"
         android:background="@mipmap/nevo_logo_image"
-        />
+    />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:src="@mipmap/lunar_watch_logo"
-        />
-
-
-    <com.medcorp.nevo.view.customfontview.RobotoButton
-        android:id="@+id/activity_welcome_take_tour_button"
-        style="@style/TakeTourButton"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:visibility="gone"/>
-
-    <com.medcorp.nevo.view.customfontview.RobotoButton
-        android:id="@+id/activity_welcome_next_button"
-        style="@style/TutorialButton"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:visibility="gone"/>
-
+    />
 
 </LinearLayout>

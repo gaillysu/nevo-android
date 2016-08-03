@@ -35,7 +35,6 @@ import com.medcorp.nevo.fragment.AlarmFragment;
 import com.medcorp.nevo.fragment.AnalysisFragment;
 import com.medcorp.nevo.fragment.LunarMainFragment;
 import com.medcorp.nevo.fragment.SettingsFragment;
-import com.medcorp.nevo.fragment.SleepFragment;
 import com.medcorp.nevo.fragment.StepsFragment;
 import com.medcorp.nevo.fragment.base.BaseObservableFragment;
 
@@ -120,15 +119,15 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         date = new Date(System.currentTimeMillis());
         currentTime = simple.format(date);
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+//        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
             showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
             showDateText.setText(currentTime.split("-")[2] + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(date));
-        } else {
-            setTitle(selectedMenuItem.getTitle());
-        }
+//        } else {
+//            setTitle(selectedMenuItem.getTitle());
+//        }
 
         if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
             mainStepsFragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
@@ -268,7 +267,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         }
 
         BaseObservableFragment fragment = null;
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+//        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
             switch (item.getItemId()) {
                 case R.id.nav_steps_fragment:
                     if (fragmentManager.getBackStackEntryCount() >= 1) {
@@ -287,27 +286,27 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                     fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                     break;
             }
-        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
-            switch (item.getItemId()) {
-                case R.id.nav_steps_fragment:
-                    if (fragmentManager.getBackStackEntryCount() >= 1) {
-                        fragmentManager.popBackStack();
-                        fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
-                        activeFragment.set(fragment);
-                    }
-                    return;
-
-                case R.id.nav_alarm_fragment:
-                    fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
-                    break;
-                case R.id.nav_sleep_fragment:
-                    fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
-                    break;
-                case R.id.nav_settings_fragment:
-                    fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
-                    break;
-            }
-        }
+//        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+//            switch (item.getItemId()) {
+//                case R.id.nav_steps_fragment:
+//                    if (fragmentManager.getBackStackEntryCount() >= 1) {
+//                        fragmentManager.popBackStack();
+//                        fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
+//                        activeFragment.set(fragment);
+//                    }
+//                    return;
+//
+//                case R.id.nav_alarm_fragment:
+//                    fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
+//                    break;
+//                case R.id.nav_sleep_fragment:
+//                    fragment = SleepFragment.instantiate(MainActivity.this, SleepFragment.class.getName());
+//                    break;
+//                case R.id.nav_settings_fragment:
+//                    fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+//                    break;
+//            }
+//        }
 
 
         if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
@@ -432,7 +431,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @OnClick(R.id.lunar_tool_bar)
     public void showDateDialog() {
-        if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment && ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment ) {
             final Calendar calendar = Calendar.getInstance();
             final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
