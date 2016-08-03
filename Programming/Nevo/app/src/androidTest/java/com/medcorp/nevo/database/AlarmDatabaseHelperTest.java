@@ -1,9 +1,9 @@
-package com.medcorp.nevo.database;
+package com.medcorp.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.nevo.database.entry.AlarmDatabaseHelper;
-import com.medcorp.nevo.model.Alarm;
+import com.medcorp.database.entry.AlarmDatabaseHelper;
+import com.medcorp.model.Alarm;
 
 import net.medcorp.library.ble.util.Optional;
 

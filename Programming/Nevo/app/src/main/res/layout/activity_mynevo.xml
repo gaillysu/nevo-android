@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
-                <com.medcorp.nevo.view.ListViewForScrollView
+                <com.medcorp.view.ListViewForScrollView
                     android:id="@+id/activity_mynevo_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -55,7 +55,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/window_background_color">
 
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:id="@+id/activity_mynevo_notice_label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

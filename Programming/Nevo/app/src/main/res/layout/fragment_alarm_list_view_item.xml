@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
+        <com.medcorp.view.customfontview.RobotoTextView
             android:id="@+id/fragment_alarmm_list_view_item_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:shadowColor="@color/colorPrimary"/>
     </RelativeLayout>
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
+    <com.medcorp.view.customfontview.RobotoTextView
         android:id="@+id/fragment_alarmm_list_view_item_alarm_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -44,7 +44,7 @@
             android:id="@+id/HomeClockMinute"
             android:src="@drawable/clockview_minute_sleep"/>
 
-        <com.medcorp.nevo.view.SleepDataView
+        <com.medcorp.view.SleepDataView
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -82,13 +82,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     roboto:light="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sleep_sleep_duration"/>
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_sleepduration"
                     android:layout_width="wrap_content"
@@ -102,13 +102,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     roboto:light="true"
                     android:layout_height="wrap_content"
                     android:text="@string/sleep_sleep_time"/>
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_start"
                     android:layout_width="wrap_content"
@@ -122,13 +122,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     roboto:light="true"
                     android:text="@string/sleep_wake_time"/>
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_wake"
                     android:layout_width="wrap_content"
@@ -151,14 +151,14 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     roboto:light="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sleep_deep_sleep"/>
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_deep"
                     android:layout_width="wrap_content"
@@ -172,13 +172,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     roboto:light="true"
                     android:text="@string/sleep_light_sleep"/>
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:id="@+id/fragment_sleep_today_light"
                     android:textColor="@color/white"
                     android:layout_width="wrap_content"
@@ -192,13 +192,13 @@
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/customGray"
                     android:layout_width="wrap_content"
                     roboto:light="true"
                     android:layout_height="wrap_content"
                     android:text="@string/sleep_wake_duration"/>
-                <com.medcorp.nevo.view.customfontview.RobotoTextView
+                <com.medcorp.view.customfontview.RobotoTextView
                     android:textColor="@color/white"
                     android:id="@+id/fragment_sleep_today_wakeduration"
                     android:layout_width="wrap_content"
@@ -217,7 +217,7 @@
         android:layout_weight="2"
         android:visibility="gone">
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
+    <com.medcorp.view.customfontview.RobotoTextView
         android:id="@+id/fragment_sleep_today_nosleep"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -226,7 +226,7 @@
         android:textSize="17sp"
         android:layout_marginTop="20dp"
         android:text="@string/sleep_today_no_sleep_message"/>
-    <com.medcorp.nevo.view.customfontview.RobotoButton
+    <com.medcorp.view.customfontview.RobotoButton
         android:id="@+id/fragment_sleep_today_how_to"
         android:layout_width="match_parent"
         android:layout_height="40dp"

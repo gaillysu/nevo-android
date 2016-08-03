@@ -22,7 +22,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "22.0.1"
     defaultConfig {
-        applicationId "com.medcorp.nevo"
+        applicationId "com.medcorp"
         minSdkVersion 18
         targetSdkVersion 23
         versionCode 203
@@ -46,7 +46,7 @@ android {
             applicationId "com.medcorp.lunar"
         }
         nevo{
-
+            applicationId "com.medcorp.nevo"
         }
     }
 

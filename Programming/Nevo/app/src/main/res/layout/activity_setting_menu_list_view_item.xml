@@ -19,7 +19,7 @@
         android:src="@drawable/setting"
         android:tint="@color/setting_tint_color_icon"/>
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
+    <com.medcorp.view.customfontview.RobotoTextView
         android:id="@+id/activity_setting_menu_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/nevo_logo_image"
             />
-        <com.medcorp.nevo.view.customfontview.RobotoButton
+        <com.medcorp.view.customfontview.RobotoButton
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="@string/tutorial_1_lets_activate"
@@ -31,7 +31,7 @@
         android:layout_marginBottom="85dp"
         android:background="@color/white"/>
 
-        <com.medcorp.nevo.view.customfontview.RobotoButton
+        <com.medcorp.view.customfontview.RobotoButton
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/help_take_tour"

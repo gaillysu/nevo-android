@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.medcorp.nevo.view.customfontview.RobotoTextView
+        <com.medcorp.view.customfontview.RobotoTextView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textSize="23sp"
@@ -55,7 +55,7 @@
             android:src="@drawable/lunar_clockview_minute"
             android:visibility="visible"/>
 
-        <com.medcorp.nevo.view.RoundProgressBar
+        <com.medcorp.view.RoundProgressBar
             android:id="@+id/roundProgressBar"
             android:layout_width="275dp"
             android:layout_height="275dp"
@@ -79,14 +79,14 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.medcorp.nevo.view.customfontview.RobotoTextView
+            <com.medcorp.view.customfontview.RobotoTextView
                 android:id="@+id/activity_dfu_percent_textview"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 roboto:bold="true"
                 android:textSize="28sp" />
-            <com.medcorp.nevo.view.customfontview.RobotoTextView
+            <com.medcorp.view.customfontview.RobotoTextView
                 android:id="@+id/activity_dfu_infomation_textview"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                 roboto:thin="true" />
 
             <!-- this should be a button but leave it for now.-->
-            <com.medcorp.nevo.view.customfontview.RobotoButton
+            <com.medcorp.view.customfontview.RobotoButton
                 android:id="@+id/activity_dfu_back2settings_textview"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"

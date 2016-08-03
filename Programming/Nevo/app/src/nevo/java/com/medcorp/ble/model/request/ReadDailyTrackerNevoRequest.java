@@ -1,0 +1,47 @@
+package com.medcorp.ble.model.request;
+
+import android.content.Context;
+
+import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
+
+import net.medcorp.library.ble.model.request.BLERequestData;
+
+public class ReadDailyTrackerNevoRequest extends BLERequestData {
+	public  final static  byte HEADER = 0x25;
+    // tracker no is 0~6
+    private int mTrackerNo = 0;
+
+    public ReadDailyTrackerNevoRequest(Context context, int trackerno)
+    {
+        super(new GattAttributesDataSourceImpl(context));
+        mTrackerNo = trackerno;
+    }
+	@Override
+	public byte[] getRawData() {
+		return null;
+	}
+
+	@Override
+	public byte[][] getRawDataEx() {
+        return new byte[][] {
+                {0,HEADER,(byte)(mTrackerNo&0xFF),0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0
+                },
+                {(byte) 0xFF,HEADER,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0
+                }
+        };
+	}
+
+	@Override
+	public byte getHeader() {
+		return HEADER;
+	}
+
+}

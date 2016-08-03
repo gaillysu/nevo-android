@@ -40,7 +40,7 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/lunar_clockview_minute"/>
 
-        <!--<com.medcorp.nevo.view.RoundProgressBar-->
+        <!--<RoundProgressBar-->
         <!--android:layout_marginTop="10dp"-->
         <!--android:layout_marginLeft="10dp"-->
         <!--android:layout_marginRight="10dp"-->

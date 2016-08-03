@@ -1,4 +1,4 @@
-package com.medcorp.nevo.database;
+package com.medcorp.database;
 
 import android.test.suitebuilder.TestSuiteBuilder;
 
