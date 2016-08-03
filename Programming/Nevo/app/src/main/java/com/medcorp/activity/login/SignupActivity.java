@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.activity.UserInfoActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.SignUpEvent;
@@ -55,7 +55,7 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
             editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
             editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
@@ -73,7 +73,7 @@ public class SignupActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             backClick();
             return true;
         }
@@ -91,7 +91,7 @@ public class SignupActivity extends BaseActivity {
             onSignupFailed();
             return;
         }
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             _signupButton.setEnabled(false);
             progressDialog = new ProgressDialog(SignupActivity.this,
                     R.style.AppTheme_Dark_Dialog);
@@ -142,7 +142,7 @@ public class SignupActivity extends BaseActivity {
         password = _passwordText.getText().toString();
         String passwordConfirm = _passwordConfirmText.getText().toString();
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             firstName = editTextFirstName.getText().toString();
             lastName = editLastName.getText().toString();
             if (firstName.isEmpty()) {

@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.adapter.MyNevoAdapter;
 import com.medcorp.event.bluetooth.BatteryEvent;
@@ -70,10 +70,10 @@ public class MyNevoActivity  extends BaseActivity {
         }
 
         myNevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,available_version,null);
-        if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.NEVO) {
+        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             showMyDeviceNewsLayout.setVisibility(View.GONE);
             myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
-        }else if(ApplicationFlage.FLAGE== ApplicationFlage.Flage.LUNAR){
+        }else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR){
             myNevoListView.setVisibility(View.GONE);
             showMyDeviceNewsLayout.setVisibility(View.VISIBLE);
             initLunarData();

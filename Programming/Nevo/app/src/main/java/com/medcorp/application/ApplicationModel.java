@@ -16,7 +16,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
-import com.medcorp.Car;
 import com.medcorp.R;
 import com.medcorp.activity.DfuActivity;
 import com.medcorp.ble.controller.OtaControllerImpl;
@@ -91,6 +90,14 @@ import io.fabric.sdk.android.Fabric;
  * Created by Karl on 10/15/15.
  */
 public class ApplicationModel extends Application {
+
+
+    /*
+
+    BatteryLevelPacket
+    DailyStepsPacket
+    DailyTrackerInfoPacket
+     */
 
     public final int GOOGLE_FIT_OATH_RESULT = 1001;
     private SyncController syncController;

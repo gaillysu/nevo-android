@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.adapter.SettingNotificationArrayAdapter;
 import com.medcorp.ble.model.notification.CalendarNotification;
@@ -65,7 +65,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
             title.setText(R.string.title_notifications);

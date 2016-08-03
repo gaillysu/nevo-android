@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.adapter.PresetArrayAdapter;
 import com.medcorp.R;
@@ -110,7 +110,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
-                if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+                if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
                     ejectStepsGoalDialog();
                 } else {
 

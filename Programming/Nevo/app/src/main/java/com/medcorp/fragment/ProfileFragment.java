@@ -15,7 +15,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.medcorp.ApplicationFlage;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.model.User;

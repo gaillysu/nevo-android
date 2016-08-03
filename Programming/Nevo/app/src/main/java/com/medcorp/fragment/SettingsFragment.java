@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.activity.ConnectToOtherAppsActivity;
 import com.medcorp.activity.SettingNotificationActivity;
 import com.medcorp.activity.tutorial.TutorialPage1Activity;
@@ -66,10 +66,10 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
             listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
-        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
         }
 
@@ -111,7 +111,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
         } else if (position == 7) {
-            if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+            if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
                 new MaterialDialog.Builder(getContext())
                         .content(R.string.settings_sure)
                         .negativeText(android.R.string.no)
@@ -126,7 +126,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                         })
                         .cancelable(false)
                         .show();
-            } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+            } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
                 //TODO
                 //her read about code
             }

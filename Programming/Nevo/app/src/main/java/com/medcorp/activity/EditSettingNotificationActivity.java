@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.color.GreenLed;
@@ -77,7 +77,7 @@ public class EditSettingNotificationActivity extends BaseActivity {
         notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this, notification);
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
             title.setText(notification.getStringResource());

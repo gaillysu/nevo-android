@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
-import com.medcorp.ApplicationFlage;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.R;

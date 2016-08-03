@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.medcorp.ApplicationFlage;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
 import com.medcorp.R;

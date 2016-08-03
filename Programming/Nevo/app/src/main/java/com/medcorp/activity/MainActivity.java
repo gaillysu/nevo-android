@@ -26,12 +26,11 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlage;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.AlarmFragment;
 import com.medcorp.fragment.SettingsFragment;
-import com.medcorp.fragment.SleepFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
@@ -125,9 +124,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             showDateText.setText(currentTime.split("-")[2] + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(date));
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             mainStepsFragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
-        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
         }
 
@@ -247,10 +246,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     private void setFragment(MenuItem item) {
 
-        if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.NEVO) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             setTitle(item.getTitle());
 
-        } else if (ApplicationFlage.FLAGE == ApplicationFlage.Flage.LUNAR) {
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             if (item.getItemId() == R.id.nav_steps_fragment) {
                 toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
