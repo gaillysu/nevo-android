@@ -26,4 +26,9 @@
     <color name="list_item_sub_text">#FFF</color>
     <color name="customGray">#FFFFFF</color>
     <color name="tab_unselected_font_color">#BCBCBC</color>
+    <color name="toolbar_center_date_text_color">#FFFFFF</color>
+    <color name="profile_fragment_text_right_color">#7ED8D1</color>
+    <color name="profile_fragment_text_color">#FFFFFF</color>
+    <color name="input_account_shape_color">#3A3739</color>
+    <color name="register_account_text_color">#7ED8D1</color>
 </resources>

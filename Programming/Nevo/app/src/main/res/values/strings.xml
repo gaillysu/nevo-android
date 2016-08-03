@@ -279,6 +279,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_sleep">Sleep</string>
     <string name="user_info_back_text">Back</string>
+    <string name="login_title_text">Cloud Platform</string>
+    <string name="login_page_activity_with_other">Login with social media</string>
     <string name="register_user_info_page_text">Register</string>
     <string name="register_user_info_page_next_text">Next</string>
     <string name="activity_user_info_title_above_text">Your information</string>

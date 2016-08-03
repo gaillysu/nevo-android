@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.medcorp.base.BaseActivity;
 import com.medcorp.fragment.ProfileFragment;
@@ -29,7 +30,10 @@ public class ProfileActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.profile_title);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        title.setText(R.string.profile_title);
+//        setTitle(R.string.profile_title);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = ProfileFragment.instantiate(this,ProfileFragment.class.getName());
         fragmentManager.beginTransaction().add(R.id.activity_profile_fragment_layout,
