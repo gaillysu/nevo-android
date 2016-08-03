@@ -7,7 +7,7 @@ import android.content.Context;
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-// IMPORTANT: extends  NevoMCU_OTARequest
+// IMPORTANT: extends  MCU_OTARequest
 public  class NevoMCU_OTAStartRequest extends  NevoMCU_OTARequest{
 
     public  final static  byte HEADER = 0x70;

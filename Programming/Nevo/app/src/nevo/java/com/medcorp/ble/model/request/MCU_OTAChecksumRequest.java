@@ -7,15 +7,20 @@ import android.content.Context;
  * Created by gaillysu on 15/4/1.
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
-// IMPORTANT: extends  MCU_OTARequest
-public  class NevoOTAStartRequest extends  NevoMCU_OTARequest{
+// IMPORTANT: extends  NevoRequest
+public  class MCU_OTAChecksumRequest extends MCU_OTARequest {
 
-    public  final static  byte HEADER = 0x72;
+    public  final static  byte HEADER = 0x71;
 
-    public NevoOTAStartRequest(Context context) {
+    private int mTotalpage;
+    private int mChecksum;
+
+    public MCU_OTAChecksumRequest(Context context, int totalpage, int checksum)
+    {
         super(context);
+        mTotalpage = totalpage;
+        mChecksum = checksum;
     }
-
     @Override
     public byte[] getRawData() {
            return null;
@@ -26,11 +31,12 @@ public  class NevoOTAStartRequest extends  NevoMCU_OTARequest{
 
         return new byte[][] {
                 {0,HEADER,
-                        (byte) (0xA0),
-                        (byte) (0x8A),
-                        (byte) (0x7D),
-                        (byte) (0xDE),
-                        0,0,
+                        (byte) (0xFF),
+                        (byte) (0xFF),
+                        (byte) (mTotalpage&0xFF),
+                        (byte) ((mTotalpage>>8)&0xFF),
+                        (byte) (mChecksum&0xFF),
+                        0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0

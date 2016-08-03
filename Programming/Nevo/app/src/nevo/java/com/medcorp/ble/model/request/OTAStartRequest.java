@@ -8,11 +8,11 @@ import android.content.Context;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 // IMPORTANT: extends  MCU_OTARequest
-public  class NevoOTAStartRequest extends  NevoMCU_OTARequest{
+public  class OTAStartRequest extends MCU_OTARequest {
 
     public  final static  byte HEADER = 0x72;
 
-    public NevoOTAStartRequest(Context context) {
+    public OTAStartRequest(Context context) {
         super(context);
     }
 
