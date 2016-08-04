@@ -131,8 +131,7 @@ public class ApplicationModel extends Application {
         userDatabaseHelper = new UserDatabaseHelper(this);
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
-        Car car = new Car();
-        car.drive();
+
         Optional<User> user = userDatabaseHelper.getLoginUser();
         if (user.isEmpty()) {
             nevoUser = new User(0);

@@ -46,6 +46,7 @@
 
     <style name="AnalysisTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabGravity">fill</item>
+        <item name="android:textAllCaps">true</item>
         <item name="tabSelectedTextColor">@color/analysis_fragment_tab_selected_background_color
         </item>
         <item name="tabMode">fixed</item>

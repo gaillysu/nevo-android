@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -12,10 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.medcorp.ApplicationFlag;
+import com.medcorp.R;
 import com.medcorp.activity.UserInfoActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.SignUpEvent;
-import com.medcorp.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,14 +54,10 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
             editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
             editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
             checkIsAgreeBt.setChecked(false);
-        } else {
-            titleRegister.setVisibility(View.GONE);
-        }
     }
 
     @OnClick(R.id.register_title_back_image_button)

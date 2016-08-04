@@ -5,13 +5,13 @@ import android.util.Log;
 /**
  * Created by Administrator on 2016/7/1.
  */
-public class ApplicationFlage {
+public class ApplicationFlag {
 
-    public enum Flage{
+    public enum Flag{
         LUNAR,NEVO;
     }
 
-    public static final Flage FLAGE = Flage.LUNAR;
+    public static final Flag FLAG = Flag.LUNAR;
 
     static{
         Log.w("Karl","Hello");

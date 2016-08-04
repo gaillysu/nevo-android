@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Nevo.iml" filepath="$PROJECT_DIR$/Nevo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../med-library/library/library.iml" filepath="$PROJECT_DIR$/../../../med-library/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wheelPickLib/wheelPickLib.iml" filepath="$PROJECT_DIR$/wheelPickLib/wheelPickLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheelPickLib/wheelpicklib.iml" filepath="$PROJECT_DIR$/wheelPickLib/wheelpicklib.iml" />
     </modules>
   </component>
 </project>
