@@ -131,10 +131,6 @@ public class ApplicationModel extends Application {
         userDatabaseHelper = new UserDatabaseHelper(this);
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
-<<<<<<< HEAD
-
-=======
->>>>>>> 3d06586440f4346681d8ddedf81a4e00c81c2aac
         Optional<User> user = userDatabaseHelper.getLoginUser();
         if (user.isEmpty()) {
             nevoUser = new User(0);
