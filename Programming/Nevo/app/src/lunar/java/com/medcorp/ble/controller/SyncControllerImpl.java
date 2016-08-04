@@ -36,23 +36,24 @@ import com.medcorp.ble.model.notification.SmsNotification;
 import com.medcorp.ble.model.notification.TelephoneNotification;
 import com.medcorp.ble.model.notification.WeChatNotification;
 import com.medcorp.ble.model.notification.WhatsappNotification;
-import com.medcorp.ble.model.packet.DailyStepsNevoPacket;
-import com.medcorp.ble.model.packet.DailyTrackerInfoNevoPacket;
-import com.medcorp.ble.model.packet.DailyTrackerNevoPacket;
-import com.medcorp.ble.model.packet.NevoPacket;
-import com.medcorp.ble.model.request.GetBatteryLevelNevoRequest;
-import com.medcorp.ble.model.request.GetStepsGoalNevoRequest;
-import com.medcorp.ble.model.request.LedLightOnOffNevoRequest;
-import com.medcorp.ble.model.request.ReadDailyTrackerInfoNevoRequest;
-import com.medcorp.ble.model.request.ReadDailyTrackerNevoRequest;
-import com.medcorp.ble.model.request.SetAlarmNevoRequest;
-import com.medcorp.ble.model.request.SetCardioNevoRequest;
-import com.medcorp.ble.model.request.SetGoalNevoRequest;
-import com.medcorp.ble.model.request.SetNotificationNevoRequest;
-import com.medcorp.ble.model.request.SetProfileNevoRequest;
-import com.medcorp.ble.model.request.SetRtcNevoRequest;
-import com.medcorp.ble.model.request.TestModeNevoRequest;
-import com.medcorp.ble.model.request.WriteSettingNevoRequest;
+import com.medcorp.ble.model.packet.BatteryLevelPacket;
+import com.medcorp.ble.model.packet.DailyStepsPacket;
+import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
+import com.medcorp.ble.model.packet.DailyTrackerPacket;
+import com.medcorp.ble.model.packet.Packet;
+import com.medcorp.ble.model.request.GetBatteryLevelRequest;
+import com.medcorp.ble.model.request.GetStepsGoalRequest;
+import com.medcorp.ble.model.request.LedLightOnOffRequest;
+import com.medcorp.ble.model.request.ReadDailyTrackerInfoRequest;
+import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
+import com.medcorp.ble.model.request.SetAlarmRequest;
+import com.medcorp.ble.model.request.SetCardioRequest;
+import com.medcorp.ble.model.request.SetGoalRequest;
+import com.medcorp.ble.model.request.SetNotificationRequest;
+import com.medcorp.ble.model.request.SetProfileRequest;
+import com.medcorp.ble.model.request.SetRtcRequest;
+import com.medcorp.ble.model.request.TestModeRequest;
+import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -181,7 +182,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new CalendarNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WeChatNotification()).getHexColor());
         applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WhatsappNotification()).getHexColor());
-        sendRequest(new SetNotificationNevoRequest(mContext, applicationNotificationColorMap));
+        sendRequest(new SetNotificationRequest(mContext, applicationNotificationColorMap));
 
     }
 
@@ -197,7 +198,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             {
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
 
-                NevoPacket packet = new NevoPacket(packetsBuffer);
+                Packet packet = new Packet(packetsBuffer);
                 //if packets invaild, discard them, and reset buffer
                 if(!packet.isVaildPackets())
                 {
@@ -207,23 +208,23 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     return;
                 }
 
-                if((byte)SetRtcNevoRequest.HEADER == nevoData.getRawData()[1])
+                if((byte) SetRtcRequest.HEADER == nevoData.getRawData()[1])
                 {
                     //setp2:start set user profile
-                    sendRequest(new SetProfileNevoRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
+                    sendRequest(new SetProfileRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
                 }
-                else if((byte) SetProfileNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) SetProfileRequest.HEADER == nevoData.getRawData()[1])
                 {
                     //step3:WriteSetting
-                    sendRequest(new WriteSettingNevoRequest(mContext));
+                    sendRequest(new WriteSettingRequest(mContext));
                 }
-                else if((byte) WriteSettingNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) WriteSettingRequest.HEADER == nevoData.getRawData()[1])
                 {
                     //step4:SetCardio
-                    sendRequest(new SetCardioNevoRequest(mContext));
+                    sendRequest(new SetCardioRequest(mContext));
                 }
 
-                else if((byte) SetCardioNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) SetCardioRequest.HEADER == nevoData.getRawData()[1])
                 {
                     EventBus.getDefault().post(new InitializeEvent(InitializeEvent.INITIALIZE_STATUS.END));
                     //start sync notification, phone --> nevo
@@ -232,7 +233,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     // important for user, so here need use local's setting sync with nevo
                     setNotification(true);
                 }
-                else if((byte) SetNotificationNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) SetNotificationRequest.HEADER == nevoData.getRawData()[1])
                 {
                     if(initNotification)
                     {
@@ -245,7 +246,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                                 if(alarm.isEnable())
                                 {
                                     customerAlarmList.add(alarm);
-                                    if(customerAlarmList.size()>=SetAlarmNevoRequest.maxAlarmCount)
+                                    if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
                                     {
                                         break;
                                     }
@@ -269,7 +270,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         initNotification = true;
                     }
                 }
-                else if((byte) SetAlarmNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) SetAlarmRequest.HEADER == nevoData.getRawData()[1])
                 {
                     if(initAlarm)
                     {
@@ -282,10 +283,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         initAlarm = true;
                     }
                 }
-                else if((byte) ReadDailyTrackerInfoNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) ReadDailyTrackerInfoRequest.HEADER == nevoData.getRawData()[1])
                 {
                     if(!mSyncAllFlag) {
-                        DailyTrackerInfoNevoPacket infopacket = packet.newDailyTrackerInfoNevoPacket();
+                        DailyTrackerInfoPacket infopacket = new DailyTrackerInfoPacket(packet.getPackets());
                         mCurrentDay = 0;
                         savedDailyHistory = infopacket.getDailyTrackerInfo();
                         if (!savedDailyHistory.isEmpty()) {
@@ -294,9 +295,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                     }
                 }
-                else if((byte) ReadDailyTrackerNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) ReadDailyTrackerRequest.HEADER == nevoData.getRawData()[1])
                 {
-                    DailyTrackerNevoPacket thispacket = packet.newDailyTrackerNevoPacket();
+                    DailyTrackerPacket thispacket = new DailyTrackerPacket(packet.getPackets());
 
                     if(savedDailyHistory.isEmpty()) {
                         mCurrentDay = 0;
@@ -421,15 +422,15 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             mLocalService.findCellPhone();
                         }
                         //let all color LED light on, means that find CellPhone is successful.
-                        sendRequest(new TestModeNevoRequest(mContext,0x3F0000,false));
+                        sendRequest(new TestModeRequest(mContext,0x3F0000,false));
                     }
                 }
-                else if((byte) GetStepsGoalNevoRequest.HEADER == nevoData.getRawData()[1])
+                else if((byte) GetStepsGoalRequest.HEADER == nevoData.getRawData()[1])
                 {
                     if (!mEnableTestMode)
                     {
                         mEnableTestMode = true;
-                        sendRequest(new TestModeNevoRequest(mContext,0,false));
+                        sendRequest(new TestModeRequest(mContext,0,false));
                     }
                     //save current day's step count to "Steps" table
                     Date currentday = new Date();
@@ -437,7 +438,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
                     steps.setDate(Common.removeTimeFromDate(currentday).getTime());
 
-                    DailyStepsNevoPacket stepPacket = packet.newDailyStepsNevoPacket();
+                    DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     steps.setSteps(stepPacket.getDailySteps());
                     steps.setGoal(stepPacket.getDailyStepsGoal());
                     steps.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
@@ -446,18 +447,18 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //end save
                 }
                 //process done(such as save local db), then notify top layer to get or refresh screen
-                if (packet.getHeader() == (byte) GetStepsGoalNevoRequest.HEADER) {
+                if (packet.getHeader() == (byte) GetStepsGoalRequest.HEADER) {
                     EventBus.getDefault().post(new LittleSyncEvent(true));
                 }
-                else if((byte) GetBatteryLevelNevoRequest.HEADER == packet.getHeader()) {
-                    EventBus.getDefault().post(new BatteryEvent(new Battery(packet.newBatteryLevelNevoPacket().getBatteryLevel())));
+                else if((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
+                    EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel())));
                 }
                 else if((byte) 0xF0 == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 }
-                else if((byte) SetAlarmNevoRequest.HEADER == packet.getHeader()
-                        || (byte) SetNotificationNevoRequest.HEADER == packet.getHeader()
-                        || (byte) SetGoalNevoRequest.HEADER == packet.getHeader()) {
+                else if((byte) SetAlarmRequest.HEADER == packet.getHeader()
+                        || (byte) SetNotificationRequest.HEADER == packet.getHeader()
+                        || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new RequestResponseEvent(true));
                 }
                 packetsBuffer.clear();
@@ -517,43 +518,43 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     private void setRtc() {
-        sendRequest(new SetRtcNevoRequest(mContext));
+        sendRequest(new SetRtcRequest(mContext));
     }
 
     @Override
     public void  getDailyTrackerInfo(boolean syncAll)
     {
         if(syncAll){
-            sendRequest(new ReadDailyTrackerInfoNevoRequest(mContext));
+            sendRequest(new ReadDailyTrackerInfoRequest(mContext));
         } else if(!mSyncAllFlag){
             getDailyTracker(0);
         }
     }
 
     private void  getDailyTracker(int trackerNo) {
-        sendRequest(new ReadDailyTrackerNevoRequest(mContext, trackerNo));
+        sendRequest(new ReadDailyTrackerRequest(mContext, trackerNo));
     }
 
     @Override
     public void setGoal(GoalBase goal) {
-        sendRequest(new SetGoalNevoRequest(mContext,goal));
+        sendRequest(new SetGoalRequest(mContext,goal));
     }
 
     @Override
     public void setAlarm(List<Alarm> list,boolean init) {
         initAlarm = init;
-        sendRequest(new SetAlarmNevoRequest(mContext,list));
+        sendRequest(new SetAlarmRequest(mContext,list));
     }
 
     @Override
     public void getStepsAndGoal() {
-        sendRequest(new GetStepsGoalNevoRequest(mContext));
+        sendRequest(new GetStepsGoalRequest(mContext));
     }
 
     @Override
     public void getBatteryLevel()
     {
-        sendRequest(new GetBatteryLevelNevoRequest(mContext));
+        sendRequest(new GetBatteryLevelRequest(mContext));
     }
 
     /**
@@ -565,7 +566,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public void findDevice()
     {
-        sendRequest(new LedLightOnOffNevoRequest(mContext,0x3F0000,true));
+        sendRequest(new LedLightOnOffRequest(mContext,0x3F0000,true));
     }
 
     @Override
