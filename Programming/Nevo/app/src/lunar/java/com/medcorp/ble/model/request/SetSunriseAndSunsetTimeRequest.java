@@ -4,16 +4,26 @@ import android.content.Context;
 
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 
+import net.medcorp.library.ble.datasource.GattAttributesDataSource;
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
- * Created by med on 16/7/29.
+ * Created by med on 16/7/25.
  */
-public class ReadDailyTrackerInfoRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x06;
+public class SetSunriseAndSunsetTimeRequest extends BLERequestData {
+    public  final static  byte HEADER = 0x0a;
 
-    public ReadDailyTrackerInfoRequest(Context context) {
+    private final byte sunriseHour;
+    private final byte sunriseMin;
+    private final byte sunsetHour;
+    private final byte sunsetMin;
+
+    public SetSunriseAndSunsetTimeRequest(Context context, byte sunriseHour, byte sunriseMin, byte sunsetHour, byte sunsetMin) {
         super(new GattAttributesDataSourceImpl(context));
+        this.sunriseHour = sunriseHour;
+        this.sunriseMin = sunriseMin;
+        this.sunsetHour = sunsetHour;
+        this.sunsetMin = sunsetMin;
     }
 
     @Override
@@ -24,8 +34,8 @@ public class ReadDailyTrackerInfoRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {0,HEADER,0,0,
-                        0,0,0,0,
+                {       0,HEADER,sunriseHour,sunriseMin,
+                        sunsetHour,sunsetMin,0,0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0
@@ -43,6 +53,4 @@ public class ReadDailyTrackerInfoRequest extends BLERequestData {
     public byte getHeader() {
         return HEADER;
     }
-
 }
-

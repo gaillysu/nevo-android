@@ -7,50 +7,51 @@ import com.medcorp.model.User;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
+/**
+ * Created by med on 16/7/29.
+ */
 public class SetProfileRequest extends BLERequestData {
-	public  final static  byte HEADER = 0x20;
-	private User user;
+    public  final static  byte HEADER = 0x03;
+    private User user;
 
-	public SetProfileRequest(Context context, User user) {
-		super(new GattAttributesDataSourceImpl(context));
-		this.user = user;
-	}
+    public SetProfileRequest(Context context, User user) {
+        super(new GattAttributesDataSourceImpl(context));
+        this.user = user;
+    }
+    @Override
+    public byte[] getRawData() {
 
-	@Override
-	public byte[] getRawData() {
-	
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public byte[][] getRawDataEx() {
+    @Override
+    public byte[][] getRawDataEx() {
 
         int age = user.getAge();
         int height = user.getHeight();
         int weight = user.getWeight();
         int sex = user.getSex();
 
-		return new byte[][] {
-				   {0,HEADER,
-                   (byte)(age&0xFF),(byte)(height&0xFF),(byte)(weight&0xFF),(byte)(sex&0xFF),
-                    0,0,0,0,
-                    0,0,0,0,
-                    0,0,0,0,
-                    0,0
-					},
-				{(byte) 0xFF,HEADER,0,0,
-						0,0,0,0,
-						0,0,0,0,
-						0,0,0,0,
-						0,0,0,0
-				}					
-		      };
-	}
+        return new byte[][] {
+                {0,HEADER,
+                        (byte)(age&0xFF),(byte)(height&0xFF),(byte)(weight&0xFF),(byte)(sex&0xFF),
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0
+                },
+                {(byte) 0xFF,HEADER,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0,
+                        0,0,0,0
+                }
+        };
+    }
 
-	@Override
-	public byte getHeader() {
+    @Override
+    public byte getHeader() {
 
-		return HEADER;
-	}
-
+        return HEADER;
+    }
 }

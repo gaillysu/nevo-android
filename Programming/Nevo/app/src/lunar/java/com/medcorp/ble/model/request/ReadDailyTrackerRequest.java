@@ -6,8 +6,11 @@ import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
+/**
+ * Created by med on 16/7/29.
+ */
 public class ReadDailyTrackerRequest extends BLERequestData {
-	public  final static  byte HEADER = 0x25;
+    public  final static  byte HEADER = 0x07;
     // tracker no is 0~6
     private int mTrackerNo = 0;
 
@@ -16,13 +19,13 @@ public class ReadDailyTrackerRequest extends BLERequestData {
         super(new GattAttributesDataSourceImpl(context));
         mTrackerNo = trackerno;
     }
-	@Override
-	public byte[] getRawData() {
-		return null;
-	}
+    @Override
+    public byte[] getRawData() {
+        return null;
+    }
 
-	@Override
-	public byte[][] getRawDataEx() {
+    @Override
+    public byte[][] getRawDataEx() {
         return new byte[][] {
                 {0,HEADER,(byte)(mTrackerNo&0xFF),0,
                         0,0,0,0,
@@ -37,11 +40,11 @@ public class ReadDailyTrackerRequest extends BLERequestData {
                         0,0,0,0
                 }
         };
-	}
+    }
 
-	@Override
-	public byte getHeader() {
-		return HEADER;
-	}
+    @Override
+    public byte getHeader() {
+        return HEADER;
+    }
 
 }

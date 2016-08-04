@@ -40,20 +40,8 @@ import com.medcorp.ble.model.packet.BatteryLevelPacket;
 import com.medcorp.ble.model.packet.DailyStepsPacket;
 import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.ble.model.packet.DailyTrackerPacket;
-import com.medcorp.ble.model.packet.Packet;
-import com.medcorp.ble.model.request.GetBatteryLevelRequest;
-import com.medcorp.ble.model.request.GetStepsGoalRequest;
-import com.medcorp.ble.model.request.LedLightOnOffRequest;
-import com.medcorp.ble.model.request.ReadDailyTrackerInfoRequest;
-import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
-import com.medcorp.ble.model.request.SetAlarmRequest;
-import com.medcorp.ble.model.request.SetCardioRequest;
-import com.medcorp.ble.model.request.SetGoalRequest;
-import com.medcorp.ble.model.request.SetNotificationRequest;
-import com.medcorp.ble.model.request.SetProfileRequest;
-import com.medcorp.ble.model.request.SetRtcRequest;
-import com.medcorp.ble.model.request.TestModeRequest;
-import com.medcorp.ble.model.request.WriteSettingRequest;
+import com.medcorp.ble.model.packet.*;
+import com.medcorp.ble.model.request.*;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -67,6 +55,7 @@ import com.medcorp.model.DailyHistory;
 import com.medcorp.model.GoalBase;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.Steps;
+import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 
@@ -126,9 +115,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
 
+    private WatchInfomation watchInfomation;
+
     public SyncControllerImpl(Context context)
     {
         mContext = context;
+        watchInfomation = new WatchInfomation();
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
@@ -186,6 +178,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     }
 
+    @Override
+    public WatchInfomation getWatchInfomation() {
+        return watchInfomation;
+    }
+
     @Subscribe
     public void onEvent(BLEResponseDataEvent eventData) {
         BLEResponseData data = eventData.getData();
@@ -196,15 +193,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
             if((byte)0xFF == nevoData.getRawData()[0])
             {
-                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
-
                 Packet packet = new Packet(packetsBuffer);
                 //if packets invaild, discard them, and reset buffer
                 if(!packet.isVaildPackets())
                 {
                     Log.e("Nevo Error","InVaild Packets Received!");
                     packetsBuffer.clear();
-
+                    QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
                     return;
                 }
 
@@ -462,6 +457,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     EventBus.getDefault().post(new RequestResponseEvent(true));
                 }
                 packetsBuffer.clear();
+                QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
             }
         }
     }

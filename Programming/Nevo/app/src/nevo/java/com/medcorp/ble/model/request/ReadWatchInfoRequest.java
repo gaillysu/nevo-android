@@ -1,18 +1,15 @@
 package com.medcorp.ble.model.request;
 
 import android.content.Context;
-
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
-
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
- * Created by med on 16/7/29.
+ * Created by med on 16/7/25.
  */
-public class ReadDailyTrackerInfoRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x06;
-
-    public ReadDailyTrackerInfoRequest(Context context) {
+public class ReadWatchInfoRequest extends BLERequestData {
+    public  final static  byte HEADER = 0x09;
+    public ReadWatchInfoRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));
     }
 
@@ -24,7 +21,7 @@ public class ReadDailyTrackerInfoRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {0,HEADER,0,0,
+                {       0,HEADER,0,0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0,
@@ -43,6 +40,4 @@ public class ReadDailyTrackerInfoRequest extends BLERequestData {
     public byte getHeader() {
         return HEADER;
     }
-
 }
-

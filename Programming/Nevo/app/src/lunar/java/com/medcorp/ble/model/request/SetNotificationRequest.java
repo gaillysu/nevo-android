@@ -17,8 +17,11 @@ import net.medcorp.library.ble.model.request.BLERequestData;
 
 import java.util.Map;
 
+/**
+ * Created by med on 16/8/1.
+ */
 public class SetNotificationRequest extends BLERequestData {
-	public  final static  byte HEADER = 0x02;
+    public  final static  byte HEADER = 0x02;
     public static class SetNortificationRequestValues {
         //default vibrator number is 3
         final static byte VIBRATION_ON = 0x03;
@@ -62,12 +65,12 @@ public class SetNotificationRequest extends BLERequestData {
     }
 
     @Override
-	public byte[] getRawData() {
-		return null;
-	}
+    public byte[] getRawData() {
+        return null;
+    }
 
-	@Override
-	public byte[][] getRawDataEx() {
+    @Override
+    public byte[][] getRawDataEx() {
         return new byte[][] {
                 {0,HEADER,
                         (byte)(call_vib_number&0xFF),
@@ -110,12 +113,12 @@ public class SetNotificationRequest extends BLERequestData {
                 }
         };
 
-	}
+    }
 
-	@Override
-	public byte getHeader() {
-			return HEADER;
-	}
+    @Override
+    public byte getHeader() {
+        return HEADER;
+    }
 
 
     private class StateSaver implements NotificationVisitor<Void> {

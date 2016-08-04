@@ -5,7 +5,7 @@ import net.medcorp.library.ble.model.response.MEDRawData;
 import java.util.List;
 
 /**
- * Created by gaillysu on 15/4/1.
+ * Created by med on 16/8/1.
  */
 public class BatteryLevelPacket extends Packet {
     public BatteryLevelPacket(List<MEDRawData> packets) {

@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by gaillysu on 15/4/1.
+ * Created by med on 16/7/29.
  */
 public class DailyTrackerInfoPacket extends Packet {
     public DailyTrackerInfoPacket(List<MEDRawData> packets) {
@@ -69,7 +69,6 @@ public class DailyTrackerInfoPacket extends Packet {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                //    days.append(DailyHistory(TotalSteps: 0, HourlySteps: [24], Date:date))
             }
 
         }

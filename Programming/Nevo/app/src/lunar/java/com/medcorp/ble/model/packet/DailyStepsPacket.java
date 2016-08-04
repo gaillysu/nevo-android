@@ -6,9 +6,8 @@ import net.medcorp.library.ble.util.HexUtils;
 import java.util.List;
 
 /**
- * Created by gaillysu on 15/4/1.
+ * Created by med on 16/8/1.
  */
-
 public class DailyStepsPacket extends Packet {
 
     public DailyStepsPacket(List<MEDRawData> packets) {
@@ -42,6 +41,5 @@ public class DailyStepsPacket extends Packet {
 
         return dailyStepGoal;
     }
-
 
 }

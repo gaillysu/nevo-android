@@ -6,22 +6,25 @@ import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
+/**
+ * Created by med on 16/8/1.
+ */
 public class GetStepsGoalRequest extends BLERequestData {
 
-	public  final static byte HEADER = 0x26;
+    public  final static byte HEADER = 0x08;
 
-        public GetStepsGoalRequest(Context context) {
-                super(new GattAttributesDataSourceImpl(context));
-        }
+    public GetStepsGoalRequest(Context context) {
+        super(new GattAttributesDataSourceImpl(context));
+    }
 
-        @Override
-	public byte[] getRawData() {
+    @Override
+    public byte[] getRawData() {
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public byte[][] getRawDataEx() {
+    @Override
+    public byte[][] getRawDataEx() {
         return new byte[][] {
                 {       0,HEADER,0,0,
                         0,0,0,0,
@@ -36,11 +39,12 @@ public class GetStepsGoalRequest extends BLERequestData {
                         0,0,0,0
                 }
         };
-	}
+    }
 
-	@Override
-	public byte getHeader() {
-		return HEADER;
-	}
+    @Override
+    public byte getHeader() {
+        return HEADER;
+    }
 
 }
+

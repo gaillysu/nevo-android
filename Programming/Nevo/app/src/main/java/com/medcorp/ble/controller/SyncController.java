@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.medcorp.model.GoalBase;
 import com.medcorp.model.Alarm;
+import com.medcorp.model.WatchInfomation;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
@@ -99,5 +100,7 @@ public interface SyncController {
      * @param init ,if true means by syncController invoked to do init sync, false means invoked by application to set value
      */
     public void setNotification(boolean init);
+
+    public WatchInfomation getWatchInfomation();
 
 }

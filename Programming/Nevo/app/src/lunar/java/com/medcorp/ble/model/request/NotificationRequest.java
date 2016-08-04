@@ -4,16 +4,21 @@ import android.content.Context;
 
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 
+import net.medcorp.library.ble.datasource.GattAttributesDataSource;
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
- * Created by med on 16/7/29.
+ * Created by med on 16/7/25.
  */
-public class ReadDailyTrackerInfoRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x06;
+public class NotificationRequest extends BLERequestData {
+    public  final static  byte HEADER = 0x60;
+    final private byte categoryID;
+    final private byte numberAlert;
 
-    public ReadDailyTrackerInfoRequest(Context context) {
+    public NotificationRequest(Context context, byte categoryID, byte numberAlert) {
         super(new GattAttributesDataSourceImpl(context));
+        this.categoryID = categoryID;
+        this.numberAlert = numberAlert;
     }
 
     @Override
@@ -24,7 +29,7 @@ public class ReadDailyTrackerInfoRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {0,HEADER,0,0,
+                {       0,HEADER,categoryID,numberAlert,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0,
@@ -43,6 +48,4 @@ public class ReadDailyTrackerInfoRequest extends BLERequestData {
     public byte getHeader() {
         return HEADER;
     }
-
 }
-
