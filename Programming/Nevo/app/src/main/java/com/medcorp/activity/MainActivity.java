@@ -35,6 +35,7 @@ import com.medcorp.fragment.AnalysisFragment;
 import com.medcorp.fragment.LunarMainFragment;
 import com.medcorp.fragment.SettingsFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
@@ -54,7 +55,6 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.seesaa.android.datetimepicker.date.DatePickerDialog;
 
 /**
  * Created by Karl on 12/10/15.
@@ -123,9 +123,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         showDateText.setText(currentTime.split("-")[2] + " " +
                 new SimpleDateFormat("MMM", Locale.US).format(date));
 
-        //        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-        //            mainStepsFragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
-        //        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
         mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
 
         activeFragment.set(mainStepsFragment);
@@ -154,10 +151,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 startActivity(LoginActivity.class);
             }
         });
-        // Add snackbar on Coordinator Layout
-        //        Snackbar snackbar = new Snackbar();
-        //        snackbar.setText("Hello Jason");
-        //        snackbar.show();
     }
 
     @Override
@@ -404,9 +397,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void showDateDialog() {
         if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment) {
             final Calendar calendar = Calendar.getInstance();
-            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
+            final DatePickerDialog  datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
+            datePickerDialog.setOnDateSetListener(this);
+            datePickerDialog.show(getFragmentManager(), "calendarDialog");
         }
     }
 
@@ -418,6 +412,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         final String strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
 
         try {
+
             java.util.Date selectDate = simple.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
