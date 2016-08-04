@@ -277,6 +277,11 @@ push and hold the third button, until the white LED blinks</string>
     <!--lunar-->
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
+    <string name="register_account_page_title">Sign Up</string>
+    <string name="register_first_name_hint">First Name</string>
+    <string name="register_last_name_hint">Last Name</string>
+    <string name="register_terms_text">Terms &amp; Conditions</string>
+    <string name="register_terms_is_agree">I agree to the terms and conditions</string>
     <string name="lunar_adapter_sleep">Sleep</string>
     <string name="user_info_back_text">Back</string>
     <string name="login_title_text">Cloud Platform</string>

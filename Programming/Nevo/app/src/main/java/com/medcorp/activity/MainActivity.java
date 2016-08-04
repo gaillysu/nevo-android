@@ -26,17 +26,17 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlag;
+import com.medcorp.R;
+import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.AlarmFragment;
-import com.medcorp.fragment.SettingsFragment;
-import com.medcorp.fragment.base.BaseObservableFragment;
-import com.medcorp.R;
-import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.fragment.AnalysisFragment;
 import com.medcorp.fragment.LunarMainFragment;
-import com.medcorp.fragment.StepsFragment;
+import com.medcorp.fragment.SettingsFragment;
+import com.medcorp.fragment.base.BaseObservableFragment;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
 import net.medcorp.library.ble.event.BLESearchEvent;
@@ -55,7 +55,6 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.seesaa.android.datetimepicker.date.DatePickerDialog;
 
 /**
  * Created by Karl on 12/10/15.
@@ -119,16 +118,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         currentTime = simple.format(date);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
-            showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-            showDateText.setText(currentTime.split("-")[2] + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(date));
+        toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
+        showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        showDateText.setText(currentTime.split("-")[2] + " " +
+                new SimpleDateFormat("MMM", Locale.US).format(date));
 
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            mainStepsFragment = StepsFragment.instantiate(this, StepsFragment.class.getName());
-        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
-        }
+        mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
 
         activeFragment.set(mainStepsFragment);
         fragmentManager = getSupportFragmentManager();
@@ -156,10 +151,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 startActivity(LoginActivity.class);
             }
         });
-        // Add snackbar on Coordinator Layout
-        //        Snackbar snackbar = new Snackbar();
-        //        snackbar.setText("Hello Jason");
-        //        snackbar.show();
     }
 
     @Override
@@ -246,40 +237,40 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     private void setFragment(MenuItem item) {
 
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            setTitle(item.getTitle());
-
-        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            if (item.getItemId() == R.id.nav_steps_fragment) {
-                toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
-                showDateText.setText(currentTime.split("-")[2] + " " +
-                        new SimpleDateFormat("MMM", Locale.US).format(date));
-            } else {
-                toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
-                showDateText.setText(item.getTitle());
-            }
+        //        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+        //            setTitle(item.getTitle());
+        //
+        //        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        if (item.getItemId() == R.id.nav_steps_fragment) {
+            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
+            showDateText.setText(currentTime.split("-")[2] + " " +
+                    new SimpleDateFormat("MMM", Locale.US).format(date));
+        } else {
+            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
+            showDateText.setText(item.getTitle());
+            //            }
         }
 
         BaseObservableFragment fragment = null;
-            switch (item.getItemId()) {
-                case R.id.nav_steps_fragment:
-                    if (fragmentManager.getBackStackEntryCount() >= 1) {
-                        fragmentManager.popBackStack();
-                        fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
-                        activeFragment.set(fragment);
-                    }
-                    return;
-                case R.id.nav_alarm_fragment:
-                    fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
-                    break;
-                case R.id.nav_sleep_fragment:
-                    fragment = AnalysisFragment.instantiate(MainActivity.this, AnalysisFragment.class.getName());
-                    break;
-                case R.id.nav_settings_fragment:
-                    fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
-                    break;
-            }
+        switch (item.getItemId()) {
+            case R.id.nav_steps_fragment:
+                if (fragmentManager.getBackStackEntryCount() >= 1) {
+                    fragmentManager.popBackStack();
+                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
+                    activeFragment.set(fragment);
+                }
+                return;
+            case R.id.nav_alarm_fragment:
+                fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
+                break;
+            case R.id.nav_sleep_fragment:
+                fragment = AnalysisFragment.instantiate(MainActivity.this, AnalysisFragment.class.getName());
+                break;
+            case R.id.nav_settings_fragment:
+                fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+                break;
+        }
 
 
         if (activeFragment.get().getClass().getName().equals(fragment.getClass().getName())) {
@@ -404,11 +395,12 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @OnClick(R.id.lunar_tool_bar)
     public void showDateDialog() {
-        if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment ) {
+        if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment) {
             final Calendar calendar = Calendar.getInstance();
-            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
+            final DatePickerDialog  datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            datePickerDialog.show(getSupportFragmentManager(), "calendarDialog");
+            datePickerDialog.setOnDateSetListener(this);
+            datePickerDialog.show(getFragmentManager(), "calendarDialog");
         }
     }
 
@@ -420,6 +412,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         final String strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
 
         try {
+
             java.util.Date selectDate = simple.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
