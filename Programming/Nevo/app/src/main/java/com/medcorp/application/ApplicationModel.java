@@ -21,7 +21,7 @@ import com.medcorp.activity.DfuActivity;
 import com.medcorp.ble.controller.OtaControllerImpl;
 import com.medcorp.ble.controller.SyncController;
 import com.medcorp.ble.controller.SyncControllerImpl;
-import com.medcorp.ble.model.request.NumberOfStepsGoal;
+import com.medcorp.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.cloud.CloudSyncManager;
 import com.medcorp.database.entry.AlarmDatabaseHelper;
 import com.medcorp.database.entry.GoalDatabaseHelper;
@@ -131,7 +131,10 @@ public class ApplicationModel extends Application {
         userDatabaseHelper = new UserDatabaseHelper(this);
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3d06586440f4346681d8ddedf81a4e00c81c2aac
         Optional<User> user = userDatabaseHelper.getLoginUser();
         if (user.isEmpty()) {
             nevoUser = new User(0);

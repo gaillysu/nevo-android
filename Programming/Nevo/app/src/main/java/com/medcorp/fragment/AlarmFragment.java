@@ -23,7 +23,7 @@ import com.medcorp.activity.EditAlarmActivity;
 import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.AlarmArrayAdapter;
-import com.medcorp.ble.model.request.SetAlarmNevoRequest;
+import com.medcorp.ble.model.request.SetAlarmRequest;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.fragment.listener.OnAlarmSwitchListener;
@@ -210,7 +210,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 if(alarm.isEnable())
                 {
                     customerAlarmList.add(alarm);
-                    if(customerAlarmList.size()>= SetAlarmNevoRequest.maxAlarmCount)
+                    if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
                     {
                         break;
                     }

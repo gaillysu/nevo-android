@@ -14,6 +14,6 @@ public class ApplicationFlag {
     public static final Flag FLAG = Flag.LUNAR;
 
     static{
-        Log.w("Karl","Hello");
+        Log.w("Karl","Hello lunar");
     }
 }

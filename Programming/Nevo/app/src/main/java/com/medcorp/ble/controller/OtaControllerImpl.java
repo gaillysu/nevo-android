@@ -7,15 +7,15 @@ import android.widget.Toast;
 
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
-import com.medcorp.ble.model.request.NevoMCU_OTAPacketRequest;
-import com.medcorp.ble.model.request.NevoMCU_OTAPageRequest;
+import com.medcorp.ble.model.request.MCU_OTAPacketRequest;
+import com.medcorp.ble.model.request.MCU_OTAPageRequest;
 import com.medcorp.R;
-import com.medcorp.ble.model.request.NevoMCU_OTAChecksumRequest;
-import com.medcorp.ble.model.request.NevoMCU_OTAStartRequest;
-import com.medcorp.ble.model.request.NevoOTAControlRequest;
-import com.medcorp.ble.model.request.NevoOTAPacketFileSizeRequest;
-import com.medcorp.ble.model.request.NevoOTAPacketRequest;
-import com.medcorp.ble.model.request.NevoOTAStartRequest;
+import com.medcorp.ble.model.request.MCU_OTAChecksumRequest;
+import com.medcorp.ble.model.request.MCU_OTAStartRequest;
+import com.medcorp.ble.model.request.OTAControlRequest;
+import com.medcorp.ble.model.request.OTAPacketFileSizeRequest;
+import com.medcorp.ble.model.request.OTAPacketRequest;
+import com.medcorp.ble.model.request.OTAStartRequest;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.controller.OtaController;
@@ -233,7 +233,7 @@ public class OtaControllerImpl implements OtaController  {
             Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
            //Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
-            sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
+            sendRequest(new OTAPacketRequest(mContext,nextPacketData));
             progress = 100.0;
             percentage = (int)(progress);
             Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
@@ -250,7 +250,7 @@ public class OtaControllerImpl implements OtaController  {
         Log.i(TAG,"writing packet number " + (writingPacketNumber+1) + " ...");
        // Log.i(TAG, new String(Hex.encodeHex(nextPacketData)));
 
-        sendRequest(new NevoOTAPacketRequest(mContext,nextPacketData));
+        sendRequest(new OTAPacketRequest(mContext,nextPacketData));
         progress = 100.0*writingPacketNumber * enumPacketOption.PACKET_SIZE.rawValue() / binFileSize;
         percentage = (int)progress;
 
@@ -285,10 +285,10 @@ public class OtaControllerImpl implements OtaController  {
     {
         Log.i(TAG,"DFUOperationsdetails enablePacketNotification");
 
-        sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
+        sendRequest(new OTAControlRequest(mContext, new byte[]{(byte) DfuOperations.PACKET_RECEIPT_NOTIFICATION_REQUEST.rawValue()
                 , (byte) enumPacketOption.PACKETS_NOTIFICATION_INTERVAL.rawValue()
                 , 0}));
-        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
+        sendRequest(new OTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RECEIVE_FIRMWARE_IMAGE_REQUEST.rawValue()}));
 
         //wait 20ms
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -305,18 +305,18 @@ public class OtaControllerImpl implements OtaController  {
     void resetSystem()
     {
         Log.i(TAG,"DFUOperationsDetails resetSystem");
-        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RESET_SYSTEM.rawValue()}));
+        sendRequest(new OTAControlRequest(mContext,new byte[]{(byte)DfuOperations.RESET_SYSTEM.rawValue()}));
     }
 
     void validateFirmware()
     {
         Log.i(TAG,"DFUOperationsDetails validateFirmware");
-        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
+        sendRequest(new OTAControlRequest(mContext,new byte[]{(byte)DfuOperations.VALIDATE_FIRMWARE_REQUEST.rawValue()}));
     }
     void activateAndReset()
     {
         Log.i(TAG,"DFUOperationsDetails activateAndReset");
-        sendRequest(new NevoOTAControlRequest(mContext,new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
+        sendRequest(new OTAControlRequest(mContext,new byte[]{(byte)DfuOperations.ACTIVATE_AND_RESET_REQUEST.rawValue()}));
     }
     String responseErrorMessage(byte errorCode)
     {
@@ -450,8 +450,8 @@ public class OtaControllerImpl implements OtaController  {
         if (dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH)
         {
             openFile(firmwareFile);
-            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue()}));
-            sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize, true));
+            sendRequest(new OTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue()}));
+            sendRequest(new OTAPacketFileSizeRequest(mContext, binFileSize, true));
         }
         else
         {
@@ -494,8 +494,8 @@ public class OtaControllerImpl implements OtaController  {
         if(manualmode && dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH)
         {
             state = DFUControllerState.SEND_FIRMWARE_DATA;
-            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
-            sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize,false));
+            sendRequest(new OTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
+            sendRequest(new OTAPacketFileSizeRequest(mContext, binFileSize,false));
         }
         //pair mode for doing OTA
         else
@@ -619,7 +619,7 @@ public class OtaControllerImpl implements OtaController  {
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            connectionController.sendRequest(new NevoOTAStartRequest(mContext));
+                            connectionController.sendRequest(new OTAStartRequest(mContext));
                         }
                     },1000);
                 }
@@ -630,8 +630,8 @@ public class OtaControllerImpl implements OtaController  {
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            sendRequest(new NevoOTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
-                            sendRequest(new NevoOTAPacketFileSizeRequest(mContext, binFileSize,false));
+                            sendRequest(new OTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
+                            sendRequest(new OTAPacketFileSizeRequest(mContext, binFileSize,false));
                         }
                     },1000);
                 }
@@ -698,7 +698,7 @@ public class OtaControllerImpl implements OtaController  {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                connectionController.sendRequest(new NevoMCU_OTAStartRequest(mContext));
+                                connectionController.sendRequest(new MCU_OTAStartRequest(mContext));
                             }
                         }, 1000);
                     }
@@ -827,7 +827,7 @@ public class OtaControllerImpl implements OtaController  {
     void MCU_sendFirmwareChunk()
     {
         Log.i(TAG,"sendFirmwareData");
-        NevoMCU_OTAPageRequest Onepage = new NevoMCU_OTAPageRequest(mContext);
+        MCU_OTAPageRequest Onepage = new MCU_OTAPageRequest(mContext);
         for (int i = 0; i < notificationPacketInterval && firmwareDataBytesSent < binFileSize; i++)
         {
             int length = DFUCONTROLLER_MAX_PACKET_SIZE;
@@ -872,7 +872,7 @@ public class OtaControllerImpl implements OtaController  {
 
                 firmwareDataBytesSent += length;
             }
-            Onepage.addPacket(new NevoMCU_OTAPacketRequest(mContext,pagePacket));
+            Onepage.addPacket(new MCU_OTAPacketRequest(mContext,pagePacket));
         }
         if(curpage < totalpage)
         {
@@ -893,7 +893,7 @@ public class OtaControllerImpl implements OtaController  {
             state = DFUControllerState.FINISHED;
             progress = 100.0;
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage((int)(progress));
-            sendRequest(new NevoMCU_OTAChecksumRequest(mContext,totalpage, checksum));
+            sendRequest(new MCU_OTAChecksumRequest(mContext,totalpage, checksum));
             Log.i(TAG,"sendEndPacket, totalpage = " + totalpage +", checksum = " + checksum + ", checksum-Lowbyte = " + (checksum&0xFF));
             return;
         }

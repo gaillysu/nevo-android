@@ -21,12 +21,12 @@ import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.notification.CalendarNotification;
 import com.medcorp.ble.model.notification.FacebookNotification;
 import com.medcorp.ble.model.notification.SmsNotification;
+import com.medcorp.ble.model.request.LedLightOnOffRequest;
 import com.medcorp.util.Preferences;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.ble.model.notification.EmailNotification;
 import com.medcorp.ble.model.notification.WeChatNotification;
 import com.medcorp.ble.model.notification.WhatsappNotification;
-import com.medcorp.ble.model.request.LedLightOnOffNevoRequest;
 import com.medcorp.R;
 import com.medcorp.ble.model.notification.TelephoneNotification;
 
@@ -142,7 +142,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
             @Override
             public void run() {
                 ConnectionController.Singleton.getInstance(NevoNotificationListener.this, new GattAttributesDataSourceImpl(NevoNotificationListener.this))
-                        .sendRequest(new LedLightOnOffNevoRequest(getApplicationContext(), count%2==0?ledColor:0, count%2==0));
+                        .sendRequest(new LedLightOnOffRequest(getApplicationContext(), count%2==0?ledColor:0, count%2==0));
                 showNotification(count-1,ledColor);
             }
         },count%2==0?(count==LIGHTTIMES*2?0:500):1200); //first time should do right now, here have 0ms
