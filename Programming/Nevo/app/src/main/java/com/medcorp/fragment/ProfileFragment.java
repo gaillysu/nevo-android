@@ -52,50 +52,59 @@ public class ProfileFragment extends PreferenceFragmentCompat {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         user = getModel().getNevoUser();
 
-            View view = inflater.inflate(R.layout.profile_fragment_layout, container, false);
-            final TextView firstName = (TextView) view.findViewById(R.id.profile_fragment_user_first_name_tv);
-            final TextView lastName = (TextView) view.findViewById(R.id.profile_fragment_user_last_name_tv);
-            final TextView userBirthday = (TextView) view.findViewById(R.id.profile_fragment_user_birthday_tv);
-            final TextView userHeight = (TextView) view.findViewById(R.id.profile_fragment_user_height_tv);
-            final TextView userWeight = (TextView) view.findViewById(R.id.profile_fragment_user_weight_tv);
-            User user = getModel().getNevoUser();
-            firstName.setText(user.getFirstName());
-            lastName.setText(user.getLastName());
-            userBirthday.setText(new SimpleDateFormat("dd-MM-yyyy").format(new Date(user.getBirthday())).replace("-",","));
-            userHeight.setText(user.getHeight() + "cm");
-            userWeight.setText(user.getWeight() + "kg");
-            lastName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editUserName(lastName);
-                }
-            });
-            firstName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editUserName(firstName);
-                }
-            });
-            userBirthday.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editUserBirthday(userBirthday);
-                }
-            });
-            userHeight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editUserHeight(userHeight);
-                }
-            });
-            userWeight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    editUserWeight(userWeight);
-                }
-            });
-            return view;
-//        }
+        View view = inflater.inflate(R.layout.profile_fragment_layout, container, false);
+        final TextView firstName = (TextView) view.findViewById(R.id.profile_fragment_user_first_name_tv);
+        final TextView lastName = (TextView) view.findViewById(R.id.profile_fragment_user_last_name_tv);
+        final TextView userBirthday = (TextView) view.findViewById(R.id.profile_fragment_user_birthday_tv);
+        final TextView userHeight = (TextView) view.findViewById(R.id.profile_fragment_user_height_tv);
+        final TextView userWeight = (TextView) view.findViewById(R.id.profile_fragment_user_weight_tv);
+
+        User user = getModel().getNevoUser();
+        firstName.setText(user.getFirstName());
+        lastName.setText(user.getLastName());
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String userBir = simpleDateFormat.format(new Date(user.getBirthday()));
+        userBirthday.setText(new SimpleDateFormat("MMM").format(new Date(user.getBirthday()))
+                + "," + userBir.split("-")[0] + "," + userBir.split("-")[2]);
+        userHeight.setText(user.getHeight() + "cm");
+        userWeight.setText(user.getWeight() + "kg");
+
+        lastName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserName(lastName);
+            }
+        });
+
+        firstName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserName(firstName);
+            }
+        });
+
+        userBirthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserBirthday(userBirthday);
+            }
+        });
+
+        userHeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserHeight(userHeight);
+            }
+        });
+
+        userWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editUserWeight(userWeight);
+            }
+        });
+        return view;
     }
 
     /**
@@ -141,7 +150,7 @@ public class ProfileFragment extends PreferenceFragmentCompat {
 
         dialog.setNegativeButton(getString(R.string.notification_cancel), new DialogInterface.OnClickListener() {
             @Override
-               public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
@@ -198,15 +207,13 @@ public class ProfileFragment extends PreferenceFragmentCompat {
 
     private void editUserBirthday(final TextView birthdayText) {
         viewType = 1;
-        final Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        String formatDate = format.format(date);
+        String userInputBirthday = birthdayText.getText().toString().replace(",", "-");
         final DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(ProfileFragment.this.getActivity(),
                 new DatePickerPopWin.OnDatePickedListener() {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                         try {
                             Date date = dateFormat.parse(dateDesc);
                             birthdayText.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "," + day + "," + year);
@@ -216,10 +223,10 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
-                .minYear(Integer.valueOf(formatDate.split("-")[0]) - 100) //min year in loop
-                .maxYear(Integer.valueOf(formatDate.split("-")[0])) // max year in loop
-                .dateChose((Integer.valueOf(formatDate.split("-")[0]) - 30)
-                        + "-" + formatDate.split("-")[1] + "-" + formatDate.split("-")[2]) // date chose when init popwindow
+                .minYear(Integer.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())).split("-")[0]) - 100) //min year in loop
+                .maxYear(Integer.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())).split("-")[0]) + 1)
+                .dateChose((Integer.valueOf(userInputBirthday.split("-")[2]))
+                        + "-" + userInputBirthday.split("-")[1] + "-" + userInputBirthday.split("-")[0]) // date chose when init popwindow
                 .build();
         pickerPopWin.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -240,7 +247,8 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
                 try {
                     String userBirthday = userWeight.getText().toString();
-                    Date date = sdf.parse(userBirthday.replace(",","-"));
+                    userBirthday = userBirthday.replace(",", "-");
+                    Date date = sdf.parse(userBirthday);
                     user.setBirthday(date.getTime());
                 } catch (ParseException e) {
                     e.printStackTrace();
