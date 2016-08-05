@@ -20,7 +20,7 @@
     <color name="colorPrimaryDark">#A08455</color>
     <color name="tutorial_next_text_color">#A08455</color>
     <color name="tutorial_progress_bar_color">#A08455</color>
-    <color name="user_info_sex_bg">#7ED8D1</color>
+    <color name="user_info_sex_bg">#A08455</color>
     <color name="fragment_steps_window_bg">@color/window_background_color</color>
     <color name="textColorPrimary">#333</color>
     <color name="notification_list_text_color">#000</color>

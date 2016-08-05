@@ -33,9 +33,8 @@ public class ProfileActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
-//        setTitle(R.string.profile_title);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = ProfileFragment.instantiate(this,ProfileFragment.class.getName());
+        Fragment fragment = ProfileFragment.instantiate(this, ProfileFragment.class.getName());
         fragmentManager.beginTransaction().add(R.id.activity_profile_fragment_layout,
                 fragment).addToBackStack(ProfileFragment.class.getName()).commit();
     }

@@ -82,7 +82,7 @@
 
     <string name="tutorial_2_title">Bluetooth einschalten</string>
     <string name="tutorial_2_continue">Weiter</string>
-    <string name="tutorial_2_text">Ihre Einstellungen öffnen, zum Aktivieren bevor Sie fortfahren.</string>
+    <string name="tutorial_2_text">Ihre Einstellungen öffnen, zum Aktivieren \n bevor Sie fortfahren.</string>
     <string name="tutorial_2_dialog_negative">Einstellungen</string>
     <string name="tutorial_2_dialog_positive">Bluetooth in den Einstellungen einschalten, um mit Nevo zu verbinden</string>
 

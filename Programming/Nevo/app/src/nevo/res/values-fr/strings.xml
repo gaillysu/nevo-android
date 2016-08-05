@@ -83,7 +83,7 @@
 
     <string name="tutorial_2_title">Activer le Bluetooth</string>
     <string name="tutorial_2_continue">Continuer</string>
-    <string name="tutorial_2_text">Ouvrez vos paramètres à activer avant de continuer.</string>
+    <string name="tutorial_2_text">Ouvrez vos paramètres à activer \n avant de continuer.</string>
     <string name="tutorial_2_dialog_negative">Paramètres</string>
     <string name="tutorial_2_dialog_positive">Activez le Bluetooth dans les paramètres pour la connexion avec nevo</string>
 

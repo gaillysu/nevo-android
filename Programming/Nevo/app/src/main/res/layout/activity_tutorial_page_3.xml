@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:roboto="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/baseBackground"
+              android:gravity="center_horizontal"
                 android:orientation="vertical">
 
     <com.medcorp.view.customfontview.RobotoTextView
@@ -33,6 +34,7 @@
         android:id="@+id/activity_tutorial_page3_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:layout_centerInParent="true"
         android:background="@drawable/tutorial_nevo_settime"/>
 
@@ -43,12 +45,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
         android:background="@color/transparent"
         android:text="@string/tutorial_3_next"
+        android:layout_marginTop="20dp"
         android:textAllCaps="false"
         android:textColor="@color/tutorial_next_text_color"
         android:textSize="21sp"
         roboto:light="true"/>
 
-</RelativeLayout>
+</LinearLayout>

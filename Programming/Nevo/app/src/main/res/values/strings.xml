@@ -85,7 +85,7 @@
 
     <string name="tutorial_2_title">Turn on Bluetooth</string>
     <string name="tutorial_2_continue">Continue</string>
-    <string name="tutorial_2_text">Open your settings to activate before you continue.</string>
+    <string name="tutorial_2_text">Open your settings to activate \n before you continue.</string>
     <string name="tutorial_2_dialog_negative">Settings</string>
     <string name="tutorial_2_dialog_positive">Turn on Bluetooth in the settings to connect with nevo</string>
 
