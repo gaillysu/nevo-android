@@ -5,7 +5,7 @@ package com.medcorp.util;
  * build packets
  */
 public class SplitPacketConverter {
-    final int MTU = 20;
+   static final int MTU = 20;
 
     /**
      *
