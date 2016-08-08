@@ -10,16 +10,16 @@ public class ApplicationInfomation {
      */
     private byte listNumber;
     /**
-     * 2 bytes length one led will match one bit,enable is 1, disable is 0
+     * 5 bytes,LED1 - 8 on/off,	LED9-12,Vib on/off,	Colour_LED_Red,	Colour_LED_Green,	Colour_LED_Blue
      */
-    private short ledPattern;
+    private byte[] ledPattern;
 
     /**
      * application ID, use the package name
      */
     private String data;
 
-    public ApplicationInfomation(byte listNumber,short ledPattern,String data) {
+    public ApplicationInfomation(byte listNumber,byte[] ledPattern,String data) {
         this.listNumber = listNumber;
         this.ledPattern = ledPattern;
         this.data = data;
@@ -29,7 +29,7 @@ public class ApplicationInfomation {
         return listNumber;
     }
 
-    public short getLedPattern() {
+    public byte[] getLedPattern() {
         return ledPattern;
     }
 

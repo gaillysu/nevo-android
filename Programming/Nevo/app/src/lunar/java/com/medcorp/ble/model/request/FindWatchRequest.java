@@ -24,7 +24,7 @@ public class FindWatchRequest extends BLERequestData {
     public byte[][] getRawDataEx() {
         return new byte[][] {
                 {       0,HEADER, (byte) 0xFF, (byte) 0xFF,
-                        0,0,0,0,
+                        (byte)0xFF,0,0,0, //light on red color LED
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0
