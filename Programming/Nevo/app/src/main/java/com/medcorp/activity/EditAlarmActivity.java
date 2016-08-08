@@ -52,7 +52,8 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onBackPressed() {
-        setResult(alarm.isEnable() && (alarmOld.getMinute()!= alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
+        setResult(alarm.isEnable() && (alarmOld.getMinute()
+                != alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
         finish();
     }
 

@@ -84,7 +84,7 @@ public class LunarMainFragment extends BaseObservableFragment {
         }
         final List<Goal> goalList = getModel().getAllGoal();
         List<String> stringList = new ArrayList<>();
-        final List<Goal> goalEnableList = new ArrayList<Goal>();
+        final List<Goal> goalEnableList = new ArrayList<>();
 
         for (Goal goal : goalList) {
             if (goal.isStatus()) {
