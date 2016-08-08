@@ -35,6 +35,7 @@ import com.medcorp.fragment.AnalysisFragment;
 import com.medcorp.fragment.LunarMainFragment;
 import com.medcorp.fragment.SettingsFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
+import com.medcorp.util.Preferences;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
@@ -90,6 +91,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
     private MenuItem selectItem;
+    private String strDate;
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
@@ -116,7 +118,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-mm-dd");
         date = new Date(System.currentTimeMillis());
         currentTime = simple.format(date);
-
+        strDate = currentTime;
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
         showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
@@ -404,18 +406,14 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
 
         SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
-        final String strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
-
+        strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
         try {
 
             java.util.Date selectDate = simple.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
             date = selectDate;
-            Intent intent = new Intent();
-            intent.setAction("changeSelectDate");
-            intent.putExtra("date", strDate);
-            sendBroadcast(intent);
+            Preferences.saveSelectDate(this,strDate);
         } catch (ParseException e) {
 
         }

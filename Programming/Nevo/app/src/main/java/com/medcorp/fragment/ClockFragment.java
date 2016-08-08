@@ -1,9 +1,5 @@
 package com.medcorp.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,10 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.R;
+import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
+import com.medcorp.util.Preferences;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +43,7 @@ public class ClockFragment extends BaseFragment {
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
 
+    private Date userSelectDate;
     private final int REFRESHINTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable refreshTimerTask = new Runnable() {
@@ -84,29 +82,22 @@ public class ClockFragment extends BaseFragment {
         });
     }
 
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-          String date =   intent.getStringExtra("date");
-            SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                Date changeDate = simple.parse(date);
-                initData(changeDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, clockFragmentContentView);
-        initData(new Date());
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("changeSelectDate");
-        (this.getActivity()).registerReceiver(mBroadcastReceiver,intentFilter);
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if(selectDate == null){
+            userSelectDate = new Date();
+        }else{
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        initData(userSelectDate);
         return clockFragmentContentView;
     }
 
@@ -148,11 +139,5 @@ public class ClockFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        this.getActivity().unregisterReceiver(mBroadcastReceiver);
     }
 }

@@ -1,9 +1,5 @@
 package com.medcorp.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.R;
+import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
+import com.medcorp.util.Preferences;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,30 +36,25 @@ public class LunarMainStepsFragment extends BaseFragment {
     @Bind(R.id.lunar_main_fragment_steps_chart)
     BarChart hourlyBarChart;
     private Steps steps;
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String date = intent.getStringExtra("date");
-            SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            try {
-                Date changeDate = simple.parse(date);
-                initData(changeDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+    private Date userSelectDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View lunarMainFragmentAdapterChart = inflater.inflate(R.layout.chart_fragment_lunar_main_fragment_adapter_layout, container, false);
         ButterKnife.bind(this, lunarMainFragmentAdapterChart);
-        initData(new Date());
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("changeSelectDate");
-        (this.getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
+       String selectDate =  Preferences.getSelectDate(this.getContext());
+        if(selectDate == null){
+            userSelectDate = new Date();
+        }else{
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        initData(userSelectDate);
 
         modifyChart(hourlyBarChart);
         return lunarMainFragmentAdapterChart;
@@ -97,12 +88,4 @@ public class LunarMainStepsFragment extends BaseFragment {
 
         return activityTime.toString();
     }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        this.getActivity().unregisterReceiver(mBroadcastReceiver);
-    }
-
 }

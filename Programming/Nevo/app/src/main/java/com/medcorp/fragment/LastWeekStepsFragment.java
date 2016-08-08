@@ -1,9 +1,5 @@
 package com.medcorp.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +8,7 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.util.Preferences;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,29 +27,20 @@ public class LastWeekStepsFragment extends BaseFragment {
 
     private Date userSelectDate;
 
-    private BroadcastReceiver changeDateBroadcast = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-                 String selectDateString = intent.getStringExtra("date");
-            SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                userSelectDate =  simple.parse(selectDateString);
-                initData(userSelectDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.last_week_chart_fragment_layout,container,false);
         ButterKnife.bind(this,view);
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("changeSelectDate");
-        LastWeekStepsFragment.this.getActivity().registerReceiver(changeDateBroadcast,intentFilter);
-
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if(selectDate == null){
+            userSelectDate = new Date();
+        }else{
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         initData(userSelectDate);
         return view;
     }
@@ -61,9 +49,4 @@ public class LastWeekStepsFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        this.getActivity().unregisterReceiver(changeDateBroadcast);
-    }
 }

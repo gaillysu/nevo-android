@@ -194,5 +194,5 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         }
         return stepsList;
     }
-    
+
 }
