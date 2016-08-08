@@ -2,8 +2,8 @@ package com.medcorp.database.entry;
 
 import android.content.Context;
 
-import com.medcorp.database.dao.StepsDAO;
 import com.medcorp.database.DatabaseHelper;
+import com.medcorp.database.dao.StepsDAO;
 import com.medcorp.model.Steps;
 
 import net.medcorp.library.ble.util.Optional;
@@ -194,4 +194,5 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         }
         return stepsList;
     }
+    
 }
