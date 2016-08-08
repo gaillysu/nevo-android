@@ -13,19 +13,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlag;
+import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.datasource.NotificationDataHelper;
+import com.medcorp.ble.model.color.BlueLed;
 import com.medcorp.ble.model.color.GreenLed;
 import com.medcorp.ble.model.color.LightGreenLed;
 import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.color.OrangeLed;
 import com.medcorp.ble.model.color.RedLed;
+import com.medcorp.ble.model.color.YellowLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.util.Preferences;
-import com.medcorp.R;
-import com.medcorp.ble.model.color.BlueLed;
-import com.medcorp.ble.model.color.YellowLed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,13 +76,9 @@ public class EditSettingNotificationActivity extends BaseActivity {
         notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this, notification);
 
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-            title.setText(notification.getStringResource());
-        } else {
-            setTitle(notification.getStringResource());
-        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        title.setText(notification.getStringResource());
 
         onOffSwitch.setChecked(notification.isOn());
         colorImage.setImageDrawable(ContextCompat.getDrawable(this, selectedLed.getImageResource()));
@@ -98,7 +93,7 @@ public class EditSettingNotificationActivity extends BaseActivity {
 
     @OnClick(R.id.activity_setting_notification_edit_layout)
     public void colorLayoutClicked() {
-        List<String> stringList = new ArrayList<String>();
+        List<String> stringList = new ArrayList<>();
         for (int i = 0; i < ledList.size(); i++) {
             stringList.add(getString(ledList.get(i).getStringResource()));
         }

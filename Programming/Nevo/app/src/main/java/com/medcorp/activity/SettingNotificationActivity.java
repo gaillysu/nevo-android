@@ -10,16 +10,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlag;
-import com.medcorp.base.BaseActivity;
-import com.medcorp.adapter.SettingNotificationArrayAdapter;
-import com.medcorp.ble.model.notification.CalendarNotification;
-import com.medcorp.ble.model.notification.FacebookNotification;
-import com.medcorp.ble.model.notification.SmsNotification;
 import com.medcorp.R;
+import com.medcorp.adapter.SettingNotificationArrayAdapter;
+import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.datasource.NotificationDataHelper;
+import com.medcorp.ble.model.notification.CalendarNotification;
 import com.medcorp.ble.model.notification.EmailNotification;
+import com.medcorp.ble.model.notification.FacebookNotification;
 import com.medcorp.ble.model.notification.Notification;
+import com.medcorp.ble.model.notification.SmsNotification;
 import com.medcorp.ble.model.notification.TelephoneNotification;
 import com.medcorp.ble.model.notification.WeChatNotification;
 import com.medcorp.ble.model.notification.WhatsappNotification;
@@ -65,13 +64,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-            title.setText(R.string.title_notifications);
-        } else {
-            setTitle(R.string.title_notifications);
-        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        title.setText(R.string.title_notifications);
+
         NevoNotificationListener.getNotificationAccessPermission(this);
     }
 

@@ -237,10 +237,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     private void setFragment(MenuItem item) {
 
-        //        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-        //            setTitle(item.getTitle());
-        //
-        //        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         if (item.getItemId() == R.id.nav_steps_fragment) {
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
@@ -249,7 +245,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } else {
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
             showDateText.setText(item.getTitle());
-            //            }
         }
 
         BaseObservableFragment fragment = null;
@@ -397,7 +392,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void showDateDialog() {
         if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment) {
             final Calendar calendar = Calendar.getInstance();
-            final DatePickerDialog  datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
+            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.setOnDateSetListener(this);
             datePickerDialog.show(getFragmentManager(), "calendarDialog");
