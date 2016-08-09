@@ -28,7 +28,7 @@ public class SetAlarmRequest extends BLERequestData {
             Alarm alarm = list.get(i);
             mHour[i]  = alarm.getHour();
             mMinute[i] = alarm.getMinute();
-            mEnable[i] = alarm.isEnable();
+            mEnable[i] = (alarm.getWeekDay()==0?false:true);
         }
 	}
 	

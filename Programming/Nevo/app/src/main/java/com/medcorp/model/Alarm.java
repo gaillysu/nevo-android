@@ -8,14 +8,14 @@ public class Alarm {
     private int id = -1;
     private int hour;
     private int minute;
-    private boolean enable;
+    private byte weekDay;
     private String label;
 
-    public Alarm(int hour, int minute,boolean enable,String label)
+    public Alarm(int hour, int minute,byte weekDay,String label)
     {
         this.hour = hour;
         this.minute = minute;
-        this.enable = enable;
+        this.weekDay = weekDay;
         this.label = label;
     }
 
@@ -35,8 +35,8 @@ public class Alarm {
         return minute;
     }
 
-    public boolean isEnable() {
-        return enable;
+    public byte getWeekDay() {
+        return weekDay;
     }
 
     public void setHour(int hour) {
@@ -47,8 +47,8 @@ public class Alarm {
         this.minute = minute;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    public void setWeekDay(byte weekDay) {
+        this.weekDay = weekDay;
     }
 
     public String getLabel() {

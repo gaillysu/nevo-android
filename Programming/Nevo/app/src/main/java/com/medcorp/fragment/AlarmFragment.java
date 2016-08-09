@@ -86,7 +86,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        final Alarm alarm = new Alarm(hourOfDay,minute,false,"");
+        final Alarm alarm = new Alarm(hourOfDay,minute,(byte)0,"");
         new MaterialDialog.Builder(getActivity())
                 .title(R.string.alarm_add)
                 .content(R.string.alarm_label_alarm)
@@ -155,7 +155,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             ToastHelper.showShortToast(getContext(), R.string.in_app_notification_max_three_alarm);
             return;
         }
-        alarm.setEnable(isChecked);
+        alarm.setWeekDay(isChecked?(byte)0:(byte)1);
         getModel().updateAlarm(alarm);
 
         List<Alarm> alarmSettingList = new ArrayList<Alarm>();
@@ -170,17 +170,17 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             }
         }
         for (Alarm thisAlarm : alarmRemainsList) {
-            if (thisAlarm.isEnable() && alarmSettingList.size() < 3) {
+            if (thisAlarm.getWeekDay()>0 && alarmSettingList.size() < 3) {
                 alarmSettingList.add(thisAlarm);
             }
         }
         //step3:check  alarmSettingList.size() == 3 ?
         ////build 1 or 2 invaild alarm to add alarmSettingList
         if (alarmSettingList.size() == 1) {
-            alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
-            alarmSettingList.add(new Alarm(0, 0, false, "unknown"));
+            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown"));
+            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown"));
         } else if (alarmSettingList.size() == 2) {
-            alarmSettingList.add(new Alarm(0,0,false,"unknown"));
+            alarmSettingList.add(new Alarm(0,0, (byte) 0,"unknown"));
         }
         getModel().setAlarm(alarmSettingList);
         ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);
@@ -189,7 +189,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         int count = 0;
         for(Alarm alarm:alarmList)
         {
-            if(alarm.isEnable()){
+            if(alarm.getWeekDay()>0){
                 count++;
             }
         }
@@ -207,7 +207,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         {
             for(Alarm alarm: list)
             {
-                if(alarm.isEnable())
+                if(alarm.getWeekDay()>0)
                 {
                     customerAlarmList.add(alarm);
                     if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
@@ -223,7 +223,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         }
         else
         {
-            customerAlarmList.add(new Alarm(0, 0, false, ""));
+            customerAlarmList.add(new Alarm(0, 0, (byte) 0, ""));
         }
         getModel().setAlarm(customerAlarmList);
         ((MainActivity)getActivity()).showStateString(R.string.in_app_notification_syncing_alarm,false);

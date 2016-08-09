@@ -19,9 +19,9 @@ public class AlarmDAO {
     @DatabaseField
     private String Label;
 
-    public static final String enabledString = "enabled";
+    public static final String weekDayString = "weekDay";
     @DatabaseField
-    private boolean Enabled;
+    private byte weekDay;
 
     public static String getiDString() {
         return iDString;
@@ -40,16 +40,16 @@ public class AlarmDAO {
     }
 
 
-    public static String getEnabledString() {
-        return enabledString;
+    public static String getWeekDayString() {
+        return weekDayString;
     }
 
-    public boolean isEnabled() {
-        return Enabled;
+    public byte getWeekDay() {
+        return weekDay;
     }
 
-    public void setEnabled(boolean enabled) {
-        Enabled = enabled;
+    public void setWeekDay(byte weekDay) {
+        this.weekDay = weekDay;
     }
 
     public String getAlarm() {

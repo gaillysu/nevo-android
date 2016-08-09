@@ -117,7 +117,7 @@ public class AlarmDatabaseHelper implements iSettingDatabaseHelper<Alarm> {
         AlarmDAO alarmDAO = new AlarmDAO();
         alarmDAO.setAlarm(alarm.getHour() + ":" + alarm.getMinute());
         alarmDAO.setLabel(alarm.getLabel());
-        alarmDAO.setEnabled(alarm.isEnable());
+        alarmDAO.setWeekDay(alarm.getWeekDay());
         return alarmDAO;
     }
 
@@ -125,7 +125,7 @@ public class AlarmDatabaseHelper implements iSettingDatabaseHelper<Alarm> {
         String[] splittedAlarmStrings = alarmDAO.getAlarm().split(":");
         int hour = Integer.parseInt(splittedAlarmStrings[0]);
         int minutes = Integer.parseInt(splittedAlarmStrings[1]);
-        Alarm alarm =new Alarm(hour,minutes,alarmDAO.isEnabled(), alarmDAO.getLabel());
+        Alarm alarm =new Alarm(hour,minutes,alarmDAO.getWeekDay(), alarmDAO.getLabel());
         alarm.setId(alarmDAO.getID());
         return  alarm;
     }
