@@ -238,7 +238,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             List<Alarm> customerAlarmList = new ArrayList<Alarm>();
                             for(Alarm alarm: list)
                             {
-                                if(alarm.isEnable())
+                                if(alarm.getWeekDay()>0)
                                 {
                                     customerAlarmList.add(alarm);
                                     if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
@@ -255,7 +255,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                         else
                         {
-                            list.add(new Alarm(0,0, false, ""));
+                            list.add(new Alarm(0,0, (byte)0, ""));
                             setAlarm(list, true);
                         }
                     }

@@ -44,7 +44,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
         alarm = getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)));
-        alarmOld = new Alarm(alarm.getHour(),alarm.getMinute(),alarm.isEnable(),alarm.getLabel());
+        alarmOld = new Alarm(alarm.getHour(),alarm.getMinute(),alarm.getWeekDay(),alarm.getLabel());
         listView.setAdapter(new AlarmEditAdapter(this,alarm));
         listView.setOnItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -52,7 +52,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onBackPressed() {
-        setResult(alarm.isEnable() && (alarmOld.getMinute()
+        setResult(alarm.getWeekDay()>0 && (alarmOld.getMinute()
                 != alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
         finish();
     }
@@ -68,14 +68,14 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             case R.id.done_menu:
                 if(getModel().updateAlarm(alarm)){
                     ToastHelper.showShortToast(this, R.string.alarm_saved);
-                    setResult(alarm.isEnable() && (alarmOld.getMinute()!= alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
+                    setResult(alarm.getWeekDay()>0 && (alarmOld.getMinute()!= alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
                     finish();
                 }else{
                     ToastHelper.showShortToast(this,R.string.alarm_could_not_save);
                 }
                 return true;
             default:
-                setResult(alarm.isEnable() && (alarmOld.getMinute()!= alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
+                setResult(alarm.getWeekDay()>0 && (alarmOld.getMinute()!= alarm.getMinute() || alarmOld.getHour()!= alarm.getHour()) ? 1:0 );
                 finish();
         }
         return false;
@@ -107,7 +107,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             }else{
                 ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
             }
-            setResult(alarm.isEnable()?-1:0);
+            setResult(alarm.getWeekDay()>0?-1:0);
             finish();
         }
     }

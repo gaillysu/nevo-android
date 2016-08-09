@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by med on 16/8/1.
  */
-public class SetAlarmRequest extends BLERequestData {
+public class SetAlarmWithTypeRequest extends BLERequestData {
 
     public  final static  byte HEADER = 0x0c;
     public  final static int maxAlarmCount = 14;
@@ -21,7 +21,7 @@ public class SetAlarmRequest extends BLERequestData {
     private boolean mEnable;
     private byte alarmNumber; //0 ~~ maxAlarmCount-1
 
-    public SetAlarmRequest(Context context, Alarm alarm, byte alarmNumber)
+    public SetAlarmWithTypeRequest(Context context, Alarm alarm, byte alarmNumber)
     {
         super(new GattAttributesDataSourceImpl(context));
         mHour = alarm.getHour();
