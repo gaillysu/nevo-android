@@ -10,6 +10,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 /**
  * Created by gaillysu on 16/3/8.
+ *
  */
 public class MedManager {
     private Context context;

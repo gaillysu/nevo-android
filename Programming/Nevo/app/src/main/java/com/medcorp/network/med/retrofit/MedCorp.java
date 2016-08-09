@@ -3,9 +3,12 @@ package com.medcorp.network.med.retrofit;
 
 import com.medcorp.network.med.model.CreateUserModel;
 import com.medcorp.network.med.model.CreateUserObject;
-import com.medcorp.network.med.model.NevoUserModel;
+import com.medcorp.network.med.model.LoginUserModel;
+import com.medcorp.network.med.model.LoginUserObject;
 import com.medcorp.network.validic.model.RequestTokenBody;
 import com.medcorp.network.validic.model.RequestTokenResponse;
+
+import net.medcorp.library.user.UserLoginModel;
 
 import retrofit.http.Body;
 import retrofit.http.Field;
@@ -20,11 +23,10 @@ public interface MedCorp {
 
     @FormUrlEncoded
     @POST("/api/account/register")
-    NevoUserModel registerNevoUser(@Field("params[time]") long time, @Field("params[check_key]") String check_key, @Field("user") String user, @Field("password") String password);
+    UserLoginModel registerNevoUser(@Field("params[time]") long time, @Field("params[check_key]") String check_key, @Field("user") String user, @Field("password") String password);
 
-    @FormUrlEncoded
-    @POST("/api/account/login")
-    NevoUserModel loginNevoUser(@Field("params[time]") long time,@Field("params[check_key]") String check_key, @Field("user") String user, @Field("password") String password);
+    @POST("/user/login")
+    LoginUserModel userLogin(@Body LoginUserObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
 
     @POST("/user/create")
     CreateUserModel userCreate(@Body CreateUserObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);

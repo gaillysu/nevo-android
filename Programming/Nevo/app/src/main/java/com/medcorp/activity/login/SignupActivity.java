@@ -54,10 +54,10 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-            checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
-            editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
-            editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
-            checkIsAgreeBt.setChecked(false);
+        checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
+        editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
+        editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
+        checkIsAgreeBt.setChecked(false);
     }
 
     @OnClick(R.id.register_title_back_image_button)
@@ -86,26 +86,13 @@ public class SignupActivity extends BaseActivity {
             onSignupFailed();
             return;
         }
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            _signupButton.setEnabled(false);
-            progressDialog = new ProgressDialog(SignupActivity.this,
-                    R.style.AppTheme_Dark_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage(getString(R.string.register_popup_message));
-            progressDialog.show();
-            email = _emailText.getText().toString();
-            password = _passwordText.getText().toString();
-            getModel().nevoUserRegister(email, password);
-        } else {
-            Intent intent = new Intent(this, UserInfoActivity.class);
-            intent.putExtra("email", email);
-            intent.putExtra("password", password);
-            intent.putExtra("firstName", firstName);
-            intent.putExtra("lastName", lastName);
-            startActivity(intent);
-            finish();
-        }
+        Intent intent = new Intent(this, UserInfoActivity.class);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password);
+        intent.putExtra("firstName", firstName);
+        intent.putExtra("lastName", lastName);
+        startActivity(intent);
+        finish();
     }
 
     @Subscribe

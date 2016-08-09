@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
 import android.text.InputType;
@@ -50,7 +49,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private List<Alarm> alarmList;
     private AlarmArrayAdapter alarmArrayAdapter;
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
@@ -158,11 +156,11 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         alarm.setEnable(isChecked);
         getModel().updateAlarm(alarm);
 
-        List<Alarm> alarmSettingList = new ArrayList<Alarm>();
+        List<Alarm> alarmSettingList = new ArrayList<>();
         //step1: add this alarm
         alarmSettingList.add(alarm);
         //step2:, find other 2 alarms that is enabled.
-        List<Alarm> alarmRemainsList = new ArrayList<Alarm>();
+        List<Alarm> alarmRemainsList = new ArrayList<>();
         for (int i = 0; i < alarmList.size(); i++) {
             Alarm theAlarm = alarmList.get(i);
             if (theAlarm.getId() != alarm.getId()) {

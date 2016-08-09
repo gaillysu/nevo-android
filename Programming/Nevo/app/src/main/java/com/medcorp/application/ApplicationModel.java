@@ -29,7 +29,6 @@ import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
 import com.medcorp.database.entry.UserDatabaseHelper;
 import com.medcorp.event.LoginEvent;
-import com.medcorp.event.SignUpEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionFailedEvent;
@@ -55,9 +54,10 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
 import com.medcorp.network.med.manager.MedManager;
-import com.medcorp.network.med.model.NevoUserLoginRequest;
-import com.medcorp.network.med.model.NevoUserModel;
-import com.medcorp.network.med.model.NevoUserRegisterRequest;
+import com.medcorp.network.med.model.LoginUser;
+import com.medcorp.network.med.model.LoginUserModel;
+import com.medcorp.network.med.model.LoginUserRequest;
+import com.medcorp.network.med.model.UserWithLocation;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.network.validic.model.ValidicSleepRecordModelBase;
@@ -79,6 +79,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +89,7 @@ import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Karl on 10/15/15.
+ *
  */
 public class ApplicationModel extends Application {
 
@@ -497,40 +499,47 @@ public class ApplicationModel extends Application {
 
 
     public void nevoUserRegister(String email, String password) {
-        NevoUserRegisterRequest nevoUserRegisterRequest = new NevoUserRegisterRequest(email, password);
 
-        validicMedManager.execute(nevoUserRegisterRequest, new RequestListener<NevoUserModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-                spiceException.printStackTrace();
-                EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED));
-            }
-
-            @Override
-            public void onRequestSuccess(NevoUserModel nevoUserModel) {
-
-                Log.i("ApplicationModel", "nevo user register: " + nevoUserModel.getState());
-                if (nevoUserModel.getState().equals("success")) {
-                    EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.SUCCESS));
-                    nevoUser.setNevoUserID(nevoUserModel.getUid());
-                    nevoUser.setNevoUserToken(nevoUserModel.getToken());
-                    nevoUser.setIsLogin(true);
-                    //save to "user" local table
-                    saveNevoUser(nevoUser);
-                    getSyncController().getDailyTrackerInfo(true);
-                    getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
-                } else {
-                    EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED));
-                }
-
-            }
-        });
+//
+//        CreateAccountRequest createAccountRequest = new CreateAccountRequest(email, password);
+//
+//        validicMedManager.execute(createAccountRequest, new RequestListener<NevoUserModel>() {
+//            @Override
+//            public void onRequestFailure(SpiceException spiceException) {
+//                spiceException.printStackTrace();
+//                EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED));
+//            }
+//
+//            @Override
+//            public void onRequestSuccess(NevoUserModel nevoUserModel) {
+//
+//                Log.i("ApplicationModel", "nevo user register: " + nevoUserModel.getState());
+//                if (nevoUserModel.getState().equals("success")) {
+//                    EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.SUCCESS));
+//                    nevoUser.setNevoUserID(nevoUserModel.getUid());
+//                    nevoUser.setNevoUserToken(nevoUserModel.getToken());
+//                    nevoUser.setIsLogin(true);
+//                    //save to "user" local table
+//                    saveNevoUser(nevoUser);
+//                    getSyncController().getDailyTrackerInfo(true);
+//                    getCloudSyncManager().launchSyncAll(nevoUser, getNeedSyncSteps(nevoUser.getNevoUserID()), getNeedSyncSleep(nevoUser.getNevoUserID()));
+//                } else {
+//                    EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED));
+//                }
+//
+//            }
+//        });
     }
 
     public void nevoUserLogin(String email, String password) {
-        NevoUserLoginRequest nevoUserLoginRequest = new NevoUserLoginRequest(email, password);
 
-        validicMedManager.execute(nevoUserLoginRequest, new RequestListener<NevoUserModel>() {
+        LoginUser user = new LoginUser();
+        user.setEmail(email);
+        user.setPassword(password);
+
+        final LoginUserRequest loginUserRequest = new LoginUserRequest(user, validicMedManager.getAccessToken());
+
+        validicMedManager.execute(loginUserRequest, new RequestListener<LoginUserModel>() {
 
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -539,15 +548,21 @@ public class ApplicationModel extends Application {
             }
 
             @Override
-            public void onRequestSuccess(NevoUserModel nevoUserModel) {
-                if (nevoUserModel.getState().equals("success")) {
-                    //get the user's profile from local database
-                    List<Optional<User>> user = userDatabaseHelper.get(nevoUserModel.getUid());
-                    if (!user.isEmpty()) {
-                        nevoUser = user.get(0).get();
+            public void onRequestSuccess(LoginUserModel nevoUserModel) {
+
+                if (nevoUserModel.getStatus() == 1) {
+                    UserWithLocation user = nevoUserModel.getUser();
+                    try {
+                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
-                    nevoUser.setNevoUserID(nevoUserModel.getUid());
-                    nevoUser.setNevoUserToken(nevoUserModel.getToken());
+                    nevoUser.setFirstName(user.getFirst_name());
+                    nevoUser.setHeight(user.getLength());
+                    nevoUser.setLastName(user.getLast_name());
+                    nevoUser.setWeight(user.getWeight());
+                    nevoUser.setId(user.getId());
+                    nevoUser.setNevoUserEmail(user.getEmail());
                     nevoUser.setIsLogin(true);
                     saveNevoUser(nevoUser);
                     getSyncController().getDailyTrackerInfo(true);

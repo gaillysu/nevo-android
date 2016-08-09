@@ -94,20 +94,24 @@ public class UserInfoActivity extends BaseActivity {
             progress.setMessage(getString(R.string.network_wait_text));
             progress.show();
 
-            getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo,getModel().getNetworkManage()
+            getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
                     .getAccessToken()), new RequestListener<CreateUserModel>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     progress.dismiss();
                     spiceException.printStackTrace();
-                    ToastHelper.showLongToast(UserInfoActivity.this,spiceException.getMessage());
+                    ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
                 }
 
                 @Override
                 public void onRequestSuccess(CreateUserModel createUserModel) {
                     progress.dismiss();
-                    startActivity(LoginActivity.class);
-                    finish();
+                    if (createUserModel.getStatus() == 1) {
+                        startActivity(LoginActivity.class);
+                        finish();
+                    } else {
+                        ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());
+                    }
                 }
             });
 
@@ -215,7 +219,7 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             backClick();
             return true;
         }

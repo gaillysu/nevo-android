@@ -27,7 +27,7 @@ public class SetProfileRequest extends BLERequestData {
 
         int age = user.getAge();
         int height = user.getHeight();
-        int weight = user.getWeight();
+        int weight = (int)user.getWeight();
         int sex = user.getSex();
 
 		return new byte[][] {

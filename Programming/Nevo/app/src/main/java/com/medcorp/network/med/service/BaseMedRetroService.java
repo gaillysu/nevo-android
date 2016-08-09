@@ -7,10 +7,11 @@ import retrofit.RestAdapter;
 
 /**
  * Created by Karl on 3/15/16.
+ *
  */
 public class BaseMedRetroService extends RetrofitGsonSpiceService {
 
-    private final static String BASE_URL = "http://api.nevowatch.com";
+    private  static final String BASE_URL = "http://nevo.karljohnchow.com";
 
     @Override
     public void onCreate() {

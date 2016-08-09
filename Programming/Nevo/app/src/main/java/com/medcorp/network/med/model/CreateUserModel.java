@@ -1,7 +1,7 @@
 package com.medcorp.network.med.model;
 
 
-import com.medcorp.network.base.BaseResponse;
+import net.medcorp.library.user.BaseResponse;
 
 /**
  * Created by med on 16/5/3.

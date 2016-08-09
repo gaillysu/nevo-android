@@ -16,6 +16,7 @@ import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2016/7/5.
+ *
  */
 public class ForgetPasswordResultActivity extends BaseActivity {
 

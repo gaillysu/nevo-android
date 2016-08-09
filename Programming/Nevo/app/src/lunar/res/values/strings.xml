@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lunar</string>
-
     <string name="login_page_activity_with_other">Login with social media</string>
     <string name="register_first_name_hint">First Name</string>
     <string name="register_last_name_hint">Last Name</string>
@@ -29,7 +28,7 @@
     <string name="in_app_notification_searching">Searching for LunaR&#8230;</string>
     <string name="in_app_notification_could_not_find">Could not find LunaR.</string>
     <string name="in_app_notification_max_three_alarm">LunaR supports only three alarms.</string>
-    <string name="location_access_content">Please grant location access so it can detect lunar.</string>
+    <string name="location_access_content">Please grant location access so it can detect lunaR.</string>
     <string name="title_steps">Dashboard</string>
     <string name="settings_my_nevo">My LunaR</string>
     <string name="my_nevo_notice_message"> To save battery power, Bluetooth disconnects automatically when away from the phone for more than 2 minutes. You will not receive notifications on LunaR when disconnected.</string>
