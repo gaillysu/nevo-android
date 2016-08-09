@@ -33,8 +33,13 @@ public class UpdateApplicationRequest extends BLERequestData {
         List<Byte> data = new ArrayList<>();
         data.add((byte)applicationInfomation.getListNumber());
         data.add((byte)applicationInfomation.getData().length());
-        data.add((byte)(applicationInfomation.getLedPattern()&0xFF));
-        data.add((byte)((applicationInfomation.getLedPattern()>>8)&0xFF));
+        //TODO add high byte???
+        //data.add((byte)0x01);
+        data.add((byte)(applicationInfomation.getLedPattern()[0]));
+        data.add((byte)(applicationInfomation.getLedPattern()[1]));
+        data.add((byte)(applicationInfomation.getLedPattern()[2]));
+        data.add((byte)(applicationInfomation.getLedPattern()[3]));
+        data.add((byte)(applicationInfomation.getLedPattern()[4]));
         for(byte b:applicationInfomation.getData().getBytes())
         {
             data.add(b);
