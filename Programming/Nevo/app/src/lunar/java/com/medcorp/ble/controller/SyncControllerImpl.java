@@ -203,10 +203,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             List<Alarm> customerAlarmList = new ArrayList<Alarm>();
                             for(Alarm alarm: list)
                             {
-                                if(alarm.isEnable())
+                                if(alarm.getWeekDay()>0)
                                 {
                                     customerAlarmList.add(alarm);
-                                    if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
+                                    if(customerAlarmList.size()>= SetAlarmWithTypeRequest.maxAlarmCount)
                                     {
                                         break;
                                     }
@@ -220,12 +220,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                         else
                         {
-                            list.add(new Alarm(0,0, false, ""));
+                            list.add(new Alarm(0,0, (byte) 0, ""));
                             setAlarm(list, true);
                         }
 
                 }
-                else if((byte) SetAlarmRequest.HEADER == lunarData.getRawData()[1])
+                else if((byte) SetAlarmWithTypeRequest.HEADER == lunarData.getRawData()[1])
                 {
                     if(initAlarm)
                     {
@@ -406,7 +406,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 else if((byte) FindWatchRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 }
-                else if((byte) SetAlarmRequest.HEADER == packet.getHeader()
+                else if((byte) SetAlarmWithTypeRequest.HEADER == packet.getHeader()
                         || (byte) SetNotificationRequest.HEADER == packet.getHeader()
                         || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new RequestResponseEvent(true));
@@ -496,7 +496,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         initAlarm = init;
         byte index = 0;
         for(Alarm alarm:list) {
-            sendRequest(new SetAlarmRequest(mContext, alarm,index));
+            sendRequest(new SetAlarmWithTypeRequest(mContext, alarm,index));
             index++;
         }
     }

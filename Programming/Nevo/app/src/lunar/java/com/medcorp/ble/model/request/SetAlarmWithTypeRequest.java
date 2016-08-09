@@ -26,7 +26,7 @@ public class SetAlarmWithTypeRequest extends BLERequestData {
         super(new GattAttributesDataSourceImpl(context));
         mHour = alarm.getHour();
         mMinute = alarm.getMinute();
-        mEnable = alarm.isEnable();
+        mEnable = alarm.getWeekDay()>0?true:false;
         this.alarmNumber = alarmNumber;
     }
 

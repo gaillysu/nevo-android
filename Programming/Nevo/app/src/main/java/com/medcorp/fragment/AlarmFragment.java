@@ -22,7 +22,7 @@ import com.medcorp.activity.EditAlarmActivity;
 import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.AlarmArrayAdapter;
-import com.medcorp.ble.model.request.SetAlarmRequest;
+import com.medcorp.ble.model.request.SetAlarmWithTypeRequest;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.fragment.listener.OnAlarmSwitchListener;
@@ -208,7 +208,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 if(alarm.getWeekDay()>0)
                 {
                     customerAlarmList.add(alarm);
-                    if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
+                    if(customerAlarmList.size()>= SetAlarmWithTypeRequest.maxAlarmCount)
                     {
                         break;
                     }
