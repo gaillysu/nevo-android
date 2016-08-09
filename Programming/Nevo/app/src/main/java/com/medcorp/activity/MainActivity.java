@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private View rootView;
     private TextView userView;
     private String currentTime;
-    private java.util.Date date;
+    private Date date;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MenuItem selectedMenuItem;
@@ -401,26 +401,22 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         }
     }
 
-
-    @Override
-    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
-
-        SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
-        strDate = year + "-" + monthOfYear + "-" + dayOfMonth;
-        try {
-
-            java.util.Date selectDate = simple.parse(strDate);
-            showDateText.setText(dayOfMonth + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
-            date = selectDate;
-            Preferences.saveSelectDate(this,strDate);
-        } catch (ParseException e) {
-
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        strDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            java.util.Date selectDate = format.parse(strDate);
+            showDateText.setText(dayOfMonth + " " +
+                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Preferences.saveSelectDate(this, strDate);
     }
 }
