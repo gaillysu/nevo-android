@@ -3,6 +3,7 @@ package com.medcorp.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.medcorp.R;
+import com.medcorp.event.DateSelectChangedEvent;
+import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
+import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -137,7 +144,44 @@ public class ClockFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(LittleSyncEvent event) {
+        if (event.isSuccess()) {
+            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
+            if (steps == null) {
+                return;
+            }
+            int dailySteps = steps.getSteps();
+            int dailyGoal = steps.getGoal();
+            Log.i("ClockFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+            mUiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    initData(userSelectDate);
+                }
+            });
+          }
+    }
+
+    @Subscribe
+    public void onEvent(final DateSelectChangedEvent event) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                userSelectDate = event.getDate();
+                initData(userSelectDate);
+            }
+        });
     }
 }

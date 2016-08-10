@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.base.BaseActivity;
+import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.AlarmFragment;
 import com.medcorp.fragment.AnalysisFragment;
@@ -414,6 +415,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             java.util.Date selectDate = format.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
                     new SimpleDateFormat("MMM", Locale.US).format(selectDate));
+            EventBus.getDefault().post(new DateSelectChangedEvent(selectDate));
         } catch (ParseException e) {
             e.printStackTrace();
         }
