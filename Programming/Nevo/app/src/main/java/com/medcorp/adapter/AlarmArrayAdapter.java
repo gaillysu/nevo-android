@@ -44,7 +44,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm>{
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
-        onOffSwitch.setChecked(alarm.isEnable());
+        onOffSwitch.setChecked(alarm.getWeekDay()!=0);
 
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

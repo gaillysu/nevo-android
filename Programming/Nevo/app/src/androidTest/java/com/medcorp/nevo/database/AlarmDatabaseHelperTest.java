@@ -22,9 +22,9 @@ public class AlarmDatabaseHelperTest extends AndroidTestCase {
         super.setUp();
 
         db = new AlarmDatabaseHelper(getContext());
-        addAlarm = new Alarm(7,30,true,"wake up alarm");
-        updateAlarm = new Alarm(12,30,true,"lunch time");
-        removeAlarm = new Alarm(22,30,false,"sleep time");
+        addAlarm = new Alarm(7,30, (byte) 1,"wake up alarm");
+        updateAlarm = new Alarm(12,30, (byte) 1,"lunch time");
+        removeAlarm = new Alarm(22,30, (byte) 0,"sleep time");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AlarmDatabaseHelperTest extends AndroidTestCase {
         Optional<Alarm> thisAlarm2 = db.get(addAlarm.getId()).get(0);
         assertEquals(false, thisAlarm2.isEmpty());
 
-        assertEquals(addAlarm.isEnable(),thisAlarm2.get().isEnable());
+        assertEquals(addAlarm.getWeekDay(),thisAlarm2.get().getWeekDay());
         assertEquals(addAlarm.getLabel(),thisAlarm2.get().getLabel());
         assertEquals(addAlarm.getMinute(),thisAlarm2.get().getMinute());
         assertEquals(addAlarm.getHour(),thisAlarm2.get().getHour());
@@ -55,7 +55,7 @@ public class AlarmDatabaseHelperTest extends AndroidTestCase {
         assertEquals(false,thisAlarm1.isEmpty());
         updateAlarm = thisAlarm1.get();
 
-        updateAlarm.setEnable(!updateAlarm.isEnable());
+        updateAlarm.setWeekDay((byte) (updateAlarm.getWeekDay()>0?0:1));
         updateAlarm.setLabel("wetew5234t");
         updateAlarm.setHour(updateAlarm.getHour() + 1);
         updateAlarm.setMinute(updateAlarm.getMinute() + 1);
@@ -64,7 +64,7 @@ public class AlarmDatabaseHelperTest extends AndroidTestCase {
         Optional<Alarm> thisAlarm2 = db.get(updateAlarm.getId()).get(0);
         assertEquals(false, thisAlarm2.isEmpty());
 
-        assertEquals(thisAlarm2.get().isEnable(),updateAlarm.isEnable());
+        assertEquals(thisAlarm2.get().getWeekDay(),updateAlarm.getWeekDay());
         assertEquals(thisAlarm2.get().getLabel(),updateAlarm.getLabel());
         assertEquals(thisAlarm2.get().getHour(),updateAlarm.getHour());
         assertEquals(thisAlarm2.get().getMinute(),updateAlarm.getMinute());

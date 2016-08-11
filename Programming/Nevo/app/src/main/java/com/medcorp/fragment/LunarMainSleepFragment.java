@@ -1,16 +1,24 @@
 package com.medcorp.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
+import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.util.Preferences;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +41,8 @@ public class LunarMainSleepFragment extends BaseFragment {
     TextView showUserActivityTime;
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
+    @Bind(R.id.fragment_sleep_history_linechart)
+    LineChart lineChartSleep;
 
     private Date userSelectDate;
 
@@ -51,9 +61,14 @@ public class LunarMainSleepFragment extends BaseFragment {
             }
         }
         initData(userSelectDate);
+        modifyChart(lineChartSleep);
         return sleepView;
     }
 
+    private void modifyChart(LineChart lineChart) {
+
+
+    }
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
@@ -74,5 +89,28 @@ public class LunarMainSleepFragment extends BaseFragment {
             activityTime.append(walkDuration + "m");
         }
         return activityTime.toString();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(final DateSelectChangedEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                userSelectDate = event.getDate();
+                initData(userSelectDate);
+                modifyChart(lineChartSleep);
+            }
+        });
     }
 }

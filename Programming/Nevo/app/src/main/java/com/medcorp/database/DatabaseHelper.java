@@ -24,9 +24,10 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "nevowatch.db";
-    private static final int DATABASE_VERSION = 6; // from 3 to 4, refactor table "Preset" to "Goal"
+    private static final int DATABASE_VERSION = 7; // from 3 to 4, refactor table "Preset" to "Goal"
                                                    // from 4 to 5, fix table struct to save login data and Validic data.
                                                    // from 5 to 6, add "User" table "nevoUserIsLogin","validicUserIsConnected" fields
+                                                   //from  6 to 7,fix "Alarm" alarm.enable to alarm.weekDay
     private  Dao<IDailyHistory,Integer> dailyhistoryDao = null;
     private  Dao<UserDAO,Integer> userDao = null;
     private  Dao<SleepDAO,Integer> sleepDao = null;
