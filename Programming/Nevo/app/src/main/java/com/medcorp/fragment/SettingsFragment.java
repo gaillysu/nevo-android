@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.ConnectToOtherAppsActivity;
 import com.medcorp.activity.GoalsActivity;
@@ -20,6 +22,7 @@ import com.medcorp.activity.MyNevoActivity;
 import com.medcorp.activity.SettingAboutActivity;
 import com.medcorp.activity.SettingNotificationActivity;
 import com.medcorp.activity.login.LoginActivity;
+import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.adapter.SettingMenuAdapter;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.listener.OnCheckedChangeInListListener;
@@ -53,21 +56,17 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
+
         listMenu = new ArrayList<SettingsMenuItem>();
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification), R.drawable.setting_linkloss, Preferences.getLinklossNotification(getActivity())));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_goals), R.drawable.setting_goals));
-        //TODO change Icon
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
-
-        //        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-        //            listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
-        //            listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
-        //        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-        //        }
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
+//        listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
         settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
@@ -87,31 +86,57 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 1) {
+
             startActivity(SettingNotificationActivity.class);
+
         } else if (position == 2) {
+
             if (getModel().isWatchConnected()) {
                 startActivity(MyNevoActivity.class);
             } else {
                 ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
+
         } else if (position == 3) {
+
             if (getModel().isWatchConnected()) {
                 getModel().blinkWatch();
+
             } else {
+
                 ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
+
         } else if (position == 4) {
+
             startActivity(GoalsActivity.class);
+
         } else if (position == 5) {
             startActivity(ConnectToOtherAppsActivity.class);
         } else if (position == 6) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
+
         } else if (position == 7) {
-            //TODO
-            Intent intent  = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
+
+            new MaterialDialog.Builder(getContext())
+                    .content(R.string.settings_sure)
+                    .negativeText(android.R.string.no)
+                    .positiveText(android.R.string.yes)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            getModel().forgetDevice();
+                            startActivity(TutorialPage1Activity.class);
+                            SettingsFragment.this.getActivity().finish();
+                        }
+                    })
+                    .cancelable(false)
+                    .show();
+
+        }else if(position == 8) {
+            Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
             startActivity(intent);
-            //her read about code
         }
     }
 

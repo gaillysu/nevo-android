@@ -25,7 +25,7 @@
     </style>
 
     <style name="NevoActionBar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:textColor">#000000</item>
+        <item name="android:textColor">@color/left_menu_item_text_color</item>
         <item name="android:colorPrimary">@color/black</item>
     </style>
     <style name="NevoDialogStyle" parent="Base.V7.Theme.AppCompat.Light.Dialog">

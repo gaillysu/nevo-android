@@ -2,6 +2,7 @@ package com.medcorp.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -109,6 +110,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         getSupportActionBar().setElevation(0);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         navigationView.setNavigationItemSelectedListener(this);
+        ColorStateList colorStateList = this.getResources().getColorStateList(R.color.navigation_text_color_select);
+        navigationView.setItemTextColor(colorStateList);
         drawerLayout.setDrawerListener(this);
 
         MenuItem firstItem = navigationView.getMenu().getItem(0);
@@ -119,6 +122,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         date = new Date(System.currentTimeMillis());
         currentTime = simple.format(date);
         strDate = currentTime;
+
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
         showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);

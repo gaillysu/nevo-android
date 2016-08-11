@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by karl-john on 11/12/15.
+ *
  */
 public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener, TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener {
 

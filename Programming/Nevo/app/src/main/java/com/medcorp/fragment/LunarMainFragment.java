@@ -80,7 +80,7 @@ public class LunarMainFragment extends BaseObservableFragment {
     private void popupStepsGoalDialog() {
         if (!getModel().isWatchConnected()) {
             ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_no_watch, false);
-            return ;
+            return;
         }
         final List<Goal> goalList = getModel().getAllGoal();
         List<String> stringList = new ArrayList<>();
@@ -126,6 +126,7 @@ public class LunarMainFragment extends BaseObservableFragment {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
     @Subscribe
     public void onEvent(RequestResponseEvent event) {
         //if this response comes from syncController init, ignore it, only for user set a new goal.
