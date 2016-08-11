@@ -41,5 +41,13 @@
         android:layout_marginRight="10dp"
         android:focusable="false"
         android:shadowColor="@color/colorPrimary"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="70dp"
+        />
 
 </RelativeLayout>

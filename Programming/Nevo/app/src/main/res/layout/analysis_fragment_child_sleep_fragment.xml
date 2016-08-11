@@ -19,41 +19,6 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:drawableLeft="@drawable/steps_identification_icon"
-            android:drawablePadding="10dp"
-            android:textSize="20sp"
-            android:text="@string/lunar_main_sleep_fragment_time_text"
-            android:textColor="@color/white"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/steps_identification_total_icon"
-            android:drawablePadding="10dp"
-            android:textSize="20sp"
-            android:text="@string/lunar_main_sleep_staus_text_light"
-            android:textColor="@color/white"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/steps_identification_total_icon"
-            android:drawablePadding="10dp"
-            android:textSize="20sp"
-            android:text="@string/lunar_main_sleep_staus_text_deep"
-            android:textColor="@color/white"
-            />
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/this_week_steps_fragment_chart"
             android:layout_width="fill_parent"

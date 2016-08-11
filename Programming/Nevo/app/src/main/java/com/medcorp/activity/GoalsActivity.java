@@ -159,6 +159,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     }
 
     private void ejectStepsGoalDialog() {
+
         final Dialog dialog = new AlertDialog.Builder(this).create();
         dialog.show();
         Window window = dialog.getWindow();
