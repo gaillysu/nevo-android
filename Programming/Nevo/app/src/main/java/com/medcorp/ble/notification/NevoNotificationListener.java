@@ -77,6 +77,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         mTm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         mListener = new CallStateListener();
         mTm.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
+        Log.w("Karl","notification service onCreate() invoked");
     }
 
     @Override
@@ -178,6 +179,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);
 
                 }
@@ -195,5 +197,6 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
     public void onDestroy() {
         super.onDestroy();
         mTm.listen(mListener, PhoneStateListener.LISTEN_NONE);
+        Log.w("Karl","notification service onDestroy() invoked");
     }
 }

@@ -38,6 +38,7 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.model.Alarm;
+import com.medcorp.model.ApplicationInfomation;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
 import com.medcorp.model.GoalBase;
@@ -355,6 +356,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                 }
                 //press B key once--- down and up within 500ms
+                /* //this is old code ,when press key down/up, watch will send key event to app. now it will send "findphone" event to app
                 else if((byte) 0xF1 == lunarData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
                 {
                     long currentTime = System.currentTimeMillis();
@@ -371,13 +373,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     {
                         if(mLocalService!=null) {
                             mLocalService.findCellPhone();
+                            sendRequest(new FindPhoneRequest(mContext));
                         }
                     }
-                }
+                }*/
                 else if((byte) FindPhoneRequest.HEADER == lunarData.getRawData()[1])
                 {
                     if(mLocalService!=null) {
                         mLocalService.findCellPhone();
+                        //send response to watch that found out
+                        sendRequest(new FindPhoneRequest(mContext));
                     }
                 }
                 else if((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1])
@@ -395,6 +400,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
                     ((ApplicationModel)mContext).saveDailySteps(steps);
                     //end save
+                }
+                else if((byte) NewApplicationArrivedPacket.HEADER == lunarData.getRawData()[1])
+                {
+                    NewApplicationArrivedPacket newApplicationArrivedPacket = new NewApplicationArrivedPacket(packet.getPackets());
+                    Log.i(TAG,"new Application arrived,total:" + newApplicationArrivedPacket.getTotalApplications());
+                    Log.i(TAG,"new Application arrived,ID: " + newApplicationArrivedPacket.getApplicationInfomation().getData());
+                    //TODO send AddApplicationRequest ???
+                    sendRequest(new AddApplicationRequest(mContext,newApplicationArrivedPacket.getApplicationInfomation()));
                 }
                 //process done(such as save local db), then notify top layer to get or refresh screen
                 if (packet.getHeader() == (byte) GetStepsGoalRequest.HEADER) {
