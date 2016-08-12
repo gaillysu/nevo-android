@@ -17,15 +17,17 @@ import com.medcorp.fragment.LunarMainSolarFragment;
  */
 public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
 
-    private LunarMainFragment clockFragment;
+    private LunarMainFragment mainFragment;
     private Context context;
     private String[] fragmentAdapterArray;
+
     public LunarMainFragmentAdapter(FragmentManager fm, LunarMainFragment fragment) {
         super(fm);
-        this.clockFragment = fragment;
+        this.mainFragment = fragment;
         context = fragment.getContext();
         fragmentAdapterArray = context.getResources().getStringArray(R.array.lunar_main_adapter_fragment);
     }
+
     @Override
     public Fragment getItem(int position) {
         switch (position){

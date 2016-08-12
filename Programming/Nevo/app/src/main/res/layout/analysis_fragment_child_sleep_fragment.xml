@@ -14,20 +14,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/lunar_main_sleep_fragment_title_text"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
             />
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/this_week_steps_fragment_chart"
-            android:layout_width="fill_parent"
-            android:layout_height="210dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="bottom">
-        </com.github.mikephil.charting.charts.LineChart>
+            <!--android:text="@string/lunar_main_sleep_fragment_title_text"-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/analysis_sleep_fragment_view_page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
     </LinearLayout>
 
     <include
