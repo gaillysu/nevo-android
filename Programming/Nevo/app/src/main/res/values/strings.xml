@@ -277,6 +277,7 @@ push and hold the third button, until the white LED blinks</string>
     <!--lunar-->
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
+    <string name="lunar_adapter_solar">Solar</string>
     <string name="register_account_page_title">Sign Up</string>
     <string name="register_first_name_hint">First Name</string>
     <string name="register_last_name_hint">Last Name</string>
@@ -350,6 +351,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="this_week_steps_identification_average">AVERAGE</string>
     <string name="this_week_steps_identification_two">AVERAGE:</string>
     <string name="steps_fragment_total_steps">TOTAL:</string>
-
+    <string name="main_fragment_solar_page_time_on_battery_text">TIME ON BATTERY</string>
+    <string name="main_fragment_solar_page_time_on_solar_text">TIME ON SOLAR</string>
     <!--<lunar end>-->
 </resources>

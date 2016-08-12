@@ -35,6 +35,7 @@
         <item>@string/lunar_adapter_clock</item>
         <item>@string/lunar_adapter_chart</item>
         <item>@string/lunar_adapter_sleep</item>
+        <item>@string/lunar_adapter_solar</item>
     </array>
 
     <array name="analysis_fragment_table_array">
