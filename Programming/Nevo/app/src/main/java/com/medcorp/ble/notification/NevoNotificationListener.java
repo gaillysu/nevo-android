@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.telephony.PhoneStateListener;
@@ -81,11 +82,25 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
     }
 
     @Override
+    public void onListenerConnected() {
+        super.onListenerConnected();
+        Log.w("Karl","notification service onListenerConnected() invoked");
+    }
+
+    @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
         if(statusBarNotification == null) {
             return;
         }
-
+        //add log to debug notifications
+        try {
+            Bundle bundle = (Bundle)statusBarNotification.getNotification().getClass().getDeclaredField("extras").get(statusBarNotification.getNotification()); //this.getExtras().get("android.title");
+            Log.w("Karl","<<<<<<<<<<new notification>>>>>>>>>category:" + statusBarNotification.getNotification().category + ",package:" +statusBarNotification.getPackageName() + ",title:" + bundle.get("android.title")+",text:" + bundle.get("android.text") + ",subtext:"+bundle.get("android.subText") + ",people:"+bundle.get("android.people"));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
         Notification notification = statusBarNotification.getNotification();
         NotificationDataHelper helper = new NotificationDataHelper(this);
         if (notification != null) {

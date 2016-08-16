@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -30,6 +31,7 @@ import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.ble.model.packet.*;
 import com.medcorp.ble.model.request.*;
+import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -112,6 +114,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
+        //force android Notification Manager Service to start NevoNotificationListener
+        startNotificationListener();
         EventBus.getDefault().register(this);
     }
 
@@ -570,6 +574,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
         //when forget the watch, force a big sync when got connected again
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
+    }
+    @Override
+    public void startNotificationListener() {
+        //force android NotificationManagerService to rebind user NotificationListenerService
+        // http://www.zhihu.com/question/33540416/answer/113706620
+        PackageManager pm = mContext.getPackageManager();
+        pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
     }
 
     /**

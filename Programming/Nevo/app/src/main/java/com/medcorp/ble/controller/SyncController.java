@@ -103,4 +103,10 @@ public interface SyncController {
 
     public WatchInfomation getWatchInfomation();
 
+    /**
+     * for some customize ROM(xiaomi,meizhu...), the notification listener service perhaps got killed, here force system notification manager to restart it
+     * use "adb shell dumpsys notification" to look which service is killed.
+     */
+    public void startNotificationListener();
+
 }
