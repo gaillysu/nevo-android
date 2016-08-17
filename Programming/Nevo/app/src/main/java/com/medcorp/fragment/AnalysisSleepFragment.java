@@ -74,7 +74,6 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        //TODO
         LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
         LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
         LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);

@@ -10,13 +10,34 @@ public class Alarm {
     private int minute;
     private byte weekDay;
     private String label;
+    private int alarmType;
+    private String alarmRepeat;
 
-    public Alarm(int hour, int minute,byte weekDay,String label)
+    public Alarm(int hour, int minute,byte weekDay,String label,int alarmStyle , String repeatDay)
     {
         this.hour = hour;
         this.minute = minute;
         this.weekDay = weekDay;
         this.label = label;
+        this.alarmType = alarmStyle;
+        this.alarmRepeat = repeatDay;
+    }
+
+    public int getAlarmType() {
+        return alarmType;
+    }
+
+    public void setAlarmType(int alarmStyle) {
+        this.alarmType = alarmStyle;
+    }
+
+
+    public String getRepeatDay() {
+        return alarmRepeat;
+    }
+
+    public void setRepeatDay(String repeatDay) {
+        this.alarmRepeat = repeatDay;
     }
 
     public void setId(int id) {
@@ -61,6 +82,7 @@ public class Alarm {
 
     @Override
     public String toString() {
+
         StringBuilder builder = new StringBuilder();
         if (hour == 0){
             builder.append("00");
@@ -78,5 +100,6 @@ public class Alarm {
             builder.append(minute);
         }
         return builder.toString();
+
     }
 }

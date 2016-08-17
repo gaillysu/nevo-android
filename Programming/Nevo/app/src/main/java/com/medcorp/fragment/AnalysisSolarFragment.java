@@ -87,14 +87,14 @@ public class AnalysisSolarFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 switch(position){
+                    case 0:
+                        solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
+                        break;
                     case 1:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_week_steps);
                         break;
                     case 2:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_month_solar);
-                        break;
-                    case 0:
-                        solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
                         break;
                 }
             }

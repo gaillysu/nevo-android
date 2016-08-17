@@ -128,8 +128,6 @@
     <string name="startup_goal_weekend">Weekend</string>
 
 
-
-
     <string name="alarm_add">Add alarm</string>
     <string name="alarm_saved">Saved alarm!</string>
     <string name="alarm_could_not_save">Could not save alarm!</string>
@@ -272,7 +270,7 @@ push and hold the third button, until the white LED blinks</string>
     <!--add-->
     <string name="network_wait_text">Please wait ...</string>
     <string name="user_email_is_error">Please check your account...</string>
-<!--add-->
+    <!--add-->
 
     <!--lunar-->
     <string name="lunar_adapter_clock">Clock</string>
@@ -353,5 +351,28 @@ push and hold the third button, until the white LED blinks</string>
     <string name="steps_fragment_total_steps">TOTAL:</string>
     <string name="main_fragment_solar_page_time_on_battery_text">TIME ON BATTERY</string>
     <string name="main_fragment_solar_page_time_on_solar_text">TIME ON SOLAR</string>
+
+    <string name="edit_alarm_repeat">Repeat</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+    <string name="repeat_once">Once</string>
+    <string name="one_h">一</string>
+    <string name="two_h">二</string>
+    <string name="three_h">三</string>
+    <string name="four_h">四</string>
+    <string name="five_h">五</string>
+    <string name="six_h">六</string>
+    <string name="day">日</string>
+    <string name="every_day">Every day</string>
+    <string name="edit_alarm_sleep">Sleep Alarm</string>
+    <string name="edit_alarm_wake">Wake Alarm</string>
+    <!--<string name="week_day">平日</string>-->
+    <!--<string name="week_end">周末</string>-->
+    <!--<string name="week">周</string>-->
     <!--<lunar end>-->
 </resources>

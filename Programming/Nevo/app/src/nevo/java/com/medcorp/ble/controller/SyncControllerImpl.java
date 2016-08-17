@@ -21,7 +21,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -42,8 +41,20 @@ import com.medcorp.ble.model.packet.BatteryLevelPacket;
 import com.medcorp.ble.model.packet.DailyStepsPacket;
 import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.ble.model.packet.DailyTrackerPacket;
-import com.medcorp.ble.model.packet.*;
-import com.medcorp.ble.model.request.*;
+import com.medcorp.ble.model.packet.Packet;
+import com.medcorp.ble.model.request.GetBatteryLevelRequest;
+import com.medcorp.ble.model.request.GetStepsGoalRequest;
+import com.medcorp.ble.model.request.LedLightOnOffRequest;
+import com.medcorp.ble.model.request.ReadDailyTrackerInfoRequest;
+import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
+import com.medcorp.ble.model.request.SetAlarmRequest;
+import com.medcorp.ble.model.request.SetCardioRequest;
+import com.medcorp.ble.model.request.SetGoalRequest;
+import com.medcorp.ble.model.request.SetNotificationRequest;
+import com.medcorp.ble.model.request.SetProfileRequest;
+import com.medcorp.ble.model.request.SetRtcRequest;
+import com.medcorp.ble.model.request.TestModeRequest;
+import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.bluetooth.BatteryEvent;
@@ -260,7 +271,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                         else
                         {
-                            list.add(new Alarm(0,0, (byte)0, ""));
+                            list.add(new Alarm(0,0, (byte)0, "",0,""));
                             setAlarm(list, true);
                         }
                     }

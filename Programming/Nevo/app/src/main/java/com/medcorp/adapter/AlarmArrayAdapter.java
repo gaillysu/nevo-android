@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 
-import com.medcorp.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.R;
+import com.medcorp.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.model.Alarm;
 import com.medcorp.view.customfontview.RobotoTextView;
 
@@ -18,12 +18,14 @@ import java.util.List;
 /**
  * Created by karl-john on 17/12/15.
  */
-public class AlarmArrayAdapter extends ArrayAdapter<Alarm>{
+public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
     private OnAlarmSwitchListener onAlarmSwitchedListener;
-    private  Context context;
+    private Context context;
     private List<Alarm> alarmList;
     private AlarmArrayAdapter adapter;
+    private String alarmStyle;
+
     public AlarmArrayAdapter(Context context, List<Alarm> alarmList, OnAlarmSwitchListener listener) {
         super(context, 0, alarmList);
         this.context = context;
@@ -41,15 +43,25 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm>{
         RobotoTextView alarmTimeTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_time);
         RobotoTextView alarmLabelTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_label);
         SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_switch);
+
+        RobotoTextView repeatText = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat);
+
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
-        onOffSwitch.setChecked(alarm.getWeekDay()!=0);
+        onOffSwitch.setChecked(alarm.getWeekDay() != 0);
+        if (alarm.getAlarmType() == 0) {
+            alarmStyle = getContext().getString(R.string.edit_alarm_sleep);
+        } else if (alarm.getAlarmType() == 1) {
+            alarmStyle = getContext().getString(R.string.edit_alarm_wake);
+        }
+
+        repeatText.setText( alarmStyle+":" + alarm.getRepeatDay());
 
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView,alarm);
+                onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
             }
         });
         return itemView;

@@ -34,8 +34,8 @@ public class TutorialPageSuccessActivity extends BaseActivity {
             getModel().addGoal(new Goal(getString(R.string.startup_goal_light), true, 7000));
             getModel().addGoal(new Goal(getString(R.string.startup_goal_moderate), true, 10000));
             getModel().addGoal(new Goal(getString(R.string.startup_goal_heavy), true, 20000));
-            getModel().addAlarm(new Alarm(8, 0, (byte) 0, getString(R.string.startup_goal_weekly_days)));
-            getModel().addAlarm(new Alarm(9, 0, (byte) 0, getString(R.string.startup_goal_weekend)));
+            getModel().addAlarm(new Alarm(8, 0, (byte) 0, getString(R.string.startup_goal_weekly_days),0,""));
+            getModel().addAlarm(new Alarm(9, 0, (byte) 0, getString(R.string.startup_goal_weekend),0,""));
             sharedPreferences.putBoolean(getString(R.string.key_preset), true);
             sharedPreferences.commit();
         }

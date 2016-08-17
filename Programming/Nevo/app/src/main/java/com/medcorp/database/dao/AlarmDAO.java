@@ -11,7 +11,7 @@ public class AlarmDAO {
     @DatabaseField(generatedId = true)
     private int ID;
 
-    public static final String alarmString= "alarm";
+    public static final String alarmString = "alarm";
     @DatabaseField
     private String Alarm;
 
@@ -22,6 +22,38 @@ public class AlarmDAO {
     public static final String weekDayString = "weekDay";
     @DatabaseField
     private byte weekDay;
+
+    public static final String alarmTypeString = "alarmType";
+    @DatabaseField
+    private int alarmType;
+
+    public static final String alarmRepeatString = "alarmRepeat";
+    @DatabaseField
+    private String alarmRepeat;
+
+    public static String getAlarmTypeString() {
+        return alarmTypeString;
+    }
+
+    public static String getAlarmRepeatString() {
+        return alarmRepeatString;
+    }
+
+    public int getAlarmType() {
+        return alarmType;
+    }
+
+    public void setAlarmType(int alarmType) {
+        this.alarmType = alarmType;
+    }
+
+    public String getAlarmRepeat() {
+        return alarmRepeat;
+    }
+
+    public void setAlarmRepeat(String alarmRepeat) {
+        this.alarmRepeat = alarmRepeat;
+    }
 
     public static String getiDString() {
         return iDString;
