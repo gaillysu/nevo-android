@@ -12,8 +12,9 @@ public class Alarm {
     private String label;
     private int alarmType;
     private String alarmRepeat;
+    private boolean isOnlyOne;
 
-    public Alarm(int hour, int minute,byte weekDay,String label,int alarmStyle , String repeatDay)
+    public Alarm(int hour, int minute,byte weekDay,String label,int alarmStyle , String repeatDay , boolean isOnlyOne)
     {
         this.hour = hour;
         this.minute = minute;
@@ -21,6 +22,22 @@ public class Alarm {
         this.label = label;
         this.alarmType = alarmStyle;
         this.alarmRepeat = repeatDay;
+        this.isOnlyOne = isOnlyOne;
+    }
+
+    public String getAlarmRepeat() {
+        return alarmRepeat;
+    }
+
+    public void setAlarmRepeat(String alarmRepeat) {
+        this.alarmRepeat = alarmRepeat;
+    }
+    public boolean isOnlyOne() {
+        return isOnlyOne;
+    }
+
+    public void setOnlyOne(boolean onlyOne) {
+        isOnlyOne = onlyOne;
     }
 
     public int getAlarmType() {

@@ -17,4 +17,13 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+    <string-array name="week_day">
+        <item name="monday">Mon</item>
+        <item name="tuesday">Tue</item>
+        <item name="wednesday">Wed</item>
+        <item name="thursday">Thu</item>
+        <item name="friday">Fri</item>
+        <item name="saturday">Sat</item>
+        <item name="sunday">Sun</item>
+    </string-array>
 </resources>

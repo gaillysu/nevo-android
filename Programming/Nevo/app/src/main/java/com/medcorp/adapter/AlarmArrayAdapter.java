@@ -44,6 +44,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         RobotoTextView alarmLabelTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_label);
         SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_switch);
 
+        RobotoTextView repeatTextDec = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat_dec);
         RobotoTextView repeatText = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat);
 
         alarmTimeTextView.setText(alarm.toString());
@@ -56,8 +57,8 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             alarmStyle = getContext().getString(R.string.edit_alarm_wake);
         }
 
-        repeatText.setText( alarmStyle+":" + alarm.getRepeatDay());
-
+        repeatText.setText( alarm.getRepeatDay());
+        repeatTextDec.setText(alarmStyle+": " );
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

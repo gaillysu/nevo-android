@@ -65,14 +65,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/nevo/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevo/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevo/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevo/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevo/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevo/assets" type="java-test-resource" />
@@ -81,6 +73,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testNevo/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevo/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevo/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestNevo/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -126,7 +126,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/Nevo/wheelPickLib/1.1.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/design/23.2.0/jars" />
@@ -223,7 +222,7 @@
     <orderEntry type="library" exported="" name="guava-jdk5-13.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-fitness-8.4.0" level="project" />
-    <orderEntry type="library" exported="" name="wheelPickLib-1.1.1" level="project" />
+    <orderEntry type="module" module-name="wheelPickLib" exported="" />
     <orderEntry type="module" module-name="library" exported="" />
   </component>
 </module>

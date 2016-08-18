@@ -271,7 +271,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                         else
                         {
-                            list.add(new Alarm(0,0, (byte)0, "",0,""));
+                            list.add(new Alarm(0,0, (byte)0, "",0,"",false));
                             setAlarm(list, true);
                         }
                     }

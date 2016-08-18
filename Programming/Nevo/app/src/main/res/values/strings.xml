@@ -360,14 +360,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
-    <string name="repeat_once">Once</string>
-    <string name="one_h">一</string>
-    <string name="two_h">二</string>
-    <string name="three_h">三</string>
-    <string name="four_h">四</string>
-    <string name="five_h">五</string>
-    <string name="six_h">六</string>
-    <string name="day">日</string>
     <string name="every_day">Every day</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="edit_alarm_wake">Wake Alarm</string>

@@ -6,6 +6,7 @@
     <color name="customWhite">#f4f2f1</color>
     <color name="transparent">#00000000</color>
     <color name="black">#ff000000</color>
+    <color name = "alarm_repeat_text_color">#BCBCBC</color>
     <color name="white">#000000</color>
     <color name="pupdialogue_background">#22000000</color>
     <color name="wake_sleep">#fffde69c</color>
