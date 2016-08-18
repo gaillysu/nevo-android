@@ -43,6 +43,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/nevoDebug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevoDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevoDebug/shaders" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/nevo/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/nevo/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/nevo/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/nevo/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/nevo/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/nevo/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevoDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevoDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevoDebug/assets" type="java-test-resource" />
@@ -51,12 +57,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testNevoDebug/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevoDebug/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testNevoDebug/shaders" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/nevo/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/nevo/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/nevo/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/nevo/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/nevo/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/nevo/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevo/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevo/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/nevo/assets" type="java-resource" />
@@ -211,8 +211,8 @@
     <orderEntry type="library" exported="" name="crashlytics-core-2.3.8" level="project" />
     <orderEntry type="library" exported="" name="spring-android-rest-template-1.0.1.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="robospice-1.4.14" level="project" />
-    <orderEntry type="library" exported="" name="robospice-cache-1.4.14" level="project" />
     <orderEntry type="library" exported="" name="eventbus-3.0.0" level="project" />
+    <orderEntry type="library" exported="" name="robospice-cache-1.4.14" level="project" />
     <orderEntry type="library" exported="" name="google-api-services-tasks-v1-rev35-1.19.0" level="project" />
     <orderEntry type="library" exported="" name="ormlite-core-4.47" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
