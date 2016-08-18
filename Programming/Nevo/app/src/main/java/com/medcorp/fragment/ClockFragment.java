@@ -112,7 +112,7 @@ public class ClockFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
 
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
