@@ -17,7 +17,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/analysis_fragment_this_week_steps"
             android:textAllCaps="true"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="20sp"
             />
 

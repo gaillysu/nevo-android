@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textSize="23sp"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:id="@+id/titleTextView"
             android:text="@string/dfu_update"
             android:background="@color/colorPrimary"

@@ -127,8 +127,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //                }).negativeText(R.string.alarm_cancel)
         //                .show();
 
-        //        final AlertDialog.Builder selectRepeatDialog = new AlertDialog.Builder(getContext());
-        //        final AlertDialog dialog = selectRepeatDialog.create();
         View alarmDialogView = inflater.inflate(R.layout.add_alarm_dialog_layout, null);
         final Dialog dialog = new AlertDialog.Builder(getContext()).create();
         dialog.show();
