@@ -15,6 +15,7 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 import com.medcorp.view.graphs.MainStepsBarChart;
 
 import org.greenrobot.eventbus.EventBus;
@@ -80,7 +81,7 @@ public class LunarMainStepsFragment extends BaseFragment {
     private void initData(Date date) {
         User user = getModel().getNevoUser();
         steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));
@@ -100,19 +101,6 @@ public class LunarMainStepsFragment extends BaseFragment {
         }else{
             hourlyBarChart.setDataInChart(new int[]{0});
         }
-    }
-
-    private String formatTime(int walkDuration) {
-        StringBuilder activityTime = new StringBuilder();
-        if (walkDuration >= 60) {
-            if (walkDuration % 60 > 0) {
-                activityTime.append((walkDuration /60)).append("h");
-                activityTime.append(walkDuration % 60).append("m");
-            }
-        } else {
-            activityTime.append(walkDuration).append("m");
-        }
-        return activityTime.toString();
     }
 
     @Override

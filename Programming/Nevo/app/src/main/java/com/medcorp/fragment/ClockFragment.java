@@ -18,6 +18,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -112,25 +113,11 @@ public class ClockFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
-
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(result);
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
-    }
-
-    private String formatTime(int walkDuration) {
-        StringBuilder activityTime = new StringBuilder();
-        if (walkDuration >= 60) {
-            if (walkDuration % 60 > 0) {
-                activityTime.append((walkDuration /60)).append("h");
-                activityTime.append(walkDuration % 60).append("m");
-            }
-        } else {
-            activityTime.append(walkDuration).append("m");
-        }
-        return activityTime.toString();
     }
 
     @Override
