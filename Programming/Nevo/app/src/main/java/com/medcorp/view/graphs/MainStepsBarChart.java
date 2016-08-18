@@ -16,7 +16,6 @@ import com.medcorp.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static java.lang.Math.abs;
 
@@ -116,7 +115,6 @@ public class MainStepsBarChart extends BarChart {
         List<BarEntry> yValue = new ArrayList<BarEntry>();
         int maxValue = 0;
         final int stepsModulo = 200;
-        Random r = new Random();
         for (int i = 0; i < stepsArray.length; i++) {
             yValue.add(new BarEntry(stepsArray[i], i));
             xVals.add(i + ":00");
@@ -127,9 +125,14 @@ public class MainStepsBarChart extends BarChart {
         int labelCount = 6;
         if (maxValue == 0) {
             maxValue = 500;
+            labelCount = 6;
         } else {
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
-            labelCount = (maxValue/stepsModulo) +1;
+            if (maxValue < 500){
+                labelCount = (maxValue/50) +1;
+            }else{
+                labelCount = (maxValue/stepsModulo) +1;
+            }
         }
         getAxisLeft().setAxisMaxValue(maxValue);
         getAxisLeft().setLabelCount(labelCount,true);

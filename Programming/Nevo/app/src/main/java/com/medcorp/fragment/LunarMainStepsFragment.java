@@ -25,6 +25,7 @@ import org.json.JSONException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -78,12 +79,11 @@ public class LunarMainStepsFragment extends BaseFragment {
 
     private void initData(Date date) {
         User user = getModel().getNevoUser();
-//        steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        steps = new Steps(new Date().getTime());
-//                ( long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, int walkDistance,int runDistance,int walkDuration,int runDuration,String remarks)
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
-        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
-        showUserSteps.setText(String.valueOf(user.getDistanceTraveled(steps)));
+        steps = getModel().getDailySteps(user.getNevoUserID(), date);
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserSteps.setText(String.valueOf(steps.getSteps()));
+        String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
+        showUserStepsDistance.setText(String.valueOf(result));
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
         if (steps.getSteps() != 0){
             JSONArray array = null;
@@ -106,13 +106,12 @@ public class LunarMainStepsFragment extends BaseFragment {
         StringBuilder activityTime = new StringBuilder();
         if (walkDuration >= 60) {
             if (walkDuration % 60 > 0) {
-                activityTime.append(walkDuration % 60).append("h");
-                activityTime.append(walkDuration - (walkDuration % 60 * 60)).append("m");
+                activityTime.append((walkDuration /60)).append("h");
+                activityTime.append(walkDuration % 60).append("m");
             }
         } else {
             activityTime.append(walkDuration).append("m");
         }
-
         return activityTime.toString();
     }
 

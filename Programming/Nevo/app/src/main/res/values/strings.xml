@@ -323,7 +323,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_fragment_edit_first_name_edit_hint">First Name</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
-    <string name="lunar_fragment_calorie_text">CALORIE</string>
+    <string name="lunar_fragment_calorie_text">CALORIES</string>
     <string name="lunar_main_sleep_fragment_time_text">SLEEP TIME</string>
     <string name="lunar_main_sleep_fragment_title_text">OVER ALL SLEEP TIME</string>
     <string name="lunar_main_sleep_fragment_solar_title">SOLAR TIME</string>

@@ -194,8 +194,9 @@ public class User {
         return (int) (2.0 * weight * 3.5 / 200 * (steps.getRunDuration() + steps.getWalkDuration()));
     }
 
-    public int getDistanceTraveled(Steps steps){
-        return (int) ((height * 0.45 / 100) * steps.getSteps() / 1000);
+    public double getDistanceTraveled(Steps steps){
+        double distance = ((height * 0.45 / 100) * steps.getSteps() / 1000);
+        return distance;
     }
 
 }

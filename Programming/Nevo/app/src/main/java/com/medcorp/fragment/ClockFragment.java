@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -113,21 +114,22 @@ public class ClockFragment extends BaseFragment {
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
-        showUserStepsDistance.setText(String.valueOf(user.getDistanceTraveled(steps)));
+
+        String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
+        showUserStepsDistance.setText(result);
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
     }
 
     private String formatTime(int walkDuration) {
-        StringBuffer activityTime = new StringBuffer();
+        StringBuilder activityTime = new StringBuilder();
         if (walkDuration >= 60) {
             if (walkDuration % 60 > 0) {
-                activityTime.append(walkDuration % 60 + "h");
-                activityTime.append(walkDuration - (walkDuration % 60 * 60) + "m");
+                activityTime.append((walkDuration /60)).append("h");
+                activityTime.append(walkDuration % 60).append("m");
             }
         } else {
-            activityTime.append(walkDuration + "m");
+            activityTime.append(walkDuration).append("m");
         }
-
         return activityTime.toString();
     }
 
