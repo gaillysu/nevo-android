@@ -1,19 +1,23 @@
 package com.medcorp.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.medcorp.R;
 import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
-import com.medcorp.R;
+import com.medcorp.util.Preferences;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,26 +37,50 @@ public class AnalysisStepsFragment extends BaseFragment {
     @Bind(R.id.analysis_steps_fragment_content_chart_view_pager)
     ViewPager chartViewPager;
 
-    private ArrayList<Fragment> stepsDataList;
+    private View thisWeekView;
+    private View lastWeekView;
+    private View lastMonthView;
+    private List<View> stepsDataList;
+    private Date userSelectDate;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View stepsView = inflater.inflate(R.layout.analysis_fragment_child_steps_fragment, container, false);
         ButterKnife.bind(this, stepsView);
-        initView();
+
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if (selectDate == null) {
+            userSelectDate = new Date();
+        } else {
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        initView(inflater);
+        initData(userSelectDate);
         return stepsView;
     }
 
-    private void initView() {
+    private void initData(Date userSelectDate) {
+        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
+        LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
+        LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
+    }
+
+    private void initView(LayoutInflater inflater) {
+
         stepsDataList = new ArrayList<>(3);
-        ThisWeekStepsFragment thisWeek = (ThisWeekStepsFragment) ThisWeekStepsFragment.instantiate(this.getContext(), ThisWeekStepsFragment.class.getName());
-        LastWeekStepsFragment lastWeek = (LastWeekStepsFragment) LastWeekStepsFragment.instantiate(this.getContext(), LastWeekStepsFragment.class.getName());
-        LastMonthStepsFragment lastMonth = (LastMonthStepsFragment) LastMonthStepsFragment.instantiate(this.getContext(), LastMonthStepsFragment.class.getName());
-        stepsDataList.add(thisWeek);
-        stepsDataList.add(lastWeek);
-        stepsDataList.add(lastMonth);
-        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(getChildFragmentManager(), stepsDataList);
+        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
+        lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
+        lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
+        stepsDataList.add(thisWeekView);
+        stepsDataList.add(lastWeekView);
+        stepsDataList.add(lastMonthView);
+
+        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(stepsDataList);
         chartViewPager.setAdapter(adapter);
         chartViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -63,14 +91,14 @@ public class AnalysisStepsFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 switch(position){
+                    case 0:
+                        analysisStepsText.setText(R.string.analysis_fragment_this_week_steps);
+                        break;
                     case 1:
                         analysisStepsText.setText(R.string.analysis_fragment_last_week_steps);
                         break;
                     case 2:
                         analysisStepsText.setText(R.string.analysis_fragment_last_month_solar);
-                        break;
-                    case 0:
-                        analysisStepsText.setText(R.string.analysis_fragment_this_week_steps);
                         break;
                 }
             }

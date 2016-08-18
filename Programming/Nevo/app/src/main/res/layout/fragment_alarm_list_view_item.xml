@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:text="jhggjh"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="65sp"
             roboto:thin="true"/>
@@ -41,7 +42,16 @@
         android:textColor="@color/black"
         android:paddingTop="15dp"
         android:textSize="18sp"
+        android:text="sdafds"
         roboto:bold="true"/>
-
+   <com.medcorp.view.customfontview.RobotoTextView
+       android:id="@+id/fragment_alarm_list_view_item_alarm_repeat"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:text="adsad"
+       android:textColor="@color/black"
+       android:textSize="25dp"
+       />
 
 </RelativeLayout>

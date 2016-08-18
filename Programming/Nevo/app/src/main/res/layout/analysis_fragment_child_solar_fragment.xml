@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,23 +15,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/lunar_main_sleep_fragment_solar_title"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="20sp"
             />
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/this_week_steps_fragment_chart"
-            android:layout_width="fill_parent"
-            android:layout_height="210dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_vertical">
-        </com.github.mikephil.charting.charts.LineChart>
+        <!--android:text="@string/lunar_main_sleep_fragment_solar_title"-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/analysis_solar_fragment_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
     </LinearLayout>
+
     <include
+        layout="@layout/analysis_bottom_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/analysis_bottom_layout"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

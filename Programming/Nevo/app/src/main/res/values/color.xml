@@ -29,12 +29,11 @@
     <color name="textColorPrimaryInverse">#FFF</color>
     <color name="navigation_drawer_selected_background_color">#F2F2F2</color>
     <color name="tab_selected_background_color">#6D6D6D</color>
-    <color name="left_menu_item_text_color">#000</color>
-
+    <color name="left_menu_item_text_color">#000000</color>
     <color name="analysis_fragment_tab_selected_background_color">#000</color>
     <color name="analysis_fragment_tab_background_color">#A08455</color>
     <color name="register_account_back_tint_color">#ff524e4e</color>
-
+    <color name="analysis_fragment_tablayout_background_color">#666666</color>
     <color name="tab_unselected_font_color">#BCBCBC</color>
     <color name="list_item_divider">#E5E5EA</color>
     <color name="list_item_header_text_color">#6F6F6F</color>

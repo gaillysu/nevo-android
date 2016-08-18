@@ -132,4 +132,22 @@
         <item name="android:textColorPrimary">@color/customGray</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
+
+    <style name="new_alarm_clock_repeat_days_llyt">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="new_alarm_clcok_repeat_days_tog_btn">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:background">@drawable/toggle_btn_repeat_week</item>
+        <item name="android:checked">false</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_marginLeft">3dp</item>
+        <item name="android:textColor">@drawable/text_color_toggle_btn_circle</item>
+    </style>
+
 </resources>

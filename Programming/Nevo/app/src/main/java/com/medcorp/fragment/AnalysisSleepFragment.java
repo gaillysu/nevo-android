@@ -1,14 +1,23 @@
 package com.medcorp.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.medcorp.fragment.base.BaseFragment;
+import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
+import com.medcorp.adapter.AnalysisStepsChartAdapter;
+import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.util.Preferences;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,13 +31,81 @@ public class AnalysisSleepFragment extends BaseFragment {
     TextView averageStepsText;
     @Bind(R.id.steps_fragment_total_steps_tv)
     TextView totalStepsText;
+    @Bind(R.id.analysis_sleep_fragment_view_page)
+    ViewPager sleepViewPage;
+    @Bind(R.id.steps_fragment_title_tv)
+    TextView sleepTextView;
 
-    @Nullable
+    private List<View> sleepList;
+    private Date userSelectDate;
+    private View thisWeekView;
+    private View lastWeekView;
+    private View lastMonthView;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View sleepView = inflater.inflate(R.layout.analysis_fragment_child_sleep_fragment,container,false);
         ButterKnife.bind(this,sleepView);
 
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if (selectDate == null) {
+            userSelectDate = new Date();
+        } else {
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        initView(inflater);
         return sleepView;
+    }
+
+    private void initView(LayoutInflater inflater) {
+        sleepList = new ArrayList<>(3);
+        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
+        lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
+        lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
+        sleepList.add(thisWeekView);
+        sleepList.add(lastWeekView);
+        sleepList.add(lastMonthView);
+        initData(userSelectDate);
+    }
+
+    private void initData(Date userSelectDate) {
+        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
+        LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
+        LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
+
+
+        AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
+        sleepViewPage.setAdapter(adapter);
+        sleepViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch(position){
+                    case 0:
+                        sleepTextView.setText(R.string.analysis_fragment_this_week_steps);
+                        break;
+                    case 1:
+                        sleepTextView.setText(R.string.analysis_fragment_last_week_steps);
+                        break;
+                    case 2:
+                        sleepTextView.setText(R.string.analysis_fragment_last_month_solar);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

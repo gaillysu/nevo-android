@@ -44,7 +44,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         setSupportActionBar(toolbar);
         Bundle bundle = getIntent().getExtras();
         alarm = getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)));
-        alarmOld = new Alarm(alarm.getHour(),alarm.getMinute(),alarm.getWeekDay(),alarm.getLabel());
+        alarmOld = new Alarm(alarm.getHour(),alarm.getMinute(),alarm.getWeekDay(),alarm.getLabel(),alarm.getAlarmType(),alarm.getRepeatDay());
         listView.setAdapter(new AlarmEditAdapter(this,alarm));
         listView.setOnItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

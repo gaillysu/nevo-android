@@ -11,6 +11,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.telephony.PhoneStateListener;
@@ -77,6 +78,13 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         mTm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         mListener = new CallStateListener();
         mTm.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
+        Log.w("Karl","notification service onCreate() invoked");
+    }
+
+    @Override
+    public void onListenerConnected() {
+        super.onListenerConnected();
+        Log.w("Karl","notification service onListenerConnected() invoked");
     }
 
     @Override
@@ -84,7 +92,15 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         if(statusBarNotification == null) {
             return;
         }
-
+        //add log to debug notifications
+        try {
+            Bundle bundle = (Bundle)statusBarNotification.getNotification().getClass().getDeclaredField("extras").get(statusBarNotification.getNotification()); //this.getExtras().get("android.title");
+            Log.w("Karl","<<<<<<<<<<new notification>>>>>>>>>category:" + statusBarNotification.getNotification().category + ",package:" +statusBarNotification.getPackageName() + ",title:" + bundle.get("android.title")+",text:" + bundle.get("android.text") + ",subtext:"+bundle.get("android.subText") + ",people:"+bundle.get("android.people"));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
         Notification notification = statusBarNotification.getNotification();
         NotificationDataHelper helper = new NotificationDataHelper(this);
         if (notification != null) {
@@ -178,6 +194,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);
 
                 }
@@ -195,5 +212,6 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
     public void onDestroy() {
         super.onDestroy();
         mTm.listen(mListener, PhoneStateListener.LISTEN_NONE);
+        Log.w("Karl","notification service onDestroy() invoked");
     }
 }

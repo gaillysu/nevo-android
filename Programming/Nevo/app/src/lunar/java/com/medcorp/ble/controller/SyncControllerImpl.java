@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -30,6 +31,7 @@ import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.ble.model.packet.*;
 import com.medcorp.ble.model.request.*;
+import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -38,6 +40,7 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.model.Alarm;
+import com.medcorp.model.ApplicationInfomation;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
 import com.medcorp.model.GoalBase;
@@ -111,6 +114,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
+        //force android Notification Manager Service to start NevoNotificationListener
+        startNotificationListener();
         EventBus.getDefault().register(this);
     }
 
@@ -355,6 +360,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                 }
                 //press B key once--- down and up within 500ms
+                /* //this is old code ,when press key down/up, watch will send key event to app. now it will send "findphone" event to app
                 else if((byte) 0xF1 == lunarData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
                 {
                     long currentTime = System.currentTimeMillis();
@@ -371,13 +377,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     {
                         if(mLocalService!=null) {
                             mLocalService.findCellPhone();
+                            sendRequest(new FindPhoneRequest(mContext));
                         }
                     }
-                }
+                }*/
                 else if((byte) FindPhoneRequest.HEADER == lunarData.getRawData()[1])
                 {
                     if(mLocalService!=null) {
                         mLocalService.findCellPhone();
+                        //send response to watch that found out
+                        sendRequest(new FindPhoneRequest(mContext));
                     }
                 }
                 else if((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1])
@@ -395,6 +404,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //I can't calculator these value from this packet, they should come from CMD 0x25 cmd
                     ((ApplicationModel)mContext).saveDailySteps(steps);
                     //end save
+                }
+                else if((byte) NewApplicationArrivedPacket.HEADER == lunarData.getRawData()[1])
+                {
+                    NewApplicationArrivedPacket newApplicationArrivedPacket = new NewApplicationArrivedPacket(packet.getPackets());
+                    Log.i(TAG,"new Application arrived,total:" + newApplicationArrivedPacket.getTotalApplications());
+                    Log.i(TAG,"new Application arrived,ID: " + newApplicationArrivedPacket.getApplicationInfomation().getData());
+                    //TODO send AddApplicationRequest ???
+                    sendRequest(new AddApplicationRequest(mContext,newApplicationArrivedPacket.getApplicationInfomation()));
                 }
                 //process done(such as save local db), then notify top layer to get or refresh screen
                 if (packet.getHeader() == (byte) GetStepsGoalRequest.HEADER) {
@@ -557,6 +574,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
         //when forget the watch, force a big sync when got connected again
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
+    }
+    @Override
+    public void startNotificationListener() {
+        //force android NotificationManagerService to rebind user NotificationListenerService
+        // http://www.zhihu.com/question/33540416/answer/113706620
+        PackageManager pm = mContext.getPackageManager();
+        pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
     }
 
     /**
