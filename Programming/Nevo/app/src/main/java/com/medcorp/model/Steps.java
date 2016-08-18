@@ -1,48 +1,50 @@
 package com.medcorp.model;
 
+import java.util.Date;
+
 public class Steps implements Comparable<Steps>{
 
     private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     private String validicRecordID = "0";
 
-    private String nevoUserID;
+    private String nevoUserID = "1";
 
-    private final long createdDate;
+    private long createdDate = new Date().getTime();
 
-    private long date;
+    private long date = new Date().getTime();
 
-    private int steps;
+    private int steps = 1000;
 
-    private int walkSteps;
+    private int walkSteps = 400;
 
-    private int runSteps;
+    private int runSteps = 600;
 
-    private int distance;
+    private int distance = 1000;
 
-    private int walkDistance;
+    private int walkDistance = 400;
 
-    private int runDistance;
+    private int runDistance = 600;
 
-    private int walkDuration;
+    private int walkDuration = 100;
 
-    private int runDuration;
+    private int runDuration = 100;
 
-    private int calories;
+    private int calories = 0;
 
-    private String hourlySteps;
+    private String hourlySteps = "[1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]";
 
-    private String hourlyDistance;
+    private String hourlyDistance = "[1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]";
 
-    private String hourlyCalories;
+    private String hourlyCalories = "[1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3,1,2,3]";
 
-    private int inZoneTime;
+    private int inZoneTime = 100;
 
-    private int outZoneTime;
+    private int outZoneTime = 1000;
 
-    private int noActivityTime;
+    private int noActivityTime = 1000;
 
-    private int goal;
+    private int goal = 5000;
 
     private String remarks;
 
@@ -254,4 +256,8 @@ public class Steps implements Comparable<Steps>{
         }
         return 0;
     }
+
+
+
+
 }

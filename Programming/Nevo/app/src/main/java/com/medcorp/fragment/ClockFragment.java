@@ -51,7 +51,7 @@ public class ClockFragment extends BaseFragment {
     TextView showUserSteps;
 
     private Date userSelectDate;
-    private final int REFRESHINTERVAL = 10000;
+    private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable refreshTimerTask = new Runnable() {
         @Override
@@ -68,7 +68,7 @@ public class ClockFragment extends BaseFragment {
         setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
         //realtime sync for current steps and goal
         getModel().getSyncController().getStepsAndGoal();
-        mUiHandler.postDelayed(refreshTimerTask, REFRESHINTERVAL);
+        mUiHandler.postDelayed(refreshTimerTask, REFRESH_INTERVAL);
     }
 
     private void setHour(final float degree) {
@@ -112,9 +112,9 @@ public class ClockFragment extends BaseFragment {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
-        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
-        showUserSteps.setText(steps.getSteps() + "");
-        showUserCosumeCalories.setText(steps.getCalories() + "");
+        showUserSteps.setText(String.valueOf(steps.getSteps()));
+        showUserStepsDistance.setText(String.valueOf(user.getDistanceTraveled(steps)));
+        showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
     }
 
     private String formatTime(int walkDuration) {
