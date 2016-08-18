@@ -32,7 +32,7 @@
                 android:textSize="20dp"
                 android:gravity="center_vertical"
                 android:text="@string/main_fragment_solar_page_time_on_battery_text"
-                android:textColor="@color/white"
+                android:textColor="@color/text_color"
                 />
             <TextView
                 android:id="@+id/today_solar_battery_time_tv"
@@ -58,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:textSize="20dp"
                 android:text="@string/main_fragment_solar_page_time_on_solar_text"
-                android:textColor="@color/white"
+                android:textColor="@color/text_color"
                 />
             <TextView
                 android:id="@+id/today_solar_solar_time_tv"

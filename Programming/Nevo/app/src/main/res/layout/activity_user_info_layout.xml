@@ -17,7 +17,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
         android:text="@string/activity_user_info_title_above_text"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:textSize="30dp"
         />
 
@@ -27,7 +27,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="@string/activity_user_info_text_dec_middle"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:textSize="16sp"
         />
 
@@ -50,13 +50,13 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="40dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         android:gravity="center_vertical"
         android:background="@drawable/shape_input_email_account_bg"
         android:hint="@string/activity_user_info_birthday"
         android:paddingLeft="8dp"
-        android:textColorHint="@color/white"/>
+        android:textColorHint="@color/text_color"/>
 
     <TextView
         android:id="@+id/register_account_activity_edit_height"
@@ -66,12 +66,12 @@
         android:layout_marginRight="50dp"
         android:gravity="center_vertical"
         android:layout_marginTop="5dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         android:background="@drawable/shape_input_email_account_bg"
         android:hint="@string/activity_user_info_height"
         android:paddingLeft="8dp"
-        android:textColorHint="@color/white"/>
+        android:textColorHint="@color/text_color"/>
 
     <TextView
         android:id="@+id/register_account_activity_edit_weight"
@@ -81,10 +81,10 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginTop="5dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         android:background="@drawable/shape_input_email_account_bg"
         android:hint="@string/activity_user_info_weight"
         android:paddingLeft="8dp"
-        android:textColorHint="@color/white"/>
+        android:textColorHint="@color/text_color"/>
 </LinearLayout>

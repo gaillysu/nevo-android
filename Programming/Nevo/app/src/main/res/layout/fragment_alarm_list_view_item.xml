@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:roboto="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:roboto="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp">
 
     <RelativeLayout
         android:id="@+id/fragment_alarm_list_view_item_alarm_time_wrapper"
@@ -15,9 +16,9 @@
             android:id="@+id/fragment_alarmm_list_view_item_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
             android:text="jhggjh"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/black"
             android:textSize="65sp"
             roboto:thin="true"/>
 
@@ -37,21 +38,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_alarm_list_view_item_alarm_time_wrapper"
-        android:paddingBottom="25dp"
         android:paddingLeft="5dp"
-        android:textColor="@color/black"
-        android:paddingTop="15dp"
-        android:textSize="18sp"
+        android:paddingTop="10dp"
         android:text="sdafds"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         roboto:bold="true"/>
-   <com.medcorp.view.customfontview.RobotoTextView
-       android:id="@+id/fragment_alarm_list_view_item_alarm_repeat"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_alignParentBottom="true"
-       android:text="adsad"
-       android:textColor="@color/black"
-       android:textSize="25dp"
-       />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        >
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/fragment_alarm_list_view_item_alarm_repeat_dec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="adsad"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            />
+
+        <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/fragment_alarm_list_view_item_alarm_repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="adsad"
+            android:textColor="@color/alarm_repeat_text_color"
+            android:textSize="15sp"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -15,14 +15,14 @@
             android:text="@string/forget_password_activity_title_dec"
             android:textSize="30dp"
             android:layout_marginTop="80dp"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginTop="30dp"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
             android:text="@string/forget_password_activity_page_dec"/>
@@ -34,7 +34,7 @@
             android:layout_marginRight="50dp"
             android:layout_marginTop="60dp"
             android:hint="@string/log_in_email"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/text_color"
             android:paddingLeft="8dp"
             android:textSize="20sp"
             android:background="@drawable/shape_input_email_account_bg"
@@ -49,6 +49,6 @@
             android:background="@drawable/shape_login_button_bg"
             android:gravity="center"
             android:text="@string/forget_password_send_request_bt_text"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="20sp"/>
 </LinearLayout>

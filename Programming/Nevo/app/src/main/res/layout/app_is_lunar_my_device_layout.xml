@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/key_firmwares"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="20sp"
             />
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="5dp"
             android:drawableRight="@drawable/right_arrow"
-            android:drawableTint="@color/white"
+            android:drawableTint="@color/text_color"
             android:gravity="right"
             android:text="ss"
             android:textColor="@color/my_device_right_show_version_text_color"
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_nevo_battery"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="20sp"
             />
 
@@ -70,7 +70,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1.5dp"
-        android:background="@color/white"/>
+        android:background="@color/text_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_device_version_text"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="20sp"
             />
 

@@ -129,7 +129,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{getResources().getColor(R.color.deep_sleep), getResources().getColor(R.color.light_sleep), getResources().getColor(R.color.wake_sleep)});
         dataSet.setHighlightEnabled(true);
-        dataSet.setHighLightColor(getResources().getColor(R.color.white));
+        dataSet.setHighLightColor(getResources().getColor(R.color.text_color));
         dataSet.setHighLightAlpha(100);
 
         List<BarDataSet> dataSets = new ArrayList<BarDataSet>();

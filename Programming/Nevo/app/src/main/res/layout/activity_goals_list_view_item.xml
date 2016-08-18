@@ -18,7 +18,7 @@
             android:id="@+id/activity_goals_list_view_item_goal_steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color"
             android:textSize="25sp"
             roboto:thin="true"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
@@ -39,7 +39,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="25dp"
         android:paddingLeft="5dp"
-        android:textColor="@color/white"
+        android:textColor="@color/text_color"
         roboto:bold="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

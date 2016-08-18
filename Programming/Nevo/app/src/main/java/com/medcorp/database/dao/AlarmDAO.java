@@ -31,6 +31,23 @@ public class AlarmDAO {
     @DatabaseField
     private String alarmRepeat;
 
+    public static final String alarmIsOnlyOne = "isOnlyOne";
+    @DatabaseField
+    private boolean isOnlyOne;
+
+    public boolean isOnlyOne() {
+        return isOnlyOne;
+    }
+
+    public void setOnlyOne(boolean onlyOne) {
+        isOnlyOne = onlyOne;
+    }
+
+    public static String getAlarmIsOnlyOne() {
+        return alarmIsOnlyOne;
+    }
+
+
     public static String getAlarmTypeString() {
         return alarmTypeString;
     }
