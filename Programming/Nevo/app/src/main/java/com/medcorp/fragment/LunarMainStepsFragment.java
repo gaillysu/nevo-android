@@ -3,7 +3,6 @@ package com.medcorp.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +11,22 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
-import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
-import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
+import com.medcorp.view.graphs.MainStepsBarChart;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,7 +45,8 @@ public class LunarMainStepsFragment extends BaseFragment {
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
     @Bind(R.id.lunar_main_fragment_steps_chart)
-    BarChart hourlyBarChart;
+    MainStepsBarChart hourlyBarChart;
+
     private Steps steps;
     private Date userSelectDate;
 
@@ -52,7 +55,7 @@ public class LunarMainStepsFragment extends BaseFragment {
         View lunarMainFragmentAdapterChart = inflater.inflate(R.layout.chart_fragment_lunar_main_fragment_adapter_layout, container, false);
         ButterKnife.bind(this, lunarMainFragmentAdapterChart);
 
-       String selectDate =  Preferences.getSelectDate(this.getContext());
+        String selectDate =  Preferences.getSelectDate(this.getContext());
         if(selectDate == null){
             userSelectDate = new Date();
         }else{
@@ -75,27 +78,29 @@ public class LunarMainStepsFragment extends BaseFragment {
     }
 
 
-    public void initData(Date date) {
+    private void initData(Date date) {
         User user = getModel().getNevoUser();
         steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
-        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
-        showUserSteps.setText(steps.getSteps() + "");
-        showUserCosumeCalories.setText(steps.getCalories() + "");
-    }
-
-    private String formatTime(int walkDuration) {
-        StringBuffer activityTime = new StringBuffer();
-        if (walkDuration >= 60) {
-            if (walkDuration % 60 > 0) {
-                activityTime.append(walkDuration % 60 + "h");
-                activityTime.append(walkDuration - (walkDuration % 60 * 60) + "m");
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserSteps.setText(String.valueOf(steps.getSteps()));
+        String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
+        showUserStepsDistance.setText(String.valueOf(result));
+        showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
+        if (steps.getSteps() != 0){
+            JSONArray array = null;
+            try {
+                array = new JSONArray(steps.getHourlySteps());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } else {
-            activityTime.append(walkDuration + "m");
+            int[] stepsArray = new int[24];
+            for (int i = 0; i < 24; i++){
+                stepsArray[i] = array.optInt(i,0);
+            }
+            hourlyBarChart.setDataInChart(stepsArray);
+        }else{
+            hourlyBarChart.setDataInChart(new int[]{0});
         }
-
-        return activityTime.toString();
     }
 
     @Override

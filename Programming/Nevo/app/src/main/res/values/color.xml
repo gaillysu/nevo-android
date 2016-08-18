@@ -17,6 +17,7 @@
     <color name="window_background_color">#FFFFFF</color>
     <color name="switch_slider_color">@color/colorPrimary</color>
     <color name="colorPrimary">#A08455</color>
+     <color name="colorAccent">#A08455 </color>
     <color name="tool_bar_bg_color">#FFFFFF</color>
     <color name="steps_fragment_title_color">#FFFFFF</color>
     <color name="colorPrimaryDark">#A08455</color>

@@ -188,4 +188,15 @@ public class User {
     public String toString() {
         return firstName + " " + lastName;
     }
+
+
+    public int getConsumedCalories(Steps steps){
+        return (int) (2.0 * weight * 3.5 / 200 * (steps.getRunDuration() + steps.getWalkDuration()));
+    }
+
+    public double getDistanceTraveled(Steps steps){
+        double distance = ((height * 0.45 / 100) * steps.getSteps() / 1000);
+        return distance;
+    }
+
 }

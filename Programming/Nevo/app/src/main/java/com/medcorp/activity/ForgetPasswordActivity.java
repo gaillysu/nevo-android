@@ -12,7 +12,7 @@ import com.medcorp.R;
 import com.medcorp.network.listener.ResponseListener;
 import com.medcorp.network.validic.model.CheckUserInputEmailIsTrueRequest;
 import com.medcorp.network.validic.model.RequestTokenResponse;
-import com.medcorp.util.PublicUtils;
+import com.medcorp.util.EmailUtils;
 import com.medcorp.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 
@@ -46,7 +46,7 @@ public class ForgetPasswordActivity extends BaseActivity {
     public void forgetPasswordClick(){
         final String email = editEmail.getText().toString();
         if(!TextUtils.isEmpty(email)){
-            if(PublicUtils.checkEmail(email)){
+            if(EmailUtils.checkEmail(email)){
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
