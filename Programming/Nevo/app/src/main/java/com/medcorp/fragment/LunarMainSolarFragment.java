@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.util.Preferences;
@@ -56,7 +60,7 @@ public class LunarMainSolarFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
         float[] solarPieChartDate = {40f, 60f};
-        String[] destory = {"solar","battery"};
+        String[] describe = getContext().getResources().getStringArray(R.array.solar_describe_battery_text);
         ArrayList<String> des = new ArrayList<>();
         solarPieChart.setUsePercentValues(true);
         solarPieChart.setDescription("");
@@ -65,23 +69,32 @@ public class LunarMainSolarFragment extends BaseFragment {
 
         ArrayList<Entry> yValue = new ArrayList<>();
         for (int i = 0; i < solarPieChartDate.length; i++) {
-            des.add(i,destory[i]);
+            des.add(i,describe[i]);
             yValue.add(new Entry(solarPieChartDate[i],i));
         }
 
-//        PieDataSet pieDataSet = new PieDataSet(yValue,"");
+        PieDataSet pieDataSet = new PieDataSet(yValue,"");
 
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.GRAY);
-        colors.add(R.color.steps_identification_tint_color);
-//        pieDataSet.setColors(colors);
+        if(ApplicationFlag.FLAG== ApplicationFlag.Flag.LUNAR) {
+            colors.add(Color.rgb(126, 216, 209));
+            colors.add(Color.rgb(179, 126, 189));
+        }else{
+            colors.add(Color.rgb(160,132,85));
+            colors.add(Color.rgb(188,188,188));
+        }
+        pieDataSet.setColors(colors);
+        pieDataSet.setSliceSpace(1f);
 
-//        PieData pieData = new PieData( des, pieDataSet);
-//        pieData.setValueFormatter(new PercentFormatter());
-//        pieData.setValueTextColor(R.color.text_color);//设置描述字体颜色
+        PieData pieData = new PieData( des, pieDataSet);
+        pieData.setValueFormatter(new PercentFormatter());
+        pieData.setValueFormatter(new PercentFormatter());
 
-//        pieData.setDataSet(pieDataSet);
-//        solarPieChart.setData(pieData);
-        solarPieChart.invalidate();//更新
+        pieData.setDataSet(pieDataSet);
+        pieData.setValueTextColor(Color.rgb(255,255,255));
+        pieData.setValueTextSize(25f);
+
+        solarPieChart.setData(pieData);
+        solarPieChart.invalidate();
     }
 }

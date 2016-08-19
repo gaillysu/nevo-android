@@ -59,14 +59,11 @@ public class ProfileFragment extends PreferenceFragmentCompat {
         final TextView userHeight = (TextView) view.findViewById(R.id.profile_fragment_user_height_tv);
         final TextView userWeight = (TextView) view.findViewById(R.id.profile_fragment_user_weight_tv);
 
-        User user = getModel().getNevoUser();
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String userBir = simpleDateFormat.format(new Date(user.getBirthday()));
-        userBirthday.setText(new SimpleDateFormat("MMM").format(new Date(user.getBirthday()))
-                + "," + userBir.split("-")[0] + "," + userBir.split("-")[2]);
+        //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd,MMM,yyyy");
+        userBirthday.setText(simpleDateFormat.format(new Date(user.getBirthday())));
         userHeight.setText(user.getHeight() + "cm");
         userWeight.setText(user.getWeight() + "kg");
 
@@ -126,8 +123,10 @@ public class ProfileFragment extends PreferenceFragmentCompat {
         final EditText editName = (EditText) dialogView.findViewById(R.id.profile_fragment_input_dialog_edit_text);
         if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
             editName.setHint(getString(R.string.profile_fragment_edit_first_name_edit_hint));
+            editName.setText(user.getFirstName());
         } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
             editName.setHint(getString(R.string.profile_fragment_input_surname_edit_hint));
+            editName.setText(user.getLastName());
         }
 
         dialog.setView(dialogView);
@@ -167,18 +166,13 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
                         userWeight.setText(dateDesc + "kg");
+                        user.setWeight(new Integer(dateDesc).intValue());
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
-                .dateChose("60")
+                .dateChose(user.getWeight()+"")
                 .build();
-        pickerPopWin3.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                upDataUserData(userWeight);
 
-            }
-        });
         pickerPopWin3.showPopWin(ProfileFragment.this.getActivity());
     }
 
@@ -191,95 +185,45 @@ public class ProfileFragment extends PreferenceFragmentCompat {
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
                         userHeight.setText(dateDesc + "cm");
+                        user.setHeight(new Integer(dateDesc).intValue());
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
-                .dateChose("170")
+                .dateChose(user.getHeight()+"")
                 .build();
-        pickerPopWin2.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                upDataUserData(userHeight);
-            }
-        });
+
         pickerPopWin2.showPopWin(ProfileFragment.this.getActivity());
     }
 
     private void editUserBirthday(final TextView birthdayText) {
         viewType = 1;
-        String userInputBirthday = birthdayText.getText().toString().replace(",", "-");
         final DatePickerPopWin pickerPopWin = new DatePickerPopWin.Builder(ProfileFragment.this.getActivity(),
                 new DatePickerPopWin.OnDatePickedListener() {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             Date date = dateFormat.parse(dateDesc);
-                            birthdayText.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "," + day + "," + year);
+                            birthdayText.setText(new SimpleDateFormat("dd,MMM,yyyy", Locale.US).format(date));
+                            user.setBirthday(date.getTime());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
-                .minYear(Integer.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())).split("-")[0]) - 100) //min year in loop
-                .maxYear(Integer.valueOf(new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())).split("-")[0]) + 1)
-                .dateChose((Integer.valueOf(userInputBirthday.split("-")[2]))
-                        + "-" + userInputBirthday.split("-")[1] + "-" + userInputBirthday.split("-")[0]) // date chose when init popwindow
+                .minYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) - 100) //min year in loop
+                .maxYear(Integer.valueOf(new SimpleDateFormat("yyyy").format(new Date())) + 1)
+                .dateChose(new SimpleDateFormat("yyyy-MM-dd").format(new Date(user.getBirthday()))) // date chose when init popwindow
                 .build();
-        pickerPopWin.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                upDataUserData(birthdayText);
-
-            }
-        });
         pickerPopWin.showPopWin(ProfileFragment.this.getActivity());
     }
-
-    /**
-     * @param userWeight
-     */
-    private void upDataUserData(TextView userWeight) {
-        switch (userWeight.getId()) {
-            case R.id.profile_fragment_user_birthday_tv:
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-                try {
-                    String userBirthday = userWeight.getText().toString();
-                    userBirthday = userBirthday.replace(",", "-");
-                    Date date = sdf.parse(userBirthday);
-                    user.setBirthday(date.getTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.profile_fragment_user_height_tv:
-                String height = userWeight.getText().toString();
-                if (height.contains("cm")) {
-                    user.setHeight(new Integer(height.replace("cm", "")).intValue());
-                }
-                break;
-            case R.id.profile_fragment_user_weight_tv:
-                String weight = userWeight.getText().toString();
-                if (weight.contains("kg")) {
-                    //TODO未确定类型 < haha
-                    //                    user.setWeight(new Integer(weight.replace("kg","")).intValue());
-                    user.setWeight((int) Double.parseDouble(weight.replace("kg", "")));
-                }
-                break;
-        }
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getModel().saveNevoUser(getModel().getNevoUser());
-                if (user != null) {
-                    getModel().saveNevoUser(user);
-                }
+                getModel().saveNevoUser(user);
                 getActivity().finish();
                 break;
         }

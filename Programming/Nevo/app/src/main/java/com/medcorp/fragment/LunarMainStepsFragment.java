@@ -86,7 +86,7 @@ public class LunarMainStepsFragment extends BaseFragment {
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
-        if (steps.getSteps() != 0){
+        if (steps.getSteps() != 0 && steps.getHourlySteps()!=null){
             JSONArray array = null;
             try {
                 array = new JSONArray(steps.getHourlySteps());

@@ -188,17 +188,15 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
             case 1:
                 break;
             case 2:
-                leftLoopView.setVisibility(View.INVISIBLE);
+                leftLoopView.setVisibility(View.GONE);
                 rightLoopView.setVisibility(View.GONE);
                 tv_pickerRight.setVisibility(View.VISIBLE);
                 tv_pickerRight.setText("cm");
                 tv_pickerRight.setTextSize(viewTextSize);
                 break;
             case 3:
-
+                middleLoopView.setVisibility(View.GONE);
                 rightLoopView.setVisibility(View.GONE);
-                leftLoopView.setMinimumWidth(30);
-                middleLoopView.setMinimumWidth(30);
                 tv_pickerRight.setVisibility(View.VISIBLE);
                 tv_pickerRight.setTextSize(viewTextSize);
                 tv_pickerRight.setText("kg");
@@ -435,7 +433,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 case 3:
                     int weight = leftPos;
                     int porint = middlePos;
-                    mListener.onDatePickCompleted(weight, porint, 0, (weight + 25) + "." + porint + "");
+                    mListener.onDatePickCompleted(weight, porint, 0, (weight + 25)+"");
                     break;
                 default:
                     dismissPopWin();

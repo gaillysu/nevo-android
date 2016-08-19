@@ -114,7 +114,7 @@ public class StepsDAO {
      */
     public static final String fHourlySteps = "HourlySteps";
     @DatabaseField
-    private String HourlySteps;
+    private String HourlySteps = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     /**
      * one day's hourly distance, such as: int HourlyDistance[n] = {0,2000,3000,...,1000}, here "n" is fixed to 24
@@ -160,6 +160,22 @@ public class StepsDAO {
     public static final String fGoal = "Goal";
     @DatabaseField
     private int Goal;
+
+    public static final String fDistanceGoal = "distanceGoal";
+    @DatabaseField
+    private int distanceGoal;
+
+    public static final String fCaloriesGoal = "caloriesGoal";
+    @DatabaseField
+    private int caloriesGoal;
+
+    public static final String fActiveTimeGoal = "activeTimeGoal";
+    @DatabaseField
+    private int activeTimeGoal;
+
+    public static final String fGoalReached = "goalReached";
+    @DatabaseField
+    private byte goalReached;
 
     /**
      * remarks field, save extend  infomation
@@ -344,5 +360,37 @@ public class StepsDAO {
 
     public void setValidicRecordID(String validicRecordID) {
         this.validicRecordID = validicRecordID;
+    }
+
+    public int getDistanceGoal() {
+        return distanceGoal;
+    }
+
+    public void setDistanceGoal(int distanceGoal) {
+        this.distanceGoal = distanceGoal;
+    }
+
+    public int getCaloriesGoal() {
+        return caloriesGoal;
+    }
+
+    public void setCaloriesGoal(int caloriesGoal) {
+        this.caloriesGoal = caloriesGoal;
+    }
+
+    public int getActiveTimeGoal() {
+        return activeTimeGoal;
+    }
+
+    public void setActiveTimeGoal(int activeTimeGoal) {
+        this.activeTimeGoal = activeTimeGoal;
+    }
+
+    public byte getGoalReached() {
+        return goalReached;
+    }
+
+    public void setGoalReached(byte goalReached) {
+        this.goalReached = goalReached;
     }
 }

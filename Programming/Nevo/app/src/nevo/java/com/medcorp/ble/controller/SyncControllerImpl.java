@@ -361,8 +361,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     steps.setHourlyCalories(history.getHourlycalories());
                     steps.setHourlyDistance(history.getHourlydistance());
                     steps.setHourlySteps(history.getHourlysteps());
-
                     steps.setGoal(thispacket.getStepsGoal());
+                    steps.setDistanceGoal(thispacket.getDistanceGoal());
+                    steps.setCaloriesGoal(thispacket.getCaloriesGoal());
+                    steps.setActiveTimeGoal(thispacket.getActiveTimeGoal());
+                    steps.setNoActivityTime(thispacket.getInactivityTime());
                     steps.setWalkSteps(thispacket.getDailyWalkSteps());
                     steps.setRunSteps(thispacket.getDailyRunSteps());
                     steps.setWalkDistance(thispacket.getDailyWalkDistance());

@@ -18,6 +18,8 @@
         android:id="@+id/lunar_main_fragment_step_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
         layout="@layout/lunar_fragment_main_content_news_layout"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>
