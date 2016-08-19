@@ -75,16 +75,21 @@ public class LunarMainSolarFragment extends BaseFragment {
         PieDataSet pieDataSet = new PieDataSet(yValue,"");
 
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.GRAY);
-        colors.add(R.color.steps_identification_tint_color);
+        colors.add(Color.rgb(126,216,209));
+        colors.add(Color.rgb(179,126,189));
+
         pieDataSet.setColors(colors);
+        pieDataSet.setSliceSpace(1.5f);
 
         PieData pieData = new PieData( des, pieDataSet);
         pieData.setValueFormatter(new PercentFormatter());
-        pieData.setValueTextColor(R.color.text_color);//设置描述字体颜色
+        pieData.setValueFormatter(new PercentFormatter());
 
         pieData.setDataSet(pieDataSet);
+        pieData.setValueTextColor(Color.rgb(255,255,255));
+        pieData.setValueTextSize(25f);
+
         solarPieChart.setData(pieData);
-        solarPieChart.invalidate();//更新
+        solarPieChart.invalidate();
     }
 }
