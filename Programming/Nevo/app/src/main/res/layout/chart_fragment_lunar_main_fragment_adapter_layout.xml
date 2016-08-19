@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <com.github.mikephil.charting.charts.BarChart
+    <com.medcorp.view.graphs.MainStepsBarChart
+        android:layout_alignParentTop="true"
         android:id="@+id/lunar_main_fragment_steps_chart"
-        android:layout_weight="1"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="63dp"
         android:background="@color/window_background_color"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp">
-    </com.github.mikephil.charting.charts.BarChart>
+        android:layout_width="match_parent"
+        android:layout_above="@+id/lunar_main_fragment_step_data"
+        android:layout_height="match_parent"/>
+
     <include
+        android:id="@+id/lunar_main_fragment_step_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/lunar_fragment_main_content_news_layout"/>
-</LinearLayout>
+        layout="@layout/lunar_fragment_main_content_news_layout"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

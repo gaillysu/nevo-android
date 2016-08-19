@@ -4,11 +4,11 @@ public class Steps implements Comparable<Steps>{
 
     private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
-    private String validicRecordID = "0";
+    private String validicRecordID;
 
     private String nevoUserID;
 
-    private final long createdDate;
+    private long createdDate;
 
     private long date;
 
@@ -254,4 +254,8 @@ public class Steps implements Comparable<Steps>{
         }
         return 0;
     }
+
+
+
+
 }

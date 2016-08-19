@@ -6,8 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
         android:layout_marginTop="40dp"
         android:orientation="vertical"
         >
@@ -23,8 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal" >
 
                 <TextView
                     android:layout_width="0dp"
@@ -32,18 +31,18 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_calorie_text"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_consume_calories"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
             </LinearLayout>
 
@@ -60,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_steps_text"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
 
                 <TextView
@@ -68,10 +67,11 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -96,18 +96,19 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_activity_time_text"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="18sp"
+                    android:id="@+id/textView"/>
 
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_activity_time_tv"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
             </LinearLayout>
 
@@ -124,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_distance_km_text"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
 
                 <TextView
@@ -132,10 +133,11 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
             </LinearLayout>
         </LinearLayout>

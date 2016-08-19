@@ -18,6 +18,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,7 +53,7 @@ public class ClockFragment extends BaseFragment {
     TextView showUserSteps;
 
     private Date userSelectDate;
-    private final int REFRESHINTERVAL = 10000;
+    private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private Runnable refreshTimerTask = new Runnable() {
         @Override
@@ -68,7 +70,7 @@ public class ClockFragment extends BaseFragment {
         setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
         //realtime sync for current steps and goal
         getModel().getSyncController().getStepsAndGoal();
-        mUiHandler.postDelayed(refreshTimerTask, REFRESHINTERVAL);
+        mUiHandler.postDelayed(refreshTimerTask, REFRESH_INTERVAL);
     }
 
     private void setHour(final float degree) {
@@ -111,24 +113,11 @@ public class ClockFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
-        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
-        showUserSteps.setText(steps.getSteps() + "");
-        showUserCosumeCalories.setText(steps.getCalories() + "");
-    }
-
-    private String formatTime(int walkDuration) {
-        StringBuffer activityTime = new StringBuffer();
-        if (walkDuration >= 60) {
-            if (walkDuration % 60 > 0) {
-                activityTime.append(walkDuration % 60 + "h");
-                activityTime.append(walkDuration - (walkDuration % 60 * 60) + "m");
-            }
-        } else {
-            activityTime.append(walkDuration + "m");
-        }
-
-        return activityTime.toString();
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserSteps.setText(String.valueOf(steps.getSteps()));
+        String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
+        showUserStepsDistance.setText(result);
+        showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
     }
 
     @Override
