@@ -33,7 +33,7 @@ public class UserDAO {
      */
     public static final String fWeight = "Weight";
     @DatabaseField
-    private float Weight = 75;
+    private int Weight = 75;
 
     /**
      * default height, 175cm
@@ -158,11 +158,11 @@ public class UserDAO {
         Age = age;
     }
 
-    public float getWeight() {
+    public int getWeight() {
         return Weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(int weight) {
         Weight = weight;
     }
 

@@ -53,4 +53,5 @@
     <color name="profile_fragment_text_right_color">#A08455</color>
     <color name="steps_identification_tint_color">#AA79B3</color>
     <color name="calendar_dialog_view_title_bg">#618889</color>
+    <color name="colorAccent">#A08455</color>
 </resources>

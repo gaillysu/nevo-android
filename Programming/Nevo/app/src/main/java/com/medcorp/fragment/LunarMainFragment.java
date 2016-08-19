@@ -119,7 +119,6 @@ public class LunarMainFragment extends BaseObservableFragment {
                     })
                     .positiveText(R.string.goal_ok)
                     .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
-                    .backgroundColorRes(R.color.colorPrimaryDark)
                     .show();
         }else{
             ejectStepsGoalDialog();
