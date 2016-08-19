@@ -30,7 +30,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_calorie_text"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_color"
                     android:textSize="18sp" />
 
                 <TextView
@@ -58,7 +58,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_steps_text"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_color"
                     android:textSize="18sp"
                     />
 
@@ -95,7 +95,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_activity_time_text"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_color"
                     android:textSize="18sp"
                     android:id="@+id/textView"/>
 
@@ -124,7 +124,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_distance_km_text"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_color"
                     android:textSize="18sp"
                     />
 
