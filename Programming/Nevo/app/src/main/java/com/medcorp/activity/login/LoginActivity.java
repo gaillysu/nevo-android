@@ -3,7 +3,6 @@ package com.medcorp.activity.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -87,7 +86,6 @@ public class LoginActivity extends BaseActivity {
         }
         progressDialog.dismiss();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

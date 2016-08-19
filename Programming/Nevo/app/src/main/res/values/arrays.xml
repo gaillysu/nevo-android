@@ -26,4 +26,8 @@
         <item name="saturday">Sat</item>
         <item name="sunday">Sun</item>
     </string-array>
+    <string-array name="solar_describe_battery_text">
+        <item>Solar</item>
+        <item>Battery</item>
+    </string-array>
 </resources>
