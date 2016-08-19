@@ -19,7 +19,7 @@ android {
             storePassword 'imaze123'
         }
     }
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion '23.0.3'
     defaultConfig {
         applicationId "com.medcorp"
@@ -63,20 +63,20 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:preference-v7:23.2.0'
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:recyclerview-v7:23.2.0'
+    compile 'com.android.support:preference-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.google.apis:google-api-services-tasks:v1-rev35-1.19.0' exclude module: 'httpclient'
     compile 'com.google.api-client:google-api-client-android:1.19.0' exclude module: 'httpclient'
     compile 'com.google.http-client:google-http-client-gson:1.19.0' exclude module: 'httpclient'
-    compile 'com.google.android.gms:play-services-identity:8.4.0'
-    compile 'com.google.android.gms:play-services-fitness:8.4.0'
+    compile 'com.google.android.gms:play-services-identity:9.4.0'
+    compile 'com.google.android.gms:play-services-fitness:9.4.0'
     compile files('libs/ormlite-android-4.47.jar')
     compile files('libs/ormlite-core-4.47.jar')
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     androidTestCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:design:24.2.0'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
         transitive = true
     }
@@ -89,7 +89,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
     compile project(path: ':wheelPickLib')
     compile project(':wheelPickLib')
     compile 'com.wdullaer:materialdatetimepicker:2.4.0'

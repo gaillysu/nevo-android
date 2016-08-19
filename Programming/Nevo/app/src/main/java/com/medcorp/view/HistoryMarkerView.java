@@ -22,7 +22,7 @@ public class HistoryMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvContent.setText("" + e.getVal());
+//        tvContent.setText("" + e.getVal());
     }
 
     @Override
@@ -34,4 +34,5 @@ public class HistoryMarkerView extends MarkerView {
     public int getYOffset(float y) {
         return -getHeight();
     }
+
 }

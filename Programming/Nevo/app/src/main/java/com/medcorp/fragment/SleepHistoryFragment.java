@@ -18,12 +18,13 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.medcorp.R;
+import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.SleepData;
-import com.medcorp.R;
-import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.util.SleepDataHandler;
 import com.medcorp.util.SleepSorter;
 
@@ -88,7 +89,7 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         barChart.setDoubleTapToZoomEnabled(false);
         barChart.setViewPortOffsets(0.0f, 0.0f, 0.0f, 80.0f);
         barChart.setDragEnabled(true);
-        barChart.setDrawHighlightArrow(true);
+//        barChart.setDrawHighlightArrow(true);
 
         YAxis yAxis = barChart.getAxisLeft();
         yAxis.setDrawGridLines(false);
@@ -114,11 +115,11 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         SleepDataHandler handler = new SleepDataHandler(sleepList);
         int i = 0;
         sleepDataList = handler.getSleepData();
-        for (SleepData sleepData:sleepDataList) {
-            yValue.add(new BarEntry(new float[]{sleepData.getDeepSleep(),sleepData.getLightSleep(),sleepData.getAwake()}, i));
-            xVals.add(sdf.format(new Date(sleepData.getDate())));
-            i++;
-        }
+//        for (SleepData sleepData:sleepDataList) {
+//            yValue.add(new BarEntry(new float[]{sleepData.getDeepSleep(),sleepData.getLightSleep(),sleepData.getAwake()}, i));
+//            xVals.add(sdf.format(new Date(sleepData.getDate())));
+//            i++;
+//        }
         if (sleepDataList.size() < 7) {
             barChart.setScaleMinima((.14f), 1f);
         }else{
@@ -132,9 +133,9 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
         dataSet.setHighLightColor(getResources().getColor(R.color.text_color));
         dataSet.setHighLightAlpha(100);
 
-        List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        List<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(dataSet);
-        BarData data = new BarData(xVals, dataSets);
+        BarData data = new BarData(dataSets);
         barChart.setData(data);
         barChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
 
@@ -154,10 +155,10 @@ public class SleepHistoryFragment extends BaseFragment implements OnChartValueSe
     }
 
     @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        barChart.highlightValue(e.getXIndex(), dataSetIndex);
-        SleepData sleepData = sleepDataList.get(e.getXIndex());
-        setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
+    public void onValueSelected(Entry e, Highlight h) {
+//        barChart.highlightValue(e.getXIndex(), dataSetIndex);
+//        SleepData sleepData = sleepDataList.get(e.getXIndex());
+//        setDashboard(new Dashboard(sleepData.getTotalSleep(), sleepData.getDeepSleep(), sleepData.getLightSleep(), sleepData.getSleepStart(), sleepData.getSleepEnd(), sleepData.getAwake()));
     }
 
     @Override

@@ -4,13 +4,16 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <com.github.mikephil.charting.charts.LineChart
+    <com.medcorp.view.graphs.SleepChart
         android:id="@+id/fragment_sleep_history_linechart"
         android:layout_width="fill_parent"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="63dp"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/window_background_color">
-    </com.github.mikephil.charting.charts.LineChart>
+    </com.medcorp.view.graphs.SleepChart>
 
 
     <LinearLayout
@@ -37,18 +40,20 @@
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_main_sleep_fragment_time_text"
+                    android:layout_weight="2"
                     android:textColor="@color/text_color"
                     android:textSize="18sp"
                     />
 
                 <TextView
-                    android:id="@+id/lunar_fragment_show_user_consume_calories"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lunar_sleep_fragment_sleep_time"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="start"
+                    android:layout_weight="1"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
                     android:textSize="18sp"
@@ -63,7 +68,8 @@
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_main_sleep_fragment_wake_time_text"
                     android:textColor="@color/text_color"
@@ -71,8 +77,9 @@
                     />
 
                 <TextView
-                    android:id="@+id/lunar_fragment_show_user_steps_tv"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lunar_hjbkarl"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="0"
@@ -97,17 +104,19 @@
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_main_sleep_fragment_sleep_dec"
                     android:textColor="@color/text_color"
                     android:textSize="18sp"
+                    android:layout_weight="2"
                     />
 
                 <TextView
-                    android:id="@+id/lunar_fragment_show_user_activity_time_tv"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lunar_sleep_fragment_quality"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="start"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
@@ -123,7 +132,8 @@
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_main_sleep_fragment_duration"
                     android:textColor="@color/text_color"
@@ -131,9 +141,10 @@
                     />
 
                 <TextView
-                    android:id="@+id/lunar_fragment_show_user_steps_distance_tv"
-                    android:layout_width="match_parent"
+                    android:id="@+id/lunar_sleep_fragment_duration"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="start"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"

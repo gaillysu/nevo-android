@@ -112,6 +112,8 @@
     <string name="sleep_wake_time">Wake time</string>
     <string name="sleep_deep_sleep">Deep sleep</string>
     <string name="sleep_light_sleep">Light sleep</string>
+    <string name="sleep_awake">Awake</string>
+
     <string name="sleep_wake_duration">Wake duration</string>
     <string name="sleep_today_no_sleep_message">You didn\'t sleep with your nevo.</string>
     <string name="sleep_select_date">select a date</string>

@@ -4,14 +4,17 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.github.mikephil.charting.formatter.AxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.medcorp.R;
 
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import static java.lang.Math.abs;
  * Created by karl-john on 18/8/2016.
  */
 
-public class MainStepsBarChart extends BarChart {
+public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
     private int[] steps = new int[0];
     public MainStepsBarChart(Context context) {
         super(context);
@@ -57,6 +60,7 @@ public class MainStepsBarChart extends BarChart {
         setBorderColor(Color.BLACK);
         setDrawBorders(true);
 
+
         YAxis leftAxis = getAxisLeft();
         leftAxis.setEnabled(true);
         leftAxis.setDrawGridLines(true);
@@ -67,11 +71,16 @@ public class MainStepsBarChart extends BarChart {
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setAxisMinValue(0.0f);
         leftAxis.setDrawLabels(true);
-        leftAxis.setValueFormatter(new YAxisValueFormatter() {
+        leftAxis.mAxisMinimum = 0.0f;
+        leftAxis.setValueFormatter(new AxisValueFormatter() {
             @Override
-            public String getFormattedValue(float value, YAxis yAxis) {
-                int resValue = (int) value;
-                return resValue + "";
+            public String getFormattedValue(float value, AxisBase axis) {
+                return String.format("%d",(long)value);
+            }
+
+            @Override
+            public int getDecimalDigits() {
+                return 0;
             }
         });
 
@@ -93,9 +102,9 @@ public class MainStepsBarChart extends BarChart {
         xAxis.setGridLineWidth(widthLines);
         xAxis.setTextSize(10f);
         xAxis.setDrawAxisLine(true);
-        xAxis.setLabelsToSkip(5);
-        xAxis.setSpaceBetweenLabels(-10);
+        xAxis.setLabelCount(6);
         xAxis.setDrawLimitLinesBehindData(true);
+        xAxis.setValueFormatter(this);
 
     }
 
@@ -111,13 +120,12 @@ public class MainStepsBarChart extends BarChart {
                 }
             }
         }
-        List<String> xVals = new ArrayList<String>();
         List<BarEntry> yValue = new ArrayList<BarEntry>();
         int maxValue = 0;
         final int stepsModulo = 200;
         for (int i = 0; i < stepsArray.length; i++) {
-            yValue.add(new BarEntry(stepsArray[i], i));
-            xVals.add(i + ":00");
+            BarEntry entry = new BarEntry(i, stepsArray[i],i + ":???");
+            yValue.add(entry);
             if (stepsArray[i] > maxValue) {
                 maxValue = stepsArray[i];
             }
@@ -139,11 +147,12 @@ public class MainStepsBarChart extends BarChart {
 
         setScaleMinima((.14f), 1f);
         BarDataSet dataSet = new BarDataSet(yValue, "");
+
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)});
-        List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        List<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(dataSet);
-        BarData data = new BarData(xVals, dataSets);
+        BarData data = new BarData(dataSets);
         setData(data);
         invalidate();
     }
@@ -154,5 +163,15 @@ public class MainStepsBarChart extends BarChart {
             totalSteps += steps[i];
         }
         return totalSteps;
+    }
+
+    @Override
+    public String getFormattedValue(float value, AxisBase axis) {
+        return (long)value + ":00";
+    }
+
+    @Override
+    public int getDecimalDigits() {
+        return 0;
     }
 }

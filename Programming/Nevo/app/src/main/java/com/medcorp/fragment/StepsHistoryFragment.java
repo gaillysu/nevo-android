@@ -18,6 +18,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
@@ -99,7 +100,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
 
         for(Steps steps:stepsList)
         {
-            yValue.add(new BarEntry(new float[]{steps.getSteps()}, i));
+//            yValue.add(new BarEntry(new float[]{steps.getSteps()}, i));
             xVals.add(sdf.format(new Date(steps.getDate())));
             i++;
         }
@@ -115,9 +116,9 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         dataSet.setColors(new int[]{getResources().getColor(R.color.customGray)});
         dataSet.setHighlightEnabled(true);
         dataSet.setHighLightColor(getResources().getColor(R.color.customOrange));
-        List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        List<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataSets.add(dataSet);
-        BarData data = new BarData(xVals, dataSets);
+        BarData data = new BarData(dataSets);
         barChart.setData(data);
         barChart.animateY(2000, Easing.EasingOption.EaseInOutCirc);
         barChart.postOnAnimation(new Runnable() {
@@ -136,10 +137,10 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
     }
 
     @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        barChart.highlightValue(e.getXIndex(), dataSetIndex);
-        Steps steps = stepsList.get(e.getXIndex());
-        setDashboard(new Dashboard(steps.getSteps(),steps.getGoal()));
+    public void onValueSelected(Entry e, Highlight h) {
+//        barChart.highlightValue(e.getXIndex(), dataSetIndex);
+//        Steps steps = stepsList.get(e.getXIndex());
+//        setDashboard(new Dashboard(steps.getSteps(),steps.getGoal()));
     }
 
     @Override

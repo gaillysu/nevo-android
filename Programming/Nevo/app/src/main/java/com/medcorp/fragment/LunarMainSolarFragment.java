@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.util.Preferences;
@@ -72,19 +69,19 @@ public class LunarMainSolarFragment extends BaseFragment {
             yValue.add(new Entry(solarPieChartDate[i],i));
         }
 
-        PieDataSet pieDataSet = new PieDataSet(yValue,"");
+//        PieDataSet pieDataSet = new PieDataSet(yValue,"");
 
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.GRAY);
         colors.add(R.color.steps_identification_tint_color);
-        pieDataSet.setColors(colors);
+//        pieDataSet.setColors(colors);
 
-        PieData pieData = new PieData( des, pieDataSet);
-        pieData.setValueFormatter(new PercentFormatter());
-        pieData.setValueTextColor(R.color.text_color);//设置描述字体颜色
+//        PieData pieData = new PieData( des, pieDataSet);
+//        pieData.setValueFormatter(new PercentFormatter());
+//        pieData.setValueTextColor(R.color.text_color);//设置描述字体颜色
 
-        pieData.setDataSet(pieDataSet);
-        solarPieChart.setData(pieData);
+//        pieData.setDataSet(pieDataSet);
+//        solarPieChart.setData(pieData);
         solarPieChart.invalidate();//更新
     }
 }

@@ -75,6 +75,7 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -197,7 +198,7 @@ public class ApplicationModel extends Application {
         }
     }
 
-    @Subscribe
+        @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
             final Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
@@ -275,6 +276,18 @@ public class ApplicationModel extends Application {
             return steps.get();
         }
         return new Steps(0);
+    }
+
+    public Sleep[] getDailySleep(String userId, Date todayDate) {
+        DateTime todayDateTime = new DateTime(todayDate);
+        DateTime yesterdayDateTime = todayDateTime.minusDays(1);
+        Date yesterdayDate = new Date(yesterdayDateTime.getMillis());
+        Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(todayDate));
+        Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
+        if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
+            return new Sleep[]{todaySleep.get(),yesterdaySleep.get()};
+        }
+        return new Sleep[0];
     }
 
     public void saveDailySleep(Sleep sleep) {

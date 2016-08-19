@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.medcorp.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +29,7 @@ public class SleepData {
         this.awake = awake;
         this.date = date;
     }
+
     public SleepData(int deepSleep, int lightSleep, int awake, long date,long sleepStart,long sleepEnd) {
         this.deepSleep = deepSleep;
         this.lightSleep = lightSleep;
@@ -131,5 +133,32 @@ public class SleepData {
             e.printStackTrace();
         }
         return json;
+    }
+
+    private int[] convertJSONArrayIntToArray(String string){
+        try {
+            JSONArray jsonArray = new JSONArray(string);
+            int[] hourlyLight = new int[jsonArray.length()];
+            for (int i = 0; i < jsonArray.length(); i++){
+                hourlyLight[i] = jsonArray.optInt(i,0);
+            }
+            return hourlyLight;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new int[0];
+        }
+    }
+
+    public int[] getHourlyDeepInt(){
+        return convertJSONArrayIntToArray(getHourlyDeep());
+    }
+
+    public int[] getHourlyLightInt(){
+        return convertJSONArrayIntToArray(getHourlyLight());
+    }
+
+
+    public int[] getHourlyWakeInt(){
+        return convertJSONArrayIntToArray(getHourlyWake());
     }
 }

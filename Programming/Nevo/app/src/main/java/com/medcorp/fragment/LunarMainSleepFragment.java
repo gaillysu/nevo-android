@@ -8,21 +8,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.fragment.base.BaseFragment;
-import com.medcorp.model.Steps;
+import com.medcorp.model.Sleep;
+import com.medcorp.model.SleepData;
 import com.medcorp.model.User;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.SleepDataHandler;
+import com.medcorp.util.TimeUtil;
+import com.medcorp.view.graphs.SleepChart;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,16 +39,19 @@ import butterknife.ButterKnife;
 public class LunarMainSleepFragment extends BaseFragment {
 
 
-    @Bind(R.id.lunar_fragment_show_user_consume_calories)
-    TextView showUserCosumeCalories;
-    @Bind(R.id.lunar_fragment_show_user_steps_distance_tv)
-    TextView showUserStepsDistance;
-    @Bind(R.id.lunar_fragment_show_user_activity_time_tv)
-    TextView showUserActivityTime;
-    @Bind(R.id.lunar_fragment_show_user_steps_tv)
-    TextView showUserSteps;
+    @Bind(R.id.lunar_sleep_fragment_duration)
+    TextView durationTextView;
+
+    @Bind(R.id.lunar_sleep_fragment_quality)
+    TextView qualityTextView;
+
+    @Bind(R.id.lunar_sleep_fragment_sleep_time)
+    TextView sleepTimeTextView;
+
+    TextView wakeTimeTextView;
+
     @Bind(R.id.fragment_sleep_history_linechart)
-    LineChart lineChartSleep;
+    SleepChart lineChartSleep;
 
     private Date userSelectDate;
 
@@ -50,6 +59,7 @@ public class LunarMainSleepFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View sleepView = inflater.inflate(R.layout.lunar_main_sleep_fragment_layout, container, false);
         ButterKnife.bind(this, sleepView);
+        wakeTimeTextView = (TextView) sleepView.findViewById(R.id.lunar_hjbkarl);
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -60,36 +70,54 @@ public class LunarMainSleepFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+
+
         initData(userSelectDate);
-        modifyChart(lineChartSleep);
         return sleepView;
     }
 
-    private void modifyChart(LineChart lineChart) {
-
-
-    }
     public void initData(Date date) {
         User user = getModel().getNevoUser();
-        Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? formatTime(steps.getWalkDuration()) : 0 + "");
-        showUserStepsDistance.setText(steps.getWalkDistance() != 0 ? steps.getWalkDistance() + "km" : 0 + "");
-        showUserSteps.setText(steps.getSteps() + "");
-        showUserCosumeCalories.setText(steps.getCalories() + "");
+        Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
+        // TEST DATA
+        Sleep today = new Sleep(1448812800000l);;
+        today.setDate(1448812800000l);
+        today.setHourlyWake("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+        today.setHourlyLight("[57, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+        today.setHourlyDeep("[0, 60, 60, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]") ;
+        today.setHourlySleep("[57, 60, 60, 60, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+//        Sleep yesterday = new Sleep(1448726400000l);
+//        yesterday.setDate(1448726400000l);
+//        yesterday.setHourlyWake("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10]");
+//        yesterday.setHourlyLight("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19]");
+//        yesterday.setHourlyDeep("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]") ;
+//        yesterday.setHourlySleep("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29]");
+        List<Sleep> sleepList = new ArrayList<>();
+//        sleepList.add(yesterday);
+        sleepList.add(today);
+
+        SleepDataHandler handler = new SleepDataHandler(sleepList,false);
+        List<SleepData> sleepDataList = handler.getSleepData();
+        // TEST DATA
+        if (!sleepDataList.isEmpty()){
+            SleepData sleepData = sleepDataList.get(sleepDataList.size()-1);
+            lineChartSleep.setDataInChart(sleepData);
+            durationTextView.setText(TimeUtil.formatTime(sleepData.getLightSleep()+ sleepData.getDeepSleep() + sleepData.getAwake()));
+            qualityTextView.setText("100%");
+            DateTime sleepStart = new DateTime(sleepData.getSleepStart());
+
+            sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
+            wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
+        }else{
+            lineChartSleep.setEmptyChart();
+            durationTextView.setText("0");
+            qualityTextView.setText("0");
+            sleepTimeTextView.setText("0");
+            wakeTimeTextView.setText("0");
+        }
     }
 
-    private String formatTime(int walkDuration) {
-        StringBuffer activityTime = new StringBuffer();
-        if (walkDuration >= 60) {
-            if (walkDuration % 60 > 0) {
-                activityTime.append(walkDuration % 60 + "h");
-                activityTime.append(walkDuration - (walkDuration % 60 * 60) + "m");
-            }
-        } else {
-            activityTime.append(walkDuration + "m");
-        }
-        return activityTime.toString();
-    }
     @Override
     public void onStart() {
         super.onStart();
@@ -109,7 +137,6 @@ public class LunarMainSleepFragment extends BaseFragment {
             public void run() {
                 userSelectDate = event.getDate();
                 initData(userSelectDate);
-                modifyChart(lineChartSleep);
             }
         });
     }

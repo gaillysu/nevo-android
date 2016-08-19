@@ -36,7 +36,7 @@ public class TipsView extends MarkerView {
             CandleEntry ce = (CandleEntry) e;
             tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, false));
         } else {
-            tvContent.setText("" + Utils.formatNumber(e.getVal(), 0, false));
+//            tvContent.setText("" + Utils.formatNumber(e.getVal(), 0, false));
         }
     }
 
