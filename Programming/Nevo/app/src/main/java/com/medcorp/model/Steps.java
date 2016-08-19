@@ -42,7 +42,12 @@ public class Steps implements Comparable<Steps>{
 
     private int noActivityTime;
 
+    //keep name, means stepsGoal
     private int goal;
+    private int distanceGoal;
+    private int caloriesGoal;
+    private int activeTimeGoal;
+    private byte goalReached;
 
     private String remarks;
 
@@ -243,6 +248,39 @@ public class Steps implements Comparable<Steps>{
 
     public void setNevoUserID(String nevoUserID) {
         this.nevoUserID = nevoUserID;
+    }
+
+
+    public int getDistanceGoal() {
+        return distanceGoal;
+    }
+
+    public void setDistanceGoal(int distanceGoal) {
+        this.distanceGoal = distanceGoal;
+    }
+
+    public int getCaloriesGoal() {
+        return caloriesGoal;
+    }
+
+    public void setCaloriesGoal(int caloriesGoal) {
+        this.caloriesGoal = caloriesGoal;
+    }
+
+    public int getActiveTimeGoal() {
+        return activeTimeGoal;
+    }
+
+    public void setActiveTimeGoal(int activeTimeGoal) {
+        this.activeTimeGoal = activeTimeGoal;
+    }
+
+    public byte getGoalReached() {
+        return goalReached;
+    }
+
+    public void setGoalReached(byte goalReached) {
+        this.goalReached = goalReached;
     }
 
     @Override

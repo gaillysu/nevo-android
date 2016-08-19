@@ -1,5 +1,7 @@
 package com.medcorp.ble.model.packet;
 
+import com.medcorp.model.GoalBase;
+
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.util.HexUtils;
 
@@ -374,6 +376,46 @@ public class DailyTrackerPacket extends Packet {
 
         return stepGoal;
     }
+    public int getDistanceGoal()
+    {
+        int goal = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[10],
+                getPackets().get(0).getRawData()[11],
+                getPackets().get(0).getRawData()[12],
+                getPackets().get(0).getRawData()[13]
+        });
+
+        return goal;
+    }
+    public int getCaloriesGoal()
+    {
+        int goal = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[14],
+                getPackets().get(0).getRawData()[15],
+                getPackets().get(0).getRawData()[16],
+                getPackets().get(0).getRawData()[17]
+        });
+
+        return goal;
+    }
+    public int getActiveTimeGoal()
+    {
+        int goal = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[18],
+                getPackets().get(0).getRawData()[19],
+                getPackets().get(1).getRawData()[2],
+                getPackets().get(1).getRawData()[3]
+        });
+
+        return goal;
+    }
+
+    /**
+     *
+     * @return all goal reached result,@ GoalBase.GoalReached
+     */
+    public byte getGoalReached()
+    {
+        return getPackets().get(5).getRawData()[2];
+    }
+
     /**
      return History Daily walk steps
      */

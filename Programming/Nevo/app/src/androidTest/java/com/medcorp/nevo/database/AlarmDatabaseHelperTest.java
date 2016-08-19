@@ -1,4 +1,4 @@
-package com.medcorp.database;
+package com.medcorp.nevo.database;
 
 import android.test.AndroidTestCase;
 
@@ -22,9 +22,9 @@ public class AlarmDatabaseHelperTest extends AndroidTestCase {
         super.setUp();
 
         db = new AlarmDatabaseHelper(getContext());
-        addAlarm = new Alarm(7,30, (byte) 1,"wake up alarm");
-        updateAlarm = new Alarm(12,30, (byte) 1,"lunch time");
-        removeAlarm = new Alarm(22,30, (byte) 0,"sleep time");
+        addAlarm = new Alarm(7,30, (byte) 1,"wake up alarm",0,"",false);
+        updateAlarm = new Alarm(12,30, (byte) 1,"lunch time",0,"",false);
+        removeAlarm = new Alarm(22,30, (byte) 0,"sleep time",0,"",false);
     }
 
     @Override

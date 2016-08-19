@@ -155,6 +155,10 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         stepsDao.setGoal(steps.getGoal());
         stepsDao.setRemarks(steps.getRemarks());
         stepsDao.setValidicRecordID(steps.getValidicRecordID());
+        stepsDao.setDistanceGoal(steps.getDistanceGoal());
+        stepsDao.setCaloriesGoal(steps.getCaloriesGoal());
+        stepsDao.setActiveTimeGoal(steps.getActiveTimeGoal());
+        stepsDao.setGoalReached(steps.getGoalReached());
         return stepsDao;
     }
 
@@ -181,6 +185,10 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         steps.setGoal(stepsDAO.getGoal());
         steps.setRemarks(stepsDAO.getRemarks());
         steps.setValidicRecordID(stepsDAO.getValidicRecordID());
+        steps.setDistanceGoal(stepsDAO.getDistanceGoal());
+        steps.setCaloriesGoal(stepsDAO.getCaloriesGoal());
+        steps.setActiveTimeGoal(stepsDAO.getActiveTimeGoal());
+        steps.setGoalReached(stepsDAO.getGoalReached());
         return steps;
     }
 
