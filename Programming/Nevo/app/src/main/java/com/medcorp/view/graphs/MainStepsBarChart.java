@@ -111,8 +111,8 @@ public class MainStepsBarChart extends BarChart {
                 }
             }
         }
-        List<String> xVals = new ArrayList<String>();
-        List<BarEntry> yValue = new ArrayList<BarEntry>();
+        List<String> xVals = new ArrayList<>();
+        List<BarEntry> yValue = new ArrayList<>();
         int maxValue = 0;
         final int stepsModulo = 200;
         for (int i = 0; i < stepsArray.length; i++) {
@@ -141,7 +141,7 @@ public class MainStepsBarChart extends BarChart {
         BarDataSet dataSet = new BarDataSet(yValue, "");
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)});
-        List<BarDataSet> dataSets = new ArrayList<BarDataSet>();
+        List<BarDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
         BarData data = new BarData(xVals, dataSets);
         setData(data);

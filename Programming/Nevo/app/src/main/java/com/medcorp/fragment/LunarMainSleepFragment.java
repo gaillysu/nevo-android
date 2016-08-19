@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
@@ -41,6 +40,15 @@ public class LunarMainSleepFragment extends BaseFragment {
     TextView showUserActivityTime;
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
+    @Bind(R.id.main_fragment_describe_text_three)
+    TextView fragmentDescribeThree;
+    @Bind(R.id.main_fragment_describe_text_one)
+    TextView fragmentDescribeOne;
+    @Bind(R.id.main_fragment_describe_text_two)
+    TextView fragmentDescribeTwo;
+    @Bind(R.id.main_fragment_describe_text_four)
+    TextView fragmentDescribeFour;
+
     @Bind(R.id.fragment_sleep_history_linechart)
     LineChart lineChartSleep;
 
@@ -60,6 +68,12 @@ public class LunarMainSleepFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+        fragmentDescribeOne.setText(getString(R.string.lunar_main_sleep_fragment_time_text));
+        fragmentDescribeTwo.setText(getString(R.string.lunar_main_sleep_fragment_wake_time_text));
+        fragmentDescribeThree.setText(getString(R.string.lunar_main_sleep_fragment_sleep_dec));
+        fragmentDescribeFour.setText(getString(R.string.lunar_main_sleep_fragment_duration));
+
+
         initData(userSelectDate);
         modifyChart(lineChartSleep);
         return sleepView;
