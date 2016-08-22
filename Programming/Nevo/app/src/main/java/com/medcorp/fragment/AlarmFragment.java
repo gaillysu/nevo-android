@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TimePicker;
-import android.widget.ToggleButton;
 
 import com.medcorp.R;
 import com.medcorp.activity.EditAlarmActivity;
@@ -52,7 +51,7 @@ import butterknife.ButterKnife;
  */
 public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwitchListener,
         TimePickerDialog.OnTimeSetListener, AdapterView.OnItemClickListener,
-        CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener {
+        CompoundButton.OnCheckedChangeListener, RadioGroup.OnCheckedChangeListener, View.OnClickListener {
 
     @Bind(R.id.fragment_alarm_list_view)
     ListView alarmListView;
@@ -63,16 +62,17 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private Boolean isMondayChecked = false;
 
     private TreeMap<Integer, String> mMap;
-    private Boolean isTuesdayChecked = false;
-    private Boolean isWednesdayChecked = false;
-    private Boolean isThursdayChecked = false;
-    private Boolean isFridayChecked = false;
-    private Boolean isSaturdayChecked = false;
-    private Boolean isSundayChecked = false;
-    private Boolean isSelectEveryDay = false;
-    private int alarmSelectStyle = 0;
-    private boolean isOnlyOne = false;
+    private byte alarmSelectStyle = 0;
+    private Button monday;
     private String[] weekDayArray;
+    private byte weekDay = 0;
+    private Button tuesday;
+    private Button thursday;
+    private Button wednesday;
+    private Button friday;
+    private Button sunday;
+    private Button saturday;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
@@ -111,22 +111,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
-        //        new MaterialDialog.Builder(getActivity())
-        //        new MaterialDialog.Builder(getActivity())
-        //        new MaterialDialog.Builder(getActivity())
-        //                .title(R.string.alarm_add)
-        //                .content(R.string.alarm_label_alarm)
-        //                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT)
-        //                .input(getString(R.string.title_alarm), "", new MaterialDialog.InputCallback() {
-        //                    @Override
-        //                    public void onInput(MaterialDialog dialog, CharSequence input) {
-        //                        alarm.setLabel(input.toString());
-        //                        getModel().addAlarm(alarm);
-        //                        refreshListView();
-        //                    }
-        //                }).negativeText(R.string.alarm_cancel)
-        //                .show();
+        editAlarmDialog(hourOfDay, minute);
+    }
 
+    private void editAlarmDialog(final int hourOfDay, final int minute) {
         View alarmDialogView = inflater.inflate(R.layout.add_alarm_dialog_layout, null);
         final Dialog dialog = new AlertDialog.Builder(getContext()).create();
         dialog.show();
@@ -137,21 +125,22 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         final Button saveNewAlarm = (Button) alarmDialogView.findViewById(R.id.add_new_alarm_bt);
         final EditText alarmName = (EditText) alarmDialogView.findViewById(R.id.edit_input_alarm_name);
         final RadioGroup alarmStyle = (RadioGroup) alarmDialogView.findViewById(R.id.select_alarm_style_radio_group);
-        ToggleButton monday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_monday);
-        ToggleButton tuesday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_tuesday);
-        ToggleButton wednesday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_wednesday);
-        ToggleButton thursday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_thursday);
-        final ToggleButton friday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_friday);
-        ToggleButton saturday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_saturday);
-        ToggleButton sunday = (ToggleButton) alarmDialogView.findViewById(R.id.tog_btn_sunday);
+        monday = (Button) alarmDialogView.findViewById(R.id.tog_btn_monday);
+        tuesday = (Button) alarmDialogView.findViewById(R.id.tog_btn_tuesday);
+        wednesday = (Button) alarmDialogView.findViewById(R.id.tog_btn_wednesday);
+        thursday = (Button) alarmDialogView.findViewById(R.id.tog_btn_thursday);
+        friday = (Button) alarmDialogView.findViewById(R.id.tog_btn_friday);
+        saturday = (Button) alarmDialogView.findViewById(R.id.tog_btn_saturday);
+        sunday = (Button) alarmDialogView.findViewById(R.id.tog_btn_sunday);
 
-        monday.setOnCheckedChangeListener(this);
-        tuesday.setOnCheckedChangeListener(this);
-        wednesday.setOnCheckedChangeListener(this);
-        thursday.setOnCheckedChangeListener(this);
-        friday.setOnCheckedChangeListener(this);
-        saturday.setOnCheckedChangeListener(this);
-        sunday.setOnCheckedChangeListener(this);
+        monday.setOnClickListener(this);
+        tuesday.setOnClickListener(this);
+        wednesday.setOnClickListener(this);
+        thursday.setOnClickListener(this);
+        friday.setOnClickListener(this);
+        saturday.setOnClickListener(this);
+        sunday.setOnClickListener(this);
+
         //        selectRepeatDialog.setView(alarmDialogView);
         alarmStyle.setOnCheckedChangeListener(this);
 
@@ -166,7 +155,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             @Override
             public void onClick(View v) {
 
-                Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", 0, "",false);
+                Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", (byte) 0, (byte) 0);
                 StringBuffer alarmRepeatDay = new StringBuffer();
 
                 if (TextUtils.isEmpty(alarmName.getText().toString())) {
@@ -175,35 +164,26 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                     newAlarm.setLabel(alarmName.getText().toString());
                 }
 
-                if (mMap.size() != 0) {
-                    isOnlyOne = false ;
-                    for (int i = 0; i < mMap.size(); i++) {
-                        String selectRepeatString = mMap.get(new Integer(i));
-                        if (selectRepeatString != null) {
-                            if (i != (mMap.size() - 1)) {
-                                alarmRepeatDay.append(selectRepeatString + ",");
-                            } else {
-                                alarmRepeatDay.append(selectRepeatString);
-                            }
-                        }
+                List<Alarm> allAlarm = getModel().getAllAlarm();
+                int num = 0;
+                for (int i = 0; i < allAlarm.size(); i++) {
+                    if (allAlarm.get(i).getAlarmType() == alarmSelectStyle) {
+                        num++;
                     }
-                } else {
-                    isOnlyOne = true;
-                    for (int i = 0; i < mMap.size(); i++) {
-                        String selectRepeatString = mMap.get(new Integer(i));
-                        if (selectRepeatString != null) {
-                            if (i != (mMap.size() - 1)) {
-                                alarmRepeatDay.append(selectRepeatString + ",");
-                            } else {
-                                alarmRepeatDay.append(selectRepeatString);
-                            }
-                        }
+                    if (alarmSelectStyle == 1) {
+                        num += 6;
                     }
                 }
-                newAlarm.setAlarmType(alarmSelectStyle);
-                newAlarm.setOnlyOne(isOnlyOne);
-                newAlarm.setRepeatDay(alarmRepeatDay.toString());
-                getModel().addAlarm(newAlarm);
+
+                if (num < 7) {
+                    newAlarm.setWeekDay(weekDay);
+                    newAlarm.setAlarmType(alarmSelectStyle);
+                    newAlarm.setAlarmNumber((byte)num);
+                    getModel().addAlarm(newAlarm);
+                } else {
+                    ToastHelper.showShortToast(getContext(), getResources().getString(R.string.add_alarm_index_out));
+                }
+
                 dialog.dismiss();
                 refreshListView();
             }
@@ -214,15 +194,16 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
+
     private void settingAlarmRepeat(int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance() ;
+        Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minuteToday = calendar.get(Calendar.MINUTE);
         int weekday = calendar.get(Calendar.DAY_OF_WEEK);
-        if((hour*60+minuteToday) < (hourOfDay*60+minute) ){
-           mMap.put(0,weekDayArray[weekday-1]);
-        }else if((hour*60+minuteToday) >= (hourOfDay*60 + minute)){
-            mMap.put(0,weekDayArray[weekday]);
+        if ((hour * 60 + minuteToday) < (hourOfDay * 60 + minute)) {
+            mMap.put(0, weekDayArray[weekday - 1]);
+        } else if ((hour * 60 + minuteToday) >= (hourOfDay * 60 + minute)) {
+            mMap.put(0, weekDayArray[weekday]);
         }
     }
 
@@ -300,10 +281,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //step3:check  alarmSettingList.size() == 3 ?
         ////build 1 or 2 invaild alarm to add alarmSettingList
         if (alarmSettingList.size() == 1) {
-            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown", 0, "",false));
-            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown", 0, "",false));
+            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown", (byte) 0, (byte) 0));
+            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown", (byte) 0, (byte) 0));
         } else if (alarmSettingList.size() == 2) {
-            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown", 0, "",false));
+            alarmSettingList.add(new Alarm(0, 0, (byte) 0, "unknown", (byte) 0, (byte) 0));
         }
         getModel().setAlarm(alarmSettingList);
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
@@ -339,7 +320,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 customerAlarmList.add(list.get(0));
             }
         } else {
-            customerAlarmList.add(new Alarm(0, 0, (byte) 0, "", 0, "",false));
+            customerAlarmList.add(new Alarm(0, 0, (byte) 0, "", (byte) 0, (byte) 0));
         }
         getModel().setAlarm(customerAlarmList);
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
@@ -366,78 +347,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            // 选中周一
-            case R.id.tog_btn_monday:
-                if (isChecked) {
-                    isMondayChecked = true;
-                    mMap.put(0, getString(R.string.monday));
-                } else {
-                    isMondayChecked = false;
-                    mMap.remove(0);
-                }
-                break;
-            // 选中周二
-            case R.id.tog_btn_tuesday:
-                if (isChecked) {
-                    isTuesdayChecked = true;
-                    mMap.put(1, getString(R.string.tuesday));
-                } else {
-                    isTuesdayChecked = false;
-                    mMap.remove(1);
-                }
-                break;
-            // 选中周三
-            case R.id.tog_btn_wednesday:
-                if (isChecked) {
-                    isWednesdayChecked = true;
-                    mMap.put(2, getString(R.string.wednesday));
-                } else {
-                    isWednesdayChecked = false;
-                    mMap.remove(2);
-                }
-                break;
-            // 选中周四
-            case R.id.tog_btn_thursday:
-                if (isChecked) {
-                    isThursdayChecked = true;
-                    mMap.put(3, getString(R.string.thursday));
-                } else {
-                    isThursdayChecked = false;
-                    mMap.remove(3);
-                }
-                break;
-            // 选中周五
-            case R.id.tog_btn_friday:
-                if (isChecked) {
-                    isFridayChecked = true;
-                    mMap.put(4, getString(R.string.friday));
-                } else {
-                    isFridayChecked = false;
-                    mMap.remove(4);
-                }
-                break;
-            // 选中周六
-            case R.id.tog_btn_saturday:
-                if (isChecked) {
-                    isSaturdayChecked = true;
-                    mMap.put(5, getString(R.string.saturday));
-                } else {
-                    isSaturdayChecked = false;
-                    mMap.remove(5);
-                }
-                break;
-            // 选中周日
-            case R.id.tog_btn_sunday:
-                if (isChecked) {
-                    isSundayChecked = true;
-                    mMap.put(6, getString(R.string.sunday));
-                } else {
-                    isSundayChecked = false;
-                    mMap.remove(6);
-                }
-                break;
-        }
+
     }
 
     @Override
@@ -448,6 +358,89 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 break;
             case R.id.alarm_style_wake:
                 alarmSelectStyle = 1;//1代表这是一个wake的alarm
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            // 选中周一
+            case R.id.tog_btn_monday:
+                weekDay = 1;
+                monday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                tuesday.setTextColor(getResources().getColor(R.color.text_color));
+                wednesday.setTextColor(getResources().getColor(R.color.text_color));
+                thursday.setTextColor(getResources().getColor(R.color.text_color));
+                friday.setTextColor(getResources().getColor(R.color.text_color));
+                saturday.setTextColor(getResources().getColor(R.color.text_color));
+                sunday.setTextColor(getResources().getColor(R.color.text_color));
+                break;
+            // 选中周二
+            case R.id.tog_btn_tuesday:
+                monday.setTextColor(getResources().getColor(R.color.text_color));
+                tuesday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                wednesday.setTextColor(getResources().getColor(R.color.text_color));
+                thursday.setTextColor(getResources().getColor(R.color.text_color));
+                friday.setTextColor(getResources().getColor(R.color.text_color));
+                saturday.setTextColor(getResources().getColor(R.color.text_color));
+                sunday.setTextColor(getResources().getColor(R.color.text_color));
+                weekDay = 2;
+                break;
+            // 选中周三
+            case R.id.tog_btn_wednesday:
+                weekDay = 3;
+                monday.setTextColor(getResources().getColor(R.color.text_color));
+                tuesday.setTextColor(getResources().getColor(R.color.text_color));
+                wednesday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                thursday.setTextColor(getResources().getColor(R.color.text_color));
+                friday.setTextColor(getResources().getColor(R.color.text_color));
+                saturday.setTextColor(getResources().getColor(R.color.text_color));
+                sunday.setTextColor(getResources().getColor(R.color.text_color));
+                break;
+            // 选中周四
+            case R.id.tog_btn_thursday:
+                weekDay = 4;
+                monday.setTextColor(getResources().getColor(R.color.text_color));
+                tuesday.setTextColor(getResources().getColor(R.color.text_color));
+                wednesday.setTextColor(getResources().getColor(R.color.text_color));
+                thursday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                friday.setTextColor(getResources().getColor(R.color.text_color));
+                saturday.setTextColor(getResources().getColor(R.color.text_color));
+                sunday.setTextColor(getResources().getColor(R.color.text_color));
+                break;
+            // 选中周五
+            case R.id.tog_btn_friday:
+                weekDay = 5;
+                monday.setTextColor(getResources().getColor(R.color.text_color));
+                tuesday.setTextColor(getResources().getColor(R.color.text_color));
+                wednesday.setTextColor(getResources().getColor(R.color.text_color));
+                thursday.setTextColor(getResources().getColor(R.color.text_color));
+                friday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                saturday.setTextColor(getResources().getColor(R.color.text_color));
+                sunday.setTextColor(getResources().getColor(R.color.text_color));
+                break;
+            // 选中周六
+            case R.id.tog_btn_saturday:
+                weekDay = 6;
+                monday.setTextColor(getResources().getColor(R.color.text_color));
+                tuesday.setTextColor(getResources().getColor(R.color.text_color));
+                wednesday.setTextColor(getResources().getColor(R.color.text_color));
+                thursday.setTextColor(getResources().getColor(R.color.text_color));
+                friday.setTextColor(getResources().getColor(R.color.text_color));
+                saturday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                sunday.setTextColor(getResources().getColor(R.color.text_color));
+                break;
+            // 选中周日
+            case R.id.tog_btn_sunday:
+                weekDay = 7;
+                monday.setTextColor(getResources().getColor(R.color.text_color));
+                tuesday.setTextColor(getResources().getColor(R.color.text_color));
+                wednesday.setTextColor(getResources().getColor(R.color.text_color));
+                thursday.setTextColor(getResources().getColor(R.color.text_color));
+                friday.setTextColor(getResources().getColor(R.color.text_color));
+                saturday.setTextColor(getResources().getColor(R.color.text_color));
+                sunday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 break;
         }
     }

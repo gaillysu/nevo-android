@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.fragment.base.BaseFragment;
@@ -21,7 +22,6 @@ import com.medcorp.view.graphs.SleepChart;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

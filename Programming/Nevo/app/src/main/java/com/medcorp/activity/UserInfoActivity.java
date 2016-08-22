@@ -9,13 +9,13 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.medcorp.base.BaseActivity;
-import com.medcorp.network.med.model.CreateUserModel;
-import com.medcorp.network.med.model.RequestCreateNewAccountRequest;
 import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.login.SignupActivity;
+import com.medcorp.base.BaseActivity;
 import com.medcorp.network.med.model.CreateUser;
+import com.medcorp.network.med.model.CreateUserModel;
+import com.medcorp.network.med.model.RequestCreateNewAccountRequest;
 import com.medcorp.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -78,43 +78,47 @@ public class UserInfoActivity extends BaseActivity {
         String userHeight = tv_userHeight.getText().toString();
         String userWeight = tv_userWeight.getText().toString();
         if (!TextUtils.isEmpty(userBirthday) || !TextUtils.isEmpty(userHeight) || !TextUtils.isEmpty(userWeight)) {
-            CreateUser userInfo = new CreateUser();
-            userInfo.setFirst_name(firstName);
-            userInfo.setBirthday(userBirthday);
-            userInfo.setEmail(email);
-            userInfo.setLast_name(lastName);
-            userInfo.setLength(new Integer(userHeight).intValue());
-            userInfo.setWeight(Double.parseDouble(userWeight));
-            userInfo.setPassword(password);
-            userInfo.setSex(gender);
+            try {
+                CreateUser userInfo = new CreateUser();
+                userInfo.setFirst_name(firstName);
+                userInfo.setBirthday(userBirthday);
+                userInfo.setEmail(email);
+                userInfo.setLast_name(lastName);
+                userInfo.setLength(new Integer(userHeight).intValue());
+                userInfo.setWeight(Double.parseDouble(userWeight));
+                userInfo.setPassword(password);
+                userInfo.setSex(gender);
 
-            final ProgressDialog progress = new ProgressDialog(this);
-            progress.setIndeterminate(false);
-            progress.setCancelable(false);
-            progress.setMessage(getString(R.string.network_wait_text));
-            progress.show();
+                final ProgressDialog progress = new ProgressDialog(this);
+                progress.setIndeterminate(false);
+                progress.setCancelable(false);
+                progress.setMessage(getString(R.string.network_wait_text));
+                progress.show();
 
-            getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
-                    .getAccessToken()), new RequestListener<CreateUserModel>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    progress.dismiss();
-                    spiceException.printStackTrace();
-                    ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
-                }
-
-                @Override
-                public void onRequestSuccess(CreateUserModel createUserModel) {
-                    progress.dismiss();
-                    if (createUserModel.getStatus() == 1) {
-                        startActivity(LoginActivity.class);
-                        finish();
-                    } else {
-                        ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());
+                getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
+                        .getAccessToken()), new RequestListener<CreateUserModel>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        progress.dismiss();
+                        spiceException.printStackTrace();
+                        ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
                     }
-                }
-            });
 
+                    @Override
+                    public void onRequestSuccess(CreateUserModel createUserModel) {
+                        progress.dismiss();
+                        if (createUserModel.getStatus() == 1) {
+                            startActivity(LoginActivity.class);
+                            finish();
+                        } else {
+                            ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());
+                        }
+                    }
+                });
+
+            } catch (NumberFormatException e) {
+                ToastHelper.showShortToast(this, getString(R.string.user_no_select_profile_info));
+            }
         } else {
             if (userBirthday.isEmpty()) {
                 tv_userBirth.setError(getString(R.string.user_info_user_birthday_error));
@@ -130,8 +134,12 @@ public class UserInfoActivity extends BaseActivity {
                 tv_userWeight.setError(getString(R.string.user_info_user_weight_error));
             } else {
                 tv_userWeight.setError(null);
+
             }
+
         }
+
+
     }
 
     @OnClick(R.id.user_info_sex_male_tv)

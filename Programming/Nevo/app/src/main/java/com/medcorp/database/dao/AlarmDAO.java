@@ -25,51 +25,36 @@ public class AlarmDAO {
 
     public static final String alarmTypeString = "alarmType";
     @DatabaseField
-    private int alarmType;
+    private byte alarmType;
 
-    public static final String alarmRepeatString = "alarmRepeat";
+
+    public static final String alarmNumberString = "alarmNumber";
+
+    public byte getAlarmNumber() {
+        return alarmNumber;
+    }
+
+    public void setAlarmNumber(byte alarmNumber) {
+        this.alarmNumber = alarmNumber;
+    }
+
     @DatabaseField
-    private String alarmRepeat;
+    private byte alarmNumber;
 
-    public static final String alarmIsOnlyOne = "isOnlyOne";
-    @DatabaseField
-    private boolean isOnlyOne;
-
-    public boolean isOnlyOne() {
-        return isOnlyOne;
-    }
-
-    public void setOnlyOne(boolean onlyOne) {
-        isOnlyOne = onlyOne;
-    }
-
-    public static String getAlarmIsOnlyOne() {
-        return alarmIsOnlyOne;
-    }
 
 
     public static String getAlarmTypeString() {
         return alarmTypeString;
     }
 
-    public static String getAlarmRepeatString() {
-        return alarmRepeatString;
-    }
 
-    public int getAlarmType() {
+
+    public byte getAlarmType() {
         return alarmType;
     }
 
-    public void setAlarmType(int alarmType) {
+    public void setAlarmType(byte alarmType) {
         this.alarmType = alarmType;
-    }
-
-    public String getAlarmRepeat() {
-        return alarmRepeat;
-    }
-
-    public void setAlarmRepeat(String alarmRepeat) {
-        this.alarmRepeat = alarmRepeat;
     }
 
     public static String getiDString() {
@@ -88,6 +73,9 @@ public class AlarmDAO {
         return labelString;
     }
 
+    public static String getAlarmNumberString() {
+        return alarmNumberString;
+    }
 
     public static String getWeekDayString() {
         return weekDayString;

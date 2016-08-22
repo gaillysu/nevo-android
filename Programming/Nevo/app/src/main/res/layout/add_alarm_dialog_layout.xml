@@ -3,9 +3,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_margin="20dp"
-              android:padding="20dp"
               android:background="@color/window_background_color"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="20dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/transparent"
+        android:hint="@string/edit_alarm_name"
         />
 
     <View
@@ -34,146 +35,157 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="bottom"
+            android:layout_alignParentBottom="true"
             android:text="@string/edit_alarm_repeat"
             android:textSize="26sp"/>
+        <!--<Button-->
+        <!--android:id="@+id/edit_alarm_repeat_is_once"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:text="@string/edit_alarm_repeat_Once"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:background="@color/transparent"-->
+        <!--/>-->
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:orientation="horizontal"
         >
+
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_monday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/monday"
-                android:textOn="@string/monday">
-            </ToggleButton>
+                android:text="@string/monday">
+            </Button>
         </LinearLayout>
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_tuesday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/tuesday"
-                android:textOn="@string/tuesday">
-            </ToggleButton>
+                android:text="@string/tuesday">
+            </Button>
         </LinearLayout>
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_wednesday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/wednesday"
-                android:textOn="@string/wednesday">
-            </ToggleButton>
+                android:text="@string/wednesday"
+                >
+            </Button>
         </LinearLayout>
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_thursday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/thursday"
-                android:textOn="@string/thursday">
-            </ToggleButton>
+                android:text="@string/thursday">
+            </Button>
         </LinearLayout>
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_friday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/friday"
-                android:textOn="@string/friday">
-            </ToggleButton>
+                android:text="@string/friday"
+                >
+            </Button>
         </LinearLayout>
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_saturday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/saturday"
-                android:textOn="@string/saturday">
-            </ToggleButton>
+                android:text="@string/saturday"
+                >
+            </Button>
         </LinearLayout>
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
-            <ToggleButton
+            <Button
                 android:id="@+id/tog_btn_sunday"
                 style="@style/new_alarm_clcok_repeat_days_tog_btn"
-                android:textOff="@string/sunday"
-                android:textOn="@string/sunday">
-            </ToggleButton>
+                android:text="@string/sunday">
+            </Button>
         </LinearLayout>
     </LinearLayout>
+
     <RadioGroup
         android:id="@+id/select_alarm_style_radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/alarm_style_sleep"
             style="@style/StepsGoalDialogRadioBUttonStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
+            android:layout_weight="1"
             android:checked="true"
             android:maxLines="1"
+            android:paddingLeft="5dp"
             android:text="@string/edit_alarm_sleep"/>
+
         <RadioButton
             android:id="@+id/alarm_style_wake"
             style="@style/StepsGoalDialogRadioBUttonStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
             android:paddingLeft="5dp"
             android:text="@string/edit_alarm_wake"/>
     </RadioGroup>
 
     <LinearLayout
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="right"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
         >
 
         <Button
             android:id="@+id/cancel_edit_alarm_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/transparent"
             android:text="@string/goal_cancel"
             android:textColor="@color/colorPrimary"
-            android:background="@color/transparent"
             />
+
         <Button
             android:id="@+id/add_new_alarm_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/transparent"
             android:text="@string/goal_ok"
             android:textColor="@color/colorPrimary"
-            android:background="@color/transparent"
             />
     </LinearLayout>
 </LinearLayout>

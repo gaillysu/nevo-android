@@ -57,7 +57,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
             alarmStyle = getContext().getString(R.string.edit_alarm_wake);
         }
 
-        repeatText.setText( alarm.getRepeatDay());
+        repeatText.setText(getContext().getResources().getStringArray(R.array.week_day)[(int)alarm.getWeekDay()]);
         repeatTextDec.setText(alarmStyle+": " );
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

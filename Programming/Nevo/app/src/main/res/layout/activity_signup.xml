@@ -53,6 +53,7 @@
                 android:hint="@string/log_in_email"
                 android:inputType="textEmailAddress"
                 android:paddingLeft="8dp"
+                android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color"
                 />
 
@@ -61,10 +62,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
-
                 android:background="@drawable/shape_input_email_account_bg"
                 android:hint="@string/register_first_name_hint"
                 android:paddingLeft="8dp"
+                android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color"
                 />
 
@@ -74,9 +75,9 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/shape_input_email_account_bg"
-
                 android:hint="@string/register_last_name_hint"
                 android:paddingLeft="8dp"
+                android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color"
                 />
 
@@ -92,6 +93,7 @@
                 android:hint="@string/log_in_password"
                 android:inputType="textPassword"
                 android:paddingLeft="8dp"
+                android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color"
                 />
 
@@ -104,6 +106,7 @@
                 android:hint="@string/register_password_confirm"
                 android:inputType="textPassword"
                 android:paddingLeft="8dp"
+                android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color"/>
 
             <TextView

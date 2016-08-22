@@ -6,6 +6,7 @@
     <stroke android:dashWidth="3dp"
             android:dashGap="3dp"
             android:width="1dp"
-            android:color="#BCBCBC"
+            android:color="@color/colorPrimary"
         />
+    <solid android:color="@color/colorPrimary"></solid>
 </shape>

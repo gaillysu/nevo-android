@@ -275,6 +275,8 @@ push and hold the third button, until the white LED blinks</string>
     <!--add-->
 
     <!--lunar-->
+
+    <string name="add_alarm_index_out">The same type of alarm clock can only add 7!</string>
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>
@@ -353,8 +355,11 @@ push and hold the third button, until the white LED blinks</string>
     <string name="steps_fragment_total_steps">TOTAL:</string>
     <string name="main_fragment_solar_page_time_on_battery_text">TIME ON BATTERY</string>
     <string name="main_fragment_solar_page_time_on_solar_text">TIME ON SOLAR</string>
+    <string name="user_no_select_profile_info">Please select the correct profile !</string>
 
     <string name="edit_alarm_repeat">Repeat</string>
+    <string name="edit_alarm_name">Alarm Name</string>
+    <string name="edit_alarm_repeat_Once">Once</string>
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>
     <string name="wednesday">Wed</string>

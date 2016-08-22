@@ -382,7 +382,6 @@ public class ApplicationModel extends Application {
         saveDailySleep(sleep);
     }
 
-
     public List<Sleep> getNeedSyncSleep(String userid) {
         return sleepDatabaseHelper.getNeedSyncSleep(userid);
     }
