@@ -11,6 +11,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
@@ -67,10 +68,10 @@ public class LunarMainSolarFragment extends BaseFragment {
         solarPieChart.setDrawHoleEnabled(false);
         solarPieChart.setDrawCenterText(false);
 
-        ArrayList<Entry> yValue = new ArrayList<>();
+        ArrayList<PieEntry> yValue = new ArrayList<>();
         for (int i = 0; i < solarPieChartDate.length; i++) {
             des.add(i,describe[i]);
-            yValue.add(new Entry(solarPieChartDate[i],i));
+            yValue.add(new PieEntry(solarPieChartDate[i],i));
         }
 
         PieDataSet pieDataSet = new PieDataSet(yValue,"");
@@ -86,7 +87,7 @@ public class LunarMainSolarFragment extends BaseFragment {
         pieDataSet.setColors(colors);
         pieDataSet.setSliceSpace(1f);
 
-        PieData pieData = new PieData( des, pieDataSet);
+        PieData pieData = new PieData(pieDataSet);
         pieData.setValueFormatter(new PercentFormatter());
         pieData.setValueFormatter(new PercentFormatter());
 

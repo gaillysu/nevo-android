@@ -124,19 +124,16 @@ public class SignupActivity extends BaseActivity {
         password = _passwordText.getText().toString();
         String passwordConfirm = _passwordConfirmText.getText().toString();
 
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            firstName = editTextFirstName.getText().toString();
-            lastName = editLastName.getText().toString();
-            if (firstName.isEmpty()) {
-                valid = false;
-                editTextFirstName.setError(getString(R.string.register_input_first_is_empty));
-            } else {
-                editTextFirstName.setError(null);
-            }
-
-            if (!checkIsAgreeBt.isChecked()) {
-                valid = false;
-            }
+        firstName = editTextFirstName.getText().toString();
+        lastName = editLastName.getText().toString();
+        if (firstName.isEmpty()) {
+            valid = false;
+            editTextFirstName.setError(getString(R.string.register_input_first_is_empty));
+        } else {
+            editTextFirstName.setError(null);
+        }
+        if (!checkIsAgreeBt.isChecked()) {
+            valid = false;
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
