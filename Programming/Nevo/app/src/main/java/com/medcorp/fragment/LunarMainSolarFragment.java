@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
@@ -73,7 +70,7 @@ public class LunarMainSolarFragment extends BaseFragment {
             yValue.add(new Entry(solarPieChartDate[i],i));
         }
 
-        PieDataSet pieDataSet = new PieDataSet(yValue,"");
+//        PieDataSet pieDataSet = new PieDataSet(yValue,"");
 
         ArrayList<Integer> colors = new ArrayList<>();
         if(ApplicationFlag.FLAG== ApplicationFlag.Flag.LUNAR) {
@@ -83,18 +80,18 @@ public class LunarMainSolarFragment extends BaseFragment {
             colors.add(Color.rgb(160,132,85));
             colors.add(Color.rgb(188,188,188));
         }
-        pieDataSet.setColors(colors);
-        pieDataSet.setSliceSpace(1f);
+//        pieDataSet.setColors(colors);
+//        pieDataSet.setSliceSpace(1f);
 
-        PieData pieData = new PieData( des, pieDataSet);
-        pieData.setValueFormatter(new PercentFormatter());
-        pieData.setValueFormatter(new PercentFormatter());
+//        PieData pieData = new PieData( des, pieDataSet);
+//        pieData.setValueFormatter(new PercentFormatter());
+//        pieData.setValueFormatter(new PercentFormatter());
+//
+//        pieData.setDataSet(pieDataSet);
+//        pieData.setValueTextColor(Color.rgb(255,255,255));
+//        pieData.setValueTextSize(25f);
 
-        pieData.setDataSet(pieDataSet);
-        pieData.setValueTextColor(Color.rgb(255,255,255));
-        pieData.setValueTextSize(25f);
-
-        solarPieChart.setData(pieData);
+//        solarPieChart.setData(pieData);
         solarPieChart.invalidate();
     }
 }

@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "com.medcorp"
         minSdkVersion 18
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 203
         versionName "2.0.1"
         multiDexEnabled true
