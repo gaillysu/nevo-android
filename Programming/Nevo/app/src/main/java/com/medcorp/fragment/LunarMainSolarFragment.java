@@ -72,6 +72,10 @@ public class LunarMainSolarFragment extends BaseFragment {
         for (int i = 0; i < solarPieChartDate.length; i++) {
             des.add(i,describe[i]);
             yValue.add(new PieEntry(solarPieChartDate[i],describe[i]));
+        ArrayList<PieEntry> yValue = new ArrayList<>();
+        for (int i = 0; i < solarPieChartDate.length; i++) {
+            des.add(i,describe[i]);
+            yValue.add(new PieEntry(solarPieChartDate[i],i));
         }
 
         PieDataSet pieDataSet = new PieDataSet(yValue,"");

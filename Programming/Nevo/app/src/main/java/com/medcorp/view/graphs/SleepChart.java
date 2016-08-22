@@ -3,6 +3,7 @@ package com.medcorp.view.graphs;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -61,8 +62,7 @@ public class SleepChart extends LineChart {
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
-        leftAxis.setAxisMinValue(0.0f);
-        leftAxis.setAxisMaxValue(11.0f);
+        leftAxis.setAxisMaxValue(2.5f);
         leftAxis.setValueFormatter(new YAxisValueFormatter());
         leftAxis.setLabelCount(3);
 
@@ -72,7 +72,6 @@ public class SleepChart extends LineChart {
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
-        rightAxis.setAxisMaxValue(10.0f);
 
         XAxis xAxis = getXAxis();
         xAxis.setAxisLineColor(Color.BLACK);
@@ -88,9 +87,12 @@ public class SleepChart extends LineChart {
         List<Entry> yValue = new ArrayList<Entry>();
         int interval = 5;
         List<Integer> intList = new ArrayList<>();
+        int lightSleepContinue = -1;
+        int deepSleepContinue = -1;
         int[] hourlyWakeTime = sleepData.getHourlyWakeInt();
         int[] hourlyLightSleepTime = sleepData.getHourlyLightInt();
         int[] hourlyDeepSleepTime = sleepData.getHourlyDeepInt();
+
         int sleptHours = Collections.max(Arrays.asList(hourlyWakeTime.length,hourlyLightSleepTime.length,hourlyDeepSleepTime.length));
         for (int hour = 0; hour < sleptHours; hour++) {
             int awakeMinutes = hourlyWakeTime[hour];
@@ -108,33 +110,27 @@ public class SleepChart extends LineChart {
             if (lightSleepMinutes > 0){
                 int consecutiveFiveMinutes = (int) lightSleepMinutes/interval;
                 for (int i = 0; i <consecutiveFiveMinutes; i++){
-                    if (i >= 5){
-                        intList.add(5);
-                    }else{
-                        intList.add(i+1);
-                    }
+                    intList.add(1);
                 }
             }
             if (deepSleepMinutes> 0){
                 int consecutiveFiveMinutes = deepSleepMinutes/interval;
                 for (int i = 0; i <consecutiveFiveMinutes; i++){
-                    if (i >= 5){
-                        intList.add(10);
-                    }else{
-                        intList.add(i+5);
-                    }
+                    intList.add(2);
                 }
             }
         }
+
         for (int i = 0; i < intList.size(); i++) {
+            Log.w("Karl","Value = " + intList.get(i));
             yValue.add(new Entry(i, intList.get(i)));
         }
         LineDataSet set = new LineDataSet(yValue, "");
         set.setColor(Color.BLACK);
         set.setCircleColor(Color.BLACK);
-        set.setLineWidth(1.5f);
+        set.setLineWidth(1.0f);
         set.setDrawCircles(false);
-        set.setDrawCircleHole(true);
+        set.setDrawCircleHole(false);
         set.setFillAlpha(128);
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setDrawFilled(true);
@@ -164,9 +160,9 @@ public class SleepChart extends LineChart {
         public String getFormattedValue(float value, AxisBase axis) {
             if (value == 0.0){
                 return getContext().getResources().getString(R.string.sleep_awake);
-            }else if (value > 0.0 && value <= 5.0){
+            }else if (value >= 0.5 && value  <= 1.5){
                 return getContext().getResources().getString(R.string.sleep_light_sleep);
-            }else if (value >= 5.0){
+            }else if (value >= 1.6 && value  <= 2.6){
                 return getContext().getResources().getString(R.string.sleep_deep_sleep);
             }
             return "?";
@@ -192,7 +188,7 @@ public class SleepChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             DateTime newDate = startDate.plusHours((int) value/10);
-            return String.valueOf(newDate.getHourOfDay()+":00");
+            return String.valueOf(newDate.getHourOfDay());
         }
 
         @Override
