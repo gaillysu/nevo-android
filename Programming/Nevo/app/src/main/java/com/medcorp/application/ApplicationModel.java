@@ -23,6 +23,7 @@ import com.medcorp.ble.controller.SyncController;
 import com.medcorp.ble.controller.SyncControllerImpl;
 import com.medcorp.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.cloud.CloudSyncManager;
+import com.medcorp.cloud.validic.ValidicOperation;
 import com.medcorp.database.entry.AlarmDatabaseHelper;
 import com.medcorp.database.entry.GoalDatabaseHelper;
 import com.medcorp.database.entry.SleepDatabaseHelper;
@@ -595,7 +596,7 @@ public class ApplicationModel extends Application {
     }
 
     public void createValidicUser(String pin, ResponseListener<ValidicUser> responseListener) {
-        getCloudSyncManager().createValidicUser(nevoUser, pin, responseListener);
+        ValidicOperation.getInstance(this).createValidicUser(nevoUser, pin, responseListener);
     }
 
     @Subscribe

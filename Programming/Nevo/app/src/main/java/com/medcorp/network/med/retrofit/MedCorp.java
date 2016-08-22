@@ -20,11 +20,6 @@ import retrofit.http.POST;
  * Created by med on 16/3/21.
  */
 public interface MedCorp {
-
-    @FormUrlEncoded
-    @POST("/api/account/register")
-    UserLoginModel registerNevoUser(@Field("params[time]") long time, @Field("params[check_key]") String check_key, @Field("user") String user, @Field("password") String password);
-
     @POST("/user/login")
     LoginUserModel userLogin(@Body LoginUserObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
 
