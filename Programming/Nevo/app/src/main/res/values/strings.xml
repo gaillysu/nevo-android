@@ -136,6 +136,7 @@
     <string name="alarm_edit">Edit Alarm</string>
     <string name="alarm_label_alarm">Label your alarm.</string>
     <string name="alarm_label">label name</string>
+    <string name="alarm_week_day">Repeat time</string>
     <string name="alarm_cancel">Cancel</string>
     <string name="alarm_deleted">Deleted alarm!</string>
     <string name="alarm_could_not_delete">Failed to delete alarm</string>
@@ -143,6 +144,8 @@
     <string name="alarm_delete">Delete Alarm</string>
     <string name="alarm_set_different_time">Set a different time</string>
     <string name="alarm_set_label_for_alarm">Set label for alarm</string>
+    <string name="alarm_set_week_day">Set weekday for alarm</string>
+    <string name="alarm_set_week_day_dialog_text">Set the alarm clock to repeat time</string>
     <string name="alarm_synced">Alarm Synced</string>
     <string name="alarm_error_sync">Error Syncing Alarm</string>
     <string name="goal_syncing_message">Syncing Goal&#8230;</string>
@@ -359,6 +362,7 @@ push and hold the third button, until the white LED blinks</string>
 
     <string name="edit_alarm_repeat">Repeat</string>
     <string name="edit_alarm_name">Alarm Name</string>
+    <string name="input_legitimate_value">Please enter a valid value from 1 to 7</string>
     <string name="edit_alarm_repeat_Once">Once</string>
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>

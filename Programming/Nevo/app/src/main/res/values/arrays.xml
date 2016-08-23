@@ -18,6 +18,7 @@
         <item>1</item>
     </string-array>
     <string-array name="week_day">
+        <item name="disable">Disable</item>
         <item name="monday">Mon</item>
         <item name="tuesday">Tue</item>
         <item name="wednesday">Wed</item>

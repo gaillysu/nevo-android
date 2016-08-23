@@ -70,22 +70,18 @@ public class LunarMainSolarFragment extends BaseFragment {
 
         List<PieEntry> yValue = new ArrayList<>();
         for (int i = 0; i < solarPieChartDate.length; i++) {
-            des.add(i,describe[i]);
-            yValue.add(new PieEntry(solarPieChartDate[i],describe[i]));
-        ArrayList<PieEntry> yValue = new ArrayList<>();
-        for (int i = 0; i < solarPieChartDate.length; i++) {
-            des.add(i,describe[i]);
-            yValue.add(new PieEntry(solarPieChartDate[i],i));
+            des.add(i, describe[i]);
+            yValue.add(new PieEntry(solarPieChartDate[i], describe[i]));
         }
 
-        PieDataSet pieDataSet = new PieDataSet(yValue,"");
+        PieDataSet pieDataSet = new PieDataSet(yValue, "");
         ArrayList<Integer> colors = new ArrayList<>();
-        if(ApplicationFlag.FLAG== ApplicationFlag.Flag.LUNAR) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             colors.add(Color.rgb(126, 216, 209));
             colors.add(Color.rgb(179, 126, 189));
-        }else{
-            colors.add(Color.rgb(160,132,85));
-            colors.add(Color.rgb(188,188,188));
+        } else {
+            colors.add(Color.rgb(160, 132, 85));
+            colors.add(Color.rgb(188, 188, 188));
         }
         pieDataSet.setColors(colors);
         pieDataSet.setSliceSpace(1f);
@@ -95,7 +91,7 @@ public class LunarMainSolarFragment extends BaseFragment {
         pieData.setValueFormatter(new PercentFormatter());
 
         pieData.setDataSet(pieDataSet);
-        pieData.setValueTextColor(Color.rgb(255,255,255));
+        pieData.setValueTextColor(Color.rgb(255, 255, 255));
         pieData.setValueTextSize(25f);
 
         solarPieChart.setData(pieData);

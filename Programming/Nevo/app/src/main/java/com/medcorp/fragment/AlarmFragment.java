@@ -213,6 +213,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         Intent i = new Intent(getContext(), EditAlarmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.key_alarm_id), alarmList.get(position).getId());
+
         i.putExtras(bundle);
         SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
         prefs.putString(getString(R.string.alarm_label), alarmList.get(position).getLabel());

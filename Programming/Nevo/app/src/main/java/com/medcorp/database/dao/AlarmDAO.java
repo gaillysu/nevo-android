@@ -29,6 +29,8 @@ public class AlarmDAO {
 
 
     public static final String alarmNumberString = "alarmNumber";
+    @DatabaseField
+    private byte alarmNumber;
 
     public byte getAlarmNumber() {
         return alarmNumber;
@@ -38,15 +40,9 @@ public class AlarmDAO {
         this.alarmNumber = alarmNumber;
     }
 
-    @DatabaseField
-    private byte alarmNumber;
-
-
-
     public static String getAlarmTypeString() {
         return alarmTypeString;
     }
-
 
 
     public byte getAlarmType() {
