@@ -8,12 +8,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
+import com.medcorp.activity.ForgetPasswordActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
+import com.medcorp.model.User;
+import com.medcorp.network.med.model.LoginUser;
+import com.medcorp.network.med.model.LoginUserModel;
+import com.medcorp.network.med.model.LoginUserRequest;
+import com.medcorp.network.med.model.UserWithLocation;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +45,7 @@ public class LoginActivity extends BaseActivity {
     Button _loginButton;
     @Bind(R.id.link_signup)
     TextView _signupLink;
+    private int inputPasswordErrorSum = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +60,8 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.link_signup)
     public void signUpAction() {
-            startActivity(SignupActivity.class);
-            finish();
+        startActivity(SignupActivity.class);
+        finish();
     }
 
     @OnClick(R.id.btn_login)
@@ -69,7 +83,60 @@ public class LoginActivity extends BaseActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        getModel().nevoUserLogin(email, password);
+        LoginUser user = new LoginUser();
+        user.setEmail(email);
+        user.setPassword(password);
+        getModel().getNetworkManage().execute(new LoginUserRequest(user, getModel().getNetworkManage().getAccessToken()),
+                new RequestListener<LoginUserModel>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        spiceException.printStackTrace();
+                        EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
+                        inputPasswordErrorSum += 1;
+                        if(inputPasswordErrorSum >2) {
+                            new MaterialDialog.Builder(LoginActivity.this)
+                                    .content(getString(R.string.prompt_is_not_forget_password))
+                                    .negativeText(android.R.string.no)
+                                    .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick( MaterialDialog dialog, DialogAction which) {
+                                    startActivity(ForgetPasswordActivity.class);
+                                    finish();
+                                }
+                            }).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onRequestSuccess(LoginUserModel loginUserModel) {
+                        if (loginUserModel.getStatus() == 1) {
+                            UserWithLocation user = loginUserModel.getUser();
+                            User nevoUser = getModel().getNevoUser();
+                            try {
+                                nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            nevoUser.setFirstName(user.getFirst_name());
+                            nevoUser.setHeight(user.getLength());
+                            nevoUser.setLastName(user.getLast_name());
+                            nevoUser.setWeight(user.getWeight());
+                            nevoUser.setId(user.getId());
+                            nevoUser.setNevoUserEmail(user.getEmail());
+                            nevoUser.setIsLogin(true);
+                            getModel().saveNevoUser(nevoUser);
+                            getModel().getSyncController().getDailyTrackerInfo(true);
+                            getModel().getCloudSyncManager().launchSyncAll(nevoUser, getModel().getNeedSyncSteps(nevoUser.getNevoUserID()),
+                                    getModel().getNeedSyncSleep(nevoUser.getNevoUserID()));
+                            EventBus.getDefault().post(new LoginEvent(LoginEvent.status.SUCCESS));
+                        } else {
+                            EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
+                        }
+                    }
+
+                });
+
     }
 
     @Subscribe
