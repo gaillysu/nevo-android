@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
+        final String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
         LoginUser user = new LoginUser();
@@ -92,20 +92,6 @@ public class LoginActivity extends BaseActivity {
                     public void onRequestFailure(SpiceException spiceException) {
                         spiceException.printStackTrace();
                         EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
-                        inputPasswordErrorSum += 1;
-                        if(inputPasswordErrorSum >2) {
-                            new MaterialDialog.Builder(LoginActivity.this)
-                                    .content(getString(R.string.prompt_is_not_forget_password))
-                                    .negativeText(android.R.string.no)
-                                    .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick( MaterialDialog dialog, DialogAction which) {
-                                    startActivity(ForgetPasswordActivity.class);
-                                    finish();
-                                }
-                            }).show();
-
-                        }
                     }
 
                     @Override
@@ -132,11 +118,29 @@ public class LoginActivity extends BaseActivity {
                             EventBus.getDefault().post(new LoginEvent(LoginEvent.status.SUCCESS));
                         } else {
                             EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
+                            inputPasswordErrorSum++;
+                            if (inputPasswordErrorSum % 3 == 0) {
+                                promptUserChangePassword();
+                            }
                         }
                     }
 
                 });
 
+    }
+
+    public void promptUserChangePassword() {
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.open_forget_password_dialog_title))
+                .content(getString(R.string.prompt_is_not_forget_password))
+                .negativeText(android.R.string.no)
+                .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(MaterialDialog dialog, DialogAction which) {
+                startActivity(ForgetPasswordActivity.class);
+                finish();
+            }
+        }).show();
     }
 
     @Subscribe
