@@ -1,14 +1,19 @@
-package com.medcorp.network.med.model;
+package com.medcorp.network.med.request.user;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.medcorp.network.base.BaseRequest;
+import com.medcorp.network.med.model.LoginUser;
+import com.medcorp.network.med.model.LoginUserModel;
+import com.medcorp.network.med.model.LoginUserObject;
+import com.medcorp.network.med.model.LoginUserParameters;
 import com.medcorp.network.med.retrofit.MedCorp;
 
 /**
  * Created by gaillysu on 16/3/14.
  */
-public class LoginUserRequest extends com.medcorp.network.base.BaseRequest<LoginUserModel,MedCorp> implements BaseRequest.BaseRetroRequestBody<LoginUserObject> {
+public class LoginUserRequest extends BaseRequest<LoginUserModel,MedCorp> implements BaseRequest.BaseRetroRequestBody<LoginUserObject> {
 
     private String token;
     private LoginUser user;

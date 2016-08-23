@@ -116,7 +116,7 @@ public class ValidicOperation {
                 if (validicRecordModel.getCode().equals("200") || validicRecordModel.getCode().equals("201"))
                 {
                     //save validic record ID to local database, for using cloud sync
-                    steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
+                    steps.setCloudRecordID(validicRecordModel.getRoutine().get_id());
                     EventBus.getDefault().post(new ValidicAddRoutineRecordEvent(steps));
                 }
             }
@@ -142,7 +142,7 @@ public class ValidicOperation {
                     //if local data == cloud data, save record_id and return
                     if(steps.getSteps()==validicReadMoreRoutineRecordsModel.getRoutine()[0].getSteps())
                     {
-                        steps.setValidicRecordID(validicReadMoreRoutineRecordsModel.getRoutine()[0].get_id());
+                        steps.setCloudRecordID(validicReadMoreRoutineRecordsModel.getRoutine()[0].get_id());
                         EventBus.getDefault().post(new ValidicUpdateRoutineRecordsModelEvent(steps));
                         return;
                     }
@@ -157,7 +157,7 @@ public class ValidicOperation {
                         public void onRequestSuccess(ValidicRoutineRecordModel validicRecordModel) {
                             //save validic record ID to local database, for using cloud sync
 
-                            steps.setValidicRecordID(validicRecordModel.getRoutine().get_id());
+                            steps.setCloudRecordID(validicRecordModel.getRoutine().get_id());
                             EventBus.getDefault().post(new ValidicUpdateRoutineRecordsModelEvent(steps));
                         }
                     });
@@ -186,11 +186,17 @@ public class ValidicOperation {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 EventBus.getDefault().post(new ValidicException(spiceException));
+                if(listener!=null) {
+                    listener.onRequestFailure(spiceException);
+                }
             }
 
             @Override
             public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadAllRecordsModel) {
                 EventBus.getDefault().post(new ValidicReadMoreRoutineRecordsModelEvent(validicReadAllRecordsModel));
+                if(listener!=null){
+                    listener.onRequestSuccess(validicReadAllRecordsModel);
+                }
             }
         });
     }
@@ -267,18 +273,23 @@ public class ValidicOperation {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 EventBus.getDefault().post(new ValidicException(spiceException));
+                if(listener!=null) {
+                    listener.onRequestFailure(spiceException);
+                }
             }
 
             @Override
             public void onRequestSuccess(ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel) {
                 // TODO catch this if needed.
                 EventBus.getDefault().post(new ValidicReadMoreSleepRecordsModelEvent(validicReadMoreSleepRecordsModel));
-//                processListener(listener, validicReadMoreSleepRecordsModel);
+                if(listener!=null) {
+                    listener.onRequestSuccess(validicReadMoreSleepRecordsModel);
+                }
             }
         });
     }
 
-    private void deleteValidicSleepRecord(final User user, final Sleep sleep, final Date date, final ResponseListener listener)
+    public void deleteValidicSleepRecord(final User user, final Sleep sleep, final Date date, final ResponseListener listener)
     {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
@@ -306,12 +317,12 @@ public class ValidicOperation {
         });
     }
 
-    private void deleteValidicRoutineRecord(final User user, Steps steps, final Date date, final ResponseListener listener)
+    public void deleteValidicRoutineRecord(final User user, Steps steps, final Date date, final ResponseListener listener)
     {
         if(user.isLogin()||!user.isConnectValidic()){
             return;
         }
-        String validicRecordID = steps.getValidicRecordID();
+        String validicRecordID = steps.getCloudRecordID();
         if(validicRecordID.equals("0")) {
             return;
         }
@@ -335,7 +346,7 @@ public class ValidicOperation {
     }
 
 
-    private void verifyValidicCredential()
+    public void verifyValidicCredential()
     {
         VerifyCredentialsRetroRequest request = new VerifyCredentialsRetroRequest(validicManager.getOrganizationID(),validicManager.getOrganizationToken());
         validicManager.execute(request, new RequestListener<VerifyCredentialModel>() {

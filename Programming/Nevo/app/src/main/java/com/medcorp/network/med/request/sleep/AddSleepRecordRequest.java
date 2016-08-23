@@ -1,4 +1,4 @@
-package com.medcorp.network.validic.request.sleep;
+package com.medcorp.network.med.request.sleep;
 
 import android.util.Log;
 

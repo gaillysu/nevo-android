@@ -1,56 +1,34 @@
 package com.medcorp.cloud;
 
-import android.content.Context;
-import android.util.Log;
-
+import com.medcorp.application.ApplicationModel;
+import com.medcorp.cloud.med.MedOperation;
 import com.medcorp.cloud.validic.ValidicOperation;
-import com.medcorp.event.validic.ValidicAddRoutineRecordEvent;
-import com.medcorp.event.validic.ValidicAddSleepRecordEvent;
-import com.medcorp.event.validic.ValidicDeleteRoutineRecordEvent;
-import com.medcorp.event.validic.ValidicDeleteSleepRecordModelEvent;
 import com.medcorp.event.validic.ValidicReadMoreRoutineRecordsModelEvent;
 import com.medcorp.event.validic.ValidicReadMoreSleepRecordsModelEvent;
-import com.medcorp.event.validic.ValidicUpdateRoutineRecordsModelEvent;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
-import com.medcorp.network.validic.manager.ValidicManager;
-import com.medcorp.network.validic.model.CreateUserRequestObject;
-import com.medcorp.network.validic.model.CreateUserRequestObjectUser;
-import com.medcorp.network.validic.model.NevoHourlySleepData;
-import com.medcorp.network.validic.model.RoutineGoal;
-import com.medcorp.network.validic.model.ValidicDeleteRoutineRecordModel;
-import com.medcorp.network.validic.model.ValidicDeleteSleepRecordModel;
+import com.medcorp.network.med.model.CreateUser;
+import com.medcorp.network.med.model.CreateUserModel;
+import com.medcorp.network.med.model.LoginUser;
+import com.medcorp.network.med.model.LoginUserModel;
+import com.medcorp.network.med.model.MedReadMoreRoutineRecordsModel;
+import com.medcorp.network.med.model.MedReadMoreSleepRecordsModel;
+import com.medcorp.network.med.model.UserWithLocation;
 import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
-import com.medcorp.network.validic.model.ValidicRoutineRecord;
-import com.medcorp.network.validic.model.ValidicRoutineRecordModel;
-import com.medcorp.network.validic.model.ValidicSleepRecord;
-import com.medcorp.network.validic.model.ValidicSleepRecordModel;
-import com.medcorp.network.validic.model.ValidicUser;
-import com.medcorp.network.validic.model.VerifyCredentialModel;
-import com.medcorp.network.validic.request.VerifyCredentialsRetroRequest;
-import com.medcorp.network.validic.request.routine.AddRoutineRecordRequest;
-import com.medcorp.network.validic.request.routine.DeleteRoutineRecordRequest;
-import com.medcorp.network.validic.request.routine.GetMoreRoutineRecordsRequest;
-import com.medcorp.network.validic.request.routine.UpdateRoutineRecordRequest;
-import com.medcorp.network.validic.request.sleep.AddSleepRecordRequest;
-import com.medcorp.network.validic.request.sleep.DeleteSleepRecordRequest;
-import com.medcorp.network.validic.request.user.CreateUserRetroRequest;
 import com.medcorp.util.Common;
-import com.medcorp.event.validic.ValidicCreateUserEvent;
 import com.medcorp.event.validic.ValidicException;
-import com.medcorp.network.validic.request.sleep.GetMoreSleepRecordsRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by med on 16/3/23.
@@ -71,51 +49,113 @@ public class CloudSyncManager {
     private final String TAG = "CloudSyncManager";
     final long INTERVAL_DATE = 365 * 24 * 60 * 60 *1000l;//user can get all data in a year
 
-    private Context context;
-    public CloudSyncManager(Context context)
+    private ApplicationModel context;
+    public CloudSyncManager(ApplicationModel context)
     {
         this.context = context;
+    }
+    private ApplicationModel getModel(){
+        return context;
+    }
+
+    public void createUser(CreateUser createUser, RequestListener<CreateUserModel> listener)
+    {
+        //TODO if enable validic, here open it
+        //ValidicOperation.getInstance(context).createValidicUser(...);
+        MedOperation.getInstance(context).createMedUser(createUser,listener);
+    }
+
+    public void userLogin(LoginUser loginUser)
+    {
+        //TODO if enable validic, here call ValidicOperation function
+        MedOperation.getInstance(context).userMedLogin(loginUser, new RequestListener<LoginUserModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+
+            }
+            @Override
+            public void onRequestSuccess(LoginUserModel loginUserModel) {
+                if (loginUserModel.getStatus() == 1) {
+                    UserWithLocation user = loginUserModel.getUser();
+                    User nevoUser = getModel().getNevoUser();
+                    try {
+                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    nevoUser.setFirstName(user.getFirst_name());
+                    nevoUser.setHeight(user.getLength());
+                    nevoUser.setLastName(user.getLast_name());
+                    nevoUser.setWeight(user.getWeight());
+                    nevoUser.setId(user.getId());
+                    nevoUser.setNevoUserEmail(user.getEmail());
+                    nevoUser.setIsLogin(true);
+                    //save it and sync with watch and cloud server
+                    getModel().saveNevoUser(nevoUser);
+                    getModel().getSyncController().getDailyTrackerInfo(true);
+                    launchSyncAll(nevoUser, getModel().getNeedSyncSteps(nevoUser.getNevoUserID()), getModel().getNeedSyncSleep(nevoUser.getNevoUserID()));
+                }
+            }
+        });
     }
 
     /**
      * when user login, invoke it
      */
     public void launchSyncAll(User user, List<Steps> stepsList, List<Sleep> sleepList){
-         for(Steps steps: stepsList)
-         {
-             ValidicOperation.getInstance(context).addValidicRoutineRecord(user,steps,new Date(steps.getDate()),null);
-         }
+        for(Steps steps: stepsList)
+        {
+            ValidicOperation.getInstance(context).addValidicRoutineRecord(user,steps,new Date(steps.getDate()),null);
+            MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(steps.getDate()),null);
+        }
         Date endDate = Common.removeTimeFromDate(new Date());
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
-
         downloadSteps(user,startDate,endDate,1);
         for(Sleep sleep: sleepList)
         {
             ValidicOperation.getInstance(context).addValidicSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
         }
-
         downloadSleep(user, startDate,endDate,1);
     }
 
     private void downloadSteps(final User user, final Date startDate, final Date endDate,final int page)
     {
-        ValidicOperation.getInstance(context).getMoreValidicRoutineRecord(user, startDate, endDate, page, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
+        if(page>0) {
+            ValidicOperation.getInstance(context).getMoreValidicRoutineRecord(user, startDate, endDate, page, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    EventBus.getDefault().post(new ValidicException(spiceException));
+                }
+
+                @Override
+                public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
+                    if (validicReadMoreRoutineRecordsModel.getSummary().getResults() > 0) {
+                        EventBus.getDefault().post(new ValidicReadMoreRoutineRecordsModelEvent(validicReadMoreRoutineRecordsModel));
+                        if (validicReadMoreRoutineRecordsModel.getSummary().getNext() != null) {
+                            String nextPageUrl = validicReadMoreRoutineRecordsModel.getSummary().getNext();
+                            int pageStart = nextPageUrl.indexOf("page=");
+                            int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
+                            int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
+                            downloadSteps(user, startDate, endDate, nextPage);
+                        }
+                    }
+                }
+            });
+        }
+        MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate,new ResponseListener<MedReadMoreRoutineRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                EventBus.getDefault().post(new ValidicException(spiceException));
-            }
 
+            }
             @Override
-            public void onRequestSuccess(ValidicReadMoreRoutineRecordsModel validicReadMoreRoutineRecordsModel) {
-                if (validicReadMoreRoutineRecordsModel.getSummary().getResults() > 0) {
-                    EventBus.getDefault().post(new ValidicReadMoreRoutineRecordsModelEvent(validicReadMoreRoutineRecordsModel));
-                    if (validicReadMoreRoutineRecordsModel.getSummary().getNext() != null) {
-                        String nextPageUrl = validicReadMoreRoutineRecordsModel.getSummary().getNext();
-                        int pageStart = nextPageUrl.indexOf("page=");
-                        int pageEnd =  nextPageUrl.substring(pageStart).indexOf("&");
-                        int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
-                        downloadSteps(user,startDate, endDate, nextPage);
-                    }
+            public void onRequestSuccess(MedReadMoreRoutineRecordsModel medReadMoreRoutineRecordsModel) {
+
+                if(medReadMoreRoutineRecordsModel.getStatus()==1 && medReadMoreRoutineRecordsModel.getSteps().length>0){
+                    Date endDate = new Date(startDate.getTime()-24*60*60*1000l);
+                    Date startDate = new Date(endDate.getTime()-30*24*60*60*1000l);
+                    //no page split
+                    downloadSteps(user,startDate, endDate,0);
                 }
             }
         });
@@ -124,23 +164,43 @@ public class CloudSyncManager {
 
     private void downloadSleep(final User user, final Date startDate, final Date endDate,final int page)
     {
-        ValidicOperation.getInstance(context).getMoreValidicSleepRecord(user, startDate, endDate, page, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
+        if(page>0) {
+            ValidicOperation.getInstance(context).getMoreValidicSleepRecord(user, startDate, endDate, page, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    EventBus.getDefault().post(new ValidicException(spiceException));
+                }
+
+                @Override
+                public void onRequestSuccess(ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel) {
+                    if (validicReadMoreSleepRecordsModel.getSummary().getResults() > 0) {
+                        EventBus.getDefault().post(new ValidicReadMoreSleepRecordsModelEvent(validicReadMoreSleepRecordsModel));
+                        if (validicReadMoreSleepRecordsModel.getSummary().getNext() != null) {
+                            String nextPageUrl = validicReadMoreSleepRecordsModel.getSummary().getNext();
+                            int pageStart = nextPageUrl.indexOf("page=");
+                            int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
+                            int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
+                            downloadSleep(user, startDate, endDate, nextPage);
+                        }
+                    }
+                }
+            });
+        }
+
+        MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new ResponseListener<MedReadMoreSleepRecordsModel>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                EventBus.getDefault().post(new ValidicException(spiceException));
+
             }
 
             @Override
-            public void onRequestSuccess(ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel) {
-                if (validicReadMoreSleepRecordsModel.getSummary().getResults() > 0) {
-                    EventBus.getDefault().post(new ValidicReadMoreSleepRecordsModelEvent(validicReadMoreSleepRecordsModel));
-                    if (validicReadMoreSleepRecordsModel.getSummary().getNext() != null) {
-                        String nextPageUrl = validicReadMoreSleepRecordsModel.getSummary().getNext();
-                        int pageStart = nextPageUrl.indexOf("page=");
-                        int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
-                        int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
-                        downloadSleep(user, startDate, endDate, nextPage);
-                    }
+            public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
+                if(medReadMoreSleepRecordsModel.getStatus()==1&& medReadMoreSleepRecordsModel.getSleep().length>0)
+                {
+                    Date endDate = new Date(startDate.getTime()-24*60*60*1000l);
+                    Date startDate = new Date(endDate.getTime()-30*24*60*60*1000l);
+                    //no page split
+                    downloadSleep(user,startDate, endDate,0);
                 }
             }
         });
@@ -152,6 +212,7 @@ public class CloudSyncManager {
     public void launchSyncDaily(User user, Steps steps)
     {
         ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps,new Date(),null);
+        MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(),null);
     }
 
     /**
@@ -162,13 +223,13 @@ public class CloudSyncManager {
         for(Steps steps: stepsList)
         {
             ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps,new Date(steps.getDate()),null);
+            MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(),null);
         }
 
         for(Sleep sleep: sleepList)
         {
             ValidicOperation.getInstance(context).addValidicSleepRecord(user, sleep , new Date(sleep.getDate()), null);
+            MedOperation.getInstance(context).addMedSleepRecord(user, sleep , new Date(sleep.getDate()), null);
         }
     }
-
-
 }

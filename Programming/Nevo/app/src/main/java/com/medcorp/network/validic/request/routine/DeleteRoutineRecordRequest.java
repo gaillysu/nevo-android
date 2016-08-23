@@ -3,16 +3,15 @@ package com.medcorp.network.validic.request.routine;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.DeleteRoutineRecordRequestObject;
 import com.medcorp.network.validic.model.ValidicDeleteRoutineRecordModel;
-import com.medcorp.network.base.BaseRetroRequest;
 import com.medcorp.network.validic.retrofit.Validic;
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class DeleteRoutineRecordRequest extends RetrofitSpiceRequest<ValidicDeleteRoutineRecordModel,Validic> implements BaseRetroRequest<DeleteRoutineRecordRequestObject> {
+public class DeleteRoutineRecordRequest extends BaseRequest<ValidicDeleteRoutineRecordModel,Validic> implements BaseRequest.BaseRetroRequestBody<DeleteRoutineRecordRequestObject> {
 
     private String   organizationId;
     private String   organizationTokenKey;

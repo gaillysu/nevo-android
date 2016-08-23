@@ -4,7 +4,7 @@ public class Steps implements Comparable<Steps>{
 
     private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
-    private String validicRecordID;
+    private String cloudRecordID;
 
     private String nevoUserID;
 
@@ -234,12 +234,12 @@ public class Steps implements Comparable<Steps>{
         this.runDuration = runDuration;
     }
 
-    public String getValidicRecordID() {
-        return validicRecordID;
+    public String getCloudRecordID() {
+        return cloudRecordID;
     }
 
-    public void setValidicRecordID(String validicRecordID) {
-        this.validicRecordID = validicRecordID;
+    public void setCloudRecordID(String cloudRecordID) {
+        this.cloudRecordID = cloudRecordID;
     }
 
     public String getNevoUserID() {

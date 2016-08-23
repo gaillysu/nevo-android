@@ -1,14 +1,14 @@
-package com.medcorp.network.validic.request.routine;
+package com.medcorp.network.med.request.sleep;
 
 import com.medcorp.network.base.BaseRequest;
-import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
+import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.network.validic.retrofit.Validic;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class GetMoreRoutineRecordsRequest extends BaseRequest<ValidicReadMoreRoutineRecordsModel,Validic> {
+public class GetMoreSleepRecordsRequest extends BaseRequest<ValidicReadMoreSleepRecordsModel,Validic> {
 
     private String   organizationId;
     private String   organizationTokenKey;
@@ -17,8 +17,8 @@ public class GetMoreRoutineRecordsRequest extends BaseRequest<ValidicReadMoreRou
     private String   end_timestamp;
     private int      page;
 
-    public GetMoreRoutineRecordsRequest(String organizationId, String organizationTokenKey, String validicUserId,String start_timestamp,String end_timestamp,int page) {
-        super(ValidicReadMoreRoutineRecordsModel.class,Validic.class);
+    public GetMoreSleepRecordsRequest(String organizationId, String organizationTokenKey, String validicUserId,String   start_timestamp,String   end_timestamp,int page) {
+        super(ValidicReadMoreSleepRecordsModel.class,Validic.class);
         this.organizationId = organizationId;
         this.organizationTokenKey = organizationTokenKey;
         this.validicUserId = validicUserId;
@@ -28,7 +28,7 @@ public class GetMoreRoutineRecordsRequest extends BaseRequest<ValidicReadMoreRou
     }
 
     @Override
-    public ValidicReadMoreRoutineRecordsModel loadDataFromNetwork() throws Exception {
-        return getService().getMoreRoutineRecordsRequest(organizationId, validicUserId, organizationTokenKey,start_timestamp,end_timestamp,1,page);
+    public ValidicReadMoreSleepRecordsModel loadDataFromNetwork() throws Exception {
+        return getService().getMoreSleepRecordsRequest(organizationId, validicUserId, organizationTokenKey,start_timestamp,end_timestamp,1,page);
     }
 }

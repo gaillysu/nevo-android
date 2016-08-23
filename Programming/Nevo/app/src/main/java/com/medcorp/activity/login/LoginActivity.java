@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
+import com.medcorp.network.med.model.LoginUser;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -69,7 +70,10 @@ public class LoginActivity extends BaseActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        getModel().nevoUserLogin(email, password);
+        LoginUser user = new LoginUser();
+        user.setEmail(email);
+        user.setPassword(password);
+        getModel().getCloudSyncManager().userLogin(user);
     }
 
     @Subscribe

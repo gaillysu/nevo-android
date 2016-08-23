@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.network.med.model.CreateUserModel;
-import com.medcorp.network.med.model.RequestCreateNewAccountRequest;
 import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.login.SignupActivity;
@@ -94,8 +93,7 @@ public class UserInfoActivity extends BaseActivity {
             progress.setMessage(getString(R.string.network_wait_text));
             progress.show();
 
-            getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
-                    .getAccessToken()), new RequestListener<CreateUserModel>() {
+            getModel().getCloudSyncManager().createUser(userInfo, new RequestListener<CreateUserModel>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
                     progress.dismiss();
