@@ -110,7 +110,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
     {
         List<Steps> stepsList = new ArrayList<Steps>();
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fValidicRecordID, "0").query();
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().isNull(StepsDAO.fCloudRecordID).query();
             for(StepsDAO stepsDAO : stepsDAOList){
                 stepsList.add(convertToNormal(stepsDAO));
             }
@@ -154,7 +154,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         stepsDao.setNoActivityTime(steps.getNoActivityTime());
         stepsDao.setGoal(steps.getGoal());
         stepsDao.setRemarks(steps.getRemarks());
-        stepsDao.setValidicRecordID(steps.getCloudRecordID());
+        stepsDao.setCloudRecordID(steps.getCloudRecordID());
         stepsDao.setDistanceGoal(steps.getDistanceGoal());
         stepsDao.setCaloriesGoal(steps.getCaloriesGoal());
         stepsDao.setActiveTimeGoal(steps.getActiveTimeGoal());
@@ -184,7 +184,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         steps.setNoActivityTime(stepsDAO.getNoActivityTime());
         steps.setGoal(stepsDAO.getGoal());
         steps.setRemarks(stepsDAO.getRemarks());
-        steps.setCloudRecordID(stepsDAO.getValidicRecordID());
+        steps.setCloudRecordID(stepsDAO.getCloudRecordID());
         steps.setDistanceGoal(stepsDAO.getDistanceGoal());
         steps.setCaloriesGoal(stepsDAO.getCaloriesGoal());
         steps.setActiveTimeGoal(stepsDAO.getActiveTimeGoal());

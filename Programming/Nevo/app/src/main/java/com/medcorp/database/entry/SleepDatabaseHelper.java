@@ -108,7 +108,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     public List<Sleep> getNeedSyncSleep(String userId) {
         List<Sleep> sleepList = new ArrayList<Sleep>();
         try {
-            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fValidicRecordID, "0").query();
+            List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).and().isNull(SleepDAO.fCloudRecordID).query();
             for (SleepDAO sleepDAO: sleepDAOList) {
                 sleepList.add(convertToNormal(sleepDAO));
             }
@@ -147,7 +147,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         sleepDAO.setTotalLightTime(sleep.getTotalLightTime());
         sleepDAO.setTotalSleepTime(sleep.getTotalSleepTime());
         sleepDAO.setTotalWakeTime(sleep.getTotalWakeTime());
-        sleepDAO.setValidicRecordID(sleep.getValidicRecordID());
+        sleepDAO.setCloudRecordID(sleep.getCloudRecordID());
         return sleepDAO;
     }
 
@@ -168,7 +168,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         sleep.setTotalLightTime(sleepDAO.getTotalLightTime());
         sleep.setTotalSleepTime(sleepDAO.getTotalSleepTime());
         sleep.setTotalWakeTime(sleepDAO.getTotalWakeTime());
-        sleep.setValidicRecordID(sleepDAO.getValidicRecordID());
+        sleep.setCloudRecordID(sleepDAO.getCloudRecordID());
         return sleep;
     }
 

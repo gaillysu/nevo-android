@@ -247,7 +247,7 @@ public class ValidicOperation {
             public void onRequestSuccess(ValidicSleepRecordModel validicSleepRecordModel) {
                 if(validicSleepRecordModel.getCode().equals("200")||validicSleepRecordModel.getCode().equals("201"))
                 {
-                    sleep.setValidicRecordID(validicSleepRecordModel.getSleep().get_id());
+                    sleep.setCloudRecordID(validicSleepRecordModel.getSleep().get_id());
                     EventBus.getDefault().post(new ValidicAddSleepRecordEvent(sleep));
                 }
             }
@@ -294,7 +294,7 @@ public class ValidicOperation {
         if(!user.isLogin()||!user.isConnectValidic()){
             return;
         }
-        String validicRecordID = sleep.getValidicRecordID();
+        String validicRecordID = sleep.getCloudRecordID();
         if(validicRecordID.equals("0")) {
             return;
         }

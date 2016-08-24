@@ -369,7 +369,7 @@ public class ApplicationModel extends Application {
         sleep.setStart(0);
         sleep.setEnd(0);
         sleep.setNevoUserID(getNevoUser().getNevoUserID());
-        sleep.setValidicRecordID(validicSleepRecord.get_id());
+        sleep.setCloudRecordID(validicSleepRecord.get_id());
         try {
             sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
         } catch (JSONException e) {

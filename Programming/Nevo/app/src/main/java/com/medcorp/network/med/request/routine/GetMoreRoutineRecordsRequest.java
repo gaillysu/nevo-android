@@ -14,10 +14,10 @@ public class GetMoreRoutineRecordsRequest extends BaseRequest<MedReadMoreRoutine
 
     private String   organizationTokenKey;
     private String   userID;
-    private String   start_timestamp;
-    private String   end_timestamp;
+    private long   start_timestamp;
+    private long   end_timestamp;
 
-    public GetMoreRoutineRecordsRequest(String organizationTokenKey, String userID,String start_timestamp,String end_timestamp) {
+    public GetMoreRoutineRecordsRequest(String organizationTokenKey, String userID,long start_timestamp,long end_timestamp) {
         super(MedReadMoreRoutineRecordsModel.class,MedCorp.class);
         this.organizationTokenKey = organizationTokenKey;
         this.userID = userID;
@@ -27,6 +27,6 @@ public class GetMoreRoutineRecordsRequest extends BaseRequest<MedReadMoreRoutine
 
     @Override
     public MedReadMoreRoutineRecordsModel loadDataFromNetwork() throws Exception {
-        return getService().getMoreRoutineRecordsRequest(buildAuthorization(),userID,organizationTokenKey,start_timestamp,end_timestamp);
+        return getService().getMoreRoutineRecordsRequest(buildAuthorization(),"application/json",userID,organizationTokenKey,start_timestamp,end_timestamp);
     }
 }

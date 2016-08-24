@@ -40,7 +40,7 @@ public interface MedCorp {
     MedRoutineRecordModel stepsCreate(@Body MedRoutineRecordObject object,@Header("Authorization") String auth, @Header("Content-Type") String type);
 
     @GET("/steps/user/{USER_ID}")
-    MedReadMoreRoutineRecordsModel getMoreRoutineRecordsRequest(@Header("Authorization") String auth,@Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") String start_date, @Query("end_date") String end_date);
+    MedReadMoreRoutineRecordsModel getMoreRoutineRecordsRequest(@Header("Authorization") String auth,@Header("Content-Type") String type,@Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") long start_date, @Query("end_date") long end_date);
 
     //TODO add sleep REST API
 }

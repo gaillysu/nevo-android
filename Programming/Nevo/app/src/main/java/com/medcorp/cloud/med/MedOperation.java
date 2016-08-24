@@ -142,10 +142,10 @@ public class MedOperation {
             return;
         }
 
-        String startTimestamp = Common.getUTCTimestampFromLocalDate(startDate);
-        String endTimeStamps = Common.getUTCTimestampFromLocalDate(endDate);
+        long startTimestamp = startDate.getTime();
+        long endTimeStamps = endDate.getTime();
 
-        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(medManager.getAccessToken(), user.getValidicUserID(), startTimestamp, endTimeStamps);
+        GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(medManager.getAccessToken(), user.getNevoUserID(), startTimestamp, endTimeStamps);
 
         medManager.execute(getMoreRecordsRequest, new RequestListener<MedReadMoreRoutineRecordsModel>() {
             @Override

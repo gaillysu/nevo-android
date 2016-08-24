@@ -87,7 +87,7 @@ public class CloudSyncManager {
                     nevoUser.setHeight(user.getLength());
                     nevoUser.setLastName(user.getLast_name());
                     nevoUser.setWeight(user.getWeight());
-                    nevoUser.setId(user.getId());
+                    nevoUser.setNevoUserID(""+user.getId());
                     nevoUser.setNevoUserEmail(user.getEmail());
                     nevoUser.setIsLogin(true);
                     //save it and sync with watch and cloud server
@@ -108,7 +108,8 @@ public class CloudSyncManager {
             ValidicOperation.getInstance(context).addValidicRoutineRecord(user,steps,new Date(steps.getDate()),null);
             MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(steps.getDate()),null);
         }
-        Date endDate = Common.removeTimeFromDate(new Date());
+        //calculate today 's last time: 23:59:59
+        Date endDate = new Date(Common.removeTimeFromDate(new Date()).getTime()+24*60*60*1000l-1);
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
         downloadSteps(user,startDate,endDate,1);
         for(Sleep sleep: sleepList)
@@ -151,7 +152,7 @@ public class CloudSyncManager {
             @Override
             public void onRequestSuccess(MedReadMoreRoutineRecordsModel medReadMoreRoutineRecordsModel) {
 
-                if(medReadMoreRoutineRecordsModel.getStatus()==1 && medReadMoreRoutineRecordsModel.getSteps().length>0){
+                if(medReadMoreRoutineRecordsModel.getStatus()==1 && medReadMoreRoutineRecordsModel.getSteps()!=null && medReadMoreRoutineRecordsModel.getSteps().length>0){
                     Date endDate = new Date(startDate.getTime()-24*60*60*1000l);
                     Date startDate = new Date(endDate.getTime()-30*24*60*60*1000l);
                     //no page split
@@ -195,7 +196,7 @@ public class CloudSyncManager {
 
             @Override
             public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
-                if(medReadMoreSleepRecordsModel.getStatus()==1&& medReadMoreSleepRecordsModel.getSleep().length>0)
+                if(medReadMoreSleepRecordsModel.getStatus()==1&& medReadMoreSleepRecordsModel.getSleep()!=null && medReadMoreSleepRecordsModel.getSleep().length>0)
                 {
                     Date endDate = new Date(startDate.getTime()-24*60*60*1000l);
                     Date startDate = new Date(endDate.getTime()-30*24*60*60*1000l);
@@ -223,7 +224,7 @@ public class CloudSyncManager {
         for(Steps steps: stepsList)
         {
             ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps,new Date(steps.getDate()),null);
-            MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(),null);
+            MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(steps.getDate()),null);
         }
 
         for(Sleep sleep: sleepList)
