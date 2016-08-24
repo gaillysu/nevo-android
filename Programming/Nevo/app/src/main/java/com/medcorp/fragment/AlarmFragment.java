@@ -165,24 +165,29 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 }
 
                 List<Alarm> allAlarm = getModel().getAllAlarm();
+
                 int num = 0;
+                if (alarmSelectStyle == 1) {
+                    num = 7;
+                }
+
                 for (int i = 0; i < allAlarm.size(); i++) {
                     if (allAlarm.get(i).getAlarmType() == alarmSelectStyle) {
                         num++;
                     }
-                    if (alarmSelectStyle == 1) {
-                        num += 6;
-                    }
+
                 }
 
-                if (num < 7) {
+                if ((alarmSelectStyle == 0 && num < 7) || (alarmSelectStyle == 1 && num <= 13)) {
+
                     newAlarm.setWeekDay(weekDay);
                     newAlarm.setAlarmType(alarmSelectStyle);
-                    newAlarm.setAlarmNumber((byte)num);
+                    newAlarm.setAlarmNumber((byte) num);
                     getModel().addAlarm(newAlarm);
                 } else {
                     ToastHelper.showShortToast(getContext(), getResources().getString(R.string.add_alarm_index_out));
                 }
+
 
                 dialog.dismiss();
                 refreshListView();

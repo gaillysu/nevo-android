@@ -118,6 +118,7 @@ public class AlarmDatabaseHelper implements iSettingDatabaseHelper<Alarm> {
         alarmDAO.setAlarm(alarm.getHour() + ":" + alarm.getMinute());
         alarmDAO.setLabel(alarm.getLabel());
         alarmDAO.setWeekDay(alarm.getWeekDay());
+        alarmDAO.setAlarmNumber(alarm.getAlarmNumber());
         alarmDAO.setAlarmType(alarm.getAlarmType());
         return alarmDAO;
     }

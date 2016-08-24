@@ -3,6 +3,7 @@ package com.medcorp.activity.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -90,12 +91,14 @@ public class LoginActivity extends BaseActivity {
                 new RequestListener<LoginUserModel>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
+                        progressDialog.dismiss();
                         spiceException.printStackTrace();
                         EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
                     }
 
                     @Override
                     public void onRequestSuccess(LoginUserModel loginUserModel) {
+                        progressDialog.dismiss();
                         if (loginUserModel.getStatus() == 1) {
                             UserWithLocation user = loginUserModel.getUser();
                             User nevoUser = getModel().getNevoUser();
@@ -130,13 +133,11 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void promptUserChangePassword() {
-        new MaterialDialog.Builder(this)
-                .title(getString(R.string.open_forget_password_dialog_title))
-                .content(getString(R.string.prompt_is_not_forget_password))
-                .negativeText(android.R.string.no)
+        new MaterialDialog.Builder(this).contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
+                .title(R.string.open_forget_password_dialog_title).content(R.string.prompt_is_not_forget_password).negativeText(android.R.string.cancel)
                 .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
-            public void onClick(MaterialDialog dialog, DialogAction which) {
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 startActivity(ForgetPasswordActivity.class);
                 finish();
             }
