@@ -314,6 +314,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="forget_password_result_prompt">Check your inbox</string>
     <string name="forget_password_result_email_address_text">A email has been sent to: </string>
     <string name="forget_password_result_test_email_address">shaw@med-corp.com</string>
+    <string name="prompt_is_not_forget_password">Do you need to change your password?</string>
+    <string name="open_forget_password_dialog_title">Forget password</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we\’ve\n sent and verify your e-mail ad-\ndress.</string>
     <string name="analysis_fragment_title_string">Analysis</string>
     <string name="steps_goal_one">4500 steps</string>
@@ -327,7 +329,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
     <string name="profile_input_user_first_name_dialog_title">Input FirstName</string>
     <string name="profile_input_user_surname_dialog_title">Input Surname</string>
-    <string name="profile_fragment_edit_first_name_edit_hint">First Name</string>
+    <string name="profile_fragment_edit_first_name_edit_hint">Input Name</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
     <string name="lunar_fragment_calorie_text">CALORIES</string>
@@ -374,6 +376,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="every_day">Every day</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="edit_alarm_wake">Wake Alarm</string>
+    <string name="edit_profile">Edit Profile</string>
     <!--<string name="week_day">平日</string>-->
     <!--<string name="week_end">周末</string>-->
     <!--<string name="week">周</string>-->

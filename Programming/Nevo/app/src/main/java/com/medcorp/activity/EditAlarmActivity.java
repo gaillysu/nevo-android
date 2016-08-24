@@ -3,6 +3,7 @@ package com.medcorp.activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -42,6 +44,12 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_alarm);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        title.setText(R.string.title_alarm);
+
         Bundle bundle = getIntent().getExtras();
         alarm = getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)));
         alarmOld = new Alarm(alarm.getHour(), alarm.getMinute(), alarm.getWeekDay(), alarm.getLabel(), alarm.getAlarmType(), alarm.getAlarmNumber());

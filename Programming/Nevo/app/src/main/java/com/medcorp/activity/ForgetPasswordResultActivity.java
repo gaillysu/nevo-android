@@ -33,7 +33,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(LoginActivity.class);
+                startActivity(MainActivity.class);
                 finish();
             }
         }, 1500);

@@ -145,6 +145,8 @@
 
         //Lunar
         <activity android:name=".activity.UserInfoActivity"/>
+        <activity android:name=".activity.ForgetPasswordActivity"/>
+        <activity android:name=".activity.ForgetPasswordResultActivity"/>
     </application>
 
 </manifest>
