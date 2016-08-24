@@ -303,6 +303,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="activity_user_info_man">Male</string>
     <string name="activity_user_info_female">Female</string>
     <string name="user_info_user_birthday_error">Birthday may not be empty</string>
+    <string name="info_company_height">Cm</string>
+    <string name="info_company_weight">Kg</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
     <string name="register_input_first_is_empty">User name cannot be empty</string>
@@ -365,20 +367,17 @@ push and hold the third button, until the white LED blinks</string>
     <string name="edit_alarm_repeat">Repeat</string>
     <string name="edit_alarm_name">Alarm Name</string>
     <string name="input_legitimate_value">Please enter a valid value from 1 to 7</string>
-    <string name="edit_alarm_repeat_Once">Once</string>
-    <string name="monday">Mon</string>
-    <string name="tuesday">Tue</string>
-    <string name="wednesday">Wed</string>
-    <string name="thursday">Thu</string>
-    <string name="friday">Fri</string>
-    <string name="saturday">Sat</string>
-    <string name="sunday">Sun</string>
-    <string name="every_day">Every day</string>
+    <string name="monday">Every Mon</string>
+    <string name="tuesday">Every Tue</string>
+    <string name="wednesday">Every Wed</string>
+    <string name="thursday">Every Thu</string>
+    <string name="friday">Every Fri</string>
+    <string name="saturday">Every Sat</string>
+    <string name="sunday">Every Sun</string>
+    <string name="every_day">Every </string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="edit_alarm_wake">Wake Alarm</string>
     <string name="edit_profile">Edit Profile</string>
-    <!--<string name="week_day">平日</string>-->
-    <!--<string name="week_end">周末</string>-->
-    <!--<string name="week">周</string>-->
+    <string name="login_skip_text">Skip</string>
     <!--<lunar end>-->
 </resources>

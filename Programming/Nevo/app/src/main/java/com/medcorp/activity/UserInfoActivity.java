@@ -39,6 +39,7 @@ public class UserInfoActivity extends BaseActivity {
     private String lastName;
     private String password;
     private int viewType = -1;
+    private ProgressDialog progressDialog;
     @Bind(R.id.register_account_activity_edit_birthday)
     TextView tv_userBirth;
     @Bind(R.id.register_account_activity_edit_height)
@@ -84,29 +85,30 @@ public class UserInfoActivity extends BaseActivity {
                 userInfo.setBirthday(userBirthday);
                 userInfo.setEmail(email);
                 userInfo.setLast_name(lastName);
-                userInfo.setLength(new Integer(userHeight).intValue());
-                userInfo.setWeight(Double.parseDouble(userWeight));
+                userInfo.setLength(new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue());
+                userInfo.setWeight(Double.parseDouble(userWeight.replace(getString(R.string.info_company_weight), "")));
                 userInfo.setPassword(password);
                 userInfo.setSex(gender);
 
-                final ProgressDialog progress = new ProgressDialog(this);
-                progress.setIndeterminate(false);
-                progress.setCancelable(false);
-                progress.setMessage(getString(R.string.network_wait_text));
-                progress.show();
+                progressDialog = new ProgressDialog(this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage(getString(R.string.network_wait_text));
+                progressDialog.show();
 
                 getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
                         .getAccessToken()), new RequestListener<CreateUserModel>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
-                        progress.dismiss();
+                        progressDialog.dismiss();
                         spiceException.printStackTrace();
                         ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
                     }
 
                     @Override
                     public void onRequestSuccess(CreateUserModel createUserModel) {
-                        progress.dismiss();
+                        progressDialog.dismiss();
                         if (createUserModel.getStatus() == 1) {
                             startActivity(LoginActivity.class);
                             finish();
@@ -172,13 +174,14 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
-                            Date date = dateFormat.parse(dateDesc);
+                            Date userSelectDate = dateFormat.parse(dateDesc);
+                            tv_userBirth.setText(new SimpleDateFormat("MMM").format(userSelectDate) + "-" + day + "-" + year);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        tv_userBirth.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "-" + day + "-" + year);
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
@@ -198,7 +201,7 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        tv_userHeight.setText(dateDesc);
+                        tv_userHeight.setText(dateDesc + getString(R.string.info_company_height));
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
@@ -216,7 +219,7 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        tv_userWeight.setText(dateDesc);
+                        tv_userWeight.setText(dateDesc + getString(R.string.info_company_weight));
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)

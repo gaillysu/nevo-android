@@ -67,6 +67,4 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         });
         return itemView;
     }
-
-
 }

@@ -140,8 +140,6 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         friday.setOnClickListener(this);
         saturday.setOnClickListener(this);
         sunday.setOnClickListener(this);
-
-        //        selectRepeatDialog.setView(alarmDialogView);
         alarmStyle.setOnCheckedChangeListener(this);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.ForgetPasswordActivity;
+import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
 import com.medcorp.model.User;
@@ -20,6 +22,7 @@ import com.medcorp.network.med.model.LoginUser;
 import com.medcorp.network.med.model.LoginUserModel;
 import com.medcorp.network.med.model.LoginUserRequest;
 import com.medcorp.network.med.model.UserWithLocation;
+import com.medcorp.util.Preferences;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -46,6 +49,8 @@ public class LoginActivity extends BaseActivity {
     Button _loginButton;
     @Bind(R.id.link_signup)
     TextView _signupLink;
+    @Bind(R.id.login_skip_bt)
+    Button skipLoginBt;
     private int inputPasswordErrorSum = 0;
 
     @Override
@@ -57,11 +62,20 @@ public class LoginActivity extends BaseActivity {
         if (getModel().getNevoUser().getNevoUserEmail() != null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
         }
+        if(Preferences.getIsFirstLogin(this)){
+            skipLoginBt.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.link_signup)
     public void signUpAction() {
         startActivity(SignupActivity.class);
+        finish();
+    }
+
+    @OnClick(R.id.login_skip_bt)
+    public void skipLogin(){
+        startActivity(TutorialPage1Activity.class);
         finish();
     }
 
@@ -107,6 +121,7 @@ public class LoginActivity extends BaseActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
+                            Preferences.saveIsFirstLogin(LoginActivity.this,false);
                             nevoUser.setFirstName(user.getFirst_name());
                             nevoUser.setHeight(user.getLength());
                             nevoUser.setLastName(user.getLast_name());
