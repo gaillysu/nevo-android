@@ -131,6 +131,11 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return false;
     }
 
+    public boolean isFoundInLocalSteps(Date date,String userId)
+    {
+        return get(userId,date).notEmpty();
+    }
+
     private StepsDAO convertToDao(Steps steps){
         StepsDAO stepsDao = new StepsDAO();
         stepsDao.setID(steps.getiD());

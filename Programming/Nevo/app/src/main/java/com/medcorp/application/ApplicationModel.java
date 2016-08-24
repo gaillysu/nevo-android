@@ -58,6 +58,8 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
 import com.medcorp.network.med.manager.MedManager;
+import com.medcorp.network.med.model.MedRoutineRecordModel;
+import com.medcorp.network.med.model.MedRoutineRecordWithID;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.network.validic.model.ValidicSleepRecordModelBase;
@@ -78,6 +80,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -298,6 +301,9 @@ public class ApplicationModel extends Application {
     public boolean isFoundInLocalSteps(int activity_id) {
         return stepsDatabaseHelper.isFoundInLocalSteps(activity_id);
     }
+    public boolean isFoundInLocalSteps(Date date,String userID) {
+        return stepsDatabaseHelper.isFoundInLocalSteps(date,userID);
+    }
 
     public boolean isFoundInLocalSleep(int activity_id) {
         return sleepDatabaseHelper.isFoundInLocalSleep(activity_id);
@@ -317,6 +323,29 @@ public class ApplicationModel extends Application {
         } else {
             steps.setGoal(7000);
         }
+        saveDailySteps(steps);
+    }
+
+    public void saveStepsFromMed(MedRoutineRecordWithID routine,Date createDate) {
+        Steps steps = new Steps(createDate.getTime());
+        steps.setDate(Common.removeTimeFromDate(createDate).getTime());
+        try {
+            JSONArray hourlyArray = new JSONArray(routine.getSteps());
+            int totalSteps = 0;
+            for (int i = 0; i < hourlyArray.length(); i++){
+                totalSteps += hourlyArray.optInt(i);
+            }
+            steps.setHourlySteps(routine.getSteps());
+            steps.setSteps(totalSteps);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        steps.setDistance((int) routine.getDistance());
+        steps.setCalories(routine.getCalories());
+        steps.setNoActivityTime(routine.getActive_time());
+        steps.setNevoUserID(routine.getUid()+"");
+        steps.setCloudRecordID(routine.getId()+"");
+        steps.setGoal(10000);
         saveDailySteps(steps);
     }
 
@@ -582,16 +611,19 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent medReadMoreRoutineRecordsModelEvent) {
-        //TODO save to database
-        /**
-        for (ValidicRoutineRecordModelBase routine : medReadMoreRoutineRecordsModelEvent.getValidicReadMoreRoutineRecordsModel().getRoutine()) {
-            int activity_id = Integer.parseInt(routine.getActivity_id());
-            // if activity_id not exist in local Steps table, save it
-            if (!isFoundInLocalSteps(activity_id)) {
-                saveStepsFromValidic(routine);
+
+        for (MedRoutineRecordWithID routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
+                // if activity_id not exist in local Steps table, save it
+                if (!isFoundInLocalSteps(date,routine.getUid()+""))
+                {
+                    saveStepsFromMed(routine,date);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
-         */
     }
 
     @Subscribe

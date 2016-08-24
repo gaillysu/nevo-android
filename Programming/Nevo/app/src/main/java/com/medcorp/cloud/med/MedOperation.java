@@ -141,9 +141,9 @@ public class MedOperation {
         if (!user.isLogin()) {
             return;
         }
-
-        long startTimestamp = startDate.getTime();
-        long endTimeStamps = endDate.getTime();
+        //use unit in "second"
+        long startTimestamp = startDate.getTime()/1000;
+        long endTimeStamps = endDate.getTime()/1000;
 
         GetMoreRoutineRecordsRequest getMoreRecordsRequest = new GetMoreRoutineRecordsRequest(medManager.getAccessToken(), user.getNevoUserID(), startTimestamp, endTimeStamps);
 
