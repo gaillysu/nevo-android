@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.fragment.base.BaseFragment;
@@ -20,10 +19,11 @@ import com.medcorp.util.Preferences;
 import com.medcorp.util.SleepDataHandler;
 import com.medcorp.util.SleepDataUtils;
 import com.medcorp.util.TimeUtil;
-import com.medcorp.view.graphs.SleepChart;
+import com.medcorp.view.graphs.SleepTodayChart;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,17 +43,18 @@ public class LunarMainSleepFragment extends BaseFragment {
 
     @Bind(R.id.lunar_sleep_fragment_duration)
     TextView durationTextView;
-
     @Bind(R.id.lunar_sleep_fragment_quality)
     TextView qualityTextView;
-
     @Bind(R.id.lunar_sleep_fragment_sleep_time)
     TextView sleepTimeTextView;
-
+    @Bind(R.id.lunar_hjbkarl)
     TextView wakeTimeTextView;
 
     @Bind(R.id.fragment_sleep_history_linechart)
-    SleepChart lineChartSleep;
+    SleepTodayChart lineChartSleep;
+
+
+
 
     private Date userSelectDate;
 
@@ -61,7 +62,7 @@ public class LunarMainSleepFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View sleepView = inflater.inflate(R.layout.lunar_main_sleep_fragment_layout, container, false);
         ButterKnife.bind(this, sleepView);
-        wakeTimeTextView = (TextView) sleepView.findViewById(R.id.lunar_hjbkarl);
+//        wakeTimeTextView = (TextView) sleepView.findViewById(R.id.lunar_hjbkarl);
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -72,7 +73,6 @@ public class LunarMainSleepFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
-
 
         initData(userSelectDate);
         return sleepView;

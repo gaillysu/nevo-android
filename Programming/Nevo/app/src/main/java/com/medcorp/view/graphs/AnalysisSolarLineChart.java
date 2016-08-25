@@ -10,7 +10,6 @@ import android.util.Log;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -19,7 +18,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.R;
-import com.medcorp.model.Steps;
+import com.medcorp.model.Solar;
+import com.medcorp.util.TimeUtil;
 
 import org.joda.time.DateTime;
 
@@ -32,22 +32,22 @@ import static java.lang.Math.abs;
  * Created by Karl on 8/24/16.
  */
 
-public class StepsAnalysisLineChart extends LineChart{
+public class AnalysisSolarLineChart extends LineChart{
 
-    private List<Steps> stepsList = new ArrayList<>();
+    private List<Solar> solarList = new ArrayList<>();
 
-    public StepsAnalysisLineChart(Context context) {
+    public AnalysisSolarLineChart(Context context) {
         super(context);
         initGraph();
 
     }
 
-    public StepsAnalysisLineChart(Context context, AttributeSet attrs) {
+    public AnalysisSolarLineChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public StepsAnalysisLineChart(Context context, AttributeSet attrs, int defStyle) {
+    public AnalysisSolarLineChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }
@@ -90,45 +90,32 @@ public class StepsAnalysisLineChart extends LineChart{
 
     }
 
-    public void addData(List<Steps> stepsList, final int goal, int max){
-        this.stepsList = stepsList;
+    public void addData(List<Solar> solarList, int maxDays){
+        this.solarList = solarList;
 
         List<Entry> yValue = new ArrayList<Entry>();
         int maxValue = 0;
 
-        final int stepsModulo = 500;
-        for (int i = 0; i < max; i++) {
-            if (i < stepsList.size()){
-                Steps steps = stepsList.get(i);
-                if (steps.getSteps() > maxValue){
-                    maxValue = steps.getSteps();
+        final int stepsModulo = 30;
+        for (int i = 0; i < maxDays; i++) {
+            if (i < solarList.size()){
+                Solar solar = solarList.get(i);
+                if (solar.getTotalHarvestingTime() > maxValue){
+                    maxValue = solar.getTotalHarvestingTime();
                 }
-                yValue.add(new Entry(i, steps.getSteps()));
+                yValue.add(new Entry(i, solar.getTotalHarvestingTime()));
             }else{
                 yValue.add(new Entry(i, 0));
             }
         }
 
         Log.w("Karl","Max vlaue = " + maxValue);
-        boolean putTop = false;
-        if (maxValue == 0 ||  maxValue  < goal){
-            maxValue = goal + stepsModulo;
+        if (maxValue == 0){
+            maxValue = stepsModulo;
         }else{
-            putTop = true;
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
 
-        LimitLine limitLine = new LimitLine(goal, "Goal: " +  goal);
-        limitLine.setLineWidth(1.5f);
-        limitLine.setLineColor(Color.BLACK);
-        limitLine.setTextSize(18f);
-        limitLine.setTextColor(Color.BLACK);
-
-        if(putTop) {
-            limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
-        }else{
-            limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
-        }
         LineDataSet set = new LineDataSet(yValue, "");
         set.setColor(Color.BLACK);
         set.setCircleColor(R.color.transparent);
@@ -144,16 +131,16 @@ public class StepsAnalysisLineChart extends LineChart{
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
         set.setFillDrawable(drawable);
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        if (stepsList.size() > 7) {
-            getXAxis().setLabelCount(stepsList.size());
+        if (solarList.size() > 7) {
+            getXAxis().setLabelCount(solarList.size());
         }
         getXAxis().setValueFormatter(new XValueFormatter());
         dataSets.add(set);
 
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
-        leftAxis.addLimitLine(limitLine);
         leftAxis.setAxisMaxValue(maxValue * 1.0f);
+        leftAxis.setLabelCount(maxValue/30);
         LineData data = new LineData(dataSets);
         setData(data);
 
@@ -171,27 +158,27 @@ public class StepsAnalysisLineChart extends LineChart{
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            if (stepsList.size() < 11){
-                if (count >= stepsList.size()){
+            if (solarList.size() < 11){
+                if (count >= solarList.size()){
                     count = 0;
                 }
-                Steps steps = stepsList.get(count);
+                Solar solar = solarList.get(count);
                 count ++;
-                DateTime time = new DateTime(steps.getDate());
+                DateTime time = new DateTime(solar.getDate());
 
                 return time.toString("dd/MM") ;
             }else{
-                if (count == 0 || count % 5 == 0 || count == (stepsList.size() -1)){
-                    if (count >= stepsList.size()){
+                if (count == 0 || count % 5 == 0 || count == (solarList.size() -1)){
+                    if (count >= solarList.size()){
                         count = 0;
                     }
-                    Steps steps = stepsList.get(count);
+                    Solar solar = solarList.get(count);
                     count ++;
 
-                    DateTime time = new DateTime(steps.getDate());
+                    DateTime time = new DateTime(solar.getDate());
                     return time.toString("dd/MM") ;
                 }else{
-                    if (count >= stepsList.size()){
+                    if (count >= solarList.size()){
                         count = 0;
                     }
                     count ++;
@@ -210,7 +197,8 @@ public class StepsAnalysisLineChart extends LineChart{
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            return String.valueOf(Math.round(value));
+            int minutes = Math.round(value);
+            return TimeUtil.formatTime(minutes);
         }
 
         @Override

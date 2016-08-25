@@ -104,13 +104,6 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             }
         }
 
-        if (activeNotificationList.size() == 0) {
-            active.setVisibility(View.GONE);
-            lineView.setVisibility(View.GONE);
-        }
-        if (inactiveNotificationList.size() == 0) {
-            inactive.setVisibility(View.GONE);
-        }
 
         activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList);
         activeListView.setAdapter(activeNotificationArrayAdapter);
@@ -119,6 +112,13 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         inactiveNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, inactiveNotificationList);
         inactiveListView.setAdapter(inactiveNotificationArrayAdapter);
         inactiveListView.setOnItemClickListener(this);
+
+        if (activeNotificationList.size() == 0) {
+            active.setVisibility(View.GONE);
+        }
+        if (inactiveNotificationList.size() == 0) {
+            inactive.setVisibility(View.GONE);
+        }
     }
 
     @Override
