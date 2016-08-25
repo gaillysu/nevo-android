@@ -20,7 +20,7 @@ import com.medcorp.util.Preferences;
 import com.medcorp.util.SleepDataHandler;
 import com.medcorp.util.SleepDataUtils;
 import com.medcorp.util.TimeUtil;
-import com.medcorp.view.graphs.SleepChart;
+import com.medcorp.view.graphs.SleepTodayChart;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +53,7 @@ public class LunarMainSleepFragment extends BaseFragment {
     TextView wakeTimeTextView;
 
     @Bind(R.id.fragment_sleep_history_linechart)
-    SleepChart lineChartSleep;
+    SleepTodayChart lineChartSleep;
 
     private Date userSelectDate;
 

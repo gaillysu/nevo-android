@@ -3,10 +3,13 @@ package com.medcorp.model;
 import android.content.Context;
 
 import com.medcorp.R;
+import com.medcorp.util.Common;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.medcorp.util.Common.convertJSONArrayIntToArray;
+
 
 /**
  * Created by Karl on 11/27/15.
@@ -135,30 +138,17 @@ public class SleepData {
         return json;
     }
 
-    private int[] convertJSONArrayIntToArray(String string){
-        try {
-            JSONArray jsonArray = new JSONArray(string);
-            int[] hourlyLight = new int[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++){
-                hourlyLight[i] = jsonArray.optInt(i,0);
-            }
-            return hourlyLight;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return new int[0];
-        }
-    }
 
     public int[] getHourlyDeepInt(){
-        return convertJSONArrayIntToArray(getHourlyDeep());
+        return Common.convertJSONArrayIntToArray(getHourlyDeep());
     }
 
     public int[] getHourlyLightInt(){
-        return convertJSONArrayIntToArray(getHourlyLight());
+        return Common.convertJSONArrayIntToArray(getHourlyLight());
     }
 
 
     public int[] getHourlyWakeInt(){
-        return convertJSONArrayIntToArray(getHourlyWake());
+        return Common.convertJSONArrayIntToArray(getHourlyWake());
     }
 }

@@ -12,7 +12,7 @@ import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.SleepData;
 import com.medcorp.util.Preferences;
-import com.medcorp.view.graphs.SleepAnalysisLineChart;
+import com.medcorp.view.graphs.AnalysisSleepLineChart;
 
 import org.joda.time.DateTime;
 
@@ -77,9 +77,9 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        SleepAnalysisLineChart thisWeekChart = (SleepAnalysisLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
-        SleepAnalysisLineChart lastWeekChart = (SleepAnalysisLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
-        SleepAnalysisLineChart lastMonthChart = (SleepAnalysisLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
+        AnalysisSleepLineChart thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
+        AnalysisSleepLineChart lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
+        AnalysisSleepLineChart lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
 
         //TODO Replace this data with sleep data from the database,
         /*

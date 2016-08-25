@@ -31,22 +31,22 @@ import java.util.List;
  * Created by Karl on 8/24/16.
  */
 
-public class SleepAnalysisLineChart extends LineChart{
+public class AnalysisSleepLineChart extends LineChart{
 
     private List<SleepData> sleepList = new ArrayList<>();
 
-    public SleepAnalysisLineChart(Context context) {
+    public AnalysisSleepLineChart(Context context) {
         super(context);
         initGraph();
 
     }
 
-    public SleepAnalysisLineChart(Context context, AttributeSet attrs) {
+    public AnalysisSleepLineChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public SleepAnalysisLineChart(Context context, AttributeSet attrs, int defStyle) {
+    public AnalysisSleepLineChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }

@@ -13,7 +13,7 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
-import com.medcorp.view.graphs.StepsAnalysisLineChart;
+import com.medcorp.view.graphs.AnalysisStepsLineChart;
 
 import org.joda.time.DateTime;
 
@@ -71,9 +71,9 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
         // TODO  get right data from the database
-        StepsAnalysisLineChart thisWeekChart = (StepsAnalysisLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
-        StepsAnalysisLineChart lastWeekChart = (StepsAnalysisLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
-        StepsAnalysisLineChart lastMonthChart = (StepsAnalysisLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
+        AnalysisStepsLineChart thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
+        AnalysisStepsLineChart lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
+        AnalysisStepsLineChart lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
 
         /*
          * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.

@@ -15,9 +15,10 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import org.joda.time.DateTime;
 import com.medcorp.R;
 import com.medcorp.model.SleepData;
+
+import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,20 +31,20 @@ import java.util.Locale;
  * Created by karl-john on 19/8/2016.
  */
 
-public class SleepChart extends LineChart {
+public class SleepTodayChart extends LineChart {
 
 
-    public SleepChart(Context context) {
+    public SleepTodayChart(Context context) {
         super(context);
         initGraph();
     }
 
-    public SleepChart(Context context, AttributeSet attrs) {
+    public SleepTodayChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public SleepChart(Context context, AttributeSet attrs, int defStyle) {
+    public SleepTodayChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }
