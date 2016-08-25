@@ -361,10 +361,10 @@ push and hold the third button, until the white LED blinks</string>
     <string name="analysis_fragment_last_month_solar">LAST 30 DAYS</string>
     <string name="this_week_steps_identification_one">YOU</string>
     <string name="this_week_steps_identification_average">AVERAGE</string>
-    <string name="this_week_steps_identification_two">Average Steps:</string>
-    <string name="steps_fragment_total_steps">Total\nSteps:</string>
-    <string name="steps_fragment_average_calories">Average Calories:</string>
-    <string name="steps_fragment_average_time">Average Time:</string>
+    <string name="this_week_steps_identification_two">Avg Steps:</string>
+    <string name="steps_fragment_total_steps">Total Steps:</string>
+    <string name="steps_fragment_average_calories">Avg Calories:</string>
+    <string name="steps_fragment_average_time">Avg Time: </string>
     <string name="main_fragment_solar_page_time_on_battery_text">Time On Battery</string>
     <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
     <string name="user_no_select_profile_info">Please select the correct profile !</string>
