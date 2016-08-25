@@ -2,7 +2,6 @@ package com.medcorp.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
-import com.medcorp.view.graphs.StepsLineChart;
+import com.medcorp.view.graphs.StepsAnalysisLineChart;
 
 import org.joda.time.DateTime;
 
@@ -72,17 +71,22 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
         // TODO  get right data from the database
-        StepsLineChart thisWeekChart = (StepsLineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
-        StepsLineChart lastWeekChart = (StepsLineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
-        StepsLineChart lastMonthChart = (StepsLineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
-        // database get this week
-        thisWeekChart.addData(generateTestData(3000,10000,0,7),700);
+        StepsAnalysisLineChart thisWeekChart = (StepsAnalysisLineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
+        StepsAnalysisLineChart lastWeekChart = (StepsAnalysisLineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
+        StepsAnalysisLineChart lastMonthChart = (StepsAnalysisLineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
 
-        // database get last week
-        lastWeekChart.addData(generateTestData(3000,10000,7,7),700);
+        /*
+         * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.
+         * In this month this is 30 (or 31) because there are 30 days in a month.
+        */
+        //TODO database get this week
+        thisWeekChart.addData(generateTestData(3000,10000,0,7),700, 7);
 
-        // database get this month
-        lastMonthChart.addData(generateTestData(3000,10000,0,30),700);
+        //TODO database get last week
+        lastWeekChart.addData(generateTestData(3000,10000,7,7),700, 7);
+
+        //TODO database get this month
+        lastMonthChart.addData(generateTestData(3000,10000,0,30),700, 30);
     }
 
     private List<Steps> generateTestData(int minSteps, int maxSteps, int daysOffSetFromToday, int amountOfDays){

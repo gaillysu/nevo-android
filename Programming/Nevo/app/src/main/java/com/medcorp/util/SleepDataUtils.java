@@ -20,10 +20,6 @@ public class SleepDataUtils{
         int i1 = today.getAwake() + yesterday.getAwake();
         int i2 = today.getLightSleep() + yesterday.getLightSleep();
         int i3 = today.getDeepSleep() + yesterday.getDeepSleep();
-        Log.w("Karl","Total = " + i1);
-        Log.w("Karl","Total = " + i2);
-        Log.w("Karl","Total = " + i3);
-        Log.w("Karl","Total = " + (i1+i2+i3));
         SleepData sleepData = new SleepData(today.getAwake() + yesterday.getAwake(), today.getLightSleep() + yesterday.getLightSleep(), today.getDeepSleep() + yesterday.getDeepSleep(), today.getDate());
         sleepData.setSleepStart(yesterday.getSleepStart());
         sleepData.setSleepEnd(today.getSleepEnd());
@@ -35,12 +31,12 @@ public class SleepDataUtils{
 
     private static String mergeSleepData (int[] sleepArray1, int[] sleepArray2){
         JSONArray mergedSleepData = new JSONArray();
-        for (int i = 0; i < sleepArray1.length; i++){
-            mergedSleepData.put(sleepArray1[i]);
+        for (int aSleepArray1 : sleepArray1) {
+            mergedSleepData.put(aSleepArray1);
         }
 
-        for (int i = 0; i < sleepArray2.length; i++){
-            mergedSleepData.put(sleepArray2[i]);
+        for (int aSleepArray2 : sleepArray2) {
+            mergedSleepData.put(aSleepArray2);
         }
         return mergedSleepData.toString();
     }

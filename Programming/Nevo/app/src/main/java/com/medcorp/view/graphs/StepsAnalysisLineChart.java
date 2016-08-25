@@ -32,22 +32,22 @@ import static java.lang.Math.abs;
  * Created by Karl on 8/24/16.
  */
 
-public class StepsLineChart extends LineChart{
+public class StepsAnalysisLineChart extends LineChart{
 
     private List<Steps> stepsList = new ArrayList<>();
 
-    public StepsLineChart(Context context) {
+    public StepsAnalysisLineChart(Context context) {
         super(context);
         initGraph();
 
     }
 
-    public StepsLineChart(Context context, AttributeSet attrs) {
+    public StepsAnalysisLineChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initGraph();
     }
 
-    public StepsLineChart(Context context, AttributeSet attrs, int defStyle) {
+    public StepsAnalysisLineChart(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initGraph();
     }
@@ -90,14 +90,14 @@ public class StepsLineChart extends LineChart{
 
     }
 
-    public void addData(List<Steps> stepsList, final int goal){
+    public void addData(List<Steps> stepsList, final int goal, int max){
         this.stepsList = stepsList;
 
         List<Entry> yValue = new ArrayList<Entry>();
         int maxValue = 0;
 
         final int stepsModulo = 500;
-        for (int i = 0; i < stepsList.size(); i++) {
+        for (int i = 0; i < max; i++) {
             if (i < stepsList.size() - 1){
                 Steps steps = stepsList.get(i);
                 if (steps.getSteps() > maxValue){
