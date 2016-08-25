@@ -78,9 +78,16 @@ public class AnalysisSolarFragment extends BaseFragment {
         AnalysisSolarLineChart thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
         AnalysisSolarLineChart lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
         AnalysisSolarLineChart lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
+
+        // TODO Add real data from the database, also create database for solar.
+        // TODO add other following textfields: Average Time in Sun, Most Time in Sun , Least time in sun, Total Time in Sun
+        // 不明白用 GOOGLE TRANSLATE :D
+        // remove dummy data after migrating to db
         thisWeekChart.addData(generateDummyData(7,0),7);
         lastWeekChart.addData(generateDummyData(7,7),7);
         lastMonthChart.addData(generateDummyData(30,0),30);
+
+
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(solarList);
         solarViewPager.setAdapter(adapter);
         solarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

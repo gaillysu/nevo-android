@@ -125,13 +125,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         final Button saveNewAlarm = (Button) alarmDialogView.findViewById(R.id.add_new_alarm_bt);
         final EditText alarmName = (EditText) alarmDialogView.findViewById(R.id.edit_input_alarm_name);
         final RadioGroup alarmStyle = (RadioGroup) alarmDialogView.findViewById(R.id.select_alarm_style_radio_group);
-        monday = (Button) alarmDialogView.findViewById(R.id.tog_btn_monday);
-        tuesday = (Button) alarmDialogView.findViewById(R.id.tog_btn_tuesday);
-        wednesday = (Button) alarmDialogView.findViewById(R.id.tog_btn_wednesday);
-        thursday = (Button) alarmDialogView.findViewById(R.id.tog_btn_thursday);
+        monday = (Button) alarmDialogView.findViewById(R.id.tag_btn_monday);
+        tuesday = (Button) alarmDialogView.findViewById(R.id.tag_btn_tuesday);
+        wednesday = (Button) alarmDialogView.findViewById(R.id.tag_btn_wednesday);
+        thursday = (Button) alarmDialogView.findViewById(R.id.tag_btn_thursday);
         friday = (Button) alarmDialogView.findViewById(R.id.tog_btn_friday);
-        saturday = (Button) alarmDialogView.findViewById(R.id.tog_btn_saturday);
-        sunday = (Button) alarmDialogView.findViewById(R.id.tog_btn_sunday);
+        saturday = (Button) alarmDialogView.findViewById(R.id.tag_btn_saturday);
+        sunday = (Button) alarmDialogView.findViewById(R.id.tag_btn_sunday);
 
         monday.setOnClickListener(this);
         tuesday.setOnClickListener(this);
@@ -370,7 +370,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public void onClick(View view) {
         switch (view.getId()) {
             // 选中周一
-            case R.id.tog_btn_monday:
+            case R.id.tag_btn_monday:
                 weekDay = 1;
                 monday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -381,7 +381,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周二
-            case R.id.tog_btn_tuesday:
+            case R.id.tag_btn_tuesday:
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -392,7 +392,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 weekDay = 2;
                 break;
             // 选中周三
-            case R.id.tog_btn_wednesday:
+            case R.id.tag_btn_wednesday:
                 weekDay = 3;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -403,7 +403,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周四
-            case R.id.tog_btn_thursday:
+            case R.id.tag_btn_thursday:
                 weekDay = 4;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -425,7 +425,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周六
-            case R.id.tog_btn_saturday:
+            case R.id.tag_btn_saturday:
                 weekDay = 6;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -436,7 +436,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周日
-            case R.id.tog_btn_sunday:
+            case R.id.tag_btn_sunday:
                 weekDay = 7;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));

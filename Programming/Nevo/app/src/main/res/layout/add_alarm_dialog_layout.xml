@@ -55,15 +55,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
 
             <Button
-                android:id="@+id/tog_btn_monday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                android:id="@+id/tag_btn_monday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/monday">
             </Button>
         </LinearLayout>
@@ -72,8 +71,8 @@
             style="@style/new_alarm_clock_repeat_days_llyt">
 
             <Button
-                android:id="@+id/tog_btn_tuesday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                android:id="@+id/tag_btn_tuesday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/tuesday">
             </Button>
         </LinearLayout>
@@ -82,8 +81,8 @@
             style="@style/new_alarm_clock_repeat_days_llyt">
 
             <Button
-                android:id="@+id/tog_btn_wednesday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                android:id="@+id/tag_btn_wednesday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/wednesday"
                 >
             </Button>
@@ -93,8 +92,8 @@
             style="@style/new_alarm_clock_repeat_days_llyt">
 
             <Button
-                android:id="@+id/tog_btn_thursday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                android:id="@+id/tag_btn_thursday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/thursday">
             </Button>
         </LinearLayout>
@@ -104,7 +103,7 @@
 
             <Button
                 android:id="@+id/tog_btn_friday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/friday"
                 >
             </Button>
@@ -112,10 +111,9 @@
 
         <LinearLayout
             style="@style/new_alarm_clock_repeat_days_llyt">
-
             <Button
-                android:id="@+id/tog_btn_saturday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                android:id="@+id/tag_btn_saturday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/saturday"
                 >
             </Button>
@@ -125,8 +123,8 @@
             style="@style/new_alarm_clock_repeat_days_llyt">
 
             <Button
-                android:id="@+id/tog_btn_sunday"
-                style="@style/new_alarm_clcok_repeat_days_tog_btn"
+                android:id="@+id/tag_btn_sunday"
+                style="@style/new_alarm_clock_repeat_days_tag_btn"
                 android:text="@string/sunday">
             </Button>
         </LinearLayout>
