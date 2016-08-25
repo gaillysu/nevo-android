@@ -6,13 +6,6 @@
               android:background="@color/window_background_color"
               android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        >
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -27,15 +20,13 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/window_background_color"/>
-
                 <ImageButton
                     android:id="@+id/lunar_main_fragment_left_arrow"
                     android:layout_width="28dp"
                     android:layout_height="35dp"
-                    android:layout_marginTop="150dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@android:color/transparent"
                     android:paddingLeft="8dp"
+                    android:layout_marginTop="200dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/left_arrow"
                     />
@@ -43,9 +34,8 @@
                     android:id="@+id/lunar_main_fragment_right_arrow"
                     android:layout_width="28dp"
                     android:layout_height="35dp"
+                    android:layout_marginTop="200dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="150dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@android:color/transparent"
                     android:paddingRight="8dp"
                     android:scaleType="fitXY"
@@ -53,5 +43,4 @@
                     />
             </RelativeLayout>
         </FrameLayout>
-    </LinearLayout>
 </LinearLayout>
