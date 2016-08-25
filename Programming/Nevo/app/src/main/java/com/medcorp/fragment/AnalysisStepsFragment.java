@@ -71,9 +71,9 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
         // TODO  get right data from the database
-        StepsAnalysisLineChart thisWeekChart = (StepsAnalysisLineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
-        StepsAnalysisLineChart lastWeekChart = (StepsAnalysisLineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
-        StepsAnalysisLineChart lastMonthChart = (StepsAnalysisLineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
+        StepsAnalysisLineChart thisWeekChart = (StepsAnalysisLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
+        StepsAnalysisLineChart lastWeekChart = (StepsAnalysisLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
+        StepsAnalysisLineChart lastMonthChart = (StepsAnalysisLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
 
         /*
          * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.
@@ -105,9 +105,9 @@ public class AnalysisStepsFragment extends BaseFragment {
 
     private void initView(LayoutInflater inflater) {
         stepsDataList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
-        lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
-        lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
+        thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
+        lastWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
+        lastMonthView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
         stepsDataList.add(thisWeekView);
         stepsDataList.add(lastWeekView);
         stepsDataList.add(lastMonthView);

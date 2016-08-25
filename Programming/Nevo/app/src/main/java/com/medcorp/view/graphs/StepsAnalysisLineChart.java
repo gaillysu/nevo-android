@@ -98,7 +98,7 @@ public class StepsAnalysisLineChart extends LineChart{
 
         final int stepsModulo = 500;
         for (int i = 0; i < max; i++) {
-            if (i < stepsList.size() - 1){
+            if (i < stepsList.size()){
                 Steps steps = stepsList.get(i);
                 if (steps.getSteps() > maxValue){
                     maxValue = steps.getSteps();
@@ -144,7 +144,9 @@ public class StepsAnalysisLineChart extends LineChart{
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
         set.setFillDrawable(drawable);
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        getXAxis().setLabelCount(stepsList.size());
+        if (stepsList.size() > 7) {
+            getXAxis().setLabelCount(stepsList.size());
+        }
         getXAxis().setValueFormatter(new XValueFormatter());
         dataSets.add(set);
 
@@ -208,7 +210,6 @@ public class StepsAnalysisLineChart extends LineChart{
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            Log.w("Karl","Value = " + value);
             return String.valueOf(Math.round(value));
         }
 
