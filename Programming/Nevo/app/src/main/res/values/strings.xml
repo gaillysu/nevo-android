@@ -283,6 +283,9 @@ push and hold the third button, until the white LED blinks</string>
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>
+    <string name="main_sleep_fragment_title">Sleep</string>
+    <string name="main_steps_fragment_title">Steps</string>
+    <string name="main_clock_fragment_title">Clock</string>
     <string name="register_account_page_title">Sign Up</string>
     <string name="register_first_name_hint">First Name</string>
     <string name="register_last_name_hint">Last Name</string>
@@ -334,18 +337,18 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_fragment_edit_first_name_edit_hint">Input Name</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
-    <string name="lunar_fragment_calorie_text">CALORIES</string>
-    <string name="lunar_main_sleep_fragment_time_text">SLEEP TIME</string>
+    <string name="lunar_fragment_calorie_text">Calories</string>
+    <string name="lunar_main_sleep_fragment_time_text">Sleep Time</string>
     <string name="lunar_main_sleep_fragment_title_text">OVER ALL SLEEP TIME</string>
     <string name="lunar_main_sleep_fragment_solar_title">SOLAR TIME</string>
     <string name="lunar_main_sleep_staus_text_light">LIGHT SLEEP TIME </string>
     <string name="lunar_main_sleep_staus_text_deep">DEEP SLEEP TIME</string>
-    <string name="lunar_main_sleep_fragment_wake_time_text">WAKE TIME</string>
-    <string name="lunar_main_sleep_fragment_sleep_dec">QUALITY</string>
-    <string name="lunar_main_sleep_fragment_duration">DURATION</string>
-    <string name="lunar_fragment_steps_text">STEPS</string>
-    <string name="lunar_fragment_activity_time_text">TIME</string>
-    <string name="lunar_fragment_distance_km_text">KM</string>
+    <string name="lunar_main_sleep_fragment_wake_time_text">Wake Time</string>
+    <string name="lunar_main_sleep_fragment_sleep_dec">Quality</string>
+    <string name="lunar_main_sleep_fragment_duration">Duration</string>
+    <string name="lunar_fragment_steps_text">Steps</string>
+    <string name="lunar_fragment_activity_time_text">Time</string>
+    <string name="lunar_fragment_distance_km_text">Km</string>
     <string name="my_nevo_new_update_available">NEW UPDATE AVAILABLE</string>
     <string name="my_device_version_text">Watch Version</string>
 
@@ -358,10 +361,12 @@ push and hold the third button, until the white LED blinks</string>
     <string name="analysis_fragment_last_month_solar">LAST 30 DAYS</string>
     <string name="this_week_steps_identification_one">YOU</string>
     <string name="this_week_steps_identification_average">AVERAGE</string>
-    <string name="this_week_steps_identification_two">AVERAGE:</string>
-    <string name="steps_fragment_total_steps">TOTAL:</string>
-    <string name="main_fragment_solar_page_time_on_battery_text">TIME ON BATTERY</string>
-    <string name="main_fragment_solar_page_time_on_solar_text">TIME ON SOLAR</string>
+    <string name="this_week_steps_identification_two">Average Steps:</string>
+    <string name="steps_fragment_total_steps">Total\nSteps:</string>
+    <string name="steps_fragment_average_calories">Average Calories:</string>
+    <string name="steps_fragment_average_time">Average Time:</string>
+    <string name="main_fragment_solar_page_time_on_battery_text">Time On Battery</string>
+    <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
     <string name="user_no_select_profile_info">Please select the correct profile !</string>
 
     <string name="edit_alarm_repeat">Repeat</string>
