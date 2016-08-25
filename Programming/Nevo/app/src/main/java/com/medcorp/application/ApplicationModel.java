@@ -612,6 +612,10 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent medReadMoreRoutineRecordsModelEvent) {
 
+        if(medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()==null||medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().length==0)
+        {
+            return;
+        }
         for (MedRoutineRecordWithID routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
@@ -629,6 +633,9 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent medReadMoreSleepRecordsModelEvent) {
         //TODO save to database
+        if(medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()==null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length==0){
+            return;
+        }
         /**
         ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel = validicReadMoreSleepRecordsModelEvent.getValidicReadMoreSleepRecordsModel();
         for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {

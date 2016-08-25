@@ -48,7 +48,9 @@ import java.util.List;
 public class CloudSyncManager {
     private final String TAG = "CloudSyncManager";
     final long INTERVAL_DATE = 365 * 24 * 60 * 60 *1000l;//user can get all data in a year
-
+    //here select which one cloud server
+    final CloudServerProvider cloudServerProvider = CloudServerProvider.All;
+    
     private ApplicationModel context;
     public CloudSyncManager(ApplicationModel context)
     {
@@ -105,24 +107,32 @@ public class CloudSyncManager {
     public void launchSyncAll(User user, List<Steps> stepsList, List<Sleep> sleepList){
         for(Steps steps: stepsList)
         {
-            ValidicOperation.getInstance(context).addValidicRoutineRecord(user,steps,new Date(steps.getDate()),null);
-            MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(steps.getDate()),null);
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Validic.getRawValue())==CloudServerProvider.Validic.getRawValue()) {
+                ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps, new Date(steps.getDate()), null);
+            }
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
+                MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(steps.getDate()), null);
+            }
         }
         //calculate today 's last time: 23:59:59
         Date endDate = new Date(Common.removeTimeFromDate(new Date()).getTime()+24*60*60*1000l-1);
         Date startDate = new Date(endDate.getTime() - INTERVAL_DATE);
-        downloadSteps(user,startDate,endDate,1);
+        downloadSteps(user,startDate,endDate,1,cloudServerProvider);
         for(Sleep sleep: sleepList)
         {
-            ValidicOperation.getInstance(context).addValidicSleepRecord(user, sleep, new Date(sleep.getDate()), null);
-            MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            if((cloudServerProvider.getRawValue() & CloudServerProvider.Validic.getRawValue())==CloudServerProvider.Validic.getRawValue()) {
+                ValidicOperation.getInstance(context).addValidicSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            }
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
+                MedOperation.getInstance(context).addMedSleepRecord(user, sleep, new Date(sleep.getDate()), null);
+            }
         }
-        downloadSleep(user, startDate,endDate,1);
+        downloadSleep(user, startDate,endDate,1,cloudServerProvider);
     }
 
-    private void downloadSteps(final User user, final Date startDate, final Date endDate,final int page)
+    private void downloadSteps(final User user, final Date startDate, final Date endDate,final int page,CloudServerProvider provider)
     {
-        if(page>0) {
+        if((provider.getRawValue()&CloudServerProvider.Validic.getRawValue())==CloudServerProvider.Validic.getRawValue()) {
             ValidicOperation.getInstance(context).getMoreValidicRoutineRecord(user, startDate, endDate, page, new ResponseListener<ValidicReadMoreRoutineRecordsModel>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
@@ -138,34 +148,37 @@ public class CloudSyncManager {
                             int pageStart = nextPageUrl.indexOf("page=");
                             int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
                             int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
-                            downloadSteps(user, startDate, endDate, nextPage);
+                            downloadSteps(user, startDate, endDate, nextPage,CloudServerProvider.Validic);
                         }
                     }
                 }
             });
         }
-        MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate,new ResponseListener<MedReadMoreRoutineRecordsModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
+        if((provider.getRawValue()&CloudServerProvider.Med.getRawValue())==CloudServerProvider.Med.getRawValue()) {
+            MedOperation.getInstance(context).getMoreMedRoutineRecord(user, startDate, endDate, new ResponseListener<MedReadMoreRoutineRecordsModel>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
 
-            }
-            @Override
-            public void onRequestSuccess(MedReadMoreRoutineRecordsModel medReadMoreRoutineRecordsModel) {
-
-                if(medReadMoreRoutineRecordsModel.getStatus()==1 && medReadMoreRoutineRecordsModel.getSteps()!=null && medReadMoreRoutineRecordsModel.getSteps().length>0){
-                    Date endDate = new Date(startDate.getTime()-24*60*60*1000l);
-                    Date startDate = new Date(endDate.getTime()-30*24*60*60*1000l);
-                    //no page split
-                    downloadSteps(user,startDate, endDate,0);
                 }
-            }
-        });
+
+                @Override
+                public void onRequestSuccess(MedReadMoreRoutineRecordsModel medReadMoreRoutineRecordsModel) {
+
+                    if (medReadMoreRoutineRecordsModel.getStatus() == 1 && medReadMoreRoutineRecordsModel.getSteps() != null && medReadMoreRoutineRecordsModel.getSteps().length > 0) {
+                        Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
+                        Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
+                        //no page split
+                        downloadSteps(user, startDate, endDate, 0,CloudServerProvider.Med);
+                    }
+                }
+            });
+        }
     }
 
 
-    private void downloadSleep(final User user, final Date startDate, final Date endDate,final int page)
+    private void downloadSleep(final User user, final Date startDate, final Date endDate,final int page,CloudServerProvider provider)
     {
-        if(page>0) {
+        if((provider.getRawValue()&CloudServerProvider.Validic.getRawValue())==CloudServerProvider.Validic.getRawValue()) {
             ValidicOperation.getInstance(context).getMoreValidicSleepRecord(user, startDate, endDate, page, new ResponseListener<ValidicReadMoreSleepRecordsModel>() {
                 @Override
                 public void onRequestFailure(SpiceException spiceException) {
@@ -181,30 +194,30 @@ public class CloudSyncManager {
                             int pageStart = nextPageUrl.indexOf("page=");
                             int pageEnd = nextPageUrl.substring(pageStart).indexOf("&");
                             int nextPage = Integer.parseInt(nextPageUrl.substring(pageStart).substring(5, pageEnd));
-                            downloadSleep(user, startDate, endDate, nextPage);
+                            downloadSleep(user, startDate, endDate, nextPage,CloudServerProvider.Validic);
                         }
                     }
                 }
             });
         }
+        if((provider.getRawValue()&CloudServerProvider.Med.getRawValue())==CloudServerProvider.Med.getRawValue()) {
+            MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new ResponseListener<MedReadMoreSleepRecordsModel>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
 
-        MedOperation.getInstance(context).getMoreMedSleepRecord(user, startDate, endDate, new ResponseListener<MedReadMoreSleepRecordsModel>() {
-            @Override
-            public void onRequestFailure(SpiceException spiceException) {
-
-            }
-
-            @Override
-            public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
-                if(medReadMoreSleepRecordsModel.getStatus()==1&& medReadMoreSleepRecordsModel.getSleep()!=null && medReadMoreSleepRecordsModel.getSleep().length>0)
-                {
-                    Date endDate = new Date(startDate.getTime()-24*60*60*1000l);
-                    Date startDate = new Date(endDate.getTime()-30*24*60*60*1000l);
-                    //no page split
-                    downloadSleep(user,startDate, endDate,0);
                 }
-            }
-        });
+
+                @Override
+                public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
+                    if (medReadMoreSleepRecordsModel.getStatus() == 1 && medReadMoreSleepRecordsModel.getSleep() != null && medReadMoreSleepRecordsModel.getSleep().length > 0) {
+                        Date endDate = new Date(startDate.getTime() - 24 * 60 * 60 * 1000l);
+                        Date startDate = new Date(endDate.getTime() - 30 * 24 * 60 * 60 * 1000l);
+                        //no page split
+                        downloadSleep(user, startDate, endDate, 0,CloudServerProvider.Med);
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -212,8 +225,12 @@ public class CloudSyncManager {
      */
     public void launchSyncDaily(User user, Steps steps)
     {
-        ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps,new Date(),null);
-        MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(),null);
+        if((cloudServerProvider.getRawValue()&CloudServerProvider.Validic.getRawValue()) == CloudServerProvider.Validic.getRawValue()) {
+            ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps, new Date(), null);
+        }
+        if((cloudServerProvider.getRawValue()&CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
+            MedOperation.getInstance(context).addMedRoutineRecord(user, steps, new Date(), null);
+        }
     }
 
     /**
@@ -223,14 +240,22 @@ public class CloudSyncManager {
     {
         for(Steps steps: stepsList)
         {
-            ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps,new Date(steps.getDate()),null);
-            MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(steps.getDate()),null);
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Validic.getRawValue()) == CloudServerProvider.Validic.getRawValue()) {
+                ValidicOperation.getInstance(context).addValidicRoutineRecord(user, steps,new Date(steps.getDate()),null);
+            }
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
+                MedOperation.getInstance(context).addMedRoutineRecord(user,steps,new Date(steps.getDate()),null);
+            }
         }
 
         for(Sleep sleep: sleepList)
         {
-            ValidicOperation.getInstance(context).addValidicSleepRecord(user, sleep , new Date(sleep.getDate()), null);
-            MedOperation.getInstance(context).addMedSleepRecord(user, sleep , new Date(sleep.getDate()), null);
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Validic.getRawValue()) == CloudServerProvider.Validic.getRawValue()) {
+                ValidicOperation.getInstance(context).addValidicSleepRecord(user, sleep , new Date(sleep.getDate()), null);
+            }
+            if((cloudServerProvider.getRawValue()&CloudServerProvider.Med.getRawValue()) == CloudServerProvider.Med.getRawValue()) {
+                MedOperation.getInstance(context).addMedSleepRecord(user, sleep , new Date(sleep.getDate()), null);
+            }
         }
     }
 }
