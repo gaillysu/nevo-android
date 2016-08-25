@@ -60,7 +60,7 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     private void initView(LayoutInflater inflater) {
         solarList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
+        thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
         lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
         lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
         solarList.add(thisWeekView);
@@ -71,7 +71,7 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
 
-        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
+        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
         LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
         LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
 
