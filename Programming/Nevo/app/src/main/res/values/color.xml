@@ -56,7 +56,7 @@
     <color name="steps_identification_tint_color">#FFAA79B3</color>
     <color name="calendar_dialog_view_title_bg">#618889</color>
     <color name="pie_chart_child_color">#FF7ED8D1</color>
-
+    <color name="login_text_color_with">#FFFFFF</color>
 
     <color name="analysis_sleep_wake_start_color">#88BCBCBC</color>
     <color name="analysis_sleep_wake_end_color">#88BCBCBC</color>

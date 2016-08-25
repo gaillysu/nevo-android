@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +41,7 @@ public class LunarMainFragment extends BaseObservableFragment {
     ViewPager showWatchViewPage;
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
-    private int[] stepsGoalArray = {4500, 6000, 8000, 10000};
+
     private int stepsGoalNumber;
 
     @Override
@@ -165,53 +164,53 @@ public class LunarMainFragment extends BaseObservableFragment {
                     }
                 });
 
-        stepsGoalView.findViewById(R.id.steps_fragment_setting_steps_goal_ok_button).
-                setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                        stepsGoalGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                switch (checkedId) {
-                                    case R.id.radio_button_one:
-                                        stepsGoalNumber = stepsGoalArray[0];
-                                        break;
-                                    case R.id.radio_button_two:
-                                        stepsGoalNumber = stepsGoalArray[1];
-                                        break;
-                                    case R.id.radio_button_three:
-                                        stepsGoalNumber = stepsGoalArray[2];
-                                        break;
-                                    case R.id.radio_button_four:
-                                        stepsGoalNumber = stepsGoalArray[3];
-                                        break;
-                                }
-                            }
-
-                        });
-                        upDataUserStepsGoal(stepsGoalNumber);
-                    }
-                });
+//        stepsGoalView.findViewById(R.id.steps_fragment_setting_steps_goal_ok_button).
+//                setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        dialog.dismiss();
+//                        stepsGoalGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                            @Override
+//                            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                                switch (checkedId) {
+//                                    case R.id.radio_button_one:
+//                                        stepsGoalNumber = stepsGoalArray[0];
+//                                        break;
+//                                    case R.id.radio_button_two:
+//                                        stepsGoalNumber = stepsGoalArray[1];
+//                                        break;
+//                                    case R.id.radio_button_three:
+//                                        stepsGoalNumber = stepsGoalArray[2];
+//                                        break;
+//                                    case R.id.radio_button_four:
+//                                        stepsGoalNumber = stepsGoalArray[3];
+//                                        break;
+//                                }
+//                            }
+//
+//                        });
+//                        upDataUserStepsGoal(stepsGoalNumber);
+//                    }
+//                });
     }
 
-    public void upDataUserStepsGoal(final int stepsGoal) {
-        new MaterialDialog.Builder(getContext())
-                .title(R.string.goal_add)
-                .content(R.string.goal_label_goal)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getString(R.string.goal_name_goal), "",
-                        new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (input.length() == 0)
-                                    return;
-                                Goal goal = new Goal(input.toString(), false, stepsGoal);
-                                getModel().addGoal(goal);
-                            }
-                        }).negativeText(R.string.goal_cancel)
-                .show();
-
-    }
+//    public void upDataUserStepsGoal(final int stepsGoal) {
+//        new MaterialDialog.Builder(getContext())
+//                .title(R.string.goal_add)
+//                .content(R.string.goal_label_goal)
+//                .inputType(InputType.TYPE_CLASS_TEXT)
+//                .input(getString(R.string.goal_name_goal), "",
+//                        new MaterialDialog.InputCallback() {
+//                            @Override
+//                            public void onInput(MaterialDialog dialog, CharSequence input) {
+//                                if (input.length() == 0)
+//                                    return;
+//                                Goal goal = new Goal(input.toString(), false, stepsGoal);
+//                                getModel().addGoal(goal);
+//                            }
+//                        }).negativeText(R.string.goal_cancel)
+//                .show();
+//
+//    }
 }
 

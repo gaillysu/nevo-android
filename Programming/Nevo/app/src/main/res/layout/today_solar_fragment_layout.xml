@@ -66,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textSize="20dp"
+                android:textSize="18sp"
                 android:text="@string/main_fragment_solar_page_time_on_solar_text"
                 android:textColor="@color/text_color"
                 />

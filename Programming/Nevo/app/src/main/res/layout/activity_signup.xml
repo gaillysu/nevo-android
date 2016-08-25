@@ -54,7 +54,6 @@
                 android:inputType="textEmailAddress"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
                 />
 
             <EditText
@@ -66,7 +65,6 @@
                 android:hint="@string/register_first_name_hint"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
                 />
 
             <EditText
@@ -78,7 +76,6 @@
                 android:hint="@string/register_last_name_hint"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
                 />
 
 
@@ -94,7 +91,6 @@
                 android:inputType="textPassword"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"
                 />
 
             <EditText
@@ -107,7 +103,7 @@
                 android:inputType="textPassword"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
-                android:textColorHint="@color/text_color"/>
+              />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -141,7 +137,7 @@
                 android:padding="12dp"
                 android:text="@string/register_create_account"
                 android:textAllCaps="false"
-                android:textColor="@color/text_color"
+                android:textColor="@color/login_text_color_with"
                 android:textSize="20sp"/>
 
 
