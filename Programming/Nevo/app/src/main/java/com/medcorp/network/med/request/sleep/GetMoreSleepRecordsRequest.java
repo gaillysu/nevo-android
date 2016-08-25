@@ -1,34 +1,28 @@
 package com.medcorp.network.med.request.sleep;
 
 import com.medcorp.network.base.BaseRequest;
-import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
-import com.medcorp.network.validic.retrofit.Validic;
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
+import com.medcorp.network.med.model.MedReadMoreSleepRecordsModel;
+import com.medcorp.network.med.retrofit.MedCorp;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class GetMoreSleepRecordsRequest extends BaseRequest<ValidicReadMoreSleepRecordsModel,Validic> {
-
-    private String   organizationId;
+public class GetMoreSleepRecordsRequest extends BaseRequest<MedReadMoreSleepRecordsModel,MedCorp> {
     private String   organizationTokenKey;
-    private String   validicUserId;
-    private String   start_timestamp;
-    private String   end_timestamp;
-    private int      page;
+    private String userID;
+    private long   start_timestamp;
+    private long   end_timestamp;
 
-    public GetMoreSleepRecordsRequest(String organizationId, String organizationTokenKey, String validicUserId,String   start_timestamp,String   end_timestamp,int page) {
-        super(ValidicReadMoreSleepRecordsModel.class,Validic.class);
-        this.organizationId = organizationId;
+    public GetMoreSleepRecordsRequest(String organizationTokenKey, String userID,long start_timestamp,long end_timestamp) {
+        super(MedReadMoreSleepRecordsModel.class,MedCorp.class);
         this.organizationTokenKey = organizationTokenKey;
-        this.validicUserId = validicUserId;
+        this.userID = userID;
         this.start_timestamp = start_timestamp;
         this.end_timestamp = end_timestamp;
-        this.page = page;
     }
 
     @Override
-    public ValidicReadMoreSleepRecordsModel loadDataFromNetwork() throws Exception {
-        return getService().getMoreSleepRecordsRequest(organizationId, validicUserId, organizationTokenKey,start_timestamp,end_timestamp,1,page);
+    public MedReadMoreSleepRecordsModel loadDataFromNetwork() throws Exception {
+        return getService().getMoreSleepRecords (organizationTokenKey,"application/json", userID,organizationTokenKey,start_timestamp,end_timestamp);
     }
 }

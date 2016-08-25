@@ -6,8 +6,12 @@ import com.medcorp.network.med.model.CreateUserObject;
 import com.medcorp.network.med.model.LoginUserModel;
 import com.medcorp.network.med.model.LoginUserObject;
 import com.medcorp.network.med.model.MedReadMoreRoutineRecordsModel;
+import com.medcorp.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.network.med.model.MedRoutineRecordModel;
 import com.medcorp.network.med.model.MedRoutineRecordObject;
+import com.medcorp.network.med.model.MedSleepRecord;
+import com.medcorp.network.med.model.MedSleepRecordModel;
+import com.medcorp.network.med.model.MedSleepRecordObject;
 import com.medcorp.network.validic.model.RequestTokenBody;
 import com.medcorp.network.validic.model.RequestTokenResponse;
 import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
@@ -40,7 +44,12 @@ public interface MedCorp {
     MedRoutineRecordModel stepsCreate(@Body MedRoutineRecordObject object,@Header("Authorization") String auth, @Header("Content-Type") String type);
 
     @GET("/steps/user/{USER_ID}")
-    MedReadMoreRoutineRecordsModel getMoreRoutineRecordsRequest(@Header("Authorization") String auth,@Header("Content-Type") String type,@Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") long start_date, @Query("end_date") long end_date);
+    MedReadMoreRoutineRecordsModel getMoreRoutineRecords(@Header("Authorization") String auth, @Header("Content-Type") String type, @Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") long start_date, @Query("end_date") long end_date);
 
-    //TODO add sleep REST API
+    @POST("/sleep/create")
+    MedSleepRecordModel sleepCreate(@Body MedSleepRecordObject object, @Header("Authorization") String auth, @Header("Content-Type") String type);
+
+    @GET("/sleep/user/{USER_ID}")
+    MedReadMoreSleepRecordsModel getMoreSleepRecords(@Header("Authorization") String auth, @Header("Content-Type") String type, @Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") long start_date, @Query("end_date") long end_date);
+
 }

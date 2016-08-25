@@ -128,6 +128,10 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         }
         return false;
     }
+    public boolean isFoundInLocalSleep(Date date,String userId)
+    {
+        return get(userId,date).notEmpty();
+    }
 
     private SleepDAO convertToDao(Sleep sleep){
         SleepDAO sleepDAO = new SleepDAO();

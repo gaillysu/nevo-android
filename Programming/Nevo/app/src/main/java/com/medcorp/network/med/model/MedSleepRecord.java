@@ -1,23 +1,14 @@
 package com.medcorp.network.med.model;
 
 /**
- * Created by med on 16/8/23.
+ * Created by med on 16/8/25.
  */
-public class MedSleepRecordWithID {
-    private int id;
+public class MedSleepRecord {
     private int uid;
     private String deep_sleep;
     private String light_sleep;
     private String wake_time;
-    private DateWithTimeZone date;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private String date;
 
     public int getUid() {
         return uid;
@@ -51,11 +42,11 @@ public class MedSleepRecordWithID {
         this.wake_time = wake_time;
     }
 
-    public DateWithTimeZone getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(DateWithTimeZone date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

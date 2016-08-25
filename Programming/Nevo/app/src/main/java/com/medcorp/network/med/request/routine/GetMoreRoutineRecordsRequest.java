@@ -3,9 +3,6 @@ package com.medcorp.network.med.request.routine;
 import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.network.med.retrofit.MedCorp;
-import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
-import com.medcorp.network.validic.retrofit.Validic;
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by gaillysu on 16/3/8.
@@ -27,6 +24,6 @@ public class GetMoreRoutineRecordsRequest extends BaseRequest<MedReadMoreRoutine
 
     @Override
     public MedReadMoreRoutineRecordsModel loadDataFromNetwork() throws Exception {
-        return getService().getMoreRoutineRecordsRequest(buildAuthorization(),"application/json",userID,organizationTokenKey,start_timestamp,end_timestamp);
+        return getService().getMoreRoutineRecords(buildAuthorization(),"application/json",userID,organizationTokenKey,start_timestamp,end_timestamp);
     }
 }

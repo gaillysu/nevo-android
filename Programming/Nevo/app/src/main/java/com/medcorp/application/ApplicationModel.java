@@ -60,6 +60,7 @@ import com.medcorp.network.listener.ResponseListener;
 import com.medcorp.network.med.manager.MedManager;
 import com.medcorp.network.med.model.MedRoutineRecordModel;
 import com.medcorp.network.med.model.MedRoutineRecordWithID;
+import com.medcorp.network.med.model.MedSleepRecordWithID;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.network.validic.model.ValidicSleepRecordModelBase;
@@ -308,6 +309,9 @@ public class ApplicationModel extends Application {
     public boolean isFoundInLocalSleep(int activity_id) {
         return sleepDatabaseHelper.isFoundInLocalSleep(activity_id);
     }
+    public boolean isFoundInLocalSleep(Date date,String userID) {
+        return sleepDatabaseHelper.isFoundInLocalSleep(date,userID);
+    }
 
     public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine) {
         Date createDate = Common.getLocalDateFromUTCTimestamp(routine.getTimestamp(), routine.getUtc_offset());
@@ -391,8 +395,8 @@ public class ApplicationModel extends Application {
             sleep.setHourlySleep(hourlySleepList.toString());
             sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
             sleep.setTotalWakeTime(wake);
-            sleep.setTotalLightTime(deepSleep);
-            sleep.setTotalDeepTime(lightSleep);
+            sleep.setTotalLightTime(lightSleep);
+            sleep.setTotalDeepTime(deepSleep);
         }
         //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
         sleep.setStart(0);
@@ -408,6 +412,58 @@ public class ApplicationModel extends Application {
         saveDailySleep(sleep);
     }
 
+    public void saveSleepFromMed(MedSleepRecordWithID medSleepRecordWithID,Date createDate) {
+        Sleep sleep = new Sleep(createDate.getTime());
+        sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
+
+        sleep.setHourlyWake(medSleepRecordWithID.getWake_time());
+        sleep.setHourlyLight(medSleepRecordWithID.getLight_sleep());
+        sleep.setHourlyDeep(medSleepRecordWithID.getDeep_sleep());
+
+        int lightSleep = 0;
+        int deepSleep = 0;
+        int wake = 0;
+        List<Integer> hourlySleepList = new ArrayList<Integer>();
+        try {
+            JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
+            for (int i = 0; i < hourlyWake.length(); i++) {
+                wake += Integer.parseInt(hourlyWake.getString(i));
+                hourlySleepList.add(Integer.parseInt(hourlyWake.getString(i)));
+            }
+
+            JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
+            for (int i = 0; i < hourlyLight.length(); i++) {
+                lightSleep += Integer.parseInt(hourlyLight.getString(i));
+                hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
+            }
+
+            JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
+            for (int i = 0; i < hourlyDeep.length(); i++) {
+                deepSleep += Integer.parseInt(hourlyDeep.getString(i));
+                hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyDeep.getString(i)));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sleep.setHourlySleep(hourlySleepList.toString());
+        sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
+        sleep.setTotalWakeTime(wake);
+        sleep.setTotalLightTime(lightSleep);
+        sleep.setTotalDeepTime(deepSleep);
+        sleep.setStart(0);
+        sleep.setEnd(0);
+        sleep.setNevoUserID(getNevoUser().getNevoUserID());
+        //we must set CloudRecordID here, avoid doing sync repeatly
+        sleep.setCloudRecordID(medSleepRecordWithID.getId()+"");
+        try {
+            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        saveDailySleep(sleep);
+    }
 
     public List<Sleep> getNeedSyncSleep(String userid) {
         return sleepDatabaseHelper.getNeedSyncSleep(userid);
@@ -619,7 +675,7 @@ public class ApplicationModel extends Application {
         for (MedRoutineRecordWithID routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
-                // if activity_id not exist in local Steps table, save it
+                // if not exist in local Steps table, save it
                 if (!isFoundInLocalSteps(date,routine.getUid()+""))
                 {
                     saveStepsFromMed(routine,date);
@@ -632,19 +688,23 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent medReadMoreSleepRecordsModelEvent) {
-        //TODO save to database
+
         if(medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()==null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length==0){
             return;
         }
-        /**
-        ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel = validicReadMoreSleepRecordsModelEvent.getValidicReadMoreSleepRecordsModel();
-        for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
-            int activity_id = Integer.parseInt(sleep.getActivity_id());
-            //if activity_id not exist in local Sleep table, save it
-            if (isFoundInLocalSleep(activity_id)) {
-                saveSleepFromValidic(sleep);
+        for(MedSleepRecordWithID sleep: medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep())
+        {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sleep.getDate().getDate());
+                // if not exist in local Sleep table, save it
+                if (!isFoundInLocalSleep(date,sleep.getUid()+""))
+                {
+                    saveSleepFromMed(sleep,date);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        }*/
+        }
     }
 
     @Subscribe

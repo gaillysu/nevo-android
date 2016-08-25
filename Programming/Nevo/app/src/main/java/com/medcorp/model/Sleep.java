@@ -23,14 +23,14 @@ public class Sleep implements Comparable<Sleep>{
     private int totalLightTime;
 
     private int totalDeepTime;
+    //for avoid got exception, here you'd better put default values: int[24] ={0...0}
+    private String hourlySleep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlySleep;
+    private String hourlyWake="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyWake;
+    private String hourlyLight="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyLight;
-
-    private String hourlyDeep;
+    private String hourlyDeep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     private long start;
 

@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.medcorp.event.LoginEvent;
 import com.medcorp.event.med.MedAddRoutineRecordEvent;
+import com.medcorp.event.med.MedAddSleepRecordEvent;
 import com.medcorp.event.med.MedException;
 import com.medcorp.event.med.MedReadMoreRoutineRecordsModelEvent;
+import com.medcorp.event.med.MedReadMoreSleepRecordsModelEvent;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
@@ -16,8 +18,11 @@ import com.medcorp.network.med.model.CreateUserModel;
 import com.medcorp.network.med.model.LoginUser;
 import com.medcorp.network.med.model.LoginUserModel;
 import com.medcorp.network.med.model.MedReadMoreRoutineRecordsModel;
+import com.medcorp.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.network.med.model.MedRoutineRecord;
 import com.medcorp.network.med.model.MedRoutineRecordModel;
+import com.medcorp.network.med.model.MedSleepRecord;
+import com.medcorp.network.med.model.MedSleepRecordModel;
 import com.medcorp.network.med.request.user.LoginUserRequest;
 import com.medcorp.network.med.request.user.CreateUserRequest;
 import com.medcorp.network.med.request.routine.AddRoutineRecordRequest;
@@ -115,7 +120,7 @@ public class MedOperation {
         record.setSteps(steps.getHourlySteps());
         record.setCalories(steps.getCalories());
         record.setDistance(steps.getDistance());
-        record.setDate( new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate())));
+        record.setDate( new SimpleDateFormat("yyyy-MM-dd").format(date));
         record.setActive_time(steps.getNoActivityTime());
 
         AddRoutineRecordRequest addRecordRequest = new AddRoutineRecordRequest(record,medManager.getAccessToken());
@@ -123,10 +128,16 @@ public class MedOperation {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
                 spiceException.printStackTrace();
+                if(listener!=null){
+                    listener.onRequestFailure(spiceException);
+                }
                 EventBus.getDefault().post(new MedException(spiceException));
             }
             @Override
             public void onRequestSuccess(MedRoutineRecordModel medRoutineRecordModel) {
+                if(listener!=null){
+                    listener.onRequestSuccess(medRoutineRecordModel);
+                }
                 if(medRoutineRecordModel.getStatus() == 1)
                 {
                     //save cloud record ID to local database for next cloud sync
@@ -172,7 +183,38 @@ public class MedOperation {
         if(!user.isLogin()){
             return;
         }
-        //TODO implement REST API invoke
+        MedSleepRecord record = new MedSleepRecord();
+        record.setUid(Integer.parseInt(user.getNevoUserID()));
+        record.setDeep_sleep(sleep.getHourlyDeep());
+        record.setLight_sleep(sleep.getHourlyLight());
+        record.setWake_time(sleep.getHourlyWake());
+        record.setDate( new SimpleDateFormat("yyyy-MM-dd").format(date));
+
+        AddSleepRecordRequest addSleepRecordRequest = new AddSleepRecordRequest(record,medManager.getAccessToken());
+        medManager.execute(addSleepRecordRequest, new RequestListener<MedSleepRecordModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                spiceException.printStackTrace();
+                if(listener!=null){
+                    listener.onRequestFailure(spiceException);
+                }
+                EventBus.getDefault().post(new MedException(spiceException));
+            }
+            @Override
+            public void onRequestSuccess(MedSleepRecordModel medSleepRecordModel) {
+                if(listener!=null){
+                    listener.onRequestSuccess(medSleepRecordModel);
+                }
+                if(medSleepRecordModel.getStatus() == 1)
+                {
+                    //save cloud record ID to local database for next cloud sync
+                    sleep.setCloudRecordID(medSleepRecordModel.getSleep().getId()+"");
+                    EventBus.getDefault().post(new MedAddSleepRecordEvent(sleep));
+                }
+            }
+        });
+
+
     }
 
     public void getMoreMedSleepRecord(User user, Date startDate, Date endDate, final ResponseListener listener)
@@ -180,7 +222,31 @@ public class MedOperation {
         if(!user.isLogin()){
             return;
         }
-        //TODO implement REST API invoke
+
+        //use unit in "second"
+        long startTimestamp = startDate.getTime()/1000;
+        long endTimeStamps = endDate.getTime()/1000;
+
+        GetMoreSleepRecordsRequest getMoreRecordsRequest = new GetMoreSleepRecordsRequest(medManager.getAccessToken(), user.getNevoUserID(), startTimestamp, endTimeStamps);
+
+        medManager.execute(getMoreRecordsRequest, new RequestListener<MedReadMoreSleepRecordsModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                if(listener!=null){
+                    listener.onRequestFailure(spiceException);
+                }
+                spiceException.printStackTrace();
+                EventBus.getDefault().post(new MedException(spiceException));
+            }
+            @Override
+            public void onRequestSuccess(MedReadMoreSleepRecordsModel medReadMoreSleepRecordsModel) {
+                if(listener!=null){
+                    listener.onRequestSuccess(medReadMoreSleepRecordsModel);
+                }
+                EventBus.getDefault().post(new MedReadMoreSleepRecordsModelEvent(medReadMoreSleepRecordsModel));
+            }
+        });
+
     }
 
 }
