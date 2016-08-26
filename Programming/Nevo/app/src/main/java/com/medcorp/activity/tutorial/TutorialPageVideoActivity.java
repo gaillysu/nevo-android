@@ -45,7 +45,9 @@ public class TutorialPageVideoActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(LoginActivity.class);
+                    Intent intent = new Intent(TutorialPageVideoActivity.this,LoginActivity.class);
+                    intent.putExtra("isTutorialPage",true);
+                    startActivity(intent);
                     finish();
                 }
             }, 1500);

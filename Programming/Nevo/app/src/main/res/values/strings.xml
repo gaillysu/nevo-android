@@ -384,5 +384,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="edit_alarm_wake">Wake Alarm</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="login_skip_text">Skip</string>
+    <string name="login_page_activity_title">Login</string>
     <!--<lunar end>-->
 </resources>

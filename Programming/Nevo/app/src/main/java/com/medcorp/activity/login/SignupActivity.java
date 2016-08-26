@@ -62,8 +62,10 @@ public class SignupActivity extends BaseActivity {
 
     @OnClick(R.id.register_title_back_image_button)
     public void backClick() {
+        Intent intent = new Intent(SignupActivity.this,LoginActivity.class);
+        intent.putExtra("isTutorialPage",false);
+        startActivity(intent);
         finish();
-        startActivity(LoginActivity.class);
     }
 
     @Override

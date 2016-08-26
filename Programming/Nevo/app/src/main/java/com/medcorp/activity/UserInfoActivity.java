@@ -110,7 +110,9 @@ public class UserInfoActivity extends BaseActivity {
                     public void onRequestSuccess(CreateUserModel createUserModel) {
                         progressDialog.dismiss();
                         if (createUserModel.getStatus() == 1) {
-                            startActivity(LoginActivity.class);
+                            Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
+                            intent.putExtra("isTutorialPage",false);
+                            startActivity(intent);
                             finish();
                         } else {
                             ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());

@@ -155,7 +155,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         headerView.findViewById(R.id.navigation_header_spinner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                intent.putExtra("isTutorialPage",false);
+                startActivity(intent);
             }
         });
     }

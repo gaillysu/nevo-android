@@ -2,6 +2,7 @@ package com.medcorp.activity.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.ForgetPasswordActivity;
+import com.medcorp.activity.MainActivity;
 import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
@@ -62,7 +64,7 @@ public class LoginActivity extends BaseActivity {
         if (getModel().getNevoUser().getNevoUserEmail() != null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
         }
-        if(Preferences.getIsFirstLogin(this)){
+        if (Preferences.getIsFirstLogin(this)) {
             skipLoginBt.setVisibility(View.VISIBLE);
         }
     }
@@ -74,9 +76,21 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick(R.id.login_skip_bt)
-    public void skipLogin(){
-        startActivity(TutorialPage1Activity.class);
+    public void skipLogin() {
+        if (getIntent().getBooleanExtra("isTutorialPage", true)) {
+            startActivity(TutorialPage1Activity.class);
+        } else {
+            startActivity(MainActivity.class);
+        }
         finish();
+    }
+
+    @OnClick(R.id.open_tutorial_page_video)
+    public void openTutorialPageVideo(){
+        Uri uri = Uri.parse(getString(R.string.video_url));
+        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        intent.setDataAndType(uri , "video/*");
+        startActivity(intent);
     }
 
     @OnClick(R.id.btn_login)
@@ -121,7 +135,7 @@ public class LoginActivity extends BaseActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            Preferences.saveIsFirstLogin(LoginActivity.this,false);
+                            Preferences.saveIsFirstLogin(LoginActivity.this, false);
                             nevoUser.setFirstName(user.getFirst_name());
                             nevoUser.setHeight(user.getLength());
                             nevoUser.setLastName(user.getLast_name());
