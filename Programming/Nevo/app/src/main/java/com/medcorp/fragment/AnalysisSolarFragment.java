@@ -42,7 +42,7 @@ public class AnalysisSolarFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
         View solarView = inflater.inflate(R.layout.analysis_fragment_child_solar_fragment,container,false);
         ButterKnife.bind(this,solarView);
-
+        Log.w("Karl","Test push");
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
