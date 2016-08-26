@@ -3,35 +3,18 @@ package com.medcorp.activity.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
-import com.medcorp.activity.ForgetPasswordActivity;
-import com.medcorp.activity.MainActivity;
-import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
-import com.medcorp.model.User;
 import com.medcorp.network.med.model.LoginUser;
-import com.medcorp.network.med.model.LoginUserModel;
-import com.medcorp.network.med.model.LoginUserRequest;
-import com.medcorp.network.med.model.UserWithLocation;
-import com.medcorp.util.Preferences;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,9 +33,6 @@ public class LoginActivity extends BaseActivity {
     Button _loginButton;
     @Bind(R.id.link_signup)
     TextView _signupLink;
-    @Bind(R.id.login_skip_bt)
-    Button skipLoginBt;
-    private int inputPasswordErrorSum = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,9 +42,6 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         if (getModel().getNevoUser().getNevoUserEmail() != null) {
             _emailText.setText(getModel().getNevoUser().getNevoUserEmail());
-        }
-        if (Preferences.getIsFirstLogin(this)) {
-            skipLoginBt.setVisibility(View.VISIBLE);
         }
     }
 
@@ -91,6 +68,9 @@ public class LoginActivity extends BaseActivity {
 //        intent.setDataAndType(uri , "video/*");
 //        startActivity(intent);
 //    }
+            startActivity(SignupActivity.class);
+            finish();
+    }
 
     @OnClick(R.id.btn_login)
     public void loginAction() {
@@ -108,68 +88,13 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
         progressDialog.show();
 
-        final String email = _emailText.getText().toString();
+        String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
         LoginUser user = new LoginUser();
         user.setEmail(email);
         user.setPassword(password);
-        getModel().getNetworkManage().execute(new LoginUserRequest(user, getModel().getNetworkManage().getAccessToken()),
-                new RequestListener<LoginUserModel>() {
-                    @Override
-                    public void onRequestFailure(SpiceException spiceException) {
-                        progressDialog.dismiss();
-                        spiceException.printStackTrace();
-                        EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
-                    }
-
-                    @Override
-                    public void onRequestSuccess(LoginUserModel loginUserModel) {
-                        progressDialog.dismiss();
-                        if (loginUserModel.getStatus() == 1) {
-                            UserWithLocation user = loginUserModel.getUser();
-                            User nevoUser = getModel().getNevoUser();
-                            try {
-                                nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            Preferences.saveIsFirstLogin(LoginActivity.this, false);
-                            nevoUser.setFirstName(user.getFirst_name());
-                            nevoUser.setHeight(user.getLength());
-                            nevoUser.setLastName(user.getLast_name());
-                            nevoUser.setWeight(user.getWeight());
-                            nevoUser.setId(user.getId());
-                            nevoUser.setNevoUserEmail(user.getEmail());
-                            nevoUser.setIsLogin(true);
-                            getModel().saveNevoUser(nevoUser);
-                            getModel().getSyncController().getDailyTrackerInfo(true);
-                            getModel().getCloudSyncManager().launchSyncAll(nevoUser, getModel().getNeedSyncSteps(nevoUser.getNevoUserID()),
-                                    getModel().getNeedSyncSleep(nevoUser.getNevoUserID()));
-                            EventBus.getDefault().post(new LoginEvent(LoginEvent.status.SUCCESS));
-                        } else {
-                            EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED));
-                            inputPasswordErrorSum++;
-                            if (inputPasswordErrorSum % 3 == 0) {
-                                promptUserChangePassword();
-                            }
-                        }
-                    }
-
-                });
-
-    }
-
-    public void promptUserChangePassword() {
-        new MaterialDialog.Builder(this).contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
-                .title(R.string.open_forget_password_dialog_title).content(R.string.prompt_is_not_forget_password).negativeText(android.R.string.cancel)
-                .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                startActivity(ForgetPasswordActivity.class);
-                finish();
-            }
-        }).show();
+        getModel().getCloudSyncManager().userLogin(user);
     }
 
     @Subscribe

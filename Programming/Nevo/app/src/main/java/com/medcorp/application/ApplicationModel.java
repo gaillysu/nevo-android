@@ -23,6 +23,7 @@ import com.medcorp.ble.controller.SyncController;
 import com.medcorp.ble.controller.SyncControllerImpl;
 import com.medcorp.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.cloud.CloudSyncManager;
+import com.medcorp.cloud.validic.ValidicOperation;
 import com.medcorp.database.entry.AlarmDatabaseHelper;
 import com.medcorp.database.entry.GoalDatabaseHelper;
 import com.medcorp.database.entry.SleepDatabaseHelper;
@@ -33,6 +34,10 @@ import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.event.google.fit.GoogleFitUpdateEvent;
+import com.medcorp.event.med.MedAddRoutineRecordEvent;
+import com.medcorp.event.med.MedAddSleepRecordEvent;
+import com.medcorp.event.med.MedReadMoreRoutineRecordsModelEvent;
+import com.medcorp.event.med.MedReadMoreSleepRecordsModelEvent;
 import com.medcorp.event.validic.ValidicAddRoutineRecordEvent;
 import com.medcorp.event.validic.ValidicAddSleepRecordEvent;
 import com.medcorp.event.validic.ValidicCreateUserEvent;
@@ -53,6 +58,9 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
 import com.medcorp.network.med.manager.MedManager;
+import com.medcorp.network.med.model.MedRoutineRecordModel;
+import com.medcorp.network.med.model.MedRoutineRecordWithID;
+import com.medcorp.network.med.model.MedSleepRecordWithID;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.network.validic.model.ValidicSleepRecordModelBase;
@@ -73,6 +81,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +91,7 @@ import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Karl on 10/15/15.
+ *
  */
 public class ApplicationModel extends Application {
 
@@ -189,16 +199,12 @@ public class ApplicationModel extends Application {
         }
     }
 
-    @Subscribe
+        @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
             final Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
             getCloudSyncManager().launchSyncDaily(nevoUser, steps);
         }
-    }
-
-    public boolean updateUserProfile(User user){
-       return userDatabaseHelper.update(user);
     }
 
     public MedManager getNetworkManage() {
@@ -284,7 +290,7 @@ public class ApplicationModel extends Application {
         Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(todayDate));
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
         if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
-            return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
+            return new Sleep[]{todaySleep.get(),yesterdaySleep.get()};
         }
         return new Sleep[0];
     }
@@ -300,9 +306,15 @@ public class ApplicationModel extends Application {
     public boolean isFoundInLocalSteps(int activity_id) {
         return stepsDatabaseHelper.isFoundInLocalSteps(activity_id);
     }
+    public boolean isFoundInLocalSteps(Date date,String userID) {
+        return stepsDatabaseHelper.isFoundInLocalSteps(date,userID);
+    }
 
     public boolean isFoundInLocalSleep(int activity_id) {
         return sleepDatabaseHelper.isFoundInLocalSleep(activity_id);
+    }
+    public boolean isFoundInLocalSleep(Date date,String userID) {
+        return sleepDatabaseHelper.isFoundInLocalSleep(date,userID);
     }
 
     public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine) {
@@ -312,13 +324,36 @@ public class ApplicationModel extends Application {
         steps.setDate(Common.removeTimeFromDate(createDate).getTime());
         steps.setSteps((int) routine.getSteps());
         steps.setNevoUserID(getNevoUser().getNevoUserID());
-        steps.setValidicRecordID(routine.get_id());
+        steps.setCloudRecordID(routine.get_id());
         steps.setiD(Integer.parseInt(routine.getActivity_id()));
         if (routine.getExtras() != null) {
             steps.setGoal(routine.getExtras().getGoal());
         } else {
             steps.setGoal(7000);
         }
+        saveDailySteps(steps);
+    }
+
+    public void saveStepsFromMed(MedRoutineRecordWithID routine,Date createDate) {
+        Steps steps = new Steps(createDate.getTime());
+        steps.setDate(Common.removeTimeFromDate(createDate).getTime());
+        try {
+            JSONArray hourlyArray = new JSONArray(routine.getSteps());
+            int totalSteps = 0;
+            for (int i = 0; i < hourlyArray.length(); i++){
+                totalSteps += hourlyArray.optInt(i);
+            }
+            steps.setHourlySteps(routine.getSteps());
+            steps.setSteps(totalSteps);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        steps.setDistance((int) routine.getDistance());
+        steps.setCalories(routine.getCalories());
+        steps.setNoActivityTime(routine.getActive_time());
+        steps.setNevoUserID(routine.getUid()+"");
+        steps.setCloudRecordID(routine.getId()+"");
+        steps.setGoal(10000);
         saveDailySteps(steps);
     }
 
@@ -364,14 +399,67 @@ public class ApplicationModel extends Application {
             sleep.setHourlySleep(hourlySleepList.toString());
             sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
             sleep.setTotalWakeTime(wake);
-            sleep.setTotalLightTime(deepSleep);
-            sleep.setTotalDeepTime(lightSleep);
+            sleep.setTotalLightTime(lightSleep);
+            sleep.setTotalDeepTime(deepSleep);
         }
         //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
         sleep.setStart(0);
         sleep.setEnd(0);
         sleep.setNevoUserID(getNevoUser().getNevoUserID());
-        sleep.setValidicRecordID(validicSleepRecord.get_id());
+        sleep.setCloudRecordID(validicSleepRecord.get_id());
+        try {
+            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        saveDailySleep(sleep);
+    }
+
+    public void saveSleepFromMed(MedSleepRecordWithID medSleepRecordWithID,Date createDate) {
+        Sleep sleep = new Sleep(createDate.getTime());
+        sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
+
+        sleep.setHourlyWake(medSleepRecordWithID.getWake_time());
+        sleep.setHourlyLight(medSleepRecordWithID.getLight_sleep());
+        sleep.setHourlyDeep(medSleepRecordWithID.getDeep_sleep());
+
+        int lightSleep = 0;
+        int deepSleep = 0;
+        int wake = 0;
+        List<Integer> hourlySleepList = new ArrayList<Integer>();
+        try {
+            JSONArray hourlyWake = new JSONArray(sleep.getHourlyWake());
+            for (int i = 0; i < hourlyWake.length(); i++) {
+                wake += Integer.parseInt(hourlyWake.getString(i));
+                hourlySleepList.add(Integer.parseInt(hourlyWake.getString(i)));
+            }
+
+            JSONArray hourlyLight = new JSONArray(sleep.getHourlyLight());
+            for (int i = 0; i < hourlyLight.length(); i++) {
+                lightSleep += Integer.parseInt(hourlyLight.getString(i));
+                hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyLight.getString(i)));
+            }
+
+            JSONArray hourlyDeep = new JSONArray(sleep.getHourlyDeep());
+            for (int i = 0; i < hourlyDeep.length(); i++) {
+                deepSleep += Integer.parseInt(hourlyDeep.getString(i));
+                hourlySleepList.set(i, hourlySleepList.get(i) + Integer.parseInt(hourlyDeep.getString(i)));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sleep.setHourlySleep(hourlySleepList.toString());
+        sleep.setTotalSleepTime(wake + deepSleep + lightSleep);
+        sleep.setTotalWakeTime(wake);
+        sleep.setTotalLightTime(lightSleep);
+        sleep.setTotalDeepTime(deepSleep);
+        sleep.setStart(0);
+        sleep.setEnd(0);
+        sleep.setNevoUserID(getNevoUser().getNevoUserID());
+        //we must set CloudRecordID here, avoid doing sync repeatly
+        sleep.setCloudRecordID(medSleepRecordWithID.getId()+"");
         try {
             sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
         } catch (JSONException e) {
@@ -515,7 +603,7 @@ public class ApplicationModel extends Application {
     }
 
     public void createValidicUser(String pin, ResponseListener<ValidicUser> responseListener) {
-        getCloudSyncManager().createValidicUser(nevoUser, pin, responseListener);
+        ValidicOperation.getInstance(this).createValidicUser(nevoUser, pin, responseListener);
     }
 
     @Subscribe
@@ -527,6 +615,17 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent validicAddSleepRecordEvent) {
         saveDailySleep(validicAddSleepRecordEvent.getSleep());
+    }
+
+    @Subscribe
+    public void onMedAddRoutineRecordEvent(MedAddRoutineRecordEvent medAddRoutineRecordEvent) {
+        saveDailySteps(medAddRoutineRecordEvent.getSteps());
+
+    }
+
+    @Subscribe
+    public void onMedAddSleepRecordEvent(MedAddSleepRecordEvent medAddSleepRecordEvent) {
+        saveDailySleep(medAddSleepRecordEvent.getSleep());
     }
 
     @Subscribe
@@ -571,6 +670,48 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
+    public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent medReadMoreRoutineRecordsModelEvent) {
+
+        if(medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()==null||medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().length==0)
+        {
+            return;
+        }
+        for (MedRoutineRecordWithID routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
+                // if not exist in local Steps table, save it
+                if (!isFoundInLocalSteps(date,routine.getUid()+""))
+                {
+                    saveStepsFromMed(routine,date);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Subscribe
+    public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent medReadMoreSleepRecordsModelEvent) {
+
+        if(medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()==null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length==0){
+            return;
+        }
+        for(MedSleepRecordWithID sleep: medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep())
+        {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sleep.getDate().getDate());
+                // if not exist in local Sleep table, save it
+                if (!isFoundInLocalSleep(date,sleep.getUid()+""))
+                {
+                    saveSleepFromMed(sleep,date);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Subscribe
     public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent validicUpdateRoutineRecordsModelEvent) {
         saveDailySteps(validicUpdateRoutineRecordsModelEvent.getSteps());
 
@@ -580,5 +721,7 @@ public class ApplicationModel extends Application {
     public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent validicDeleteRoutineRecordEvent) {
         stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
     }
+
+
 
 }
