@@ -3,17 +3,16 @@ package com.medcorp.network.validic.request.sleep;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.AddSleepRecordRequestObject;
 import com.medcorp.network.validic.model.ValidicSleepRecord;
 import com.medcorp.network.validic.model.ValidicSleepRecordModel;
-import com.medcorp.network.base.BaseRetroRequest;
 import com.medcorp.network.validic.retrofit.Validic;
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by med on 16/3/23.
  */
-public class AddSleepRecordRequest extends RetrofitSpiceRequest<ValidicSleepRecordModel,Validic> implements BaseRetroRequest<AddSleepRecordRequestObject> {
+public class AddSleepRecordRequest extends BaseRequest<ValidicSleepRecordModel,Validic> implements BaseRequest.BaseRetroRequestBody<AddSleepRecordRequestObject> {
 
     private ValidicSleepRecord record;
     private String   organizationId;

@@ -15,7 +15,6 @@ import com.medcorp.activity.login.SignupActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.network.med.model.CreateUser;
 import com.medcorp.network.med.model.CreateUserModel;
-import com.medcorp.network.med.model.RequestCreateNewAccountRequest;
 import com.medcorp.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -97,8 +96,7 @@ public class UserInfoActivity extends BaseActivity {
                 progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
 
-                getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
-                        .getAccessToken()), new RequestListener<CreateUserModel>() {
+                getModel().getCloudSyncManager().createUser(userInfo, new RequestListener<CreateUserModel>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
                         progressDialog.dismiss();
@@ -119,7 +117,6 @@ public class UserInfoActivity extends BaseActivity {
                         }
                     }
                 });
-
             } catch (NumberFormatException e) {
                 ToastHelper.showShortToast(this, getString(R.string.user_no_select_profile_info));
             }

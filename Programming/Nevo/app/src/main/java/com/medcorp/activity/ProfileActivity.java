@@ -212,7 +212,7 @@ public class ProfileActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.done_menu:
-                getModel().updateUserProfile(user);
+                getModel().saveNevoUser(user);
                 finish();
                 break;
         }

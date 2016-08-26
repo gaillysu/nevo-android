@@ -1,5 +1,6 @@
 package com.medcorp.network.validic.request.sleep;
 
+import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.ValidicReadSleepRecordModel;
 import com.medcorp.network.validic.retrofit.Validic;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
@@ -7,7 +8,7 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class GetSleepRecordRequest extends RetrofitSpiceRequest<ValidicReadSleepRecordModel,Validic> {
+public class GetSleepRecordRequest extends BaseRequest<ValidicReadSleepRecordModel,Validic> {
 
     private String   organizationId;
     private String   organizationTokenKey;
