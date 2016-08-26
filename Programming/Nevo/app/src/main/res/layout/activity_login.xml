@@ -6,34 +6,33 @@
               android:fitsSystemWindows="true"
               android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="45dp">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="45dp">-->
 
-        <ImageButton
-            android:id="@+id/open_tutorial_page_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/icon_vdioe"
-            android:paddingLeft="18dp"
-            android:background="@android:color/transparent"
-            />
+        <!--<ImageButton-->
+            <!--android:id="@+id/open_tutorial_page_video"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@mipmap/icon_vdioe"-->
+            <!--android:paddingLeft="18dp"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:typeface="monospace"
-            android:text="@string/login_page_activity_title"
-            android:textColor="@color/text_color"
-            android:textSize="22sp"/>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:typeface="monospace"-->
+            <!--android:text="@string/login_page_activity_title"-->
+            <!--android:textColor="@color/text_color"-->
+            <!--android:textSize="22sp"/>-->
 
         <Button
             android:id="@+id/login_skip_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:typeface="monospace"
+            android:layout_gravity="right"
             android:background="@android:color/transparent"
             android:text="@string/login_skip_text"
             android:textAllCaps="false"
@@ -42,12 +41,12 @@
             android:textSize="20sp"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/black"/>
-    </RelativeLayout>
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="@color/black"/>-->
+    <!--</RelativeLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/login_title_text"
-            android:typeface="monospace"
             android:textColor="@color/colorPrimary"
             android:textSize="30sp"
             />
@@ -83,7 +81,6 @@
             android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:typeface="monospace"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_input_email_account_bg"
             android:hint="@string/log_in_email"
@@ -103,7 +100,6 @@
             android:hint="@string/log_in_password"
             android:inputType="textPassword"
             android:paddingLeft="8dp"
-            android:typeface="monospace"
             android:textColor="@color/text_color"
             />
 
@@ -113,7 +109,6 @@
             android:layout_height="48dp"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            android:typeface="monospace"
             android:background="@drawable/shape_login_button_bg"
             android:gravity="center"
             android:text="@string/log_in"
@@ -124,10 +119,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:typeface="monospace"
             android:text="@string/login_page_activity_with_other"
             android:textColor="@color/text_color"
-            android:textSize="16sp"
+            android:textSize="18sp"
             />
 
         <LinearLayout
@@ -159,9 +153,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:gravity="center"
-            android:typeface="monospace"
             android:text="@string/register_account_message"
             android:textColor="@color/register_account_text_color"
-            android:textSize="16sp"/>
+            android:textSize="18sp"/>
     </LinearLayout>
 </LinearLayout>

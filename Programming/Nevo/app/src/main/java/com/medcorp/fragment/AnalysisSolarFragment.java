@@ -33,7 +33,7 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     @Bind(R.id.analysis_solar_fragment_view_pager)
     ViewPager solarViewPager;
-    @Bind(R.id.steps_fragment_title_tv)
+    @Bind(R.id.analysis_solar_fragment_title_tv)
     TextView solarTitleTextView;
 
     private View thisWeekView;

@@ -17,6 +17,8 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/analysis_fragment_this_week_steps"
             android:textAllCaps="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/text_color"
             android:textSize="20sp"
             />

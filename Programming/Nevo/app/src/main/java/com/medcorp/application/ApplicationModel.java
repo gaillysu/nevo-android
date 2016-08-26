@@ -205,6 +205,10 @@ public class ApplicationModel extends Application {
         return validicMedManager;
     }
 
+    public StepsDatabaseHelper getStepsHelper(){
+        return stepsDatabaseHelper;
+    }
+
     public SyncController getSyncController() {
         return syncController;
     }

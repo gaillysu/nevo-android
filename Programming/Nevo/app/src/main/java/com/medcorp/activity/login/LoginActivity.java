@@ -2,7 +2,6 @@ package com.medcorp.activity.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -85,13 +84,13 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-    @OnClick(R.id.open_tutorial_page_video)
-    public void openTutorialPageVideo(){
-        Uri uri = Uri.parse(getString(R.string.video_url));
-        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-        intent.setDataAndType(uri , "video/*");
-        startActivity(intent);
-    }
+//    @OnClick(R.id.open_tutorial_page_video)
+//    public void openTutorialPageVideo(){
+//        Uri uri = Uri.parse(getString(R.string.video_url));
+//        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+//        intent.setDataAndType(uri , "video/*");
+//        startActivity(intent);
+//    }
 
     @OnClick(R.id.btn_login)
     public void loginAction() {

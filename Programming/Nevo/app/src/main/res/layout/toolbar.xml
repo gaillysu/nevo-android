@@ -38,11 +38,9 @@
                     android:id="@+id/lunar_tool_bar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:typeface="monospace"
                     android:textColor="@color/toolbar_center_date_text_color"
                     android:layout_marginLeft="3dp"
                     android:textSize="22sp"
-                    android:textStyle="bold"
                     />
             </LinearLayout>
     </android.support.v7.widget.Toolbar>
