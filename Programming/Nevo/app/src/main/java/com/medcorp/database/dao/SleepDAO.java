@@ -16,9 +16,9 @@ public class SleepDAO {
     /**
      * this is created by saving validic record
      */
-    public static final String fValidicRecordID = "validicRecordID";
+    public static final String fCloudRecordID = "cloudRecordID";
     @DatabaseField
-    private String validicRecordID;
+    private String cloudRecordID;
 
     /**
      * which user ID
@@ -263,11 +263,11 @@ public class SleepDAO {
         Remarks = remarks;
     }
 
-    public String getValidicRecordID() {
-        return validicRecordID;
+    public String getCloudRecordID() {
+        return cloudRecordID;
     }
 
-    public void setValidicRecordID(String validicRecordID) {
-        this.validicRecordID = validicRecordID;
+    public void setCloudRecordID(String cloudRecordID) {
+        this.cloudRecordID = cloudRecordID;
     }
 }

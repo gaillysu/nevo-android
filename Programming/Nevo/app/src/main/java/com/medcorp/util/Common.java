@@ -2,9 +2,6 @@ package com.medcorp.util;
 
 import android.content.Context;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -205,19 +202,5 @@ public class Common {
     static public List<String> getAllBuildinFirmwareURLs(Context context)
     {
         return  needOTAFirmwareURLs(context,-1,-1);
-    }
-
-    public static int[] convertJSONArrayIntToArray(String string){
-        try {
-            JSONArray jsonArray = new JSONArray(string);
-            int[] hourlyLight = new int[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++){
-                hourlyLight[i] = jsonArray.optInt(i,0);
-            }
-            return hourlyLight;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return new int[0];
-        }
     }
 }

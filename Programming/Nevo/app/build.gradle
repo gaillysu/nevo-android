@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.7'
+        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 apply plugin: 'com.android.application'
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId "com.medcorp"
         minSdkVersion 18
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 203
         versionName "2.0.1"
         multiDexEnabled true
@@ -39,6 +39,7 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
 
     productFlavors{
         lunar{

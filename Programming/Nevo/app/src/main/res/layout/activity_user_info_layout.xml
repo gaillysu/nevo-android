@@ -55,7 +55,8 @@
         android:gravity="center_vertical"
         android:background="@drawable/shape_input_email_account_bg"
         android:hint="@string/activity_user_info_birthday"
-        android:paddingLeft="8dp"/>
+        android:paddingLeft="8dp"
+        android:textColorHint="@color/text_color"/>
 
     <TextView
         android:id="@+id/register_account_activity_edit_height"
@@ -70,7 +71,7 @@
         android:background="@drawable/shape_input_email_account_bg"
         android:hint="@string/activity_user_info_height"
         android:paddingLeft="8dp"
-        />
+        android:textColorHint="@color/text_color"/>
 
     <TextView
         android:id="@+id/register_account_activity_edit_weight"
@@ -85,5 +86,5 @@
         android:background="@drawable/shape_input_email_account_bg"
         android:hint="@string/activity_user_info_weight"
         android:paddingLeft="8dp"
-        />
+        android:textColorHint="@color/text_color"/>
 </LinearLayout>

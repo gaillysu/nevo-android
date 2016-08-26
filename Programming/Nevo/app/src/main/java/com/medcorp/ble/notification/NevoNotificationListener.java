@@ -188,7 +188,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         if (enabledNotificationListeners == null || !enabledNotificationListeners.contains(packageName))
         {
             // Let's ask the user to enable notifications
-            new AlertDialog.Builder(ctx,R.style.AppTheme_Dark_Dialog).setTitle(R.string.notification_access_title).setMessage(R.string.notification_access_message)
+            new AlertDialog.Builder(ctx).setTitle(R.string.notification_access_title).setMessage(R.string.notification_access_message)
                     .setNegativeButton(android.R.string.no, null).setPositiveButton(android.R.string.yes, new AlertDialog.OnClickListener(){
 
                 @Override

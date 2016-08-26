@@ -136,7 +136,6 @@
     <string name="alarm_edit">Edit Alarm</string>
     <string name="alarm_label_alarm">Label your alarm.</string>
     <string name="alarm_label">label name</string>
-    <string name="alarm_week_day">Repeat time</string>
     <string name="alarm_cancel">Cancel</string>
     <string name="alarm_deleted">Deleted alarm!</string>
     <string name="alarm_could_not_delete">Failed to delete alarm</string>
@@ -144,8 +143,6 @@
     <string name="alarm_delete">Delete Alarm</string>
     <string name="alarm_set_different_time">Set a different time</string>
     <string name="alarm_set_label_for_alarm">Set label for alarm</string>
-    <string name="alarm_set_week_day">Set weekday for alarm</string>
-    <string name="alarm_set_week_day_dialog_text">Set the alarm clock to repeat time</string>
     <string name="alarm_synced">Alarm Synced</string>
     <string name="alarm_error_sync">Error Syncing Alarm</string>
     <string name="goal_syncing_message">Syncing Goal&#8230;</string>
@@ -278,14 +275,9 @@ push and hold the third button, until the white LED blinks</string>
     <!--add-->
 
     <!--lunar-->
-
-    <string name="add_alarm_index_out">The same type of alarm clock can only add 7!</string>
     <string name="lunar_adapter_clock">Clock</string>
     <string name="lunar_adapter_chart">Chart</string>
     <string name="lunar_adapter_solar">Solar</string>
-    <string name="main_sleep_fragment_title">Sleep</string>
-    <string name="main_steps_fragment_title">Steps</string>
-    <string name="main_clock_fragment_title">Clock</string>
     <string name="register_account_page_title">Sign Up</string>
     <string name="register_first_name_hint">First Name</string>
     <string name="register_last_name_hint">Last Name</string>
@@ -306,8 +298,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="activity_user_info_man">Male</string>
     <string name="activity_user_info_female">Female</string>
     <string name="user_info_user_birthday_error">Birthday may not be empty</string>
-    <string name="info_company_height">Cm</string>
-    <string name="info_company_weight">Kg</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
     <string name="register_input_first_is_empty">User name cannot be empty</string>
@@ -319,8 +309,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="forget_password_result_prompt">Check your inbox</string>
     <string name="forget_password_result_email_address_text">A email has been sent to: </string>
     <string name="forget_password_result_test_email_address">shaw@med-corp.com</string>
-    <string name="prompt_is_not_forget_password">Do you need to change your password?</string>
-    <string name="open_forget_password_dialog_title">Forget password</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we\’ve\n sent and verify your e-mail ad-\ndress.</string>
     <string name="analysis_fragment_title_string">Analysis</string>
     <string name="steps_goal_one">4500 steps</string>
@@ -334,21 +322,21 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_fragment_user_weight_text">Weight</string>
     <string name="profile_input_user_first_name_dialog_title">Input FirstName</string>
     <string name="profile_input_user_surname_dialog_title">Input Surname</string>
-    <string name="profile_fragment_edit_first_name_edit_hint">Input Name</string>
+    <string name="profile_fragment_edit_first_name_edit_hint">First Name</string>
     <string name="profile_fragment_input_user_surname_dialog_title">Input Surname</string>
     <string name="profile_fragment_input_surname_edit_hint">Surname</string>
-    <string name="lunar_fragment_calorie_text">Calories</string>
-    <string name="lunar_main_sleep_fragment_time_text">Sleep Time</string>
+    <string name="lunar_fragment_calorie_text">CALORIES</string>
+    <string name="lunar_main_sleep_fragment_time_text">SLEEP TIME</string>
     <string name="lunar_main_sleep_fragment_title_text">OVER ALL SLEEP TIME</string>
     <string name="lunar_main_sleep_fragment_solar_title">SOLAR TIME</string>
     <string name="lunar_main_sleep_staus_text_light">LIGHT SLEEP TIME </string>
     <string name="lunar_main_sleep_staus_text_deep">DEEP SLEEP TIME</string>
-    <string name="lunar_main_sleep_fragment_wake_time_text">Wake Time</string>
-    <string name="lunar_main_sleep_fragment_sleep_dec">Quality</string>
-    <string name="lunar_main_sleep_fragment_duration">Duration</string>
-    <string name="lunar_fragment_steps_text">Steps</string>
-    <string name="lunar_fragment_activity_time_text">Time</string>
-    <string name="lunar_fragment_distance_km_text">Km</string>
+    <string name="lunar_main_sleep_fragment_wake_time_text">WAKE TIME</string>
+    <string name="lunar_main_sleep_fragment_sleep_dec">QUALITY</string>
+    <string name="lunar_main_sleep_fragment_duration">DURATION</string>
+    <string name="lunar_fragment_steps_text">STEPS</string>
+    <string name="lunar_fragment_activity_time_text">TIME</string>
+    <string name="lunar_fragment_distance_km_text">KM</string>
     <string name="my_nevo_new_update_available">NEW UPDATE AVAILABLE</string>
     <string name="my_device_version_text">Watch Version</string>
 
@@ -361,17 +349,12 @@ push and hold the third button, until the white LED blinks</string>
     <string name="analysis_fragment_last_month_solar">LAST 30 DAYS</string>
     <string name="this_week_steps_identification_one">YOU</string>
     <string name="this_week_steps_identification_average">AVERAGE</string>
-    <string name="this_week_steps_identification_two">Avg Steps:</string>
-    <string name="steps_fragment_total_steps">Total Steps:</string>
-    <string name="steps_fragment_average_calories">Avg Calories:</string>
-    <string name="steps_fragment_average_time">Avg Time: </string>
-    <string name="main_fragment_solar_page_time_on_battery_text">Time On Battery</string>
-    <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
-    <string name="user_no_select_profile_info">Please select the correct profile !</string>
+    <string name="this_week_steps_identification_two">AVERAGE:</string>
+    <string name="steps_fragment_total_steps">TOTAL:</string>
+    <string name="main_fragment_solar_page_time_on_battery_text">TIME ON BATTERY</string>
+    <string name="main_fragment_solar_page_time_on_solar_text">TIME ON SOLAR</string>
 
     <string name="edit_alarm_repeat">Repeat</string>
-    <string name="edit_alarm_name">Alarm Name</string>
-    <string name="input_legitimate_value">Please enter a valid value from 1 to 7</string>
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>
     <string name="wednesday">Wed</string>
@@ -379,10 +362,11 @@ push and hold the third button, until the white LED blinks</string>
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
-    <string name="every_day">Every </string>
+    <string name="every_day">Every day</string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="edit_alarm_wake">Wake Alarm</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="login_skip_text">Skip</string>
+    <!--<string name="week_day">平日</string>-->
+    <!--<string name="week_end">周末</string>-->
+    <!--<string name="week">周</string>-->
     <!--<lunar end>-->
 </resources>

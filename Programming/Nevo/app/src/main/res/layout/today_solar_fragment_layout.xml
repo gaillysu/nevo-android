@@ -4,21 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="28dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/lunar_adapter_solar"
-            android:textColor="@color/text_color"
-            />
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/main_fragment_solar_pie_chart"
         android:layout_width="match_parent"
-        android:layout_marginRight="35dp"
-        android:layout_marginLeft="35dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_height="0dp"
+        android:padding="10dp"
         android:layout_weight="3"/>
 
     <LinearLayout
@@ -39,7 +31,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="20dp"
                 android:gravity="center_vertical"
                 android:text="@string/main_fragment_solar_page_time_on_battery_text"
                 android:textColor="@color/text_color"
@@ -48,7 +40,7 @@
                 android:id="@+id/today_solar_battery_time_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="20dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/profile_fragment_text_right_color"
                 />
@@ -66,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="20dp"
                 android:text="@string/main_fragment_solar_page_time_on_solar_text"
                 android:textColor="@color/text_color"
                 />
@@ -74,7 +66,7 @@
                 android:id="@+id/today_solar_solar_time_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textSize="18sp"
+                android:textSize="20dp"
                 android:textColor="@color/profile_fragment_text_right_color"
                 />
         </LinearLayout>

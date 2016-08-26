@@ -1,7 +1,5 @@
 package com.medcorp.util;
 
-import android.util.Log;
-
 import com.medcorp.model.Sleep;
 import com.medcorp.model.SleepData;
 
@@ -93,7 +91,6 @@ public class SleepDataHandler {
         sleepData.setHourlyWake(wakeTimeList.toString());
         sleepData.setHourlyLight(lightTimeList.toString());
         sleepData.setHourlyDeep(deepTimeList.toString());
-        Log.w("KARL","SLEEPDATA 1");
         return sleepData;
     }
 
@@ -166,7 +163,7 @@ public class SleepDataHandler {
                 int theMinutes = Integer.parseInt(hourlySleep.getString(i));
                 if(theMinutes>0)
                 {
-                    sleepStart = yesterdaySleep.getStart() + ((i+1)*60-theMinutes)*60*1000;
+                    sleepStart = yesterdaySleep.getDate() + ((i+1)*60-theMinutes)*60*1000;
                     start = i;
                     break;
                 }
@@ -192,7 +189,6 @@ public class SleepDataHandler {
         }
         int totalSleep = lightSleep + deepSleep + wake;
         if(totalSleep > 0) {
-            Log.w("KARL","SLEEPDATA 2");
             SleepData sleepData = new SleepData(deepSleep, lightSleep, wake, yesterdaySleep.getDate(),sleepStart,sleepEnd);
             sleepData.setHourlyWake(wakeTimeList.toString());
             sleepData.setHourlyLight(lightTimeList.toString());
@@ -254,7 +250,7 @@ public class SleepDataHandler {
         for (int i = 0; i < sleepList.size(); i++) {
             Sleep todaySleep = sleepList.get(i);
             if (sleptToday(todaySleep)) {
-                if (!sleptAfterTwelve(todaySleep)) {
+                if (sleptAfterTwelve(todaySleep)) {
                     SleepData sleepData = getSleepData(todaySleep);
                     sleepDataList.add(sleepData);
                     if(i > 0){
@@ -283,14 +279,15 @@ public class SleepDataHandler {
                         }
                     }
                 }
-            }  else if (i == sleepList.size() - 1) {
+            } else if ((i + 1) < sleepList.size()) {
+                Sleep tomorrow = sleepList.get(i + 1);
+                if (!sleptToday(tomorrow)) {
+                    sleepDataList.add(getSleepDataAfterSix(todaySleep));
+                }
+            } else if (i == sleepList.size() - 1) {
                 sleepDataList.add(getSleepDataAfterSix(todaySleep));
             }
         }
-
-
         return sleepDataList;
     }
-
-
 }

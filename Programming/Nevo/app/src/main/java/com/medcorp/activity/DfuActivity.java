@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.util.Common;
+import com.medcorp.R;
 import com.medcorp.view.RoundProgressBar;
 
 import net.medcorp.library.ble.controller.OtaController;

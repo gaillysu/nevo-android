@@ -6,11 +6,8 @@ import android.os.Handler;
 import android.view.WindowManager;
 
 import com.medcorp.activity.MainActivity;
-import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.R;
-import com.medcorp.util.Preferences;
-
 import net.medcorp.library.ble.util.Constants;
 
 import butterknife.ButterKnife;
@@ -28,27 +25,16 @@ public class TutorialPageVideoActivity extends BaseActivity {
             finish();
             return;
         }
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome_page);
         ButterKnife.bind(this);
 
-        if (!Preferences.getIsFirstLogin(this)) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(TutorialPage1Activity.class);
-                    finish();
-                }
-            }, 1500);
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(LoginActivity.class);
-                    finish();
-                }
-            }, 1500);
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(TutorialPage1Activity.class);
+                finish();
+            }
+        }, 1000);
     }
 }

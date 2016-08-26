@@ -1,5 +1,6 @@
 package com.medcorp.network.validic.request.routine;
 
+import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.network.validic.retrofit.Validic;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
@@ -7,7 +8,7 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class GetMoreRoutineRecordsRequest extends RetrofitSpiceRequest<ValidicReadMoreRoutineRecordsModel,Validic> {
+public class GetMoreRoutineRecordsRequest extends BaseRequest<ValidicReadMoreRoutineRecordsModel,Validic> {
 
     private String   organizationId;
     private String   organizationTokenKey;

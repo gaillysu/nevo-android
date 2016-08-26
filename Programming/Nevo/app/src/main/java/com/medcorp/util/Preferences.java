@@ -3,13 +3,13 @@ package com.medcorp.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.medcorp.R;
-import com.medcorp.ble.model.color.BlueLed;
 import com.medcorp.ble.model.color.GreenLed;
-import com.medcorp.ble.model.color.LightGreenLed;
 import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.color.OrangeLed;
 import com.medcorp.ble.model.color.RedLed;
+import com.medcorp.R;
+import com.medcorp.ble.model.color.BlueLed;
+import com.medcorp.ble.model.color.LightGreenLed;
 import com.medcorp.ble.model.color.YellowLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.model.Goal;
@@ -36,17 +36,6 @@ public class Preferences {
     public static String getSelectDate(Context context){
         init(context);
         return preferences.getString(context.getString(R.string.key_prefs_select_date),null);
-    }
-
-    public static void saveIsFirstLogin(Context context,boolean isNotFirst){
-        init(context);
-       SharedPreferences.Editor editor =  preferences.edit();
-        editor.putBoolean(context.getString(R.string.key_prefs_is_first_login),isNotFirst).apply();
-    }
-
-    public static boolean getIsFirstLogin(Context context){
-        init(context);
-        return preferences.getBoolean(context.getString(R.string.key_prefs_is_first_login),true);
     }
 
     public static void savePreset(Context context, Goal goal){

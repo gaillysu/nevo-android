@@ -56,15 +56,4 @@
     <color name="steps_identification_tint_color">#FFAA79B3</color>
     <color name="calendar_dialog_view_title_bg">#618889</color>
     <color name="pie_chart_child_color">#FF7ED8D1</color>
-    <color name="login_text_color_with">#FFFFFF</color>
-
-    <color name="analysis_sleep_wake_start_color">#88BCBCBC</color>
-    <color name="analysis_sleep_wake_end_color">#88BCBCBC</color>
-    <color name="analysis_sleep_wake_line_color">#7F7F7F</color>
-    <color name="analysis_sleep_light_start_color">#88A08455</color>
-    <color name="analysis_sleep_light_end_color">#88A08455</color>
-    <color name="analysis_sleep_light_line_color">#A08455</color>
-    <color name="analysis_sleep_deep_start_color">#88848484</color>
-    <color name="analysis_sleep_deep_end_color">#88848484</color>
-    <color name="analysis_sleep_deep_line_color">#848484</color>
 </resources>

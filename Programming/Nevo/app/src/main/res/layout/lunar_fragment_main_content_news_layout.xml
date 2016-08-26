@@ -5,7 +5,8 @@
               android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical"
         >
 
@@ -13,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginBottom="20dp"
             android:orientation="horizontal"
             >
 
@@ -26,7 +26,7 @@
                 <TextView
                     android:id="@+id/main_fragment_describe_text_one"
                     android:layout_width="0dp"
-                    android:layout_weight="5"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_calorie_text"
                     android:maxLines="1"
@@ -36,7 +36,7 @@
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_consume_calories"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:paddingLeft="5dp"
@@ -56,7 +56,7 @@
                 <TextView
                     android:id="@+id/main_fragment_describe_text_two"
                     android:layout_width="0dp"
-                    android:layout_weight="5"
+                    android:layout_weight="1"
                     android:maxLines="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_steps_text"
@@ -67,7 +67,7 @@
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_steps_tv"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:paddingLeft="5dp"
@@ -95,7 +95,7 @@
                 <TextView
                     android:id="@+id/main_fragment_describe_text_three"
                     android:layout_width="0dp"
-                    android:layout_weight="5"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_activity_time_text"
                     android:textColor="@color/text_color"
@@ -105,7 +105,7 @@
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_activity_time_tv"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:paddingLeft="5dp"
@@ -125,7 +125,7 @@
                 <TextView
                     android:id="@+id/main_fragment_describe_text_four"
                     android:layout_width="0dp"
-                    android:layout_weight="5"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_distance_km_text"
                     android:textColor="@color/text_color"
@@ -135,7 +135,7 @@
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_steps_distance_tv"
                     android:layout_width="0dp"
-                    android:layout_weight="4"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:paddingLeft="5dp"

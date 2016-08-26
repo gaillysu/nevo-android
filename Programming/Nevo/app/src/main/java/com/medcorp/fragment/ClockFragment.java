@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
+import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
@@ -53,42 +54,14 @@ public class ClockFragment extends BaseFragment {
     TextView showUserSteps;
 
     private Date userSelectDate;
-    private final int REFRESH_INTERVAL = 10000;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
-    private Runnable refreshTimerTask = new Runnable() {
-        @Override
-        public void run() {
-            refresh();
-        }
-    };
 
-    private void refresh() {
+    private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
         int mCurHour = mCalendar.get(Calendar.HOUR);
         int mCurMin = mCalendar.get(Calendar.MINUTE);
-        setMin((float) (mCurMin * 6));
-        setHour((float) ((mCurHour + mCurMin / 60.0) * 30));
-        //realtime sync for current steps and goal
-        getModel().getSyncController().getStepsAndGoal();
-        mUiHandler.postDelayed(refreshTimerTask, REFRESH_INTERVAL);
-    }
-
-    private void setHour(final float degree) {
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                hourImage.setRotation(degree);
-            }
-        });
-    }
-
-    private void setMin(final float degree) {
-        mUiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                minImage.setRotation(degree);
-            }
-        });
+        minImage.setRotation((float) (mCurMin * 6));
+        hourImage.setRotation((float) ((mCurHour + mCurMin / 60.0) * 30));
     }
 
     @Override
@@ -106,6 +79,7 @@ public class ClockFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+        refreshClock();
         initData(userSelectDate);
         return clockFragmentContentView;
     }
@@ -118,18 +92,6 @@ public class ClockFragment extends BaseFragment {
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(result);
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mUiHandler.removeCallbacks(refreshTimerTask);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
     }
 
     @Override
@@ -173,4 +135,15 @@ public class ClockFragment extends BaseFragment {
             }
         });
     }
+
+    @Subscribe
+    public void onEvent(final Timer10sEvent event) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshClock();
+            }
+        });
+    }
+
 }

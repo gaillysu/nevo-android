@@ -10,33 +10,51 @@ public class Alarm {
     private int minute;
     private byte weekDay;
     private String label;
-    private byte alarmType;
-    private byte alarmNumber;
+    private int alarmType;
+    private String alarmRepeat;
+    private boolean isOnlyOne;
 
-    public Alarm(int hour, int minute,byte weekDay,String label,byte alarmStyle ,byte alarmNumber)
+    public Alarm(int hour, int minute,byte weekDay,String label,int alarmStyle , String repeatDay , boolean isOnlyOne)
     {
         this.hour = hour;
         this.minute = minute;
         this.weekDay = weekDay;
         this.label = label;
         this.alarmType = alarmStyle;
-        this.alarmNumber =alarmNumber;
+        this.alarmRepeat = repeatDay;
+        this.isOnlyOne = isOnlyOne;
     }
 
-    public byte getAlarmNumber() {
-        return alarmNumber;
+    public String getAlarmRepeat() {
+        return alarmRepeat;
     }
 
-    public void setAlarmNumber(byte alarmNumber) {
-        this.alarmNumber = alarmNumber;
+    public void setAlarmRepeat(String alarmRepeat) {
+        this.alarmRepeat = alarmRepeat;
+    }
+    public boolean isOnlyOne() {
+        return isOnlyOne;
     }
 
-    public byte getAlarmType() {
+    public void setOnlyOne(boolean onlyOne) {
+        isOnlyOne = onlyOne;
+    }
+
+    public int getAlarmType() {
         return alarmType;
     }
 
-    public void setAlarmType(byte alarmStyle) {
+    public void setAlarmType(int alarmStyle) {
         this.alarmType = alarmStyle;
+    }
+
+
+    public String getRepeatDay() {
+        return alarmRepeat;
+    }
+
+    public void setRepeatDay(String repeatDay) {
+        this.alarmRepeat = repeatDay;
     }
 
     public void setId(int id) {

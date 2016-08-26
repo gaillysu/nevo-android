@@ -25,7 +25,7 @@ public class AlarmEditAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -47,6 +47,7 @@ public class AlarmEditAdapter extends BaseAdapter {
         RobotoTextView title = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
         RobotoTextView summary = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
         RobotoTextView delete = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
+
         if (position == 0) {
             title.setText(alarm.toString());
             summary.setText(context.getString(R.string.alarm_set_different_time));
@@ -54,9 +55,6 @@ public class AlarmEditAdapter extends BaseAdapter {
             title.setText(alarm.getLabel());
             summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
         } else if (position == 2) {
-            title.setText(context.getResources().getStringArray(R.array.week_day)[alarm.getWeekDay()]);
-            summary.setText(context.getString(R.string.alarm_set_week_day));
-        }else if(position == 3){
             summary.setVisibility(View.GONE);
             title.setVisibility(View.GONE);
             delete.setVisibility(View.VISIBLE);

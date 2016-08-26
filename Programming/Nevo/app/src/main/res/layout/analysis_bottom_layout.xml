@@ -8,8 +8,34 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/this_week_steps_identification_two"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/steps_fragment_average_steps_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/analysis_fragment_tab_selected_background_color"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -20,100 +46,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/steps_fragment_total_steps"
                 android:textColor="@color/text_color"
-                android:textSize="16sp"/>
+                android:textSize="20sp"/>
+
             <TextView
                 android:id="@+id/steps_fragment_total_steps_tv"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:paddingStart="10dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="bottom"
-                android:textColor="@color/colorAccent"
-                android:textSize="16sp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/this_week_steps_identification_two"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/steps_fragment_average_steps_tv"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="bottom|start"
-                android:layout_gravity="center"
-                android:text="sda"
-                android:textColor="@color/colorAccent"
-                android:textSize="16sp"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1">
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/steps_fragment_average_calories"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/steps_fragment_average_calories_tv"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
                 android:layout_gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"/>
+                android:textColor="@color/analysis_fragment_tab_selected_background_color"
+                android:textSize="20sp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/steps_fragment_average_time"
-                android:textColor="@color/text_color"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/steps_fragment_average_time_tv"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:layout_gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="16sp"/>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
