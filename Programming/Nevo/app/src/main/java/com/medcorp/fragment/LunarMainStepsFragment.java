@@ -3,7 +3,6 @@ package com.medcorp.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,9 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarChart;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
-import com.medcorp.event.bluetooth.LittleSyncEvent;
-import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
-import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 import com.medcorp.util.TimeUtil;
 import com.medcorp.view.graphs.MainStepsBarChart;
@@ -69,11 +65,18 @@ public class LunarMainStepsFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
-        //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
-        getModel().getSyncController().getDailyTrackerInfo(false);
+
         initData(userSelectDate);
+
+        modifyChart(hourlyBarChart);
         return lunarMainFragmentAdapterChart;
     }
+
+    private void modifyChart(BarChart hourlyBarChart) {
+
+
+    }
+
 
     private void initData(Date date) {
         User user = getModel().getNevoUser();
@@ -119,37 +122,8 @@ public class LunarMainStepsFragment extends BaseFragment {
             public void run() {
                 userSelectDate = event.getDate();
                 initData(userSelectDate);
+                modifyChart(hourlyBarChart);
             }
         });
-    }
-
-    @Subscribe
-    public void onEvent(final OnSyncEvent event) {
-        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    initData(userSelectDate);
-                }
-            });
-        }
-    }
-    @Subscribe
-    public void onEvent(LittleSyncEvent event) {
-        if (event.isSuccess()) {
-            Steps steps = getModel().getDailySteps(getModel().getNevoUser().getNevoUserID(), Common.removeTimeFromDate(userSelectDate));
-            if (steps == null) {
-                return;
-            }
-            int dailySteps = steps.getSteps();
-            int dailyGoal = steps.getGoal();
-            Log.i("LunarMainStepsFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    initData(userSelectDate);
-                }
-            });
-        }
     }
 }

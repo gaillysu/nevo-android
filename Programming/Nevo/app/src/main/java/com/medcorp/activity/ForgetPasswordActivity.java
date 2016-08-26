@@ -47,7 +47,7 @@ public class ForgetPasswordActivity extends BaseActivity {
         final String email = editEmail.getText().toString();
         if(!TextUtils.isEmpty(email)){
             if(EmailUtils.checkEmail(email)){
-                final ProgressDialog progressDialog = new ProgressDialog(this);
+                final ProgressDialog progressDialog = new ProgressDialog(this,R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage(getString(R.string.network_wait_text));
@@ -63,12 +63,16 @@ public class ForgetPasswordActivity extends BaseActivity {
                     @Override
                     public void onRequestSuccess(RequestTokenResponse requestTokenResponse) {
                         progressDialog.dismiss();
-                        Intent intent  = new Intent(ForgetPasswordActivity.this,ForgetPasswordResultActivity.class);
-                        intent.putExtra("token",requestTokenResponse.getUser().getPassword_token());
-                        intent.putExtra("email",email);
-                        intent.putExtra("id",requestTokenResponse.getUser().getId());
-                        startActivity(intent);
-                        finish();
+                        if(requestTokenResponse.getStatus() == 1) {
+                            Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordResultActivity.class);
+                            intent.putExtra("token", requestTokenResponse.getUser().getPassword_token());
+                            intent.putExtra("email", email);
+                            intent.putExtra("id", requestTokenResponse.getUser().getId());
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            ToastHelper.showShortToast(ForgetPasswordActivity.this,requestTokenResponse.getMessage());
+                        }
                     }
                 });
 

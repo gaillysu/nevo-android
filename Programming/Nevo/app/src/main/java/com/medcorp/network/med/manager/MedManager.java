@@ -44,8 +44,4 @@ public class MedManager {
         return context.getString(R.string.token);
     }
 
-    public String getOrganizationID(){
-        return "med-corp";
-    }
-
 }

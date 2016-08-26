@@ -7,17 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
 import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.SleepData;
 import com.medcorp.util.Preferences;
+import com.medcorp.view.graphs.AnalysisSleepLineChart;
+
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,7 +50,6 @@ public class AnalysisSleepFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View sleepView = inflater.inflate(R.layout.analysis_fragment_child_sleep_fragment,container,false);
         ButterKnife.bind(this,sleepView);
-
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -64,9 +67,9 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     private void initView(LayoutInflater inflater) {
         sleepList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
-        lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
-        lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
+        thisWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout,null);
+        lastWeekView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout,null);
+        lastMonthView = inflater.inflate(R.layout.analysis_sleep_chart_fragment_layout,null);
         sleepList.add(thisWeekView);
         sleepList.add(lastWeekView);
         sleepList.add(lastMonthView);
@@ -74,10 +77,19 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
-        LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
-        LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
+        AnalysisSleepLineChart thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
+        AnalysisSleepLineChart lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
+        AnalysisSleepLineChart lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
 
+        //TODO Replace this data with sleep data from the database,
+        /*
+            'Sleep' is not the right way to put it into the chart because one evening and one night is spread through 2 'Sleep' Objects.
+            Therefor we have a solution which is 'SleepData' We have therefor 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
+            getDummyData is just for the 'dummy data'
+         */
+        thisWeekChart.addData(getDummyData(7),7);
+        lastWeekChart.addData(getDummyData(7),7);
+        lastMonthChart.addData(getDummyData(30),30);
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
         sleepViewPage.setAdapter(adapter);
@@ -107,5 +119,17 @@ public class AnalysisSleepFragment extends BaseFragment {
 
             }
         });
+    }
+
+
+    public List<SleepData> getDummyData(int days){
+        List<SleepData> sleepList = new ArrayList<>();
+        Random r = new Random();
+        for (int i = 0; i < days; i++){
+            DateTime dateTime = new DateTime();
+            DateTime dateSleep = dateTime.plusDays(i);
+            sleepList.add(new SleepData(40+r.nextInt(100),240+ r.nextInt(100),10+r.nextInt(20), dateSleep.getMillis()));
+        }
+        return sleepList;
     }
 }

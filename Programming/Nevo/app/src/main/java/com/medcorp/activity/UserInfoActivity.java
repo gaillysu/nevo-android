@@ -9,12 +9,13 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
-import com.medcorp.base.BaseActivity;
-import com.medcorp.network.med.model.CreateUserModel;
 import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.login.SignupActivity;
+import com.medcorp.base.BaseActivity;
 import com.medcorp.network.med.model.CreateUser;
+import com.medcorp.network.med.model.CreateUserModel;
+import com.medcorp.network.med.model.RequestCreateNewAccountRequest;
 import com.medcorp.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -38,6 +39,7 @@ public class UserInfoActivity extends BaseActivity {
     private String lastName;
     private String password;
     private int viewType = -1;
+    private ProgressDialog progressDialog;
     @Bind(R.id.register_account_activity_edit_birthday)
     TextView tv_userBirth;
     @Bind(R.id.register_account_activity_edit_height)
@@ -77,42 +79,48 @@ public class UserInfoActivity extends BaseActivity {
         String userHeight = tv_userHeight.getText().toString();
         String userWeight = tv_userWeight.getText().toString();
         if (!TextUtils.isEmpty(userBirthday) || !TextUtils.isEmpty(userHeight) || !TextUtils.isEmpty(userWeight)) {
-            CreateUser userInfo = new CreateUser();
-            userInfo.setFirst_name(firstName);
-            userInfo.setBirthday(userBirthday);
-            userInfo.setEmail(email);
-            userInfo.setLast_name(lastName);
-            userInfo.setLength(new Integer(userHeight).intValue());
-            userInfo.setWeight(Double.parseDouble(userWeight));
-            userInfo.setPassword(password);
-            userInfo.setSex(gender);
+            try {
+                CreateUser userInfo = new CreateUser();
+                userInfo.setFirst_name(firstName);
+                userInfo.setBirthday(userBirthday);
+                userInfo.setEmail(email);
+                userInfo.setLast_name(lastName);
+                userInfo.setLength(new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue());
+                userInfo.setWeight(Double.parseDouble(userWeight.replace(getString(R.string.info_company_weight), "")));
+                userInfo.setPassword(password);
+                userInfo.setSex(gender);
 
-            final ProgressDialog progress = new ProgressDialog(this);
-            progress.setIndeterminate(false);
-            progress.setCancelable(false);
-            progress.setMessage(getString(R.string.network_wait_text));
-            progress.show();
+                progressDialog = new ProgressDialog(this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage(getString(R.string.network_wait_text));
+                progressDialog.show();
 
-            getModel().getCloudSyncManager().createUser(userInfo, new RequestListener<CreateUserModel>() {
-                @Override
-                public void onRequestFailure(SpiceException spiceException) {
-                    progress.dismiss();
-                    spiceException.printStackTrace();
-                    ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
-                }
-
-                @Override
-                public void onRequestSuccess(CreateUserModel createUserModel) {
-                    progress.dismiss();
-                    if (createUserModel.getStatus() == 1) {
-                        startActivity(LoginActivity.class);
-                        finish();
-                    } else {
-                        ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());
+                getModel().getNetworkManage().execute(new RequestCreateNewAccountRequest(userInfo, getModel().getNetworkManage()
+                        .getAccessToken()), new RequestListener<CreateUserModel>() {
+                    @Override
+                    public void onRequestFailure(SpiceException spiceException) {
+                        progressDialog.dismiss();
+                        spiceException.printStackTrace();
+                        ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
                     }
-                }
-            });
 
+                    @Override
+                    public void onRequestSuccess(CreateUserModel createUserModel) {
+                        progressDialog.dismiss();
+                        if (createUserModel.getStatus() == 1) {
+                            startActivity(LoginActivity.class);
+                            finish();
+                        } else {
+                            ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());
+                        }
+                    }
+                });
+
+            } catch (NumberFormatException e) {
+                ToastHelper.showShortToast(this, getString(R.string.user_no_select_profile_info));
+            }
         } else {
             if (userBirthday.isEmpty()) {
                 tv_userBirth.setError(getString(R.string.user_info_user_birthday_error));
@@ -128,8 +136,12 @@ public class UserInfoActivity extends BaseActivity {
                 tv_userWeight.setError(getString(R.string.user_info_user_weight_error));
             } else {
                 tv_userWeight.setError(null);
+
             }
+
         }
+
+
     }
 
     @OnClick(R.id.user_info_sex_male_tv)
@@ -162,13 +174,14 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
-                            Date date = dateFormat.parse(dateDesc);
+                            Date userSelectDate = dateFormat.parse(dateDesc);
+                            tv_userBirth.setText(new SimpleDateFormat("MMM").format(userSelectDate) + "-" + day + "-" + year);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        tv_userBirth.setText(new SimpleDateFormat("MMM", Locale.US).format(date) + "-" + day + "-" + year);
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
@@ -188,7 +201,7 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        tv_userHeight.setText(dateDesc);
+                        tv_userHeight.setText(dateDesc + getString(R.string.info_company_height));
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)
@@ -206,7 +219,7 @@ public class UserInfoActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        tv_userWeight.setText(dateDesc);
+                        tv_userWeight.setText(dateDesc + getString(R.string.info_company_weight));
                     }
                 }).viewStyle(viewType)
                 .viewTextSize(25)

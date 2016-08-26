@@ -14,11 +14,11 @@ public class StepsDAO {
     private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     /**
-     * this is created by saving cloud record,such as validic/med cloud
+     * this is created by saving validic record
      */
-    public static final String fCloudRecordID = "cloudRecordID";
+    public static final String fValidicRecordID = "validicRecordID";
     @DatabaseField
-    private String cloudRecordID;
+    private String validicRecordID;
 
     /**
      * which user ID
@@ -354,12 +354,12 @@ public class StepsDAO {
         RunDuration = runDuration;
     }
 
-    public String getCloudRecordID() {
-        return cloudRecordID;
+    public String getValidicRecordID() {
+        return validicRecordID;
     }
 
-    public void setCloudRecordID(String cloudRecordID) {
-        this.cloudRecordID = cloudRecordID;
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
     }
 
     public int getDistanceGoal() {

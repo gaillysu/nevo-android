@@ -4,8 +4,7 @@ public class Steps implements Comparable<Steps>{
 
     private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
-    //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
-    private String cloudRecordID;
+    private String validicRecordID;
 
     private String nevoUserID;
 
@@ -30,8 +29,8 @@ public class Steps implements Comparable<Steps>{
     private int runDuration;
 
     private int calories;
-    //IMPORTANT here must set it an array , length is 24, otherwise, it can't be upload to cloud server
-    private String hourlySteps="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+
+    private String hourlySteps;
 
     private String hourlyDistance;
 
@@ -81,10 +80,6 @@ public class Steps implements Comparable<Steps>{
 
     public void setiD(int iD) {
         this.iD = iD;
-    }
-
-    public void setCreatedDate(long createdDate) {
-        this.createdDate = createdDate;
     }
 
     public void setDate(long date) {
@@ -239,12 +234,12 @@ public class Steps implements Comparable<Steps>{
         this.runDuration = runDuration;
     }
 
-    public String getCloudRecordID() {
-        return cloudRecordID;
+    public String getValidicRecordID() {
+        return validicRecordID;
     }
 
-    public void setCloudRecordID(String cloudRecordID) {
-        this.cloudRecordID = cloudRecordID;
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
     }
 
     public String getNevoUserID() {

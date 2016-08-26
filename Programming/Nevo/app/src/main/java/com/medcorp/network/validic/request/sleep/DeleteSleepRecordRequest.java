@@ -3,15 +3,16 @@ package com.medcorp.network.validic.request.sleep;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.DeleteSleepRecordRequestObject;
 import com.medcorp.network.validic.model.ValidicDeleteSleepRecordModel;
+import com.medcorp.network.base.BaseRetroRequest;
 import com.medcorp.network.validic.retrofit.Validic;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class DeleteSleepRecordRequest extends BaseRequest<ValidicDeleteSleepRecordModel,Validic> implements BaseRequest.BaseRetroRequestBody<DeleteSleepRecordRequestObject> {
+public class DeleteSleepRecordRequest extends RetrofitSpiceRequest<ValidicDeleteSleepRecordModel,Validic> implements BaseRetroRequest<DeleteSleepRecordRequestObject> {
 
     private String   organizationId;
     private String   organizationTokenKey;

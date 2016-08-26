@@ -1,6 +1,5 @@
 package com.medcorp.network.validic.request;
 
-import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.VerifyCredentialModel;
 import com.medcorp.network.validic.retrofit.Validic;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
@@ -8,7 +7,7 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 /**
  * Created by Karl on 3/16/16.
  */
-public class VerifyCredentialsRetroRequest extends BaseRequest<VerifyCredentialModel, Validic> {
+public class VerifyCredentialsRetroRequest extends RetrofitSpiceRequest<VerifyCredentialModel, Validic> {
 
     private String organization;
     private String token;

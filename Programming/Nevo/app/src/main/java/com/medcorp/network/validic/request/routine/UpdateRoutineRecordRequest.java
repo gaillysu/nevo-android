@@ -3,16 +3,17 @@ package com.medcorp.network.validic.request.routine;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.medcorp.network.base.BaseRequest;
 import com.medcorp.network.validic.model.RoutineModel;
 import com.medcorp.network.validic.model.UpdateRoutineRecordRequestObject;
 import com.medcorp.network.validic.model.ValidicRoutineRecordModel;
+import com.medcorp.network.base.BaseRetroRequest;
 import com.medcorp.network.validic.retrofit.Validic;
+import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 /**
  * Created by gaillysu on 16/3/8.
  */
-public class UpdateRoutineRecordRequest extends BaseRequest<ValidicRoutineRecordModel,Validic> implements BaseRequest.BaseRetroRequestBody<UpdateRoutineRecordRequestObject> {
+public class UpdateRoutineRecordRequest extends RetrofitSpiceRequest<ValidicRoutineRecordModel,Validic> implements BaseRetroRequest<UpdateRoutineRecordRequestObject> {
 
     private String   organizationId;
     private String   organizationTokenKey;

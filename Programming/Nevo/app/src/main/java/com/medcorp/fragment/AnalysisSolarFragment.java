@@ -7,17 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
 import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.Solar;
 import com.medcorp.util.Preferences;
+import com.medcorp.view.graphs.AnalysisSolarLineChart;
+
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,9 +64,9 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     private void initView(LayoutInflater inflater) {
         solarList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
-        lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
-        lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
+        thisWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout,null);
+        lastWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout,null);
+        lastMonthView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout,null);
         solarList.add(thisWeekView);
         solarList.add(lastWeekView);
         solarList.add(lastMonthView);
@@ -71,9 +75,17 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
 
-        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
-        LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
-        LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
+        AnalysisSolarLineChart thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
+        AnalysisSolarLineChart lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
+        AnalysisSolarLineChart lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
+
+        // TODO Add real data from the database, also create database for solar.
+        // TODO add other following textfields: Average Time in Sun, Most Time in Sun , Least time in sun, Total Time in Sun
+        // 不明白用 GOOGLE TRANSLATE :D
+        // remove dummy data after migrating to db
+        thisWeekChart.addData(generateDummyData(7,0),7);
+        lastWeekChart.addData(generateDummyData(7,7),7);
+        lastMonthChart.addData(generateDummyData(30,0),30);
 
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(solarList);
@@ -104,5 +116,18 @@ public class AnalysisSolarFragment extends BaseFragment {
 
             }
         });
+    }
+
+    private List<Solar> generateDummyData(int maxDays, int offset){
+        List<Solar> solarList = new ArrayList<>();
+        Random r = new Random();
+        for (int i = 0; i < maxDays; i++){
+            DateTime time = new DateTime();
+            Solar solar = new Solar(time.toDate());
+            solar.setDate(time.plusDays(i + offset).toDate());
+            solar.setTotalHarvestingTime(r.nextInt(300));
+            solarList.add(solar);
+        }
+        return solarList;
     }
 }

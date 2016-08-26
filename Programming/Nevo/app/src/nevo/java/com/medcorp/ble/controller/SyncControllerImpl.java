@@ -57,7 +57,6 @@ import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
-import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
 import com.medcorp.event.bluetooth.InitializeEvent;
@@ -104,8 +103,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
@@ -133,23 +130,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     //make sure  the whole received packets
 
     private WatchInfomation watchInfomation;
-    //start a timer to do little sync, refresh dashboard @LittleSyncEvent
-    private long LITTLE_SYNC_INTERVAL = 10000L; //10s
-    private Timer autoSyncTimer = null;
-    private void startTimer() {
-        if(autoSyncTimer!=null)autoSyncTimer.cancel();
-        autoSyncTimer = new Timer();
-        autoSyncTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                //here do little sync to refesh current steps
-                getStepsAndGoal();
-                //send a 10s event to refresh clock
-                EventBus.getDefault().post(new Timer10sEvent());
-                startTimer();
-            }
-        }, LITTLE_SYNC_INTERVAL);
-    }
 
     public SyncControllerImpl(Context context)
     {
@@ -161,7 +141,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         //force android Notification Manager Service to start NevoNotificationListener
         startNotificationListener();
         EventBus.getDefault().register(this);
-        startTimer();
     }
 
     /*package*/void setContext(Context context) {
@@ -292,7 +271,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                         else
                         {
-                            list.add(new Alarm(0,0, (byte)0, "",0,"",false));
+                            list.add(new Alarm(0,0, (byte)0, "",(byte)0,(byte)0));
                             setAlarm(list, true);
                         }
                     }
@@ -468,9 +447,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         sendRequest(new TestModeRequest(mContext,0,false));
                     }
                     //save current day's step count to "Steps" table
-                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
-                    steps.setCreatedDate(new Date().getTime());
-                    steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
+                    Date currentday = new Date();
+                    Steps steps = new Steps(currentday.getTime());
+
+                    steps.setDate(Common.removeTimeFromDate(currentday).getTime());
+
                     DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     steps.setSteps(stepPacket.getDailySteps());
                     steps.setGoal(stepPacket.getDailyStepsGoal());
@@ -520,7 +501,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             packetsBuffer.clear();
             mSyncAllFlag = false;
-            mCurrentDay = 0;
         }
     }
 

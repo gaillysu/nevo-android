@@ -7,8 +7,7 @@ public class Sleep implements Comparable<Sleep>{
 
     private int iD = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
-    //IMPORTANT,HERE MUST NOT set cloudRecordID any value, pls use default value null,when we sync with cloud, it will be filled by the cloud record ID
-    private String cloudRecordID;
+    private String validicRecordID = "0";
 
     private String nevoUserID;
 
@@ -23,14 +22,14 @@ public class Sleep implements Comparable<Sleep>{
     private int totalLightTime;
 
     private int totalDeepTime;
-    //for avoid got exception, here you'd better put default values: int[24] ={0...0}
-    private String hourlySleep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyWake="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlySleep;
 
-    private String hourlyLight="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyWake;
 
-    private String hourlyDeep="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
+    private String hourlyLight;
+
+    private String hourlyDeep;
 
     private long start;
 
@@ -178,12 +177,12 @@ public class Sleep implements Comparable<Sleep>{
         this.date = date;
     }
 
-    public String getCloudRecordID() {
-        return cloudRecordID;
+    public String getValidicRecordID() {
+        return validicRecordID;
     }
 
-    public void setCloudRecordID(String cloudRecordID) {
-        this.cloudRecordID = cloudRecordID;
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
     }
 
     public String getNevoUserID() {

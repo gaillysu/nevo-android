@@ -7,17 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
 import com.medcorp.R;
 import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.Steps;
+import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
+import com.medcorp.view.graphs.AnalysisStepsLineChart;
+
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,17 +70,44 @@ public class AnalysisStepsFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        LineChart thisWeekChart = (LineChart) thisWeekView.findViewById(R.id.this_week_steps_fragment_chart);
-        LineChart lastWeekChart = (LineChart) lastWeekView.findViewById(R.id.last_week_steps_fragment_chart);
-        LineChart lastMonthChart = (LineChart) lastMonthView.findViewById(R.id.last_month_steps_fragment_chart);
+        // TODO  get right data from the database
+        AnalysisStepsLineChart thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
+        AnalysisStepsLineChart lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
+        AnalysisStepsLineChart lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
+
+        /*
+         * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.
+         * In this month this is 30 (or 31) because there are 30 days in a month.
+        */
+        //TODO database get this week
+        thisWeekChart.addData(generateTestData(3000,10000,0,7),700, 7);
+
+        //TODO database get last week
+        lastWeekChart.addData(generateTestData(3000,10000,7,7),700, 7);
+
+        //TODO database get this month
+        lastMonthChart.addData(generateTestData(3000,10000,0,30),700, 30);
+    }
+
+    private List<Steps> generateTestData(int minSteps, int maxSteps, int daysOffSetFromToday, int amountOfDays){
+        List<Steps> stepsList = new ArrayList<>();
+        Random r = new Random();
+        for (int i = 0; i < amountOfDays; i++){
+            DateTime time = new DateTime(new Date());
+            time = time.plusDays(daysOffSetFromToday+i);
+            Steps steps = new Steps(Common.removeTimeFromDate(time.toDate()).getTime());
+            steps.setDate(Common.removeTimeFromDate(time.toDate()).getTime());
+            steps.setSteps(minSteps+r.nextInt(maxSteps));
+            stepsList.add(steps);
+        }
+        return stepsList;
     }
 
     private void initView(LayoutInflater inflater) {
-
         stepsDataList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.this_week_chart_fragment_layout,null);
-        lastWeekView = inflater.inflate(R.layout.last_week_chart_fragment_layout,null);
-        lastMonthView = inflater.inflate(R.layout.last_month_chart_fragment_layout,null);
+        thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
+        lastWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
+        lastMonthView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
         stepsDataList.add(thisWeekView);
         stepsDataList.add(lastWeekView);
         stepsDataList.add(lastMonthView);
@@ -85,7 +117,6 @@ public class AnalysisStepsFragment extends BaseFragment {
         chartViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -93,19 +124,21 @@ public class AnalysisStepsFragment extends BaseFragment {
                 switch(position){
                     case 0:
                         analysisStepsText.setText(R.string.analysis_fragment_this_week_steps);
+                        // TODO - don't forget to add the average, total, calories & more
                         break;
                     case 1:
                         analysisStepsText.setText(R.string.analysis_fragment_last_week_steps);
+                        // TODO - don't forget to add the average, total, calories & more
                         break;
                     case 2:
                         analysisStepsText.setText(R.string.analysis_fragment_last_month_solar);
+                        // TODO - don't forget to add the average, total, calories & more
                         break;
                 }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
