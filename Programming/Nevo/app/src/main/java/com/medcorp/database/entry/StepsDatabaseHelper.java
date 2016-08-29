@@ -4,15 +4,11 @@ import android.content.Context;
 
 import com.medcorp.database.DatabaseHelper;
 import com.medcorp.database.dao.StepsDAO;
-import com.medcorp.model.DailySteps;
 import com.medcorp.model.Steps;
 import com.medcorp.util.CalendarWeekUtils;
-import com.medcorp.util.TimeUtil;
+import com.medcorp.util.Common;
 
 import net.medcorp.library.ble.util.Optional;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -81,7 +77,7 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
 
     @Override
     public Optional<Steps> get(String userId, Date date) {
-        List<Optional<Steps>> stepsList = new ArrayList<Optional<Steps>>();
+        List<Optional<Steps>> stepsList = new ArrayList<>();
         try {
             List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fDate, date.getTime()).query();
             for (StepsDAO stepsDAO : stepsDAOList) {
@@ -95,9 +91,28 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList.isEmpty() ? new Optional<Steps>() : stepsList.get(0);
     }
 
+//    public List<Optional<Steps>> getOneDaySteps(String userId, Date date) {
+//        List<Optional<Steps>> stepsList = new ArrayList<>();
+//        try {
+//            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao()
+//                    .queryBuilder().where().eq(StepsDAO.fNevoUserID, userId)
+//                    .and().eq(StepsDAO.fDate, Common.removeTimeFromDate(date).getTime())
+//                    .query();
+//
+//            for (StepsDAO steps : stepsDAOList) {
+//                Optional<Steps> stepsOptional = new Optional<Steps>();
+//                stepsOptional.set(convertToNormal(steps));
+//                stepsList.add(stepsOptional);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return stepsList;
+//    }
+
     @Override
     public List<Optional<Steps>> getAll(String userId) {
-        List<Optional<Steps>> stepsList = new ArrayList<Optional<Steps>>();
+        List<Optional<Steps>> stepsList = new ArrayList<>();
         try {
             List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).query();
             for (StepsDAO stepsDAO : stepsDAOList) {
@@ -111,62 +126,53 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList;
     }
 
-    public DailySteps getDailySteps(String userId , Date date){
-        List<Optional<Steps> >  stepsDAOList = get(userId);
-        int[] hours = new int[24];
-        if(stepsDAOList.size()>0){
-            try {
-            JSONArray jsonArray = new JSONArray(stepsDAOList.get(0).get().getHourlySteps());
+    public Steps getDailySteps(String userId, Date date) {
 
-                for (int i = 0; i < jsonArray.length() && i < hours.length; i++) {
-                    JSONArray stepsInHour = jsonArray.optJSONArray(i);
-                    for(int j=0;j<stepsInHour.length();j++)
-                    {
-                        hours[i] += stepsInHour.optInt(j);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao()
+                    .queryBuilder().where().eq(StepsDAO.fNevoUserID, userId)
+                    .and().eq(StepsDAO.fDate, Common.removeTimeFromDate(date).getTime())
+                    .query();
+            return convertToNormal(stepsDAOList.get(0));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        return new DailySteps(TimeUtil.getTime(date).getTime(),hours,stepsDAOList.size()>0?stepsDAOList.get(0).get().getGoal():10000);
+        return new Steps(date.getTime());
     }
 
-    public List<DailySteps> getThisWeekSteps(String userId, Date date) {
-        List<DailySteps> thisWeekSteps = new ArrayList<>();
+    public List<Steps> getThisWeekSteps(String userId, Date date) {
+        List<Steps> thisWeekSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            thisWeekSteps.add(getDailySteps(userId,new Date(start)));
+            thisWeekSteps.add(getDailySteps(userId, new Date(start)));
         }
         return thisWeekSteps;
     }
 
-    public List<DailySteps> getLastWeekSteps(String userId,Date date){
-        List<DailySteps> lastWeekSteps = new ArrayList<>();
+    public List<Steps> getLastWeekSteps(String userId, Date date) {
+        List<Steps> lastWeekSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for(long start = calendar.getLastWeekStart().getTime();start <= calendar.getLastWeekEnd().getTime();start += 24*60*60*1000L){
-            lastWeekSteps.add(getDailySteps(userId,new Date(start)));
+        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+            lastWeekSteps.add(getDailySteps(userId, new Date(start)));
         }
         return lastWeekSteps;
     }
 
-    public List<DailySteps> getLastMOnthSteps(String userId , Date date){
-        List<DailySteps> lastMonthSteps = new ArrayList<>();
+    public List<Steps> getLastMonthSteps(String userId, Date date) {
+        List<Steps> lastMonthSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for(long start = calendar.getMonthStartDate().getTime();start <= calendar.getMonthEndDate().getTime();start +=  24*60*60*1000L){
-            lastMonthSteps.add(getDailySteps(userId,new Date(start)));
+        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            lastMonthSteps.add(getDailySteps(userId, new Date(start)));
         }
         return lastMonthSteps;
     }
 
     public List<Steps> getNeedSyncSteps(String userId) {
         List<Steps> stepsList = new ArrayList<Steps>();
+        List<StepsDAO> stepsDAOList = null;
         try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().eq(StepsDAO.fValidicRecordID, "0").query();
+            stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().isNull(StepsDAO.fCloudRecordID).query();
             for (StepsDAO stepsDAO : stepsDAOList) {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao().queryBuilder().orderBy(StepsDAO.fDate, false).where().eq(StepsDAO.fNevoUserID, userId).and().isNull(StepsDAO.fCloudRecordID).query();
-            for(StepsDAO stepsDAO : stepsDAOList){
                 stepsList.add(convertToNormal(stepsDAO));
             }
         } catch (SQLException e) {
@@ -185,13 +191,11 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return false;
     }
 
-    private StepsDAO convertToDao(Steps steps) {
-    public boolean isFoundInLocalSteps(Date date,String userId)
-    {
-        return get(userId,date).notEmpty();
+    public boolean isFoundInLocalSteps(Date date, String userId) {
+        return get(userId, date).notEmpty();
     }
 
-    private StepsDAO convertToDao(Steps steps){
+    private StepsDAO convertToDao(Steps steps) {
         StepsDAO stepsDao = new StepsDAO();
         stepsDao.setID(steps.getiD());
         stepsDao.setNevoUserID(steps.getNevoUserID());

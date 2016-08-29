@@ -27,6 +27,11 @@ public class StepsDAO {
     @DatabaseField
     private String nevoUserID;
 
+
+    public static final String fValidicRecordID = "validicRecordID";
+    @DatabaseField
+    private String validicRecordID;
+
     /**
      * created date
      */
@@ -393,4 +398,14 @@ public class StepsDAO {
     public void setGoalReached(byte goalReached) {
         this.goalReached = goalReached;
     }
+
+
+    public String getValidicRecordID() {
+        return validicRecordID;
+    }
+
+    public void setValidicRecordID(String validicRecordID) {
+        this.validicRecordID = validicRecordID;
+    }
+
 }

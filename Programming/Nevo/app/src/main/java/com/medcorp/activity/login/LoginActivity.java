@@ -8,7 +8,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
+import com.medcorp.activity.ForgetPasswordActivity;
+import com.medcorp.activity.MainActivity;
+import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
 import com.medcorp.network.med.model.LoginUser;
@@ -20,8 +25,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.medcorp.R.style.AppTheme_Dark_Dialog;
+
 public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
+    private int errorSum = 0;
     private static final int REQUEST_SIGN_UP = 0;
     private ProgressDialog progressDialog;
 
@@ -61,16 +69,16 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-//    @OnClick(R.id.open_tutorial_page_video)
-//    public void openTutorialPageVideo(){
-//        Uri uri = Uri.parse(getString(R.string.video_url));
-//        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-//        intent.setDataAndType(uri , "video/*");
-//        startActivity(intent);
-//    }
-            startActivity(SignupActivity.class);
-            finish();
-    }
+    //    @OnClick(R.id.open_tutorial_page_video)
+    //    public void openTutorialPageVideo(){
+    //        Uri uri = Uri.parse(getString(R.string.video_url));
+    //        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+    //        intent.setDataAndType(uri , "video/*");
+    //        startActivity(intent);
+    //    }
+    //            startActivity(SignupActivity.class);
+    //            finish();
+    //    }
 
     @OnClick(R.id.btn_login)
     public void loginAction() {
@@ -82,7 +90,7 @@ public class LoginActivity extends BaseActivity {
         _loginButton.setEnabled(false);
 
         progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
+                AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
@@ -99,9 +107,9 @@ public class LoginActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(LoginEvent event) {
+        progressDialog.dismiss();
         switch (event.getLoginStatus()) {
             case FAILED:
-
                 onLoginFailed();
                 break;
             case SUCCESS:
@@ -109,7 +117,6 @@ public class LoginActivity extends BaseActivity {
                 break;
 
         }
-        progressDialog.dismiss();
     }
 
     @Override
@@ -134,10 +141,25 @@ public class LoginActivity extends BaseActivity {
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
+        startActivity(MainActivity.class);
         finish();
     }
 
     public void onLoginFailed() {
+        errorSum++;
+        if (errorSum % 3 == 0) {
+            new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
+                    .contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
+                    .title(getString(R.string.open_forget_password_dialog_title))
+                    .content(getString(R.string.prompt_is_not_forget_password)).negativeText(android.R.string.no)
+                    .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick( MaterialDialog dialog, DialogAction which) {
+                    startActivity(ForgetPasswordActivity.class);
+                    finish();
+                }
+            }).show();
+        }
         Toast.makeText(getBaseContext(), R.string.log_in_failed, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }

@@ -34,6 +34,7 @@ import static java.lang.Math.abs;
 
 public class AnalysisStepsLineChart extends LineChart{
 
+    private Steps steps;
     private List<Steps> stepsList = new ArrayList<>();
 
     public AnalysisStepsLineChart(Context context) {
@@ -90,16 +91,16 @@ public class AnalysisStepsLineChart extends LineChart{
 
     }
 
-    public void addData(List<Steps> stepsList, final int goal, int max){
+    public void addData(List<Steps> stepsList){
         this.stepsList = stepsList;
 
         List<Entry> yValue = new ArrayList<Entry>();
         int maxValue = 0;
 
         final int stepsModulo = 500;
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < stepsList.size(); i++) {
             if (i < stepsList.size()){
-                Steps steps = stepsList.get(i);
+                steps= stepsList.get(i);
                 if (steps.getSteps() > maxValue){
                     maxValue = steps.getSteps();
                 }
@@ -111,14 +112,14 @@ public class AnalysisStepsLineChart extends LineChart{
 
         Log.w("Karl","Max vlaue = " + maxValue);
         boolean putTop = false;
-        if (maxValue == 0 ||  maxValue  < goal){
-            maxValue = goal + stepsModulo;
+        if (maxValue == 0 ||  maxValue  < steps.getGoal()){
+            maxValue = steps.getGoal() + stepsModulo;
         }else{
             putTop = true;
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
 
-        LimitLine limitLine = new LimitLine(goal, "Goal: " +  goal);
+        LimitLine limitLine = new LimitLine(steps.getGoal(), "Goal: " +  steps.getGoal());
         limitLine.setLineWidth(1.5f);
         limitLine.setLineColor(Color.BLACK);
         limitLine.setTextSize(18f);

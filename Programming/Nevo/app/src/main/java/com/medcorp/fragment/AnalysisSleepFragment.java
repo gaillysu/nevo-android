@@ -37,7 +37,7 @@ public class AnalysisSleepFragment extends BaseFragment {
     TextView totalStepsText;
     @Bind(R.id.analysis_sleep_fragment_view_page)
     ViewPager sleepViewPage;
-    @Bind(R.id.anlysis_sleep_fragment_title_tv)
+    @Bind(R.id.analysis_sleep_fragment_title_tv)
     TextView sleepTextView;
 
     private List<View> sleepList;

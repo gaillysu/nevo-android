@@ -58,7 +58,6 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
 import com.medcorp.network.med.manager.MedManager;
-import com.medcorp.network.med.model.MedRoutineRecordModel;
 import com.medcorp.network.med.model.MedRoutineRecordWithID;
 import com.medcorp.network.med.model.MedSleepRecordWithID;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;

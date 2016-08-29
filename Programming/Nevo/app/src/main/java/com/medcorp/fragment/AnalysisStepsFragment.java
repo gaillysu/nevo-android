@@ -10,19 +10,16 @@ import android.widget.TextView;
 import com.medcorp.R;
 import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.DailySteps;
 import com.medcorp.model.Steps;
-import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
-
-import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,7 +67,6 @@ public class AnalysisStepsFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        // TODO  get right data from the database
         AnalysisStepsLineChart thisWeekChart = (AnalysisStepsLineChart) thisWeekView.findViewById(R.id.analysis_step_chart);
         AnalysisStepsLineChart lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
         AnalysisStepsLineChart lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
@@ -79,29 +75,28 @@ public class AnalysisStepsFragment extends BaseFragment {
          * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.
          * In this month this is 30 (or 31) because there are 30 days in a month.
         */
-        //TODO database get this week
-        thisWeekChart.addData(generateTestData(3000,10000,0,7),700, 7);
+        List<Steps> thisWeekData = getModel().getStepsHelper().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(),userSelectDate);
+        thisWeekChart.addData(thisWeekData);
+        List<Steps> lastWeekData = getModel().getStepsHelper().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(),userSelectDate);
+        lastWeekChart.addData(lastWeekData);
 
-        //TODO database get last week
-        lastWeekChart.addData(generateTestData(3000,10000,7,7),700, 7);
-
-        //TODO database get this month
-        lastMonthChart.addData(generateTestData(3000,10000,0,30),700, 30);
+        List<Steps> lastMonthData = getModel().getStepsHelper().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(),userSelectDate);
+        lastMonthChart.addData(lastMonthData);
     }
 
-    private List<Steps> generateTestData(int minSteps, int maxSteps, int daysOffSetFromToday, int amountOfDays){
-        List<Steps> stepsList = new ArrayList<>();
-        Random r = new Random();
-        for (int i = 0; i < amountOfDays; i++){
-            DateTime time = new DateTime(new Date());
-            time = time.plusDays(daysOffSetFromToday+i);
-            Steps steps = new Steps(Common.removeTimeFromDate(time.toDate()).getTime());
-            steps.setDate(Common.removeTimeFromDate(time.toDate()).getTime());
-            steps.setSteps(minSteps+r.nextInt(maxSteps));
-            stepsList.add(steps);
-        }
-        return stepsList;
-    }
+//    private List<Steps> generateTestData(int minSteps, int maxSteps, int daysOffSetFromToday, int amountOfDays){
+//        List<Steps> stepsList = new ArrayList<>();
+//        Random r = new Random();
+//        for (int i = 0; i < amountOfDays; i++){
+//            DateTime time = new DateTime(new Date());
+//            time = time.plusDays(daysOffSetFromToday+i);
+//            Steps steps = new Steps(Common.removeTimeFromDate(time.toDate()).getTime());
+//            steps.setDate(Common.removeTimeFromDate(time.toDate()).getTime());
+//            steps.setSteps(minSteps+r.nextInt(maxSteps));
+//            stepsList.add(steps);
+//        }
+//        return stepsList;
+//    }
 
     private void initView(LayoutInflater inflater) {
         stepsDataList = new ArrayList<>(3);
