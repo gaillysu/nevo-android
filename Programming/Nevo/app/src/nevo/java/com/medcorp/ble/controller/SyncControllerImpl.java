@@ -42,11 +42,13 @@ import com.medcorp.ble.model.packet.DailyStepsPacket;
 import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.ble.model.packet.DailyTrackerPacket;
 import com.medcorp.ble.model.packet.Packet;
+import com.medcorp.ble.model.packet.WatchInfoPacket;
 import com.medcorp.ble.model.request.GetBatteryLevelRequest;
 import com.medcorp.ble.model.request.GetStepsGoalRequest;
 import com.medcorp.ble.model.request.LedLightOnOffRequest;
 import com.medcorp.ble.model.request.ReadDailyTrackerInfoRequest;
 import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
+import com.medcorp.ble.model.request.ReadWatchInfoRequest;
 import com.medcorp.ble.model.request.SetAlarmRequest;
 import com.medcorp.ble.model.request.SetCardioRequest;
 import com.medcorp.ble.model.request.SetGoalRequest;
@@ -436,6 +438,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         mCurrentDay = 0;
                         //DatabaseHelper.outPutDatabase(mContext);
                         syncFinished();
+                        //early nevo firmware doesn't support 0x27 cmd(read watch info), so I put this cmd here
+                        sendRequest(new ReadWatchInfoRequest(mContext));
                     }
                 }
                 //press B key once--- down and up within 500ms
@@ -493,6 +497,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         || (byte) SetNotificationRequest.HEADER == packet.getHeader()
                         || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new RequestResponseEvent(true));
+                }
+                else if((byte) ReadWatchInfoRequest.HEADER == packet.getHeader()) {
+                    WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
+                    watchInfomation.setWatchID(watchInfoPacket.getWatchID());
+                    watchInfomation.setWatchModel(watchInfoPacket.getWatchModel());
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
