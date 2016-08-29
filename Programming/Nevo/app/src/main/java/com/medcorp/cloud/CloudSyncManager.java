@@ -15,6 +15,7 @@ import com.medcorp.network.med.model.LoginUser;
 import com.medcorp.network.med.model.LoginUserModel;
 import com.medcorp.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.network.med.model.MedReadMoreSleepRecordsModel;
+import com.medcorp.network.med.model.UserWithID;
 import com.medcorp.network.med.model.UserWithLocation;
 import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
 import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
@@ -60,11 +61,37 @@ public class CloudSyncManager {
         return context;
     }
 
-    public void createUser(CreateUser createUser, RequestListener<CreateUserModel> listener)
+    public void createUser(CreateUser createUser)
     {
         //TODO if enable validic, here open it
         //ValidicOperation.getInstance(context).createValidicUser(...);
-        MedOperation.getInstance(context).createMedUser(createUser,listener);
+        MedOperation.getInstance(context).createMedUser(createUser, new RequestListener<CreateUserModel>() {
+            @Override
+            public void onRequestFailure(SpiceException spiceException) {
+                //DO NOTHING
+            }
+
+            @Override
+            public void onRequestSuccess(CreateUserModel createUserModel) {
+                if(createUserModel.getStatus()==1 && createUserModel.getUser()!=null){
+                    //save user ID and other profile infomation to local database
+                    User nevoUser = getModel().getNevoUser();
+                    UserWithID user = createUserModel.getUser();
+                    try {
+                        nevoUser.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday().getDate()).getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    nevoUser.setFirstName(user.getFirst_name());
+                    nevoUser.setHeight((int)user.getLength());
+                    nevoUser.setLastName(user.getLast_name());
+                    nevoUser.setWeight((int)user.getWeight());
+                    nevoUser.setNevoUserID(""+user.getId());
+                    nevoUser.setNevoUserEmail(user.getEmail());
+                    getModel().saveNevoUser(nevoUser);
+                }
+            }
+        });
     }
 
     public void userLogin(LoginUser loginUser)
@@ -92,6 +119,7 @@ public class CloudSyncManager {
                     nevoUser.setNevoUserID(""+user.getId());
                     nevoUser.setNevoUserEmail(user.getEmail());
                     nevoUser.setIsLogin(true);
+                    nevoUser.setCreatedDate(new Date().getTime());
                     //save it and sync with watch and cloud server
                     getModel().saveNevoUser(nevoUser);
                     getModel().getSyncController().getDailyTrackerInfo(true);

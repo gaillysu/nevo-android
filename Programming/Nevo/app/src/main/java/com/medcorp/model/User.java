@@ -12,7 +12,7 @@ public class User {
 
     private int height = 175;//cm
 
-    private final long createdDate;
+    private long createdDate;
 
     private int sex = 1;//gender,man:1,female:0
 
@@ -90,6 +90,10 @@ public class User {
 
     public long getCreatedDate() {
         return createdDate;
+    }
+
+    public void setCreatedDate(long createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getRemarks() {

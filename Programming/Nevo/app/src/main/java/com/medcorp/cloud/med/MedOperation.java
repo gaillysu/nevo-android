@@ -3,6 +3,7 @@ package com.medcorp.cloud.med;
 import android.content.Context;
 
 import com.medcorp.event.LoginEvent;
+import com.medcorp.event.SignUpEvent;
 import com.medcorp.event.med.MedAddRoutineRecordEvent;
 import com.medcorp.event.med.MedAddSleepRecordEvent;
 import com.medcorp.event.med.MedException;
@@ -66,12 +67,20 @@ public class MedOperation {
                 if(listener!=null){
                     listener.onRequestFailure(spiceException);
                 }
+                EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED,null));
             }
 
             @Override
             public void onRequestSuccess(CreateUserModel createUserModel) {
                 if(listener!=null){
                     listener.onRequestSuccess(createUserModel);
+                }
+                if(createUserModel.getStatus()==1&&createUserModel.getUser()!=null)
+                {
+                    EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.SUCCESS, createUserModel));
+                }
+                else {
+                    EventBus.getDefault().post(new SignUpEvent(SignUpEvent.status.FAILED, null));
                 }
             }
         });
@@ -94,10 +103,10 @@ public class MedOperation {
 
             @Override
             public void onRequestSuccess(LoginUserModel nevoUserModel) {
+                if(listener!=null){
+                    listener.onRequestSuccess(nevoUserModel);
+                }
                 if (nevoUserModel.getStatus() == 1) {
-                    if(listener!=null){
-                        listener.onRequestSuccess(nevoUserModel);
-                    }
                     EventBus.getDefault().post(new LoginEvent(LoginEvent.status.SUCCESS,nevoUserModel));
                 } else {
                     EventBus.getDefault().post(new LoginEvent(LoginEvent.status.FAILED,null));
