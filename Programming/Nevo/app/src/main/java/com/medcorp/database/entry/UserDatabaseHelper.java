@@ -102,7 +102,7 @@ public class UserDatabaseHelper implements iEntryDatabaseHelper<User> {
         Optional<User> userOptional = new Optional<>();
         try {
             //logged in nevo
-            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().where().eq(UserDAO.fNevoUserIsLogin, true).query();
+            List<UserDAO> userDAOList = databaseHelper.getUserDao().queryBuilder().orderBy(UserDAO.fCreatedDate,false).where().eq(UserDAO.fNevoUserIsLogin, true).query();
             for(UserDAO userDAO: userDAOList) {
                 userOptional.set(convertToNormal(userDAO));
                 return userOptional;

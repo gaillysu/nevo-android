@@ -64,7 +64,7 @@ public class UserDAO {
     private String LastName;
 
     /**
-     * created date
+     * created date,login date
      */
     public static final String fCreatedDate = "CreatedDate";
     @DatabaseField

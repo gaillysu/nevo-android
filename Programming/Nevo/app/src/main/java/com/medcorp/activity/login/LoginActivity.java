@@ -78,6 +78,7 @@ public class LoginActivity extends BaseActivity {
 
     @Subscribe
     public void onEvent(LoginEvent event) {
+        progressDialog.dismiss();
         switch (event.getLoginStatus()) {
             case FAILED:
 
@@ -88,7 +89,6 @@ public class LoginActivity extends BaseActivity {
                 break;
 
         }
-        progressDialog.dismiss();
     }
 
     @Override

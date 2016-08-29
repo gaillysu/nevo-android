@@ -13,11 +13,15 @@ import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.login.SignupActivity;
 import com.medcorp.base.BaseActivity;
+import com.medcorp.event.SignUpEvent;
 import com.medcorp.network.med.model.CreateUser;
 import com.medcorp.network.med.model.CreateUserModel;
 import com.medcorp.view.ToastHelper;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +62,7 @@ public class UserInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info_layout);
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         Intent intent = getIntent();
         email = intent.getStringExtra("email");
         firstName = intent.getStringExtra("firstName");
@@ -96,27 +101,7 @@ public class UserInfoActivity extends BaseActivity {
                 progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
 
-                getModel().getCloudSyncManager().createUser(userInfo, new RequestListener<CreateUserModel>() {
-                    @Override
-                    public void onRequestFailure(SpiceException spiceException) {
-                        progressDialog.dismiss();
-                        spiceException.printStackTrace();
-                        ToastHelper.showLongToast(UserInfoActivity.this, spiceException.getMessage());
-                    }
-
-                    @Override
-                    public void onRequestSuccess(CreateUserModel createUserModel) {
-                        progressDialog.dismiss();
-                        if (createUserModel.getStatus() == 1) {
-                            Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
-                            intent.putExtra("isTutorialPage",false);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            ToastHelper.showShortToast(UserInfoActivity.this, createUserModel.getMessage());
-                        }
-                    }
-                });
+                getModel().getCloudSyncManager().createUser(userInfo);
             } catch (NumberFormatException e) {
                 ToastHelper.showShortToast(this, getString(R.string.user_no_select_profile_info));
             }
@@ -141,6 +126,24 @@ public class UserInfoActivity extends BaseActivity {
         }
 
 
+    }
+
+    @Subscribe
+    public void onEvent(SignUpEvent event) {
+        progressDialog.dismiss();
+        switch (event.getSignUpStatus()) {
+            case FAILED:
+                ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_failed));
+                break;
+            case SUCCESS:
+                ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_success));
+                Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
+                intent.putExtra("isTutorialPage",false);
+                startActivity(intent);
+                finish();
+                break;
+
+        }
     }
 
     @OnClick(R.id.user_info_sex_male_tv)
