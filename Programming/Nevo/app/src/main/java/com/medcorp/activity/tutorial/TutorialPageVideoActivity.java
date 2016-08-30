@@ -28,7 +28,6 @@ public class TutorialPageVideoActivity extends BaseActivity {
             finish();
             return;
         }
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome_page);
         ButterKnife.bind(this);
@@ -45,8 +44,8 @@ public class TutorialPageVideoActivity extends BaseActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(TutorialPageVideoActivity.this,LoginActivity.class);
-                    intent.putExtra("isTutorialPage",true);
+                    Intent intent = new Intent(TutorialPageVideoActivity.this, LoginActivity.class);
+                    intent.putExtra("isTutorialPage", true);
                     startActivity(intent);
                     finish();
                 }

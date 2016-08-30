@@ -105,33 +105,6 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList;
     }
 
-//    public List<Steps> getThisWeekSteps(String userId, Date date) {
-//        List<Steps> thisWeekSteps = new ArrayList<>();
-//        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-//        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-//            Steps steps = get(userId,new Date(start)).get();
-//            thisWeekSteps.add(steps);
-//        }
-//        return thisWeekSteps;
-//    }
-//
-//    public List<Steps> getLastWeekSteps(String userId, Date date) {
-//        List<Steps> lastWeekSteps = new ArrayList<>();
-//        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-//        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-//            lastWeekSteps.add(get(userId, new Date(start)).get());
-//        }
-//        return lastWeekSteps;
-//    }
-//
-//    public List<Steps> getLastMonthSteps(String userId, Date date) {
-//        List<Steps> lastMonthSteps = new ArrayList<>();
-//        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-//        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-//            lastMonthSteps.add(get(userId, new Date(start)).get());
-//        }
-//        return lastMonthSteps;
-//    }
 
     public List<Steps> getNeedSyncSteps(String userId) {
         List<Steps> stepsList = new ArrayList<Steps>();

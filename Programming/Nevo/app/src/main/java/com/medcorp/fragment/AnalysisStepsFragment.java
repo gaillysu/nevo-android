@@ -12,6 +12,7 @@ import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
+import com.medcorp.util.CalendarWeekUtils;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
 
@@ -89,12 +90,13 @@ public class AnalysisStepsFragment extends BaseFragment {
             // 因该 没有这个 SITUATION
             // TODO next version, per day goal line.
         }
-
-        thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        thisWeekChart.addData(thisWeekData, activeGoal);
-        lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        lastWeekChart.addData(lastWeekData, activeGoal);
+        CalendarWeekUtils startDate = new CalendarWeekUtils(userSelectDate);
         lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+
+        thisWeekChart.addData(thisWeekData, activeGoal);
+        lastWeekChart.addData(lastWeekData, activeGoal);
         lastMonthChart.addData(lastMonthData, activeGoal);
     }
 
@@ -118,33 +120,33 @@ public class AnalysisStepsFragment extends BaseFragment {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        if(thisWeekData.size() != 0) {
+                        if (thisWeekData.size() != 0) {
                             setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / thisWeekData.size()
                                     , getWeekCalories(thisWeekData) / thisWeekData.size()
                                     , getAvgDurationTime(thisWeekData) / thisWeekData.size()
                                     , getResources().getString(R.string.analysis_fragment_this_week_steps));
-                        }else{
-                            setAverageText(0,0,0,0,getResources().getString(R.string.analysis_fragment_this_week_steps));
+                        } else {
+                            setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_this_week_steps));
                         }
                         break;
                     case 1:
-                        if(lastWeekData.size() != 0) {
+                        if (lastWeekData.size() != 0) {
                             setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / lastWeekData.size()
                                     , getWeekCalories(lastWeekData) / lastWeekData.size()
                                     , getAvgDurationTime(lastWeekData) / lastWeekData.size()
                                     , getResources().getString(R.string.analysis_fragment_last_week_steps));
-                        }else{
-                            setAverageText(0,0,0,0,getResources().getString(R.string.analysis_fragment_last_week_steps));
+                        } else {
+                            setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_week_steps));
                         }
                         break;
                     case 2:
-                        if(lastMonthData.size() != 0){
-                        setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / lastMonthData.size()
-                                , getWeekCalories(lastMonthData) / lastMonthData.size()
-                                , getAvgDurationTime(lastMonthData) / lastMonthData.size()
-                                ,getResources().getString(R.string.analysis_fragment_last_month_solar));
-                        }else{
-                            setAverageText(0,0,0,0,getResources().getString(R.string.analysis_fragment_last_month_solar));
+                        if (lastMonthData.size() != 0) {
+                            setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / lastMonthData.size()
+                                    , getWeekCalories(lastMonthData) / lastMonthData.size()
+                                    , getAvgDurationTime(lastMonthData) / lastMonthData.size()
+                                    , getResources().getString(R.string.analysis_fragment_last_month_solar));
+                        } else {
+                            setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_month_solar));
                         }
                         break;
                 }
@@ -156,10 +158,10 @@ public class AnalysisStepsFragment extends BaseFragment {
         });
     }
 
-    private void setAverageText(int totalSteps, int averageSteps, int averageCalories, int averageDuration,String title) {
+    private void setAverageText(int totalSteps, int averageSteps, int averageCalories, int averageDuration, String title) {
         analysisStepsText.setText(title);
-        totalStepsText.setText(totalSteps+"");
-        averageStepsText.setText(averageSteps+"");
+        totalStepsText.setText(totalSteps + "");
+        averageStepsText.setText(averageSteps + "");
         avgCalories.setText(averageCalories + "");
         avgDurationTime.setText(averageDuration + "");
 

@@ -10,35 +10,40 @@
         android:layout_gravity="bottom"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/analysis_fragment_des_total_one"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/steps_fragment_total_steps"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"/>
+
             <TextView
                 android:id="@+id/steps_fragment_total_steps_tv"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:paddingStart="10dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="bottom"
+                android:paddingStart="10dp"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"/>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
+                android:id="@+id/analysis_fragment_des_total_two"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -49,10 +54,10 @@
             <TextView
                 android:id="@+id/steps_fragment_average_steps_tv"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:gravity="bottom|start"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="bottom|start"
                 android:text="sda"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"/>
@@ -60,6 +65,7 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,10 +77,11 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
+                android:id="@+id/analysis_fragment_des_total_three"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/steps_fragment_average_calories"
@@ -84,10 +91,10 @@
             <TextView
                 android:id="@+id/steps_fragment_average_calories_tv"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="bottom"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"/>
         </LinearLayout>
@@ -98,9 +105,10 @@
             android:layout_weight="1">
 
             <TextView
+                android:id="@+id/analysis_fragment_des_total_four"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/steps_fragment_average_time"
                 android:textColor="@color/text_color"
                 android:textSize="16sp"/>
@@ -108,10 +116,10 @@
             <TextView
                 android:id="@+id/steps_fragment_average_time_tv"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:gravity="bottom"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="bottom"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"/>
         </LinearLayout>

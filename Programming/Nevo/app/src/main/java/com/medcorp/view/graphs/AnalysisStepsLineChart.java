@@ -95,7 +95,6 @@ public class AnalysisStepsLineChart extends LineChart{
     public void addData(List<Steps> stepsList, Goal goal){
         this.stepsList = stepsList;
         this.goal = goal;
-
         List<Entry> yValue = new ArrayList<Entry>();
         int maxValue = 0;
 
@@ -174,6 +173,8 @@ public class AnalysisStepsLineChart extends LineChart{
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
+
+
             if (stepsList.size() < 11){
                 if (count >= stepsList.size()){
                     count = 0;
@@ -181,7 +182,6 @@ public class AnalysisStepsLineChart extends LineChart{
                 Steps steps = stepsList.get(count);
                 count ++;
                 DateTime time = new DateTime(steps.getDate());
-
                 return time.toString("dd/MM") ;
             }else{
                 if (count == 0 || count % 5 == 0 || count == (stepsList.size() -1)){

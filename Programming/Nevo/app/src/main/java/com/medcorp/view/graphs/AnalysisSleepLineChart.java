@@ -34,6 +34,7 @@ import java.util.List;
 public class AnalysisSleepLineChart extends LineChart{
 
     private List<SleepData> sleepList = new ArrayList<>();
+    private int maxDayInGraph;
 
     public AnalysisSleepLineChart(Context context) {
         super(context);
@@ -94,15 +95,15 @@ public class AnalysisSleepLineChart extends LineChart{
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
     }
 
-    public void addData(List<SleepData> sleepList, int max){
+    public void addData(List<SleepData> sleepList, int maxDayInGraph){
         this.sleepList = sleepList;
-
+        this.maxDayInGraph = maxDayInGraph;
         List<Entry> wakeEntries = new ArrayList<Entry>();
         List<Entry> lightSleepEntries = new ArrayList<Entry>();
         List<Entry> deepSleepEntries = new ArrayList<Entry>();
         int maxValue = 0;
 
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < maxDayInGraph; i++) {
             if (i < this.sleepList.size()){
                 SleepData sleep= this.sleepList.get(i);
                 wakeEntries.add(new Entry(i, sleep.getAwake()));
@@ -146,9 +147,11 @@ public class AnalysisSleepLineChart extends LineChart{
         setData(data);
         animateY(2, Easing.EasingOption.EaseInCirc);
         invalidate();
-
+        String[] legend = getLegend().getLabels();
         // TODO Figure out to get the color from colors.xml resource.
-        getLegend().setCustom(Arrays.asList(Color.rgb(127,127,127),Color.rgb(160,132,85),Color.rgb(132,132,132)),Arrays.asList(getLegend().getLabels()));
+        getLegend().setCustom(Arrays.asList(Color.rgb(127,127,127),
+                Color.rgb(160,132,85),Color.rgb(132,132,132)),
+                Arrays.asList(getLegend().getLabels()));
         setOnClickListener(null);
     }
 
@@ -168,13 +171,22 @@ public class AnalysisSleepLineChart extends LineChart{
 
 
     private class XValueFormatter implements AxisValueFormatter{
-
         private int count = 0;
         private XValueFormatter() {
         }
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
+
+            if (sleepList.isEmpty()) {
+                if (count >= maxDayInGraph){
+                    count = 0;
+                }
+                DateTime time = new DateTime().plusDays(count);
+                count+=1;
+                return time.toString("dd/MM");
+            }
+
             if (sleepList.size() < 11){
                 if (count >= sleepList.size()){
                     count = 0;
@@ -182,8 +194,7 @@ public class AnalysisSleepLineChart extends LineChart{
                 SleepData sleepData = sleepList.get(count);
                 count ++;
                 DateTime time = new DateTime(sleepData.getDate());
-
-                return time.toString("dd/MM") ;
+                return time.toString("dd/MM");
             }else{
                 if (count == 0 || count % 5 == 0 || count == (sleepList.size() -1)){
                     if (count >= sleepList.size()){

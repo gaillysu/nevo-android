@@ -18,6 +18,8 @@ import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
 import com.medcorp.network.med.model.LoginUser;
 
+import net.medcorp.library.ble.util.Constants;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -141,7 +143,10 @@ public class LoginActivity extends BaseActivity {
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
-        startActivity(MainActivity.class);
+        getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
+        if (getIntent().getBooleanExtra("isTutorialPage", true)) {
+            startActivity(MainActivity.class);
+        }
         finish();
     }
 
@@ -154,7 +159,7 @@ public class LoginActivity extends BaseActivity {
                     .content(getString(R.string.prompt_is_not_forget_password)).negativeText(android.R.string.no)
                     .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
-                public void onClick( MaterialDialog dialog, DialogAction which) {
+                public void onClick(MaterialDialog dialog, DialogAction which) {
                     startActivity(ForgetPasswordActivity.class);
                     finish();
                 }

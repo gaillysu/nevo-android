@@ -54,6 +54,7 @@ import com.medcorp.googlefit.GoogleHistoryUpdateTask;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Sleep;
+import com.medcorp.model.SleepData;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
@@ -274,11 +275,62 @@ public class ApplicationModel extends Application {
         stepsDatabaseHelper.update(steps);
     }
 
+    public List<SleepData> getThisWeekSleep(String userId, Date date) {
+        List<SleepData> thisWeekSleep = new ArrayList<>(3);
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+            if (todaySleep.notEmpty()) {
+                Sleep dailySleep = todaySleep.get();
+                SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
+                        , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
+                        start, dailySleep.getStart(), dailySleep.getEnd());
+                thisWeekSleep.add(sleepData);
+            }
+        }
+        return thisWeekSleep;
+    }
+
+
+    public List<SleepData> getLastWeekSleep(String userId, Date date) {
+        List<SleepData> lastWeekSleep = new ArrayList<>(3);
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+            if (todaySleep.notEmpty()) {
+                Sleep dailySleep = todaySleep.get();
+                SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
+                        , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
+                        new DateTime(start).getMillis(), dailySleep.getStart(), dailySleep.getEnd());
+                lastWeekSleep.add(sleepData);
+            }
+        }
+        return lastWeekSleep;
+    }
+
+    public List<SleepData> getLastMonthSleep(String userId, Date date) {
+        List<SleepData> lastMonth = new ArrayList<>(3);
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+            if (todaySleep.notEmpty()) {
+                Sleep dailySleep = todaySleep.get();
+                SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
+                        , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
+                        start, dailySleep.getStart(), dailySleep.getEnd());
+                lastMonth.add(sleepData);
+
+            }
+        }
+        return lastMonth;
+    }
+
     public List<Steps> getThisWeekSteps(String userId, Date date) {
         List<Steps> thisWeekSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            thisWeekSteps.add(getDailySteps(userId,new Date(start)));
+            thisWeekSteps.add(getDailySteps(userId, new Date(start)));
+            thisWeekSteps.add(new Steps(start));
         }
         return thisWeekSteps;
     }
