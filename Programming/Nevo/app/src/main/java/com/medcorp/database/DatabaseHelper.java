@@ -13,6 +13,7 @@ import com.medcorp.database.dao.AlarmDAO;
 import com.medcorp.database.dao.GoalDAO;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.database.dao.SleepDAO;
+import com.medcorp.database.dao.SolarDAO;
 import com.medcorp.database.dao.StepsDAO;
 import com.medcorp.database.dao.UserDAO;
 
@@ -30,12 +31,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                                                    //from  6 to 7,fix "Alarm" alarm.enable to alarm.weekDay
                                                    //from  7 to 8, fix user.Weight to "int" type (old is float type)
                                                    //from  8 to 9,rename "validicRecordID" to "cloudRecordID" in tables "steps" and "sleep"
+                                                   //from 9 to 10, add table "solarDAO"
     private  Dao<IDailyHistory,Integer> dailyhistoryDao = null;
     private  Dao<UserDAO,Integer> userDao = null;
     private  Dao<SleepDAO,Integer> sleepDao = null;
     private  Dao<StepsDAO,Integer> stepsDao = null;
     private  Dao<AlarmDAO,Integer> alarmDao = null;
     private  Dao<GoalDAO,Integer> goalsDAO = null;
+    private  Dao<SolarDAO,Integer> solarDAO = null;
     private  Context context;
 
     //Classic singleton
@@ -64,6 +67,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, StepsDAO.class);
             TableUtils.createTable(connectionSource, AlarmDAO.class);
             TableUtils.createTable(connectionSource, GoalDAO.class);
+            TableUtils.createTable(connectionSource, SolarDAO.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
         }
@@ -90,6 +94,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, StepsDAO.class, true);
             TableUtils.dropTable(connectionSource, AlarmDAO.class, true);
             TableUtils.dropTable(connectionSource, GoalDAO.class, true);
+            TableUtils.dropTable(connectionSource, SolarDAO.class, true);
             onCreate(sqliteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
@@ -129,5 +134,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (goalsDAO == null)
             goalsDAO = getDao(GoalDAO.class);
         return goalsDAO;
+    }
+
+    public Dao<SolarDAO, Integer> getSolarDAO() throws SQLException {
+        if (solarDAO == null)
+            solarDAO = getDao(SolarDAO.class);
+        return solarDAO;
     }
 }

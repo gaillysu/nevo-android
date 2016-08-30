@@ -33,6 +33,8 @@
     <string name="key_prefs_google_fit">google_fit_status</string>
     <string name="key_prefs_select_date">select_date</string>
     <string name="key_prefs_is_first_login">is_not_first_login</string>
+    <string name="key_prefs_watch_id">watch_id</string>
+    <string name="key_prefs_watch_model">watch_model</string>
     <!-- aid OTA -->
     <string name="key_manual_mode">manualMode</string>
     <string name="key_back_to_settings">backtosetting</string>

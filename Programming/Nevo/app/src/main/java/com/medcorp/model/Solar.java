@@ -10,8 +10,16 @@ import java.util.Date;
 
 public class Solar {
 
+    private int id;
+
+    /**
+     * createdDate is the created/updated date, format is YYYY-MM-DD HH:MM:SS
+     */
     private Date createdDate;
 
+    /**
+     * date is the daily date,format is YYYY-MM-DD
+     */
     private Date date;
 
     private int userId;
@@ -30,6 +38,14 @@ public class Solar {
         this.userId = userId;
         this.hourlyHarvestingTime = hourlyHarvestingTime;
         this.totalHarvestingTime = totalHarvestingTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUserId() {
