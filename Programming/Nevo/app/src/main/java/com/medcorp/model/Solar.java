@@ -10,6 +10,8 @@ import java.util.Date;
 
 public class Solar {
 
+    private int id;
+
     private Date createdDate;
 
     private Date date;
@@ -30,6 +32,14 @@ public class Solar {
         this.userId = userId;
         this.hourlyHarvestingTime = hourlyHarvestingTime;
         this.totalHarvestingTime = totalHarvestingTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUserId() {

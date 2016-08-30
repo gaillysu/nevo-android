@@ -104,6 +104,28 @@ public class Preferences {
         return preferences.getInt("profile_unit", 0);
     }
 
+    public static void setWatchId(Context context,int id){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(context.getString(R.string.key_prefs_watch_id), id).apply();
+    }
+
+    public static int getWatchId(Context context){
+        init(context);
+        return preferences.getInt(context.getString(R.string.key_prefs_watch_id), 1);
+    }
+
+    public static void setWatchModel(Context context,int model){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(context.getString(R.string.key_prefs_watch_model), model).apply();
+    }
+
+    public static int getWatchModel(Context context){
+        init(context);
+        return preferences.getInt(context.getString(R.string.key_prefs_watch_model), 1);
+    }
+
     private static NevoLed distinguish(int ledColor){
         switch (ledColor){
             case 0x100000:

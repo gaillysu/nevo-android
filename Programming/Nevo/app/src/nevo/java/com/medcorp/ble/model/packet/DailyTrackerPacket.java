@@ -204,6 +204,45 @@ public class DailyTrackerPacket extends Packet {
 
     }
 
+    /**
+     *
+     * @return  swim total time, if watch is solar, it is the solar time ,in "minute"
+     */
+    public int getTotalSwimTime() {
+        int packetno = 3;
+        int offset = 12;
+        int value = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],
+                getPackets().get(packetno).getRawData()[offset+1],
+                getPackets().get(packetno).getRawData()[offset+2],
+                getPackets().get(packetno).getRawData()[offset+3]
+        });
+        return value;
+    }
+
+    /**
+     *
+     * @return  swim hourly time, if watch is solar, it is the solar time ,in "minute"
+     */
+    public List<Integer> getHourlySwimTime() {
+
+        ArrayList<Integer> HourlySwimTime = new ArrayList<Integer>();
+        int HEADERLENGTH = 6;
+        int hourlySwimTime =0;
+        //get every hour swim time:
+        for (int i = 0; i<24; i++)
+        {
+            int packetno = HEADERLENGTH+i*3+1;
+            int offset = 10;
+            hourlySwimTime = 0;
+            if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
+            {
+                hourlySwimTime = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],getPackets().get(packetno).getRawData()[offset+1]});
+            }
+            HourlySwimTime.add(i,hourlySwimTime);
+        }
+        return HourlySwimTime;
+    }
+
     public int getInactivityTime() {
         int packetno = 3;
         int offset = 16;

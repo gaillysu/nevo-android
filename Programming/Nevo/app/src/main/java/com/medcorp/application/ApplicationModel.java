@@ -27,6 +27,7 @@ import com.medcorp.cloud.validic.ValidicOperation;
 import com.medcorp.database.entry.AlarmDatabaseHelper;
 import com.medcorp.database.entry.GoalDatabaseHelper;
 import com.medcorp.database.entry.SleepDatabaseHelper;
+import com.medcorp.database.entry.SolarDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
 import com.medcorp.database.entry.UserDatabaseHelper;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
@@ -110,6 +111,7 @@ public class ApplicationModel extends Application {
     private AlarmDatabaseHelper alarmDatabaseHelper;
     private GoalDatabaseHelper goalDatabaseHelper;
     private UserDatabaseHelper userDatabaseHelper;
+    private SolarDatabaseHelper solarDatabaseHelper;
     private boolean firmwareUpdateAlertDailog = false;
     //if it is -1, means mcu version hasn't be read
     private int mcuFirmwareVersion = -1;
@@ -132,6 +134,7 @@ public class ApplicationModel extends Application {
         alarmDatabaseHelper = new AlarmDatabaseHelper(this);
         goalDatabaseHelper = new GoalDatabaseHelper(this);
         userDatabaseHelper = new UserDatabaseHelper(this);
+        solarDatabaseHelper = new SolarDatabaseHelper(this);
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         Optional<User> user = userDatabaseHelper.getLoginUser();
@@ -212,6 +215,9 @@ public class ApplicationModel extends Application {
 
     public StepsDatabaseHelper getStepsHelper() {
         return stepsDatabaseHelper;
+    }
+    public SolarDatabaseHelper getSolarDatabaseHelper(){
+        return solarDatabaseHelper;
     }
 
     public SyncController getSyncController() {

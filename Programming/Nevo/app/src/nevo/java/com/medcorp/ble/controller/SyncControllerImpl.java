@@ -71,6 +71,7 @@ import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
 import com.medcorp.model.GoalBase;
 import com.medcorp.model.Sleep;
+import com.medcorp.model.Solar;
 import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
@@ -134,7 +135,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
 
-    private WatchInfomation watchInfomation;
+
     //start a timer to do little sync, refresh dashboard @LittleSyncEvent
     private long LITTLE_SYNC_INTERVAL = 10000L; //10s
     private Timer autoSyncTimer = null;
@@ -156,7 +157,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public SyncControllerImpl(Context context)
     {
         mContext = context;
-        watchInfomation = new WatchInfomation();
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
@@ -219,6 +219,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public WatchInfomation getWatchInfomation() {
+        WatchInfomation watchInfomation = new WatchInfomation();
+        watchInfomation.setWatchID((byte)Preferences.getWatchId(mContext));
+        watchInfomation.setWatchModel((byte)Preferences.getWatchModel(mContext));
         return watchInfomation;
     }
 
@@ -427,6 +430,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ((ApplicationModel) mContext).saveDailySleep(sleep);
                         //end update
                     }
+                    //here save solar time to local database when watch ID>1
+                    if(getWatchInfomation().getWatchID()>1){
+                        Solar solar = new Solar(new Date());
+                        solar.setDate(Common.removeTimeFromDate(new Date()));
+                        solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
+                        solar.setTotalHarvestingTime(thispacket.getTotalSwimTime());
+                        solar.setHourlyHarvestingTime(thispacket.getHourlySwimTime().toString());
+                        ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
+                    }
+
                     mCurrentDay++;
                     if(mCurrentDay < savedDailyHistory.size() && mSyncAllFlag)
                     {
@@ -438,8 +451,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         mCurrentDay = 0;
                         //DatabaseHelper.outPutDatabase(mContext);
                         syncFinished();
-                        //early nevo firmware doesn't support 0x27 cmd(read watch info), so I put this cmd here
-                        sendRequest(new ReadWatchInfoRequest(mContext));
                     }
                 }
                 //press B key once--- down and up within 500ms
@@ -500,8 +511,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 else if((byte) ReadWatchInfoRequest.HEADER == packet.getHeader()) {
                     WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
-                    watchInfomation.setWatchID(watchInfoPacket.getWatchID());
-                    watchInfomation.setWatchModel(watchInfoPacket.getWatchModel());
+                    //save watch infomation into preference
+                    Preferences.setWatchId(mContext,watchInfoPacket.getWatchID());
+                    Preferences.setWatchModel(mContext,watchInfoPacket.getWatchModel());
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
@@ -522,6 +534,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 @Override
                 public void run() {
                     packetsBuffer.clear();
+                    //early nevo firmware doesn't support 0x27 cmd(read watch info), so I put this cmd here
+                    sendRequest(new ReadWatchInfoRequest(mContext));
                     setRtc();
                 }
             }, 2000);
@@ -646,6 +660,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
         //when forget the watch, force a big sync when got connected again
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
+        //reset watch ID and watch model to nevo
+        Preferences.setWatchId(mContext,1);
     }
 
     @Override
