@@ -64,6 +64,7 @@ import com.medcorp.network.validic.model.ValidicReadMoreSleepRecordsModel;
 import com.medcorp.network.validic.model.ValidicRoutineRecordModelBase;
 import com.medcorp.network.validic.model.ValidicSleepRecordModelBase;
 import com.medcorp.network.validic.model.ValidicUser;
+import com.medcorp.util.CalendarWeekUtils;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.ToastHelper;
@@ -90,7 +91,6 @@ import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Karl on 10/15/15.
- *
  */
 public class ApplicationModel extends Application {
 
@@ -198,7 +198,7 @@ public class ApplicationModel extends Application {
         }
     }
 
-        @Subscribe
+    @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {
             final Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
@@ -210,7 +210,7 @@ public class ApplicationModel extends Application {
         return validicMedManager;
     }
 
-    public StepsDatabaseHelper getStepsHelper(){
+    public StepsDatabaseHelper getStepsHelper() {
         return stepsDatabaseHelper;
     }
 
@@ -274,6 +274,34 @@ public class ApplicationModel extends Application {
         stepsDatabaseHelper.update(steps);
     }
 
+    public List<Steps> getThisWeekSteps(String userId, Date date) {
+        List<Steps> thisWeekSteps = new ArrayList<>();
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            thisWeekSteps.add(getDailySteps(userId,new Date(start)));
+        }
+        return thisWeekSteps;
+    }
+
+    public List<Steps> getLastWeekSteps(String userId, Date date) {
+        List<Steps> lastWeekSteps = new ArrayList<>();
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+            lastWeekSteps.add(getDailySteps(userId, new Date(start)));
+        }
+        return lastWeekSteps;
+    }
+
+    public List<Steps> getLastMonthSteps(String userId, Date date) {
+        List<Steps> lastMonthSteps = new ArrayList<>();
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            lastMonthSteps.add(getDailySteps(userId, new Date(start)));
+        }
+        return lastMonthSteps;
+    }
+
+
     public Steps getDailySteps(String userId, Date date) {
         Optional<Steps> steps = stepsDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
         if (steps.notEmpty()) {
@@ -289,7 +317,7 @@ public class ApplicationModel extends Application {
         Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(todayDate));
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
         if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
-            return new Sleep[]{todaySleep.get(),yesterdaySleep.get()};
+            return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
         }
         return new Sleep[0];
     }
@@ -305,15 +333,17 @@ public class ApplicationModel extends Application {
     public boolean isFoundInLocalSteps(int activity_id) {
         return stepsDatabaseHelper.isFoundInLocalSteps(activity_id);
     }
-    public boolean isFoundInLocalSteps(Date date,String userID) {
-        return stepsDatabaseHelper.isFoundInLocalSteps(date,userID);
+
+    public boolean isFoundInLocalSteps(Date date, String userID) {
+        return stepsDatabaseHelper.isFoundInLocalSteps(date, userID);
     }
 
     public boolean isFoundInLocalSleep(int activity_id) {
         return sleepDatabaseHelper.isFoundInLocalSleep(activity_id);
     }
-    public boolean isFoundInLocalSleep(Date date,String userID) {
-        return sleepDatabaseHelper.isFoundInLocalSleep(date,userID);
+
+    public boolean isFoundInLocalSleep(Date date, String userID) {
+        return sleepDatabaseHelper.isFoundInLocalSleep(date, userID);
     }
 
     public void saveStepsFromValidic(ValidicRoutineRecordModelBase routine) {
@@ -333,13 +363,13 @@ public class ApplicationModel extends Application {
         saveDailySteps(steps);
     }
 
-    public void saveStepsFromMed(MedRoutineRecordWithID routine,Date createDate) {
+    public void saveStepsFromMed(MedRoutineRecordWithID routine, Date createDate) {
         Steps steps = new Steps(createDate.getTime());
         steps.setDate(Common.removeTimeFromDate(createDate).getTime());
         try {
             JSONArray hourlyArray = new JSONArray(routine.getSteps());
             int totalSteps = 0;
-            for (int i = 0; i < hourlyArray.length(); i++){
+            for (int i = 0; i < hourlyArray.length(); i++) {
                 totalSteps += hourlyArray.optInt(i);
             }
             steps.setHourlySteps(routine.getSteps());
@@ -350,8 +380,8 @@ public class ApplicationModel extends Application {
         steps.setDistance((int) routine.getDistance());
         steps.setCalories(routine.getCalories());
         steps.setNoActivityTime(routine.getActive_time());
-        steps.setNevoUserID(routine.getUid()+"");
-        steps.setCloudRecordID(routine.getId()+"");
+        steps.setNevoUserID(routine.getUid() + "");
+        steps.setCloudRecordID(routine.getId() + "");
         steps.setGoal(10000);
         saveDailySteps(steps);
     }
@@ -415,7 +445,7 @@ public class ApplicationModel extends Application {
         saveDailySleep(sleep);
     }
 
-    public void saveSleepFromMed(MedSleepRecordWithID medSleepRecordWithID,Date createDate) {
+    public void saveSleepFromMed(MedSleepRecordWithID medSleepRecordWithID, Date createDate) {
         Sleep sleep = new Sleep(createDate.getTime());
         sleep.setDate(Common.removeTimeFromDate(createDate).getTime());
 
@@ -458,7 +488,7 @@ public class ApplicationModel extends Application {
         sleep.setEnd(0);
         sleep.setNevoUserID(getNevoUser().getNevoUserID());
         //we must set CloudRecordID here, avoid doing sync repeatly
-        sleep.setCloudRecordID(medSleepRecordWithID.getId()+"");
+        sleep.setCloudRecordID(medSleepRecordWithID.getId() + "");
         try {
             sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
         } catch (JSONException e) {
@@ -671,17 +701,15 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent medReadMoreRoutineRecordsModelEvent) {
 
-        if(medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()==null||medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().length==0)
-        {
+        if (medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps() == null || medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().length == 0) {
             return;
         }
         for (MedRoutineRecordWithID routine : medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps()) {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(routine.getDate().getDate());
                 // if not exist in local Steps table, save it
-                if (!isFoundInLocalSteps(date,routine.getUid()+""))
-                {
-                    saveStepsFromMed(routine,date);
+                if (!isFoundInLocalSteps(date, routine.getUid() + "")) {
+                    saveStepsFromMed(routine, date);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -692,17 +720,15 @@ public class ApplicationModel extends Application {
     @Subscribe
     public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent medReadMoreSleepRecordsModelEvent) {
 
-        if(medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()==null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length==0){
+        if (medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep() == null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length == 0) {
             return;
         }
-        for(MedSleepRecordWithID sleep: medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep())
-        {
+        for (MedSleepRecordWithID sleep : medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep()) {
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sleep.getDate().getDate());
                 // if not exist in local Sleep table, save it
-                if (!isFoundInLocalSleep(date,sleep.getUid()+""))
-                {
-                    saveSleepFromMed(sleep,date);
+                if (!isFoundInLocalSleep(date, sleep.getUid() + "")) {
+                    saveSleepFromMed(sleep, date);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -720,7 +746,6 @@ public class ApplicationModel extends Application {
     public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent validicDeleteRoutineRecordEvent) {
         stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
     }
-
 
 
 }

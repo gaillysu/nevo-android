@@ -10,13 +10,13 @@ import android.widget.TextView;
 import com.medcorp.R;
 import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
-import com.medcorp.model.DailySteps;
+import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +33,10 @@ public class AnalysisStepsFragment extends BaseFragment {
     TextView averageStepsText;
     @Bind(R.id.steps_fragment_total_steps_tv)
     TextView totalStepsText;
+    @Bind(R.id.steps_fragment_average_calories_tv)
+    TextView avgCalories;
+    @Bind(R.id.steps_fragment_average_time_tv)
+    TextView avgDurationTime;
 
     @Bind(R.id.steps_fragment_title_tv)
     TextView analysisStepsText;
@@ -42,23 +46,21 @@ public class AnalysisStepsFragment extends BaseFragment {
     private View thisWeekView;
     private View lastWeekView;
     private View lastMonthView;
-    private List<View> stepsDataList;
-    private Date userSelectDate;
+    private List<Steps> thisWeekData;
+    private List<Steps> lastWeekData;
+    private List<Steps> lastMonthData;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View stepsView = inflater.inflate(R.layout.analysis_fragment_child_steps_fragment, container, false);
         ButterKnife.bind(this, stepsView);
 
         String selectDate = Preferences.getSelectDate(this.getContext());
+        Date userSelectDate;
         if (selectDate == null) {
             userSelectDate = new Date();
         } else {
-            try {
-                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            userSelectDate = DateTime.parse("yyyy-MM-dd").toDate();
         }
 
         initView(inflater);
@@ -75,34 +77,32 @@ public class AnalysisStepsFragment extends BaseFragment {
          * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.
          * In this month this is 30 (or 31) because there are 30 days in a month.
         */
-        List<Steps> thisWeekData = getModel().getStepsHelper().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(),userSelectDate);
-        thisWeekChart.addData(thisWeekData);
-        List<Steps> lastWeekData = getModel().getStepsHelper().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(),userSelectDate);
-        lastWeekChart.addData(lastWeekData);
+        Goal activeGoal = null;
+        for (Goal goal : getModel().getAllGoal()) {
+            if (goal.isStatus()) {
+                activeGoal = goal;
+                break;
+            }
+        }
+        if (activeGoal == null) {
+            activeGoal = new Goal("Unknown", true, 7000);
+            // 因该 没有这个 SITUATION
+            // TODO next version, per day goal line.
+        }
 
-        List<Steps> lastMonthData = getModel().getStepsHelper().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(),userSelectDate);
-        lastMonthChart.addData(lastMonthData);
+        thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        thisWeekChart.addData(thisWeekData, activeGoal);
+        lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        lastWeekChart.addData(lastWeekData, activeGoal);
+        lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        lastMonthChart.addData(lastMonthData, activeGoal);
     }
 
-//    private List<Steps> generateTestData(int minSteps, int maxSteps, int daysOffSetFromToday, int amountOfDays){
-//        List<Steps> stepsList = new ArrayList<>();
-//        Random r = new Random();
-//        for (int i = 0; i < amountOfDays; i++){
-//            DateTime time = new DateTime(new Date());
-//            time = time.plusDays(daysOffSetFromToday+i);
-//            Steps steps = new Steps(Common.removeTimeFromDate(time.toDate()).getTime());
-//            steps.setDate(Common.removeTimeFromDate(time.toDate()).getTime());
-//            steps.setSteps(minSteps+r.nextInt(maxSteps));
-//            stepsList.add(steps);
-//        }
-//        return stepsList;
-//    }
-
     private void initView(LayoutInflater inflater) {
-        stepsDataList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
-        lastWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
-        lastMonthView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout,null);
+        List<View> stepsDataList = new ArrayList<>(3);
+        thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
+        lastWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
+        lastMonthView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         stepsDataList.add(thisWeekView);
         stepsDataList.add(lastWeekView);
         stepsDataList.add(lastMonthView);
@@ -116,18 +116,36 @@ public class AnalysisStepsFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                switch(position){
+                switch (position) {
                     case 0:
-                        analysisStepsText.setText(R.string.analysis_fragment_this_week_steps);
-                        // TODO - don't forget to add the average, total, calories & more
+                        if(thisWeekData.size() != 0) {
+                            setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / thisWeekData.size()
+                                    , getWeekCalories(thisWeekData) / thisWeekData.size()
+                                    , getAvgDurationTime(thisWeekData) / thisWeekData.size()
+                                    , getResources().getString(R.string.analysis_fragment_this_week_steps));
+                        }else{
+                            setAverageText(0,0,0,0,getResources().getString(R.string.analysis_fragment_this_week_steps));
+                        }
                         break;
                     case 1:
-                        analysisStepsText.setText(R.string.analysis_fragment_last_week_steps);
-                        // TODO - don't forget to add the average, total, calories & more
+                        if(lastWeekData.size() != 0) {
+                            setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / lastWeekData.size()
+                                    , getWeekCalories(lastWeekData) / lastWeekData.size()
+                                    , getAvgDurationTime(lastWeekData) / lastWeekData.size()
+                                    , getResources().getString(R.string.analysis_fragment_last_week_steps));
+                        }else{
+                            setAverageText(0,0,0,0,getResources().getString(R.string.analysis_fragment_last_week_steps));
+                        }
                         break;
                     case 2:
-                        analysisStepsText.setText(R.string.analysis_fragment_last_month_solar);
-                        // TODO - don't forget to add the average, total, calories & more
+                        if(lastMonthData.size() != 0){
+                        setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / lastMonthData.size()
+                                , getWeekCalories(lastMonthData) / lastMonthData.size()
+                                , getAvgDurationTime(lastMonthData) / lastMonthData.size()
+                                ,getResources().getString(R.string.analysis_fragment_last_month_solar));
+                        }else{
+                            setAverageText(0,0,0,0,getResources().getString(R.string.analysis_fragment_last_month_solar));
+                        }
                         break;
                 }
             }
@@ -136,5 +154,38 @@ public class AnalysisStepsFragment extends BaseFragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    private void setAverageText(int totalSteps, int averageSteps, int averageCalories, int averageDuration,String title) {
+        analysisStepsText.setText(title);
+        totalStepsText.setText(totalSteps+"");
+        averageStepsText.setText(averageSteps+"");
+        avgCalories.setText(averageCalories + "");
+        avgDurationTime.setText(averageDuration + "");
+
+    }
+
+    private int getAvgDurationTime(List<Steps> thisWeekData) {
+        int durationTime = 0;
+        for (Steps steps : thisWeekData) {
+            durationTime += steps.getRunDuration();
+        }
+        return durationTime;
+    }
+
+    private int getWeekCalories(List<Steps> thisWeekData) {
+        int avgCaloriesNum = 0;
+        for (Steps steps : thisWeekData) {
+            avgCaloriesNum += steps.getCalories();
+        }
+        return avgCaloriesNum;
+    }
+
+    private int getWeekSteps(List<Steps> thisWeekData) {
+        int totalSteps = 0;
+        for (Steps steps : thisWeekData) {
+            totalSteps += steps.getSteps();
+        }
+        return totalSteps;
     }
 }

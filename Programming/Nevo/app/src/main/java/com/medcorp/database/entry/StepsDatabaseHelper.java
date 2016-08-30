@@ -5,8 +5,6 @@ import android.content.Context;
 import com.medcorp.database.DatabaseHelper;
 import com.medcorp.database.dao.StepsDAO;
 import com.medcorp.model.Steps;
-import com.medcorp.util.CalendarWeekUtils;
-import com.medcorp.util.Common;
 
 import net.medcorp.library.ble.util.Optional;
 
@@ -91,25 +89,6 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList.isEmpty() ? new Optional<Steps>() : stepsList.get(0);
     }
 
-//    public List<Optional<Steps>> getOneDaySteps(String userId, Date date) {
-//        List<Optional<Steps>> stepsList = new ArrayList<>();
-//        try {
-//            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao()
-//                    .queryBuilder().where().eq(StepsDAO.fNevoUserID, userId)
-//                    .and().eq(StepsDAO.fDate, Common.removeTimeFromDate(date).getTime())
-//                    .query();
-//
-//            for (StepsDAO steps : stepsDAOList) {
-//                Optional<Steps> stepsOptional = new Optional<Steps>();
-//                stepsOptional.set(convertToNormal(steps));
-//                stepsList.add(stepsOptional);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return stepsList;
-//    }
-
     @Override
     public List<Optional<Steps>> getAll(String userId) {
         List<Optional<Steps>> stepsList = new ArrayList<>();
@@ -126,46 +105,33 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList;
     }
 
-    public Steps getDailySteps(String userId, Date date) {
-
-        try {
-            List<StepsDAO> stepsDAOList = databaseHelper.getStepsDao()
-                    .queryBuilder().where().eq(StepsDAO.fNevoUserID, userId)
-                    .and().eq(StepsDAO.fDate, Common.removeTimeFromDate(date).getTime())
-                    .query();
-            return convertToNormal(stepsDAOList.get(0));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new Steps(date.getTime());
-    }
-
-    public List<Steps> getThisWeekSteps(String userId, Date date) {
-        List<Steps> thisWeekSteps = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            thisWeekSteps.add(getDailySteps(userId, new Date(start)));
-        }
-        return thisWeekSteps;
-    }
-
-    public List<Steps> getLastWeekSteps(String userId, Date date) {
-        List<Steps> lastWeekSteps = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-            lastWeekSteps.add(getDailySteps(userId, new Date(start)));
-        }
-        return lastWeekSteps;
-    }
-
-    public List<Steps> getLastMonthSteps(String userId, Date date) {
-        List<Steps> lastMonthSteps = new ArrayList<>();
-        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            lastMonthSteps.add(getDailySteps(userId, new Date(start)));
-        }
-        return lastMonthSteps;
-    }
+//    public List<Steps> getThisWeekSteps(String userId, Date date) {
+//        List<Steps> thisWeekSteps = new ArrayList<>();
+//        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+//        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+//            Steps steps = get(userId,new Date(start)).get();
+//            thisWeekSteps.add(steps);
+//        }
+//        return thisWeekSteps;
+//    }
+//
+//    public List<Steps> getLastWeekSteps(String userId, Date date) {
+//        List<Steps> lastWeekSteps = new ArrayList<>();
+//        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+//        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+//            lastWeekSteps.add(get(userId, new Date(start)).get());
+//        }
+//        return lastWeekSteps;
+//    }
+//
+//    public List<Steps> getLastMonthSteps(String userId, Date date) {
+//        List<Steps> lastMonthSteps = new ArrayList<>();
+//        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+//        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+//            lastMonthSteps.add(get(userId, new Date(start)).get());
+//        }
+//        return lastMonthSteps;
+//    }
 
     public List<Steps> getNeedSyncSteps(String userId) {
         List<Steps> stepsList = new ArrayList<Steps>();

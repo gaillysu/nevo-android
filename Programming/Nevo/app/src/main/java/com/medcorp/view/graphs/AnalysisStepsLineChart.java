@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.medcorp.R;
+import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
 
 import org.joda.time.DateTime;
@@ -34,8 +35,8 @@ import static java.lang.Math.abs;
 
 public class AnalysisStepsLineChart extends LineChart{
 
-    private Steps steps;
-    private List<Steps> stepsList = new ArrayList<>();
+    private List<Steps> stepsList ;
+    private Goal goal;
 
     public AnalysisStepsLineChart(Context context) {
         super(context);
@@ -91,8 +92,9 @@ public class AnalysisStepsLineChart extends LineChart{
 
     }
 
-    public void addData(List<Steps> stepsList){
+    public void addData(List<Steps> stepsList, Goal goal){
         this.stepsList = stepsList;
+        this.goal = goal;
 
         List<Entry> yValue = new ArrayList<Entry>();
         int maxValue = 0;
@@ -100,7 +102,7 @@ public class AnalysisStepsLineChart extends LineChart{
         final int stepsModulo = 500;
         for (int i = 0; i < stepsList.size(); i++) {
             if (i < stepsList.size()){
-                steps= stepsList.get(i);
+               Steps steps = stepsList.get(i);
                 if (steps.getSteps() > maxValue){
                     maxValue = steps.getSteps();
                 }
@@ -112,14 +114,14 @@ public class AnalysisStepsLineChart extends LineChart{
 
         Log.w("Karl","Max vlaue = " + maxValue);
         boolean putTop = false;
-        if (maxValue == 0 ||  maxValue  < steps.getGoal()){
-            maxValue = steps.getGoal() + stepsModulo;
+        if (maxValue == 0 ||  maxValue  < goal.getSteps()){
+            maxValue = goal.getSteps() + stepsModulo;
         }else{
             putTop = true;
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
 
-        LimitLine limitLine = new LimitLine(steps.getGoal(), "Goal: " +  steps.getGoal());
+        LimitLine limitLine = new LimitLine(goal.getSteps(), "Goal: " +  goal.getSteps());
         limitLine.setLineWidth(1.5f);
         limitLine.setLineColor(Color.BLACK);
         limitLine.setTextSize(18f);
