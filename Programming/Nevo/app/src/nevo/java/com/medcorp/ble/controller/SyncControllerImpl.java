@@ -432,8 +432,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                     //here save solar time to local database when watch ID>1
                     if(getWatchInfomation().getWatchID()>1){
-                        Solar solar = new Solar(new Date());
-                        solar.setDate(Common.removeTimeFromDate(new Date()));
+                        Solar solar = new Solar(new Date(history.getCreated()));
+                        solar.setDate(Common.removeTimeFromDate(solar.getCreatedDate()));
                         solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
                         solar.setTotalHarvestingTime(thispacket.getTotalSwimTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlySwimTime().toString());

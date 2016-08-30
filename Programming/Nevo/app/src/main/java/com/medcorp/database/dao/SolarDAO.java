@@ -14,7 +14,7 @@ public class SolarDAO {
      */
     public static final String fID = "ID";
     @DatabaseField(generatedId = true)
-    private int ID = 1;
+    private int ID = (int) Math.floor(Math.random()*Integer.MAX_VALUE);
 
     /**
      * createDate is YYYY-MM-DD HH:MM:SS, means create or update date

@@ -12,8 +12,14 @@ public class Solar {
 
     private int id;
 
+    /**
+     * createdDate is the created/updated date, format is YYYY-MM-DD HH:MM:SS
+     */
     private Date createdDate;
 
+    /**
+     * date is the daily date,format is YYYY-MM-DD
+     */
     private Date date;
 
     private int userId;
