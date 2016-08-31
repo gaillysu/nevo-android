@@ -14,6 +14,7 @@ import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
+import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
@@ -87,7 +88,7 @@ public class ClockFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(result);
@@ -98,6 +99,8 @@ public class ClockFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
+        getModel().getSyncController().getDailyTrackerInfo(false);
     }
 
     @Override
@@ -144,6 +147,18 @@ public class ClockFragment extends BaseFragment {
                 refreshClock();
             }
         });
+    }
+
+    @Subscribe
+    public void onEvent(final OnSyncEvent event) {
+        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData(userSelectDate);
+                }
+            });
+        }
     }
 
 }

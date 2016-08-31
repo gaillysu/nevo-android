@@ -69,8 +69,6 @@ public class LunarMainStepsFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
-        //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
-        getModel().getSyncController().getDailyTrackerInfo(false);
         initData(userSelectDate);
         return lunarMainFragmentAdapterChart;
     }
@@ -78,7 +76,7 @@ public class LunarMainStepsFragment extends BaseFragment {
     private void initData(Date date) {
         User user = getModel().getNevoUser();
         steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()) : 0 + " min");
+        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()+steps.getRunDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));
@@ -104,6 +102,8 @@ public class LunarMainStepsFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
+        getModel().getSyncController().getDailyTrackerInfo(false);
     }
 
     @Override
