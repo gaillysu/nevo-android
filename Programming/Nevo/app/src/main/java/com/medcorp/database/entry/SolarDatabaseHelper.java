@@ -117,6 +117,7 @@ public class SolarDatabaseHelper implements iEntryDatabaseHelper<Solar> {
     }
     private Solar convertToNormal(SolarDAO solarDAO) {
         Solar solar = new Solar(solarDAO.getCreatedDate());
+        solar.setId(solarDAO.getID());
         solar.setDate(solarDAO.getDate());
         solar.setHourlyHarvestingTime(solarDAO.getHourlyHarvestingTime());
         solar.setTotalHarvestingTime(solarDAO.getTotalHarvestingTime());
