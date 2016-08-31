@@ -41,8 +41,11 @@ import com.medcorp.ble.model.packet.BatteryLevelPacket;
 import com.medcorp.ble.model.packet.DailyStepsPacket;
 import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
 import com.medcorp.ble.model.packet.DailyTrackerPacket;
+import com.medcorp.ble.model.packet.FindPhonePacket;
 import com.medcorp.ble.model.packet.Packet;
 import com.medcorp.ble.model.packet.WatchInfoPacket;
+import com.medcorp.ble.model.request.FindPhoneRequest;
+import com.medcorp.ble.model.request.FindWatchRequest;
 import com.medcorp.ble.model.request.GetBatteryLevelRequest;
 import com.medcorp.ble.model.request.GetStepsGoalRequest;
 import com.medcorp.ble.model.request.LedLightOnOffRequest;
@@ -480,6 +483,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         sendRequest(new TestModeRequest(mContext,0x3F0000,false));
                     }
                 }
+                else if((byte) FindPhonePacket.HEADER == packet.getHeader())
+                {
+                    if(mLocalService!=null) {
+                        mLocalService.findCellPhone();
+                    }
+                    //let all color LED light on, means that find CellPhone is successful.
+                    sendRequest(new FindPhoneRequest(mContext));
+                }
                 else if((byte) GetStepsGoalRequest.HEADER == nevoData.getRawData()[1])
                 {
                     if (!mEnableTestMode)
@@ -506,7 +517,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 else if((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel())));
                 }
-                else if((byte) 0xF0 == packet.getHeader()) {
+                else if((byte) 0xF0 == packet.getHeader() || FindWatchRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 }
                 else if((byte) SetAlarmRequest.HEADER == packet.getHeader()
@@ -629,7 +640,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public void findDevice()
     {
-        sendRequest(new LedLightOnOffRequest(mContext,0x3F0000,true));
+        //if user watch is old,use 0xF0 cmd to find watch
+        if(getWatchInfomation().getWatchID()<=1) {
+            sendRequest(new LedLightOnOffRequest(mContext, 0x3F0000, true));
+        }else {
+            //light on all color LED and start vibrator
+            sendRequest(new FindWatchRequest(mContext,true));
+        }
     }
 
     @Override

@@ -10,9 +10,11 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  */
 public class FindWatchRequest extends BLERequestData {
     public  final static  byte HEADER = 0x44;
+    private boolean vibrator;
 
-    public FindWatchRequest(Context context) {
+    public FindWatchRequest(Context context,boolean vibrator) {
         super(new GattAttributesDataSourceImpl(context));
+        this.vibrator = vibrator;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class FindWatchRequest extends BLERequestData {
     public byte[][] getRawDataEx() {
         return new byte[][] {
                 {       0,HEADER, (byte) 0xFF, (byte) 0xFF,
-                        (byte)0xFF,0,0,0, //light on all color LED and start vibrator
+                        vibrator?(byte)0xFF:0,0,0,0, //light on all color LED and start/stop vibrator
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0
