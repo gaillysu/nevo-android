@@ -100,7 +100,9 @@ public class ClockFragment extends BaseFragment {
         super.onStart();
         EventBus.getDefault().register(this);
         //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
-        getModel().getSyncController().getDailyTrackerInfo(false);
+        if(Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
+            getModel().getSyncController().getDailyTrackerInfo(false);
+        }
     }
 
     @Override
