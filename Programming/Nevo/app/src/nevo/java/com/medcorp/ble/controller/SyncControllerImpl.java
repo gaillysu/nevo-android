@@ -398,6 +398,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     steps.setRunDistance(thispacket.getDailyRunDistance());
                     steps.setWalkDuration(thispacket.getDailyWalkDuration());
                     steps.setRunDuration(thispacket.getDailyRunDuration());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total active time: " + (steps.getWalkDuration()+steps.getRunDuration()) + ",walk time: " + steps.getWalkDuration() + ",run time: "+ steps.getRunDuration());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total distance: " + steps.getDistance() +",walk distance: " + steps.getWalkDistance() + ",run distance: " + steps.getRunDistance());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total calories: " + steps.getCalories());
                     try {
                         steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
                     } catch (JSONException e) {
@@ -437,6 +440,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
                         solar.setTotalHarvestingTime(thispacket.getTotalSwimTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlySwimTime().toString());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solor time:" + solar.getHourlyHarvestingTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solor time:" + solar.getTotalHarvestingTime());
                         ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
                     }
 
