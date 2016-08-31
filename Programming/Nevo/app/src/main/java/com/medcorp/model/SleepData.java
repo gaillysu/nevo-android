@@ -8,8 +8,6 @@ import com.medcorp.util.Common;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.medcorp.util.Common.convertJSONArrayIntToArray;
-
 
 /**
  * Created by Karl on 11/27/15.

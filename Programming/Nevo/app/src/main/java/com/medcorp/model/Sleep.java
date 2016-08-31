@@ -44,7 +44,9 @@ public class Sleep implements Comparable<Sleep>{
         this.createdDate = createdDate;
     }
 
-    public Sleep(long createdDate, long date, int totalSleepTime, int totalWakeTime, int totalLightTime, int totalDeepTime, String hourlySleep, String hourlyWake, String hourlyLight, String hourlyDeep, long start, long end, int sleepQuality, String remarks) {
+    public Sleep(long createdDate, long date, int totalSleepTime, int totalWakeTime, int totalLightTime,
+                 int totalDeepTime, String hourlySleep, String hourlyWake, String hourlyLight, String hourlyDeep,
+                 long start, long end, int sleepQuality, String remarks) {
         this.createdDate = createdDate;
         this.date = date;
         this.totalSleepTime = totalSleepTime;

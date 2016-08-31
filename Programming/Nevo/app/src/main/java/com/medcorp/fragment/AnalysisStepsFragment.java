@@ -12,7 +12,6 @@ import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
-import com.medcorp.util.CalendarWeekUtils;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
 

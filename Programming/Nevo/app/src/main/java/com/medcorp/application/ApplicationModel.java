@@ -466,7 +466,7 @@ public class ApplicationModel extends Application {
             int lightSleep = 0;
             int deepSleep = 0;
             int wake = 0;
-            List<Integer> hourlySleepList = new ArrayList<Integer>();
+            List<Integer> hourlySleepList = new ArrayList<>();
 
             sleep.setHourlyWake(validicSleepRecord.getExtras().getHourlyWake());
             sleep.setHourlyLight(validicSleepRecord.getExtras().getHourlyLight());
