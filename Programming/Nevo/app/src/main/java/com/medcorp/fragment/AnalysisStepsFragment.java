@@ -90,7 +90,6 @@ public class AnalysisStepsFragment extends BaseFragment {
             // 因该 没有这个 SITUATION
             // TODO next version, per day goal line.
         }
-        CalendarWeekUtils startDate = new CalendarWeekUtils(userSelectDate);
         lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);

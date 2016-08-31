@@ -217,7 +217,8 @@ public class ApplicationModel extends Application {
     public StepsDatabaseHelper getStepsHelper() {
         return stepsDatabaseHelper;
     }
-    public SolarDatabaseHelper getSolarDatabaseHelper(){
+
+    public SolarDatabaseHelper getSolarDatabaseHelper() {
         return solarDatabaseHelper;
     }
 
@@ -292,6 +293,9 @@ public class ApplicationModel extends Application {
                         , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
                         start, dailySleep.getStart(), dailySleep.getEnd());
                 thisWeekSleep.add(sleepData);
+            } else {
+                SleepData sleepData = new SleepData(0, 0, 0, start, 0, 0);
+                thisWeekSleep.add(sleepData);
             }
         }
         return thisWeekSleep;
@@ -309,6 +313,9 @@ public class ApplicationModel extends Application {
                         , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
                         new DateTime(start).getMillis(), dailySleep.getStart(), dailySleep.getEnd());
                 lastWeekSleep.add(sleepData);
+            } else {
+                SleepData sleepData = new SleepData(0, 0, 0, start, 0, 0);
+                lastWeekSleep.add(sleepData);
             }
         }
         return lastWeekSleep;
@@ -325,7 +332,9 @@ public class ApplicationModel extends Application {
                         , dailySleep.getTotalLightTime(), dailySleep.getTotalWakeTime(),
                         start, dailySleep.getStart(), dailySleep.getEnd());
                 lastMonth.add(sleepData);
-
+            } else {
+                SleepData sleepData = new SleepData(0, 0, 0, start, 0, 0);
+                lastMonth.add(sleepData);
             }
         }
         return lastMonth;
@@ -364,8 +373,11 @@ public class ApplicationModel extends Application {
         Optional<Steps> steps = stepsDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
         if (steps.notEmpty()) {
             return steps.get();
+        } else {
+            return new Steps(date.getTime(),date.getTime(),0,0,0,
+                    0,0,"","","",
+                    0,0,0,0,0,0,0,0,"");
         }
-        return new Steps(0);
     }
 
     public Sleep[] getDailySleep(String userId, Date todayDate) {

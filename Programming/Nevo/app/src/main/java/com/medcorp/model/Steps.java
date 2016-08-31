@@ -57,7 +57,11 @@ public class Steps implements Comparable<Steps>{
         this.createdDate = createdDate;
     }
 
-    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps, int distance, int calories, String hourlySteps, String hourlyDistance, String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime, int goal, int walkDistance,int runDistance,int walkDuration,int runDuration,String remarks) {
+    public Steps( long createdDate, long date, int steps, int walkSteps, int runSteps,
+                  int distance, int calories, String hourlySteps, String hourlyDistance,
+                  String hourlyCalories, int inZoneTime, int outZoneTime, int noActivityTime,
+                  int goal, int walkDistance,int runDistance,int walkDuration,int runDuration,String remarks) {
+
         this.createdDate = createdDate;
         this.date = date;
         this.steps = steps;
