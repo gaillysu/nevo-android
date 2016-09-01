@@ -107,6 +107,18 @@ public class LunarMainSleepFragment extends BaseFragment {
             DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
             wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
         } else {
+            // TODO  create empty sleepdata object, then lineChartSleep.setDataInChart(sleepData);
+            /*
+                Don't forget this:
+                SleepData data = new SleepData(new Date());
+                data.startTime = new DateTime().minusDay(1).setTime(20:00)
+                data.endTime = new DateTime().minusDay(1).setTime(08:00)
+                data.setLightSleep = "[0,0,0,0,0,0,0,0,0]"
+                data.setDeepSleep = "[0,0,0,0,0,0,0,0,0]"
+                data.setWakeTime = "[0,0,0,0,0,0,0,0,0]"
+                date.setTotalTime = "[0,0,0,0,0,0,0,0,0]"
+                date.setTotal alkdjhfksjdhfalkjshdflkaj
+             */
             lineChartSleep.setEmptyChart();
             durationTextView.setText("0");
             qualityTextView.setText("0");
