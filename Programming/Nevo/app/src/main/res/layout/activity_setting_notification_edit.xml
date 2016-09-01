@@ -93,4 +93,5 @@
             android:layout_marginRight="60dp"
             android:background="@color/list_item_divider"/>
     </RelativeLayout>
+
 </LinearLayout>

@@ -374,9 +374,9 @@ public class ApplicationModel extends Application {
         if (steps.notEmpty()) {
             return steps.get();
         } else {
-            return new Steps(date.getTime(),date.getTime(),0,0,0,
-                    0,0,"","","",
-                    0,0,0,0,0,0,0,0,"");
+            return new Steps(date.getTime(), date.getTime(), 0, 0, 0,
+                    0, 0, "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "", "",
+                    0, 0, 0, 0, 0, 0, 0, 0, "");
         }
     }
 
@@ -388,8 +388,32 @@ public class ApplicationModel extends Application {
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
         if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
             return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
+        } else {
+            Sleep yesterday = new Sleep(new DateTime().getMillis());
+            DateTime yesterdayTime = getToday().minusDays(1);
+            yesterday.setDate(yesterdayTime.getMillis());
+            yesterday.setStart(yesterdayTime.withHourOfDay(20).getMillis());
+            yesterday.setEnd(yesterdayTime.withHourOfDay(23).withMinuteOfHour(59).getMillis());
+            yesterday.setHourlyWake("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            yesterday.setHourlyLight("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            yesterday.setHourlyDeep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            yesterday.setHourlySleep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+
+            Sleep today = new Sleep(new DateTime().getMillis());
+            DateTime todayTime = getToday();
+            today.setDate(todayTime.getMillis());
+            today.setStart(todayTime.getMillis());
+            today.setEnd(todayTime.withHourOfDay(8).getMillis());
+            today.setHourlyWake("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            today.setHourlyLight("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            today.setHourlyDeep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            today.setHourlySleep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
+            return new Sleep[]{today,yesterday};
         }
-        return new Sleep[0];
+    }
+
+    private DateTime getToday() {
+        return new DateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
     }
 
     public void saveDailySleep(Sleep sleep) {

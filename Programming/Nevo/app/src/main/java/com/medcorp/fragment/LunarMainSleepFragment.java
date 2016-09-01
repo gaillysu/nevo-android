@@ -53,7 +53,6 @@ public class LunarMainSleepFragment extends BaseFragment {
     @Bind(R.id.fragment_sleep_history_linechart)
     SleepTodayChart lineChartSleep;
 
-
     private Date userSelectDate;
 
     @Override
@@ -79,13 +78,15 @@ public class LunarMainSleepFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
-        List<Sleep> sleepList = new ArrayList<>();
+        List<Sleep> sleepList = new ArrayList<Sleep>(0);
+
         for (int i = 0; i < sleepArray.length; i++) {
             sleepList.add(sleepArray[i]);
         }
 
         SleepDataHandler handler = new SleepDataHandler(sleepList, false);
         List<SleepData> sleepDataList = handler.getSleepData();
+
         if (!sleepDataList.isEmpty()) {
             SleepData sleepData;
             if (sleepDataList.size() == 2) {
@@ -95,17 +96,17 @@ public class LunarMainSleepFragment extends BaseFragment {
 
                 sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
                 durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
-//            } else {
+            } else {
                 sleepData = sleepDataList.get(0);
-//                DateTime sleepStart = new DateTime(sleepData.getSleepStart());
-//                sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
-//                durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
-                lineChartSleep.setDataInChart(sleepData);
-                qualityTextView.setText("100%");
-                DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
-                wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
+                DateTime sleepStart = new DateTime(sleepData.getSleepStart());
+                sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
+                durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
             }
-        }else{
+            qualityTextView.setText("100%");
+            lineChartSleep.setDataInChart(sleepData);
+            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
+            wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
+        } else {
             lineChartSleep.setEmptyChart();
             durationTextView.setText("0");
             qualityTextView.setText("0");
@@ -113,6 +114,7 @@ public class LunarMainSleepFragment extends BaseFragment {
             wakeTimeTextView.setText("0");
         }
     }
+
 
     @Override
     public void onStart() {
@@ -136,4 +138,6 @@ public class LunarMainSleepFragment extends BaseFragment {
             }
         });
     }
+
+
 }
