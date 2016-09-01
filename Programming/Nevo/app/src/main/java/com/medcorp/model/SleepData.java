@@ -20,9 +20,9 @@ public class SleepData {
     private long date;
     private long sleepStart;
     private long sleepEnd;
-    private String hourlyWake;
-    private String hourlyLight;
-    private String hourlyDeep;
+    private String hourlyWake = "[ 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
+    private String hourlyLight = "[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
+    private String hourlyDeep = "[ 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
 
     public SleepData(int deepSleep, int lightSleep, int awake, long date) {
         this.deepSleep = deepSleep;
@@ -31,7 +31,7 @@ public class SleepData {
         this.date = date;
     }
 
-    public SleepData(int deepSleep, int lightSleep, int awake, long date,long sleepStart,long sleepEnd) {
+    public SleepData(int deepSleep, int lightSleep, int awake, long date, long sleepStart, long sleepEnd) {
         this.deepSleep = deepSleep;
         this.lightSleep = lightSleep;
         this.awake = awake;
@@ -73,7 +73,7 @@ public class SleepData {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -117,19 +117,18 @@ public class SleepData {
         this.hourlyDeep = hourlyDeep;
     }
 
-    public JSONObject toJSONObject(Context context)
-    {
+    public JSONObject toJSONObject(Context context) {
         JSONObject json = new JSONObject();
         try {
-            json.put(context.getString(R.string.key_sleep_duration),getTotalSleep());
-            json.put(context.getString(R.string.key_sleep_deep_duration),getDeepSleep());
-            json.put(context.getString(R.string.key_sleep_light_duration),getLightSleep());
-            json.put(context.getString(R.string.key_sleep_start_time),getSleepStart());
-            json.put(context.getString(R.string.key_sleep_end_time),getSleepEnd());
-            json.put(context.getString(R.string.key_sleep_wake_duration),getAwake());
-            json.put(context.getString(R.string.key_sleep_hourly_wake),getHourlyWake());
-            json.put(context.getString(R.string.key_sleep_hourly_light),getHourlyLight());
-            json.put(context.getString(R.string.key_sleep_hourly_deep),getHourlyDeep());
+            json.put(context.getString(R.string.key_sleep_duration), getTotalSleep());
+            json.put(context.getString(R.string.key_sleep_deep_duration), getDeepSleep());
+            json.put(context.getString(R.string.key_sleep_light_duration), getLightSleep());
+            json.put(context.getString(R.string.key_sleep_start_time), getSleepStart());
+            json.put(context.getString(R.string.key_sleep_end_time), getSleepEnd());
+            json.put(context.getString(R.string.key_sleep_wake_duration), getAwake());
+            json.put(context.getString(R.string.key_sleep_hourly_wake), getHourlyWake());
+            json.put(context.getString(R.string.key_sleep_hourly_light), getHourlyLight());
+            json.put(context.getString(R.string.key_sleep_hourly_deep), getHourlyDeep());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -137,16 +136,16 @@ public class SleepData {
     }
 
 
-    public int[] getHourlyDeepInt(){
+    public int[] getHourlyDeepInt() {
         return Common.convertJSONArrayIntToArray(getHourlyDeep());
     }
 
-    public int[] getHourlyLightInt(){
+    public int[] getHourlyLightInt() {
         return Common.convertJSONArrayIntToArray(getHourlyLight());
     }
 
 
-    public int[] getHourlyWakeInt(){
+    public int[] getHourlyWakeInt() {
         return Common.convertJSONArrayIntToArray(getHourlyWake());
     }
 }

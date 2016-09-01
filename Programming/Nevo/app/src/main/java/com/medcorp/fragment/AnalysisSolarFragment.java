@@ -14,14 +14,11 @@ import com.medcorp.model.Solar;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisSolarLineChart;
 
-import org.joda.time.DateTime;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,17 +32,24 @@ public class AnalysisSolarFragment extends BaseFragment {
     ViewPager solarViewPager;
     @Bind(R.id.analysis_solar_fragment_title_tv)
     TextView solarTitleTextView;
+    @Bind(R.id.today_solar_battery_time_tv)
+    TextView averageTimeOnBattery;
+    @Bind(R.id.today_solar_solar_time_tv)
+    TextView averageTimeOnSolar;
 
     private View thisWeekView;
     private View lastWeekView;
     private View lastMonthView;
     private List<View> solarList;
     private Date userSelectDate;
+    private List<Solar> thisWeek;
+    private List<Solar> lastWeek;
+    private List<Solar> lastMonth;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
-        View solarView = inflater.inflate(R.layout.analysis_fragment_child_solar_fragment,container,false);
-        ButterKnife.bind(this,solarView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View solarView = inflater.inflate(R.layout.analysis_fragment_child_solar_fragment, container, false);
+        ButterKnife.bind(this, solarView);
 
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
@@ -57,6 +61,7 @@ public class AnalysisSolarFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+
         initView(inflater);
         return solarView;
     }
@@ -64,9 +69,9 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     private void initView(LayoutInflater inflater) {
         solarList = new ArrayList<>(3);
-        thisWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout,null);
-        lastWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout,null);
-        lastMonthView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout,null);
+        thisWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout, null);
+        lastWeekView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout, null);
+        lastMonthView = inflater.inflate(R.layout.analysis_solar_chart_fragment_layout, null);
         solarList.add(thisWeekView);
         solarList.add(lastWeekView);
         solarList.add(lastMonthView);
@@ -79,14 +84,12 @@ public class AnalysisSolarFragment extends BaseFragment {
         AnalysisSolarLineChart lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
         AnalysisSolarLineChart lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
 
-        // TODO Add real data from the database, also create database for solar.
-        // TODO add other following textfields: Average Time in Sun, Most Time in Sun , Least time in sun, Total Time in Sun
-        // 不明白用 GOOGLE TRANSLATE :D
-        // remove dummy data after migrating to db
-        thisWeekChart.addData(generateDummyData(7,0),7);
-        lastWeekChart.addData(generateDummyData(7,7),7);
-        lastMonthChart.addData(generateDummyData(30,0),30);
-
+        thisWeek = getModel().getThisWeekSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        lastWeek = getModel().getLastWeekSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        lastMonth = getModel().getLastMonthSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        thisWeekChart.addData(thisWeek, 7);
+        lastWeekChart.addData(lastWeek, 7);
+        lastMonthChart.addData(lastMonth, 30);
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(solarList);
         solarViewPager.setAdapter(adapter);
@@ -98,15 +101,18 @@ public class AnalysisSolarFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                switch(position){
+                switch (position) {
                     case 0:
                         solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
+                        averageTimeOnSolar.setText(getAverageTimeOnBattery(thisWeek)+"");
                         break;
                     case 1:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_week_steps);
+                        averageTimeOnSolar.setText(getAverageTimeOnBattery(lastWeek)+"");
                         break;
                     case 2:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_month_solar);
+                        averageTimeOnSolar.setText(getAverageTimeOnBattery(lastMonth)+"");
                         break;
                 }
             }
@@ -118,16 +124,11 @@ public class AnalysisSolarFragment extends BaseFragment {
         });
     }
 
-    private List<Solar> generateDummyData(int maxDays, int offset){
-        List<Solar> solarList = new ArrayList<>();
-        Random r = new Random();
-        for (int i = 0; i < maxDays; i++){
-            DateTime time = new DateTime();
-            Solar solar = new Solar(time.toDate());
-            solar.setDate(time.plusDays(i + offset).toDate());
-            solar.setTotalHarvestingTime(r.nextInt(300));
-            solarList.add(solar);
+    public int getAverageTimeOnBattery(List<Solar> list){
+        int sum = 0;
+        for(Solar solar : list){
+            sum = solar.getTotalHarvestingTime();
         }
-        return solarList;
+        return sum == 0?0:sum/list.size();
     }
 }

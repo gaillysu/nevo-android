@@ -372,7 +372,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="main_fragment_solar_page_time_on_battery_text">Time On Battery</string>
     <string name="main_fragment_solar_page_time_on_solar_text">Time On Solar</string>
     <string name="user_no_select_profile_info">Please select the correct profile !</string>
-
+    <string name="analysis_fragment_solar_page_time_on_battery_text">Average Time On Battery</string>
+    <string name="analysis_fragment_solar_page_time_on_solar_text">Average Time On Solar</string>
     <string name="edit_alarm_repeat">Repeat</string>
     <string name="edit_alarm_name">Alarm Name</string>
     <string name="input_legitimate_value">Please enter a valid value from 1 to 7</string>

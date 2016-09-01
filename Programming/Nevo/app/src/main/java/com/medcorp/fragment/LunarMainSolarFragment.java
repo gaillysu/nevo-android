@@ -61,6 +61,10 @@ public class LunarMainSolarFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
         float[] solarPieChartDate = {40f, 60f};
+        setPieChartData(solarPieChartDate);
+    }
+
+    private void setPieChartData(float[] solarPieChartDate) {
         String[] describe = getContext().getResources().getStringArray(R.array.solar_describe_battery_text);
         ArrayList<String> des = new ArrayList<>();
         solarPieChart.setUsePercentValues(true);

@@ -49,7 +49,7 @@ public class SleepTodayChart extends LineChart {
         initGraph();
     }
 
-    public void initGraph(){
+    public void initGraph() {
         setContentDescription("");
         setDescription("");
         setNoDataTextDescription("");
@@ -83,9 +83,9 @@ public class SleepTodayChart extends LineChart {
 
     }
 
-    public void setDataInChart(SleepData sleepData){
+    public void setDataInChart(SleepData sleepData) {
         SimpleDateFormat sdf = new SimpleDateFormat("d'/'M", Locale.US);
-        List<Entry> yValue = new ArrayList<Entry>();
+        List<Entry> yValue = new ArrayList<>();
         int interval = 5;
         List<Integer> intList = new ArrayList<>();
         int lightSleepContinue = -1;
@@ -94,36 +94,36 @@ public class SleepTodayChart extends LineChart {
         int[] hourlyLightSleepTime = sleepData.getHourlyLightInt();
         int[] hourlyDeepSleepTime = sleepData.getHourlyDeepInt();
 
-        int sleptHours = Collections.max(Arrays.asList(hourlyWakeTime.length,hourlyLightSleepTime.length,hourlyDeepSleepTime.length));
+        int sleptHours = Collections.max(Arrays.asList(hourlyWakeTime.length, hourlyLightSleepTime.length, hourlyDeepSleepTime.length));
         for (int hour = 0; hour < sleptHours; hour++) {
             int awakeMinutes = hourlyWakeTime[hour];
             int lightSleepMinutes = hourlyLightSleepTime[hour];
             int deepSleepMinutes = hourlyDeepSleepTime[hour];
-            if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0 ){
+            if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0) {
                 continue;
             }
-            if (awakeMinutes > 0){
-                int consecutiveMinutes = awakeMinutes/interval;
-                for (int i = 0; i <consecutiveMinutes; i++){
+            if (awakeMinutes > 0) {
+                int consecutiveMinutes = awakeMinutes / interval;
+                for (int i = 0; i < consecutiveMinutes; i++) {
                     intList.add(0);
                 }
             }
-            if (lightSleepMinutes > 0){
-                int consecutiveFiveMinutes = (int) lightSleepMinutes/interval;
-                for (int i = 0; i <consecutiveFiveMinutes; i++){
+            if (lightSleepMinutes > 0) {
+                int consecutiveFiveMinutes = (int) lightSleepMinutes / interval;
+                for (int i = 0; i < consecutiveFiveMinutes; i++) {
                     intList.add(1);
                 }
             }
-            if (deepSleepMinutes> 0){
-                int consecutiveFiveMinutes = deepSleepMinutes/interval;
-                for (int i = 0; i <consecutiveFiveMinutes; i++){
+            if (deepSleepMinutes > 0) {
+                int consecutiveFiveMinutes = deepSleepMinutes / interval;
+                for (int i = 0; i < consecutiveFiveMinutes; i++) {
                     intList.add(2);
                 }
             }
         }
 
         for (int i = 0; i < intList.size(); i++) {
-            Log.w("Karl","Value = " + intList.get(i));
+            Log.w("Karl", "Value = " + intList.get(i));
             yValue.add(new Entry(i, intList.get(i)));
         }
         LineDataSet set = new LineDataSet(yValue, "");
@@ -138,8 +138,8 @@ public class SleepTodayChart extends LineChart {
         set.setDrawValues(false);
         set.setCircleColorHole(Color.BLACK);
         set.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
-//        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.chart_gradient);
-//        set.setFillDrawable(drawable);
+        //        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.chart_gradient);
+        //        set.setFillDrawable(drawable);
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         dataSets.add(set);
         LineData data = new LineData(dataSets);
@@ -155,32 +155,33 @@ public class SleepTodayChart extends LineChart {
 
     }
 
-    private class YAxisValueFormatter implements AxisValueFormatter{
+    private class YAxisValueFormatter implements AxisValueFormatter {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            if (value == 0.0){
+            if (value == 0.0) {
                 return getContext().getResources().getString(R.string.sleep_awake);
-            }else if (value >= 0.5 && value  <= 1.5){
+            } else if (value >= 0.5 && value <= 1.5) {
                 return getContext().getResources().getString(R.string.sleep_light_sleep);
-            }else if (value >= 1.6 && value  <= 2.6){
+            } else if (value >= 1.6 && value <= 2.6) {
                 return getContext().getResources().getString(R.string.sleep_deep_sleep);
             }
             return "?";
         }
+
         @Override
         public int getDecimalDigits() {
             return 0;
         }
     }
 
-    private class XAxisValueFormatter implements AxisValueFormatter{
+    private class XAxisValueFormatter implements AxisValueFormatter {
 
         private final int interval;
         private final int size;
         private final DateTime startDate;
 
-        public XAxisValueFormatter(int size, int interval, DateTime startDate){
+        public XAxisValueFormatter(int size, int interval, DateTime startDate) {
             this.size = size;
             this.interval = interval;
             this.startDate = startDate;
@@ -188,7 +189,7 @@ public class SleepTodayChart extends LineChart {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            DateTime newDate = startDate.plusHours((int) value/10);
+            DateTime newDate = startDate.plusHours((int) value / 10);
             return String.valueOf(newDate.getHourOfDay());
         }
 

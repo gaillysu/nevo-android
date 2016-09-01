@@ -92,10 +92,9 @@ public class AnalysisStepsFragment extends BaseFragment {
         lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-
-        thisWeekChart.addData(thisWeekData, activeGoal);
-        lastWeekChart.addData(lastWeekData, activeGoal);
-        lastMonthChart.addData(lastMonthData, activeGoal);
+        thisWeekChart.addData(thisWeekData, activeGoal,7);
+        lastWeekChart.addData(lastWeekData, activeGoal,7);
+        lastMonthChart.addData(lastMonthData, activeGoal,7);
     }
 
     private void initView(LayoutInflater inflater) {

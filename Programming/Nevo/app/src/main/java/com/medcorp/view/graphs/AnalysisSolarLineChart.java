@@ -32,9 +32,10 @@ import static java.lang.Math.abs;
  * Created by Karl on 8/24/16.
  */
 
-public class AnalysisSolarLineChart extends LineChart{
+public class AnalysisSolarLineChart extends LineChart {
 
     private List<Solar> solarList = new ArrayList<>();
+    private int maxDays;
 
     public AnalysisSolarLineChart(Context context) {
         super(context);
@@ -52,7 +53,7 @@ public class AnalysisSolarLineChart extends LineChart{
         initGraph();
     }
 
-    private void initGraph(){
+    private void initGraph() {
         setContentDescription("");
         setDescription("");
         setNoDataTextDescription("");
@@ -90,29 +91,29 @@ public class AnalysisSolarLineChart extends LineChart{
 
     }
 
-    public void addData(List<Solar> solarList, int maxDays){
+    public void addData(List<Solar> solarList, int maxDays) {
         this.solarList = solarList;
-
+        this.maxDays = maxDays;
         List<Entry> yValue = new ArrayList<Entry>();
         int maxValue = 0;
 
         final int stepsModulo = 30;
         for (int i = 0; i < maxDays; i++) {
-            if (i < solarList.size()){
+            if (i < solarList.size()) {
                 Solar solar = solarList.get(i);
-                if (solar.getTotalHarvestingTime() > maxValue){
+                if (solar.getTotalHarvestingTime() > maxValue) {
                     maxValue = solar.getTotalHarvestingTime();
                 }
                 yValue.add(new Entry(i, solar.getTotalHarvestingTime()));
-            }else{
+            } else {
                 yValue.add(new Entry(i, 0));
             }
         }
 
-        Log.w("Karl","Max vlaue = " + maxValue);
-        if (maxValue == 0){
+        Log.w("Karl", "Max vlaue = " + maxValue);
+        if (maxValue == 0) {
             maxValue = stepsModulo;
-        }else{
+        } else {
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
 
@@ -140,7 +141,7 @@ public class AnalysisSolarLineChart extends LineChart{
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
         leftAxis.setAxisMaxValue(maxValue * 1.0f);
-        leftAxis.setLabelCount(maxValue/30);
+        leftAxis.setLabelCount(maxValue / 30);
         LineData data = new LineData(dataSets);
         setData(data);
 
@@ -150,38 +151,49 @@ public class AnalysisSolarLineChart extends LineChart{
     }
 
 
-    private class XValueFormatter implements AxisValueFormatter{
+    private class XValueFormatter implements AxisValueFormatter {
 
         private int count = 0;
+
         private XValueFormatter() {
         }
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            if (solarList.size() < 11){
-                if (count >= solarList.size()){
+
+            if (solarList.isEmpty()) {
+                if (count >= maxDays) {
+                    count = 0;
+                }
+                DateTime time = new DateTime().plusDays(count);
+                count += 1;
+                return time.toString("dd/MM");
+            }
+
+            if (solarList.size() < 11) {
+                if (count >= solarList.size()) {
                     count = 0;
                 }
                 Solar solar = solarList.get(count);
-                count ++;
+                count++;
                 DateTime time = new DateTime(solar.getDate());
 
-                return time.toString("dd/MM") ;
-            }else{
-                if (count == 0 || count % 5 == 0 || count == (solarList.size() -1)){
-                    if (count >= solarList.size()){
+                return time.toString("dd/MM");
+            } else {
+                if (count == 0 || count % 5 == 0 || count == (solarList.size() - 1)) {
+                    if (count >= solarList.size()) {
                         count = 0;
                     }
                     Solar solar = solarList.get(count);
-                    count ++;
+                    count++;
 
                     DateTime time = new DateTime(solar.getDate());
-                    return time.toString("dd/MM") ;
-                }else{
-                    if (count >= solarList.size()){
+                    return time.toString("dd/MM");
+                } else {
+                    if (count >= solarList.size()) {
                         count = 0;
                     }
-                    count ++;
+                    count++;
                     return "";
                 }
             }
@@ -193,7 +205,7 @@ public class AnalysisSolarLineChart extends LineChart{
         }
     }
 
-    private class YValueFormatter implements AxisValueFormatter{
+    private class YValueFormatter implements AxisValueFormatter {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {

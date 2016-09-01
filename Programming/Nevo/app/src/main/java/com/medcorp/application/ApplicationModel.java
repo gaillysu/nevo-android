@@ -56,6 +56,7 @@ import com.medcorp.model.Alarm;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.SleepData;
+import com.medcorp.model.Solar;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.network.listener.ResponseListener;
@@ -282,6 +283,48 @@ public class ApplicationModel extends Application {
         stepsDatabaseHelper.update(steps);
     }
 
+    public List<Solar> getThisWeekSolar(String userId, Date date) {
+        List<Solar> thisWeekSolar = new ArrayList<>();
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
+            if (optional.notEmpty()) {
+                thisWeekSolar.add(optional.get());
+            } else {
+                thisWeekSolar.add(new Solar(new Date(start), new Date(start), getNevoUser().getId(), "", 0));
+            }
+        }
+        return thisWeekSolar;
+    }
+
+    public List<Solar> getLastWeekSolar(String userId, Date date) {
+        List<Solar> lastWeekSolar = new ArrayList<>();
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+            Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
+            if (optional.notEmpty()) {
+                lastWeekSolar.add(optional.get());
+            } else {
+                lastWeekSolar.add(new Solar(new Date(start), new Date(start), getNevoUser().getId(), "", 0));
+            }
+        }
+        return lastWeekSolar;
+    }
+
+    public List<Solar> getLastMonthSolar(String userId, Date date) {
+        List<Solar> lastMonthSolar = new ArrayList<>();
+        CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
+            if (optional.notEmpty()) {
+                lastMonthSolar.add(optional.get());
+            } else {
+                lastMonthSolar.add(new Solar(new Date(start), new Date(start), getNevoUser().getId(), "", 0));
+            }
+        }
+        return lastMonthSolar;
+    }
+
     public List<SleepData> getThisWeekSleep(String userId, Date date) {
         List<SleepData> thisWeekSleep = new ArrayList<>(3);
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
@@ -388,32 +431,8 @@ public class ApplicationModel extends Application {
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
         if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
             return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
-        } else {
-            Sleep yesterday = new Sleep(new DateTime().getMillis());
-            DateTime yesterdayTime = getToday().minusDays(1);
-            yesterday.setDate(yesterdayTime.getMillis());
-            yesterday.setStart(yesterdayTime.withHourOfDay(20).getMillis());
-            yesterday.setEnd(yesterdayTime.withHourOfDay(23).withMinuteOfHour(59).getMillis());
-            yesterday.setHourlyWake("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            yesterday.setHourlyLight("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            yesterday.setHourlyDeep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            yesterday.setHourlySleep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-
-            Sleep today = new Sleep(new DateTime().getMillis());
-            DateTime todayTime = getToday();
-            today.setDate(todayTime.getMillis());
-            today.setStart(todayTime.getMillis());
-            today.setEnd(todayTime.withHourOfDay(8).getMillis());
-            today.setHourlyWake("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            today.setHourlyLight("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            today.setHourlyDeep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            today.setHourlySleep("[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
-            return new Sleep[]{today,yesterday};
         }
-    }
-
-    private DateTime getToday() {
-        return new DateTime().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
+        return new Sleep[0];
     }
 
     public void saveDailySleep(Sleep sleep) {
