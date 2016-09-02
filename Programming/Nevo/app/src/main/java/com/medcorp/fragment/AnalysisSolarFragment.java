@@ -105,14 +105,17 @@ public class AnalysisSolarFragment extends BaseFragment {
                     case 0:
                         solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
                         averageTimeOnSolar.setText(getAverageTimeOnBattery(thisWeek)+"");
+                        averageTimeOnBattery.setText("0");
                         break;
                     case 1:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_week_steps);
                         averageTimeOnSolar.setText(getAverageTimeOnBattery(lastWeek)+"");
+                        averageTimeOnBattery.setText("0");
                         break;
                     case 2:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_month_solar);
                         averageTimeOnSolar.setText(getAverageTimeOnBattery(lastMonth)+"");
+                        averageTimeOnBattery.setText("0");
                         break;
                 }
             }

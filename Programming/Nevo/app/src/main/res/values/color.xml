@@ -39,6 +39,7 @@
     <color name="analysis_fragment_tablayout_background_color">#666666</color>
     <color name="tab_unselected_font_color">#BCBCBC</color>
     <color name="list_item_divider">#E5E5EA</color>
+    <color name="notification_divider_color">#C8C7CC</color>
     <color name="list_item_header_text_color">#6F6F6F</color>
     <color name="list_item_sub_text">#757575</color>
     <color name="setting_fragment_text_color">#ff524e4e</color>

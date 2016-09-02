@@ -60,7 +60,7 @@
     <string name="dfu_update_message">Updating&#8230;</string>
     <string name="dfu_update_available">An update is available for your watch.</string>
 
-    <string name="notification_allow">Allow notifications</string>
+    <string name="notification_allow">Allow Notifications</string>
     <string name="notification">Notification</string>
     <string name="notification_led_red">Red LED</string>
     <string name="notification_led_blue">Blue LED</string>
@@ -390,5 +390,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="login_skip_text">Skip</string>
     <string name="login_page_activity_title">Login</string>
+    <string name="save_notification_ok">Save success!</string>
     <!--<lunar end>-->
 </resources>
