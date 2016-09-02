@@ -58,6 +58,7 @@ public interface SyncController {
           @init: if true means by syncController invoked to do init sync, false means invoked by application to set value
      */
 	public void setAlarm(List<Alarm> list,boolean init);
+    public void setAlarm(Alarm alarm);
     /*
       return Nevo 's current daily step count and step Goal, refresh mainhome's Clock screen.
      */
