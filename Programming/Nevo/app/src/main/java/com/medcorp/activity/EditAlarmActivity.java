@@ -115,7 +115,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .inputType(InputType.TYPE_CLASS_NUMBER)
                     .input(getString(R.string.alarm_week_day),
                             getResources().getStringArray(R.array.week_day)[alarm.getWeekDay()&0x0F], new MaterialDialog.InputCallback() {
-
+                                //TODO: here should show message to let user input which day of a week.
                                 @Override
                                 public void onInput(MaterialDialog dialog, CharSequence input) {
                                     if (input.length() == 0) {
