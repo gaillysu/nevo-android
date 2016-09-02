@@ -16,13 +16,13 @@ public class SetAlarmWithTypeRequest extends BLERequestData {
 	private byte alarmWeekDay;
 	private byte alarmNumber; //0 ~~ 13, 0~6:wake alarm, 7~13:sleep alarm
 
-	public SetAlarmWithTypeRequest(Context context, Alarm alarm, byte alarmNumber)
+	public SetAlarmWithTypeRequest(Context context, Alarm alarm)
 	{
 		super(new GattAttributesDataSourceImpl(context));
 		mHour = alarm.getHour();
 		mMinute = alarm.getMinute();
-		alarmWeekDay = alarm.getWeekDay();
-		this.alarmNumber = alarmNumber;
+		alarmWeekDay = (alarm.getWeekDay()&0x80)==0x80?(byte)(alarm.getWeekDay()&0x0f):(byte)0;
+		this.alarmNumber = alarm.getAlarmNumber();
 	}
 
 	@Override

@@ -50,14 +50,16 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
-        onOffSwitch.setChecked(alarm.getWeekDay() != 0);
+        onOffSwitch.setChecked((alarm.getWeekDay()&0x80) == 0x80);
         if (alarm.getAlarmType() == 0) {
             alarmStyle = getContext().getString(R.string.edit_alarm_sleep);
         } else if (alarm.getAlarmType() == 1) {
             alarmStyle = getContext().getString(R.string.edit_alarm_wake);
         }
 
-        repeatText.setText(getContext().getResources().getStringArray(R.array.week_day)[(int)alarm.getWeekDay()]);
+        String [] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
+        String weekDay = ((alarm.getWeekDay()&0x80) == 0x80)? weekDayArray[alarm.getWeekDay()&0x0F]:weekDayArray[0];
+        repeatText.setText(weekDay);
         repeatTextDec.setText(alarmStyle+": " );
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

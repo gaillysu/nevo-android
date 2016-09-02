@@ -27,13 +27,13 @@
     </string-array>
     <string-array name="week_day">
         <item name="disable">Disable</item>
+        <item name="sunday">Sun</item>
         <item name="monday">Mon</item>
         <item name="tuesday">Tue</item>
         <item name="wednesday">Wed</item>
         <item name="thursday">Thu</item>
         <item name="friday">Fri</item>
         <item name="saturday">Sat</item>
-        <item name="sunday">Sun</item>
     </string-array>
     <string-array name="solar_describe_battery_text">
         <item>Solar</item>
