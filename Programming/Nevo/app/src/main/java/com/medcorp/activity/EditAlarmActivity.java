@@ -36,7 +36,6 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     ListView listView;
 
     private Alarm alarm;
-    private Alarm alarmOld;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,6 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
         Bundle bundle = getIntent().getExtras();
         alarm = getModel().getAlarmById(bundle.getInt(getString(R.string.key_alarm_id)));
-        alarmOld = new Alarm(alarm.getHour(), alarm.getMinute(), alarm.getWeekDay(), alarm.getLabel(), alarm.getAlarmType(), alarm.getAlarmNumber());
         listView.setAdapter(new AlarmEditAdapter(this, alarm));
         listView.setOnItemClickListener(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,8 +58,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onBackPressed() {
-        setResult(alarm.getWeekDay() > 0 && (alarmOld.getMinute()
-                != alarm.getMinute() || alarmOld.getHour() != alarm.getHour()) ? 1 : 0);
+        setResult(0);
         finish();
     }
 
@@ -77,14 +74,14 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             case R.id.done_menu:
                 if (getModel().updateAlarm(alarm)) {
                     ToastHelper.showShortToast(this, R.string.alarm_saved);
-                    setResult(alarm.getWeekDay() > 0 && (alarmOld.getMinute() != alarm.getMinute() || alarmOld.getHour() != alarm.getHour()) ? 1 : 0);
+                    setResult(1);
                     finish();
                 } else {
                     ToastHelper.showShortToast(this, R.string.alarm_could_not_save);
                 }
                 return true;
             default:
-                setResult(alarm.getWeekDay() > 0 && (alarmOld.getMinute() != alarm.getMinute() || alarmOld.getHour() != alarm.getHour()) ? 1 : 0);
+                setResult(0);
                 finish();
         }
         return false;
@@ -117,8 +114,8 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .content(getString(R.string.alarm_set_week_day_dialog_text))
                     .inputType(InputType.TYPE_CLASS_NUMBER)
                     .input(getString(R.string.alarm_week_day),
-                            getResources().getStringArray(R.array.week_day)[alarm.getWeekDay()], new MaterialDialog.InputCallback() {
-
+                            getResources().getStringArray(R.array.week_day)[alarm.getWeekDay()&0x0F], new MaterialDialog.InputCallback() {
+                                //TODO: here should show message to let user input which day of a week.
                                 @Override
                                 public void onInput(MaterialDialog dialog, CharSequence input) {
                                     if (input.length() == 0) {
@@ -127,7 +124,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                                     try {
                                         int inputWeekdayValue = new Integer(input.toString()).intValue();
                                         if (inputWeekdayValue > 0 && inputWeekdayValue <= 7) {
-                                            alarm.setWeekDay((byte) inputWeekdayValue);
+                                            alarm.setWeekDay(((alarm.getWeekDay()&0x80) == 0x80)?(byte) (0x80|inputWeekdayValue):(byte)inputWeekdayValue);
                                             listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
                                         } else {
                                             ToastHelper.showShortToast(EditAlarmActivity.this, getString(R.string.input_legitimate_value));
@@ -144,7 +141,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             } else {
                 ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_deleted);
             }
-            setResult(alarm.getWeekDay() > 0 ? -1 : 0);
+            setResult(-1);
             finish();
         }
     }

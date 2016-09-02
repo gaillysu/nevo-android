@@ -53,6 +53,7 @@ import com.medcorp.ble.model.request.ReadDailyTrackerInfoRequest;
 import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
 import com.medcorp.ble.model.request.ReadWatchInfoRequest;
 import com.medcorp.ble.model.request.SetAlarmRequest;
+import com.medcorp.ble.model.request.SetAlarmWithTypeRequest;
 import com.medcorp.ble.model.request.SetCardioRequest;
 import com.medcorp.ble.model.request.SetGoalRequest;
 import com.medcorp.ble.model.request.SetNotificationRequest;
@@ -272,55 +273,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     // Steps count is 0, and all notification is off, because Notification is very
                     // important for user, so here need use local's setting sync with nevo
                     setNotification(true);
+                    //here start sync every alarm
+                    List<Alarm> alarmList = ((ApplicationModel)mContext).getAllAlarm();
+                    for(Alarm alarm:alarmList) {
+                        setAlarm(alarm);
+                    }
                 }
                 else if((byte) SetNotificationRequest.HEADER == nevoData.getRawData()[1])
                 {
                     if(initNotification)
                     {
-                        List<Alarm> list = ((ApplicationModel) mContext).getAllAlarm();
-                        if(!list.isEmpty())
-                        {
-                            List<Alarm> customerAlarmList = new ArrayList<Alarm>();
-                            for(Alarm alarm: list)
-                            {
-                                if(alarm.getWeekDay()>0)
-                                {
-                                    customerAlarmList.add(alarm);
-                                    if(customerAlarmList.size()>= SetAlarmRequest.maxAlarmCount)
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
-                            if(customerAlarmList.isEmpty())
-                            {
-                                customerAlarmList.add(list.get(0));
-                            }
-                            setAlarm(customerAlarmList, true);
-                        }
-                        else
-                        {
-                            list.add(new Alarm(0,0, (byte)0, "",(byte)0,(byte)0));
-                            setAlarm(list, true);
-                        }
-                    }
-                    else
-                    {
-                        //call setNotification() by application, here reset it true
-                        initNotification = true;
-                    }
-                }
-                else if((byte) SetAlarmRequest.HEADER == nevoData.getRawData()[1])
-                {
-                    if(initAlarm)
-                    {
-                        //start sync data, nevo-->phone
                         syncActivityData();
-                    }
-                    else
-                    {
-                        //call setAlarm() by application, here reset it true
-                        initAlarm = true;
                     }
                 }
                 else if((byte) ReadDailyTrackerInfoRequest.HEADER == nevoData.getRawData()[1])
@@ -618,6 +581,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void setAlarm(List<Alarm> list,boolean init) {
         initAlarm = init;
         sendRequest(new SetAlarmRequest(mContext,list));
+    }
+
+    @Override
+    public void setAlarm(Alarm alarm) {
+        sendRequest(new SetAlarmWithTypeRequest(mContext,alarm));
     }
 
     @Override

@@ -179,7 +179,7 @@
     <string name="in_app_notification_synced">Syncing data finished!</string>
     <string name="in_app_notification_no_watch">No watch connected.</string>
     <string name="in_app_notification_max_three_alarm">nevo supports only three alarms.</string>
-
+    <string name="in_app_notification_max_fourteen_alarm">nevo supports only fourteen alarms.</string>
     <string name="title_alarm">Alarm</string>
     <string name="title_my_nevo">My nevo</string>
     <string name="title_about">About</string>
