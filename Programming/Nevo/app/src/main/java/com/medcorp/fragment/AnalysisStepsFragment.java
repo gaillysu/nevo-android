@@ -89,9 +89,9 @@ public class AnalysisStepsFragment extends BaseFragment {
             // 因该 没有这个 SITUATION
             // TODO next version, per day goal line.
         }
-        lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         thisWeekChart.addData(thisWeekData, activeGoal,7);
         lastWeekChart.addData(lastWeekData, activeGoal,7);
         lastMonthChart.addData(lastMonthData, activeGoal,7);

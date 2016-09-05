@@ -76,11 +76,12 @@ public class LunarMainSleepFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
-        if (sleepArray.length == 0) {
+        if (sleepArray == null) {
             DateTime dateTime = getToday();
             SleepData sleepData = new SleepData(0, 0, 0, date.getTime());
             sleepData.setSleepStart(dateTime.getMillis());
             sleepData.setSleepEnd(dateTime.withHourOfDay(8).getMillis());
+            sleepData.setHourlyWake("[ 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
             lineChartSleep.setDataInChart(sleepData);
             durationTextView.setText("0");
             qualityTextView.setText("0");

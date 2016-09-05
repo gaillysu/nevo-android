@@ -286,7 +286,8 @@ public class ApplicationModel extends Application {
     public List<Solar> getThisWeekSolar(String userId, Date date) {
         List<Solar> thisWeekSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getWeekStartDate().getTime(); start <=
+                calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
             if (optional.notEmpty()) {
                 thisWeekSolar.add(optional.get());
@@ -300,7 +301,8 @@ public class ApplicationModel extends Application {
     public List<Solar> getLastWeekSolar(String userId, Date date) {
         List<Solar> lastWeekSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getLastWeekStart().getTime(); start <=
+                calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
             if (optional.notEmpty()) {
                 lastWeekSolar.add(optional.get());
@@ -314,7 +316,8 @@ public class ApplicationModel extends Application {
     public List<Solar> getLastMonthSolar(String userId, Date date) {
         List<Solar> lastMonthSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getMonthStartDate().getTime(); start <=
+                calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
             if (optional.notEmpty()) {
                 lastMonthSolar.add(optional.get());
@@ -328,7 +331,8 @@ public class ApplicationModel extends Application {
     public List<SleepData> getThisWeekSleep(String userId, Date date) {
         List<SleepData> thisWeekSleep = new ArrayList<>(3);
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getWeekStartDate().getTime(); start <=
+                calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
@@ -348,7 +352,8 @@ public class ApplicationModel extends Application {
     public List<SleepData> getLastWeekSleep(String userId, Date date) {
         List<SleepData> lastWeekSleep = new ArrayList<>(3);
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getLastWeekStart().getTime(); start <=
+                calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
@@ -367,7 +372,8 @@ public class ApplicationModel extends Application {
     public List<SleepData> getLastMonthSleep(String userId, Date date) {
         List<SleepData> lastMonth = new ArrayList<>(3);
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getMonthStartDate().getTime(); start <=
+                calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
@@ -384,19 +390,20 @@ public class ApplicationModel extends Application {
     }
 
     public List<Steps> getThisWeekSteps(String userId, Date date) {
-        List<Steps> thisWeekSteps = new ArrayList<>();
+        List<Steps> thisWeek = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getWeekStartDate().getTime(); start <= calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            thisWeekSteps.add(getDailySteps(userId, new Date(start)));
-            thisWeekSteps.add(new Steps(start));
+        for (long start = calendar.getWeekStartDate().getTime(); start <=
+                calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+            thisWeek.add(getDailySteps(userId, new Date(start)));
         }
-        return thisWeekSteps;
+        return thisWeek;
     }
 
     public List<Steps> getLastWeekSteps(String userId, Date date) {
         List<Steps> lastWeekSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getLastWeekStart().getTime(); start <= calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getLastWeekStart().getTime(); start <=
+                calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
             lastWeekSteps.add(getDailySteps(userId, new Date(start)));
         }
         return lastWeekSteps;
@@ -405,7 +412,8 @@ public class ApplicationModel extends Application {
     public List<Steps> getLastMonthSteps(String userId, Date date) {
         List<Steps> lastMonthSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
-        for (long start = calendar.getMonthStartDate().getTime(); start <= calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+        for (long start = calendar.getMonthStartDate().getTime(); start <=
+                calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
             lastMonthSteps.add(getDailySteps(userId, new Date(start)));
         }
         return lastMonthSteps;
@@ -413,14 +421,16 @@ public class ApplicationModel extends Application {
 
 
     public Steps getDailySteps(String userId, Date date) {
+        Steps stpes = null ;
         Optional<Steps> steps = stepsDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
         if (steps.notEmpty()) {
-            return steps.get();
+            stpes = steps.get();
         } else {
-            return new Steps(date.getTime(), date.getTime(), 0, 0, 0,
-                    0, 0, "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "", "",
-                    0, 0, 0, 0, 0, 0, 0, 0, "");
+            stpes =  new Steps(date.getTime());
+            stpes.setDate(date.getTime());
+            stpes.setCreatedDate(date.getTime());
         }
+        return stpes;
     }
 
     public Sleep[] getDailySleep(String userId, Date todayDate) {
@@ -429,18 +439,19 @@ public class ApplicationModel extends Application {
         Date yesterdayDate = new Date(yesterdayDateTime.getMillis());
         Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(todayDate));
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
+
         if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
             return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
         }
-        return new Sleep[0];
+        return null;
     }
 
     public void saveDailySleep(Sleep sleep) {
         sleepDatabaseHelper.update(sleep);
     }
 
-    public List<Steps> getNeedSyncSteps(String userid) {
-        return stepsDatabaseHelper.getNeedSyncSteps(userid);
+    public List<Steps> getNeedSyncSteps(String userId) {
+        return stepsDatabaseHelper.getNeedSyncSteps(userId);
     }
 
     public boolean isFoundInLocalSteps(int activity_id) {

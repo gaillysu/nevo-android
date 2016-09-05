@@ -33,9 +33,9 @@ public class Steps implements Comparable<Steps>{
     //IMPORTANT here must set it an array , length is 24, otherwise, it can't be upload to cloud server
     private String hourlySteps="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyDistance;
+    private String hourlyDistance ="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
-    private String hourlyCalories;
+    private String hourlyCalories ="[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]";
 
     private int inZoneTime;
 

@@ -181,7 +181,7 @@ public class AnalysisStepsLineChart extends LineChart {
                 if (count >= maxDays) {
                     count = 0;
                 }
-                DateTime time = new DateTime().plusDays(count);
+                DateTime time = new DateTime(stepsList.get(count).getCreatedDate()).plusDays(count);
                 count += 1;
                 return time.toString("dd/MM");
             }

@@ -52,8 +52,10 @@ public class CalendarWeekUtils {
         calendar.setTime(date);
         WeekStartDate = new Date(date.getTime() - (calendar.get(Calendar.DAY_OF_WEEK) - 1) * 24 * 60 * 60 * 1000L);
         WeekEndDate = new Date(WeekStartDate.getTime() + 6 * 24 * 60 * 60 * 1000L);
-        lastWeekEnd = new Date(WeekStartDate.getTime() - 24 * 60 * 60 * 1000L);
-        lastWeekStart = new Date(lastWeekEnd.getTime() + 6 * 24 * 60 * 60 * 1000L);
+
+        lastWeekEnd = new Date(WeekStartDate.getTime()-24 * 60 * 60 * 1000L);
+        lastWeekStart = new Date(lastWeekEnd.getTime() - 6 * 24 * 60 * 60 * 1000L);
+
         calendar.set(Calendar.DAY_OF_MONTH ,1);
         monthStartDate = calendar.getTime();
         calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
