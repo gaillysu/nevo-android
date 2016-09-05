@@ -1,7 +1,9 @@
 package com.medcorp.activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +36,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Bind(R.id.activity_edit_alarm_list_view)
     ListView listView;
+    private int alarmRepeatDay;
 
     private Alarm alarm;
 
@@ -109,32 +112,25 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     }).negativeText(R.string.alarm_cancel)
                     .show();
         } else if (position == 2) {
-            new MaterialDialog.Builder(EditAlarmActivity.this)
-                    .title(R.string.alarm_edit)
-                    .content(getString(R.string.alarm_set_week_day_dialog_text))
-                    .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input(getString(R.string.alarm_week_day),
-                            getResources().getStringArray(R.array.week_day)[alarm.getWeekDay()&0x0F], new MaterialDialog.InputCallback() {
-                                //TODO: here should show message to let user input which day of a week.
-                                @Override
-                                public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    if (input.length() == 0) {
-                                        return;
-                                    }
-                                    try {
-                                        int inputWeekdayValue = new Integer(input.toString()).intValue();
-                                        if (inputWeekdayValue > 0 && inputWeekdayValue <= 7) {
-                                            alarm.setWeekDay(((alarm.getWeekDay()&0x80) == 0x80)?(byte) (0x80|inputWeekdayValue):(byte)inputWeekdayValue);
-                                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
-                                        } else {
-                                            ToastHelper.showShortToast(EditAlarmActivity.this, getString(R.string.input_legitimate_value));
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        ToastHelper.showShortToast(EditAlarmActivity.this, getString(R.string.input_legitimate_value));
-                                    }
-                                }
-                            }).negativeText(R.string.alarm_cancel)
-                    .show();
+            String[] weekDay = getResources().getStringArray(R.array.week_day);
+            new AlertDialog.Builder(this).setTitle(R.string.alarm_edit).
+                    setSingleChoiceItems(weekDay, alarm.getWeekDay()&0x0F, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (i >= 0) {
+                                alarmRepeatDay = i;
+                            }
+                        }
+                    }).setNegativeButton(R.string.notification_cancel, null).setPositiveButton(
+                    R.string.notification_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ?
+                                    (byte) (0x80 | alarmRepeatDay) : (byte) alarmRepeatDay);
+                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
+                        }
+                    }).show();
+
         } else if (position == 3) {
             if (!getModel().deleteAlarm(alarm)) {
                 ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);

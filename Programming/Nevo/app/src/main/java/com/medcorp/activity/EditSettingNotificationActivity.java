@@ -51,6 +51,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Bind(R.id.notification_watch_icon)
     ImageView watchView;
 
+    private int defaultColor = 0;
     private EditNotificationAdapter adapter;
 
     private final List<NevoLed> ledList = new ArrayList<>();
@@ -77,14 +78,15 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         helper = new NotificationDataHelper(this);
-        ledList.add(new GreenLed());
         ledList.add(new RedLed());
         ledList.add(new BlueLed());
-        ledList.add(new LightGreenLed());
+        ledList.add(new GreenLed());
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
+        ledList.add(new LightGreenLed());
         notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this, notification);
+        setDefaultLampColor();
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
@@ -94,21 +96,43 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         initView();
     }
 
+    private void setDefaultLampColor() {
+        switch (selectedLed.getStringResource()){
+            case R.string.notification_led_red:
+                defaultColor = 0;
+                break;
+            case R.string.notification_led_blue:
+                defaultColor = 1;
+                break;
+            case R.string.notification_led_green:
+                defaultColor = 2;
+                break;
+            case R.string.notification_led_yellow:
+                defaultColor = 3;
+                break;
+            case R.string.notification_led_orange:
+                defaultColor = 4;
+                break;
+            case R.string.notification_led_light_green:
+                defaultColor = 5;
+                break;
+        }
+    }
+
     private void initView() {
         dataList = new ArrayList<>();
-        int def = getIndexFromLed(notification.getDefaultColor());
         for (int i = 0; i < notificationIcon.length; i++) {
             NotificationListItemBean bean = new NotificationListItemBean();
             bean.setLampId(notificationIcon[i]);
             bean.setNotificationTimeText(notificationTimeTextArray[i]);
-            if (def == i) {
+            if ( i == defaultColor ) {
                 bean.setChecked(true);
             }else{
                 bean.setChecked(false);
             }
             dataList.add(bean);
         }
-        watchView.setImageResource(watchIcon[def%5]);
+        watchView.setImageResource(watchIcon[defaultColor]);
         adapter = new EditNotificationAdapter(this, dataList);
         notificationLampList.setAdapter(adapter);
         notificationLampList.setOnItemClickListener(this);
@@ -150,18 +174,10 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
             case R.id.done_menu:
                 Preferences.saveNotificationColor(this, notification, selectedLed);
                 ToastHelper.showShortToast(this,getString(R.string.save_notification_ok));
+                finish();
                 break;
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private int getIndexFromLed(NevoLed led) {
-        for (int i = 0; i < ledList.size(); i++) {
-            if (ledList.get(i).equals(led)) {
-                return i;
-            }
-        }
-        return -1;
     }
 }

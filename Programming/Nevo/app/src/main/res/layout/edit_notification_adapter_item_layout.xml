@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/open_notification_red_lamp"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="38dp"
         android:layout_marginLeft="10dp"
         >
 
