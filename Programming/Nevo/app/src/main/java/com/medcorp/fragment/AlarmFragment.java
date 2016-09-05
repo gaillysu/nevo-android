@@ -115,6 +115,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         weekDay = (byte)calendar.get(Calendar.DAY_OF_WEEK);
+        alarmSelectStyle = 0;//here must reset it when add new alarm, due to it is the class member variable
         editAlarmDialog(hourOfDay, minute);
     }
 

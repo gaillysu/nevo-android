@@ -36,7 +36,6 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Bind(R.id.activity_edit_alarm_list_view)
     ListView listView;
-    private int alarmRepeatDay;
 
     private Alarm alarm;
 
@@ -112,25 +111,23 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     }).negativeText(R.string.alarm_cancel)
                     .show();
         } else if (position == 2) {
-            String[] weekDay = getResources().getStringArray(R.array.week_day);
-            new AlertDialog.Builder(this).setTitle(R.string.alarm_edit).
-                    setSingleChoiceItems(weekDay, alarm.getWeekDay()&0x0F, new DialogInterface.OnClickListener() {
+            String[] weekDays = getResources().getStringArray(R.array.week_day);
+            String[] javaWeekDays = new String[]{weekDays[1],weekDays[2],weekDays[3],weekDays[4],weekDays[5],weekDays[6],weekDays[7]};
+            new MaterialDialog.Builder(EditAlarmActivity.this)
+                    .title(R.string.alarm_edit)
+                    .content(getString(R.string.alarm_set_week_day_dialog_text))
+                    .items(javaWeekDays)
+                    .itemsCallbackSingleChoice(alarm.getWeekDay()&0x0F, new MaterialDialog.ListCallbackSingleChoice() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            if (i >= 0) {
-                                alarmRepeatDay = i;
-                            }
-                        }
-                    }).setNegativeButton(R.string.notification_cancel, null).setPositiveButton(
-                    R.string.notification_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ?
-                                    (byte) (0x80 | alarmRepeatDay) : (byte) alarmRepeatDay);
+                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which+1)) : (byte) (which+1));
                             listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
+                            return true;
                         }
-                    }).show();
-
+                    })
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
+                    .show();
         } else if (position == 3) {
             if (!getModel().deleteAlarm(alarm)) {
                 ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);

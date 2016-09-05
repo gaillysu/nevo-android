@@ -55,7 +55,7 @@ public class AlarmEditAdapter extends BaseAdapter {
             summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
         } else if (position == 2) {
             String [] weekDayArray = context.getResources().getStringArray(R.array.week_day);
-            String weekDay = ((alarm.getWeekDay()&0x80) == 0x80)? weekDayArray[alarm.getWeekDay()&0x0F]:weekDayArray[0];
+            String weekDay = weekDayArray[alarm.getWeekDay()&0x0F];
             title.setText(weekDay);
             summary.setText(context.getString(R.string.alarm_set_week_day));
         }else if(position == 3){
