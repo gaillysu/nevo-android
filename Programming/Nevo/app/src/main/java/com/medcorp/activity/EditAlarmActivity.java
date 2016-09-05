@@ -109,31 +109,22 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     }).negativeText(R.string.alarm_cancel)
                     .show();
         } else if (position == 2) {
+            String[] weekDays = getResources().getStringArray(R.array.week_day);
+            String[] javaWeekDays = new String[]{weekDays[1],weekDays[2],weekDays[3],weekDays[4],weekDays[5],weekDays[6],weekDays[7]};
             new MaterialDialog.Builder(EditAlarmActivity.this)
                     .title(R.string.alarm_edit)
                     .content(getString(R.string.alarm_set_week_day_dialog_text))
-                    .inputType(InputType.TYPE_CLASS_NUMBER)
-                    .input(getString(R.string.alarm_week_day),
-                            getResources().getStringArray(R.array.week_day)[alarm.getWeekDay()&0x0F], new MaterialDialog.InputCallback() {
-                                //TODO: here should show message to let user input which day of a week.
-                                @Override
-                                public void onInput(MaterialDialog dialog, CharSequence input) {
-                                    if (input.length() == 0) {
-                                        return;
-                                    }
-                                    try {
-                                        int inputWeekdayValue = new Integer(input.toString()).intValue();
-                                        if (inputWeekdayValue > 0 && inputWeekdayValue <= 7) {
-                                            alarm.setWeekDay(((alarm.getWeekDay()&0x80) == 0x80)?(byte) (0x80|inputWeekdayValue):(byte)inputWeekdayValue);
-                                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
-                                        } else {
-                                            ToastHelper.showShortToast(EditAlarmActivity.this, getString(R.string.input_legitimate_value));
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        ToastHelper.showShortToast(EditAlarmActivity.this, getString(R.string.input_legitimate_value));
-                                    }
-                                }
-                            }).negativeText(R.string.alarm_cancel)
+                    .items(javaWeekDays)
+                    .itemsCallbackSingleChoice(alarm.getWeekDay()&0x0F, new MaterialDialog.ListCallbackSingleChoice() {
+                        @Override
+                        public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which+1)) : (byte) (which+1));
+                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
+                            return true;
+                        }
+                    })
+                    .positiveText(R.string.goal_ok)
+                    .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                     .show();
         } else if (position == 3) {
             if (!getModel().deleteAlarm(alarm)) {

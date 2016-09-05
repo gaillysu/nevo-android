@@ -58,7 +58,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         }
 
         String [] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
-        String weekDay = ((alarm.getWeekDay()&0x80) == 0x80)? weekDayArray[alarm.getWeekDay()&0x0F]:weekDayArray[0];
+        String weekDay = weekDayArray[alarm.getWeekDay()&0x0F];
         repeatText.setText(weekDay);
         repeatTextDec.setText(alarmStyle+": " );
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
