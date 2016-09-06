@@ -90,8 +90,8 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         xAxis.setTypeface(tf);
 
         SimpleDateFormat sdf = new SimpleDateFormat("d'/'M");
-        List<String> xVals = new ArrayList<String>();
-        List<BarEntry> yValue = new ArrayList<BarEntry>();
+        List<String> xVals = new ArrayList<>();
+        List<BarEntry> yValue = new ArrayList<>();
 
         stepsList = getModel().getAllSteps();
         Collections.sort(stepsList, new StepsSorter());
@@ -116,7 +116,7 @@ public class StepsHistoryFragment extends BaseFragment implements OnChartValueSe
         dataSet.setColors(new int[]{getResources().getColor(R.color.customGray)});
         dataSet.setHighlightEnabled(true);
         dataSet.setHighLightColor(getResources().getColor(R.color.customOrange));
-        List<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        List<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
         BarData data = new BarData(dataSets);
         barChart.setData(data);

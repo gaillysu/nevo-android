@@ -94,6 +94,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:paddingLeft="2dp"
                 android:gravity="bottom"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp"/>

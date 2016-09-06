@@ -102,7 +102,7 @@ public class AnalysisSleepFragment extends BaseFragment {
         thisWeekSleepData = getModel().getThisWeekSleep(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekSleepData = getModel().getLastWeekSleep(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastMonthSleepData = getModel().getLastMonthSleep(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-
+        setDesText(0);
         AnalysisSleepLineChart thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
         AnalysisSleepLineChart lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
         AnalysisSleepLineChart lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
@@ -111,9 +111,9 @@ public class AnalysisSleepFragment extends BaseFragment {
             Therefor we have a solution which is 'SleepData' We have therefor 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
             getDummyData is just for the 'dummy data'
          */
-        thisWeekChart.addData(thisWeekSleepData,7);
-        lastWeekChart.addData(lastWeekSleepData,7);
-        lastMonthChart.addData(lastMonthSleepData,30);
+        thisWeekChart.addData(thisWeekSleepData, 7);
+        lastWeekChart.addData(lastWeekSleepData, 7);
+        lastMonthChart.addData(lastMonthSleepData, 30);
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
         sleepViewPage.setAdapter(adapter);
@@ -125,35 +125,7 @@ public class AnalysisSleepFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        String title = getString(R.string.analysis_fragment_this_week_steps);
-                        if (thisWeekSleepData.size() != 0) {
-                            setAverageText(getTotalSleep(thisWeekSleepData), getTotalSleep(thisWeekSleepData) / thisWeekSleepData.size()
-                                    , getAverageWake(thisWeekSleepData) / thisWeekSleepData.size(), 0, title);
-                        } else {
-                            setAverageText(0, 0, 0, 0, title);
-                        }
-                        break;
-                    case 1:
-                        String lastTitle = getString(R.string.analysis_fragment_last_week_steps);
-                        if (lastWeekSleepData.size() != 0) {
-                            setAverageText(getTotalSleep(lastWeekSleepData), getTotalSleep(lastWeekSleepData) / lastWeekSleepData.size()
-                                    , getAverageWake(lastWeekSleepData) / lastWeekSleepData.size(), 0, lastTitle);
-                        } else {
-                            setAverageText(0, 0, 0, 0, lastTitle);
-                        }
-                        break;
-                    case 2:
-                        String lastMonthTitle = getString(R.string.analysis_fragment_last_month_solar);
-                        if (lastMonthSleepData.size() != 0) {
-                            setAverageText(getTotalSleep(lastMonthSleepData), getTotalSleep(lastMonthSleepData) / lastMonthSleepData.size()
-                                    , getAverageWake(lastMonthSleepData) / lastMonthSleepData.size(), 0, lastMonthTitle);
-                        } else {
-                            setAverageText(0, 0, 0, 0, lastMonthTitle);
-                        }
-                        break;
-                }
+                setDesText(position);
             }
 
             @Override
@@ -164,7 +136,17 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void setAverageText(int totalSleep, int averageSleep, int averageWakeValue, int averageQuality, String title) {
-        totalStepsText.setText(totalSleep + "");
+        StringBuffer buffer = new StringBuffer();
+        if (totalSleep / 60 > 0) {
+            buffer.append(totalSleep / 60 + "h");
+        }
+        if (totalSleep % 60 > 0) {
+            buffer.append(totalSleep % 60 + "m");
+        }
+        if (buffer.length() <= 0) {
+            buffer.append("0");
+        }
+        totalStepsText.setText(buffer.toString());
         averageStepsText.setText(averageSleep + "");
         averageWake.setText(averageWakeValue + "");
         sleepQualityTv.setText(averageQuality + "");
@@ -185,5 +167,37 @@ public class AnalysisSleepFragment extends BaseFragment {
             averageWake += sleepData.getAwake();
         }
         return averageWake / list.size();
+    }
+
+    public void setDesText(int position) {
+        switch (position) {
+            case 0:
+                String title = getString(R.string.analysis_fragment_this_week_steps);
+                if (thisWeekSleepData.size() != 0) {
+                    setAverageText(getTotalSleep(thisWeekSleepData), getTotalSleep(thisWeekSleepData) / thisWeekSleepData.size()
+                            , getAverageWake(thisWeekSleepData) / thisWeekSleepData.size(), 0, title);
+                } else {
+                    setAverageText(0, 0, 0, 0, title);
+                }
+                break;
+            case 1:
+                String lastTitle = getString(R.string.analysis_fragment_last_week_steps);
+                if (lastWeekSleepData.size() != 0) {
+                    setAverageText(getTotalSleep(lastWeekSleepData), getTotalSleep(lastWeekSleepData) / lastWeekSleepData.size()
+                            , getAverageWake(lastWeekSleepData) / lastWeekSleepData.size(), 0, lastTitle);
+                } else {
+                    setAverageText(0, 0, 0, 0, lastTitle);
+                }
+                break;
+            case 2:
+                String lastMonthTitle = getString(R.string.analysis_fragment_last_month_solar);
+                if (lastMonthSleepData.size() != 0) {
+                    setAverageText(getTotalSleep(lastMonthSleepData), getTotalSleep(lastMonthSleepData) / lastMonthSleepData.size()
+                            , getAverageWake(lastMonthSleepData) / lastMonthSleepData.size(), 0, lastMonthTitle);
+                } else {
+                    setAverageText(0, 0, 0, 0, lastMonthTitle);
+                }
+                break;
+        }
     }
 }

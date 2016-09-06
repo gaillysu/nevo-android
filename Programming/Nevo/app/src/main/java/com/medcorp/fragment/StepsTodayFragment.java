@@ -3,7 +3,6 @@ package com.medcorp.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.R;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
-import com.medcorp.util.Common;
-import com.medcorp.util.Preferences;
-import com.medcorp.R;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
+import com.medcorp.util.Common;
+import com.medcorp.util.Preferences;
 import com.medcorp.view.RoundProgressBar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,6 +29,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 /**
  * Created by Karl on 12/10/15.
+ *
  */
 public class StepsTodayFragment extends BaseFragment {
 
@@ -106,7 +106,7 @@ public class StepsTodayFragment extends BaseFragment {
             public void run() {
                 goal.setText(dashboard.formatSteps(dashboard.goal));
                 goal_progress.setText(dashboard.progress + "%");
-                dailysteps.setText(dashboard.formatSteps(dashboard.allsteps));
+                dailysteps.setText(dashboard.formatSteps(dashboard.allSteps));
             }
         });
     }
@@ -165,16 +165,16 @@ public class StepsTodayFragment extends BaseFragment {
         int goal;
         int progress;
         int distance;
-        int allsteps;
+        int allSteps;
         int calories;
 
-        Dashboard(int steps,int goal,int progress,int distance,int allsteps,int calories)
+        Dashboard(int steps, int goal, int progress, int distance, int allSteps, int calories)
         {
             this.steps = steps;
             this.goal = goal;
             this.progress = progress;
             this.distance = distance;
-            this.allsteps = allsteps;
+            this.allSteps = allSteps;
             this.calories = calories;
         }
         String formatSteps(int steps)

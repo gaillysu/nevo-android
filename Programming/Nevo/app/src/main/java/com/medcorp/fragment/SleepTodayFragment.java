@@ -125,9 +125,9 @@ public class SleepTodayFragment extends BaseFragment {
         refresh();
         JSONObject sleepAnalysisResult = new JSONObject();
         SleepDatabaseHelper helper = new SleepDatabaseHelper(getContext());
-        List<Sleep> sleepList = new ArrayList<Sleep>();
+        List<Sleep> sleepList = new ArrayList<>();
         Date today = Common.removeTimeFromDate(new Date());
-        Date yesterday = new Date(today.getTime()-24*60*60*1000);
+        Date yesterday = new Date(today.getTime()-24*60*60*1000L);
         Optional<Sleep> todaySleep = helper.get(getModel().getNevoUser().getNevoUserID(),today);
         Optional<Sleep> yesterdaySleep = helper.get(getModel().getNevoUser().getNevoUserID(),yesterday);
         if(yesterdaySleep.notEmpty()) {
@@ -192,6 +192,7 @@ public class SleepTodayFragment extends BaseFragment {
             }
         });
     }
+
     class Dashboard{
         int sleepDuration;
         int sleepDeepDuration;
@@ -200,7 +201,8 @@ public class SleepTodayFragment extends BaseFragment {
         long sleepEnd;
         int sleepWakeDuration;
 
-        Dashboard(int sleepDuration,int sleepDeepDuration,int sleepLightDuration,long sleepStart,long sleepEnd,int sleepWakeDuration)
+        Dashboard(int sleepDuration,int sleepDeepDuration,int sleepLightDuration,long sleepStart,
+                  long sleepEnd,int sleepWakeDuration)
         {
             this.sleepDuration = sleepDuration;
             this.sleepDeepDuration = sleepDeepDuration;
