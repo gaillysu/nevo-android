@@ -15,7 +15,10 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.Solar;
 import com.medcorp.util.Preferences;
+
+import net.medcorp.library.ble.util.Optional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -60,7 +63,14 @@ public class LunarMainSolarFragment extends BaseFragment {
     }
 
     private void initData(Date userSelectDate) {
-        float[] solarPieChartDate = {40f, 60f};
+        float powerOnBatteryPercent = 100f;
+        float powerOnSolarPercent = 0f;
+        Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(),userSelectDate);
+        if(solarOptional.notEmpty()){
+            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime()*100f/(24*60);
+            powerOnBatteryPercent = 100f - powerOnSolarPercent;
+        }
+        float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
         setPieChartData(solarPieChartDate);
     }
 
