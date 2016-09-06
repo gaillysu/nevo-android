@@ -38,6 +38,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by karl-john on 14/12/15.
+ *
  */
 public class SettingsFragment extends BaseObservableFragment implements AdapterView.OnItemClickListener, OnCheckedChangeInListListener {
 
@@ -45,9 +46,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     ListView settingListView;
 
     private List<SettingsMenuItem> listMenu;
-
     private SettingMenuAdapter settingAdapter;
-
     final private int REQUEST_LOGIN = 100;
 
     @Nullable
@@ -57,7 +56,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
 
-        listMenu = new ArrayList<SettingsMenuItem>();
+        listMenu = new ArrayList<>();
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_link_loss_notification), R.drawable.setting_linkloss, Preferences.getLinklossNotification(getActivity())));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
@@ -66,7 +65,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
-//        listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
+        //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
         settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
@@ -134,7 +133,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .cancelable(false)
                     .show();
 
-        }else if(position == 8) {
+        } else if (position == 8) {
             Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
             startActivity(intent);
         }

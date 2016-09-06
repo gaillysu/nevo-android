@@ -97,7 +97,7 @@ public class AnalysisStepsLineChart extends LineChart {
         this.stepsList = stepsList;
         this.goal = goal;
         this.maxDays = maxDays;
-        List<Entry> yValue = new ArrayList<Entry>();
+        List<Entry> yValue = new ArrayList<>();
         int maxValue = 0;
 
         final int stepsModulo = 500;
@@ -147,7 +147,7 @@ public class AnalysisStepsLineChart extends LineChart {
 
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
         set.setFillDrawable(drawable);
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        List<ILineDataSet> dataSets = new ArrayList<>();
         if (stepsList.size() > 7) {
             getXAxis().setLabelCount(stepsList.size());
         }

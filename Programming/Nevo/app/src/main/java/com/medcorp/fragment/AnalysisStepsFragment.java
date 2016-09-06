@@ -78,9 +78,11 @@ public class AnalysisStepsFragment extends BaseFragment {
         AnalysisStepsLineChart lastWeekChart = (AnalysisStepsLineChart) lastWeekView.findViewById(R.id.analysis_step_chart);
         AnalysisStepsLineChart lastMonthChart = (AnalysisStepsLineChart) lastMonthView.findViewById(R.id.analysis_step_chart);
 
-        /*
-         * Added max in 'addData', max is the timespam in days, in 'this week' and 'last week' this is 7 because 7 days is equal to a week.
+        /**
+         * Added max in 'addData', max is the time spam in days, in 'this week' and
+         * 'last week' this is 7 because 7 days is equal to a week.
          * In this month this is 30 (or 31) because there are 30 days in a month.
+         *
         */
         Goal activeGoal = null;
         for (Goal goal : getModel().getAllGoal()) {
@@ -91,8 +93,6 @@ public class AnalysisStepsFragment extends BaseFragment {
         }
         if (activeGoal == null) {
             activeGoal = new Goal("Unknown", true, 1000);
-            // 因该 没有这个 SITUATION
-            // TODO next version, per day goal line.
         }
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);

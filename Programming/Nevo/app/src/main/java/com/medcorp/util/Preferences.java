@@ -14,9 +14,6 @@ import com.medcorp.ble.model.color.YellowLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.model.Goal;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by karl-john on 29/12/15.
  */
@@ -39,7 +36,7 @@ public class Preferences {
     public static String getSelectDate(Context context) {
         init(context);
         return preferences.getString(context.getString(R.string.key_prefs_select_date),
-                new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                null);
     }
 
     public static void saveIsFirstLogin(Context context, boolean isNotFirst) {

@@ -183,7 +183,8 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         roundProgressBar.setVisibility(View.VISIBLE);
         percentTextView.setText("");
         infomationTextView.setText("");
-        back2settings.setVisibility(View.INVISIBLE); //The process of OTA hide this control
+        //The process of OTA hide this control
+        back2settings.setVisibility(View.INVISIBLE);
         mNevoOtaController.performDFUOnFile(selectedFileURL, enumFirmwareType);
     }
 

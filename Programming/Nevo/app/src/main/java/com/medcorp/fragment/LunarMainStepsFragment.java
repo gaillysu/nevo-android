@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 public class LunarMainStepsFragment extends BaseFragment {
 
     @Bind(R.id.lunar_fragment_show_user_consume_calories)
-    TextView showUserCosumeCalories;
+    TextView showUserConsumeCalories;
     @Bind(R.id.lunar_fragment_show_user_steps_distance_tv)
     TextView showUserStepsDistance;
     @Bind(R.id.lunar_fragment_show_user_activity_time_tv)
@@ -79,7 +79,7 @@ public class LunarMainStepsFragment extends BaseFragment {
         showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));
-        showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
+        showUserConsumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
 
         if (steps.getSteps() != 0 && steps.getHourlySteps()!=null){
             JSONArray array = null;
