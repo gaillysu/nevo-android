@@ -17,6 +17,7 @@ import com.medcorp.R;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Solar;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 
 import net.medcorp.library.ble.util.Optional;
 
@@ -72,6 +73,8 @@ public class LunarMainSolarFragment extends BaseFragment {
         }
         float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
         setPieChartData(solarPieChartDate);
+        batteryTimeTv.setText(TimeUtil.formatTime((int)(powerOnBatteryPercent*0.01f*24*60)));
+        solarTimeTv.setText(TimeUtil.formatTime((int)(powerOnSolarPercent*0.01f*24*60)));
     }
 
     private void setPieChartData(float[] solarPieChartDate) {
