@@ -17,25 +17,22 @@ public class SleepDataUtils{
             Log.w("Karl","Hey, something went wrong here!");
             return new SleepData(0,0,0,0);
         }
-        int i1 = today.getAwake() + yesterday.getAwake();
-        int i2 = today.getLightSleep() + yesterday.getLightSleep();
-        int i3 = today.getDeepSleep() + yesterday.getDeepSleep();
         SleepData sleepData = new SleepData(today.getAwake() + yesterday.getAwake(), today.getLightSleep() + yesterday.getLightSleep(), today.getDeepSleep() + yesterday.getDeepSleep(), today.getDate());
         sleepData.setSleepStart(yesterday.getSleepStart());
         sleepData.setSleepEnd(today.getSleepEnd());
-        sleepData.setHourlyWake(mergeSleepData(today.getHourlyWakeInt(),yesterday.getHourlyWakeInt()));
-        sleepData.setHourlyLight(mergeSleepData(today.getHourlyLightInt(),yesterday.getHourlyLightInt()));
-        sleepData.setHourlyDeep(mergeSleepData(today.getHourlyDeepInt(),yesterday.getHourlyDeepInt()));
+        sleepData.setHourlyWake(mergeSleepData(yesterday.getHourlyWakeInt(),today.getHourlyWakeInt()));
+        sleepData.setHourlyLight(mergeSleepData(yesterday.getHourlyLightInt(),today.getHourlyLightInt()));
+        sleepData.setHourlyDeep(mergeSleepData(yesterday.getHourlyDeepInt(),today.getHourlyDeepInt()));
         return sleepData;
     }
 
-    private static String mergeSleepData (int[] sleepArray1, int[] sleepArray2){
+    private static String mergeSleepData (int[] yesterdaySleepArray, int[] todaySleepArray){
         JSONArray mergedSleepData = new JSONArray();
-        for (int aSleepArray1 : sleepArray1) {
+        for (int aSleepArray1 : yesterdaySleepArray) {
             mergedSleepData.put(aSleepArray1);
         }
 
-        for (int aSleepArray2 : sleepArray2) {
+        for (int aSleepArray2 : todaySleepArray) {
             mergedSleepData.put(aSleepArray2);
         }
         return mergedSleepData.toString();

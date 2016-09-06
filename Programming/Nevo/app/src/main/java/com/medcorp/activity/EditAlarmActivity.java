@@ -117,7 +117,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .title(R.string.alarm_edit)
                     .content(getString(R.string.alarm_set_week_day_dialog_text))
                     .items(javaWeekDays)
-                    .itemsCallbackSingleChoice(alarm.getWeekDay()&0x0F, new MaterialDialog.ListCallbackSingleChoice() {
+                    .itemsCallbackSingleChoice((alarm.getWeekDay()&0x0F)-1, new MaterialDialog.ListCallbackSingleChoice() {
                         @Override
                         public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which+1)) : (byte) (which+1));

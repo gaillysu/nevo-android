@@ -93,6 +93,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
+                if (!getModel().isWatchConnected()) {
+                    ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                    return false;
+                }
                 Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
                 alarmDialog.setTitle(R.string.alarm_add);
                 alarmDialog.show();
@@ -205,6 +209,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (!getModel().isWatchConnected()) {
+            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+            return;
+        }
         Intent i = new Intent(getContext(), EditAlarmActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt(getString(R.string.key_alarm_id), alarmList.get(position).getId());

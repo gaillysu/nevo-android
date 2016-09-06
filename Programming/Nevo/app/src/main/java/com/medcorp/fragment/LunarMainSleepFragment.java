@@ -112,7 +112,7 @@ public class LunarMainSleepFragment extends BaseFragment {
                     sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
                     durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
                 }
-                qualityTextView.setText("100%");
+                qualityTextView.setText((sleepData.getLightSleep()+ sleepData.getDeepSleep())*100/sleepData.getTotalSleep()+"%");
                 lineChartSleep.setDataInChart(sleepData);
                 DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
                 wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
