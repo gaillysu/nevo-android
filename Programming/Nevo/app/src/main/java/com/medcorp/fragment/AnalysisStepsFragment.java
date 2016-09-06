@@ -17,6 +17,8 @@ import com.medcorp.view.graphs.AnalysisStepsLineChart;
 
 import org.joda.time.DateTime;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,11 +58,13 @@ public class AnalysisStepsFragment extends BaseFragment {
         ButterKnife.bind(this, stepsView);
 
         String selectDate = Preferences.getSelectDate(this.getContext());
-        Date userSelectDate;
-        if (selectDate == null) {
-            userSelectDate = new Date();
-        } else {
-            userSelectDate = DateTime.parse("yyyy-MM-dd").toDate();
+        Date userSelectDate = new Date();
+        if (selectDate != null) {
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         initView(inflater);

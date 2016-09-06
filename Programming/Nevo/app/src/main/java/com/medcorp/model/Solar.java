@@ -23,9 +23,9 @@ public class Solar {
     private Date date;
 
     private int userId;
-
+    //"[0,0,0,....0]", 24 length array, unit is in minutes
     private String hourlyHarvestingTime;
-
+    //unit is in minutes
     private int totalHarvestingTime;
 
     public Solar(Date createdDate) {

@@ -130,7 +130,7 @@ public class MedOperation {
         record.setCalories(steps.getCalories());
         record.setDistance(steps.getDistance());
         record.setDate( new SimpleDateFormat("yyyy-MM-dd").format(date));
-        record.setActive_time(steps.getNoActivityTime());
+        record.setActive_time(steps.getRunDuration()+steps.getWalkDuration());
 
         AddRoutineRecordRequest addRecordRequest = new AddRoutineRecordRequest(record,medManager.getAccessToken());
         medManager.execute(addRecordRequest, new RequestListener<MedRoutineRecordModel>() {

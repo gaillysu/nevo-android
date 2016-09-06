@@ -503,7 +503,7 @@ public class ApplicationModel extends Application {
         }
         steps.setDistance((int) routine.getDistance());
         steps.setCalories(routine.getCalories());
-        steps.setNoActivityTime(routine.getActive_time());
+        steps.setWalkDuration(routine.getActive_time());
         steps.setNevoUserID(routine.getUid() + "");
         steps.setCloudRecordID(routine.getId() + "");
         steps.setGoal(10000);
