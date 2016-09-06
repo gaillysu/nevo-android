@@ -14,7 +14,6 @@ import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class AnalysisStepsFragment extends BaseFragment {
     private List<Steps> thisWeekData;
     private List<Steps> lastWeekData;
     private List<Steps> lastMonthData;
-    private Date userSelectDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,17 +55,14 @@ public class AnalysisStepsFragment extends BaseFragment {
         ButterKnife.bind(this, stepsView);
 
         String selectDate = Preferences.getSelectDate(this.getContext());
-
-        if (selectDate == null) {
-            userSelectDate = new Date();
-        } else {
+        Date userSelectDate = new Date();
+        if (selectDate != null) {
             try {
                 userSelectDate = new SimpleDateFormat("yy-MM-dd").parse(selectDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
         initView(inflater);
         initData(userSelectDate);
         return stepsView;

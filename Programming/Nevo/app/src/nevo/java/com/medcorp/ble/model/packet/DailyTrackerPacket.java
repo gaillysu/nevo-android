@@ -216,7 +216,7 @@ public class DailyTrackerPacket extends Packet {
                 getPackets().get(packetno).getRawData()[offset+2],
                 getPackets().get(packetno).getRawData()[offset+3]
         });
-        return value;
+        return value/60;
     }
 
     /**
@@ -238,7 +238,7 @@ public class DailyTrackerPacket extends Packet {
             {
                 hourlySwimTime = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],getPackets().get(packetno).getRawData()[offset+1]});
             }
-            HourlySwimTime.add(i,hourlySwimTime);
+            HourlySwimTime.add(i,hourlySwimTime/60);
         }
         return HourlySwimTime;
     }
