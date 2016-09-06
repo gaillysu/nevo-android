@@ -85,7 +85,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             }
         }
         if (activeGoal == null) {
-            activeGoal = new Goal("Unknown", true, 7000);
+            activeGoal = new Goal("Unknown", true, 1000);
             // 因该 没有这个 SITUATION
             // TODO next version, per day goal line.
         }
