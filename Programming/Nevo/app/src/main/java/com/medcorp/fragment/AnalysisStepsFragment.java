@@ -14,9 +14,6 @@ import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
-
-import org.joda.time.DateTime;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,12 +58,11 @@ public class AnalysisStepsFragment extends BaseFragment {
         Date userSelectDate = new Date();
         if (selectDate != null) {
             try {
-                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+                userSelectDate = new SimpleDateFormat("yy-MM-dd").parse(selectDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
         initView(inflater);
         initData(userSelectDate);
         return stepsView;
@@ -89,16 +85,16 @@ public class AnalysisStepsFragment extends BaseFragment {
             }
         }
         if (activeGoal == null) {
-            activeGoal = new Goal("Unknown", true, 7000);
+            activeGoal = new Goal("Unknown", true, 1000);
             // 因该 没有这个 SITUATION
             // TODO next version, per day goal line.
         }
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
-        thisWeekChart.addData(thisWeekData, activeGoal,7);
-        lastWeekChart.addData(lastWeekData, activeGoal,7);
-        lastMonthChart.addData(lastMonthData, activeGoal,7);
+        thisWeekChart.addData(thisWeekData, activeGoal, 7);
+        lastWeekChart.addData(lastWeekData, activeGoal, 7);
+        lastMonthChart.addData(lastMonthData, activeGoal, 7);
     }
 
     private void initView(LayoutInflater inflater) {
