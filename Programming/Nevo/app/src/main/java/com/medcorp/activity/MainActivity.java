@@ -49,7 +49,7 @@ import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -83,7 +83,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private View rootView;
     private TextView userView;
     private String currentTime;
-    private Date date;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private MenuItem selectedMenuItem;
@@ -93,7 +92,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
     private MenuItem selectItem;
-    private String strDate;
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
@@ -119,16 +117,15 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         onNavigationItemSelected(firstItem);
         firstItem.setChecked(true);
 
-        SimpleDateFormat simple = new SimpleDateFormat("yyyy-mm-dd");
-        date = new Date(System.currentTimeMillis());
-        currentTime = simple.format(date);
-        strDate = currentTime;
+        SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd");
+        currentTime = simple.format(new Date());
+        Preferences.saveSelectDate(this, currentTime);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
         showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         showDateText.setText(currentTime.split("-")[2] + " " +
-                new SimpleDateFormat("MMM", Locale.US).format(date));
+                new SimpleDateFormat("MMM", Locale.US).format(new Date()));
 
         mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
 
@@ -253,7 +250,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         if (item.getItemId() == R.id.nav_steps_fragment) {
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
             showDateText.setText(currentTime.split("-")[2] + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(date));
+                    new SimpleDateFormat("MMM", Locale.US).format(new Date()));
+            //here restore the selected date to today's date, otherwise, will get the wrong record of that day
+            Preferences.saveSelectDate(this, currentTime);
         } else {
             toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
             showDateText.setText(item.getTitle());
@@ -418,7 +417,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        strDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+        String strDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             java.util.Date selectDate = format.parse(strDate);
