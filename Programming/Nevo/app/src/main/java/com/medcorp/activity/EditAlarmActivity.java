@@ -1,9 +1,7 @@
 package com.medcorp.activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +26,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by karl-john on 21/12/15.
+ *
  */
 public class EditAlarmActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 

@@ -25,6 +25,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/7/21.
+ *
  */
 public class AnalysisStepsFragment extends BaseFragment {
 
@@ -87,7 +88,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             }
         }
         if (activeGoal == null) {
-            activeGoal = new Goal("Unknown", true, 1000);
+            activeGoal = new Goal("Unknown", true, 7000);
         }
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
@@ -131,7 +132,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             buffer.append(averageDuration/60+"h");
         }
         if(averageDuration%60>0){
-            buffer.append(averageDuration%60+"m");
+            buffer.append(averageDuration%60+"mim");
         }
         if(buffer.length()<=0){
             buffer.append("0");

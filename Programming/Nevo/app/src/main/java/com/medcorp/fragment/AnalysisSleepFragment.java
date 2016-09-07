@@ -141,7 +141,7 @@ public class AnalysisSleepFragment extends BaseFragment {
             buffer.append(totalSleep / 60 + "h");
         }
         if (totalSleep % 60 > 0) {
-            buffer.append(totalSleep % 60 + "m");
+            buffer.append(totalSleep % 60 + "min");
         }
         if (buffer.length() <= 0) {
             buffer.append("0");

@@ -317,7 +317,7 @@ public class ApplicationModel extends Application {
         List<Solar> lastMonthSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
-                calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+                date.getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Solar> optional = solarDatabaseHelper.get(userId, new Date(start));
             if (optional.notEmpty()) {
                 lastMonthSolar.add(optional.get());
@@ -373,7 +373,7 @@ public class ApplicationModel extends Application {
         List<SleepData> lastMonth = new ArrayList<>(3);
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
-                calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+                date.getTime(); start += 24 * 60 * 60 * 1000L) {
             Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
@@ -413,7 +413,7 @@ public class ApplicationModel extends Application {
         List<Steps> lastMonthSteps = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
-                calendar.getMonthEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
+                date.getTime(); start += 24 * 60 * 60 * 1000L) {
             lastMonthSteps.add(getDailySteps(userId, new Date(start)));
         }
         return lastMonthSteps;
