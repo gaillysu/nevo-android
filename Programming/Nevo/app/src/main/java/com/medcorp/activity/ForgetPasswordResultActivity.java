@@ -3,12 +3,10 @@ package com.medcorp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.widget.TextView;
 
-import com.medcorp.base.BaseActivity;
 import com.medcorp.R;
-import com.medcorp.activity.login.LoginActivity;
+import com.medcorp.base.BaseActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +22,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
     TextView showUserEmailAccountText;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forget_password_result_page_layout);
         ButterKnife.bind(this);

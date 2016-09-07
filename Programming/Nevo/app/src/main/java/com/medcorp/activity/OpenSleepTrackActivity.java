@@ -10,6 +10,7 @@ import butterknife.OnClick;
 
 /**
  * Created by gaillysu on 15/12/28.
+ *
  */
 public class OpenSleepTrackActivity extends BaseActivity {
 

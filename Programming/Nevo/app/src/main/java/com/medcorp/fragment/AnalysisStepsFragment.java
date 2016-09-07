@@ -136,7 +136,6 @@ public class AnalysisStepsFragment extends BaseFragment {
         if(buffer.length()<=0){
             buffer.append("0");
         }
-
         analysisStepsText.setText(title);
         totalStepsText.setText(totalSteps + "");
         averageStepsText.setText(averageSteps + "");

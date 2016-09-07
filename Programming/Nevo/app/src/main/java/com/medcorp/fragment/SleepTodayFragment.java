@@ -123,7 +123,7 @@ public class SleepTodayFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         refresh();
-        JSONObject sleepAnalysisResult = new JSONObject();
+        JSONObject sleepAnalysisResult  = new JSONObject();
         SleepDatabaseHelper helper = new SleepDatabaseHelper(getContext());
         List<Sleep> sleepList = new ArrayList<>();
         Date today = Common.removeTimeFromDate(new Date());

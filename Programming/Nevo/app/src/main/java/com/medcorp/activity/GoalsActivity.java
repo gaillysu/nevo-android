@@ -43,7 +43,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     PresetArrayAdapter presetArrayAdapter;
     Goal goal;
 
-    private boolean showSyncGoal;
+
     private int[] stepsGoalArray = {4500, 6000, 8000, 10000};
     private int stepsGoalNumber;
 

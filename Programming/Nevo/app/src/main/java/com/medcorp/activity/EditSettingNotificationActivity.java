@@ -59,8 +59,8 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     private Notification notification;
     private NevoLed selectedLed;
     private List<NotificationListItemBean> dataList;
-    private int[] notificationIcon = {R.drawable.red_dot, R.drawable.blue_dot, R.drawable.green_dot,
-            R.drawable.yellow_dot, R.drawable.orange_dot, R.drawable.light_green_dot};
+    private int[] notificationIcon = {R.drawable.red_dot, R.drawable.blue_dot,R.drawable.light_green_dot,
+            R.drawable.yellow_dot, R.drawable.orange_dot, R.drawable.green_dot };
     private String[] notificationTimeTextArray;
     private int[] watchIcon = {R.drawable.two_clock_notification, R.drawable.four_clock_notification,
             R.drawable.six_clock_notification, R.drawable.eight_clock_notificatio,
@@ -80,10 +80,10 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         helper = new NotificationDataHelper(this);
         ledList.add(new RedLed());
         ledList.add(new BlueLed());
-        ledList.add(new GreenLed());
+        ledList.add(new LightGreenLed());
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
-        ledList.add(new LightGreenLed());
+        ledList.add(new GreenLed());
         notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this, notification);
         setDefaultLampColor();
@@ -104,7 +104,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
             case R.string.notification_led_blue:
                 defaultColor = 1;
                 break;
-            case R.string.notification_led_green:
+            case R.string.notification_led_light_green:
                 defaultColor = 2;
                 break;
             case R.string.notification_led_yellow:
@@ -113,7 +113,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
             case R.string.notification_led_orange:
                 defaultColor = 4;
                 break;
-            case R.string.notification_led_light_green:
+            case R.string.notification_led_green:
                 defaultColor = 5;
                 break;
         }

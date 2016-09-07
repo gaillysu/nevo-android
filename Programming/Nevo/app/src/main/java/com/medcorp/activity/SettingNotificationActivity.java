@@ -34,15 +34,13 @@ import butterknife.ButterKnife;
  * Created by gaillysu on 15/12/31.
  */
 public class SettingNotificationActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
-
     @Bind(R.id.activity_setting_notification_active_list_view)
     ListView activeListView;
-
     @Bind(R.id.activity_setting_notification_inactive_list_view)
     ListView inactiveListView;
-
     @Bind(R.id.notification_active_title)
     RelativeLayout active;
     @Bind(R.id.inactive_notification_title)
@@ -115,9 +113,13 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
         if (activeNotificationList.size() == 0) {
             active.setVisibility(View.GONE);
+        }else{
+            active.setVisibility(View.VISIBLE);
         }
         if (inactiveNotificationList.size() == 0) {
             inactive.setVisibility(View.GONE);
+        }else{
+            inactive.setVisibility(View.VISIBLE);
         }
     }
 
