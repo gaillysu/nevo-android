@@ -16,6 +16,9 @@ public class TimeUtil {
                 activityTime.append((walkDuration / 60)).append("h");
                 activityTime.append(walkDuration % 60).append("m");
             }
+            else {
+                activityTime.append((walkDuration / 60)).append("h");
+            }
         } else {
             activityTime.append(walkDuration).append("m");
         }

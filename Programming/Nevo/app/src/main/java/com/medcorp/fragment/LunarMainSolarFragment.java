@@ -2,6 +2,8 @@ package com.medcorp.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,18 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
+import com.medcorp.event.DateSelectChangedEvent;
+import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Solar;
+import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 import com.medcorp.util.TimeUtil;
 
 import net.medcorp.library.ble.util.Optional;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -113,5 +121,44 @@ public class LunarMainSolarFragment extends BaseFragment {
 
         solarPieChart.setData(pieData);
         solarPieChart.invalidate();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+        //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
+        if(Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
+            getModel().getSyncController().getDailyTrackerInfo(false);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onEvent(final DateSelectChangedEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                userSelectDate = event.getDate();
+                initData(userSelectDate);
+            }
+        });
+    }
+
+    @Subscribe
+    public void onEvent(final OnSyncEvent event) {
+        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    initData(userSelectDate);
+                }
+            });
+        }
     }
 }
