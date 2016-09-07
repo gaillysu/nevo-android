@@ -150,6 +150,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                finish();
             }
         });
 
@@ -159,6 +160,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 Intent intent = new Intent(MainActivity.this,LoginActivity.class);
                 intent.putExtra("isTutorialPage",false);
                 startActivity(intent);
+                finish();
             }
         });
     }

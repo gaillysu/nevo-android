@@ -10,15 +10,11 @@ import android.widget.TextView;
 
 import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.R;
-import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.login.SignupActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.SignUpEvent;
 import com.medcorp.network.med.model.CreateUser;
-import com.medcorp.network.med.model.CreateUserModel;
 import com.medcorp.view.ToastHelper;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -137,9 +133,9 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             case SUCCESS:
                 ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_success));
-                Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
-                intent.putExtra("isTutorialPage",false);
-                startActivity(intent);
+//                Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
+//                intent.putExtra("isTutorialPage",false);
+//                startActivity(intent);
                 finish();
                 break;
 

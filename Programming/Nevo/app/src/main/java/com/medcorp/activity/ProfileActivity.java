@@ -209,10 +209,12 @@ public class ProfileActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                startActivity(MainActivity.class);
                 finish();
                 break;
             case R.id.done_menu:
                 getModel().saveNevoUser(user);
+                startActivity(MainActivity.class);
                 finish();
                 break;
         }

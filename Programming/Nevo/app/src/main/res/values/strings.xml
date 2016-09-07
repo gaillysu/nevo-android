@@ -240,8 +240,9 @@
     <string name="register_password_confirm">Confirm Password</string>
     <string name="register_account_message">No account yet? Create one</string>
     <string name="register_to_login">Already a member? Login</string>
-    <string name="register_success">Sign up success</string>
-    <string name="register_failed">Sign up failed</string>
+    <string name="singnup_success">Sign up success</string>
+    <string name="singnup_failed">Sign up failed</string>
+
     <string name="register_popup_message">Creating Account...</string>
     <string name="register_email_error">enter a valid email address</string>
     <string name="register_password_error">between 4 and 10 alphanumeric characters</string>
@@ -273,6 +274,8 @@ push and hold the third button, until the white LED blinks</string>
 
 
     <!--lunar-->
+    <string name="register_success">Register up success</string>
+    <string name="register_failed">Register up failed</string>
     <string name="network_wait_text">Please wait ...</string>
     <string name="user_email_is_error">Please check your account...</string>
     <string name="add_alarm_index_out">The same type of alarm clock can only add 7!</string>
