@@ -308,7 +308,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                     savedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
                     savedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
-//                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + savedDailyHistory.get(mCurrentDay).getHourlySteps().toString());
 
                     savedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
                     savedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
@@ -341,8 +340,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     savedDailyHistory.get(mCurrentDay).setHourlyCalories(thispacket.getHourlyCalories());
 
                     IDailyHistory history = new IDailyHistory(savedDailyHistory.get(mCurrentDay));
-                    //DatabaseHelper.getInstance(mContext).SaveDailyHistory(history);
-                    //Log.i(TAG, savedDailyHistory.get(mCurrentDay).getDate().toString() + " successfully saved to database, created = " + history.getCreated());
                     //update steps/sleep tables
                     Steps steps = new Steps(history.getCreated());
                     steps.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
@@ -364,6 +361,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     steps.setRunDistance(thispacket.getDailyRunDistance());
                     steps.setWalkDuration(thispacket.getDailyWalkDuration());
                     steps.setRunDuration(thispacket.getDailyRunDuration());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total Steps:" + steps.getSteps());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + steps.getHourlySteps());
                     Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total active time: " + (steps.getWalkDuration()+steps.getRunDuration()) + ",walk time: " + steps.getWalkDuration() + ",run time: "+ steps.getRunDuration());
                     Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total distance: " + steps.getDistance() +",walk distance: " + steps.getWalkDistance() + ",run distance: " + steps.getRunDistance());
                     Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total calories: " + steps.getCalories());
