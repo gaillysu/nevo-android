@@ -12,6 +12,7 @@ import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Solar;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 import com.medcorp.view.graphs.AnalysisSolarLineChart;
 
 import java.text.ParseException;
@@ -104,18 +105,18 @@ public class AnalysisSolarFragment extends BaseFragment {
                 switch (position) {
                     case 0:
                         solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);
-                        averageTimeOnSolar.setText(getAverageTimeOnBattery(thisWeek)+"");
-                        averageTimeOnBattery.setText("0");
+                        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(thisWeek)));
+                        averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(thisWeek)));
                         break;
                     case 1:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_week_steps);
-                        averageTimeOnSolar.setText(getAverageTimeOnBattery(lastWeek)+"");
-                        averageTimeOnBattery.setText("0");
+                        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastWeek)));
+                        averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(lastWeek)));
                         break;
                     case 2:
                         solarTitleTextView.setText(R.string.analysis_fragment_last_month_solar);
-                        averageTimeOnSolar.setText(getAverageTimeOnBattery(lastMonth)+"");
-                        averageTimeOnBattery.setText("0");
+                        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(lastMonth)));
+                        averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(lastMonth)));
                         break;
                 }
             }
@@ -125,6 +126,8 @@ public class AnalysisSolarFragment extends BaseFragment {
 
             }
         });
+        averageTimeOnSolar.setText(TimeUtil.formatTime(getAverageTimeOnBattery(thisWeek)));
+        averageTimeOnBattery.setText(TimeUtil.formatTime(24*60-getAverageTimeOnBattery(thisWeek)));
     }
 
     public int getAverageTimeOnBattery(List<Solar> list){

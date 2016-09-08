@@ -405,8 +405,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
                         solar.setTotalHarvestingTime(thispacket.getTotalSwimTime());
                         solar.setHourlyHarvestingTime(thispacket.getHourlySwimTime().toString());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solor time:" + solar.getHourlyHarvestingTime());
-                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solor time:" + solar.getTotalHarvestingTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solar time:" + solar.getHourlyHarvestingTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solar time:" + solar.getTotalHarvestingTime());
                         ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
                     }
 
