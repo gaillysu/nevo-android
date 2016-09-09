@@ -20,12 +20,10 @@ import com.medcorp.model.SleepData;
 
 import org.joda.time.DateTime;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by karl-john on 19/8/2016.
@@ -63,9 +61,10 @@ public class SleepTodayChart extends LineChart {
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
+        leftAxis.setAxisMinValue(0.0f);
         leftAxis.setAxisMaxValue(2.5f);
         leftAxis.setValueFormatter(new YAxisValueFormatter());
-        leftAxis.setLabelCount(3);
+        leftAxis.setLabelCount(2);
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
@@ -84,12 +83,10 @@ public class SleepTodayChart extends LineChart {
     }
 
     public void setDataInChart(SleepData sleepData) {
-        SimpleDateFormat sdf = new SimpleDateFormat("d'/'M", Locale.US);
+
         List<Entry> yValue = new ArrayList<>();
         int interval = 5;
         List<Integer> intList = new ArrayList<>();
-        int lightSleepContinue = -1;
-        int deepSleepContinue = -1;
         int[] hourlyWakeTime = sleepData.getHourlyWakeInt();
         int[] hourlyLightSleepTime = sleepData.getHourlyLightInt();
         int[] hourlyDeepSleepTime = sleepData.getHourlyDeepInt();
@@ -140,7 +137,7 @@ public class SleepTodayChart extends LineChart {
         set.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
         //        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.chart_gradient);
         //        set.setFillDrawable(drawable);
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         LineData data = new LineData(dataSets);
         setData(data);
@@ -189,8 +186,10 @@ public class SleepTodayChart extends LineChart {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            DateTime newDate = startDate.plusHours((int) value / 10);
-            return String.valueOf(newDate.getHourOfDay());
+            DateTime newDate = startDate.plusHours((int) value / 5);
+            String y = String.valueOf(newDate.getHourOfDay());
+            return y;
+
         }
 
         @Override

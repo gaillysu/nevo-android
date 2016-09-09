@@ -157,7 +157,7 @@ public class AnalysisSleepLineChart extends LineChart{
 
     private LineDataSet getDataSet(List<Entry> entries, String setName, Drawable gradient, @ColorRes int lineColor){
         LineDataSet set = new LineDataSet(entries,setName);
-
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setColors(new int[]{lineColor});
         set.setLineWidth(1.5f);
         set.setDrawCircles(false);

@@ -121,7 +121,7 @@ public class AnalysisSolarLineChart extends LineChart {
         set.setColor(Color.BLACK);
         set.setCircleColor(R.color.transparent);
         set.setLineWidth(1.5f);
-
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setDrawCircles(false);
         set.setFillAlpha(128);
         set.setDrawFilled(true);

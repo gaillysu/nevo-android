@@ -100,7 +100,7 @@ public class SleepDataHandler {
     private boolean sleptToday(Sleep sleep) {
         try {
             JSONArray hourlySleep = new JSONArray(sleep.getHourlySleep());
-            for (int i = 0; i < 18 && hourlySleep.length() > 18; i++) {
+            for (int i = 0; i < 17 && hourlySleep.length() > 17; i++) {
                 if (Integer.parseInt(hourlySleep.getString(i)) > 0) {
                     return true;
                 }

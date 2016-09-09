@@ -329,11 +329,13 @@ public class ApplicationModel extends Application {
     }
 
     public List<SleepData> getThisWeekSleep(String userId, Date date) {
-        List<SleepData> thisWeekSleep = new ArrayList<>(3);
+
+        List<SleepData> thisWeekSleep = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
+
         for (long start = calendar.getWeekStartDate().getTime(); start <=
                 calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, date);
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
@@ -354,7 +356,7 @@ public class ApplicationModel extends Application {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getLastWeekStart().getTime(); start <=
                 calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,date);
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
@@ -374,7 +376,7 @@ public class ApplicationModel extends Application {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
                 date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,date);
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
@@ -435,15 +437,28 @@ public class ApplicationModel extends Application {
 
     public Sleep[] getDailySleep(String userId, Date todayDate) {
         DateTime todayDateTime = new DateTime(todayDate);
-        DateTime yesterdayDateTime = todayDateTime.minusDays(1);
-        Date yesterdayDate = new Date(yesterdayDateTime.getMillis());
-        Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(todayDate));
-        Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId, Common.removeTimeFromDate(yesterdayDate));
-
-        if (todaySleep.notEmpty() && yesterdaySleep.notEmpty()) {
-            return new Sleep[]{todaySleep.get(), yesterdaySleep.get()};
+        Date yesterdayDate = new Date(todayDateTime.getMillis()-24*60*60*1000L);
+        Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,todayDate);
+        Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId,yesterdayDate);
+        Sleep[] sleeps = new Sleep[2];
+        if(todaySleep.notEmpty()){
+            sleeps[0] = todaySleep.get();
+        }else{
+            sleeps[0] = new Sleep(todayDate.getTime(),todayDate.getTime(),0, 0, 0,
+            0,"[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+                    "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]","[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+            Common.removeTimeFromDate(todayDate).getTime(), (Common.removeTimeFromDate(yesterdayDate).getTime()+24*60*60*1000L-1),0,"");
         }
-        return null;
+        if(yesterdaySleep.notEmpty()){
+            sleeps[1] = yesterdaySleep.get();
+        }else{
+            sleeps[1] = new Sleep(todayDate.getTime(),todayDate.getTime(),0, 0, 0,
+                    0,"[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+                    "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]","[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+                    Common.removeTimeFromDate(todayDate).getTime(),(Common.removeTimeFromDate(yesterdayDate).getTime()+24*60*60*1000L-1),0,"");
+        }
+
+        return sleeps;
     }
 
     public void saveDailySleep(Sleep sleep) {
