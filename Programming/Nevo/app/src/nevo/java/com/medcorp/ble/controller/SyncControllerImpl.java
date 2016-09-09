@@ -96,6 +96,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
 import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.util.Constants;
+import net.medcorp.library.ble.util.HexUtils;
 import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -151,6 +152,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             public void run() {
                 //here do little sync to refesh current steps
                 getStepsAndGoal();
+                //TODO test code for solar power collection
+                //sendRequest(new TestModeRequest(mContext,TestModeRequest.MODE_F4));
                 //send a 10s event to refresh clock
                 EventBus.getDefault().post(new Timer10sEvent());
                 startTimer();
@@ -274,8 +277,20 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     // important for user, so here need use local's setting sync with nevo
                     setNotification(true);
                     //here start sync every alarm
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date());
                     List<Alarm> alarmList = ((ApplicationModel)mContext).getAllAlarm();
                     for(Alarm alarm:alarmList) {
+                        //disable today 's sleep alarm when it comes in active mode (BT connected)
+                        //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
+                        if(alarm.getAlarmNumber()>=7
+                                && (alarm.getWeekDay()&0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
+                                && (alarm.getHour()<calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour()==calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute()<calendar.get(Calendar.MINUTE))))
+                        {
+                            if(alarm.getHour()<calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour()==calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute()<calendar.get(Calendar.MINUTE))){
+                                alarm.setWeekDay((byte) (alarm.getWeekDay()&0x0F));
+                            }
+                        }
                         setAlarm(alarm);
                     }
                 }
@@ -442,8 +457,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                             mLocalService.findCellPhone();
                         }
                         //let all color LED light on, means that find CellPhone is successful.
-                        sendRequest(new TestModeRequest(mContext,0x3F0000,false));
+                        sendRequest(new TestModeRequest(mContext,0x3F0000,false, TestModeRequest.MODE_F0));
                     }
+                }
+                else if((byte) TestModeRequest.MODE_F4 == packet.getHeader())
+                {
+                    int battery_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[2],packet.getPackets().get(0).getRawData()[3]});
+                    int pv_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[4],packet.getPackets().get(0).getRawData()[5]});
+                    float battery_voltage = ((battery_adc+1) * 360f / 1024)/100;
+                    float pv_voltage = ((pv_adc+1) * 360f / 1024)/100;
+                    Log.i(TAG,"battery_adc= " + battery_adc + ",battery_voltage= " + battery_voltage + ",pv_adc= " +pv_adc+",pv_voltage= " + pv_voltage);
                 }
                 else if((byte) FindPhonePacket.HEADER == packet.getHeader())
                 {
@@ -458,7 +481,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     if (!mEnableTestMode)
                     {
                         mEnableTestMode = true;
-                        sendRequest(new TestModeRequest(mContext,0,false));
+                        sendRequest(new TestModeRequest(mContext,0,false, TestModeRequest.MODE_F0));
                     }
                     //save current day's step count to "Steps" table
                     Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
