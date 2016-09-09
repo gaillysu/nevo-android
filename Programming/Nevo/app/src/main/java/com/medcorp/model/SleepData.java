@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 /**
  * Created by Karl on 11/27/15.
+ *
  */
 public class SleepData {
 

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by karl-john on 17/11/15.
+ *
  */
 public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
@@ -45,9 +46,9 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, object.getNevoUserID()).and().eq(SleepDAO.fDate, object.getDate()).query();
             if(sleepDAOList.isEmpty()) return add(object)!=null;
-            SleepDAO daoobject = convertToDao(object);
-            daoobject.setID(sleepDAOList.get(0).getID());
-            result = databaseHelper.getSleepDao().update(daoobject);
+            SleepDAO daoObject = convertToDao(object);
+            daoObject.setID(sleepDAOList.get(0).getID());
+            result = databaseHelper.getSleepDao().update(daoObject);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -70,11 +71,11 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
     @Override
     public List<Optional<Sleep>> get(String userId) {
-        List<Optional<Sleep>> sleepList = new ArrayList<Optional<Sleep>>();
+        List<Optional<Sleep>> sleepList = new ArrayList<>();
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).query();
             for (SleepDAO sleepDAO: sleepDAOList) {
-                Optional<Sleep> sleepOptional = new Optional<Sleep>();
+                Optional<Sleep> sleepOptional = new Optional<>();
                 sleepOptional.set(convertToNormal(sleepDAO));
                 sleepList.add(sleepOptional);
             }
@@ -86,11 +87,11 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
 
     @Override
     public Optional<Sleep> get(String userId,Date date) {
-        List<Optional<Sleep>> sleepList = new ArrayList<Optional<Sleep>>();
+        List<Optional<Sleep>> sleepList = new ArrayList<>();
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().where().eq(SleepDAO.fNevoUserID, userId).and().eq(SleepDAO.fDate, date.getTime()).query();
             for (SleepDAO sleepDAO: sleepDAOList) {
-                Optional<Sleep> sleepOptional = new Optional<Sleep>();
+                Optional<Sleep> sleepOptional = new Optional<>();
                 sleepOptional.set(convertToNormal(sleepDAO));
                 sleepList.add(sleepOptional);
             }
@@ -106,7 +107,7 @@ public class SleepDatabaseHelper implements iEntryDatabaseHelper<Sleep> {
     }
 
     public List<Sleep> getNeedSyncSleep(String userId) {
-        List<Sleep> sleepList = new ArrayList<Sleep>();
+        List<Sleep> sleepList = new ArrayList<>();
         try {
             List<SleepDAO> sleepDAOList = databaseHelper.getSleepDao().queryBuilder().orderBy(SleepDAO.fDate, false).where().eq(SleepDAO.fNevoUserID, userId).and().isNull(SleepDAO.fCloudRecordID).query();
             for (SleepDAO sleepDAO: sleepDAOList) {
