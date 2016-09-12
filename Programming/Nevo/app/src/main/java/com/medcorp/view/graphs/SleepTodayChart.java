@@ -27,6 +27,7 @@ import java.util.List;
 
 /**
  * Created by karl-john on 19/8/2016.
+ *
  */
 
 public class SleepTodayChart extends LineChart {
@@ -101,7 +102,7 @@ public class SleepTodayChart extends LineChart {
             if (awakeMinutes > 0) {
                 int consecutiveMinutes = awakeMinutes / interval;
                 for (int i = 0; i < consecutiveMinutes; i++) {
-                    intList.add(0);
+                    intList.add(2);
                 }
             }
             if (lightSleepMinutes > 0) {
@@ -113,7 +114,7 @@ public class SleepTodayChart extends LineChart {
             if (deepSleepMinutes > 0) {
                 int consecutiveFiveMinutes = deepSleepMinutes / interval;
                 for (int i = 0; i < consecutiveFiveMinutes; i++) {
-                    intList.add(2);
+                    intList.add(0);
                 }
             }
         }
@@ -156,11 +157,11 @@ public class SleepTodayChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             if (value == 0.0) {
-                return getContext().getResources().getString(R.string.sleep_awake);
+                return getContext().getResources().getString(R.string.sleep_deep_sleep);
             } else if (value >= 0.5 && value <= 1.5) {
                 return getContext().getResources().getString(R.string.sleep_light_sleep);
             } else if (value >= 1.6 && value <= 2.6) {
-                return getContext().getResources().getString(R.string.sleep_deep_sleep);
+                return getContext().getResources().getString(R.string.sleep_awake);
             }
             return "?";
         }

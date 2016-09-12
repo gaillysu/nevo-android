@@ -153,33 +153,4 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
 
     }
-
-    //    @Override
-    //    public void onCheckedChange(CompoundButton buttonView, boolean isChecked, final int position) {
-    //        if (position == 0) {
-    //            Preferences.saveLinklossNotification(getActivity(), isChecked);
-    //        }
-    //        if (position == 8) {
-    //            if (isChecked) {
-    //                getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
-    //            } else {
-    //                getModel().getNevoUser().setIsLogin(false);
-    //                getModel().saveNevoUser(getModel().getNevoUser());
-    //            }
-    //        }
-    //    }
-    //
-    //    @Override
-    //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //        super.onActivityResult(requestCode, resultCode, data);
-    //        if (requestCode == REQUEST_LOGIN) {
-    //            if (resultCode == Activity.RESULT_OK) {
-    //                listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, true));
-    //                settingAdapter.notifyDataSetChanged();
-    //            } else if (resultCode == Activity.RESULT_CANCELED) {
-    //                listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, false));
-    //                settingAdapter.notifyDataSetChanged();
-    //            }
-    //        }
-    //    }
 }

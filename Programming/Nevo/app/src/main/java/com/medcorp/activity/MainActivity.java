@@ -49,10 +49,10 @@ import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -154,8 +154,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         headerView.findViewById(R.id.navigation_header_spinner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
-                intent.putExtra("isTutorialPage",false);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.putExtra("isTutorialPage", false);
                 startActivity(intent);
                 finish();
             }
@@ -222,6 +222,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
     }
 
+
     @Override
     public void onDrawerClosed(View drawerView) {
         setFragment(selectedMenuItem);
@@ -261,12 +262,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
-                if (fragmentManager.getBackStackEntryCount() >= 1) {
-                    fragmentManager.popBackStack();
-                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount() - 1);
-                    activeFragment.set(fragment);
-                }
-                return;
+                //                if (fragmentManager.getBackStackEntryCount() >= 1) {
+                //                    fragmentManager.popBackStack();
+                //                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(0);
+                //                    activeFragment.set(fragment);
+                //                }
+                fragment = LunarMainFragment.instantiate(MainActivity.this, LunarMainFragment.class.getName());
+                break;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());
                 break;

@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Karl on 12/10/15.
+ *
  */
 public class StepsFragment extends BaseObservableFragment {
 
