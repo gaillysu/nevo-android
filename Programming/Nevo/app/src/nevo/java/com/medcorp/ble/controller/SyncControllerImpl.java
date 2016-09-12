@@ -634,8 +634,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         if(getWatchInfomation().getWatchID()<=1) {
             sendRequest(new LedLightOnOffRequest(mContext, 0x3F0000, true));
         }else {
-            //light on all color LED and start vibrator
+            //light on all color LED and start vibrator 2s for saving power consume
             sendRequest(new FindWatchRequest(mContext,true));
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sendRequest(new LedLightOnOffRequest(mContext, 0x3F0000, false));
+                }
+            }, 2000);
         }
     }
 
