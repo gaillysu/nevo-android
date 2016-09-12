@@ -91,7 +91,7 @@ public class MyNevoActivity  extends BaseActivity {
 
     private void checkVersion()
     {
-        List<String> firmwareURLs = new ArrayList<String>();
+        List<String> firmwareURLs = new ArrayList<>();
         //check build-in firmwares
         //fill  list by build-in files or download files
         if(null == getModel().getWatchSoftware() || null == getModel().getWatchFirmware())
