@@ -31,7 +31,6 @@ import java.util.List;
 
 public class SleepTodayChart extends LineChart {
 
-
     public SleepTodayChart(Context context) {
         super(context);
         initGraph();
@@ -186,10 +185,9 @@ public class SleepTodayChart extends LineChart {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            DateTime newDate = startDate.plusHours((int) value / 5);
-            String y = String.valueOf(newDate.getHourOfDay());
-            return y;
 
+             DateTime newDate = startDate.plusHours((int) value / 10);
+            return String.valueOf(newDate.getHourOfDay());
         }
 
         @Override

@@ -55,7 +55,9 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            />
         <activity
             android:name=".activity.GoalsActivity"
             android:screenOrientation="portrait"/>

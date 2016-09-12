@@ -283,6 +283,10 @@ public class ApplicationModel extends Application {
         stepsDatabaseHelper.update(steps);
     }
 
+    public void removeUser(User user){
+        userDatabaseHelper.remove(user.getNevoUserID(),new Date(user.getCreatedDate()));
+    }
+
     public List<Solar> getThisWeekSolar(String userId, Date date) {
         List<Solar> thisWeekSolar = new ArrayList<>();
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);

@@ -17,6 +17,7 @@ import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.LoginEvent;
 import com.medcorp.network.med.model.LoginUser;
+import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.util.Constants;
 
@@ -143,6 +144,7 @@ public class LoginActivity extends BaseActivity {
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
+        Preferences.saveIsFirstLogin(this,false);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
         if (getIntent().getBooleanExtra("isTutorialPage", true)) {
             startActivity(MainActivity.class);
