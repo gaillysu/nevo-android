@@ -20,6 +20,7 @@ import com.medcorp.activity.GoalsActivity;
 import com.medcorp.activity.MyNevoActivity;
 import com.medcorp.activity.SettingAboutActivity;
 import com.medcorp.activity.SettingNotificationActivity;
+import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.adapter.SettingMenuAdapter;
 import com.medcorp.fragment.base.BaseObservableFragment;
@@ -27,6 +28,8 @@ import com.medcorp.listener.OnCheckedChangeInListListener;
 import com.medcorp.model.SettingsMenuItem;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.ToastHelper;
+
+import net.medcorp.library.ble.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by karl-john on 14/12/15.
- *
  */
 public class SettingsFragment extends BaseObservableFragment implements AdapterView.OnItemClickListener, OnCheckedChangeInListListener {
 
@@ -63,7 +65,8 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
-        //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
+        //           listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
+        listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
         settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
@@ -132,8 +135,17 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .show();
 
         } else if (position == 8) {
+            getModel().removeUser(getModel().getNevoUser());
+            Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+            intent.putExtra("isTutorialPage", true);
+            SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
+            Preferences.saveIsFirstLogin(SettingsFragment.this.getContext(), true);
+            startActivity(intent);
+            SettingsFragment.this.getActivity().finish();
+        } else if (position == 9) {
             Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
             startActivity(intent);
+
         }
     }
 
@@ -141,33 +153,4 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
 
     }
-
-    //    @Override
-//    public void onCheckedChange(CompoundButton buttonView, boolean isChecked, final int position) {
-//        if (position == 0) {
-//            Preferences.saveLinklossNotification(getActivity(), isChecked);
-//        }
-//        if (position == 8) {
-//            if (isChecked) {
-//                getActivity().startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
-//            } else {
-//                getModel().getNevoUser().setIsLogin(false);
-//                getModel().saveNevoUser(getModel().getNevoUser());
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_LOGIN) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, true));
-//                settingAdapter.notifyDataSetChanged();
-//            } else if (resultCode == Activity.RESULT_CANCELED) {
-//                listMenu.set(8, new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, false));
-//                settingAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
 }
