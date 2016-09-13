@@ -121,7 +121,7 @@ public class SleepTodayChart extends LineChart {
 
         for (int i = 0; i < intList.size(); i++) {
             Log.w("Karl", "Value = " + intList.get(i));
-            yValue.add(new Entry(i, intList.get(i))); 
+            yValue.add(new Entry(i, intList.get(i)));
         }
         LineDataSet set = new LineDataSet(yValue, "");
         set.setColor(Color.BLACK);

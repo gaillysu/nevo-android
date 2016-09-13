@@ -339,7 +339,7 @@ public class ApplicationModel extends Application {
 
         for (long start = calendar.getWeekStartDate().getTime(); start <=
                 calendar.getWeekEndDate().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, date);
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId, new Date(start));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
@@ -347,7 +347,7 @@ public class ApplicationModel extends Application {
                         start, dailySleep.getStart(), dailySleep.getEnd());
                 thisWeekSleep.add(sleepData);
             } else {
-                SleepData sleepData = new SleepData(0, 0, 0, start, 0, 0);
+                SleepData sleepData = new SleepData(0, 0, 0, start);
                 thisWeekSleep.add(sleepData);
             }
         }
@@ -360,7 +360,8 @@ public class ApplicationModel extends Application {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getLastWeekStart().getTime(); start <=
                 calendar.getLastWeekEnd().getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,date);
+
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,new Date(start));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()
@@ -380,7 +381,7 @@ public class ApplicationModel extends Application {
         CalendarWeekUtils calendar = new CalendarWeekUtils(date);
         for (long start = calendar.getMonthStartDate().getTime(); start <=
                 date.getTime(); start += 24 * 60 * 60 * 1000L) {
-            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,date);
+            Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,new Date(start));
             if (todaySleep.notEmpty()) {
                 Sleep dailySleep = todaySleep.get();
                 SleepData sleepData = new SleepData(dailySleep.getTotalDeepTime()

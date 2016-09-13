@@ -29,6 +29,7 @@ import java.util.List;
 
 /**
  * Created by Karl on 8/24/16.
+ *
  */
 
 public class AnalysisSleepLineChart extends LineChart{
@@ -98,17 +99,19 @@ public class AnalysisSleepLineChart extends LineChart{
     public void addData(List<SleepData> sleepList, int maxDayInGraph){
         this.sleepList = sleepList;
         this.maxDayInGraph = maxDayInGraph;
-        List<Entry> wakeEntries = new ArrayList<Entry>();
-        List<Entry> lightSleepEntries = new ArrayList<Entry>();
-        List<Entry> deepSleepEntries = new ArrayList<Entry>();
+        List<Entry> wakeEntries = new ArrayList<>();
+        List<Entry> lightSleepEntries = new ArrayList<>();
+        List<Entry> deepSleepEntries = new ArrayList<>();
         int maxValue = 0;
 
-        for (int i = 0; i < maxDayInGraph; i++) {
+        for (int i = 0; i <this.sleepList.size() ; i++) {
             if (i < this.sleepList.size()){
                 SleepData sleep= this.sleepList.get(i);
+
                 wakeEntries.add(new Entry(i, sleep.getAwake()));
                 lightSleepEntries.add(new Entry(i, sleep.getLightSleep()));
                 deepSleepEntries.add(new Entry(i, sleep.getDeepSleep()));
+
                 if (maxValue < sleep.getLightSleep()){
                     maxValue = sleep.getLightSleep();
                 }
@@ -126,9 +129,7 @@ public class AnalysisSleepLineChart extends LineChart{
         }
 
         maxValue = ((Math.round(maxValue / 60) + 1) * 60);
-
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-
+        List<ILineDataSet> dataSets = new ArrayList<>();
 
         getXAxis().setLabelCount(this.sleepList.size()-1);
         getXAxis().setValueFormatter(new XValueFormatter());
@@ -157,11 +158,11 @@ public class AnalysisSleepLineChart extends LineChart{
 
     private LineDataSet getDataSet(List<Entry> entries, String setName, Drawable gradient, @ColorRes int lineColor){
         LineDataSet set = new LineDataSet(entries,setName);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        set.setMode(LineDataSet.Mode.LINEAR);
         set.setColors(new int[]{lineColor});
         set.setLineWidth(1.5f);
         set.setDrawCircles(false);
-        set.setFillAlpha(128);
+        set.setFillAlpha(60);
         set.setLabel(setName);
         set.setDrawFilled(true);
         set.setDrawValues(false);

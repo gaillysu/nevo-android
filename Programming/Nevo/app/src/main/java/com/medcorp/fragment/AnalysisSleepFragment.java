@@ -12,6 +12,7 @@ import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.SleepData;
 import com.medcorp.util.Preferences;
+import com.medcorp.view.TipsView;
 import com.medcorp.view.graphs.AnalysisSleepLineChart;
 
 import java.text.ParseException;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/7/21.
+ *
  */
 public class AnalysisSleepFragment extends BaseFragment {
 
@@ -59,6 +61,7 @@ public class AnalysisSleepFragment extends BaseFragment {
     private List<SleepData> thisWeekSleepData;
     private List<SleepData> lastWeekSleepData;
     private List<SleepData> lastMonthSleepData;
+    private AnalysisSleepLineChart thisWeekChart, lastWeekChart, lastMonthChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,17 +106,21 @@ public class AnalysisSleepFragment extends BaseFragment {
         lastWeekSleepData = getModel().getLastWeekSleep(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastMonthSleepData = getModel().getLastMonthSleep(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         setDesText(0);
-        AnalysisSleepLineChart thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
-        AnalysisSleepLineChart lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
-        AnalysisSleepLineChart lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
+        thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
+        lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
+        lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
         /*
             'Sleep' is not the right way to put it into the chart because one evening and one night is spread through 2 'Sleep' Objects.
             Therefor we have a solution which is 'SleepData' We have therefor 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
             getDummyData is just for the 'dummy data'
          */
+        TipsView mv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeekSleepData, 7);
+        thisWeekChart.setMarkerView(mv);
         lastWeekChart.addData(lastWeekSleepData, 7);
+        lastWeekChart.setMarkerView(mv);
         lastMonthChart.addData(lastMonthSleepData, 30);
+        lastMonthChart.setMarkerView(mv);
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
         sleepViewPage.setAdapter(adapter);
