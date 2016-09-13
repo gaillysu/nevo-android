@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
@@ -70,6 +71,7 @@ import com.medcorp.event.bluetooth.InitializeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
+import com.medcorp.event.bluetooth.SolarConvertEvent;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
@@ -152,8 +154,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             public void run() {
                 //here do little sync to refesh current steps
                 getStepsAndGoal();
-                //TODO test code for solar power collection
-                //sendRequest(new TestModeRequest(mContext,TestModeRequest.MODE_F4));
+                if(BuildConfig.DEBUG) {
+                    sendRequest(new TestModeRequest(mContext, TestModeRequest.MODE_F4));
+                }
                 //send a 10s event to refresh clock
                 EventBus.getDefault().post(new Timer10sEvent());
                 startTimer();
@@ -467,6 +470,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     float battery_voltage = ((battery_adc+1) * 360f / 1024)/100;
                     float pv_voltage = ((pv_adc+1) * 360f / 1024)/100;
                     Log.i(TAG,"battery_adc= " + battery_adc + ",battery_voltage= " + battery_voltage + ",pv_adc= " +pv_adc+",pv_voltage= " + pv_voltage);
+                    EventBus.getDefault().post(new SolarConvertEvent(pv_adc));
                 }
                 else if((byte) FindPhonePacket.HEADER == packet.getHeader())
                 {
@@ -474,7 +478,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         mLocalService.findCellPhone();
                     }
                     //let all color LED light on, means that find CellPhone is successful.
-                    sendRequest(new FindPhoneRequest(mContext));
+                    sendRequest(new TestModeRequest(mContext,0x3F0000,false, TestModeRequest.MODE_F0));
                 }
                 else if((byte) GetStepsGoalRequest.HEADER == nevoData.getRawData()[1])
                 {

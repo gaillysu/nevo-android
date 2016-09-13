@@ -15,9 +15,11 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.medcorp.ApplicationFlag;
+import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
+import com.medcorp.event.bluetooth.SolarConvertEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Solar;
 import com.medcorp.util.Common;
@@ -49,7 +51,8 @@ public class LunarMainSolarFragment extends BaseFragment {
     TextView solarTimeTv;
     @Bind(R.id.main_fragment_solar_pie_chart)
     PieChart solarPieChart;
-
+    @Bind(R.id.main_fragment_solar_title_tv)
+    TextView solarTitle;
     private Date userSelectDate;
 
     @Override
@@ -160,5 +163,17 @@ public class LunarMainSolarFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    @Subscribe
+    public void onEvent(final SolarConvertEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if(BuildConfig.DEBUG) {
+                    solarTitle.setText("Solar adc:" + event.getPv_adc());
+                }
+            }
+        });
     }
 }
