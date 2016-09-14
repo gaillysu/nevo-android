@@ -110,4 +110,6 @@ public interface SyncController {
      */
     public void startNotificationListener();
 
+    public boolean getHoldRequest();
+    public void setHoldRequest(boolean holdRequest);
 }

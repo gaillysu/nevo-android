@@ -117,9 +117,9 @@ public class OtaControllerImpl implements OtaController  {
     {
         @Override
         public void run() {
-            Log.e(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() + ",lastprogress = " + lastprogress + ",progress = " + progress);
             if (lastprogress == progress) //when no change happened, timeout
             {
+                Log.e(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() + ",lastprogress = " + lastprogress + ",progress = " + progress);
                 ERRORCODE errorcode = ERRORCODE.TIMEOUT;
                 if (state == DFUControllerState.SEND_START_COMMAND
                         && dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH
@@ -503,6 +503,7 @@ public class OtaControllerImpl implements OtaController  {
             state = DFUControllerState.IDLE;
             connectionController.setOTAMode(false, true);
         }
+        mContext.getSyncController().setHoldRequest(true);
         if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onPrepareOTA(firmwareType);
     }
 
@@ -580,7 +581,7 @@ public class OtaControllerImpl implements OtaController  {
 
         //disconnect and reconnect for reading new version
         connectionController.setOTAMode(false, true);
-
+        mContext.getSyncController().setHoldRequest(false);
     }
 
     @Override

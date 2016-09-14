@@ -137,6 +137,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private boolean mSyncAllFlag = false;
     private boolean initAlarm = true;
     private boolean initNotification = true;
+    private boolean isHoldRequest = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -199,6 +200,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             return;
         }
         if(!isConnected()) {
+            return;
+        }
+        //when OTA mode, disable syncController send any request command to BLE
+        if(isHoldRequest) {
             return;
         }
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
@@ -696,6 +701,16 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         pm.setComponentEnabledSetting(new ComponentName(mContext, NevoNotificationListener.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
+    }
+
+    @Override
+    public void setHoldRequest(boolean holdRequest) {
+        isHoldRequest = holdRequest;
+    }
+
+    @Override
+    public boolean getHoldRequest() {
+        return isHoldRequest;
     }
 
     /**
