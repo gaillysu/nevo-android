@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by gaillysu on 15/12/23.
+ *
  */
 public class GoalsActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
@@ -66,7 +67,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
         presetArrayAdapter = new PresetArrayAdapter(this, getModel(), goalList);
         presetListView.setAdapter(presetArrayAdapter);
         presetListView.setOnItemClickListener(this);
-        goal = new Goal("", false, 7000);
+        goal = new Goal("", false, stepsGoalArray[3]);
     }
 
 

@@ -60,7 +60,7 @@ public class AnalysisSleepLineChart extends LineChart{
         setNoDataTextDescription("");
         setNoDataText("");
         setDragEnabled(false);
-        setScaleEnabled(true);
+        setScaleEnabled(false);
         setTouchEnabled(true);
         setPinchZoom(false);
         setClickable(false);

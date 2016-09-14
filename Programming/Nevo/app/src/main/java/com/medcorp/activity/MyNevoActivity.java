@@ -108,9 +108,6 @@ public class MyNevoActivity  extends BaseActivity {
             myNevo.setFirmwareURLs(firmwareURLs);
             myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
         }
-        //check network firmwares
-
-        //end check network firmwares
     }
 
     @Override

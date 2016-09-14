@@ -55,7 +55,7 @@ public class SleepTodayChart extends LineChart {
         setScaleEnabled(false);
         //        setTouchEnabled(true);
         setPinchZoom(false);
-                setHighlightPerTapEnabled(false);
+        setHighlightPerTapEnabled(false);
         getLegend().setEnabled(false);
 
         YAxis leftAxis = getAxisLeft();
@@ -136,8 +136,8 @@ public class SleepTodayChart extends LineChart {
         set.setDrawValues(false);
         set.setCircleColorHole(Color.BLACK);
         set.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
-        //        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.chart_gradient);
-        //        set.setFillDrawable(drawable);
+//        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.chart_gradient);
+//        set.setFillDrawable(drawable);
         List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         LineData data = new LineData(dataSets);

@@ -34,7 +34,8 @@ public class ForgetPasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forget_passwor_activity_layout);
         ButterKnife.bind(this);
-
+        Intent intent = getIntent();
+        editEmail.setText(intent.getStringExtra("email"));
     }
 
     @OnClick(R.id.back_page_image_button)

@@ -31,10 +31,12 @@ import butterknife.OnClick;
 import static com.medcorp.R.style.AppTheme_Dark_Dialog;
 
 public class LoginActivity extends BaseActivity {
+
     private static final String TAG = "LoginActivity";
     private int errorSum = 0;
     private static final int REQUEST_SIGN_UP = 0;
     private ProgressDialog progressDialog;
+    private String email;
 
     @Bind(R.id.input_email)
     EditText _emailText;
@@ -99,7 +101,7 @@ public class LoginActivity extends BaseActivity {
         progressDialog.setMessage(getString(R.string.log_in_popup_message));
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
+        email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
         LoginUser user = new LoginUser();
@@ -139,14 +141,16 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onLoginSuccess() {
-        Toast.makeText(getBaseContext(), R.string.log_in_success, Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), R.string.log_in_success, Toast.LENGTH_SHORT).show();
         _loginButton.setEnabled(true);
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
-        Preferences.saveIsFirstLogin(this,false);
+        Preferences.saveIsFirstLogin(this, false);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
         if (getIntent().getBooleanExtra("isTutorialPage", true)) {
+            startActivity(TutorialPage1Activity.class);
+        }else{
             startActivity(MainActivity.class);
         }
         finish();
@@ -162,7 +166,9 @@ public class LoginActivity extends BaseActivity {
                     .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(MaterialDialog dialog, DialogAction which) {
-                    startActivity(ForgetPasswordActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                    intent.putExtra("email", email);
+                    startActivity(intent);
                     finish();
                 }
             }).show();

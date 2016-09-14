@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.widget.TextView;
 
 import com.medcorp.R;
+import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.base.BaseActivity;
 
 import butterknife.Bind;
@@ -31,7 +32,7 @@ public class ForgetPasswordResultActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(MainActivity.class);
+                startActivity(LoginActivity.class);
                 finish();
             }
         }, 1500);
