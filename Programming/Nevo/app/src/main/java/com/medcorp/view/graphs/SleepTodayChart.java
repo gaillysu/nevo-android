@@ -27,7 +27,6 @@ import java.util.List;
 
 /**
  * Created by karl-john on 19/8/2016.
- *
  */
 
 public class SleepTodayChart extends LineChart {
@@ -54,7 +53,9 @@ public class SleepTodayChart extends LineChart {
         setNoDataText("");
         setDragEnabled(false);
         setScaleEnabled(false);
+        //        setTouchEnabled(true);
         setPinchZoom(false);
+                setHighlightPerTapEnabled(false);
         getLegend().setEnabled(false);
 
         YAxis leftAxis = getAxisLeft();
@@ -187,7 +188,7 @@ public class SleepTodayChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
 
-             DateTime newDate = startDate.plusHours((int) value / 10);
+            DateTime newDate = startDate.plusHours((int) value / 10);
             return String.valueOf(newDate.getHourOfDay());
         }
 

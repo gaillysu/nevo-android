@@ -60,6 +60,7 @@ public class AnalysisSolarLineChart extends LineChart {
         setNoDataText("");
         setDragEnabled(false);
         setScaleEnabled(false);
+//        setTouchEnabled(true);
         setPinchZoom(false);
         setClickable(false);
         setHighlightPerTapEnabled(false);

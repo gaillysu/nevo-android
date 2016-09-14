@@ -117,8 +117,10 @@ public class AnalysisSleepFragment extends BaseFragment {
         TipsView mv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeekSleepData, 7);
         thisWeekChart.setMarkerView(mv);
+
         lastWeekChart.addData(lastWeekSleepData, 7);
         lastWeekChart.setMarkerView(mv);
+
         lastMonthChart.addData(lastMonthSleepData, 30);
         lastMonthChart.setMarkerView(mv);
 

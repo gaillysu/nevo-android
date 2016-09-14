@@ -64,6 +64,7 @@ public class AnalysisStepsLineChart extends LineChart {
         setScaleEnabled(false);
         setPinchZoom(false);
         setClickable(false);
+//        setTouchEnabled(true);
         setHighlightPerTapEnabled(false);
         setHighlightPerDragEnabled(false);
         dispatchSetSelected(false);

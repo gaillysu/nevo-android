@@ -13,6 +13,7 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Preferences;
+import com.medcorp.view.TipsView;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,9 +95,13 @@ public class AnalysisStepsFragment extends BaseFragment {
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         setDesText(0);
+        TipsView marker = new TipsView(AnalysisStepsFragment.this.getContext(),R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeekData, activeGoal, 7);
+        thisWeekChart.setMarkerView(marker);
         lastWeekChart.addData(lastWeekData, activeGoal, 7);
+        lastWeekChart.setMarkerView(marker);
         lastMonthChart.addData(lastMonthData, activeGoal, 7);
+        lastMonthChart.setMarkerView(marker);
     }
 
     private void initView(LayoutInflater inflater) {

@@ -13,6 +13,7 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Solar;
 import com.medcorp.util.Preferences;
 import com.medcorp.util.TimeUtil;
+import com.medcorp.view.TipsView;
 import com.medcorp.view.graphs.AnalysisSolarLineChart;
 
 import java.text.ParseException;
@@ -46,6 +47,7 @@ public class AnalysisSolarFragment extends BaseFragment {
     private List<Solar> thisWeek;
     private List<Solar> lastWeek;
     private List<Solar> lastMonth;
+    private AnalysisSolarLineChart thisWeekChart,lastWeekChart,lastMonthChart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,16 +83,20 @@ public class AnalysisSolarFragment extends BaseFragment {
 
     private void initData(Date userSelectDate) {
 
-        AnalysisSolarLineChart thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
-        AnalysisSolarLineChart lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
-        AnalysisSolarLineChart lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
+        thisWeekChart = (AnalysisSolarLineChart) thisWeekView.findViewById(R.id.analysis_solar_chart);
+        lastWeekChart = (AnalysisSolarLineChart) lastWeekView.findViewById(R.id.analysis_solar_chart);
+        lastMonthChart = (AnalysisSolarLineChart) lastMonthView.findViewById(R.id.analysis_solar_chart);
 
         thisWeek = getModel().getThisWeekSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeek = getModel().getLastWeekSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastMonth = getModel().getLastMonthSolar(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        TipsView marker = new TipsView(AnalysisSolarFragment.this.getContext(),R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeek, 7);
+        thisWeekChart.setMarkerView(marker);
         lastWeekChart.addData(lastWeek, 7);
+        lastWeekChart.setMarkerView(marker);
         lastMonthChart.addData(lastMonth, 30);
+        lastMonthChart.setMarkerView(marker);
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(solarList);
         solarViewPager.setAdapter(adapter);

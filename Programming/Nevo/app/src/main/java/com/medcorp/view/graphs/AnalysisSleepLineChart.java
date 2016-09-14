@@ -60,10 +60,11 @@ public class AnalysisSleepLineChart extends LineChart{
         setNoDataTextDescription("");
         setNoDataText("");
         setDragEnabled(false);
-        setScaleEnabled(false);
+        setScaleEnabled(true);
+        setTouchEnabled(true);
         setPinchZoom(false);
         setClickable(false);
-        setHighlightPerTapEnabled(false);
+        setHighlightPerTapEnabled(true);
         setHighlightPerDragEnabled(false);
         dispatchSetSelected(false);
         Legend legend = getLegend();

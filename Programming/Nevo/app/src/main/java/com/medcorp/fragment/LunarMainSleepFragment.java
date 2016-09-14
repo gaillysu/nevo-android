@@ -19,6 +19,7 @@ import com.medcorp.util.Preferences;
 import com.medcorp.util.SleepDataHandler;
 import com.medcorp.util.SleepDataUtils;
 import com.medcorp.util.TimeUtil;
+import com.medcorp.view.TipsView;
 import com.medcorp.view.graphs.SleepTodayChart;
 
 import org.greenrobot.eventbus.EventBus;

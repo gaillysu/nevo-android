@@ -16,9 +16,11 @@ import com.medcorp.R;
 public class TipsView extends MarkerView {
 
     private TextView tvContent;
+
     /**
      * Constructor. Sets up the MarkerView with a custom layout resource.
-     *  @param context
+     *
+     * @param context
      * @param layoutResource the layout resource to use for the MarkerView
      */
     public TipsView(Context context, int layoutResource) {
@@ -30,7 +32,6 @@ public class TipsView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-
         if (e instanceof CandleEntry) {
             CandleEntry ce = (CandleEntry) e;
             tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
