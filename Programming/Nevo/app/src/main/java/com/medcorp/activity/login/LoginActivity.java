@@ -148,9 +148,9 @@ public class LoginActivity extends BaseActivity {
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
-        if (getIntent().getBooleanExtra("isTutorialPage", true)) {
+        if (getIntent().getBooleanExtra("isTutorialPage", true) && Preferences.getIsFirstLogin(this)) {
             startActivity(TutorialPage1Activity.class);
-        }else{
+        } else {
             startActivity(MainActivity.class);
         }
         finish();

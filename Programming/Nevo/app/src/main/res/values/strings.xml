@@ -198,7 +198,7 @@
     <string name="settings_notifications">Notifications</string>
     <string name="settings_notifications_active_title">Active Notifications</string>
     <string name="settings_notifications_inactive_title">Inactive Notifications</string>
-    <string name="settings_my_nevo">My nevo</string>
+    <string name="settings_my_nevo">My Nevo</string>
     <string name="settings_find_my_watch">Find my watch</string>
     <string name="settings_goals">Goals</string>
     <string name="settings_support">Support</string>
@@ -222,7 +222,6 @@
     <string name="google_fit_sync_error">Error syncing data to Google Fit.</string>
     <string name="google_fit_log_out_title">Log out Google Play</string>
     <string name="google_fit_log_out_message">Do you want to disable Google Fit?</string>
-    <string name="google_fit_log_out">Log out</string>
     <string name="google_fit_cancel">Cancel</string>
 
     <string name="validic_pin_code_title">Input PIN code</string>
@@ -390,5 +389,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="login_skip_text">Skip</string>
     <string name="login_page_activity_title">Login</string>
     <string name="save_notification_ok">Save success!</string>
+    <string name="google_fit_log_out">Log out</string>
     <!--<lunar end>-->
 </resources>
