@@ -285,7 +285,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     // important for user, so here need use local's setting sync with nevo
                     setNotification(true);
                     //here start sync every alarm
-                    //firstly reset all alarms
+                    //firstly clean all alarms
                     for(int i=0;i<14;i++)
                     {
                         setAlarm(new Alarm(0,0,(byte)0,"",(byte)(i<7?0:1),(byte)i));
@@ -294,21 +294,23 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     calendar.setTime(new Date());
                     List<Alarm> alarmList = ((ApplicationModel)mContext).getAllAlarm();
                     for(Alarm alarm:alarmList) {
-                        //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
-                        if (alarm.getAlarmNumber()>=7) {
-                            //disable today 's sleep alarm when it comes in active mode (BT connected)
-                            if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
-                                    && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
-                                alarm.setWeekDay((byte) (alarm.getWeekDay() & 0x0F));
+                        if((alarm.getWeekDay() & 0x80) == 0x80)
+                        {
+                            //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
+                            if (alarm.getAlarmNumber() >= 7) {
+                                //discard today 's sleep alarm when it comes in active mode (BT connected)
+                                if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
+                                        && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
+                                    continue;
+                                }
+                                //discard yesterday 's sleep alarm when it comes in active mode (BT connected)
+                                else if ((((alarm.getWeekDay() & 0x0F) + 1) == calendar.get(Calendar.DAY_OF_WEEK))
+                                        || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1)) {
+                                    continue;
+                                }
                             }
-                            //disable yesterday 's sleep alarm when it comes in active mode (BT connected)
-                            else if((((alarm.getWeekDay() & 0x0F)+1) == calendar.get(Calendar.DAY_OF_WEEK))
-                                    || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1))
-                            {
-                                alarm.setWeekDay((byte) (alarm.getWeekDay() & 0x0F));
-                            }
+                            setAlarm(alarm);
                         }
-                        setAlarm(alarm);
                     }
                 }
                 else if((byte) SetNotificationRequest.HEADER == nevoData.getRawData()[1])
