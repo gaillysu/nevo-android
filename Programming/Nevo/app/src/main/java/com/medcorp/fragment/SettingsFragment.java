@@ -23,13 +23,18 @@ import com.medcorp.activity.SettingNotificationActivity;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.tutorial.TutorialPage1Activity;
 import com.medcorp.adapter.SettingMenuAdapter;
+import com.medcorp.event.bluetooth.FindWatchEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.listener.OnCheckedChangeInListListener;
 import com.medcorp.model.SettingsMenuItem;
+import com.medcorp.util.LinklossNotificationUtils;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.ToastHelper;
 
 import net.medcorp.library.ble.util.Constants;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +156,26 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
+        if(position == 0) {
+            Preferences.saveLinklossNotification(getActivity(),isChecked);
+        }
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+    @Subscribe
+    public void onEvent(final FindWatchEvent event) {
+        if(event.isSuccess()) {
+            //when find watch, vibrate cell phone once that means finding out
+            LinklossNotificationUtils.sendNotification(getActivity(),true);
+        }
     }
 }

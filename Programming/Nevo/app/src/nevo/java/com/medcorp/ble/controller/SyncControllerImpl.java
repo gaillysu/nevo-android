@@ -81,6 +81,7 @@ import com.medcorp.model.Solar;
 import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
+import com.medcorp.util.LinklossNotificationUtils;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -565,6 +566,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             packetsBuffer.clear();
             mSyncAllFlag = false;
             mCurrentDay = 0;
+        }
+        if(Preferences.getLinklossNotification(mContext))
+        {
+            LinklossNotificationUtils.sendNotification(mContext,stateChangedEvent.isConnected());
         }
     }
 

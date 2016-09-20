@@ -25,8 +25,8 @@ public class FindWatchRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {       0,HEADER, (byte) 0xFF, (byte) 0xFF,
-                        vibrator?(byte)0xFF:0,0,0,0, //light on all color LED and start/stop vibrator
+                {       0,HEADER, (byte) 0x00, (byte) 0x00,
+                        vibrator?(byte)0xBF:(byte)0x3F,0,0,0, //light on all color LED and start/stop vibrator
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0
