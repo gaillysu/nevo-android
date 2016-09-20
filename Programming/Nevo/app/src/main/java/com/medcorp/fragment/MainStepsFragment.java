@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by Jason on 2016/7/19.
  *
  */
-public class LunarMainStepsFragment extends BaseFragment {
+public class MainStepsFragment extends BaseFragment {
 
     @Bind(R.id.lunar_fragment_show_user_consume_calories)
     TextView showUserConsumeCalories;
@@ -146,7 +146,7 @@ public class LunarMainStepsFragment extends BaseFragment {
             }
             int dailySteps = steps.getSteps();
             int dailyGoal = steps.getGoal();
-            Log.i("LunarMainStepsFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+            Log.i("MainStepsFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

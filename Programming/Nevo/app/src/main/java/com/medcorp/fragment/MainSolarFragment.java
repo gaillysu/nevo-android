@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Jason on 2016/8/12.
  */
-public class LunarMainSolarFragment extends BaseFragment {
+public class MainSolarFragment extends BaseFragment {
 
     @Bind(R.id.today_solar_battery_time_tv)
     TextView batteryTimeTv;

@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2016/7/26.
  *
  */
-public class LunarMainSleepFragment extends BaseFragment {
+public class MainSleepFragment extends BaseFragment {
 
 
     @Bind(R.id.lunar_sleep_fragment_duration)
@@ -82,6 +82,7 @@ public class LunarMainSleepFragment extends BaseFragment {
         for (int i = 0; i < sleepArray.length; i++) {
             sleepList.add(sleepArray[i]);
         }
+
         SleepDataHandler handler = new SleepDataHandler(sleepList, false);
         List<SleepData> sleepDataList = handler.getSleepData();
 
@@ -101,8 +102,6 @@ public class LunarMainSleepFragment extends BaseFragment {
                 durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
             }
             qualityTextView.setText((sleepData.getLightSleep() + sleepData.getDeepSleep()) * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
-
-
             lineChartSleep.setDataInChart(sleepData);
             DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
             wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
@@ -113,7 +112,6 @@ public class LunarMainSleepFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-
     }
 
     @Override
