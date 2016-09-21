@@ -13,8 +13,10 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Steps;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 import com.medcorp.view.TipsView;
 import com.medcorp.view.graphs.AnalysisStepsLineChart;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +28,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/7/21.
- *
  */
 public class AnalysisStepsFragment extends BaseFragment {
 
@@ -80,7 +81,7 @@ public class AnalysisStepsFragment extends BaseFragment {
          * 'last week' this is 7 because 7 days is equal to a week.
          * In this month this is 30 (or 31) because there are 30 days in a month.
          *
-        */
+         */
         Goal activeGoal = null;
         for (Goal goal : getModel().getAllGoal()) {
             if (goal.isStatus()) {
@@ -95,7 +96,7 @@ public class AnalysisStepsFragment extends BaseFragment {
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastMonthData = getModel().getLastMonthSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         setDesText(0);
-        TipsView marker = new TipsView(AnalysisStepsFragment.this.getContext(),R.layout.custom_marker_view);
+        TipsView marker = new TipsView(AnalysisStepsFragment.this.getContext(), R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeekData, activeGoal, 7);
         thisWeekChart.setMarkerView(marker);
         lastWeekChart.addData(lastWeekData, activeGoal, 7);
@@ -122,7 +123,7 @@ public class AnalysisStepsFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-               setDesText(position);
+                setDesText(position);
             }
 
             @Override
@@ -132,21 +133,11 @@ public class AnalysisStepsFragment extends BaseFragment {
     }
 
     private void setAverageText(int totalSteps, int averageSteps, int averageCalories, int averageDuration, String title) {
-        StringBuffer buffer = new StringBuffer();
-        if(averageDuration/60>0){
-            buffer.append(averageDuration/60+"h");
-        }
-        if(averageDuration%60>0){
-            buffer.append(averageDuration%60+"mim");
-        }
-        if(buffer.length()<=0){
-            buffer.append("0");
-        }
         analysisStepsText.setText(title);
         totalStepsText.setText(totalSteps + "");
         averageStepsText.setText(averageSteps + "");
         avgCalories.setText(averageCalories + "");
-        avgDurationTime.setText(buffer.toString());
+        avgDurationTime.setText(TimeUtil.formatTime(averageDuration));
 
     }
 

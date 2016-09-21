@@ -12,6 +12,7 @@ import com.medcorp.adapter.AnalysisStepsChartAdapter;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.SleepData;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 import com.medcorp.view.TipsView;
 import com.medcorp.view.graphs.AnalysisSleepLineChart;
 
@@ -26,14 +27,13 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/7/21.
- *
  */
 public class AnalysisSleepFragment extends BaseFragment {
 
     @Bind(R.id.steps_fragment_average_steps_tv)
-    TextView averageStepsText;
+    TextView averageSleepText;
     @Bind(R.id.steps_fragment_total_steps_tv)
-    TextView totalStepsText;
+    TextView totalSleepText;
     @Bind(R.id.steps_fragment_average_calories_tv)
     TextView averageWake;
     @Bind(R.id.steps_fragment_average_time_tv)
@@ -145,20 +145,11 @@ public class AnalysisSleepFragment extends BaseFragment {
     }
 
     private void setAverageText(int totalSleep, int averageSleep, int averageWakeValue, int averageQuality, String title) {
-        StringBuffer buffer = new StringBuffer();
-        if (totalSleep / 60 > 0) {
-            buffer.append(totalSleep / 60 + "h");
-        }
-        if (totalSleep % 60 > 0) {
-            buffer.append(totalSleep % 60 + "min");
-        }
-        if (buffer.length() <= 0) {
-            buffer.append("0");
-        }
-        totalStepsText.setText(buffer.toString());
-        averageStepsText.setText(averageSleep + "");
-        averageWake.setText(averageWakeValue + "");
-        sleepQualityTv.setText(averageQuality + "");
+
+        totalSleepText.setText(TimeUtil.formatTime(totalSleep));
+        averageSleepText.setText(TimeUtil.formatTime(averageSleep));
+        averageWake.setText(TimeUtil.formatTime(averageWakeValue));
+        sleepQualityTv.setText(averageQuality + "%");
         sleepTextView.setText(title);
     }
 
@@ -173,9 +164,25 @@ public class AnalysisSleepFragment extends BaseFragment {
     public int getAverageWake(List<SleepData> list) {
         int averageWake = 0;
         for (SleepData sleepData : list) {
-            averageWake += sleepData.getAwake();
+            averageWake += sleepData.getTotalSleep()-sleepData.getDeepSleep()-sleepData.getLightSleep();
         }
         return averageWake / list.size();
+    }
+
+    public int getTotalDeepSleep(List<SleepData> list) {
+        int totalSleep = 0;
+        for(SleepData sleep : list){
+            totalSleep += sleep.getDeepSleep();
+        }
+        return totalSleep;
+    }
+
+    public int getLightSleep(List<SleepData> list){
+        int sumLightSleep = 0;
+        for(SleepData sleep : list){
+            sumLightSleep += sleep.getLightSleep();
+        }
+        return sumLightSleep;
     }
 
     public void setDesText(int position) {
@@ -184,7 +191,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                 String title = getString(R.string.analysis_fragment_this_week_steps);
                 if (thisWeekSleepData.size() != 0) {
                     setAverageText(getTotalSleep(thisWeekSleepData), getTotalSleep(thisWeekSleepData) / thisWeekSleepData.size()
-                            , getAverageWake(thisWeekSleepData) / thisWeekSleepData.size(), 0, title);
+                            , getAverageWake(thisWeekSleepData) / thisWeekSleepData.size()
+                            ,(getTotalDeepSleep(thisWeekSleepData)+getLightSleep(thisWeekSleepData))*100/(getTotalSleep(thisWeekSleepData)==0?1:getTotalSleep(thisWeekSleepData)), title);
                 } else {
                     setAverageText(0, 0, 0, 0, title);
                 }
@@ -193,7 +201,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                 String lastTitle = getString(R.string.analysis_fragment_last_week_steps);
                 if (lastWeekSleepData.size() != 0) {
                     setAverageText(getTotalSleep(lastWeekSleepData), getTotalSleep(lastWeekSleepData) / lastWeekSleepData.size()
-                            , getAverageWake(lastWeekSleepData) / lastWeekSleepData.size(), 0, lastTitle);
+                            , getAverageWake(lastWeekSleepData) / lastWeekSleepData.size(),
+                            (getTotalDeepSleep(thisWeekSleepData)+getLightSleep(thisWeekSleepData))*100/(getTotalSleep(thisWeekSleepData)==0?1:getTotalSleep(thisWeekSleepData)), lastTitle);
                 } else {
                     setAverageText(0, 0, 0, 0, lastTitle);
                 }
@@ -202,7 +211,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                 String lastMonthTitle = getString(R.string.analysis_fragment_last_month_solar);
                 if (lastMonthSleepData.size() != 0) {
                     setAverageText(getTotalSleep(lastMonthSleepData), getTotalSleep(lastMonthSleepData) / lastMonthSleepData.size()
-                            , getAverageWake(lastMonthSleepData) / lastMonthSleepData.size(), 0, lastMonthTitle);
+                            , getAverageWake(lastMonthSleepData) / lastMonthSleepData.size(),
+                            (getTotalDeepSleep(thisWeekSleepData)+getLightSleep(thisWeekSleepData))*100/(getTotalSleep(thisWeekSleepData)==0?1:getTotalSleep(thisWeekSleepData)), lastMonthTitle);
                 } else {
                     setAverageText(0, 0, 0, 0, lastMonthTitle);
                 }

@@ -112,17 +112,17 @@ public class SleepTodayChart extends LineChart {
             //                    intList.add(1f);
             //                }
             //            }
-//            if (deepSleepMinutes > 0) {
-//                int consecutiveFiveMinutes = deepSleepMinutes / interval;
-//                for (int i = 0; i < consecutiveFiveMinutes; i++) {
-                    //                    intList.add(0.6f+);
-                    intList.add(2.3f - (float)deepSleepMinutes/60);
-//                }
-//            }
+            //            if (deepSleepMinutes > 0) {
+            //                int consecutiveFiveMinutes = deepSleepMinutes / interval;
+            //                for (int i = 0; i < consecutiveFiveMinutes; i++) {
+            //                    intList.add(0.6f+);
+            //                }
+            //            }
+            intList.add(2.3f - ((float) deepSleepMinutes / 60) * 1.6f);
         }
 
         for (int i = 0; i < intList.size(); i++) {
-//            Log.w("Karl", "Value = " + intList.get(i));
+            //            Log.w("Karl", "Value = " + intList.get(i));
 
             yValue.add(new Entry(i, intList.get(i)));
         }
@@ -191,9 +191,9 @@ public class SleepTodayChart extends LineChart {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            Log.w("Karl", "Value = " +value);
-            DateTime newDate = startDate.plusHours((int)(value+0.5));
-            return String.valueOf(newDate.getHourOfDay())+ ":00";
+            Log.w("Karl", "Value = " + value);
+            DateTime newDate = startDate.plusHours((int) (value + 0.5));
+            return String.valueOf(newDate.getHourOfDay()) + ":00";
         }
 
         @Override
