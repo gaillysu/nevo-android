@@ -21,11 +21,10 @@ import com.medcorp.model.SleepData;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
+ *
  * Created by karl-john on 19/8/2016.
  */
 
@@ -62,7 +61,7 @@ public class SleepTodayChart extends LineChart {
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
         leftAxis.setAxisMinValue(0.0f);
-        leftAxis.setAxisMaxValue(2.7f);
+        leftAxis.setAxisMaxValue(2.8f);
         leftAxis.setValueFormatter(new YAxisValueFormatter());
         leftAxis.setLabelCount(1);
 
@@ -90,8 +89,13 @@ public class SleepTodayChart extends LineChart {
         int[] hourlyWakeTime = sleepData.getHourlyWakeInt();
         int[] hourlyLightSleepTime = sleepData.getHourlyLightInt();
         int[] hourlyDeepSleepTime = sleepData.getHourlyDeepInt();
+        int sleptHours=hourlyWakeTime.length;
+        if (sleptHours < hourlyLightSleepTime.length){
+            sleptHours  = hourlyLightSleepTime.length;
+        }else if (sleptHours < hourlyDeepSleepTime.length){
+            sleptHours  = hourlyDeepSleepTime.length;
+        }
 
-        int sleptHours = Collections.max(Arrays.asList(hourlyWakeTime.length, hourlyLightSleepTime.length, hourlyDeepSleepTime.length));
         for (int hour = 0; hour < sleptHours; hour++) {
             int awakeMinutes = hourlyWakeTime[hour];
             int lightSleepMinutes = hourlyLightSleepTime[hour];
@@ -117,11 +121,12 @@ public class SleepTodayChart extends LineChart {
             //                    intList.add(0.6f+);
             //                }
             //            }
-            intList.add(2.3f - ((float) deepSleepMinutes / 60) * 1.6f);
+            float deep = (float) deepSleepMinutes/60f;
+            intList.add(2.3f-deep*2.3f);
         }
-
-        for (int i = 0; i < intList.size(); i++) {
-            yValue.add(new Entry(i, intList.get(i)));
+        for (int hour = 0 ; hour <  sleptHours; hour++){
+            DateTime time = new DateTime(sleepData.getSleepStart());
+            yValue.add(new Entry(time.getHourOfDay() + hour, intList.get(hour)));
         }
         LineDataSet set = new LineDataSet(yValue, "");
         set.setColor(Color.BLACK);
@@ -144,7 +149,7 @@ public class SleepTodayChart extends LineChart {
 
         animateY(2, Easing.EasingOption.EaseInCirc);
         invalidate();
-        getXAxis().setLabelCount(sleptHours);
+        getXAxis().setLabelCount(intList.size()-1);
         getXAxis().setValueFormatter(new XAxisValueFormatter(intList.size(), interval, new DateTime(sleepData.getSleepStart())));
     }
 
@@ -161,7 +166,7 @@ public class SleepTodayChart extends LineChart {
                 return getContext().getResources().getString(R.string.sleep_deep_sleep);
             } else if (value >= 0.5 && value <= 1.5) {
                 return getContext().getResources().getString(R.string.sleep_light_sleep);
-            } else if (value >= 1.6 && value <= 2.6) {
+            } else if (value >= 1.6 && value <= 2.3) {
                 return getContext().getResources().getString(R.string.sleep_awake);
             }
             return "?";
@@ -180,7 +185,7 @@ public class SleepTodayChart extends LineChart {
         private final int size;
         private final DateTime startDate;
 
-        public XAxisValueFormatter(int size, int interval, DateTime startDate) {
+        XAxisValueFormatter(int size, int interval, DateTime startDate) {
             this.size = size;
             this.interval = interval;
             this.startDate = startDate;
@@ -188,8 +193,9 @@ public class SleepTodayChart extends LineChart {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
+
             Log.w("Karl", "Value = " + value);
-            DateTime newDate = startDate.plusHours((int) (value + 1));
+            DateTime newDate = startDate.plusHours((int) (value));
             return String.valueOf(newDate.getHourOfDay()) + ":00";
         }
 
