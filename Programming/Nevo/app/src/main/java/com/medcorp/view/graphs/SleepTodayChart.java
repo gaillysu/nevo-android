@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * Created by karl-john on 19/8/2016.
  */
 
@@ -89,11 +88,11 @@ public class SleepTodayChart extends LineChart {
         int[] hourlyWakeTime = sleepData.getHourlyWakeInt();
         int[] hourlyLightSleepTime = sleepData.getHourlyLightInt();
         int[] hourlyDeepSleepTime = sleepData.getHourlyDeepInt();
-        int sleptHours=hourlyWakeTime.length;
-        if (sleptHours < hourlyLightSleepTime.length){
-            sleptHours  = hourlyLightSleepTime.length;
-        }else if (sleptHours < hourlyDeepSleepTime.length){
-            sleptHours  = hourlyDeepSleepTime.length;
+        int sleptHours = hourlyWakeTime.length;
+        if (sleptHours < hourlyLightSleepTime.length) {
+            sleptHours = hourlyLightSleepTime.length;
+        } else if (sleptHours < hourlyDeepSleepTime.length) {
+            sleptHours = hourlyDeepSleepTime.length;
         }
 
         for (int hour = 0; hour < sleptHours; hour++) {
@@ -121,10 +120,10 @@ public class SleepTodayChart extends LineChart {
             //                    intList.add(0.6f+);
             //                }
             //            }
-            float deep = (float) deepSleepMinutes/60f;
-            intList.add(2.3f-deep*2.3f);
+            float deep = (float) deepSleepMinutes / 60f;
+            intList.add(2.5f - deep * 2.5f);
         }
-        for (int hour = 0 ; hour <  sleptHours; hour++){
+        for (int hour = 0; hour < intList.size(); hour++) {
             DateTime time = new DateTime(sleepData.getSleepStart());
             yValue.add(new Entry(time.getHourOfDay() + hour, intList.get(hour)));
         }
@@ -149,7 +148,7 @@ public class SleepTodayChart extends LineChart {
 
         animateY(2, Easing.EasingOption.EaseInCirc);
         invalidate();
-        getXAxis().setLabelCount(intList.size()-1);
+        getXAxis().setLabelCount(intList.size() - 1);
         getXAxis().setValueFormatter(new XAxisValueFormatter(intList.size(), interval, new DateTime(sleepData.getSleepStart())));
     }
 
