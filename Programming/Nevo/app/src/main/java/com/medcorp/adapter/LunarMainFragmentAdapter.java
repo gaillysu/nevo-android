@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.medcorp.R;
-import com.medcorp.fragment.ClockFragment;
+import com.medcorp.fragment.MainClockFragment;
 import com.medcorp.fragment.MainFragment;
 import com.medcorp.fragment.MainSleepFragment;
 import com.medcorp.fragment.MainSolarFragment;
@@ -32,8 +32,8 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                ClockFragment clockFragment = (ClockFragment) ClockFragment.instantiate(context,ClockFragment.class.getName());
-                return clockFragment;
+                MainClockFragment mainClockFragment = (MainClockFragment) MainClockFragment.instantiate(context,MainClockFragment.class.getName());
+                return mainClockFragment;
             case 1:
                 MainStepsFragment mainStepsFragment = (MainStepsFragment) com.medcorp.fragment.MainStepsFragment.instantiate(context,MainStepsFragment.class.getName());
                 return mainStepsFragment;

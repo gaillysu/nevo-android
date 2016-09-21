@@ -99,7 +99,6 @@ public class SleepTodayChart extends LineChart {
             if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0) {
                 continue;
             }
-            //
             //            if (awakeMinutes > 0) {
             //                int consecutiveMinutes = awakeMinutes / interval;
             //                for (int i = 0; i < consecutiveMinutes; i++) {
@@ -122,8 +121,6 @@ public class SleepTodayChart extends LineChart {
         }
 
         for (int i = 0; i < intList.size(); i++) {
-            //            Log.w("Karl", "Value = " + intList.get(i));
-
             yValue.add(new Entry(i, intList.get(i)));
         }
         LineDataSet set = new LineDataSet(yValue, "");
@@ -192,7 +189,7 @@ public class SleepTodayChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             Log.w("Karl", "Value = " + value);
-            DateTime newDate = startDate.plusHours((int) (value + 0.5));
+            DateTime newDate = startDate.plusHours((int) (value + 1));
             return String.valueOf(newDate.getHourOfDay()) + ":00";
         }
 

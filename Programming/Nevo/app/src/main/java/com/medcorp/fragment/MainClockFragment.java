@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/7/19.
  */
-public class ClockFragment extends BaseFragment {
+public class MainClockFragment extends BaseFragment {
 
     @Bind(R.id.HomeClockHour)
     ImageView hourImage;
@@ -120,7 +120,7 @@ public class ClockFragment extends BaseFragment {
             }
             int dailySteps = steps.getSteps();
             int dailyGoal = steps.getGoal();
-            Log.i("ClockFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
+            Log.i("MainClockFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {

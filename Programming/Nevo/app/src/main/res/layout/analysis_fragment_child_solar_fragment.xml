@@ -11,7 +11,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAllCaps="true"
-
             android:text="@string/analysis_fragment_this_week_steps"
             android:textColor="@color/text_color"
             android:layout_marginBottom="5dp"
@@ -31,6 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:orientation="horizontal"
         >
         <LinearLayout
@@ -42,7 +42,7 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="@string/analysis_fragment_solar_page_time_on_battery_text"
                 android:textColor="@color/text_color"
@@ -51,7 +51,8 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:text="@string/analysis_fragment_solar_page_time_on_solar_text"
                 android:textColor="@color/text_color"
@@ -61,7 +62,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
@@ -70,7 +71,7 @@
             <TextView
                 android:id="@+id/today_solar_battery_time_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"
                 android:gravity="center_vertical"
                 android:text="0"
@@ -83,6 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
                 android:text="0"
                 android:textColor="@color/profile_fragment_text_right_color"
                 android:textSize="18sp"

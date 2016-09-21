@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
+        android:layout_marginTop="23dp"
         android:layout_gravity="center_horizontal">
 
         <ImageView
@@ -54,6 +55,7 @@
         layout="@layout/lunar_fragment_main_content_news_layout"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="26dp"
+        android:layout_marginTop = "40dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
