@@ -71,9 +71,9 @@ public class MainClockFragment extends BaseFragment {
         ButterKnife.bind(this, clockFragmentContentView);
 
         String selectDate = Preferences.getSelectDate(this.getContext());
-        if(selectDate == null){
+        if (selectDate == null) {
             userSelectDate = new Date();
-        }else{
+        } else {
             try {
                 userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
             } catch (ParseException e) {
@@ -90,7 +90,7 @@ public class MainClockFragment extends BaseFragment {
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
-        String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
+        String result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(result);
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
     }
@@ -100,7 +100,7 @@ public class MainClockFragment extends BaseFragment {
         super.onStart();
         EventBus.getDefault().register(this);
         //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
-        if(Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
+        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             getModel().getSyncController().getDailyTrackerInfo(false);
         }
     }
@@ -127,7 +127,7 @@ public class MainClockFragment extends BaseFragment {
                     initData(userSelectDate);
                 }
             });
-          }
+        }
     }
 
     @Subscribe
@@ -153,7 +153,7 @@ public class MainClockFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
