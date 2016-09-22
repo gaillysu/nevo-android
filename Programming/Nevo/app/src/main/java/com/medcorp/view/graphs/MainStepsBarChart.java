@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -24,6 +23,7 @@ import static java.lang.Math.abs;
 
 /**
  * Created by karl-john on 18/8/2016.
+ *
  */
 
 public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
@@ -120,7 +120,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
                 }
             }
         }
-        List<BarEntry> yValue = new ArrayList<BarEntry>();
+        List<BarEntry> yValue = new ArrayList<>();
         int maxValue = 0;
         final int stepsModulo = 200;
         for (int i = 0; i < stepsArray.length; i++) {
@@ -150,9 +150,10 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
 
         dataSet.setDrawValues(false);
         dataSet.setColors(new int[]{ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)});
-        List<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        List<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
         BarData data = new BarData(dataSets);
+        data.setBarWidth(0.95f);
         setData(data);
         invalidate();
     }

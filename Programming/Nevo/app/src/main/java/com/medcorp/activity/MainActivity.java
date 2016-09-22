@@ -34,7 +34,7 @@ import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.AlarmFragment;
 import com.medcorp.fragment.AnalysisFragment;
-import com.medcorp.fragment.LunarMainFragment;
+import com.medcorp.fragment.MainFragment;
 import com.medcorp.fragment.SettingsFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         showDateText.setText(currentTime.split("-")[2] + " " +
                 new SimpleDateFormat("MMM", Locale.US).format(new Date()));
 
-        mainStepsFragment = LunarMainFragment.instantiate(this, LunarMainFragment.class.getName());
+        mainStepsFragment = MainFragment.instantiate(this, MainFragment.class.getName());
 
         activeFragment.set(mainStepsFragment);
         fragmentManager = getSupportFragmentManager();
@@ -267,7 +267,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 //                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(0);
                 //                    activeFragment.set(fragment);
                 //                }
-                fragment = LunarMainFragment.instantiate(MainActivity.this, LunarMainFragment.class.getName());
+                fragment = MainFragment.instantiate(MainActivity.this, MainFragment.class.getName());
                 break;
             case R.id.nav_alarm_fragment:
                 fragment = AlarmFragment.instantiate(MainActivity.this, AlarmFragment.class.getName());

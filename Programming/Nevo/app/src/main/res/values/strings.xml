@@ -111,6 +111,7 @@
     <string name="sleep_sleep_time">Sleep time</string>
     <string name="sleep_wake_time">Wake time</string>
     <string name="sleep_deep_sleep">Deep sleep</string>
+    <string name="sleep_time">Time</string>
     <string name="sleep_light_sleep">Light sleep</string>
     <string name="sleep_awake">Awake</string>
 

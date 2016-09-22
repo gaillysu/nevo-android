@@ -395,23 +395,24 @@ public class ApplicationModel extends Application {
     }
 
     public Sleep[] getDailySleep(String userId, Date todayDate) {
-        DateTime todayDateTime = new DateTime(todayDate);
-        Date yesterdayDate = new Date(todayDateTime.getMillis()-24*60*60*1000L);
+        Date yesterdayDate = new Date(todayDate.getTime()-24*60*60*1000l);
+
         Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,todayDate);
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId,yesterdayDate);
+
         Sleep[] sleeps = new Sleep[2];
         if(todaySleep.notEmpty()){
-            sleeps[0] = todaySleep.get();
+            sleeps[1] = todaySleep.get();
         }else{
-            sleeps[0] = new Sleep(todayDate.getTime(),todayDate.getTime(),0, 0, 0,
+            sleeps[1] = new Sleep(todayDate.getTime(),todayDate.getTime(),0, 0, 0,
             0,"[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
                     "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]","[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
             Common.removeTimeFromDate(todayDate).getTime(), (Common.removeTimeFromDate(yesterdayDate).getTime()+24*60*60*1000L-1),0,"");
         }
         if(yesterdaySleep.notEmpty()){
-            sleeps[1] = yesterdaySleep.get();
+            sleeps[0] = yesterdaySleep.get();
         }else{
-            sleeps[1] = new Sleep(todayDate.getTime(),todayDate.getTime(),0, 0, 0,
+            sleeps[0] = new Sleep(yesterdayDate.getTime(),yesterdayDate.getTime(),0, 0, 0,
                     0,"[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
                     "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]","[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
                     Common.removeTimeFromDate(todayDate).getTime(),(Common.removeTimeFromDate(yesterdayDate).getTime()+24*60*60*1000L-1),0,"");

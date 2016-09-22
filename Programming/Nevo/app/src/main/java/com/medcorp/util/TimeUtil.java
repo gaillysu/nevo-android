@@ -14,13 +14,13 @@ public class TimeUtil {
         if (walkDuration >= 60) {
             if (walkDuration % 60 > 0) {
                 activityTime.append((walkDuration / 60)).append("h");
-                activityTime.append(walkDuration % 60).append("m");
+                activityTime.append(walkDuration % 60).append("min");
             }
             else {
                 activityTime.append((walkDuration / 60)).append("h");
             }
         } else {
-            activityTime.append(walkDuration).append("m");
+            activityTime.append(walkDuration).append("min");
         }
         return activityTime.toString();
     }

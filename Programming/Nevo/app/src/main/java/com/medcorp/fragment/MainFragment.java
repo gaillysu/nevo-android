@@ -35,7 +35,7 @@ import butterknife.OnClick;
  * Created by Administrator on 2016/7/19.
  *
  */
-public class LunarMainFragment extends BaseObservableFragment {
+public class MainFragment extends BaseObservableFragment {
 
 
     @Bind(R.id.fragment_lunar_main_view_pager)
