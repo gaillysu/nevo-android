@@ -598,7 +598,7 @@ public class OtaControllerImpl implements OtaController  {
     public void forGetDevice()
     {
         //BLE OTA need repair NEVO, so here forget this nevo when OTA done.
-        connectionController.unPairDevice();
+        connectionController.unPairDevice(connectionController.getSaveAddress());
     }
     //end public function
 

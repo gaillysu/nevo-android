@@ -150,52 +150,6 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onEvent(BLEFirmwareVersionReceivedEvent event) {
-        //in tutorial steps, don't popup this alert dialog
-        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
-            if (event.getFirmwareTypes() == Constants.DfuFirmwareTypes.MCU) {
-                mcuFirmwareVersion = Integer.parseInt(event.getVersion());
-            }
-            if (event.getFirmwareTypes() == Constants.DfuFirmwareTypes.BLUETOOTH) {
-                bleFirmwareVersion = Integer.parseInt(event.getVersion());
-            }
-            //both MCU and BLE version all be read done. and make sure this dialog only popup once.
-            if (!firmwareUpdateAlertDailog && mcuFirmwareVersion >= 0 && bleFirmwareVersion >= 0) {
-                final ArrayList<String> needOTAFirmwareList = (ArrayList<String>) Common.needOTAFirmwareURLs(this, mcuFirmwareVersion, bleFirmwareVersion);
-                if (!needOTAFirmwareList.isEmpty()) {
-                    new MaterialDialog.Builder(this)
-                            .title(R.string.dfu_update_positive)
-                            .content(R.string.dfu_update_available)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
-                                    firmwareUpdateAlertDailog = true;
-                                    Intent intent = new Intent(ApplicationModel.this, DfuActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putStringArrayList(getString(R.string.key_firmwares), needOTAFirmwareList);
-                                    bundle.putBoolean(getString(R.string.key_back_to_settings), false);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.putExtras(bundle);
-                                    ApplicationModel.this.startActivity(intent);
-                                }
-                            })
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
-                                    firmwareUpdateAlertDailog = true;
-                                }
-                            })
-                            .positiveText(R.string.dfu_update_positive)
-                            .negativeText(R.string.dfu_update_negative)
-                            .cancelable(false)
-                            .show();
-                }
-            }
-        }
-    }
-
-
-    @Subscribe
     public void onEvent(OnSyncEvent event) {
         if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             updateGoogleFit();

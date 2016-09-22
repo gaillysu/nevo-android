@@ -697,7 +697,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             connectionController.disconnect();
         }
         //step2:unpair this watch from system bluetooth setting
-        connectionController.unPairDevice();
+        connectionController.unPairDevice(connectionController.getSaveAddress());
         //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
