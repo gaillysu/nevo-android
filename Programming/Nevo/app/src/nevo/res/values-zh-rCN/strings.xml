@@ -268,7 +268,6 @@
     <string name="info_company_height">厘米</string>
     <string name="info_company_weight">千克</string>
     <string name="input_legitimate_value">请输入1到7的合法数字</string>
-    <string name="key_notification"></string>
     <string name="log_in">登录</string>
     <string name="log_in_email">电邮</string>
     <string name="log_in_failed">登录失败</string>
