@@ -41,4 +41,6 @@
     <!-- Validic keys-->
     <string name="key_validic_organization_id">56d3b075407e010001000000</string>
     <string name="key_validic_organization_token">b85dcb3b85e925200f3fd4cafe6dce92295f449d9596b137941de7e9e2c3e7ae</string>
+    <!-- Nevo API token -->
+    <string name="token">SU9gPy5e1d1t7W8FG2fQ6MuT06cY95MB</string>
 </resources>
