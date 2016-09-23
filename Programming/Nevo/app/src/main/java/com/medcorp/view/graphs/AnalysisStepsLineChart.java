@@ -121,9 +121,9 @@ public class AnalysisStepsLineChart extends LineChart {
             putTop = true;
             maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
-
-        LimitLine limitLine = new LimitLine(goal.getSteps(), "Goal: " + goal.getSteps());
-        limitLine.setLineWidth(1.5f);
+        //        "Goal: " + goal.getSteps()
+        LimitLine limitLine = new LimitLine(goal.getSteps(), "");
+        limitLine.setLineWidth(0.0f);
         limitLine.setLineColor(Color.BLACK);
         limitLine.setTextSize(18f);
         limitLine.setTextColor(Color.BLACK);
