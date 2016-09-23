@@ -25,12 +25,30 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
-import com.medcorp.ble.model.packet.*;
-import com.medcorp.ble.model.request.*;
+import com.medcorp.ble.model.packet.BatteryLevelPacket;
+import com.medcorp.ble.model.packet.DailyStepsPacket;
+import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
+import com.medcorp.ble.model.packet.DailyTrackerPacket;
+import com.medcorp.ble.model.packet.NewApplicationArrivedPacket;
+import com.medcorp.ble.model.packet.Packet;
+import com.medcorp.ble.model.packet.WatchInfoPacket;
+import com.medcorp.ble.model.request.AddApplicationRequest;
+import com.medcorp.ble.model.request.FindPhoneRequest;
+import com.medcorp.ble.model.request.FindWatchRequest;
+import com.medcorp.ble.model.request.GetBatteryLevelRequest;
+import com.medcorp.ble.model.request.GetStepsGoalRequest;
+import com.medcorp.ble.model.request.ReadDailyTrackerInfoRequest;
+import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
+import com.medcorp.ble.model.request.ReadWatchInfoRequest;
+import com.medcorp.ble.model.request.SetAlarmWithTypeRequest;
+import com.medcorp.ble.model.request.SetGoalRequest;
+import com.medcorp.ble.model.request.SetNotificationRequest;
+import com.medcorp.ble.model.request.SetProfileRequest;
+import com.medcorp.ble.model.request.SetRtcRequest;
+import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.bluetooth.BatteryEvent;
@@ -40,7 +58,6 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.model.Alarm;
-import com.medcorp.model.ApplicationInfomation;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
 import com.medcorp.model.GoalBase;
@@ -75,9 +92,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
@@ -230,7 +245,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         }
                         else
                         {
-                            list.add(new Alarm(0,0, (byte) 0, "",0,"",false));
+                            list.add(new Alarm(0,0, (byte) 0, "",(byte)0,(byte)0));
                             setAlarm(list, true);
                         }
 
@@ -524,6 +539,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Override
+    public void setAlarm(Alarm alarm) {
+        sendRequest(new SetAlarmWithTypeRequest(mContext,alarm,alarm.getAlarmNumber()));
+    }
+
+    @Override
     public void getStepsAndGoal() {
         sendRequest(new GetStepsGoalRequest(mContext));
     }
@@ -573,7 +593,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             connectionController.disconnect();
         }
         //step2:unpair this watch from system bluetooth setting
-        connectionController.unPairDevice();
+        connectionController.unPairDevice("");
         //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
