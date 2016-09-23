@@ -88,7 +88,6 @@ public class SleepTodayChart extends LineChart {
 
     public void setDataInChart(SleepData sleepData) {
         List<Entry> yValue = new ArrayList<>();
-        int interval = 5;
         List<Float> intList = new ArrayList<>();
         int[] hourlyWakeTime = sleepData.getHourlyWakeInt();
         int[] hourlyLightSleepTime = sleepData.getHourlyLightInt();
