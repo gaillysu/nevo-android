@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                         snackbar.dismiss();
                     }
                 }
-            }, 2000);
+            }, 1800);
         }
     }
 

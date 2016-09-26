@@ -137,14 +137,15 @@ public class AnalysisStepsFragment extends BaseFragment {
         totalStepsText.setText(totalSteps + "");
         averageStepsText.setText(averageSteps + "");
         avgCalories.setText(averageCalories + "");
-        avgDurationTime.setText(TimeUtil.formatTime(averageDuration));
+        String averageActivityTime = TimeUtil.formatTime(averageDuration);
+        avgDurationTime.setText(averageActivityTime);
 
     }
 
     private int getAvgDurationTime(List<Steps> thisWeekData) {
         int durationTime = 0;
         for (Steps steps : thisWeekData) {
-            durationTime += steps.getRunDuration();
+            durationTime += steps.getWalkDuration();
         }
         return durationTime;
     }
@@ -169,9 +170,9 @@ public class AnalysisStepsFragment extends BaseFragment {
         switch (position) {
             case 0:
                 if (thisWeekData.size() != 0) {
-                    setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / thisWeekData.size()
-                            , getWeekCalories(thisWeekData) / thisWeekData.size()
-                            , getAvgDurationTime(thisWeekData) / thisWeekData.size()
+                    setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / 7
+                            , getWeekCalories(thisWeekData) / 7
+                            , getAvgDurationTime(thisWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_this_week_steps));
                 } else {
                     setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_this_week_steps));
@@ -179,9 +180,9 @@ public class AnalysisStepsFragment extends BaseFragment {
                 break;
             case 1:
                 if (lastWeekData.size() != 0) {
-                    setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / lastWeekData.size()
-                            , getWeekCalories(lastWeekData) / lastWeekData.size()
-                            , getAvgDurationTime(lastWeekData) / lastWeekData.size()
+                    setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / 7
+                            , getWeekCalories(lastWeekData) / 7
+                            , getAvgDurationTime(lastWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_last_week_steps));
                 } else {
                     setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_week_steps));
@@ -189,9 +190,9 @@ public class AnalysisStepsFragment extends BaseFragment {
                 break;
             case 2:
                 if (lastMonthData.size() != 0) {
-                    setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / lastMonthData.size()
-                            , getWeekCalories(lastMonthData) / lastMonthData.size()
-                            , getAvgDurationTime(lastMonthData) / lastMonthData.size()
+                    setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / 30
+                            , getWeekCalories(lastMonthData) / 30
+                            , getAvgDurationTime(lastMonthData) /30/1000
                             , getResources().getString(R.string.analysis_fragment_last_month_solar));
                 } else {
                     setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_month_solar));

@@ -9,6 +9,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.Utils;
 import com.medcorp.R;
+import com.medcorp.util.TimeUtil;
 
 /**
  * Created by med on 16/7/1.
@@ -34,9 +35,9 @@ public class TipsView extends MarkerView {
     public void refreshContent(Entry e, Highlight highlight) {
         if (e instanceof CandleEntry) {
             CandleEntry ce = (CandleEntry) e;
-            tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
+            tvContent.setText("" + TimeUtil.formatTime( new Integer(Utils.formatNumber(ce.getHigh(), 0, true)).intValue()));
         } else {
-            tvContent.setText("" + Utils.formatNumber(e.getY(), 0, true));
+            tvContent.setText("" + TimeUtil.formatTime(new Integer(Utils.formatNumber(e.getY(), 0, true)).intValue()));
         }
     }
 
