@@ -55,6 +55,7 @@
                 android:inputType="textEmailAddress"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
+                android:imeOptions="actionNext"
                 />
 
             <EditText
@@ -66,6 +67,8 @@
                 android:hint="@string/register_first_name_hint"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext"
                 />
 
             <EditText
@@ -77,6 +80,8 @@
                 android:hint="@string/register_last_name_hint"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext"
                 />
 
 
@@ -92,6 +97,7 @@
                 android:inputType="textPassword"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
+                android:imeOptions="actionNext"
                 />
 
             <EditText
@@ -104,6 +110,7 @@
                 android:inputType="textPassword"
                 android:paddingLeft="8dp"
                 android:textColor="@color/text_color"
+                android:imeOptions="actionDone"
               />
 
             <TextView

@@ -43,7 +43,6 @@ public class SignupActivity extends BaseActivity {
 
     private String firstName;
     private String lastName;
-    private ProgressDialog progressDialog;
     private CheckBox checkIsAgreeBt;
     private String email;
     private String password;
@@ -112,7 +111,6 @@ public class SignupActivity extends BaseActivity {
                 finish();
                 break;
         }
-        progressDialog.dismiss();
     }
 
     public void onSignupFailed() {
