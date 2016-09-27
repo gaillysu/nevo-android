@@ -51,4 +51,15 @@
     </array>
 
     <!--lunar end-->
+    <!--nevo without solar start -->
+    <array name="nevo_main_adapter_fragment">
+        <item>@string/lunar_adapter_clock</item>
+        <item>@string/lunar_adapter_chart</item>
+        <item>@string/lunar_adapter_sleep</item>
+    </array>
+    <array name="nevo_analysis_fragment_table_array">
+        <item>@string/analysis_fragment_table_steps</item>
+        <item>@string/analysis_fragment_table_sleep</item>
+    </array>
+    <!--nevo end-->
 </resources>

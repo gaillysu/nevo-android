@@ -25,6 +25,9 @@ public class AnalysisFragmentPagerAdapter extends FragmentPagerAdapter {
         this.analysisFragment = fragment;
         context = fragment.getContext();
         analysisTableArray = fragment.getResources().getStringArray(R.array.analysis_fragment_table_array);
+        if(analysisFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
+            analysisTableArray = fragment.getResources().getStringArray(R.array.nevo_analysis_fragment_table_array);
+        }
     }
 
     @Override

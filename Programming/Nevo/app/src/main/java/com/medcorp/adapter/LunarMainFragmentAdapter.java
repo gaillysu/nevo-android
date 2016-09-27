@@ -26,6 +26,9 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
         this.mainFragment = fragment;
         context = fragment.getContext();
         fragmentAdapterArray = context.getResources().getStringArray(R.array.lunar_main_adapter_fragment);
+        if(mainFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
+            fragmentAdapterArray = context.getResources().getStringArray(R.array.nevo_main_adapter_fragment);
+        }
     }
 
     @Override
