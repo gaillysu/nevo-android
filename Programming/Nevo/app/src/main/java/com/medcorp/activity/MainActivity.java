@@ -63,6 +63,7 @@ import butterknife.OnClick;
 
 /**
  * Created by Karl on 12/10/15.
+ *
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
