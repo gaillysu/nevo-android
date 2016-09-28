@@ -109,10 +109,11 @@ public class AnalysisSleepFragment extends BaseFragment {
         thisWeekChart = (AnalysisSleepLineChart) thisWeekView.findViewById(R.id.analysis_sleep_chart);
         lastWeekChart = (AnalysisSleepLineChart) lastWeekView.findViewById(R.id.analysis_sleep_chart);
         lastMonthChart = (AnalysisSleepLineChart) lastMonthView.findViewById(R.id.analysis_sleep_chart);
-        /*
-            'Sleep' is not the right way to put it into the chart because one evening and one night is spread through 2 'Sleep' Objects.
-            Therefor we have a solution which is 'SleepData' We have therefor 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
-            getDummyData is just for the 'dummy data'
+        /**
+         * 'Sleep' is not the right way to put it into the chart because one evening and one night is spread
+         * through 2 'Sleep' Objects.Therefor we have a solution which is 'SleepData' We have therefor
+         * 'SleepDataHandler' to parse a List<Sleep> to List<SleepData>. Although, this needs to be tested.
+         * getDummyData is just for the 'dummy data'
          */
         TipsView mv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeekSleepData, 7);
@@ -164,7 +165,7 @@ public class AnalysisSleepFragment extends BaseFragment {
     public int getAverageWake(List<SleepData> list) {
         int averageWake = 0;
         for (SleepData sleepData : list) {
-//            sleepData.getTotalSleep()-sleepData.getDeepSleep()-sleepData.getLightSleep();
+            //sleepData.getTotalSleep()-sleepData.getDeepSleep()-sleepData.getLightSleep();
             averageWake += sleepData.getAwake();
         }
         return averageWake / list.size();
@@ -172,15 +173,15 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     public int getTotalDeepSleep(List<SleepData> list) {
         int totalSleep = 0;
-        for(SleepData sleep : list){
+        for (SleepData sleep : list) {
             totalSleep += sleep.getDeepSleep();
         }
         return totalSleep;
     }
 
-    public int getLightSleep(List<SleepData> list){
+    public int getLightSleep(List<SleepData> list) {
         int sumLightSleep = 0;
-        for(SleepData sleep : list){
+        for (SleepData sleep : list) {
             sumLightSleep += sleep.getLightSleep();
         }
         return sumLightSleep;
@@ -193,8 +194,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                 if (thisWeekSleepData.size() != 0) {
                     setAverageText(getTotalSleep(thisWeekSleepData), getTotalSleep(thisWeekSleepData) / thisWeekSleepData.size()
                             , getAverageWake(thisWeekSleepData) / thisWeekSleepData.size()
-                            ,(getTotalDeepSleep(thisWeekSleepData)+getLightSleep(thisWeekSleepData))*100/
-                                    (getTotalSleep(thisWeekSleepData)==0?1:getTotalSleep(thisWeekSleepData)), title);
+                            , (getTotalDeepSleep(thisWeekSleepData) + getLightSleep(thisWeekSleepData)) * 100 /
+                                    (getTotalSleep(thisWeekSleepData) == 0 ? 1 : getTotalSleep(thisWeekSleepData)), title);
                 } else {
                     setAverageText(0, 0, 0, 0, title);
                 }
@@ -204,8 +205,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                 if (lastWeekSleepData.size() != 0) {
                     setAverageText(getTotalSleep(lastWeekSleepData), getTotalSleep(lastWeekSleepData) / lastWeekSleepData.size()
                             , getAverageWake(lastWeekSleepData) / lastWeekSleepData.size(),
-                            (getTotalDeepSleep(thisWeekSleepData)+getLightSleep(thisWeekSleepData))*100/(getTotalSleep(thisWeekSleepData)==0?
-                                    1:getTotalSleep(thisWeekSleepData)), lastTitle);
+                            (getTotalDeepSleep(thisWeekSleepData) + getLightSleep(thisWeekSleepData)) * 100 / (getTotalSleep(thisWeekSleepData) == 0 ?
+                                    1 : getTotalSleep(thisWeekSleepData)), lastTitle);
                 } else {
                     setAverageText(0, 0, 0, 0, lastTitle);
                 }
@@ -215,8 +216,8 @@ public class AnalysisSleepFragment extends BaseFragment {
                 if (lastMonthSleepData.size() != 0) {
                     setAverageText(getTotalSleep(lastMonthSleepData), getTotalSleep(lastMonthSleepData) / lastMonthSleepData.size()
                             , getAverageWake(lastMonthSleepData) / lastMonthSleepData.size(),
-                            (getTotalDeepSleep(thisWeekSleepData)+getLightSleep(thisWeekSleepData))*100/(getTotalSleep(thisWeekSleepData)==0?
-                                    1:getTotalSleep(thisWeekSleepData)), lastMonthTitle);
+                            (getTotalDeepSleep(thisWeekSleepData) + getLightSleep(thisWeekSleepData)) * 100 / (getTotalSleep(thisWeekSleepData) == 0 ?
+                                    1 : getTotalSleep(thisWeekSleepData)), lastMonthTitle);
                 } else {
                     setAverageText(0, 0, 0, 0, lastMonthTitle);
                 }

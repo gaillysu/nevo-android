@@ -24,21 +24,18 @@
             android:id="@+id/clock_imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
             android:src="@drawable/lunar_watch_icon"/>
 
         <ImageView
             android:id="@+id/HomeClockHour"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
             android:src="@drawable/lunar_clockview_hour"/>
 
         <ImageView
             android:id="@+id/HomeClockMinute"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
             android:src="@drawable/lunar_clockview_minute"/>
     </RelativeLayout>
 

@@ -28,7 +28,6 @@ import com.medcorp.R;
 import com.medcorp.activity.EditAlarmActivity;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.AlarmArrayAdapter;
-import com.medcorp.ble.model.request.SetAlarmWithTypeRequest;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.fragment.listener.OnAlarmSwitchListener;
@@ -72,7 +71,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private Button friday;
     private Button sunday;
     private Button saturday;
-    private Alarm  editAlarm;
+    private Alarm editAlarm;
+    private boolean isRepeat = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //set today 's week day
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        weekDay = (byte)calendar.get(Calendar.DAY_OF_WEEK);
+        weekDay = (byte) calendar.get(Calendar.DAY_OF_WEEK);
         alarmSelectStyle = 0;//here must reset it when add new alarm, due to it is the class member variable
         editAlarmDialog(hourOfDay, minute);
     }
@@ -162,6 +162,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             @Override
             public void onClick(View v) {
 
+
                 Alarm newAlarm = new Alarm(hourOfDay, minute, (byte) 0, "", (byte) 0, (byte) 0);
                 StringBuffer alarmRepeatDay = new StringBuffer();
 
@@ -184,21 +185,39 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                     }
 
                 }
-
+                for (int i = 0; i < allAlarm.size(); i++) {
+                    byte repeatDay = allAlarm.get(i).getWeekDay();
+                    byte alarmType = allAlarm.get(i).getAlarmType();
+                    if (repeatDay == (byte) (0X80 | weekDay) && alarmType == alarmSelectStyle) {
+                        isRepeat = true;
+                        break;
+                    } else {
+                        isRepeat = false;
+                    }
+                }
                 if ((alarmSelectStyle == 0 && num <= 13) || (alarmSelectStyle == 1 && num <= 6)) {
-                    newAlarm.setWeekDay((byte) (0x80 | weekDay));
-                    newAlarm.setAlarmType(alarmSelectStyle);
-                    newAlarm.setAlarmNumber((byte) num);
-                    getModel().addAlarm(newAlarm);
-                    getModel().getSyncController().setAlarm(newAlarm);
-
+                    if (!isRepeat) {
+                        newAlarm.setWeekDay((byte) (0x80 | weekDay));
+                        newAlarm.setAlarmType(alarmSelectStyle);
+                        newAlarm.setAlarmNumber((byte) num);
+                        getModel().addAlarm(newAlarm);
+                        getModel().getSyncController().setAlarm(newAlarm);
+                        refreshListView();
+                    } else {
+                        String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
+                        if (alarmSelectStyle == 0) {
+                            ToastHelper.showShortToast(AlarmFragment.this.getActivity()
+                                    , getString(R.string.prompt_user_alarm_no_repeat) + " " + weekDayArray[weekDay]);
+                        } else {
+                            ToastHelper.showShortToast(AlarmFragment.this.getActivity()
+                                    , getString(R.string.prompt_user_alarm_no_repeat_two) + " " + weekDayArray[weekDay]);
+                        }
+                    }
                 } else {
                     ToastHelper.showShortToast(getContext(), getResources().getString(R.string.add_alarm_index_out));
                 }
-
-
                 dialog.dismiss();
-                refreshListView();
+
             }
         });
 
@@ -286,11 +305,9 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             return;
         }
-        if(deleteOrUpdate == -1)
-        {
-            editAlarm.setWeekDay((byte)0);
-        }
-        else if(deleteOrUpdate == 1){
+        if (deleteOrUpdate == -1) {
+            editAlarm.setWeekDay((byte) 0);
+        } else if (deleteOrUpdate == 1) {
             editAlarm = getModel().getAlarmById(editAlarm.getId());
         }
         getModel().getSyncController().setAlarm(editAlarm);

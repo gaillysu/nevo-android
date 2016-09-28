@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -43,6 +44,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
 import net.medcorp.library.ble.event.BLESearchEvent;
+import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 
@@ -151,6 +153,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             }
         });
 
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
+            FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
+            floatingActionButton.setVisibility(View.GONE);
+        }
         headerView.findViewById(R.id.navigation_header_spinner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

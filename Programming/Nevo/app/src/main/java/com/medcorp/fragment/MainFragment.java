@@ -29,7 +29,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2016/7/19.
@@ -56,15 +55,15 @@ public class MainFragment extends BaseObservableFragment {
         return view;
     }
 
-    @OnClick(R.id.lunar_main_fragment_left_arrow)
-    public void leftClick() {
-        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() - 1);
-    }
-
-    @OnClick(R.id.lunar_main_fragment_right_arrow)
-    public void rightClick() {
-        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() + 1);
-    }
+//    @OnClick(R.id.lunar_main_fragment_left_arrow)
+//    public void leftClick() {
+//        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() - 1);
+//    }
+//
+//    @OnClick(R.id.lunar_main_fragment_right_arrow)
+//    public void rightClick() {
+//        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() + 1);
+//    }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
@@ -155,7 +154,6 @@ public class MainFragment extends BaseObservableFragment {
         Window window = dialog.getWindow();
         View stepsGoalView = View.inflate(getContext(), R.layout.steps_fragment_dialog_layout, null);
         window.setContentView(stepsGoalView);
-
         final RadioGroup stepsGoalGroup = (RadioGroup) stepsGoalView.findViewById(R.id.steps_fragment_dialog_group);
         stepsGoalView.findViewById(R.id.steps_fragment_cancel_steps_setting_button).
                 setOnClickListener(new View.OnClickListener() {
