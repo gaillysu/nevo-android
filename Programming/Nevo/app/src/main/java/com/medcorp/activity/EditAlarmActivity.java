@@ -21,12 +21,13 @@ import com.medcorp.base.BaseActivity;
 import com.medcorp.model.Alarm;
 import com.medcorp.view.ToastHelper;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * Created by karl-john on 21/12/15.
- *
  */
 public class EditAlarmActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
@@ -37,6 +38,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     ListView listView;
 
     private Alarm alarm;
+    private boolean isRepeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_menu:
-                if (getModel().updateAlarm(alarm)) {
+                if (getModel().updateAlarm(alarm) && !isRepeat) {
                     ToastHelper.showShortToast(this, R.string.alarm_saved);
                     setResult(1);
                     finish();
@@ -111,22 +113,40 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                     .show();
         } else if (position == 2) {
             String[] weekDays = getResources().getStringArray(R.array.week_day);
-            String[] javaWeekDays = new String[]{weekDays[1],weekDays[2],weekDays[3],weekDays[4],weekDays[5],weekDays[6],weekDays[7]};
+            String[] javaWeekDays = new String[]{weekDays[1], weekDays[2], weekDays[3], weekDays[4], weekDays[5], weekDays[6], weekDays[7]};
             new MaterialDialog.Builder(EditAlarmActivity.this)
                     .title(R.string.alarm_edit)
                     .content(getString(R.string.alarm_set_week_day_dialog_text))
                     .items(javaWeekDays)
-                    .itemsCallbackSingleChoice((alarm.getWeekDay()&0x0F)-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    .itemsCallbackSingleChoice((alarm.getWeekDay() & 0x0F) - 1, new MaterialDialog.ListCallbackSingleChoice() {
                         @Override
                         public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                            alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which+1)) : (byte) (which+1));
-                            listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
+                            List<Alarm> allAlarm = getModel().getAllAlarm();
+                            String[] weekDayArray = getResources().getStringArray(R.array.week_day);
+                            for (Alarm olderAlarm : allAlarm) {
+                                byte weekDay = olderAlarm.getWeekDay();
+                                if (weekDay == (byte) (0x80 | (which + 1))) {
+                                    isRepeat = true;
+                                    break;
+                                } else {
+                                    isRepeat = false;
+                                }
+                            }
+                            if (isRepeat) {
+                                ToastHelper.showShortToast(EditAlarmActivity.this, alarm.getAlarmType() == (byte) 0 ?
+                                        getString(R.string.prompt_user_alarm_no_repeat) + " " + weekDayArray[which + 1]
+                                        : getString(R.string.prompt_user_alarm_no_repeat_two) + " " + weekDayArray[which + 1]);
+                            } else {
+                                alarm.setWeekDay(((alarm.getWeekDay() & 0x80) == 0x80) ? (byte) (0x80 | (which + 1)) : (byte) (which + 1));
+                                listView.setAdapter(new AlarmEditAdapter(EditAlarmActivity.this, alarm));
+                            }
                             return true;
                         }
                     })
                     .positiveText(R.string.goal_ok)
                     .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                     .show();
+
         } else if (position == 3) {
             if (!getModel().deleteAlarm(alarm)) {
                 ToastHelper.showShortToast(EditAlarmActivity.this, R.string.alarm_could_not_change);

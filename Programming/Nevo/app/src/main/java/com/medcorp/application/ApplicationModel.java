@@ -3,21 +3,16 @@ package com.medcorp.application;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.medcorp.R;
-import com.medcorp.activity.DfuActivity;
 import com.medcorp.ble.controller.OtaControllerImpl;
 import com.medcorp.ble.controller.SyncController;
 import com.medcorp.ble.controller.SyncControllerImpl;
@@ -73,8 +68,6 @@ import com.medcorp.util.Preferences;
 import com.medcorp.view.ToastHelper;
 
 import net.medcorp.library.ble.controller.OtaController;
-import net.medcorp.library.ble.event.BLEFirmwareVersionReceivedEvent;
-import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;

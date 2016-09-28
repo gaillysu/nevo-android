@@ -43,6 +43,7 @@
 
     <include
         layout="@layout/user_info_sex_select_bt"/>
+
     <TextView
         android:id="@+id/register_account_activity_edit_birthday"
         android:layout_width="match_parent"
