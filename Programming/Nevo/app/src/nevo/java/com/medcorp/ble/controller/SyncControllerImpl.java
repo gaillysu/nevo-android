@@ -407,32 +407,31 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         e.printStackTrace();
                     }
                     //update  the day 's "steps" table
-                    if(steps.getSteps() !=0) {
-                        ((ApplicationModel) mContext).saveDailySteps(steps);
+                    //no matter what value the steps is,here must save it to table,for maintaining data consistency,for example, user reinstall battery or connect another watch,we should show lastest data to user
+                    ((ApplicationModel) mContext).saveDailySteps(steps);
+                    //no matter what the sleep is,here must save it to table,for maintaining data consistency
+                    Sleep sleep = new Sleep(history.getCreated());
+                    sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                    sleep.setHourlySleep(history.getHourlySleepTime());
+                    sleep.setHourlyWake(history.getHourlyWakeTime());
+                    sleep.setHourlyLight(history.getHourlyLightTime());
+                    sleep.setHourlyDeep(history.getHourlDeepTime());
+                    sleep.setTotalSleepTime(history.getTotalSleepTime());
+                    sleep.setTotalWakeTime(history.getTotalWakeTime());
+                    sleep.setTotalLightTime(history.getTotalLightTime());
+                    sleep.setTotalDeepTime(history.getTotalDeepTime());
+                    //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
+                    sleep.setStart(0);
+                    sleep.setEnd(0);
+                    sleep.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
+                    try {
+                        sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if(history.getTotalSleepTime() != 0) {
-                        Sleep sleep = new Sleep(history.getCreated());
-                        sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                        sleep.setHourlySleep(history.getHourlySleepTime());
-                        sleep.setHourlyWake(history.getHourlyWakeTime());
-                        sleep.setHourlyLight(history.getHourlyLightTime());
-                        sleep.setHourlyDeep(history.getHourlDeepTime());
-                        sleep.setTotalSleepTime(history.getTotalSleepTime());
-                        sleep.setTotalWakeTime(history.getTotalWakeTime());
-                        sleep.setTotalLightTime(history.getTotalLightTime());
-                        sleep.setTotalDeepTime(history.getTotalDeepTime());
-                        //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
-                        sleep.setStart(0);
-                        sleep.setEnd(0);
-                        sleep.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
-                        try {
-                            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        ((ApplicationModel) mContext).saveDailySleep(sleep);
-                        //end update
-                    }
+                    ((ApplicationModel) mContext).saveDailySleep(sleep);
+                    //end update
+
                     //here save solar time to local database when watch ID>1
                     if(getWatchInfomation().getWatchID()>1){
                         Solar solar = new Solar(new Date(history.getCreated()));
