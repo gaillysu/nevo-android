@@ -84,7 +84,7 @@ public class AnalysisSleepLineChart extends LineChart{
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
-        rightAxis.setAxisLineColor(Color.BLACK);
+        rightAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
@@ -141,6 +141,7 @@ public class AnalysisSleepLineChart extends LineChart{
         dataSets.add(getDataSet(lightSleepEntries, "Light Sleep",lightGradient,R.color.analysis_sleep_light_line_color));
         dataSets.add(getDataSet(deepSleepEntries, "Deep Sleep",deepGradient,R.color.analysis_sleep_deep_line_color));
 
+
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
         leftAxis.setAxisMaxValue(maxValue * 1.0f);
@@ -151,8 +152,8 @@ public class AnalysisSleepLineChart extends LineChart{
         invalidate();
         String[] legend = getLegend().getLabels();
         // TODO Figure out to get the color from colors.xml resource.
-        getLegend().setCustom(Arrays.asList(Color.rgb(188,188,188),
-                Color.rgb(160,132,85),Color.rgb(127,127,127)),
+        getLegend().setCustom(Arrays.asList(Color.rgb(127,127,127),
+                Color.rgb(160,132,85),Color.rgb(188,188,188)),
                 Arrays.asList(getLegend().getLabels()));
         setOnClickListener(null);
     }

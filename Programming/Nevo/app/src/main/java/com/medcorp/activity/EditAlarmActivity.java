@@ -125,7 +125,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
                             String[] weekDayArray = getResources().getStringArray(R.array.week_day);
                             for (Alarm olderAlarm : allAlarm) {
                                 byte weekDay = olderAlarm.getWeekDay();
-                                if (weekDay == (byte) (0x80 | (which + 1))) {
+                                if ((weekDay & 0x0F) == (which + 1)) {
                                     isRepeat = true;
                                     break;
                                 } else {

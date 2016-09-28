@@ -188,7 +188,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 for (int i = 0; i < allAlarm.size(); i++) {
                     byte repeatDay = allAlarm.get(i).getWeekDay();
                     byte alarmType = allAlarm.get(i).getAlarmType();
-                    if (repeatDay == (byte) (0X80 | weekDay) && alarmType == alarmSelectStyle) {
+                    if ((repeatDay & 0x0F) == weekDay && alarmType == alarmSelectStyle) {
                         isRepeat = true;
                         break;
                     } else {

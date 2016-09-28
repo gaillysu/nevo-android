@@ -154,11 +154,13 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             }
         });
 
-        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
             FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
             floatingActionButton.setVisibility(View.GONE);
+        }else{
+          floatingActionButton.setVisibility(View.VISIBLE);
         }
-        headerView.findViewById(R.id.navigation_header_spinner).setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);

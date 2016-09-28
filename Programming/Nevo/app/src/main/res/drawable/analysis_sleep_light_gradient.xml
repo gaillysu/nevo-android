@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="90"
-        android:startColor="@color/analysis_sleep_light_start_color"
-        android:endColor="@color/analysis_sleep_light_end_color"/>
+        android:startColor="#24ffffff"
+        android:endColor="#a47f40"/>
 </shape>

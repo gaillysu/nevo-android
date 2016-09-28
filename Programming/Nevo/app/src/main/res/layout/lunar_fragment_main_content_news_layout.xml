@@ -31,7 +31,7 @@
                     android:text="@string/lunar_fragment_calorie_text"
                     android:maxLines="1"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/lunar_fragment_show_user_consume_calories"
@@ -42,7 +42,7 @@
                     android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
             </LinearLayout>
 
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_steps_text"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
 
                 <TextView
@@ -73,7 +73,7 @@
                     android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_activity_time_text"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                    />
 
                 <TextView
@@ -111,7 +111,7 @@
                     android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
             </LinearLayout>
 
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/lunar_fragment_distance_km_text"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
 
                 <TextView
@@ -141,7 +141,7 @@
                     android:paddingLeft="5dp"
                     android:text="0"
                     android:textColor="@color/profile_fragment_text_right_color"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     />
             </LinearLayout>
         </LinearLayout>
