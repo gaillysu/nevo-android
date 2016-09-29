@@ -41,6 +41,7 @@ public class AnalysisSleepFragment extends BaseFragment {
 
     @Bind(R.id.analysis_sleep_fragment_view_page)
     ViewPager sleepViewPage;
+
     @Bind(R.id.analysis_sleep_fragment_title_tv)
     TextView sleepTextView;
 
@@ -118,13 +119,13 @@ public class AnalysisSleepFragment extends BaseFragment {
         TipsView mv = new TipsView(AnalysisSleepFragment.this.getContext(), R.layout.custom_marker_view);
         thisWeekChart.addData(thisWeekSleepData, 7);
         thisWeekChart.setMarkerView(mv);
-
+        thisWeekChart.animateY(3000);
         lastWeekChart.addData(lastWeekSleepData, 7);
         lastWeekChart.setMarkerView(mv);
-
+        lastWeekChart.animateY(3000);
         lastMonthChart.addData(lastMonthSleepData, 30);
         lastMonthChart.setMarkerView(mv);
-
+        lastMonthChart.animateY(3000);
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(sleepList);
         sleepViewPage.setAdapter(adapter);
         sleepViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

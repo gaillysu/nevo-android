@@ -97,6 +97,7 @@ public class MainStepsFragment extends BaseFragment {
         }else{
             hourlyBarChart.setDataInChart(new int[]{0});
         }
+        hourlyBarChart.animateY(3000);
     }
 
     @Override

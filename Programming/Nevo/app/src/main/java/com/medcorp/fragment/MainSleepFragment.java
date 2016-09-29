@@ -103,6 +103,7 @@ public class MainSleepFragment extends BaseFragment {
             }
             qualityTextView.setText((sleepData.getLightSleep() + sleepData.getDeepSleep()) * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
             lineChartSleep.setDataInChart(sleepData);
+            lineChartSleep.animateY(3000);
             DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
             wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
         }

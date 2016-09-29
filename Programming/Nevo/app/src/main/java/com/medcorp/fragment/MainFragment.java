@@ -3,7 +3,6 @@ package com.medcorp.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +19,7 @@ import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.model.Goal;
 import com.medcorp.util.Preferences;
+import com.medcorp.view.customfontview.LazyViewPager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,7 +38,7 @@ public class MainFragment extends BaseObservableFragment {
 
 
     @Bind(R.id.fragment_lunar_main_view_pager)
-    ViewPager showWatchViewPage;
+    LazyViewPager showWatchViewPage;
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
 
