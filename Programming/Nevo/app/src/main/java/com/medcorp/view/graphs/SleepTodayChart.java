@@ -102,7 +102,7 @@ public class SleepTodayChart extends LineChart {
             if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0) {
                 continue;
             }
-            float deep = deepSleepMinutes / 60f;
+            float deep = 1.0f*deepSleepMinutes / (awakeMinutes+lightSleepMinutes+deepSleepMinutes);
             intList.add(2.3f - deep * 2.0f);
         }
 
