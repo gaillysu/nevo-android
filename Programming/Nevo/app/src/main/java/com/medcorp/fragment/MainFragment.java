@@ -51,7 +51,6 @@ public class MainFragment extends BaseObservableFragment {
         setHasOptionsMenu(true);
         adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
         showWatchViewPage.setAdapter(adapter);
-
         return view;
     }
 

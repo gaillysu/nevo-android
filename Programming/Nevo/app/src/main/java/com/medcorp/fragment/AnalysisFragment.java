@@ -10,10 +10,10 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.medcorp.R;
 import com.medcorp.adapter.AnalysisFragmentPagerAdapter;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
-import com.medcorp.R;
 
 import org.greenrobot.eventbus.Subscribe;
 

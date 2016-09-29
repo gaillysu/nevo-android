@@ -69,6 +69,7 @@ public class MainStepsFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+        hourlyBarChart.animateY(3000);
         initData(userSelectDate);
         return lunarMainFragmentAdapterChart;
     }
@@ -81,7 +82,6 @@ public class MainStepsFragment extends BaseFragment {
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));
         showUserConsumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
-
         if (steps.getSteps() != 0 && steps.getHourlySteps()!=null){
             JSONArray array = null;
             try {
@@ -97,7 +97,7 @@ public class MainStepsFragment extends BaseFragment {
         }else{
             hourlyBarChart.setDataInChart(new int[]{0});
         }
-        hourlyBarChart.animateY(3000);
+
     }
 
     @Override

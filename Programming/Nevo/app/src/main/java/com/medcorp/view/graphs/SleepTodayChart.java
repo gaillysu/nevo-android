@@ -2,6 +2,8 @@ package com.medcorp.view.graphs;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -100,8 +102,8 @@ public class SleepTodayChart extends LineChart {
             if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0) {
                 continue;
             }
-            float deep = 1 - deepSleepMinutes / 60f;
-            intList.add(2.3f - deep * 2.3f);
+            float deep = deepSleepMinutes / 60f;
+            intList.add(2.3f - deep * 2.0f);
         }
 
         for (int hour = 0; hour < intList.size(); hour++) {
@@ -121,7 +123,8 @@ public class SleepTodayChart extends LineChart {
         set.setDrawValues(false);
         set.setCircleColorHole(Color.BLACK);
         set.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
-
+        Drawable lightGradient = ContextCompat.getDrawable(getContext(), R.drawable.analysis_sleep_light_gradient);
+        set.setFillDrawable(lightGradient);
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         dataSets.add(set);
         LineData data = new LineData(dataSets);
@@ -131,6 +134,7 @@ public class SleepTodayChart extends LineChart {
         invalidate();
         getXAxis().setLabelCount(intList.size() - 1);
         getXAxis().setValueFormatter(new XAxisValueFormatter(intList.size(), new DateTime(sleepData.getSleepStart())));
+
     }
 
     public void setEmptyChart() {
