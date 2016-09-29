@@ -166,7 +166,7 @@ public class SleepDataHandler {
                 int theMinutes = Integer.parseInt(hourlySleep.getString(i));
                 if(theMinutes>0)
                 {
-                    sleepStart = yesterdaySleep.getStart() + ((i+1)*60-theMinutes)*60*1000;
+                    sleepStart = yesterdaySleep.getDate() + ((i+1)*60-theMinutes)*60*1000;
                     start = i;
                     break;
                 }

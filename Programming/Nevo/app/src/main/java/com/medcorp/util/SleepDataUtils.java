@@ -17,7 +17,7 @@ public class SleepDataUtils{
             Log.w("Karl","Hey, something went wrong here!");
             return new SleepData(0,0,0,0);
         }
-        SleepData sleepData = new SleepData(today.getAwake() + yesterday.getAwake(), today.getLightSleep() + yesterday.getLightSleep(), today.getDeepSleep() + yesterday.getDeepSleep(), today.getDate());
+        SleepData sleepData = new SleepData(today.getDeepSleep() + yesterday.getDeepSleep(),today.getLightSleep() + yesterday.getLightSleep(),today.getAwake() + yesterday.getAwake(),today.getDate());
         sleepData.setSleepStart(yesterday.getSleepStart());
         sleepData.setSleepEnd(today.getSleepEnd());
         sleepData.setHourlyWake(mergeSleepData(yesterday.getHourlyWakeInt(),today.getHourlyWakeInt()));

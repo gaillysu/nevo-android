@@ -100,13 +100,13 @@ public class SleepTodayChart extends LineChart {
             if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0) {
                 continue;
             }
-            float deep = 1 - deepSleepMinutes / 60;
+            float deep = 1 - deepSleepMinutes / 60f;
             intList.add(2.3f - deep * 2.3f);
         }
 
         for (int hour = 0; hour < intList.size(); hour++) {
             DateTime time = new DateTime(sleepData.getSleepStart());
-            yValue.add(new Entry(time.getHourOfDay() + hour, intList.get(hour)));
+            yValue.add(new Entry((time.getHourOfDay() + hour)%24, intList.get(hour)));
         }
 
         LineDataSet set = new LineDataSet(yValue, "");
