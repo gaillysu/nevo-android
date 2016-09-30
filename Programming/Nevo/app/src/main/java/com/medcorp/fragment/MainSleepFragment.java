@@ -96,7 +96,7 @@ public class MainSleepFragment extends BaseFragment {
                 sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
                 durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
             }
-            qualityTextView.setText((sleepData.getLightSleep() + sleepData.getDeepSleep()) * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
+            qualityTextView.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
             lineChartSleep.setDataInChart(sleepData);
             lineChartSleep.animateY(3000);
             DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
