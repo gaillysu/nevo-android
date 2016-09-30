@@ -28,6 +28,7 @@ import org.joda.time.DateTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -77,14 +78,8 @@ public class MainSleepFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
-        List<Sleep> sleepList = new ArrayList<>();
-
-        for (int i = 0; i < sleepArray.length; i++) {
-            sleepList.add(sleepArray[i]);
-        }
-
-        SleepDataHandler handler = new SleepDataHandler(sleepList, false);
-        List<SleepData> sleepDataList = handler.getSleepData();
+        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
+        List<SleepData> sleepDataList = handler.getSleepData(date);
 
         if (!sleepDataList.isEmpty()) {
             SleepData sleepData;

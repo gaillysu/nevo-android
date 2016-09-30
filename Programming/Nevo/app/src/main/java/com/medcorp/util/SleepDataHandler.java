@@ -10,6 +10,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,7 +101,7 @@ public class SleepDataHandler {
     private boolean sleptToday(Sleep sleep) {
         try {
             JSONArray hourlySleep = new JSONArray(sleep.getHourlySleep());
-            for (int i = 0; i < 17 && hourlySleep.length() > 17; i++) {
+            for (int i = 0; i < 18 && hourlySleep.length() > 18; i++) {
                 if (Integer.parseInt(hourlySleep.getString(i)) > 0) {
                     return true;
                 }
@@ -292,5 +293,40 @@ public class SleepDataHandler {
         return sleepDataList;
     }
 
+    /** we define sleep duration: sleep is made of two parts: yesterday sleep from 18:00 to 23:59 and today sleep starts with 00:00 to 17:59
+     * here name yesterday sleepData as SLEEP2, today sleepData as SLEEP1
+     * @parameter: Date today
+     * INPUT: sleepList.size() == 1 , Sleep is either yesterday or today record
+     * INPUT: sleepList.size() == 2 ,Sleep includes yesterday and today record
+     * @return for INPUT case 1, return [SLEEP1] or [SLEEP2];for INPUT case 2, return [SLEEP1,SLEEP2];
+     */
+    public List<SleepData> getSleepData(Date today) {
+        List<SleepData> sleepDataList = new ArrayList<>();
+        for (int i = 0; i < sleepList.size(); i++) {
+            Sleep currentDaySleep = sleepList.get(i);
+            //only one day,yesterday or today
+            if (sleepList.size() == 1) {
+                //this is only today's sleep, calculate  it from 00:00 to 17:59
+                if(Common.removeTimeFromDate(today).getTime() == currentDaySleep.getDate())
+                {
+                    sleepDataList.add(getSleepData(currentDaySleep));
+                }
+                //this is only yesterday sleep, calculate it from 18:00 to 23:59
+                else
+                {
+                    sleepDataList.add(getSleepDataAfterSix(currentDaySleep));
+                }
+            }
+            //two days,return SLEEP1 and SLEEP2
+            else {
+                if(Common.removeTimeFromDate(today).getTime() == currentDaySleep.getDate()) {
+                    sleepDataList.add(0,getSleepData(currentDaySleep));
+                } else {
+                    sleepDataList.add(getSleepDataAfterSix(currentDaySleep));
+                }
+            }
+        }
+        return sleepDataList;
+    }
 
 }

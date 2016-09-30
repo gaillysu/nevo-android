@@ -393,25 +393,20 @@ public class ApplicationModel extends Application {
         Optional<Sleep> todaySleep = sleepDatabaseHelper.get(userId,todayDate);
         Optional<Sleep> yesterdaySleep = sleepDatabaseHelper.get(userId,yesterdayDate);
 
-        Sleep[] sleeps = new Sleep[2];
-        if(todaySleep.notEmpty()){
-            sleeps[1] = todaySleep.get();
-        }else{
-            sleeps[1] = new Sleep(todayDate.getTime(),todayDate.getTime(),0, 0, 0,
-            0,"[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
-                    "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]","[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
-            Common.removeTimeFromDate(todayDate).getTime(), (Common.removeTimeFromDate(yesterdayDate).getTime()+24*60*60*1000L-1),0,"");
+        //use yesterday and today data to analysis sleep,pls refer to SleepDataHandler class
+        if(yesterdaySleep.notEmpty() && todaySleep.notEmpty()){
+            return new Sleep[]{todaySleep.get(),yesterdaySleep.get()};
         }
-        if(yesterdaySleep.notEmpty()){
-            sleeps[0] = yesterdaySleep.get();
-        }else{
-            sleeps[0] = new Sleep(yesterdayDate.getTime(),yesterdayDate.getTime(),0, 0, 0,
-                    0,"[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]", "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
-                    "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]","[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
-                    Common.removeTimeFromDate(todayDate).getTime(),(Common.removeTimeFromDate(yesterdayDate).getTime()+24*60*60*1000L-1),0,"");
+        //use today data to analysis sleep
+        if(todaySleep.notEmpty() && yesterdaySleep.isEmpty()){
+            return new Sleep[]{todaySleep.get()};
         }
-
-        return sleeps;
+        //use yesterday data (after 18:00) to analysis sleep
+        if(yesterdaySleep.notEmpty() && todaySleep.isEmpty()){
+            return new Sleep[]{yesterdaySleep.get()};
+        }
+        //NO sleep data
+        return new Sleep[]{new Sleep(todayDate.getTime())};
     }
 
     public void saveDailySleep(Sleep sleep) {
