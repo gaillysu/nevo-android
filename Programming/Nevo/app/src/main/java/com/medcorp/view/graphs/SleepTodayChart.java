@@ -107,7 +107,6 @@ public class SleepTodayChart extends LineChart {
         }
 
         for (int hour = 0; hour < intList.size(); hour++) {
-            DateTime time = new DateTime(sleepData.getSleepStart());
             yValue.add(new Entry(hour, intList.get(hour)));
         }
 
