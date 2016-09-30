@@ -405,8 +405,10 @@ public class ApplicationModel extends Application {
         if(yesterdaySleep.notEmpty() && todaySleep.isEmpty()){
             return new Sleep[]{yesterdaySleep.get()};
         }
-        //NO sleep data
-        return new Sleep[]{new Sleep(todayDate.getTime())};
+        //NO data sleep
+        Sleep noDataSleep = new Sleep(todayDate.getTime());
+        noDataSleep.setDate(Common.removeTimeFromDate(todayDate).getTime());
+        return new Sleep[]{noDataSleep};
     }
 
     public void saveDailySleep(Sleep sleep) {

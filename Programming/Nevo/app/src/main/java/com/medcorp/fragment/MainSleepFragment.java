@@ -15,6 +15,7 @@ import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.SleepData;
 import com.medcorp.model.User;
+import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 import com.medcorp.util.SleepDataHandler;
 import com.medcorp.util.SleepDataUtils;
@@ -85,21 +86,21 @@ public class MainSleepFragment extends BaseFragment {
             SleepData sleepData;
             if (sleepDataList.size() == 2) {
                 sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
-                DateTime sleepStart = new DateTime(sleepData.getSleepStart());
+                DateTime sleepStart = new DateTime(sleepData.getSleepStart()==0?Common.removeTimeFromDate(date).getTime():sleepData.getSleepStart());
                 Log.w("Karl", "Yo yo : " + sleepData.getTotalSleep());
 
                 sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
                 durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
             } else {
                 sleepData = sleepDataList.get(0);
-                DateTime sleepStart = new DateTime(sleepData.getSleepStart());
+                DateTime sleepStart = new DateTime(sleepData.getSleepStart()==0?Common.removeTimeFromDate(date).getTime():sleepData.getSleepStart());
                 sleepTimeTextView.setText(sleepStart.toString("HH:mm", Locale.ENGLISH));
                 durationTextView.setText(TimeUtil.formatTime(sleepData.getTotalSleep()));
             }
             qualityTextView.setText(sleepData.getDeepSleep() * 100 / (sleepData.getTotalSleep() == 0 ? 1 : sleepData.getTotalSleep()) + "%");
             lineChartSleep.setDataInChart(sleepData);
             lineChartSleep.animateY(3000);
-            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd());
+            DateTime sleepEnd = new DateTime(sleepData.getSleepEnd()==0?Common.removeTimeFromDate(date).getTime():sleepData.getSleepEnd());
             wakeTimeTextView.setText(sleepEnd.toString("HH:mm", Locale.ENGLISH));
         }
     }
