@@ -101,7 +101,7 @@ public class MainFragment extends BaseObservableFragment {
 
         if(goalList.size() != 0) {
             new MaterialDialog.Builder(getContext())
-                    .title(R.string.goal)
+                    .title(R.string.goal).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
                     .items(cs)
                     .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                         @Override

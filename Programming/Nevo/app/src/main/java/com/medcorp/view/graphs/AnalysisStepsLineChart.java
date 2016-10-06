@@ -74,6 +74,7 @@ public class AnalysisStepsLineChart extends LineChart {
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
+        leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0.0f);
 
         YAxis rightAxis = getAxisRight();
@@ -85,7 +86,7 @@ public class AnalysisStepsLineChart extends LineChart {
 
         XAxis xAxis = getXAxis();
         xAxis.setAxisLineColor(Color.BLACK);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);

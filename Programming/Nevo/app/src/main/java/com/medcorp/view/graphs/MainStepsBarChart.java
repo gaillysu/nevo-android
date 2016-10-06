@@ -67,6 +67,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
         leftAxis.setGridColor(Color.BLACK);
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setAxisLineWidth(widthLines);
+        leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setGridLineWidth(widthLines);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setAxisMinValue(0.0f);
@@ -96,7 +97,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
 
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawGridLines(true);
         xAxis.setDrawLabels(true);
         xAxis.setGridLineWidth(widthLines);

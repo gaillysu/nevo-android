@@ -392,6 +392,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="login_page_activity_title">Login</string>
     <string name="save_notification_ok">Save success!</string>
     <string name="google_fit_log_out">Log out</string>
-    <!--<lunar end>-->
     <string name="disable">Disable</string>
+    <!--<lunar end>-->
 </resources>

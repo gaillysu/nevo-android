@@ -67,6 +67,7 @@ public class SleepTodayChart extends LineChart {
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
+        leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0.0f);
         leftAxis.setAxisMaxValue(2.6f);
         leftAxis.setValueFormatter(new YAxisValueFormatter());
@@ -81,7 +82,7 @@ public class SleepTodayChart extends LineChart {
 
         XAxis xAxis = getXAxis();
         xAxis.setAxisLineColor(Color.BLACK);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -124,7 +125,7 @@ public class SleepTodayChart extends LineChart {
         set.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
         Drawable lightGradient = ContextCompat.getDrawable(getContext(), R.drawable.analysis_sleep_light_gradient);
         set.setFillDrawable(lightGradient);
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(set);
         LineData data = new LineData(dataSets);
         setData(data);

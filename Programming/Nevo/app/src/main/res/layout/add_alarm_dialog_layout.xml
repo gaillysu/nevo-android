@@ -11,13 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/alarm_add"
+        android:textColor="@color/text_color"
         android:textSize="26sp"
-        />
+        android:id="@+id/textView3"/>
 
     <EditText
         android:id="@+id/edit_input_alarm_name"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color"
         android:background="@color/transparent"
         android:hint="@string/edit_alarm_name"
         />
@@ -36,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
+            android:textColor="@color/text_color"
             android:text="@string/edit_alarm_repeat"
             android:textSize="26sp"/>
         <!--<Button-->
@@ -145,6 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="true"
+            android:textColor="@color/text_color"
             android:maxLines="1"
             android:paddingLeft="5dp"
             android:text="@string/edit_alarm_sleep"/>
@@ -155,6 +160,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/text_color"
             android:layout_weight="1"
             android:paddingLeft="5dp"
             android:text="@string/edit_alarm_wake"/>

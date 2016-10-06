@@ -334,6 +334,7 @@
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
+    <string name="disable">Disable</string>
     <string name="every_day">Every </string>
     <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="edit_alarm_wake">Wake Alarm</string>
@@ -399,6 +400,7 @@
     <string name="forget_password_result_email_address_text">A email has been sent to: </string>
     <string name="forget_password_result_test_email_address">shaw@med-corp.com</string>
     <string name="forget_password_result_prompt_user_check_email">Please open the link we\’ve\n sent and verify your e-mail ad-\ndress.</string>
-
+    <string name="prompt_user_alarm_no_repeat">There is already a sleep alarm set for</string>
+    <string name="prompt_user_alarm_no_repeat_two">There is already a wake alarm set for</string>
 
 </resources>

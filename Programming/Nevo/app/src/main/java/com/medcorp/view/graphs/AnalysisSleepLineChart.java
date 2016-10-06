@@ -18,6 +18,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.model.SleepData;
 
@@ -80,6 +81,7 @@ public class AnalysisSleepLineChart extends LineChart{
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
+        leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setAxisMinValue(0.0f);
 
         YAxis rightAxis = getAxisRight();
@@ -91,7 +93,7 @@ public class AnalysisSleepLineChart extends LineChart{
 
         XAxis xAxis = getXAxis();
         xAxis.setAxisLineColor(Color.BLACK);
-        xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -152,9 +154,15 @@ public class AnalysisSleepLineChart extends LineChart{
         invalidate();
         String[] legend = getLegend().getLabels();
         // TODO Figure out to get the color from colors.xml resource.
+       if( ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO){
         getLegend().setCustom(Arrays.asList(Color.rgb(127,127,127),
                 Color.rgb(160,132,85),Color.rgb(188,188,188)),
                 Arrays.asList(getLegend().getLabels()));
+       }else{
+           getLegend().setCustom(Arrays.asList(Color.rgb(117,182,178),
+                   Color.rgb(185,141,221),Color.rgb(150,147,155)),
+                   Arrays.asList(getLegend().getLabels()));
+       }
         setOnClickListener(null);
     }
 
