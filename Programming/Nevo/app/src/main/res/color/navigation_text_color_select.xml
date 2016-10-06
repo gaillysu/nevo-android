@@ -6,6 +6,6 @@
           android:color="@color/colorAccent"/>
     <item android:state_focused="true"
           android:color="@color/colorAccent"/>
-    <item android:color="@color/left_menu_item_text_color"/>
+    <item android:color="@color/text_color"/>
 
 </selector>

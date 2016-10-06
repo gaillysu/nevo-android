@@ -54,16 +54,6 @@ public class MainFragment extends BaseObservableFragment {
         return view;
     }
 
-//    @OnClick(R.id.lunar_main_fragment_left_arrow)
-//    public void leftClick() {
-//        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() - 1);
-//    }
-//
-//    @OnClick(R.id.lunar_main_fragment_right_arrow)
-//    public void rightClick() {
-//        showWatchViewPage.setCurrentItem(showWatchViewPage.getCurrentItem() + 1);
-//    }
-
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);

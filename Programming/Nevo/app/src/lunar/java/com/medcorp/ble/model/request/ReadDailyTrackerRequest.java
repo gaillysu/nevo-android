@@ -10,7 +10,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/7/29.
  */
 public class ReadDailyTrackerRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x07;
+    public  final static  byte HEADER = 0x25;
     // tracker no is 0~6
     private int mTrackerNo = 0;
 

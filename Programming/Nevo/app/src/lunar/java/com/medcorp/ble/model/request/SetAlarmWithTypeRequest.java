@@ -7,14 +7,12 @@ import com.medcorp.model.Alarm;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
-import java.util.List;
-
 /**
  * Created by med on 16/8/1.
  */
 public class SetAlarmWithTypeRequest extends BLERequestData {
 
-    public  final static  byte HEADER = 0x0c;
+    public  final static  byte HEADER = 0x41;
     public  final static int maxAlarmCount = 14;
     private int mHour;
     private int mMinute;

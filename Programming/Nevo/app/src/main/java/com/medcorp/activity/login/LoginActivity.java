@@ -147,6 +147,7 @@ public class LoginActivity extends BaseActivity {
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
+        Preferences.saveLogin(this ,Constants.LOGIN ,true);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
         if (getIntent().getBooleanExtra("isTutorialPage", true) && Preferences.getIsFirstLogin(this)) {
             startActivity(TutorialPage1Activity.class);

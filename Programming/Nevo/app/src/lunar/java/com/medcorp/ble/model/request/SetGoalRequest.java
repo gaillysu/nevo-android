@@ -12,7 +12,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/7/29.
  */
 public class SetGoalRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x05;
+    public  final static  byte HEADER = 0x22;
     private GoalBase mGoal = new NumberOfStepsGoal(NumberOfStepsGoal.LOW);
     public SetGoalRequest(Context context, GoalBase goal )
     {

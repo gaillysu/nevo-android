@@ -11,7 +11,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  */
 public class WriteSettingRequest extends BLERequestData {
 
-    public  final static  byte HEADER = 0x04;
+    public  final static  byte HEADER = 0x21;
 
     public WriteSettingRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));

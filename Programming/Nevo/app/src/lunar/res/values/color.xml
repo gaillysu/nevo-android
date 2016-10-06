@@ -27,6 +27,7 @@
     <color name="profile_fragment_text_right_color">#7ED8D1</color>
     <color name="white">#FFFFFF</color>
     <color name="snackbar_bg_color">#7ED8D1</color>
+    <color name="navigation_drawer_selected_background_color">#F2F2F2</color>
     <color name="list_item_header_text_color">#FFFFFF</color>
     <color name="notification_list_text_color">#FFFFFF</color>
     <color name="list_item_sub_text">#000</color>

@@ -4,14 +4,13 @@ import android.content.Context;
 
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.datasource.GattAttributesDataSource;
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
  * Created by med on 16/7/25.
  */
 public class FindPhoneRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x0e;
+    public  final static  byte HEADER = 0x45;
 
     public FindPhoneRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));

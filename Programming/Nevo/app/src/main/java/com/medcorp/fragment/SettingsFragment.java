@@ -141,6 +141,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
         } else if (position == 8) {
             getModel().removeUser(getModel().getNevoUser());
+            Preferences.saveLogin(SettingsFragment.this.getContext(),Constants.LOGIN,false);
             Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
             intent.putExtra("isTutorialPage", true);
             SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);

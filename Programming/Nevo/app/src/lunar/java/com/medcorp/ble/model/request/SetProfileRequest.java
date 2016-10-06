@@ -11,7 +11,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/7/29.
  */
 public class SetProfileRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x03;
+    public  final static  byte HEADER = 0x20;
     private User user;
 
     public SetProfileRequest(Context context, User user) {

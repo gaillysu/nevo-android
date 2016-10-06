@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         });
 
             FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
-        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
+        if (Preferences.getIslogin(this,Constants.LOGIN)) {
             floatingActionButton.setVisibility(View.GONE);
         }else{
           floatingActionButton.setVisibility(View.VISIBLE);

@@ -39,6 +39,17 @@ public class Preferences {
                 null);
     }
 
+    public static void saveLogin(Context context,String name ,boolean login){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(name,login).commit();
+    }
+
+    public static boolean getIslogin(Context context,String login){
+        init(context);
+        return preferences.getBoolean(login,false);
+    }
+
     public static void saveIsFirstLogin(Context context, boolean isNotFirst) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();

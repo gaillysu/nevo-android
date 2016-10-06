@@ -4,14 +4,13 @@ import android.content.Context;
 
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 
-import net.medcorp.library.ble.datasource.GattAttributesDataSource;
 import net.medcorp.library.ble.model.request.BLERequestData;
 
 /**
  * Created by med on 16/7/25.
  */
 public class SetSunriseAndSunsetTimeRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x0a;
+    public  final static  byte HEADER = 0x28;
 
     private final byte sunriseHour;
     private final byte sunriseMin;

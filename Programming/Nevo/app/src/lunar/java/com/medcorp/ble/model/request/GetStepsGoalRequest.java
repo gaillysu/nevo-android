@@ -11,7 +11,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  */
 public class GetStepsGoalRequest extends BLERequestData {
 
-    public  final static byte HEADER = 0x08;
+    public  final static byte HEADER = 0x26;
 
     public GetStepsGoalRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));
