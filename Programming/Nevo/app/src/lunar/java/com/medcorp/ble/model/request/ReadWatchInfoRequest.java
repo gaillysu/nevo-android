@@ -8,7 +8,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/7/25.
  */
 public class ReadWatchInfoRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x40;
+    public  final static  byte HEADER = 0x27;
     public ReadWatchInfoRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));
     }

@@ -8,6 +8,10 @@ public class Alarm {
     private int id = -1;
     private int hour;
     private int minute;
+    /**
+     * weekDay format: bit0~bit3 is for saving the really weekday (eg: Sunday is 1,...Saturday is 7)
+     * bit7 is for saving alarm on or off, 1 means on, 0 is off.
+     */
     private byte weekDay;
     private String label;
     private byte alarmType;
