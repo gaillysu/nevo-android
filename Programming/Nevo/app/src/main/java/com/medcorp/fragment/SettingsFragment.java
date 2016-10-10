@@ -74,6 +74,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         if (Preferences.getIslogin(SettingsFragment.this.getContext(), Constants.LOGIN)) {
             listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
         } else {
+
             listMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
         }
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
