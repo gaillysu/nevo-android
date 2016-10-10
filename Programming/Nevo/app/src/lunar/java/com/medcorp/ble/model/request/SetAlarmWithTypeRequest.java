@@ -16,16 +16,16 @@ public class SetAlarmWithTypeRequest extends BLERequestData {
     public  final static int maxAlarmCount = 14;
     private int mHour;
     private int mMinute;
-    private boolean mEnable;
-    private byte alarmNumber; //0 ~~ maxAlarmCount-1
+    private byte alarmWeekDay;//0:disable, 1~7 is Sunday to Saturday
+    private byte alarmNumber; //0 ~~ 13, 0~6:wake alarm, 7~13:sleep alarm
 
-    public SetAlarmWithTypeRequest(Context context, Alarm alarm, byte alarmNumber)
+    public SetAlarmWithTypeRequest(Context context, Alarm alarm)
     {
         super(new GattAttributesDataSourceImpl(context));
         mHour = alarm.getHour();
         mMinute = alarm.getMinute();
-        mEnable = alarm.getWeekDay()>0?true:false;
-        this.alarmNumber = alarmNumber;
+        alarmWeekDay = (alarm.getWeekDay()&0x80)==0x80?(byte)(alarm.getWeekDay()&0x0f):(byte)0;
+        this.alarmNumber = alarm.getAlarmNumber();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SetAlarmWithTypeRequest extends BLERequestData {
         return new byte[][] {
                 {0,HEADER,
                         (byte) (mHour&0xFF),(byte) (mMinute&0xFF),
-                        (byte) (alarmNumber&0xFF),(byte) (mEnable?1:0),
+                        (byte) (alarmNumber&0xFF),alarmWeekDay,
                         0,0,0,0,
                         0,0,
                         0,0,0,0,

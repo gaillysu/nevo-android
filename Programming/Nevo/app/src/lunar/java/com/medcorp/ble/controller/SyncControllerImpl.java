@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
@@ -48,15 +49,18 @@ import com.medcorp.ble.model.request.SetGoalRequest;
 import com.medcorp.ble.model.request.SetNotificationRequest;
 import com.medcorp.ble.model.request.SetProfileRequest;
 import com.medcorp.ble.model.request.SetRtcRequest;
+import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
+import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
 import com.medcorp.event.bluetooth.InitializeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
+import com.medcorp.event.bluetooth.SolarConvertEvent;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
@@ -65,6 +69,7 @@ import com.medcorp.model.Sleep;
 import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
+import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
@@ -81,6 +86,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
 import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.util.Constants;
+import net.medcorp.library.ble.util.HexUtils;
 import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -94,6 +100,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<Void> {
     private final static String TAG = "SyncControllerImpl";
@@ -121,18 +129,37 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
     //make sure  the whole received packets
 
-    private WatchInfomation watchInfomation;
+    //start a timer to do little sync, refresh dashboard @LittleSyncEvent
+    private long LITTLE_SYNC_INTERVAL = 10000L; //10s
+    private Timer autoSyncTimer = null;
+    private void startTimer() {
+        if(autoSyncTimer!=null)autoSyncTimer.cancel();
+        autoSyncTimer = new Timer();
+        autoSyncTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                //here do little sync to refesh current steps
+                getStepsAndGoal();
+                if(BuildConfig.DEBUG) {
+                    sendRequest(new TestModeRequest(mContext, TestModeRequest.MODE_F4));
+                }
+                //send a 10s event to refresh clock
+                EventBus.getDefault().post(new Timer10sEvent());
+                startTimer();
+            }
+        }, LITTLE_SYNC_INTERVAL);
+    }
 
     public SyncControllerImpl(Context context)
     {
         mContext = context;
-        watchInfomation = new WatchInfomation();
         connectionController = ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context));
         Intent intent = new Intent(mContext,LocalService.class);
         mContext.getApplicationContext().bindService(intent, mCurrentServiceConnection, Activity.BIND_AUTO_CREATE);
         //force android Notification Manager Service to start NevoNotificationListener
         startNotificationListener();
         EventBus.getDefault().register(this);
+        startTimer();
     }
 
     @Override
@@ -175,6 +202,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public WatchInfomation getWatchInfomation() {
+        WatchInfomation watchInfomation = new WatchInfomation();
+        watchInfomation.setWatchID((byte) Preferences.getWatchId(mContext));
+        watchInfomation.setWatchModel((byte)Preferences.getWatchModel(mContext));
         return watchInfomation;
     }
 
@@ -210,54 +240,48 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 else if((byte) WriteSettingRequest.HEADER == lunarData.getRawData()[1])
                 {
-                    //step4:read watch infomation
-                    sendRequest(new ReadWatchInfoRequest(mContext));
+                    EventBus.getDefault().post(new InitializeEvent(InitializeEvent.INITIALIZE_STATUS.END));
+                    //because we have a "SyncController" queue to send request, so here we can send many requests one by one.
+                    //step4: sync notifications, app-->watch
+                    setNotification(true);
+                    //step5:sync alarms, app-->watch
+                    //firstly clean all alarms
+                    for(int i=0;i<14;i++)
+                    {
+                        setAlarm(new Alarm(0,0,(byte)0,"",(byte)(i<7?0:1),(byte)i));
+                    }
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date());
+                    List<Alarm> alarmList = ((ApplicationModel)mContext).getAllAlarm();
+                    for(Alarm alarm:alarmList) {
+                        if((alarm.getWeekDay() & 0x80) == 0x80)
+                        {
+                            //NOTICE: here we only disable it in the watch, but keep its status(on or off) in the app.
+                            if (alarm.getAlarmNumber() >= 7) {
+                                //discard today 's sleep alarm when it comes in active mode (BT connected)
+                                if ((alarm.getWeekDay() & 0x0F) == calendar.get(Calendar.DAY_OF_WEEK)
+                                        && (alarm.getHour() < calendar.get(Calendar.HOUR_OF_DAY) || (alarm.getHour() == calendar.get(Calendar.HOUR_OF_DAY) && alarm.getMinute() < calendar.get(Calendar.MINUTE)))) {
+                                    continue;
+                                }
+                                //discard yesterday 's sleep alarm when it comes in active mode (BT connected)
+                                else if ((((alarm.getWeekDay() & 0x0F) + 1) == calendar.get(Calendar.DAY_OF_WEEK))
+                                        || ((alarm.getWeekDay() & 0x0F) == 7 && calendar.get(Calendar.DAY_OF_WEEK) == 1)) {
+                                    continue;
+                                }
+                            }
+                            setAlarm(alarm);
+                        }
+                    }
+                    //step6: start sync data, nevo-->phone
+                    syncActivityData();
                 }
                 else if((byte) ReadWatchInfoRequest.HEADER == lunarData.getRawData()[1])
                 {
                     //get watch ID and model type
-                    WatchInfoPacket thispacket = new WatchInfoPacket(packet.getPackets());
-                    Log.i(TAG,"get watch ID: " + thispacket.getWatchID() + ", watch model: " + thispacket.getWatchModel());
-                    watchInfomation.setWatchID(thispacket.getWatchID());
-                    watchInfomation.setWatchModel(thispacket.getWatchModel());
-
-                    EventBus.getDefault().post(new InitializeEvent(InitializeEvent.INITIALIZE_STATUS.END));
-                        List<Alarm> list = ((ApplicationModel) mContext).getAllAlarm();
-                        if(!list.isEmpty())
-                        {
-                            List<Alarm> customerAlarmList = new ArrayList<Alarm>();
-                            for(Alarm alarm: list)
-                            {
-                                if(alarm.getWeekDay()>0)
-                                {
-                                    customerAlarmList.add(alarm);
-                                    if(customerAlarmList.size()>= SetAlarmWithTypeRequest.maxAlarmCount)
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
-                            if(customerAlarmList.isEmpty())
-                            {
-                                customerAlarmList.add(list.get(0));
-                            }
-                            setAlarm(customerAlarmList, true);
-                        }
-                        else
-                        {
-                            list.add(new Alarm(0,0, (byte) 0, "",(byte)0,(byte)0));
-                            setAlarm(list, true);
-                        }
-
-                }
-                else if((byte) SetAlarmWithTypeRequest.HEADER == lunarData.getRawData()[1])
-                {
-                    if(initAlarm)
-                    {
-                        initAlarm = false;
-                        //start sync data, nevo-->phone
-                        syncActivityData();
-                    }
+                    WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
+                    //save watch infomation into preference
+                    Preferences.setWatchId(mContext,watchInfoPacket.getWatchID());
+                    Preferences.setWatchModel(mContext,watchInfoPacket.getWatchModel());
                 }
                 else if((byte) ReadDailyTrackerInfoRequest.HEADER == lunarData.getRawData()[1])
                 {
@@ -379,44 +403,29 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         syncFinished();
                     }
                 }
-                //press B key once--- down and up within 500ms
-                /* //this is old code ,when press key down/up, watch will send key event to app. now it will send "findphone" event to app
-                else if((byte) 0xF1 == lunarData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
+                else if((byte) TestModeRequest.MODE_F4 == packet.getHeader())
                 {
-                    long currentTime = System.currentTimeMillis();
-                    //remove repeat press B key down within 6s
-                    if(currentTime - mLastPressAkey > 6000)
-                    {
-                        mLastPressAkey = currentTime;
-                    }
+                    int battery_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[2],packet.getPackets().get(0).getRawData()[3]});
+                    int pv_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[4],packet.getPackets().get(0).getRawData()[5]});
+                    float battery_voltage = ((battery_adc+1) * 360f / 1024)/100;
+                    float pv_voltage = ((pv_adc+1) * 360f / 1024)/100;
+                    Log.i(TAG,"battery_adc= " + battery_adc + ",battery_voltage= " + battery_voltage + ",pv_adc= " +pv_adc+",pv_voltage= " + pv_voltage);
+                    EventBus.getDefault().post(new SolarConvertEvent(pv_adc));
                 }
-                else if((byte) 0xF1 == lunarData.getRawData()[1] && (byte) 0x00 == packet.getPackets().get(0).getRawData()[2])
-                {
-                    long currentTime = System.currentTimeMillis();
-                    if(currentTime - mLastPressAkey < 500)
-                    {
-                        if(mLocalService!=null) {
-                            mLocalService.findCellPhone();
-                            sendRequest(new FindPhoneRequest(mContext));
-                        }
-                    }
-                }*/
                 else if((byte) FindPhoneRequest.HEADER == lunarData.getRawData()[1])
                 {
                     if(mLocalService!=null) {
                         mLocalService.findCellPhone();
-                        //send response to watch that found out
-                        sendRequest(new FindPhoneRequest(mContext));
+                        //let all LED light on, means that find CellPhone is successful.
+                        sendRequest(new TestModeRequest(mContext,0xFFFFFF,false, TestModeRequest.MODE_F0));
                     }
                 }
                 else if((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1])
                 {
                     //save current day's step count to "Steps" table
-                    Date currentday = new Date();
-                    Steps steps = new Steps(currentday.getTime());
-
-                    steps.setDate(Common.removeTimeFromDate(currentday).getTime());
-
+                    Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
+                    steps.setCreatedDate(new Date().getTime());
+                    steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
                     DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     steps.setSteps(stepPacket.getDailySteps());
                     steps.setGoal(stepPacket.getDailyStepsGoal());
@@ -467,6 +476,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 @Override
                 public void run() {
                     packetsBuffer.clear();
+                    //step0:firstly read watch infomation, for Lunar and nevo Solar, we use watch ID to show solar power screen
+                    sendRequest(new ReadWatchInfoRequest(mContext));
                     setRtc();
                 }
             }, 2000);
@@ -474,6 +485,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).clear();
             packetsBuffer.clear();
             mSyncAllFlag = false;
+            mCurrentDay = 0;
         }
     }
 
@@ -530,17 +542,15 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public void setAlarm(List<Alarm> list,boolean init) {
-        initAlarm = init;
-        byte index = 0;
-        for(Alarm alarm:list) {
-            sendRequest(new SetAlarmWithTypeRequest(mContext, alarm,index));
-            index++;
+
+        for(Alarm alarm:list){
+            setAlarm(alarm);
         }
     }
 
     @Override
     public void setAlarm(Alarm alarm) {
-        sendRequest(new SetAlarmWithTypeRequest(mContext,alarm,alarm.getAlarmNumber()));
+        sendRequest(new SetAlarmWithTypeRequest(mContext,alarm));
     }
 
     @Override
