@@ -66,9 +66,11 @@ import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
 import com.medcorp.model.GoalBase;
 import com.medcorp.model.Sleep;
+import com.medcorp.model.Solar;
 import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
+import com.medcorp.util.LinklossNotificationUtils;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -358,37 +360,51 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     steps.setRunDistance(thispacket.getDailyRunDistance());
                     steps.setWalkDuration(thispacket.getDailyWalkDuration());
                     steps.setRunDuration(thispacket.getDailyRunDuration());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total Steps:" + steps.getSteps());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + steps.getHourlySteps());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total active time: " + (steps.getWalkDuration()+steps.getRunDuration()) + ",walk time: " + steps.getWalkDuration() + ",run time: "+ steps.getRunDuration());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total distance: " + steps.getDistance() +",walk distance: " + steps.getWalkDistance() + ",run distance: " + steps.getRunDistance());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(),"total calories: " + steps.getCalories());
                     try {
                         steps.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(steps.getDate()))).toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     //update  the day 's "steps" table
-                    if(steps.getSteps() !=0) {
-                        ((ApplicationModel) mContext).saveDailySteps(steps);
+                    //for maintaining data consistency(perhaps download the Cloud server record,but the server record is too old), here save steps
+                    ((ApplicationModel) mContext).saveDailySteps(steps);
+                    //for maintaining data consistency,here save sleep
+                    Sleep sleep = new Sleep(history.getCreated());
+                    sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
+                    sleep.setHourlySleep(history.getHourlySleepTime());
+                    sleep.setHourlyWake(history.getHourlyWakeTime());
+                    sleep.setHourlyLight(history.getHourlyLightTime());
+                    sleep.setHourlyDeep(history.getHourlDeepTime());
+                    sleep.setTotalSleepTime(history.getTotalSleepTime());
+                    sleep.setTotalWakeTime(history.getTotalWakeTime());
+                    sleep.setTotalLightTime(history.getTotalLightTime());
+                    sleep.setTotalDeepTime(history.getTotalDeepTime());
+                    //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
+                    sleep.setStart(0);
+                    sleep.setEnd(0);
+                    sleep.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
+                    try {
+                        sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if(history.getTotalSleepTime() != 0) {
-                        Sleep sleep = new Sleep(history.getCreated());
-                        sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
-                        sleep.setHourlySleep(history.getHourlySleepTime());
-                        sleep.setHourlyWake(history.getHourlyWakeTime());
-                        sleep.setHourlyLight(history.getHourlyLightTime());
-                        sleep.setHourlyDeep(history.getHourlDeepTime());
-                        sleep.setTotalSleepTime(history.getTotalSleepTime());
-                        sleep.setTotalWakeTime(history.getTotalWakeTime());
-                        sleep.setTotalLightTime(history.getTotalLightTime());
-                        sleep.setTotalDeepTime(history.getTotalDeepTime());
-                        //firstly reset sleep start/end time is 0, it means the day hasn't been calculate sleep analysis.
-                        sleep.setStart(0);
-                        sleep.setEnd(0);
-                        sleep.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());
-                        try {
-                            sleep.setRemarks(new JSONObject().put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date(sleep.getDate()))).toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        ((ApplicationModel) mContext).saveDailySleep(sleep);
-                        //end update
+                    ((ApplicationModel) mContext).saveDailySleep(sleep);
+                    //end update
+                    //here save solar time to local database when watch ID>1
+                    if(getWatchInfomation().getWatchID()>1){
+                        Solar solar = new Solar(new Date(history.getCreated()));
+                        solar.setDate(Common.removeTimeFromDate(solar.getCreatedDate()));
+                        solar.setUserId(Integer.parseInt(((ApplicationModel) mContext).getNevoUser().getNevoUserID()));
+                        solar.setTotalHarvestingTime(thispacket.getSolarHarvestingTime());
+                        solar.setHourlyHarvestingTime(thispacket.getHourlyHarvestTime().toString());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "hourly solar time:" + solar.getHourlyHarvestingTime());
+                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "total solar time:" + solar.getTotalHarvestingTime());
+                        ((ApplicationModel) mContext).getSolarDatabaseHelper().update(solar);
                     }
                     mCurrentDay++;
                     if(mCurrentDay < savedDailyHistory.size() && mSyncAllFlag)
@@ -486,6 +502,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             packetsBuffer.clear();
             mSyncAllFlag = false;
             mCurrentDay = 0;
+        }
+        if(Preferences.getLinklossNotification(mContext))
+        {
+            LinklossNotificationUtils.sendNotification(mContext,stateChangedEvent.isConnected());
         }
     }
 
@@ -609,6 +629,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
         //when forget the watch, force a big sync when got connected again
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, 0).commit();
+        //reset watch ID and watch model to nevo
+        Preferences.setWatchId(mContext,1);
     }
     @Override
     public void startNotificationListener() {

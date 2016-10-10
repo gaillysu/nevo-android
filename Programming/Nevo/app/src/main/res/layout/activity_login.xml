@@ -87,6 +87,7 @@
             android:inputType="textEmailAddress"
             android:paddingLeft="8dp"
             android:textColor="@color/text_color"
+            android:imeOptions="actionNext"
             />
 
         <!--  Password Label -->
@@ -101,6 +102,7 @@
             android:inputType="textPassword"
             android:paddingLeft="8dp"
             android:textColor="@color/text_color"
+            android:imeOptions="actionDone"
             />
 
         <android.support.v7.widget.AppCompatButton

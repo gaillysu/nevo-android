@@ -471,5 +471,29 @@ public class DailyTrackerPacket extends Packet {
 
     }
 
+    /**
+     *
+     * @return  the harvesting of solar per hour, unit is in minutes
+     */
+    public List<Integer> getHourlyHarvestTime() {
+
+        ArrayList<Integer> HourlyHarvestTime = new ArrayList<Integer>();
+        int hourlyHarvestTime =0;
+        //get every hour swim time:
+        for (int i = 0; i<24; i++)
+        {
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER+1;
+            int offset = 4;
+            hourlyHarvestTime = 0;
+            if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF
+                    && getPackets().get(packetno).getRawData()[offset+1] != (byte)0xFF)
+            {
+                hourlyHarvestTime = HexUtils.bytesToInt(new byte[]{getPackets().get(packetno).getRawData()[offset],getPackets().get(packetno).getRawData()[offset+1]});
+            }
+            HourlyHarvestTime.add(i,hourlyHarvestTime/60);
+        }
+        return HourlyHarvestTime;
+    }
+
     //end added
 }
