@@ -71,7 +71,11 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
         //           listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
-        listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
+        if (Preferences.getIslogin(SettingsFragment.this.getContext(), Constants.LOGIN)) {
+            listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
+        } else {
+            listMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
+        }
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
         settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
@@ -140,13 +144,19 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .show();
 
         } else if (position == 8) {
-            getModel().removeUser(getModel().getNevoUser());
-            Preferences.saveLogin(SettingsFragment.this.getContext(),Constants.LOGIN,false);
-            Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
-            intent.putExtra("isTutorialPage", true);
-            SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
-            Preferences.saveIsFirstLogin(SettingsFragment.this.getContext(), true);
-            startActivity(intent);
+            if (!Preferences.getIslogin(SettingsFragment.this.getContext(), Constants.LOGIN)) {
+                getModel().removeUser(getModel().getNevoUser());
+                Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                intent.putExtra("isTutorialPage", false);
+                SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
+                Preferences.saveIsFirstLogin(SettingsFragment.this.getContext(), true);
+                startActivity(intent);
+            } else {
+                Preferences.saveLogin(SettingsFragment.this.getContext(), Constants.LOGIN, false);
+                Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
+                intent.putExtra("isTutorialPage", false);
+                startActivity(intent);
+            }
             SettingsFragment.this.getActivity().finish();
         } else if (position == 9) {
             Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
@@ -157,10 +167,11 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     @Override
     public void onCheckedChange(CompoundButton buttonView, boolean isChecked, int position) {
-        if(position == 0) {
-            Preferences.saveLinklossNotification(getActivity(),isChecked);
+        if (position == 0) {
+            Preferences.saveLinklossNotification(getActivity(), isChecked);
         }
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -172,11 +183,12 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
     @Subscribe
     public void onEvent(final FindWatchEvent event) {
-        if(event.isSuccess()) {
+        if (event.isSuccess()) {
             //when find watch, vibrate cell phone once that means finding out
-            LinklossNotificationUtils.sendNotification(getActivity(),true);
+            LinklossNotificationUtils.sendNotification(getActivity(), true);
         }
     }
 }

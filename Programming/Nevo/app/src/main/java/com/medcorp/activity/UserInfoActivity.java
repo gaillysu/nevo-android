@@ -135,7 +135,7 @@ public class UserInfoActivity extends BaseActivity {
             case SUCCESS:
                 ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_success));
                 Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
-                intent.putExtra("isTutorialPage",false);
+                intent.putExtra("isTutorialPage",true);
                 startActivity(intent);
                 finish();
                 break;

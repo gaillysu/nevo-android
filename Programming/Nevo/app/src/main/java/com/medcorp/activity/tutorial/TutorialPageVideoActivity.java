@@ -5,10 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
-import com.medcorp.activity.MainActivity;
+import com.medcorp.R;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.base.BaseActivity;
-import com.medcorp.R;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.util.Constants;
@@ -17,6 +16,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by gaillysu on 16/1/14.
+ *
  */
 public class TutorialPageVideoActivity extends BaseActivity {
 
@@ -24,7 +24,7 @@ public class TutorialPageVideoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true) && !Preferences.getIsFirstLogin(this)) {
-            startActivity(MainActivity.class);
+            startActivity(TutorialPage1Activity.class);
             finish();
             return;
         }
@@ -38,6 +38,7 @@ public class TutorialPageVideoActivity extends BaseActivity {
                 public void run() {
                     startActivity(TutorialPage1Activity.class);
                     finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
             }, 1500);
         } else {
@@ -48,6 +49,7 @@ public class TutorialPageVideoActivity extends BaseActivity {
                     intent.putExtra("isTutorialPage", true);
                     startActivity(intent);
                     finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
             }, 1500);
         }

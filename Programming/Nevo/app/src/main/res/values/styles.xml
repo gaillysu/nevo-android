@@ -129,7 +129,7 @@
 
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
         <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:textColorPrimary">@color/tab_selected_background_color</item>
+        <item name="android:textColorPrimary">@color/text_color</item>
         <item name="android:background">@color/window_background_color</item>
     </style>
 

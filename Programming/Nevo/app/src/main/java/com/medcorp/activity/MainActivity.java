@@ -271,11 +271,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         BaseObservableFragment fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_steps_fragment:
-                //                if (fragmentManager.getBackStackEntryCount() >= 1) {
-                //                    fragmentManager.popBackStack();
-                //                    fragment = (BaseObservableFragment) fragmentManager.getFragments().get(0);
-                //                    activeFragment.set(fragment);
-                //                }
                 fragment = MainFragment.instantiate(MainActivity.this, MainFragment.class.getName());
                 break;
             case R.id.nav_alarm_fragment:

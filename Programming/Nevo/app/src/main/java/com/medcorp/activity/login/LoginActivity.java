@@ -74,17 +74,6 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-    //    @OnClick(R.id.open_tutorial_page_video)
-    //    public void openTutorialPageVideo(){
-    //        Uri uri = Uri.parse(getString(R.string.video_url));
-    //        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-    //        intent.setDataAndType(uri , "video/*");
-    //        startActivity(intent);
-    //    }
-    //            startActivity(SignupActivity.class);
-    //            finish();
-    //    }
-
     @OnClick(R.id.btn_login)
     public void loginAction() {
         if (!validate()) {
@@ -149,7 +138,7 @@ public class LoginActivity extends BaseActivity {
         Preferences.saveIsFirstLogin(this, false);
         Preferences.saveLogin(this ,Constants.LOGIN ,true);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
-        if (getIntent().getBooleanExtra("isTutorialPage", true) && Preferences.getIsFirstLogin(this)) {
+        if (getIntent().getBooleanExtra("isTutorialPage", true)) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);
