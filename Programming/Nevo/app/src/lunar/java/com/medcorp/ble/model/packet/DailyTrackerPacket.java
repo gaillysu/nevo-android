@@ -295,7 +295,7 @@ public class DailyTrackerPacket extends Packet {
         //get every hour wake Time:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3+1;
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER+1;
             int offset = 8;
             hourlyLightTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
@@ -324,7 +324,7 @@ public class DailyTrackerPacket extends Packet {
         //get every hour deep Time:
         for (int i = 0; i<24; i++)
         {
-            int packetno = HEADERLENGTH+i*3+1;
+            int packetno = HEADERLENGTH+i*HOURLYPACKETSNUMBER+1;
             int offset = 9;
             hourlyDeepTime = 0;
             if (getPackets().get(packetno).getRawData()[offset] != (byte)0xFF)
