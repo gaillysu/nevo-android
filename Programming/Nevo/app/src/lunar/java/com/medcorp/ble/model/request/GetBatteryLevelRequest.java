@@ -11,7 +11,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  */
 public class GetBatteryLevelRequest extends BLERequestData {
 
-    public  final static  byte HEADER = 0x0b;
+    public  final static  byte HEADER = 0x40;
 
     public GetBatteryLevelRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));

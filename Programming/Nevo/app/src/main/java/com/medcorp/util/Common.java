@@ -89,7 +89,7 @@ public class Common {
                     int start  = file.toLowerCase().indexOf("_v");
                     int end = file.toLowerCase().indexOf(".bin");
                     String vString = file.substring(start+2,end);
-                    if(vString != null)
+                    if(start!=-1&&vString != null)
                     {
                         buildinSoftwareVersion = Integer.parseInt(vString);
                         break;
@@ -124,7 +124,7 @@ public class Common {
                     int start  = file.toLowerCase().indexOf("_v");
                     int end = file.toLowerCase().indexOf(".hex");
                     String vString = file.substring(start+2,end);
-                    if(vString != null)
+                    if(start!=-1&&vString != null)
                     {
                         buildinFirmwareVersion = Integer.parseInt(vString);
                         break;

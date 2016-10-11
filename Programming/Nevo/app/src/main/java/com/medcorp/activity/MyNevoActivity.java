@@ -1,5 +1,6 @@
 package com.medcorp.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -99,14 +100,30 @@ public class MyNevoActivity  extends BaseActivity {
             return;
         }
 
-        int  currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
-        int  currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-        firmwareURLs = Common.needOTAFirmwareURLs(this,currentSoftwareVersion,currentFirmwareVersion);
-        if(!firmwareURLs.isEmpty())
+        int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
+        int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            firmwareURLs = Common.needOTAFirmwareURLs(this, currentSoftwareVersion, currentFirmwareVersion);
+            if (!firmwareURLs.isEmpty()) {
+                myNevo.setAvailableVersion(true);
+                myNevo.setFirmwareURLs(firmwareURLs);
+                myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+            }
+        }
+        else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR)
         {
-            myNevo.setAvailableVersion(true);
-            myNevo.setFirmwareURLs(firmwareURLs);
-            myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+            //TODO : here should read lunar build-in version
+            showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares),(ArrayList<String>)Common.getAllBuildinFirmwareURLs(MyNevoActivity.this));
+                    intent.putExtras(bundle);
+                    MyNevoActivity.this.startActivity(intent);
+                    MyNevoActivity.this.finish();
+                }
+            });
         }
     }
 
