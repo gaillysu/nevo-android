@@ -14,7 +14,7 @@ public class TimeUtil {
         if (walkDuration >= 60) {
             if (walkDuration % 60 > 0) {
                 activityTime.append((walkDuration / 60)).append("h");
-                activityTime.append(walkDuration % 60).append("min");
+                activityTime.append(walkDuration % 60).append("m");
             }
             else {
                 activityTime.append((walkDuration / 60)).append("h");
