@@ -381,4 +381,5 @@
     <string name="validic_pin_code_title">输入 PIN 码</string>
     <string name="wednesday">星期三</string>
     <string name="disable">禁用</string>
+    <string name="forget_password_input_new_password">新密码</string>
 </resources>

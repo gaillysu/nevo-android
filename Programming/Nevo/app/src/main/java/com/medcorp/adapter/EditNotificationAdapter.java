@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by Jason on 2016/9/2.
+ *
  */
 public class EditNotificationAdapter extends BaseAdapter {
 
@@ -60,6 +61,8 @@ public class EditNotificationAdapter extends BaseAdapter {
 
         if (position == 1 || position == 3) {
             holder.dividerView.setVisibility(View.VISIBLE);
+        }else{
+            holder.dividerView.setVisibility(View.GONE);
         }
 
         NotificationListItemBean bean = list.get(position);

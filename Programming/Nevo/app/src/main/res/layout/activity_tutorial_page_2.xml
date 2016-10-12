@@ -22,8 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/bluetooth_icon"
+        android:src="@drawable/bluetooth_icon"
+        android:background="@color/window_background_color"
         android:id="@+id/activity_tutorial_page2_image"
+        android:tint="@color/text_color"
         />
 
     <LinearLayout
