@@ -393,5 +393,11 @@ push and hold the third button, until the white LED blinks</string>
     <string name="save_notification_ok">Save success!</string>
     <string name="google_fit_log_out">Log out</string>
     <string name="disable">Disable</string>
+    <string name="forget_password_input_new_password">New Password</string>
+    <string name="change_password">Sure</string>
+    <string name="password_is_not_empty">Password must not be empty</string>
+    <string name="password_is_not_repeat">Passwords do not match with each other.</string>
+    <string name="password_change_failure">Changing password failed. Try again.</string>
+    <string name="password_change_success">Change Password Success</string>
     <!--<lunar end>-->
 </resources>

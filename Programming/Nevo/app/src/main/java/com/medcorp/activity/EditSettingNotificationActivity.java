@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.adapter.EditNotificationAdapter;
 import com.medcorp.base.BaseActivity;
@@ -35,6 +37,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 /**
  * Created by gaillysu on 15/12/31.
@@ -51,6 +54,10 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Bind(R.id.notification_watch_icon)
     ImageView watchView;
 
+    @Bind(R.id.notification_lamp_group)
+    LinearLayout lunarLedLampGroup;
+
+
     private int defaultColor = 0;
     private EditNotificationAdapter adapter;
 
@@ -59,8 +66,8 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     private Notification notification;
     private NevoLed selectedLed;
     private List<NotificationListItemBean> dataList;
-    private int[] notificationIcon = {R.drawable.red_dot, R.drawable.blue_dot,R.drawable.light_green_dot,
-            R.drawable.yellow_dot, R.drawable.orange_dot, R.drawable.green_dot };
+    private int[] notificationIcon = {R.drawable.red_dot, R.drawable.blue_dot, R.drawable.light_green_dot,
+            R.drawable.yellow_dot, R.drawable.orange_dot, R.drawable.green_dot};
     private String[] notificationTimeTextArray;
     private int[] watchIcon = {R.drawable.two_clock_notification, R.drawable.four_clock_notification,
             R.drawable.six_clock_notification, R.drawable.eight_clock_notificatio,
@@ -76,6 +83,12 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            lunarLedLampGroup.setVisibility(View.GONE);
+        } else {
+            notificationLampList.setVisibility(View.GONE);
+        }
 
         helper = new NotificationDataHelper(this);
         ledList.add(new RedLed());
@@ -97,7 +110,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     }
 
     private void setDefaultLampColor() {
-        switch (selectedLed.getStringResource()){
+        switch (selectedLed.getStringResource()) {
             case R.string.notification_led_red:
                 defaultColor = 0;
                 break;
@@ -125,9 +138,9 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
             NotificationListItemBean bean = new NotificationListItemBean();
             bean.setLampId(notificationIcon[i]);
             bean.setNotificationTimeText(notificationTimeTextArray[i]);
-            if ( i == defaultColor ) {
+            if (i == defaultColor) {
                 bean.setChecked(true);
-            }else{
+            } else {
                 bean.setChecked(false);
             }
             dataList.add(bean);
@@ -147,9 +160,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
                 dataList.get(i).setChecked(true);
             }
         }
-        watchView.setImageResource(watchIcon[position]);
-        selectedLed = ledList.get(position);
-        Preferences.saveNotificationColor(this, notification, selectedLed);
+        userSelectChangeLamp(position);
         adapter.notifyDataSetChanged();
     }
 
@@ -173,11 +184,49 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
                 break;
             case R.id.done_menu:
                 Preferences.saveNotificationColor(this, notification, selectedLed);
-                ToastHelper.showShortToast(this,getString(R.string.save_notification_ok));
+                ToastHelper.showShortToast(this, getString(R.string.save_notification_ok));
                 finish();
                 break;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @OnClick(R.id.two_clock_image_button)
+    public void selectRedLamp() {
+        userSelectChangeLamp(0);
+    }
+
+    @OnClick(R.id.four_clock_image_button)
+    public void selectBlueLamp() {
+        userSelectChangeLamp(1);
+
+    }
+
+    @OnClick(R.id.six_clock_image_button)
+    public void selectLightGreenLamp() {
+        userSelectChangeLamp(2);
+    }
+
+    @OnClick(R.id.eight_clock_image_button)
+    public void selectYellowLamp() {
+        userSelectChangeLamp(3);
+    }
+
+    @OnClick(R.id.ten_clock_image_button)
+    public void selectOrangeLamp() {
+        userSelectChangeLamp(4);
+    }
+
+    @OnClick(R.id.tu_clock_image_button)
+    public void selectGreenLamp() {
+        userSelectChangeLamp(5);
+    }
+
+    public void userSelectChangeLamp(int position) {
+        watchView.setImageResource(watchIcon[position]);
+        selectedLed = ledList.get(position);
+        Preferences.saveNotificationColor(this, notification, selectedLed);
     }
 }

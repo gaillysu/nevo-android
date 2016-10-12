@@ -9,18 +9,13 @@ import com.medcorp.network.med.model.MedReadMoreRoutineRecordsModel;
 import com.medcorp.network.med.model.MedReadMoreSleepRecordsModel;
 import com.medcorp.network.med.model.MedRoutineRecordModel;
 import com.medcorp.network.med.model.MedRoutineRecordObject;
-import com.medcorp.network.med.model.MedSleepRecord;
 import com.medcorp.network.med.model.MedSleepRecordModel;
 import com.medcorp.network.med.model.MedSleepRecordObject;
+import com.medcorp.network.validic.model.ChangePasswordObject;
 import com.medcorp.network.validic.model.RequestTokenBody;
 import com.medcorp.network.validic.model.RequestTokenResponse;
-import com.medcorp.network.validic.model.ValidicReadMoreRoutineRecordsModel;
-
-import net.medcorp.library.user.UserLoginModel;
 
 import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
@@ -52,4 +47,6 @@ public interface MedCorp {
     @GET("/sleep/user/{USER_ID}")
     MedReadMoreSleepRecordsModel getMoreSleepRecords(@Header("Authorization") String auth, @Header("Content-Type") String type, @Path("USER_ID") String userID, @Query("token") String token, @Query("start_date") long start_date, @Query("end_date") long end_date);
 
+    @POST("/user/forget_password")
+    LoginUserModel forgetPassword(@Body ChangePasswordObject object,@Header("Authorization") String auth,@Header("Content-Type") String type);
 }

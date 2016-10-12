@@ -35,22 +35,153 @@
             android:shadowColor="@color/colorPrimary"/>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/notification_watch_icon"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/two_clock_notification"
-        />
-
-    <ListView
-        android:id="@+id/notification_lamp_list"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:divider="@null"
-        android:layout_marginBottom="10dp"
-        ></ListView>
+        android:orientation="vertical"
+        >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:id="@+id/notification_watch_icon"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/two_clock_notification"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_lamp_group"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:id="@+id/two_clock_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/red_dot"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/four_clock_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/blue_dot"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/six_clock_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/light_green_dot"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eight_clock_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/yellow_dot"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ten_clock_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/orange_dot"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tu_clock_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/green_dot"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/notification_lamp_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:divider="@null"
+            ></ListView>
+    </LinearLayout>
 </LinearLayout>
