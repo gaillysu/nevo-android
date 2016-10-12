@@ -1,5 +1,6 @@
 package com.medcorp.ble.controller;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -51,6 +52,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import no.nordicsemi.android.dfu.DfuServiceInitiator;
+
 public class OtaControllerImpl implements OtaController  {
     private final static String TAG = "OtaControllerImpl";
 
@@ -72,6 +75,9 @@ public class OtaControllerImpl implements OtaController  {
     private int numberOfPackets = 0;
     private int bytesInLastPacket = 0;
     private int writingPacketNumber = 0;
+
+    private String zipFilePath;
+    private Uri zipFileUri;
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
@@ -187,36 +193,16 @@ public class OtaControllerImpl implements OtaController  {
                 bos.close();
                 is.close();
             }
-            //lunar BLE firmware has been converted into bin file, so here only read it into buffer
-            else
+            //lunar BLE firmware is a zip file
+            else if (filetype.equals("zip"))
             {
-                byte[] buffer = new byte[16];
-                int len =-1;
-                is = mContext.getAssets().open(filename);
-
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                while( -1 != (len = is.read(buffer)))
-                {
-                    bos.write(buffer,0,len);
-                }
-                binFileData = bos.toByteArray();
-                binFileSize = binFileData.length;
-                Log.i(TAG,"BinFileSize: "+binFileSize);
-
-                numberOfPackets = binFileSize / enumPacketOption.PACKET_SIZE.rawValue();
-
-                bytesInLastPacket = binFileSize % enumPacketOption.PACKET_SIZE.rawValue();
-
-                if (bytesInLastPacket == 0) {
-                    bytesInLastPacket = enumPacketOption.PACKET_SIZE.rawValue();
-                }
-                else
-                {
-                    numberOfPackets = numberOfPackets + 1;
-                }
-                Log.i(TAG,"Number of Packets "+ numberOfPackets + " Bytes in last Packet " + bytesInLastPacket);
-                writingPacketNumber = 0;
-                dfuFirmwareType = DfuFirmwareTypes.BLUETOOTH;
+                //TODO get zip file Uri and full path, use nordic dfu library to do OTA
+                zipFileUri = null;
+                zipFilePath = filename;
+            }
+            else if (filetype.equals("bin"))
+            {
+                MCU_openfirmware(filename);
             }
 
         } catch (IOException e) {
@@ -630,7 +616,7 @@ public class OtaControllerImpl implements OtaController  {
 
     //start ConnectionController.Delegate interface
     @Subscribe
-    public void onEvent(BLEConnectionStateChangedEvent event){
+    public void onEvent(final BLEConnectionStateChangedEvent event){
         if(mOnOtaControllerListener.notEmpty()) {
             mOnOtaControllerListener.get().connectionStateChanged(event.isConnected());
         }
@@ -762,6 +748,73 @@ public class OtaControllerImpl implements OtaController  {
                         @Override
                         public void run() {
                             connectionController.reconnect();
+                        }
+                    },1000);
+                }
+            }
+        }
+        //use distribution firmware (zip file)
+        else if(dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP)
+        {
+            if (event.isConnected())
+            {
+                if (state == DFUControllerState.SEND_RECONNECT)
+                {
+                    state = DFUControllerState.SEND_START_COMMAND;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionController.sendRequest(new OTAStartRequest(mContext));
+                        }
+                    },1000);
+                }
+                else if (state == DFUControllerState.DISCOVERING)
+                {
+                    state = DFUControllerState.SEND_FIRMWARE_DATA;
+                    //kill connectionController and med-library BT service and use dfu library service
+                    connectionController.disconnect();
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            final DfuServiceInitiator starter = new DfuServiceInitiator(event.getAddress())
+                                    .setDeviceName(event.getAddress()) //must use device name???
+                                    .setKeepBond(false)
+                                    .setForceDfu(false)
+                                    .setPacketsReceiptNotificationsEnabled(true)
+                                    .setPacketsReceiptNotificationsValue(12);
+                            starter.setZip(zipFileUri, zipFilePath);
+                            starter.start(mContext, DfuService.class);
+                        }
+                    },1000);
+                }
+            }
+            else
+            {
+                if (state == DFUControllerState.IDLE)
+                {
+                    state = DFUControllerState.SEND_RECONNECT;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionController.reconnect();
+                        }
+                    },1000);
+                }
+
+                //by BLE peer disconnect when normal mode to ota mode
+                else if (state == DFUControllerState.SEND_START_COMMAND)
+                {
+                    state = DFUControllerState.DISCOVERING;
+                    connectionController.setOTAMode(true, true);
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
+                            //when switch to DFU mode, the MAC address has changed to another one
+                            connectionController.forgetSavedAddress();
+                            connectionController.connect();
                         }
                     },1000);
                 }

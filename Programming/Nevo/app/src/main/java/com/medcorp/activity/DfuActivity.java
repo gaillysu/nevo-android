@@ -178,6 +178,9 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         if (selectedFileURL.contains(".hex")) {
             enumFirmwareType = Constants.DfuFirmwareTypes.BLUETOOTH;
         }
+        if (selectedFileURL.contains(".zip")) {
+            enumFirmwareType = Constants.DfuFirmwareTypes.DISTRIBUTION_ZIP;
+        }
         initNevoLogo();
         roundProgressBar.setProgress(0);
         roundProgressBar.setVisibility(View.VISIBLE);
