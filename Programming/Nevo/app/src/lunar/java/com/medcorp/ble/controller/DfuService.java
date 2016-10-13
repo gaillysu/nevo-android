@@ -7,6 +7,8 @@ package com.medcorp.ble.controller;
 
 import android.app.Activity;
 
+import com.medcorp.activity.NotificationActivity;
+
 import no.nordicsemi.android.dfu.DfuBaseService;
 
 public class DfuService extends DfuBaseService {
