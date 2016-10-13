@@ -2,6 +2,8 @@ package com.medcorp.util;
 
 import android.content.Context;
 
+import com.medcorp.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -108,7 +110,7 @@ public class Common {
     /**
      *
      * @param context
-     * @return build BLE firmware version
+     * @return build-in BLE firmware version
      */
     static public int getBuildinFirmwareVersion(Context context)
     {
@@ -139,6 +141,23 @@ public class Common {
         return buildinFirmwareVersion;
     }
 
+    /**
+     *
+     * @param context
+     * @return build-in ZIP firmware version
+     */
+    static public int getBuildinZipFirmwareVersion(Context context,String zipFileName)
+    {
+        int buildinFirmwareVersion = -1;
+        int start  = zipFileName.toLowerCase().indexOf("_v");
+        int end = zipFileName.toLowerCase().indexOf(".zip");
+        String vString = zipFileName.substring(start+2,end);
+        if(start!=-1&&vString != null)
+        {
+            buildinFirmwareVersion = Integer.parseInt(vString);
+        }
+        return buildinFirmwareVersion;
+    }
     /**
      *
      * @param context
@@ -205,6 +224,31 @@ public class Common {
     static public List<String> getAllBuildinFirmwareURLs(Context context)
     {
         return  needOTAFirmwareURLs(context,-1,-1);
+    }
+
+    /**
+     *
+     * @param context
+     * @return all build-in ZIP firmware
+     */
+    static public List<String> getAllBuildinZipFirmwareURLs(Context context)
+    {
+        ArrayList<String> buildinZipFirmware = new ArrayList<>();
+        buildinZipFirmware.add(Watch_Build_in_Zip_Firmware);
+        return  buildinZipFirmware;
+    }
+    /**
+     * NOTICE: if you put new ZIP file into /res/raw, pls don't forget change "Lunar_Build_in_Zip_Firmware" with its name
+     */
+    public final static String Watch_Build_in_Zip_Firmware = "lunar_20161011_v3.zip";
+    /**
+     *
+     * @param context
+     * @return all build-in ZIP firmware resource Raw ID
+     */
+    static public int getBuildinZipFirmwareRawResID(Context context)
+    {
+        return  R.raw.lunar_20161011_v3;
     }
 
     public static int[] convertJSONArrayIntToArray(String string){

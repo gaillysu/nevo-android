@@ -1,8 +1,13 @@
 package com.medcorp.activity;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
+import com.medcorp.ble.controller.DfuService;
 import com.medcorp.util.Common;
 import com.medcorp.view.RoundProgressBar;
 
@@ -31,6 +37,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import no.nordicsemi.android.dfu.DfuProgressListener;
+import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
+import no.nordicsemi.android.dfu.DfuServiceInitiator;
+import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
 /**
  * Created by gaillysu on 15/12/28.
@@ -70,6 +80,95 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
     private boolean manualMode = false;
     private boolean backToSetting = false;
     private boolean  isShowingAlertDialog = false;
+
+    private final DfuProgressListener dfuProgressListener = new DfuProgressListenerAdapter() {
+        @Override
+        public void onDeviceConnecting(final String deviceAddress) {
+            Log.i(TAG,"***********onDeviceConnecting*******" + deviceAddress);
+        }
+
+        @Override
+        public void onDfuProcessStarting(final String deviceAddress) {
+            Log.i(TAG,"***********onDfuProcessStarting*******" + deviceAddress);
+        }
+
+        @Override
+        public void onEnablingDfuMode(final String deviceAddress) {
+            Log.i(TAG,"***********onEnablingDfuMode*******" + deviceAddress);
+        }
+
+        @Override
+        public void onFirmwareValidating(final String deviceAddress) {
+            Log.i(TAG,"***********onFirmwareValidating*******" + deviceAddress);
+        }
+
+        @Override
+        public void onDeviceDisconnecting(final String deviceAddress) {
+            Log.i(TAG,"***********onDeviceDisconnecting*******" + deviceAddress);
+        }
+
+        @Override
+        public void onDfuCompleted(final String deviceAddress) {
+            Log.i(TAG,"***********onDfuCompleted*******" + deviceAddress);
+            // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    DfuActivity.this.onSuccessfulFileTranfered();
+                    // if this activity is still open and upload process was completed, cancel the notification
+                    final NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(DfuService.NOTIFICATION_ID);
+                }
+            }, 200);
+        }
+
+        @Override
+        public void onDfuAborted(final String deviceAddress) {
+            Log.i(TAG,"***********onDfuAborted*******" + deviceAddress);
+            // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    DfuActivity.this.onDFUCancelled();
+                    // if this activity is still open and upload process was completed, cancel the notification
+                    final NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(DfuService.NOTIFICATION_ID);
+                }
+            }, 200);
+        }
+
+        @Override
+        public void onProgressChanged(final String deviceAddress, final int percent, final float speed, final float avgSpeed, final int currentPart, final int partsTotal) {
+            Log.i(TAG,"***********onProgressChanged*******" + deviceAddress + ",percent = " + percent);
+            // We have to wait a bit before canceling notification. This is called before DfuService creates the last notification.
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    DfuActivity.this.onTransferPercentage(percent);
+                    // if this activity is still open and upload process was completed, cancel the notification
+                    final NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(DfuService.NOTIFICATION_ID);
+                }
+            }, 200);
+        }
+
+        @Override
+        public void onError(final String deviceAddress, final int error, final int errorType, final String message) {
+            Log.i(TAG,"***********onError*******" + deviceAddress + ",message:" + message);
+            // We have to wait a bit before canceling notification. This is called before DfuService creates the last notification.
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    DfuActivity.this.onError(OtaController.ERRORCODE.EXCEPTION);
+                    // if this activity is still open and upload process was completed, cancel the notification
+                    final NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(DfuService.NOTIFICATION_ID);
+                }
+            }, 200);
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +190,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         } else {
             showAlertDialog();
         }
+        DfuServiceListenerHelper.registerProgressListener(this, dfuProgressListener);
     }
 
     private void showAlertDialog()
@@ -350,6 +450,28 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 Toast.makeText(mContext, errorMsg, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onDFUServiceStarted(final String dfuAddress) {
+        Log.i(TAG, "onDFUServiceStarted");
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+                final BluetoothDevice device = bluetoothManager.getAdapter().getRemoteDevice(dfuAddress);
+                final DfuServiceInitiator starter = new DfuServiceInitiator(device.getAddress())
+                        .setDeviceName(device.getName())
+                        .setKeepBond(false)
+                        .setForceDfu(false)
+                        .setPacketsReceiptNotificationsEnabled(true)
+                        .setPacketsReceiptNotificationsValue(12);
+                starter.setZip(Common.getBuildinZipFirmwareRawResID(mContext));
+                Log.i(TAG, "***********dfu library starts DfuService*******" + "address = " + device.getAddress() + ",name = " + device.getName());
+                starter.start(mContext, DfuService.class);
+            }
+        },2000);
+
     }
 
     @Override

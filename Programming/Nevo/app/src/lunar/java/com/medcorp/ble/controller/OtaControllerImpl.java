@@ -1,6 +1,5 @@
 package com.medcorp.ble.controller;
 
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -52,8 +51,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import no.nordicsemi.android.dfu.DfuServiceInitiator;
-
 public class OtaControllerImpl implements OtaController  {
     private final static String TAG = "OtaControllerImpl";
 
@@ -75,9 +72,6 @@ public class OtaControllerImpl implements OtaController  {
     private int numberOfPackets = 0;
     private int bytesInLastPacket = 0;
     private int writingPacketNumber = 0;
-
-    private String zipFilePath;
-    private Uri zipFileUri;
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
@@ -122,6 +116,9 @@ public class OtaControllerImpl implements OtaController  {
     {
         @Override
         public void run() {
+            if(dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP) {
+                return;
+            }
             if (lastprogress == progress) //when no change happened, timeout
             {
                 Log.e(TAG, "* * * OTA timeout * * *" + "state = " + state + ",connected:" + isConnected() + ",lastprogress = " + lastprogress + ",progress = " + progress);
@@ -192,13 +189,6 @@ public class OtaControllerImpl implements OtaController  {
                 }
                 bos.close();
                 is.close();
-            }
-            //lunar BLE firmware is a zip file
-            else if (filetype.equals("zip"))
-            {
-                //TODO get zip file Uri and full path, use nordic dfu library to do OTA
-                zipFileUri = null;
-                zipFilePath = filename;
             }
             else if (filetype.equals("bin"))
             {
@@ -773,20 +763,10 @@ public class OtaControllerImpl implements OtaController  {
                 {
                     state = DFUControllerState.SEND_FIRMWARE_DATA;
                     //kill connectionController and med-library BT service and use dfu library service
+                    Log.i(TAG,"***********connectionController has found DFU service,disconnect it and dfu library will take over the OTA*******");
+                    connectionController.restoreSavedAddress();
                     connectionController.disconnect();
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            final DfuServiceInitiator starter = new DfuServiceInitiator(event.getAddress())
-                                    .setDeviceName(event.getAddress()) //must use device name???
-                                    .setKeepBond(false)
-                                    .setForceDfu(false)
-                                    .setPacketsReceiptNotificationsEnabled(true)
-                                    .setPacketsReceiptNotificationsValue(12);
-                            starter.setZip(zipFileUri, zipFilePath);
-                            starter.start(mContext, DfuService.class);
-                        }
-                    },1000);
+                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUServiceStarted(event.getAddress());
                 }
             }
             else

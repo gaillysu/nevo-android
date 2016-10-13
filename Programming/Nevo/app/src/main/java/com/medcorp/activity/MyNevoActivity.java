@@ -118,7 +118,7 @@ public class MyNevoActivity  extends BaseActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares),(ArrayList<String>)Common.getAllBuildinFirmwareURLs(MyNevoActivity.this));
+                    bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares),(ArrayList<String>)Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this));
                     intent.putExtras(bundle);
                     MyNevoActivity.this.startActivity(intent);
                     MyNevoActivity.this.finish();
