@@ -46,12 +46,14 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             >
+
             <ImageView
                 android:id="@+id/notification_watch_icon"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="30dp"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/two_clock_notification"
                 />
         </RelativeLayout>
@@ -68,24 +70,6 @@
             >
 
             <LinearLayout
-                android:id="@+id/two_clock_image_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/red_dot"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/four_clock_image_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -94,6 +78,25 @@
                 >
 
                 <ImageButton
+                    android:id="@+id/two_clock_image_button"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@android:color/transparent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/red_dot"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <ImageButton
+                    android:id="@+id/four_clock_image_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:background="@android:color/transparent"
@@ -103,7 +106,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/six_clock_image_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -112,6 +114,7 @@
                 >
 
                 <ImageButton
+                    android:id="@+id/six_clock_image_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:background="@android:color/transparent"
@@ -121,7 +124,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/eight_clock_image_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -130,6 +132,7 @@
                 >
 
                 <ImageButton
+                    android:id="@+id/eight_clock_image_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:background="@android:color/transparent"
@@ -139,7 +142,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ten_clock_image_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -148,6 +150,7 @@
                 >
 
                 <ImageButton
+                    android:id="@+id/ten_clock_image_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:background="@android:color/transparent"
@@ -157,7 +160,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tu_clock_image_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -166,6 +168,7 @@
                 >
 
                 <ImageButton
+                    android:id="@+id/tu_clock_image_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:background="@android:color/transparent"
