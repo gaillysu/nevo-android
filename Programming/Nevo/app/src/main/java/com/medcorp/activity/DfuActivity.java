@@ -1,10 +1,13 @@
 package com.medcorp.activity;
 
 import android.app.Activity;
+import android.app.LoaderManager;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,7 +48,8 @@ import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 /**
  * Created by gaillysu on 15/12/28.
  */
-public class DfuActivity extends BaseActivity implements OnOtaControllerListener{
+public class DfuActivity extends BaseActivity implements OnOtaControllerListener,LoaderManager.LoaderCallbacks<Cursor>,
+        PermissionRationaleFragment.PermissionDialogListener{
 
     private static final String TAG="DfuActivity";
 
@@ -190,7 +194,18 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         } else {
             showAlertDialog();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         DfuServiceListenerHelper.registerProgressListener(this, dfuProgressListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DfuServiceListenerHelper.unregisterProgressListener(this, dfuProgressListener);
     }
 
     private void showAlertDialog()
@@ -465,7 +480,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                         .setKeepBond(false)
                         .setForceDfu(false)
                         .setPacketsReceiptNotificationsEnabled(true)
-                        .setPacketsReceiptNotificationsValue(12);
+                        .setPacketsReceiptNotificationsValue(DfuServiceInitiator.DEFAULT_PRN_VALUE);
                 starter.setZip(Common.getBuildinZipFirmwareRawResID(mContext));
                 Log.i(TAG, "***********dfu library starts DfuService*******" + "address = " + device.getAddress() + ",name = " + device.getName());
                 starter.start(mContext, DfuService.class);
@@ -506,6 +521,21 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 uploadPressed();
             }
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     class ButtonTag {
