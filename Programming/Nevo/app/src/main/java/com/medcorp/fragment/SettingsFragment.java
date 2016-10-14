@@ -71,7 +71,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
         //listMenu.add(new SettingsMenuItem(getString(R.string.settings_login), R.drawable.setting_mynevo, getModel().getNevoUser().isLogin()));
-        if (Preferences.getIslogin(SettingsFragment.this.getContext(), Constants.LOGIN)) {
+        if (getModel().getNevoUser().isLogin()) {
             listMenu.add(new SettingsMenuItem(getString(R.string.google_fit_log_out), R.drawable.logout_icon));
         } else {
 
@@ -145,7 +145,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .show();
 
         } else if (position == 8) {
-            if (!Preferences.getIslogin(SettingsFragment.this.getContext(), Constants.LOGIN)) {
+            if (!getModel().getNevoUser().isLogin()) {
                 getModel().removeUser(getModel().getNevoUser());
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
                 intent.putExtra("isTutorialPage", false);
@@ -153,7 +153,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 Preferences.saveIsFirstLogin(SettingsFragment.this.getContext(), true);
                 startActivity(intent);
             } else {
-                Preferences.saveLogin(SettingsFragment.this.getContext(), Constants.LOGIN, false);
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
                 intent.putExtra("isTutorialPage", false);
                 startActivity(intent);
