@@ -49,6 +49,8 @@ public class MyNevoActivity  extends BaseActivity {
     TextView showWatchBattery;
     @Bind(R.id.my_device_version_text)
     TextView showWatchVersion;
+    @Bind(R.id.my_watch_update_tv)
+    TextView firmwerUpdateInfomation;
 
     private MyNevo myNevo;
     private final int battery_level = 2; //default is 2,  value is [0,1,2], need get later
@@ -112,18 +114,23 @@ public class MyNevoActivity  extends BaseActivity {
         }
         else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR)
         {
-            //TODO : here should read lunar build-in version
-            showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares),(ArrayList<String>)Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this));
-                    intent.putExtras(bundle);
-                    MyNevoActivity.this.startActivity(intent);
-                    MyNevoActivity.this.finish();
-                }
-            });
+            int buildinFirmwareVersion = Common.getBuildinZipFirmwareVersion(this,Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this).get(0));
+            if(currentFirmwareVersion<buildinFirmwareVersion) {
+                showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this));
+                        intent.putExtras(bundle);
+                        MyNevoActivity.this.startActivity(intent);
+                        MyNevoActivity.this.finish();
+                    }
+                });
+            }
+            else {
+                firmwerUpdateInfomation.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

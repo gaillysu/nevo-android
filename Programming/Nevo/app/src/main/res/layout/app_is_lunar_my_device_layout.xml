@@ -16,12 +16,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/key_firmwares"
+            android:text="@string/my_nevo_firmware"
             android:textColor="@color/text_color"
             android:textSize="20sp"
             />
 
         <TextView
+            android:id="@+id/my_watch_update_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -81,7 +82,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_device_version_text"
+            android:text="@string/my_nevo_application"
             android:textColor="@color/text_color"
             android:textSize="20sp"
             />
