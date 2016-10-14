@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/baseBackground"
@@ -21,7 +21,6 @@
 
         <com.medcorp.view.customfontview.RobotoTextView
             android:id="@+id/activity_tutorial_page1_notice_textview"
-            android:layout_below="@id/activity_tutorial_page1_start_textview"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,9 +34,10 @@
 
         <ImageView
             android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="20dp"
             android:layout_below="@id/activity_tutorial_page1_notice_textview"
             android:src="@drawable/tutorial_nevo_1"/>
 
@@ -51,4 +51,4 @@
             style="@style/TutorialButton"
              />
 
-</RelativeLayout>
+</LinearLayout>
