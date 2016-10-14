@@ -116,7 +116,9 @@ public class OtaControllerImpl implements OtaController  {
     {
         @Override
         public void run() {
-            if(dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP) {
+            //add timeout process when use Nordic dfu library,check the state value to judge OTA is doing or not
+            if(dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP
+                    && (state == DFUControllerState.SEND_FIRMWARE_DATA||state == DFUControllerState.INIT)) {
                 return;
             }
             if (lastprogress == progress) //when no change happened, timeout

@@ -373,7 +373,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
-                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH) ? "BLE" : "MCU") + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
+                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.MCU) ? "MCU" : "BLE") + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
     }
