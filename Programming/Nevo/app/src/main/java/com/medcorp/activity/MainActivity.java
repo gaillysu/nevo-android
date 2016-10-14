@@ -44,7 +44,6 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
 import net.medcorp.library.ble.event.BLESearchEvent;
-import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.permission.PermissionRequestDialogBuilder;
 
@@ -155,7 +154,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         });
 
             FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
-        if (Preferences.getIslogin(this,Constants.LOGIN)) {
+        if (getModel().getNevoUser().isLogin()) {
             floatingActionButton.setVisibility(View.GONE);
         }else{
           floatingActionButton.setVisibility(View.VISIBLE);

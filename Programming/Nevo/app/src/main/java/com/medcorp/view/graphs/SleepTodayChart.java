@@ -122,7 +122,7 @@ public class SleepTodayChart extends LineChart {
         set.setDrawFilled(true);
         set.setDrawValues(false);
         set.setCircleColorHole(Color.BLACK);
-        set.setFillColor(getResources().getColor(R.color.colorPrimaryDark));
+        set.setFillColor(getResources().getColor(R.color.colorPrimary));
         Drawable lightGradient = ContextCompat.getDrawable(getContext(), R.drawable.analysis_sleep_light_gradient);
         set.setFillDrawable(lightGradient);
         List<ILineDataSet> dataSets = new ArrayList<>();
