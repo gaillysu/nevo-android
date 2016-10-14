@@ -20,7 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
-import com.medcorp.ble.controller.DfuService;
+import com.medcorp.ble.dfu.DfuService;
 import com.medcorp.util.Common;
 import com.medcorp.view.RoundProgressBar;
 
@@ -373,7 +373,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             public void run() {
                 roundProgressBar.setProgress(percent);
                 percentTextView.setText(percent+"%");
-                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.MCU) ? "MCU" : "BLE") + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
+                infomationTextView.setText(getString(R.string.dfu_update_message) + ((enumFirmwareType == Constants.DfuFirmwareTypes.MCU) ? "MCU" : ((enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH)?"BLE":"")) + " (" + (currentIndex + 1) + "/" + firmwareURLs.size() + ")");
             }
         });
     }

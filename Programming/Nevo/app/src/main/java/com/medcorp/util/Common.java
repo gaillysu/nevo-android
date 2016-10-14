@@ -238,7 +238,9 @@ public class Common {
         return  buildinZipFirmware;
     }
     /**
-     * NOTICE: if you put new ZIP file into /res/raw, pls don't forget change "Lunar_Build_in_Zip_Firmware" with its name
+     * NOTICE: if you put new ZIP file into /res/raw, pls don't forget change "Watch_Build_in_Zip_Firmware" with its name
+     * now, lunar use dfu library, nevo and nevo solar still use old workflow,perhaps nevo/solar will use dfu library too.
+     * use dfu library, we only send a zip file to watch, that will improve OTA experence.
      */
     public final static String Watch_Build_in_Zip_Firmware = "lunar_20161011_v3.zip";
     /**

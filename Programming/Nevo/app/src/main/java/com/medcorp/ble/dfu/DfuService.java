@@ -1,4 +1,4 @@
-package com.medcorp.ble.controller;
+package com.medcorp.ble.dfu;
 
 /**
  * Created by med on 16/10/12.

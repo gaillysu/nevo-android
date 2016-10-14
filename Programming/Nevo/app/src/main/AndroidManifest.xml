@@ -134,7 +134,7 @@
             android:name=".network.med.service.BaseMedRetroService"
             android:exported="false" />
         <service
-            android:name=".ble.controller.DfuService"
+            android:name=".ble.dfu.DfuService"
             android:exported="true"
             android:label="Dfu" >
             <intent-filter>
