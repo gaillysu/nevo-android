@@ -110,6 +110,9 @@
         <activity
             android:name=".activity.ProfileActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.NotificationActivity"
+            android:label="Dfu" />
         <service
             android:name="net.medcorp.library.ble.ble.MEDBTService"
             android:enabled="true" />
