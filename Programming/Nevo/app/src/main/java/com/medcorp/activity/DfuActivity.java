@@ -1,13 +1,10 @@
 package com.medcorp.activity;
 
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -48,8 +45,7 @@ import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 /**
  * Created by gaillysu on 15/12/28.
  */
-public class DfuActivity extends BaseActivity implements OnOtaControllerListener,LoaderManager.LoaderCallbacks<Cursor>,
-        PermissionRationaleFragment.PermissionDialogListener{
+public class DfuActivity extends BaseActivity implements OnOtaControllerListener {
 
     private static final String TAG="DfuActivity";
 
@@ -521,21 +517,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 uploadPressed();
             }
         }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     class ButtonTag {
