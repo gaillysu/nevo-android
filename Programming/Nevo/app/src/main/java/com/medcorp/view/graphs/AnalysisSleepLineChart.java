@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -130,8 +131,8 @@ public class AnalysisSleepLineChart extends LineChart{
                 deepSleepEntries.add(new Entry(i, 0));
             }
         }
-
-        maxValue = ((Math.round(maxValue / 60) + 1) * 60);
+        maxValue+=120;
+        maxValue = ((Math.round(maxValue / 60) ) * 60);
         List<ILineDataSet> dataSets = new ArrayList<>();
 
         getXAxis().setLabelCount(this.sleepList.size()-1);
@@ -146,7 +147,7 @@ public class AnalysisSleepLineChart extends LineChart{
 
         YAxis leftAxis = getAxisLeft();
         leftAxis.setValueFormatter(new YValueFormatter());
-        leftAxis.setAxisMaxValue(maxValue * 1.0f);
+        leftAxis.setAxisMaxValue((maxValue - 60)* 1.0f);
         leftAxis.setLabelCount(maxValue/60,true);
         LineData data = new LineData(dataSets);
         setData(data);
@@ -236,6 +237,7 @@ public class AnalysisSleepLineChart extends LineChart{
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
+            Log.w("Karl","Test" + value);
             return String.valueOf(Math.round(value)/60+" hours");
         }
 

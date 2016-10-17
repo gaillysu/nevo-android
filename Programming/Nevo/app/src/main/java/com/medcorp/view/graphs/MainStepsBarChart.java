@@ -142,6 +142,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
             }else{
                 labelCount = (maxValue/stepsModulo) +1;
             }
+            labelCount = 6;
         }
         getAxisLeft().setAxisMaxValue(maxValue);
         getAxisLeft().setLabelCount(labelCount,true);
@@ -150,7 +151,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
         BarDataSet dataSet = new BarDataSet(yValue, "");
 
         dataSet.setDrawValues(false);
-        dataSet.setColors(new int[]{ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)});
+        dataSet.setColors(new int[]{ContextCompat.getColor(getContext(), R.color.colorPrimary)});
         List<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
         BarData data = new BarData(dataSets);

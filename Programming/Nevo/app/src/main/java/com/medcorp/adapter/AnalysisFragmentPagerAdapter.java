@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.medcorp.R;
 import com.medcorp.fragment.AnalysisFragment;
 import com.medcorp.fragment.AnalysisSleepFragment;
-import com.medcorp.fragment.AnalysisSolarFragment;
 import com.medcorp.fragment.AnalysisStepsFragment;
 
 /**
@@ -24,10 +23,10 @@ public class AnalysisFragmentPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.analysisFragment = fragment;
         context = fragment.getContext();
-        analysisTableArray = fragment.getResources().getStringArray(R.array.analysis_fragment_table_array);
-        if(analysisFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
+//        analysisTableArray = fragment.getResources().getStringArray(R.array.analysis_fragment_table_array);
+//        if(analysisFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
             analysisTableArray = fragment.getResources().getStringArray(R.array.nevo_analysis_fragment_table_array);
-        }
+//        }
     }
 
     @Override
@@ -39,9 +38,9 @@ public class AnalysisFragmentPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 AnalysisSleepFragment analysisSleepFragment = (AnalysisSleepFragment) AnalysisSleepFragment.instantiate(context, AnalysisSleepFragment.class.getName());
                 return analysisSleepFragment;
-            case 2:
-                AnalysisSolarFragment analysisSolarFragment = (AnalysisSolarFragment) AnalysisSolarFragment.instantiate(context, AnalysisSolarFragment.class.getName());
-                return analysisSolarFragment;
+//            case 2:
+//                AnalysisSolarFragment analysisSolarFragment = (AnalysisSolarFragment) AnalysisSolarFragment.instantiate(context, AnalysisSolarFragment.class.getName());
+//                return analysisSolarFragment;
             default:
                 return null;
         }
