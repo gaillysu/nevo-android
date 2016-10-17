@@ -100,6 +100,7 @@ import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.util.Constants;
 import net.medcorp.library.ble.util.HexUtils;
+import net.medcorp.library.ble.util.Optional;
 import net.medcorp.library.ble.util.QueuedMainThreadHandler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -550,14 +551,24 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             mTimeOutcount = 0;
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
-            Log.w("Karl","SET RTC");
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     packetsBuffer.clear();
                     //early nevo firmware doesn't support 0x27 cmd(read watch info), so I put this cmd here
                     sendRequest(new ReadWatchInfoRequest(mContext));
-                    setRtc();
+                    if(mLocalService.getPairedWatch().notEmpty() && mLocalService.getPairedWatch().get().equals(connectionController.getSaveAddress()))
+                    {
+                        //step1:set RTC
+                        Log.w("Karl","SET RTC only once: got paired firstly and got connected with it");
+                        setRtc();
+                        //here reset this watch to avoid next invoke setRTC
+                        mLocalService.resetPairedWatch();
+                    }
+                    else {
+                        //here ignore step1(setRTC),and directly do step2:set user profile
+                        sendRequest(new SetProfileRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
+                    }
                 }
             }, 2000);
         } else {
@@ -836,6 +847,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     static public class LocalService extends Service
     {
         private AlertDialog mAlertDialog = null;
+        private Optional<String> pairedBleAddress = new Optional<String>();
         BroadcastReceiver myReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -855,6 +867,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
+                else if(intent.getAction().equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    int connectState = device.getBondState();
+                    Log.i("LocalService", "Ble pair state got changed:" + connectState + ",device:" + device.getAddress());
+                    if (BluetoothDevice.BOND_BONDED == connectState) {
+                        pairedBleAddress.set(device.getAddress());
+                    }
+                    else if (BluetoothDevice.BOND_NONE == connectState) {
+                        pairedBleAddress.set(null);
+                    }
+                }
             }
         };
 
@@ -863,6 +886,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             super.onCreate();
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
             registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
+            registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
         }
 
         @Override
@@ -926,6 +950,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             public void findCellPhone()
             {
                 LocalService.this.findCellPhone();
+            }
+            public Optional<String> getPairedWatch() {
+                return LocalService.this.pairedBleAddress;
+            }
+            public void resetPairedWatch() {
+                LocalService.this.pairedBleAddress.set(null);
             }
         }
 
