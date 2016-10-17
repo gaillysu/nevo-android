@@ -29,6 +29,7 @@ import java.util.List;
 
 /**
  * Created by karl-john on 19/8/2016.
+ *
  */
 
 public class SleepTodayChart extends LineChart {

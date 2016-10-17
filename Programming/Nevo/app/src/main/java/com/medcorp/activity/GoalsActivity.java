@@ -1,7 +1,5 @@
 package com.medcorp.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -14,13 +12,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.medcorp.ApplicationFlag;
-import com.medcorp.base.BaseActivity;
-import com.medcorp.adapter.PresetArrayAdapter;
 import com.medcorp.R;
+import com.medcorp.adapter.PresetArrayAdapter;
+import com.medcorp.base.BaseActivity;
 import com.medcorp.model.Goal;
 
 import java.util.List;
@@ -30,7 +26,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by gaillysu on 15/12/23.
- *
  */
 public class GoalsActivity extends BaseActivity implements AdapterView.OnItemClickListener {
 
@@ -45,7 +40,6 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     Goal goal;
 
 
-    private int[] stepsGoalArray = {4500, 6000, 8000, 10000};
     private int stepsGoalNumber;
 
     @Override
@@ -67,7 +61,6 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
         presetArrayAdapter = new PresetArrayAdapter(this, getModel(), goalList);
         presetListView.setAdapter(presetArrayAdapter);
         presetListView.setOnItemClickListener(this);
-        goal = new Goal("", false, stepsGoalArray[3]);
     }
 
 
@@ -111,44 +104,39 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
-                if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-                    ejectStepsGoalDialog();
-                } else {
+                new MaterialDialog.Builder(GoalsActivity.this)
+                        .title(R.string.goal_add)
+                        .content(R.string.goal_input)
+                        .inputType(InputType.TYPE_CLASS_NUMBER)
+                        .input(getString(R.string.goal_step_goal), "",
+                                new MaterialDialog.InputCallback() {
+                                    @Override
+                                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                                        if (input.length() == 0)
+                                            return;
 
-                    new MaterialDialog.Builder(GoalsActivity.this)
-                            .title(R.string.goal_add)
-                            .content(R.string.goal_input)
-                            .inputType(InputType.TYPE_CLASS_NUMBER)
-                            .input(getString(R.string.goal_step_goal), "",
-                                    new MaterialDialog.InputCallback() {
-                                        @Override
-                                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                                            if (input.length() == 0)
-                                                return;
-
-                                            goal.setSteps(Integer.parseInt(input.toString()));
-                                            new MaterialDialog.Builder(GoalsActivity.this)
-                                                    .title(R.string.goal_add)
-                                                    .content(R.string.goal_label_goal)
-                                                    .inputType(InputType.TYPE_CLASS_TEXT)
-                                                    .input(getString(R.string.goal_name_goal), "",
-                                                            new MaterialDialog.InputCallback() {
-                                                                @Override
-                                                                public void onInput(MaterialDialog dialog, CharSequence input) {
-                                                                    if (input.length() == 0)
-                                                                        return;
-                                                                    goal.setLabel(input.toString());
-                                                                    getModel().addGoal(goal);
-                                                                    goalList = getModel().getAllGoal();
-                                                                    presetArrayAdapter.setDataset(goalList);
-                                                                    presetArrayAdapter.notifyDataSetChanged();
-                                                                }
-                                                            }).negativeText(R.string.goal_cancel)
-                                                    .show();
-                                        }
-                                    }).negativeText(R.string.goal_cancel)
-                            .show();
-                }
+                                        goal.setSteps(Integer.parseInt(input.toString()));
+                                        new MaterialDialog.Builder(GoalsActivity.this)
+                                                .title(R.string.goal_add)
+                                                .content(R.string.goal_label_goal)
+                                                .inputType(InputType.TYPE_CLASS_TEXT)
+                                                .input(getString(R.string.goal_name_goal), "",
+                                                        new MaterialDialog.InputCallback() {
+                                                            @Override
+                                                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                                                                if (input.length() == 0)
+                                                                    return;
+                                                                goal.setLabel(input.toString());
+                                                                getModel().addGoal(goal);
+                                                                goalList = getModel().getAllGoal();
+                                                                presetArrayAdapter.setDataset(goalList);
+                                                                presetArrayAdapter.notifyDataSetChanged();
+                                                            }
+                                                        }).negativeText(R.string.goal_cancel)
+                                                .show();
+                                    }
+                                }).negativeText(R.string.goal_cancel)
+                        .show();
                 break;
             case android.R.id.home:
                 finish();
@@ -158,75 +146,4 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
 
         return super.onOptionsItemSelected(item);
     }
-
-    private void ejectStepsGoalDialog() {
-
-        final Dialog dialog = new AlertDialog.Builder(this).create();
-        dialog.show();
-        Window window = dialog.getWindow();
-        View stepsGoalView = View.inflate(this, R.layout.steps_fragment_dialog_layout, null);
-        window.setContentView(stepsGoalView);
-
-        final RadioGroup stepsGoalGroup = (RadioGroup) stepsGoalView.findViewById(R.id.steps_fragment_dialog_group);
-        stepsGoalView.findViewById(R.id.steps_fragment_cancel_steps_setting_button).
-                setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-        stepsGoalView.findViewById(R.id.steps_fragment_setting_steps_goal_ok_button).
-                setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                        stepsGoalGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                                switch (checkedId) {
-                                    case R.id.radio_button_one:
-                                        stepsGoalNumber = stepsGoalArray[0];
-                                        break;
-                                    case R.id.radio_button_two:
-                                        stepsGoalNumber = stepsGoalArray[1];
-                                        break;
-                                    case R.id.radio_button_three:
-                                        stepsGoalNumber = stepsGoalArray[2];
-                                        break;
-                                    case R.id.radio_button_four:
-                                        stepsGoalNumber = stepsGoalArray[3];
-                                        break;
-                                }
-                            }
-
-                        });
-                        upDataUserStepsGoal(stepsGoalNumber);
-                    }
-                });
-    }
-
-    public void upDataUserStepsGoal(int stepsGoal) {
-        goal.setSteps(stepsGoal);
-        new MaterialDialog.Builder(GoalsActivity.this)
-                .title(R.string.goal_add)
-                .content(R.string.goal_label_goal)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getString(R.string.goal_name_goal), "",
-                        new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                if (input.length() == 0)
-                                    return;
-                                goal.setLabel(input.toString());
-                                getModel().addGoal(goal);
-                                goalList = getModel().getAllGoal();
-                                presetArrayAdapter.setDataset(goalList);
-                                presetArrayAdapter.notifyDataSetChanged();
-                            }
-                        }).negativeText(R.string.goal_cancel)
-                .show();
-
-    }
-
 }
