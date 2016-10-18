@@ -84,6 +84,7 @@ import net.medcorp.library.ble.exception.BluetoothDisabledException;
 import net.medcorp.library.ble.exception.QuickBTSendTimeoutException;
 import net.medcorp.library.ble.exception.QuickBTUnBindException;
 import net.medcorp.library.ble.exception.visitor.BLEExceptionVisitor;
+import net.medcorp.library.ble.kernel.MEDBT;
 import net.medcorp.library.ble.model.request.BLERequestData;
 import net.medcorp.library.ble.model.response.BLEResponseData;
 import net.medcorp.library.ble.model.response.MEDRawData;
@@ -190,7 +191,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).post(new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, request.getClass().getName());
+                Log.i(MEDBT.TAG, request.getClass().getName());
                 connectionController.sendRequest(request);
             }
         });
@@ -493,18 +494,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     packetsBuffer.clear();
                     //step0:firstly read watch infomation, for Lunar and nevo Solar, we use watch ID to show solar power screen
                     sendRequest(new ReadWatchInfoRequest(mContext));
-                    if(mLocalService.getPairedWatch().notEmpty() && mLocalService.getPairedWatch().get().equals(connectionController.getSaveAddress()))
-                    {
-                        //step1:set RTC
-                        Log.w("Karl","SET RTC only once: got paired firstly and got connected with it");
-                        setRtc();
-                        //here reset this watch to avoid next invoke setRTC
-                        mLocalService.resetPairedWatch();
-                    }
-                    else {
-                        //here ignore step1(setRTC),and directly do step2:set user profile
-                        sendRequest(new SetProfileRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
-                    }
+                    Log.w(TAG,"SET RTC");
+                    //step 1: setRTC every connection
+                    //nevo BLE v35 has an issue(not caused by setRTC)--after 00:00, the 0x26 cmd still return yesterday steps count, and press watch key A, the progress bar shows yesterday value  too(in fact, user doesn't walk )
+                    // today, after user walk 1000steps, reconnect watch, the steps count return 0, and watch show progress also reset ( so user will confuse: why my today steps get losed ?)
+                    setRtc();
                 }
             }, 2000);
         } else {
