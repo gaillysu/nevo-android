@@ -150,7 +150,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
                 intent.putExtra("isTutorialPage", false);
                 SettingsFragment.this.getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, true);
-                Preferences.saveIsFirstLogin(SettingsFragment.this.getContext(), true);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);

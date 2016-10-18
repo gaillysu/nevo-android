@@ -148,17 +148,17 @@ public class AnalysisStepsFragment extends BaseFragment {
     private int getAvgDurationTime(List<Steps> thisWeekData) {
         int durationTime = 0;
         for (Steps steps : thisWeekData) {
-            durationTime += steps.getWalkDuration();
+            durationTime += steps.getWalkDuration()+steps.getRunDistance();
         }
         return durationTime;
     }
 
     private int getWeekCalories(List<Steps> thisWeekData) {
-        int avgCaloriesNum = 0;
-        for (Steps steps : thisWeekData) {
-            avgCaloriesNum += steps.getCalories();
+      int calories = 0 ;
+        for(Steps steps : thisWeekData){
+            calories += steps.getCalories();
         }
-        return avgCaloriesNum;
+        return calories;
     }
 
     private int getWeekSteps(List<Steps> thisWeekData) {
@@ -174,7 +174,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             case 0:
                 if (thisWeekData.size() != 0) {
                     setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / 7
-                            , getWeekCalories(thisWeekData) / 7
+                            , getWeekCalories(thisWeekData)/7
                             , getAvgDurationTime(thisWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_this_week_steps));
                 } else {
@@ -184,7 +184,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             case 1:
                 if (lastWeekData.size() != 0) {
                     setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / 7
-                            , getWeekCalories(lastWeekData) / 7
+                            , getWeekCalories(lastWeekData)/7
                             , getAvgDurationTime(lastWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_last_week_steps));
                 } else {
@@ -194,7 +194,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             case 2:
                 if (lastMonthData.size() != 0) {
                     setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / 30
-                            , getWeekCalories(lastMonthData) / 30
+                            , getWeekCalories(lastMonthData)/7
                             , getAvgDurationTime(lastMonthData) /30/1000
                             , getResources().getString(R.string.analysis_fragment_last_month_solar));
                 } else {

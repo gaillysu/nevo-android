@@ -77,7 +77,7 @@ public class MainStepsFragment extends BaseFragment {
     private void initData(Date date) {
         User user = getModel().getNevoUser();
         steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()+steps.getRunDuration()) : 0 + " min");
+        showUserActivityTime.setText(steps.getWalkDuration()+steps.getRunDistance() != 0 ? TimeUtil.formatTime(steps.getWalkDuration()+steps.getRunDuration()) : 0 + " min");
         showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));

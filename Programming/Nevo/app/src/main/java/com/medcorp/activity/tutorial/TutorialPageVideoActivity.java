@@ -6,13 +6,12 @@ import android.os.Handler;
 import android.view.WindowManager;
 
 import com.medcorp.R;
+import com.medcorp.activity.MainActivity;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.util.Constants;
-
-import butterknife.ButterKnife;
 
 /**
  * Created by gaillysu on 16/1/14.
@@ -21,37 +20,45 @@ import butterknife.ButterKnife;
 public class TutorialPageVideoActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true) && !Preferences.getIsFirstLogin(this)) {
-            startActivity(TutorialPage1Activity.class);
-            finish();
-            return;
-        }
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome_page);
-        ButterKnife.bind(this);
 
-        if (!Preferences.getIsFirstLogin(this)) {
+        if(Preferences.getIsFirstLogin(this))
+        {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(TutorialPage1Activity.class);
-                    finish();
-                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                }
-            }, 1500);
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(TutorialPageVideoActivity.this, LoginActivity.class);
-                    intent.putExtra("isTutorialPage", true);
+                  Intent intent = new Intent(TutorialPageVideoActivity.this,LoginActivity.class);
+                    intent.putExtra("isTutorialPage",true);
+                    Preferences.saveIsFirstLogin(TutorialPageVideoActivity.this,false);
                     startActivity(intent);
                     finish();
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 }
-            }, 1500);
+            },1500);
+        }
+        if (!getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(TutorialPageVideoActivity.this, MainActivity.class));
+                    finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                }
+            },1500);
+        }
+
+        if(getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true) && !Preferences.getIsFirstLogin(this)){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(TutorialPageVideoActivity.this, TutorialPage1Activity.class));
+                    finish();
+                    overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                }
+            },1500);
         }
     }
 }

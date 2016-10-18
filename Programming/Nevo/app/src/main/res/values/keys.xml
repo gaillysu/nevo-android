@@ -35,6 +35,7 @@
     <string name="key_prefs_is_first_login" translatable="false">is_not_first_login</string>
     <string name="key_prefs_watch_id" translatable="false">watch_id</string>
     <string name="key_prefs_watch_model" translatable="false">watch_model</string>
+
     <!-- aid OTA -->
     <string name="key_manual_mode" translatable="false">manualMode</string>
     <string name="key_back_to_settings" translatable="false">backtosetting</string>

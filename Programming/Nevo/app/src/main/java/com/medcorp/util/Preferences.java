@@ -39,7 +39,7 @@ public class Preferences {
                 null);
     }
 
-    public static void saveIsFirstLogin(Context context, boolean isNotFirst) {
+       public static void saveIsFirstLogin(Context context, boolean isNotFirst) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(context.getString(R.string.key_prefs_is_first_login), isNotFirst).apply();
