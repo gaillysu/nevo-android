@@ -162,9 +162,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 //send a 10s event to refresh clock
                 EventBus.getDefault().post(new Timer10sEvent());
-                startTimer();
             }
-        }, LITTLE_SYNC_INTERVAL);
+        }, LITTLE_SYNC_INTERVAL,LITTLE_SYNC_INTERVAL);
     }
 
     public SyncControllerImpl(Context context)
