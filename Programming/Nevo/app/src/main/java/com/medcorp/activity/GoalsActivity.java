@@ -38,6 +38,8 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     List<Goal> goalList;
     PresetArrayAdapter presetArrayAdapter;
     Goal goal;
+    private int steps = 0;
+
 
 
     private int stepsGoalNumber;
@@ -114,8 +116,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                                     public void onInput(MaterialDialog dialog, CharSequence input) {
                                         if (input.length() == 0)
                                             return;
-
-                                        goal.setSteps(Integer.parseInt(input.toString()));
+                                        steps = Integer.parseInt(input.toString());
                                         new MaterialDialog.Builder(GoalsActivity.this)
                                                 .title(R.string.goal_add)
                                                 .content(R.string.goal_label_goal)
@@ -126,7 +127,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                                                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                                                 if (input.length() == 0)
                                                                     return;
-                                                                goal.setLabel(input.toString());
+                                                                goal = new Goal(input.toString(),true,steps);
                                                                 getModel().addGoal(goal);
                                                                 goalList = getModel().getAllGoal();
                                                                 presetArrayAdapter.setDataset(goalList);
