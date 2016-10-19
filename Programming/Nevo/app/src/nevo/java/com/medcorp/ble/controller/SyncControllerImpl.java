@@ -497,7 +497,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 else if((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel())));
                 }
-                else if(FindWatchRequest.HEADER == packet.getHeader()) {
+                else if((byte) 0xF0 == packet.getHeader() || FindWatchRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 }
                 else if((byte) SetAlarmRequest.HEADER == packet.getHeader()
