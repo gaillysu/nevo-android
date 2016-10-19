@@ -4,10 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.base.BaseActivity;
-import com.medcorp.R;
-import com.medcorp.model.Alarm;
 import com.medcorp.model.Goal;
 
 import net.medcorp.library.ble.util.Constants;

@@ -9,6 +9,7 @@
     <color name = "alarm_repeat_text_color">#BCBCBC</color>
     <color name="text_color">#000000</color>
     <color name="graph_text_color">#000000</color>
+    <color name= "tutorial_text_color">#FFFFFF</color>
     <color name="solar_pie_chart_content_text_color">#FFFFFF</color>
     <color name="pupdialogue_background">#22000000</color>
     <color name="wake_sleep">#fffde69c</color>

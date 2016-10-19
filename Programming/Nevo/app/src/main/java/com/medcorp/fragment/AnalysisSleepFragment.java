@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.medcorp.R;
@@ -53,6 +55,8 @@ public class AnalysisSleepFragment extends BaseFragment {
     TextView avgWakeDes;
     @Bind(R.id.analysis_fragment_des_total_four)
     TextView sleepQuality;
+    @Bind(R.id.ui_page_control_point)
+    LinearLayout uiControl;
 
     private List<View> sleepList;
     private Date userSelectDate;
@@ -99,6 +103,19 @@ public class AnalysisSleepFragment extends BaseFragment {
         sleepList.add(lastWeekView);
         sleepList.add(lastMonthView);
 
+        for (int i = 0; i < sleepList.size(); i++) {
+            ImageView imageView = new ImageView(AnalysisSleepFragment.this.getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                    (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            if (i == 0) {
+                imageView.setImageResource(R.drawable.ui_page_control_selector);
+            } else {
+                imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                layoutParams.leftMargin = 20;
+            }
+            uiControl.addView(imageView, layoutParams);
+        }
+
         initData(userSelectDate);
     }
 
@@ -137,6 +154,15 @@ public class AnalysisSleepFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 setDesText(position);
+                int childCount = uiControl.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    ImageView imageView = (ImageView) uiControl.getChildAt(i);
+                    if (position == i) {
+                        imageView.setImageResource(R.drawable.ui_page_control_selector);
+                    } else {
+                        imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                    }
+                }
             }
 
             @Override

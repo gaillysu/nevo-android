@@ -21,6 +21,7 @@ import com.medcorp.model.User;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 import com.medcorp.util.TimeUtil;
+import com.medcorp.view.RoundProgressBar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,7 +45,8 @@ public class MainClockFragment extends BaseFragment {
 
     @Bind(R.id.HomeClockMinute)
     ImageView minImage;
-
+    @Bind(R.id.main_steps_progress_bar)
+    RoundProgressBar roundProgressBar;
     @Bind(R.id.lunar_fragment_show_user_consume_calories)
     TextView showUserCosumeCalories;
     @Bind(R.id.lunar_fragment_show_user_steps_distance_tv)
@@ -93,6 +95,10 @@ public class MainClockFragment extends BaseFragment {
         String result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(result);
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
+        int countSteps = steps.getSteps();
+        int goal = steps.getGoal();
+        float value = (float) countSteps/(float) steps.getGoal();
+        roundProgressBar.setProgress(value*100>=100f?100:(int)(value*100));
     }
 
     @Override

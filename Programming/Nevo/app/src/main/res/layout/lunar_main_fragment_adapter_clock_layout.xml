@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:android_custom="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical">
 
 
@@ -13,7 +14,16 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="71dp"
         android:layout_weight="3">
-
+        <com.medcorp.view.RoundProgressBar
+            android:id="@+id/main_steps_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent = "true"
+            android_custom:roundColor="#00000000"
+            android_custom:roundWidth="8dp"
+            android_custom:max="100"
+            android_custom:roundProgressColor="@color/colorPrimary"
+            android_custom:textIsDisplayable="false"/>
         <ImageView
             android:id="@+id/clock_imageView"
             android:layout_width="match_parent"

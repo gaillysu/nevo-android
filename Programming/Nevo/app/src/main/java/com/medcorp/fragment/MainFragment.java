@@ -10,9 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.LunarMainFragmentAdapter;
@@ -32,16 +35,17 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/7/19.
- *
  */
 public class MainFragment extends BaseObservableFragment {
 
 
     @Bind(R.id.fragment_lunar_main_view_pager)
     ViewPager showWatchViewPage;
+    @Bind(R.id.ui_page_control_point)
+    LinearLayout uiPageControl;
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
-
+    private String[] fragmentAdapterArray;
     private int stepsGoalNumber;
 
     @Override
@@ -49,9 +53,59 @@ public class MainFragment extends BaseObservableFragment {
         View view = inflater.inflate(R.layout.lunar_main_fragment_layout, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+        initUiControl();
         adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
         showWatchViewPage.setAdapter(adapter);
         return view;
+    }
+
+    private void initUiControl() {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            fragmentAdapterArray = getResources().getStringArray(R.array.nevo_main_adapter_fragment);
+        } else {
+            fragmentAdapterArray = getResources().getStringArray(R.array.lunar_main_adapter_fragment);
+
+        }
+
+        for (int i = 0; i < fragmentAdapterArray.length; i++) {
+            ImageView imageView = new ImageView(MainFragment.this.getContext());
+            if (i == 0) {
+                imageView.setImageResource(R.drawable.ui_page_control_selector);
+            } else {
+                imageView.setImageResource(R.drawable.ui_page_control_unselector);
+            }
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (i != 0) {
+                params.leftMargin = 20;
+            }
+            uiPageControl.addView(imageView, params);
+        }
+
+        showWatchViewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int childCount = uiPageControl.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    ImageView im = (ImageView) uiPageControl.getChildAt(i);
+                    if(position == i){
+                        im.setImageResource(R.drawable.ui_page_control_selector);
+                    }else{
+                        im.setImageResource(R.drawable.ui_page_control_unselector);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -89,7 +143,7 @@ public class MainFragment extends BaseObservableFragment {
         }
         CharSequence[] cs = stringList.toArray(new CharSequence[stringList.size()]);
 
-        if(goalList.size() != 0) {
+        if (goalList.size() != 0) {
             new MaterialDialog.Builder(getContext())
                     .title(R.string.goal).itemsColor(getResources().getColor(R.color.edit_alarm_item_text_color))
                     .items(cs)
@@ -108,7 +162,7 @@ public class MainFragment extends BaseObservableFragment {
                     .positiveText(R.string.goal_ok)
                     .negativeText(R.string.goal_cancel).contentColorRes(R.color.left_menu_item_text_color)
                     .show();
-        }else{
+        } else {
             ejectStepsGoalDialog();
         }
     }

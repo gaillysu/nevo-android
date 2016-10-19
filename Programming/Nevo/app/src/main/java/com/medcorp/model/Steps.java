@@ -44,7 +44,7 @@ public class Steps implements Comparable<Steps>{
     private int noActivityTime;
 
     //keep name, means stepsGoal
-    private int goal;
+    private int goal ;
     private int distanceGoal;
     private int caloriesGoal;
     private int activeTimeGoal;

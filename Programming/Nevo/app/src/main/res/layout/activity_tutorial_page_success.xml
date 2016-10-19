@@ -30,7 +30,8 @@
         android:text="@string/tutorial_success_tap_to_continue"
         style="@style/TutorialButton"
         android:id="@+id/activity_tutorial_success_next_button"
-        android:textColor="@color/text_color"
+        android:textColor="@color/tutorial_text_color"
+        android:layout_marginBottom="61dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"/>
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

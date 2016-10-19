@@ -48,6 +48,7 @@
             android:id="@+id/activity_tutorial_1_activate_button"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="60dp"
+            android:textColor="@color/tutorial_text_color"
             style="@style/TutorialButton"
              />
 

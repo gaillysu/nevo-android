@@ -10,6 +10,7 @@
     <color name="tutorial_progress_bar_color">#7ED8D1</color>
     <color name="colorPrimary">#7ED8D1</color>
     <color name="colorPrimaryDark">#54575A</color>
+    <color name= "tutorial_text_color">#FFFFFF</color>
     <color name="colorAccent">#7ED8D1</color>
     <color name="pupdialogue_background">@color/window_background_color</color>
     <color name="fragment_steps_window_bg">#54575A</color>

@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.medcorp.R;
@@ -38,6 +40,8 @@ public class AnalysisSolarFragment extends BaseFragment {
     TextView averageTimeOnBattery;
     @Bind(R.id.today_solar_solar_time_tv)
     TextView averageTimeOnSolar;
+    @Bind(R.id.ui_page_control_point)
+    LinearLayout uiControl;
 
     private View thisWeekView;
     private View lastWeekView;
@@ -78,6 +82,20 @@ public class AnalysisSolarFragment extends BaseFragment {
         solarList.add(thisWeekView);
         solarList.add(lastWeekView);
         solarList.add(lastMonthView);
+
+        for(int i = 0; i<solarList.size(); i++){
+            ImageView imageView  = new  ImageView(AnalysisSolarFragment.this.getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                    (LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            if(i == 0){
+                imageView.setImageResource(R.drawable.ui_page_control_selector);
+            }else{
+                imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                params.leftMargin = 20;
+            }
+            uiControl.addView(imageView,params);
+        }
+
         initData(userSelectDate);
     }
 
@@ -108,6 +126,17 @@ public class AnalysisSolarFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
+
+                int childCount = uiControl.getChildCount();
+                for(int i = 0; i<childCount; i++){
+                    ImageView imageView = (ImageView) uiControl.getChildAt(i);
+                    if(position == i){
+                        imageView.setImageResource(R.drawable.ui_page_control_selector);
+                    }else{
+                        imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                    }
+                }
+
                 switch (position) {
                     case 0:
                         solarTitleTextView.setText(R.string.analysis_fragment_this_week_steps);

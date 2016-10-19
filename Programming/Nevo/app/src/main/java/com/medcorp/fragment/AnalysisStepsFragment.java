@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.medcorp.R;
@@ -44,6 +46,8 @@ public class AnalysisStepsFragment extends BaseFragment {
     TextView analysisStepsText;
     @Bind(R.id.analysis_steps_fragment_content_chart_view_pager)
     ViewPager chartViewPager;
+    @Bind(R.id.ui_page_control_point)
+    LinearLayout uiPageControl;
 
     private View thisWeekView;
     private View lastWeekView;
@@ -109,13 +113,26 @@ public class AnalysisStepsFragment extends BaseFragment {
     }
 
     private void initView(LayoutInflater inflater) {
-        List<View> stepsDataList = new ArrayList<>(3);
+        final List<View> stepsDataList = new ArrayList<>(3);
         thisWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         lastWeekView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         lastMonthView = inflater.inflate(R.layout.analysis_steps_chart_fragment_layout, null);
         stepsDataList.add(thisWeekView);
         stepsDataList.add(lastWeekView);
         stepsDataList.add(lastMonthView);
+
+        for (int i = 0; i < stepsDataList.size(); i++) {
+            ImageView imageView = new ImageView(AnalysisStepsFragment.this.getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (i == 0) {
+                imageView.setImageResource(R.drawable.ui_page_control_selector);
+            }else{
+                imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                layoutParams.leftMargin = 20;
+            }
+            uiPageControl.addView(imageView,layoutParams);
+        }
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(stepsDataList);
         chartViewPager.setAdapter(adapter);
@@ -127,6 +144,15 @@ public class AnalysisStepsFragment extends BaseFragment {
             @Override
             public void onPageSelected(int position) {
                 setDesText(position);
+                int childCount = uiPageControl.getChildCount();
+                for(int i= 0 ; i<childCount ; i++){
+                    ImageView imageView = (ImageView) uiPageControl.getChildAt(i);
+                    if(position == i){
+                        imageView.setImageResource(R.drawable.ui_page_control_selector);
+                    }else{
+                        imageView.setImageResource(R.drawable.ui_page_control_unselector);
+                    }
+                }
             }
 
             @Override
@@ -148,14 +174,14 @@ public class AnalysisStepsFragment extends BaseFragment {
     private int getAvgDurationTime(List<Steps> thisWeekData) {
         int durationTime = 0;
         for (Steps steps : thisWeekData) {
-            durationTime += steps.getWalkDuration()+steps.getRunDistance();
+            durationTime += steps.getWalkDuration() + steps.getRunDistance();
         }
         return durationTime;
     }
 
     private int getWeekCalories(List<Steps> thisWeekData) {
-      int calories = 0 ;
-        for(Steps steps : thisWeekData){
+        int calories = 0;
+        for (Steps steps : thisWeekData) {
             calories += steps.getCalories();
         }
         return calories;
@@ -174,7 +200,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             case 0:
                 if (thisWeekData.size() != 0) {
                     setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / 7
-                            , getWeekCalories(thisWeekData)/7
+                            , getWeekCalories(thisWeekData) / 7
                             , getAvgDurationTime(thisWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_this_week_steps));
                 } else {
@@ -184,7 +210,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             case 1:
                 if (lastWeekData.size() != 0) {
                     setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / 7
-                            , getWeekCalories(lastWeekData)/7
+                            , getWeekCalories(lastWeekData) / 7
                             , getAvgDurationTime(lastWeekData) / 7
                             , getResources().getString(R.string.analysis_fragment_last_week_steps));
                 } else {
@@ -194,8 +220,8 @@ public class AnalysisStepsFragment extends BaseFragment {
             case 2:
                 if (lastMonthData.size() != 0) {
                     setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / 30
-                            , getWeekCalories(lastMonthData)/7
-                            , getAvgDurationTime(lastMonthData) /30/1000
+                            , getWeekCalories(lastMonthData) / 7
+                            , getAvgDurationTime(lastMonthData) / 30 / 1000
                             , getResources().getString(R.string.analysis_fragment_last_month_solar));
                 } else {
                     setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_month_solar));
