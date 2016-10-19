@@ -3,8 +3,8 @@ package com.medcorp.activity.tutorial;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import com.medcorp.base.BaseActivity;
 import com.medcorp.R;
+import com.medcorp.base.BaseActivity;
 import com.medcorp.view.RoundProgressBar;
 
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;

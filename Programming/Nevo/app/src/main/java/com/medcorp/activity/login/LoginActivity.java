@@ -66,7 +66,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_skip_bt)
     public void skipLogin() {
-        if (getIntent().getBooleanExtra("isTutorialPage", true)) {
+        if (getIntent().getBooleanExtra("isTutorialPage", true) && !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);
@@ -147,7 +147,7 @@ public class LoginActivity extends BaseActivity {
 
     public void onLoginFailed() {
         errorSum++;
-        if (errorSum % 3 == 0) {
+        if (errorSum % 3 == 0){
             new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
                     .contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
                     .title(getString(R.string.open_forget_password_dialog_title))
