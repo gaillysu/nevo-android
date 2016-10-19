@@ -10,17 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="56dp"
         android:layout_weight="3">
         <com.medcorp.view.RoundProgressBar
             android:id="@+id/main_steps_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent = "true"
-            android_custom:roundColor="#00000000"
-            android_custom:roundWidth="8dp"
+            android_custom:roundColor="@android:color/transparent"
+            android:layout_margin="10dp"
+            android_custom:roundWidth="4dp"
             android_custom:max="100"
             android_custom:roundProgressColor="@color/colorPrimary"
             android_custom:textIsDisplayable="false"/>
@@ -28,18 +27,21 @@
             android:id="@+id/clock_imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="15dp"
             android:src="@drawable/lunar_watch_icon"/>
 
         <ImageView
             android:id="@+id/HomeClockHour"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="15dp"
             android:src="@drawable/lunar_clockview_hour"/>
 
         <ImageView
             android:id="@+id/HomeClockMinute"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="15dp"
             android:src="@drawable/lunar_clockview_minute"/>
     </RelativeLayout>
 
