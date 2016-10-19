@@ -123,7 +123,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
     private long mLastPressAkey = 0;
-    private boolean mEnableTestMode = false;
     private boolean mSyncAllFlag = false;
     private boolean initAlarm = true;
     private boolean initNotification = true;
@@ -372,8 +371,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         e.printStackTrace();
                     }
                     //update  the day 's "steps" table
-                    //for maintaining data consistency(perhaps download the Cloud server record,but the server record is too old), here save steps
-                    ((ApplicationModel) mContext).saveDailySteps(steps);
+                    //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
+                    if(steps.getSteps()>0) {
+                        ((ApplicationModel) mContext).saveDailySteps(steps);
+                    }
                     //for maintaining data consistency,here save sleep
                     Sleep sleep = new Sleep(history.getCreated());
                     sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
@@ -394,7 +395,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    ((ApplicationModel) mContext).saveDailySleep(sleep);
+                    //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
+                    if(sleep.getTotalSleepTime()>0) {
+                        ((ApplicationModel) mContext).saveDailySleep(sleep);
+                    }
                     //end update
                     //here save solar time to local database when watch ID>1
                     if(getWatchInfomation().getWatchID()>1){
@@ -484,7 +488,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void onEvent(BLEConnectionStateChangedEvent stateChangedEvent) {
 
         if(stateChangedEvent.isConnected()) {
-            mEnableTestMode = false;
             mTimeOutcount = 0;
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.

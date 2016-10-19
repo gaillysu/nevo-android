@@ -136,7 +136,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private int mCurrentDay = 0;
     private int mTimeOutcount = 0;
     private long mLastPressAkey = 0;
-    private boolean mEnableTestMode = false;
     private boolean mSyncAllFlag = false;
     private boolean initAlarm = true;
     private boolean initNotification = true;
@@ -408,9 +407,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         e.printStackTrace();
                     }
                     //update  the day 's "steps" table
-                    //no matter what value the steps is,here must save it to table,for maintaining data consistency,for example, user reinstall battery or connect another watch,we should show lastest data to user
-                    ((ApplicationModel) mContext).saveDailySteps(steps);
-                    //no matter what the sleep is,here must save it to table,for maintaining data consistency
+                    //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
+                    if(steps.getSteps()>0) {
+                        ((ApplicationModel) mContext).saveDailySteps(steps);
+                    }
                     Sleep sleep = new Sleep(history.getCreated());
                     sleep.setDate(Common.removeTimeFromDate(savedDailyHistory.get(mCurrentDay).getDate()).getTime());
                     sleep.setHourlySleep(history.getHourlySleepTime());
@@ -430,9 +430,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    ((ApplicationModel) mContext).saveDailySleep(sleep);
-                    //end update
-
+                    //why here add if(), because sometimes 0x24 cmd returns duplicated date(this should be a bug of firmware), the next record will override the previous record with the same date
+                    if(sleep.getTotalSleepTime()>0) {
+                        ((ApplicationModel) mContext).saveDailySleep(sleep);
+                    }
                     //here save solar time to local database when watch ID>1
                     if(getWatchInfomation().getWatchID()>1){
                         Solar solar = new Solar(new Date(history.getCreated()));
@@ -458,28 +459,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         syncFinished();
                     }
                 }
-                //press B key once--- down and up within 500ms
-                else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x02 == packet.getPackets().get(0).getRawData()[2])
-                {
-                    long currentTime = System.currentTimeMillis();
-                    //remove repeat press B key down within 6s
-                    if(currentTime - mLastPressAkey > 6000)
-                    {
-                        mLastPressAkey = currentTime;
-                    }
-                }
-                else if((byte) 0xF1 == nevoData.getRawData()[1] && (byte) 0x00 == packet.getPackets().get(0).getRawData()[2])
-                {
-                    long currentTime = System.currentTimeMillis();
-                    if(currentTime - mLastPressAkey < 500)
-                    {
-                        if(mLocalService!=null) {
-                            mLocalService.findCellPhone();
-                        }
-                        //let all color LED light on, means that find CellPhone is successful.
-                        sendRequest(new TestModeRequest(mContext,0x3F0000,false, TestModeRequest.MODE_F0));
-                    }
-                }
                 else if((byte) TestModeRequest.MODE_F4 == packet.getHeader())
                 {
                     int battery_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[2],packet.getPackets().get(0).getRawData()[3]});
@@ -499,11 +478,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 else if((byte) GetStepsGoalRequest.HEADER == nevoData.getRawData()[1])
                 {
-                    if (!mEnableTestMode)
-                    {
-                        mEnableTestMode = true;
-                        sendRequest(new TestModeRequest(mContext,0,false, TestModeRequest.MODE_F0));
-                    }
                     //save current day's step count to "Steps" table
                     Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
                     steps.setCreatedDate(new Date().getTime());
@@ -523,7 +497,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 else if((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel())));
                 }
-                else if((byte) 0xF0 == packet.getHeader() || FindWatchRequest.HEADER == packet.getHeader()) {
+                else if(FindWatchRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 }
                 else if((byte) SetAlarmRequest.HEADER == packet.getHeader()
@@ -547,7 +521,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void onEvent(BLEConnectionStateChangedEvent stateChangedEvent) {
 
         if(stateChangedEvent.isConnected()) {
-            mEnableTestMode = false;
             mTimeOutcount = 0;
             //step1:setRTC, should defer about 2s for waiting the Callback characteristic enable Notify
             //and wait reading FW version done , then do setRTC.
