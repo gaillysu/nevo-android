@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.VISIBLE);
         showDateText = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         showDateText.setText(currentTime.split("-")[2] + " " +
-                new SimpleDateFormat("MMM", Locale.US).format(new Date()));
+                new SimpleDateFormat("MMM").format(new Date()));
 
         mainStepsFragment = MainFragment.instantiate(this, MainFragment.class.getName());
 
