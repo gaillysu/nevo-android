@@ -383,7 +383,10 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
+                //BLE OTA done, forget the "nevo_dfu" (this is a new MAC address when doing OTA)
+                if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH) {
+                    mNevoOtaController.forGetDevice();
+                }
                 currentIndex = currentIndex + 1;
                 if (currentIndex == firmwareURLs.size()) {
                     mUpdateSuccess = true;
@@ -404,15 +407,9 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                     String strDate = format.format(Calendar.getInstance().getTimeInMillis());
                     getSharedPreferences(OtaController.PREF_NAME, Context.MODE_PRIVATE).edit().putString(OtaController.SYNCDATE, strDate).commit();
-                    //BLE OTA done, unPair nevo, due to the pair infomation has got destory in the smartphone side.
-                    if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH)
-                        mNevoOtaController.forGetDevice();
+
                 } else {
                     mUpdateSuccess = true;
-                    //unpair this watch, when reconnect it, repair it again, otherwiase, it will lead the cmd can't get response.
-                    if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH) {
-                        mNevoOtaController.forGetDevice();
-                    }
                     mNevoOtaController.reset(false);
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
 

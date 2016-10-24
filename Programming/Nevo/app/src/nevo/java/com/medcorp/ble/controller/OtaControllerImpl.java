@@ -76,7 +76,7 @@ public class OtaControllerImpl implements OtaController  {
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
-    public static final int MAX_TIME = 35000;
+    public static final int MAX_TIME = 45000;
     private double lastprogress = 0.0;
     //added for MCU OTA
 

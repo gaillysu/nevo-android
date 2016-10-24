@@ -826,25 +826,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ConnectionController.Singleton.getInstance(context,new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
-                else if(intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED))
-                {
-                    Log.i("LocalService","Low level BT connected");
-                    if(!ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).isConnected())
-                    {
-                        ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
-                    }
-                }
-                else if(intent.getAction().equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    int connectState = device.getBondState();
-                    Log.i("LocalService", "Ble pair state got changed:" + connectState + ",device:" + device.getAddress());
-                    if (BluetoothDevice.BOND_BONDED == connectState) {
-                        pairedBleAddress.set(device.getAddress());
-                    }
-                    else if (BluetoothDevice.BOND_NONE == connectState) {
-                        pairedBleAddress.set(null);
-                    }
-                }
             }
         };
 
@@ -852,8 +833,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         public void onCreate() {
             super.onCreate();
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-            registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-            registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
         }
 
         @Override
