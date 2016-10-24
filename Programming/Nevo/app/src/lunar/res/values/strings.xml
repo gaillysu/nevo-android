@@ -408,5 +408,5 @@
     <string name="prompt_user_alarm_no_repeat_two">There is already a wake alarm set for</string>
     <string name="password_change_failure">Modify password failed</string>
     <string name="password_change_success">Change Password Success</string>
-
+    <string name="sunset_activity_title_tv">TODAY</string>
 </resources>

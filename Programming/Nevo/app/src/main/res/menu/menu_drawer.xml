@@ -18,7 +18,6 @@
             android:id="@+id/nav_alarm_fragment"
             android:icon="@drawable/ios_alarm"
             android:title="@string/menu_drawer_alarm"/>
-
     </group>
 
     <group

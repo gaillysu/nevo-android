@@ -93,6 +93,7 @@ dependencies {
     compile project(':wheelPickLib')
     compile 'com.wdullaer:materialdatetimepicker:2.4.0'
     compile 'no.nordicsemi.android:dfu:1.0.4'
+    compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
 }
 
 repositories {

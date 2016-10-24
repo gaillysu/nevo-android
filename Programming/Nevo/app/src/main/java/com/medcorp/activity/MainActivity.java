@@ -427,7 +427,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         try {
             java.util.Date selectDate = format.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
+                    new SimpleDateFormat("MMM").format(selectDate));
             EventBus.getDefault().post(new DateSelectChangedEvent(selectDate));
         } catch (ParseException e) {
             e.printStackTrace();

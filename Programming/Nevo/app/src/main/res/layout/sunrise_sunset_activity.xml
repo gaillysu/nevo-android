@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="@string/sunset_activity_title_tv"
+        android:textColor="@color/text_color"
+        android:textSize="28sp"
+        />
+
+    <TextView
+        android:id="@+id/show_day_weekday_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_color"
+        android:textSize="20sp"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/clock_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/lunar_watch_icon"/>
+
+        <ImageView
+            android:id="@+id/hour_clock_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/lunar_clockview_hour"/>
+
+        <ImageView
+            android:id="@+id/minutes_clock_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/lunar_clockview_minute"/>
+        <TextView
+            android:id="@+id/sunset_activity_location_city_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/text_color"
+            android:text="hjjgsdajh"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="70dp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center_vertical"
+        >
+        <TextView
+            android:id="@+id/show_today_sunrise_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="safffdf"
+            android:drawablePadding="20dp"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/show_today_sunset_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="adasdasd"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            />
+
+    </LinearLayout>
+</LinearLayout>
