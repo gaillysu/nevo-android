@@ -4,18 +4,15 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include
-        layout="@layout/toolbar"/>
-
     <TextView
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:text="@string/sunset_activity_title_tv"
         android:textColor="@color/text_color"
-        android:textSize="28sp"
-        />
+        android:textSize="28sp"/>
 
     <TextView
         android:id="@+id/show_day_weekday_tv"
@@ -30,66 +27,213 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1">
+        android:layout_marginTop="18dp"
+        android:layout_weight="2">
 
-        <ImageView
-            android:id="@+id/clock_imageView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/lunar_watch_icon"/>
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/clock_imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/sunrise_hour_background"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_sunrise_hour_icon_up"
+                />
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/hour_clock_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
             android:src="@drawable/lunar_clockview_hour"/>
 
         <ImageView
             android:id="@+id/minutes_clock_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:src="@drawable/lunar_clockview_minute"/>
-        <TextView
-            android:id="@+id/sunset_activity_location_city_name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/text_color"
-            android:text="hjjgsdajh"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="70dp"
-            />
     </RelativeLayout>
 
+
+    <!--显示城市的部分-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
         android:gravity="center_vertical"
+        android:orientation="vertical"
         >
-        <TextView
-            android:id="@+id/show_today_sunrise_tv"
-            android:layout_width="0dp"
+
+
+        <!--显示本地城市的部分-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="safffdf"
-            android:drawablePadding="20dp"
-            android:textColor="@color/text_color"
-            android:textSize="20sp"
-            />
-        <TextView
-            android:id="@+id/show_today_sunset_tv"
-            android:layout_width="0dp"
+            android:orientation="vertical"
+            >
+
+
+            <TextView
+                android:id="@+id/world_clock_fragment_show_location_city_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp"
+                android:text="sdgjadfj"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/show_today_sunrise_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="20dp"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp"
+                        />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="30dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunrise_icon"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/show_today_sunset_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp"
+                        />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="30dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunset_icon"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--显示选择的城市部分-->
+        <LinearLayout
+            android:id="@+id/show_other_city_info_ground"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="adasdasd"
-            android:textColor="@color/text_color"
-            android:textSize="20sp"
-            />
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/world_clock_fragment_show_other_city_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp"
+                android:text="sdgjadfj"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/show_other_city_sunrise_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="20dp"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp"
+                        />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="30dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunrise_icon"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/show_other_city_sunset_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp"
+                        />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="30dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunset_icon"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 </LinearLayout>

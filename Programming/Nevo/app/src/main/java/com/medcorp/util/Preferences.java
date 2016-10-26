@@ -27,6 +27,17 @@ public class Preferences {
         }
     }
 
+    private static void saveUserSelectCity(Context context, String cityName) {
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(context.getString(R.string.key_prefs_save_other_name),cityName).apply();
+    }
+
+    public static String getSaveOtherCityName(Context context){
+        init(context);
+        return preferences.getString(context.getString(R.string.key_prefs_save_other_name),null);
+    }
+
     public static void saveSelectDate(Context context, String selectDate) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -39,7 +50,7 @@ public class Preferences {
                 null);
     }
 
-       public static void saveIsFirstLogin(Context context, boolean isNotFirst) {
+    public static void saveIsFirstLogin(Context context, boolean isNotFirst) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(context.getString(R.string.key_prefs_is_first_login), isNotFirst).apply();

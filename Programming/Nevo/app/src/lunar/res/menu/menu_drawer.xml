@@ -20,9 +20,7 @@
         <item
             android:id="@+id/nav_world_clock"
             android:icon="@drawable/ic_sunrise_hour_icon_up"
-            android:title="@string/menu_drawer_worldclock"
-            android:visible="false"
-            />
+            android:title="@string/menu_drawer_worldclock"/>
     </group>
 
     <group
