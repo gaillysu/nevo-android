@@ -412,4 +412,7 @@
     <string name="password_change_success">Change Password Success</string>
     <string name="sunset_activity_title_tv">TODAY</string>
     <string name="cancel_update">Cancel</string>
+    <string name="profile_activity_popupwindow_title">Choose picture source</string>
+    <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
+    <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
 </resources>

@@ -129,7 +129,7 @@
     <string name="startup_goal_heavy">Heavy</string>
     <string name="startup_goal_weekly_days">Weekly days</string>
     <string name="startup_goal_weekend">Weekend</string>
-
+    <string name="cancel_update">Cancel</string>
 
     <string name="alarm_add">Add alarm</string>
     <string name="alarm_saved">Saved alarm!</string>
@@ -402,5 +402,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="password_change_success">Change Password Success</string>
     <string name="sunset_activity_title_tv">TODAY</string>
     <string name="sunrise_activity_toolbar_title">Sunrise&amp;Sunset</string>
+    <string name="profile_activity_popupwindow_title">Choose picture source</string>
+    <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
+    <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
     <!--<lunar end>-->
 </resources>
