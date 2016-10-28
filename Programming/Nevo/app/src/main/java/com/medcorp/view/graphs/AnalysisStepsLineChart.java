@@ -117,10 +117,10 @@ public class AnalysisStepsLineChart extends LineChart {
         Log.w("Karl", "Max vlaue = " + maxValue);
         boolean putTop = false;
         if (maxValue == 0 || maxValue < goal.getSteps()) {
-            maxValue = goal.getSteps() + stepsModulo;
+            maxValue = goal.getSteps()+ stepsModulo;
         } else {
             putTop = true;
-            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
+            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo)+15000);
         }
         //        "Goal: " + goal.getSteps()
         LimitLine limitLine = new LimitLine(0f, "");

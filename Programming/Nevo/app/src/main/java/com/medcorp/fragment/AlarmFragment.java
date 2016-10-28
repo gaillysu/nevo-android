@@ -79,7 +79,20 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
         ButterKnife.bind(this, view);
         this.inflater = inflater;
-        alarmList = new ArrayList<>();
+        alarmList = getModel().getAllAlarm();
+        if (alarmList.size() == 0) {
+            alarmList = new ArrayList<>();
+            Alarm defAlarm;
+            for (int i = 0; i < 2; i++) {
+                if (i == 0) {
+                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), "wake alarm", (byte) 0, (byte) 0);
+                } else {
+                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), "wake alarm", (byte) 1, (byte) 1);
+                }
+                getModel().addAlarm(defAlarm);
+                alarmList.add(defAlarm);
+            }
+        }
         alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this);
         alarmListView.setAdapter(alarmArrayAdapter);
         alarmListView.setOnItemClickListener(this);

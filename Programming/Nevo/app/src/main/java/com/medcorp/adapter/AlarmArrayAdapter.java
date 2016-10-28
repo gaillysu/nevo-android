@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 import com.medcorp.R;
 import com.medcorp.fragment.listener.OnAlarmSwitchListener;
 import com.medcorp.model.Alarm;
+import com.medcorp.view.ToastHelper;
 import com.medcorp.view.customfontview.RobotoTextView;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private List<Alarm> alarmList;
     private AlarmArrayAdapter adapter;
     private String alarmStyle;
+    private int isDefWeekDay;
 
     public AlarmArrayAdapter(Context context, List<Alarm> alarmList, OnAlarmSwitchListener listener) {
         super(context, 0, alarmList);
@@ -50,21 +52,30 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
-        onOffSwitch.setChecked((alarm.getWeekDay()&0x80) == 0x80);
+        isDefWeekDay = alarm.getWeekDay() & 0x0F;
+        if (isDefWeekDay == 0) {
+            onOffSwitch.setChecked(false);
+        } else {
+            onOffSwitch.setChecked(true);
+        }
         if (alarm.getAlarmType() == 0) {
             alarmStyle = getContext().getString(R.string.edit_alarm_sleep);
         } else if (alarm.getAlarmType() == 1) {
             alarmStyle = getContext().getString(R.string.edit_alarm_wake);
         }
 
-        String [] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
-        String weekDay = weekDayArray[alarm.getWeekDay()&0x0F];
+        String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
+        String weekDay = weekDayArray[alarm.getWeekDay() & 0x0F];
         repeatText.setText(weekDay);
-        repeatTextDec.setText(alarmStyle+": " );
+        repeatTextDec.setText(alarmStyle + ": ");
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
+                if (isDefWeekDay !=0) {
+                    onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
+                }else{
+                    ToastHelper.showShortToast(context,R.string.tell_user_change_week_day);
+                }
             }
         });
         return itemView;

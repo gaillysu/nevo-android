@@ -236,7 +236,7 @@
     <string name="log_in_success">Login success</string>
     <string name="log_in_failed">Login failed</string>
 
-    <string name="register_create_account">Create Account</string>
+    <string name="register_create_account">Create account</string>
     <string name="register_password_confirm">Confirm Password</string>
     <string name="register_account_message">No account yet? Create one</string>
     <string name="register_to_login">Already a member? Login</string>
@@ -276,7 +276,7 @@ push and hold the third button, until the white LED blinks</string>
     <!--lunar-->
     <string name="prompt_user_alarm_no_repeat">There is already a sleep alarm set for</string>
     <string name="prompt_user_alarm_no_repeat_two">There is already a wake alarm set for</string>
-    <string name="register_success">Register up success</string>
+    <string name="register_success">Register successfully</string>
     <string name="register_failed">Register up failed</string>
     <string name="network_wait_text">Please wait ...</string>
     <string name="user_email_is_error">Please check your account...</string>
@@ -307,8 +307,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="activity_user_info_man">Male</string>
     <string name="activity_user_info_female">Female</string>
     <string name="user_info_user_birthday_error">Birthday may not be empty</string>
-    <string name="info_company_height">Cm</string>
-    <string name="info_company_weight">Kg</string>
+    <string name="info_company_height">cm</string>
+    <string name="info_company_weight">kg</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
     <string name="register_input_first_is_empty">User name cannot be empty</string>
@@ -405,5 +405,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_activity_popupwindow_title">Choose picture source</string>
     <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
     <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
+    <string name="tell_user_change_week_day">Please change repeat week day after open Alarm!</string>
     <!--<lunar end>-->
 </resources>

@@ -137,7 +137,9 @@ public class LoginActivity extends BaseActivity {
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
-        if (getIntent().getBooleanExtra("isTutorialPage", true)) {
+        if(getModel().isWatchConnected() ){}
+        if (getIntent().getBooleanExtra("isTutorialPage", true) &&
+                getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
             startActivity(TutorialPage1Activity.class);
         } else {
             startActivity(MainActivity.class);
@@ -151,8 +153,8 @@ public class LoginActivity extends BaseActivity {
             new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
                     .contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
                     .title(getString(R.string.open_forget_password_dialog_title))
-                    .content(getString(R.string.prompt_is_not_forget_password)).negativeText(android.R.string.no)
-                    .positiveText(android.R.string.yes).onPositive(new MaterialDialog.SingleButtonCallback() {
+                    .content(getString(R.string.prompt_is_not_forget_password)).negativeText(R.string.tutorial_failed_try_again)
+                    .positiveText(android.R.string.ok).onPositive(new MaterialDialog.SingleButtonCallback() {
                 @Override
                 public void onClick(MaterialDialog dialog, DialogAction which) {
                     Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
@@ -162,7 +164,7 @@ public class LoginActivity extends BaseActivity {
                 }
             }).show();
         }
-        Toast.makeText(getBaseContext(), R.string.log_in_failed, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getBaseContext(), R.string.log_in_failed, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 
@@ -179,7 +181,7 @@ public class LoginActivity extends BaseActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+        if (password.isEmpty() || password.length() < 4 ) {
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {

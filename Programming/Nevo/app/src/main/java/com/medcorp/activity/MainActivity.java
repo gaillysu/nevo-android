@@ -229,7 +229,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     public void onDrawerOpened(View drawerView) {
         userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
-        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
+        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ?
+                getModel().getNevoUser().getFirstName()+" "+getModel().getNevoUser().getLastName() : "");
     }
 
 

@@ -134,8 +134,8 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             case SUCCESS:
                 ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_success));
-                Intent intent = new Intent(UserInfoActivity.this,LoginActivity.class);
-                intent.putExtra("isTutorialPage",true);
+                Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
+                intent.putExtra("isTutorialPage", true);
                 startActivity(intent);
                 finish();
                 break;
@@ -177,7 +177,7 @@ public class UserInfoActivity extends BaseActivity {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             Date userSelectDate = dateFormat.parse(dateDesc);
-                            tv_userBirth.setText(new SimpleDateFormat("MMM").format(userSelectDate) + "-" + day + "-" + year);
+                            tv_userBirth.setText(day + "-" + new SimpleDateFormat("MMM").format(userSelectDate) + "-" + year);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -185,7 +185,7 @@ public class UserInfoActivity extends BaseActivity {
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
                 .minYear(Integer.valueOf(formatDate.split("-")[0]) - 100) //min year in loop
-                .maxYear(Integer.valueOf(formatDate.split("-")[0])) // max year in loop
+                .maxYear(Integer.valueOf(formatDate.split("-")[0]) + 1) // max year in loop
                 .dateChose((Integer.valueOf(formatDate.split("-")[0]) - 30)
                         + "-" + formatDate.split("-")[1] + "-" + formatDate.split("-")[2]) // date chose when init popwindow
                 .build();

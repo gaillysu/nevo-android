@@ -8,7 +8,7 @@
         android:topLeftRadius="5dp"
         android:topRightRadius="5dp"
         />
-    <solid android:color="#FFFFFF"/>
+    <solid android:color="@color/window_background_color"/>
     <stroke
         android:width="2dp"
         android:color="@color/tab_selected_background_color"

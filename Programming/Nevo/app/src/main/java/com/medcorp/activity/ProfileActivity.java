@@ -46,14 +46,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.medcorp.R.*;
+
 /**
  * Created by med on 16/4/6.
  */
 public class ProfileActivity extends BaseActivity {
 
-    @Bind(R.id.main_toolbar)
+    @Bind(id.main_toolbar)
     Toolbar toolbar;
-    @Bind(R.id.profile_activity_select_picture)
+    @Bind(id.profile_activity_select_picture)
     ImageView mImageButton;
     private User user;
     private int viewType;
@@ -68,14 +70,14 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(layout.activity_profile);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(R.string.profile_title);
+        TextView title = (TextView) toolbar.findViewById(id.lunar_tool_bar_title);
+        title.setText(string.profile_title);
 
         String path = getSDCardPath();
         String fileName = null;
@@ -86,7 +88,7 @@ public class ProfileActivity extends BaseActivity {
         }
         File file = new File(path + "/" + fileName + ".jpg");
         imageUri = Uri.fromFile(file);
-        File cropFile = new File(getSDCardPath() + "/med_temp_crop.jpg");
+        File cropFile = new File(getSDCardPath() + "/" + fileName + ".jpg");
         imageCropUri = Uri.fromFile(cropFile);
 
         Bitmap bitmap = null;
@@ -95,19 +97,22 @@ public class ProfileActivity extends BaseActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        mImageButton.setImageBitmap(bitmap);
-
+        if (bitmap == null) {
+            mImageButton.setImageDrawable(getResources().getDrawable(R.drawable.profile_header_icon));
+        }else{
+            mImageButton.setImageBitmap(bitmap);
+        }
         user = getModel().getNevoUser();
         initView();
     }
 
 
     private void initView() {
-        final TextView firstName = (TextView) findViewById(R.id.profile_fragment_user_first_name_tv);
-        final TextView lastName = (TextView) findViewById(R.id.profile_fragment_user_last_name_tv);
-        final TextView userBirthday = (TextView) findViewById(R.id.profile_fragment_user_birthday_tv);
-        final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
-        final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
+        final TextView firstName = (TextView) findViewById(id.profile_fragment_user_first_name_tv);
+        final TextView lastName = (TextView) findViewById(id.profile_fragment_user_last_name_tv);
+        final TextView userBirthday = (TextView) findViewById(id.profile_fragment_user_birthday_tv);
+        final TextView userHeight = (TextView) findViewById(id.profile_fragment_user_height_tv);
+        final TextView userWeight = (TextView) findViewById(id.profile_fragment_user_weight_tv);
 
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
@@ -162,30 +167,30 @@ public class ProfileActivity extends BaseActivity {
 
         String content = null;
         String hintName = null;
-        if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
-            content = getString(R.string.profile_input_user_first_name_dialog_title);
+        if (nameText.getId() == id.profile_fragment_user_first_name_tv) {
+            content = getString(string.profile_input_user_first_name_dialog_title);
             hintName = user.getFirstName();
-        } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
-            content = getString(R.string.profile_fragment_input_user_surname_dialog_title);
+        } else if (nameText.getId() == id.profile_fragment_user_last_name_tv) {
+            content = getString(string.profile_fragment_input_user_surname_dialog_title);
             hintName = user.getLastName();
         }
 
-        new MaterialDialog.Builder(this).title(getString(R.string.edit_profile)).content(content)
-                .inputType(InputType.TYPE_CLASS_TEXT).input(getResources().getString(R.string.profile_fragment_edit_first_name_edit_hint),
+        new MaterialDialog.Builder(this).title(getString(string.edit_profile)).content(content)
+                .inputType(InputType.TYPE_CLASS_TEXT).input(getResources().getString(string.profile_fragment_edit_first_name_edit_hint),
                 hintName, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         if (input.toString().length() > 0) {
                             nameText.setText(input.toString());
-                            if (nameText.getId() == R.id.profile_fragment_user_first_name_tv) {
+                            if (nameText.getId() == id.profile_fragment_user_first_name_tv) {
                                 user.setFirstName(input.toString());
-                            } else if (nameText.getId() == R.id.profile_fragment_user_last_name_tv) {
+                            } else if (nameText.getId() == id.profile_fragment_user_last_name_tv) {
                                 user.setLastName(input.toString());
                             }
                         }
                     }
                 })
-                .negativeText(R.string.notification_cancel).positiveText(getString(R.string.notification_ok)).show();
+                .negativeText(string.notification_cancel).positiveText(getString(string.notification_ok)).show();
 
     }
 
@@ -265,7 +270,7 @@ public class ProfileActivity extends BaseActivity {
                 startActivity(MainActivity.class);
                 finish();
                 break;
-            case R.id.done_menu:
+            case id.done_menu:
                 getModel().saveNevoUser(user);
                 startActivity(MainActivity.class);
                 finish();
@@ -274,10 +279,10 @@ public class ProfileActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.profile_activity_select_picture)
-    public void usePicture() {
+    @OnClick(id.profile_activity_select_picture)
+    public void settingPicture() {
         usePicturePopupWindow = new UsePicturePopupWindow(this, itemsOnClick);
-        usePicturePopupWindow.showAtLocation(this.findViewById(R.id.profile_activity_select_picture),
+        usePicturePopupWindow.showAtLocation(this.findViewById(id.profile_activity_select_picture),
                 Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
@@ -286,15 +291,15 @@ public class ProfileActivity extends BaseActivity {
         public void onClick(View v) {
             usePicturePopupWindow.dismiss();
             switch (v.getId()) {
-                case R.id.user_select_library:
+                case id.user_select_library:
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
                     intent.setType("image/*");
                     startActivityForResult(intent, RESULT_ALBUM_CROP_PATH);
                     break;
-                case R.id.user_select_camera:
+                case id.user_select_camera:
                     takeCameraCropUri();
                     break;
-                case R.id.user_select_cancel:
+                case id.user_select_cancel:
                     usePicturePopupWindow.dismiss();
                     break;
             }
@@ -338,7 +343,7 @@ public class ProfileActivity extends BaseActivity {
             }
             break;
             case RESULT_ALBUM_CROP_PATH:
-                String picPath = parsePicturePath(ProfileActivity.this,data.getData());
+                String picPath = parsePicturePath(ProfileActivity.this, data.getData());
                 File file = new File(picPath);
                 Uri uri = Uri.fromFile(file);
                 cropImg(uri);
@@ -435,7 +440,7 @@ public class ProfileActivity extends BaseActivity {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
                 String selection = "_id=?";
-                String[] selectionArgs = new String[] {split[1]};
+                String[] selectionArgs = new String[]{split[1]};
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         }
@@ -468,7 +473,7 @@ public class ProfileActivity extends BaseActivity {
                 if (cursor != null)
                     cursor.close();
             } catch (Exception e) {
-                Log.e("harvic",e.getMessage());
+                Log.e("harvic", e.getMessage());
             }
         }
         return null;
@@ -478,6 +483,7 @@ public class ProfileActivity extends BaseActivity {
     private static boolean isExternalStorageDocumentsUri(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
+
     private static boolean isDownloadsDocumentsUri(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
