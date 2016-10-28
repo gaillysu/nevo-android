@@ -57,7 +57,11 @@ public class EditNotificationAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.dividerView.setVisibility(View.VISIBLE);
+        if (position != list.size()) {
+            holder.dividerView.setVisibility(View.VISIBLE);
+        }else{
+            holder.dividerView.setVisibility(View.GONE);
+        }
         NotificationListItemBean bean = list.get(position);
         if (bean != null) {
             holder.lampImage.setImageResource(bean.getLampId());

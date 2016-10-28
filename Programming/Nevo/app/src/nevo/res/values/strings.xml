@@ -244,9 +244,9 @@
     <string name="singnup_failed">Sign up failed</string>
 
     <string name="register_popup_message">Creating Account...</string>
-    <string name="register_email_error">enter a valid email address</string>
-    <string name="register_password_error">between 4 and 10 alphanumeric characters</string>
-    <string name="register_password_confirm_error">confirm password failed</string>
+    <string name="register_email_error">Enter a valid Email address</string>
+    <string name="register_password_error">Password must contain at least 8 characters.</string>
+    <string name="register_password_confirm_error"> Passwords do not match</string>
 
     <string name="profile_title">Profile</string>
     <string name="profile_input_height">Input height</string>
@@ -311,7 +311,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="info_company_weight">kg</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
-    <string name="register_input_first_is_empty">User name cannot be empty</string>
+    <string name="register_input_first_is_empty">First name cannot be empty</string>
     <string name="forget_password_activity_title_dec">Forget Password</string>
     <string name="forget_password_activity_page_dec">Don\'t worry.We get you \n covered.As long as \n you don\'t forget to your\n nevo in the morning.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
@@ -406,5 +406,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
     <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
     <string name="tell_user_change_week_day">Please change repeat week day after open Alarm!</string>
+    <string name="def_alarm_one">Alarm 1</string>
+    <string name="def_alarm_two">Alarm 2</string>
     <!--<lunar end>-->
 </resources>

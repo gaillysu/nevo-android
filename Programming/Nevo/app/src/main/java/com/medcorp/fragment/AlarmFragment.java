@@ -85,9 +85,9 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             Alarm defAlarm;
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
-                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), "wake alarm", (byte) 0, (byte) 0);
+                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_one), (byte) 0, (byte) 0);
                 } else {
-                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), "wake alarm", (byte) 1, (byte) 1);
+                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_two), (byte) 1, (byte) 1);
                 }
                 getModel().addAlarm(defAlarm);
                 alarmList.add(defAlarm);

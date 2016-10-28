@@ -142,7 +142,7 @@ public class SignupActivity extends BaseActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+        if (password.isEmpty() ||  password.length() <=10) {
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {
