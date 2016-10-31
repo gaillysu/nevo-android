@@ -94,7 +94,7 @@ public class AnalysisStepsFragment extends BaseFragment {
             }
         }
         if (activeGoal == null) {
-            activeGoal = new Goal("Unknown", true, 7000);
+            activeGoal = new Goal("Unknown", true, 1000);
         }
         thisWeekData = getModel().getThisWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
         lastWeekData = getModel().getLastWeekSteps(getModel().getNevoUser().getNevoUserID(), userSelectDate);
@@ -127,11 +127,11 @@ public class AnalysisStepsFragment extends BaseFragment {
                     (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i == 0) {
                 imageView.setImageResource(R.drawable.ui_page_control_selector);
-            }else{
+            } else {
                 imageView.setImageResource(R.drawable.ui_page_control_unselector);
                 layoutParams.leftMargin = 20;
             }
-            uiPageControl.addView(imageView,layoutParams);
+            uiPageControl.addView(imageView, layoutParams);
         }
 
         AnalysisStepsChartAdapter adapter = new AnalysisStepsChartAdapter(stepsDataList);
@@ -145,11 +145,11 @@ public class AnalysisStepsFragment extends BaseFragment {
             public void onPageSelected(int position) {
                 setDesText(position);
                 int childCount = uiPageControl.getChildCount();
-                for(int i= 0 ; i<childCount ; i++){
+                for (int i = 0; i < childCount; i++) {
                     ImageView imageView = (ImageView) uiPageControl.getChildAt(i);
-                    if(position == i){
+                    if (position == i) {
                         imageView.setImageResource(R.drawable.ui_page_control_selector);
-                    }else{
+                    } else {
                         imageView.setImageResource(R.drawable.ui_page_control_unselector);
                     }
                 }
@@ -161,11 +161,11 @@ public class AnalysisStepsFragment extends BaseFragment {
         });
     }
 
-    private void setAverageText(int totalSteps, int averageSteps, int averageCalories, int averageDuration, String title) {
+    private void setAverageText(int totalSteps, int averageSteps, String averageCalories, int averageDuration, String title) {
         analysisStepsText.setText(title);
         totalStepsText.setText(totalSteps + "");
         averageStepsText.setText(averageSteps + "");
-        avgCalories.setText(averageCalories + "");
+        avgCalories.setText(averageCalories);
         String averageActivityTime = TimeUtil.formatTime(averageDuration);
         avgDurationTime.setText(averageActivityTime);
 
@@ -179,12 +179,13 @@ public class AnalysisStepsFragment extends BaseFragment {
         return durationTime;
     }
 
-    private int getWeekCalories(List<Steps> thisWeekData) {
-        int calories = 0;
-        for (Steps steps : thisWeekData) {
-            calories += steps.getCalories();
+    private String getWeekCalories(List<Steps> thisWeekData, int weekCountDay) {
+        int userWeight = getModel().getNevoUser().getWeight();
+        if(weekCountDay == 30) {
+            return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData))/weekCountDay/1000 + "";
+        }else{
+            return (int) ((2.0 * userWeight * 3.5) / 200 * getAvgDurationTime(thisWeekData))/weekCountDay+"";
         }
-        return calories;
     }
 
     private int getWeekSteps(List<Steps> thisWeekData) {
@@ -199,32 +200,32 @@ public class AnalysisStepsFragment extends BaseFragment {
         switch (position) {
             case 0:
                 if (thisWeekData.size() != 0) {
-                    setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData) / 7
-                            , getWeekCalories(thisWeekData) / 7
-                            , getAvgDurationTime(thisWeekData) / 7
+                    setAverageText(getWeekSteps(thisWeekData), getWeekSteps(thisWeekData)/7
+                            , getWeekCalories(thisWeekData,7)
+                            , getAvgDurationTime(thisWeekData)/7
                             , getResources().getString(R.string.analysis_fragment_this_week_steps));
                 } else {
-                    setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_this_week_steps));
+                    setAverageText(0, 0, 0+"", 0, getResources().getString(R.string.analysis_fragment_this_week_steps));
                 }
                 break;
             case 1:
                 if (lastWeekData.size() != 0) {
-                    setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData) / 7
-                            , getWeekCalories(lastWeekData) / 7
-                            , getAvgDurationTime(lastWeekData) / 7
+                    setAverageText(getWeekSteps(lastWeekData), getWeekSteps(lastWeekData)/7
+                            , getWeekCalories(lastWeekData,7)
+                            , getAvgDurationTime(lastWeekData)/7
                             , getResources().getString(R.string.analysis_fragment_last_week_steps));
                 } else {
-                    setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_week_steps));
+                    setAverageText(0, 0, 0+"", 0, getResources().getString(R.string.analysis_fragment_last_week_steps));
                 }
                 break;
             case 2:
                 if (lastMonthData.size() != 0) {
-                    setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData) / 30
-                            , getWeekCalories(lastMonthData) / 7
-                            , getAvgDurationTime(lastMonthData) / 30 / 1000
+                    setAverageText(getWeekSteps(lastMonthData), getWeekSteps(lastMonthData)/7
+                            , getWeekCalories(lastMonthData,30)
+                            , getAvgDurationTime(lastMonthData)/30/ 1000
                             , getResources().getString(R.string.analysis_fragment_last_month_solar));
                 } else {
-                    setAverageText(0, 0, 0, 0, getResources().getString(R.string.analysis_fragment_last_month_solar));
+                    setAverageText(0, 0, 0+"", 0, getResources().getString(R.string.analysis_fragment_last_month_solar));
                 }
                 break;
         }

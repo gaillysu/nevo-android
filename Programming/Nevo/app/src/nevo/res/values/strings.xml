@@ -2,9 +2,10 @@
     <string name="app_name">Nevo</string>
     <string name="menu_drawer_activity">Activity</string>
     <string name="menu_drawer_alarm">Alarm</string>
+    <string name="menu_drawer_worldclock">World Clock</string>
     <string name="menu_drawer_sleep">Sleep</string>
     <string name="menu_drawer_settings">Settings</string>
-
+    <string name="choose_activity_title_choose_city_tv">Choose a City</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
@@ -128,7 +129,7 @@
     <string name="startup_goal_heavy">Heavy</string>
     <string name="startup_goal_weekly_days">Weekly days</string>
     <string name="startup_goal_weekend">Weekend</string>
-
+    <string name="cancel_update">Cancel</string>
 
     <string name="alarm_add">Add alarm</string>
     <string name="alarm_saved">Saved alarm!</string>
@@ -235,7 +236,7 @@
     <string name="log_in_success">Login success</string>
     <string name="log_in_failed">Login failed</string>
 
-    <string name="register_create_account">Create Account</string>
+    <string name="register_create_account">Create account</string>
     <string name="register_password_confirm">Confirm Password</string>
     <string name="register_account_message">No account yet? Create one</string>
     <string name="register_to_login">Already a member? Login</string>
@@ -243,9 +244,9 @@
     <string name="singnup_failed">Sign up failed</string>
 
     <string name="register_popup_message">Creating Account...</string>
-    <string name="register_email_error">enter a valid email address</string>
-    <string name="register_password_error">between 4 and 10 alphanumeric characters</string>
-    <string name="register_password_confirm_error">confirm password failed</string>
+    <string name="register_email_error">Enter a valid Email address</string>
+    <string name="register_password_error">Password must contain at least 8 characters.</string>
+    <string name="register_password_confirm_error"> Passwords do not match</string>
 
     <string name="profile_title">Profile</string>
     <string name="profile_input_height">Input height</string>
@@ -275,7 +276,7 @@ push and hold the third button, until the white LED blinks</string>
     <!--lunar-->
     <string name="prompt_user_alarm_no_repeat">There is already a sleep alarm set for</string>
     <string name="prompt_user_alarm_no_repeat_two">There is already a wake alarm set for</string>
-    <string name="register_success">Register up success</string>
+    <string name="register_success">Register successfully</string>
     <string name="register_failed">Register up failed</string>
     <string name="network_wait_text">Please wait ...</string>
     <string name="user_email_is_error">Please check your account...</string>
@@ -306,11 +307,11 @@ push and hold the third button, until the white LED blinks</string>
     <string name="activity_user_info_man">Male</string>
     <string name="activity_user_info_female">Female</string>
     <string name="user_info_user_birthday_error">Birthday may not be empty</string>
-    <string name="info_company_height">Cm</string>
-    <string name="info_company_weight">Kg</string>
+    <string name="info_company_height">cm</string>
+    <string name="info_company_weight">kg</string>
     <string name="user_info_user_height_error">Length may not be empty</string>
     <string name="user_info_user_weight_error">Weight may not be empty</string>
-    <string name="register_input_first_is_empty">User name cannot be empty</string>
+    <string name="register_input_first_is_empty">First name cannot be empty</string>
     <string name="forget_password_activity_title_dec">Forget Password</string>
     <string name="forget_password_activity_page_dec">Don\'t worry.We get you \n covered.As long as \n you don\'t forget to your\n nevo in the morning.</string>
     <string name="forget_password_send_request_bt_text">SEND</string>
@@ -399,5 +400,13 @@ push and hold the third button, until the white LED blinks</string>
     <string name="password_is_not_repeat">Passwords do not match with each other.</string>
     <string name="password_change_failure">Changing password failed. Try again.</string>
     <string name="password_change_success">Change Password Success</string>
+    <string name="sunset_activity_title_tv">TODAY</string>
+    <string name="sunrise_activity_toolbar_title">Sunrise&amp;Sunset</string>
+    <string name="profile_activity_popupwindow_title">Choose picture source</string>
+    <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
+    <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
+    <string name="tell_user_change_week_day">Please change repeat week day after open Alarm!</string>
+    <string name="def_alarm_one">Alarm 1</string>
+    <string name="def_alarm_two">Alarm 2</string>
     <!--<lunar end>-->
 </resources>

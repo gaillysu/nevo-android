@@ -149,5 +149,8 @@
         <item name="android:layout_marginLeft">3dp</item>
         <item name="android:textColor">@drawable/text_color_toggle_btn_circle</item>
     </style>
-
+    <style name="Animation_profile_popupwindow">
+        <item name="android:windowEnterAnimation">@anim/profile_use_picture_popupwindow_anim</item>
+        <item name="android:windowExitAnimation">@anim/popupwindow_out_anim</item>
+    </style>
 </resources>

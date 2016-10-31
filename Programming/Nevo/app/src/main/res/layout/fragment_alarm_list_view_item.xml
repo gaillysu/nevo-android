@@ -19,7 +19,7 @@
             android:text="jhggjh"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/black"
-            android:textSize="65sp"
+            android:textSize="40sp"
             roboto:thin="true"/>
 
         <android.support.v7.widget.SwitchCompat
@@ -33,17 +33,6 @@
             android:shadowColor="@color/colorPrimary"/>
     </RelativeLayout>
 
-    <com.medcorp.view.customfontview.RobotoTextView
-        android:id="@+id/fragment_alarmm_list_view_item_alarm_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_alarm_list_view_item_alarm_time_wrapper"
-        android:paddingLeft="5dp"
-        android:paddingTop="10dp"
-        android:text="sdafds"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        roboto:bold="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,10 +43,22 @@
         >
 
         <com.medcorp.view.customfontview.RobotoTextView
+            android:id="@+id/fragment_alarmm_list_view_item_alarm_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_alarm_list_view_item_alarm_time_wrapper"
+            android:paddingLeft="5dp"
+            android:text="sdafds"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            roboto:bold="true"/>
+
+        <com.medcorp.view.customfontview.RobotoTextView
             android:id="@+id/fragment_alarm_list_view_item_alarm_repeat_dec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20dp"
             android:text="adsad"
             android:textColor="@color/black"
             android:textSize="18sp"

@@ -11,7 +11,7 @@ import retrofit.RestAdapter;
  */
 public class BaseMedRetroService extends RetrofitGsonSpiceService {
 
-    private  static final String BASE_URL = "http://nevo.karljohnchow.com";
+    private static final String BASE_URL = "http://cloud.nevowatch.com";
 
     @Override
     public void onCreate() {

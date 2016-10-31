@@ -69,6 +69,7 @@ import com.medcorp.view.ToastHelper;
 
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.util.Optional;
+import net.medcorp.library.worldclock.WorldClockDatabaseHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -116,6 +117,7 @@ public class ApplicationModel extends Application {
     private MedManager validicMedManager;
     private CloudSyncManager cloudSyncManager;
     private User nevoUser;
+    private WorldClockDatabaseHelper worldClockDatabaseHelper ;
 
     @Override
     public void onCreate() {
@@ -132,6 +134,8 @@ public class ApplicationModel extends Application {
         solarDatabaseHelper = new SolarDatabaseHelper(this);
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
+        worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
+        worldClockDatabaseHelper.setupWorldClock();
         Optional<User> user = userDatabaseHelper.getLoginUser();
         if (user.isEmpty()) {
             nevoUser = new User(0);
@@ -160,6 +164,10 @@ public class ApplicationModel extends Application {
 
     public MedManager getNetworkManage() {
         return validicMedManager;
+    }
+
+    public WorldClockDatabaseHelper getWorldClockDatabaseHelper(){
+        return worldClockDatabaseHelper;
     }
 
     public StepsDatabaseHelper getStepsHelper() {

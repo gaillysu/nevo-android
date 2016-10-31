@@ -8,7 +8,7 @@ public class Goal {
     private int id;
     private String label;
     private boolean status;
-    private int steps;
+    private int steps = 10000;
 
     public Goal(String label, boolean status, int steps) {
         this.label = label;

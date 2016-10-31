@@ -37,6 +37,7 @@ import com.medcorp.fragment.AlarmFragment;
 import com.medcorp.fragment.AnalysisFragment;
 import com.medcorp.fragment.MainFragment;
 import com.medcorp.fragment.SettingsFragment;
+import com.medcorp.fragment.WorldClockFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -114,6 +115,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         ColorStateList colorStateList = this.getResources().getColorStateList(R.color.navigation_text_color_select);
         navigationView.setItemTextColor(colorStateList);
         drawerLayout.setDrawerListener(this);
+
 
         MenuItem firstItem = navigationView.getMenu().getItem(0);
         onNavigationItemSelected(firstItem);
@@ -227,7 +229,8 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     public void onDrawerOpened(View drawerView) {
         userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
-        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getFirstName() : "");
+        showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ?
+                getModel().getNevoUser().getFirstName()+" "+getModel().getNevoUser().getLastName() : "");
     }
 
 
@@ -280,6 +283,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 break;
             case R.id.nav_settings_fragment:
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
+                break;
+            case R.id.nav_world_clock:
+                fragment = WorldClockFragment.instantiate(MainActivity.this, WorldClockFragment.class.getName());
                 break;
         }
 
@@ -427,7 +433,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         try {
             java.util.Date selectDate = format.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
-                    new SimpleDateFormat("MMM", Locale.US).format(selectDate));
+                    new SimpleDateFormat("MMM").format(selectDate));
             EventBus.getDefault().post(new DateSelectChangedEvent(selectDate));
         } catch (ParseException e) {
             e.printStackTrace();
