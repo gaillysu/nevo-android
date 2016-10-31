@@ -57,7 +57,7 @@ public class EditNotificationAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        if (position != list.size()) {
+        if (position != list.size()-1) {
             holder.dividerView.setVisibility(View.VISIBLE);
         }else{
             holder.dividerView.setVisibility(View.GONE);

@@ -1,6 +1,11 @@
 package com.medcorp.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +34,6 @@ import com.medcorp.ble.model.color.YellowLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.model.NotificationListItemBean;
 import com.medcorp.util.Preferences;
-import com.medcorp.view.ToastHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +60,13 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
 
     @Bind(R.id.notification_lamp_group)
     LinearLayout lunarLedLampGroup;
+    @Bind(R.id.notification_activity_layout)
+    CoordinatorLayout coordinatorLayout;
 
 
     private int defaultColor = 0;
     private EditNotificationAdapter adapter;
+    private Snackbar snackbar;
 
     private final List<NevoLed> ledList = new ArrayList<>();
     private NotificationDataHelper helper;
@@ -184,7 +191,24 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
                 break;
             case R.id.done_menu:
                 Preferences.saveNotificationColor(this, notification, selectedLed);
-                ToastHelper.showShortToast(this, getString(R.string.save_notification_ok));
+                if (snackbar != null) {
+                    if (snackbar.isShown()) {
+                        snackbar.dismiss();
+                    }
+                }
+                snackbar = Snackbar.make(coordinatorLayout, "", Snackbar.LENGTH_SHORT);
+                TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                tv.setTextColor(Color.WHITE);
+                tv.setText(getString(R.string.save_notification_ok));
+                Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+                ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+                snackbar.show();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        snackbar.dismiss();
+                    }
+                }, 1800);
                 finish();
                 break;
 

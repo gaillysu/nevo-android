@@ -18,7 +18,6 @@ import com.medcorp.R;
 import com.medcorp.activity.ConnectToOtherAppsActivity;
 import com.medcorp.activity.GoalsActivity;
 import com.medcorp.activity.MyNevoActivity;
-import com.medcorp.activity.SettingAboutActivity;
 import com.medcorp.activity.SettingNotificationActivity;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.tutorial.TutorialPage1Activity;
@@ -77,7 +76,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
             listMenu.add(new SettingsMenuItem(getString(R.string.login_page_activity_title), R.drawable.ic_login_setting_page));
         }
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
+        //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
         settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
         settingListView.setAdapter(settingAdapter);
@@ -157,11 +156,12 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 startActivity(intent);
             }
             SettingsFragment.this.getActivity().finish();
-        } else if (position == 9) {
-            Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
-            startActivity(intent);
-
         }
+        //        } else if (position == 9) {
+        //            Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
+        //            startActivity(intent);
+        //
+        //        }
     }
 
     @Override

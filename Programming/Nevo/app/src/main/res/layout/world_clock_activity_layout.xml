@@ -13,13 +13,14 @@
         android:orientation="horizontal"
         >
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/search_world_city_edit_city_name_ed"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_weight="1"
+            android:completionThreshold="2"
             android:background="@drawable/world_search_city_edit_background"
             android:drawableLeft="@drawable/search"
             android:drawablePadding="8dp"

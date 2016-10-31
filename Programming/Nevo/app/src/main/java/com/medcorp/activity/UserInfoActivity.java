@@ -2,8 +2,13 @@ package com.medcorp.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.TextView;
@@ -15,8 +20,6 @@ import com.medcorp.activity.login.SignupActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.event.SignUpEvent;
 import com.medcorp.network.med.model.CreateUser;
-import com.medcorp.view.ToastHelper;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -38,8 +41,11 @@ public class UserInfoActivity extends BaseActivity {
     private String firstName;
     private String lastName;
     private String password;
+    private Snackbar snackbar;
     private int viewType = -1;
     private ProgressDialog progressDialog;
+    @Bind(R.id.user_info_activity_layout)
+    CoordinatorLayout coordinatorLayout;
     @Bind(R.id.register_account_activity_edit_birthday)
     TextView tv_userBirth;
     @Bind(R.id.register_account_activity_edit_height)
@@ -100,7 +106,7 @@ public class UserInfoActivity extends BaseActivity {
 
                 getModel().getCloudSyncManager().createUser(userInfo);
             } catch (NumberFormatException e) {
-                ToastHelper.showShortToast(this, getString(R.string.user_no_select_profile_info));
+                showSnackbar(R.string.user_no_select_profile_info);
             }
         } else {
             if (userBirthday.isEmpty()) {
@@ -125,15 +131,32 @@ public class UserInfoActivity extends BaseActivity {
 
     }
 
+    public void showSnackbar(int id) {
+        snackbar = Snackbar.make(coordinatorLayout, "", Snackbar.LENGTH_LONG);
+        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        tv.setText(getString(id));
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+        snackbar.show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                snackbar.dismiss();
+            }
+        }, 1800);
+    }
+
     @Subscribe
     public void onEvent(SignUpEvent event) {
         progressDialog.dismiss();
         switch (event.getSignUpStatus()) {
             case FAILED:
-                ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_failed));
+                showSnackbar(R.string.register_failed);
                 break;
             case SUCCESS:
-                ToastHelper.showShortToast(UserInfoActivity.this, getString(R.string.register_success));
+                showSnackbar(R.string.register_success);
                 Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
                 intent.putExtra("isTutorialPage", true);
                 startActivity(intent);
@@ -185,7 +208,7 @@ public class UserInfoActivity extends BaseActivity {
                 }).viewStyle(viewType)
                 .viewTextSize(25) // pick view text size
                 .minYear(Integer.valueOf(formatDate.split("-")[0]) - 100) //min year in loop
-                .maxYear(Integer.valueOf(formatDate.split("-")[0]) + 1) // max year in loop
+                .maxYear(Integer.valueOf(formatDate.split("-")[0])) // max year in loop
                 .dateChose((Integer.valueOf(formatDate.split("-")[0]) - 30)
                         + "-" + formatDate.split("-")[1] + "-" + formatDate.split("-")[2]) // date chose when init popwindow
                 .build();
