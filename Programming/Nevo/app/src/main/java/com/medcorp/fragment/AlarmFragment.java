@@ -73,6 +73,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private Button saturday;
     private Alarm editAlarm;
     private boolean isRepeat = false;
+    private boolean showSyncAlarm = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -286,6 +287,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         //save weekday to low 4 bit,bit 7 to save enable or disable
         alarm.setWeekDay(isChecked ? (byte) (alarm.getWeekDay() | 0x80) : (byte) (alarm.getWeekDay() & 0x0F));
         getModel().updateAlarm(alarm);
+        showSyncAlarm = true;
         getModel().getSyncController().setAlarm(alarm);
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
@@ -310,6 +312,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         } else if (deleteOrUpdate == 1) {
             editAlarm = getModel().getAlarmById(editAlarm.getId());
         }
+        showSyncAlarm = true;
         getModel().getSyncController().setAlarm(editAlarm);
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
@@ -329,8 +332,11 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Subscribe
     public void onEvent(RequestResponseEvent event) {
-        int id = event.isSuccess() ? R.string.alarm_synced : R.string.alarm_error_sync;
-        ((MainActivity) getActivity()).showStateString(id, false);
+        if(showSyncAlarm) {
+            showSyncAlarm = false;
+            int id = event.isSuccess() ? R.string.alarm_synced : R.string.alarm_error_sync;
+            ((MainActivity) getActivity()).showStateString(id, false);
+        }
     }
 
     @Override
