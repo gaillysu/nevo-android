@@ -60,8 +60,8 @@ public class SignupActivity extends BaseActivity {
 
     @OnClick(R.id.register_title_back_image_button)
     public void backClick() {
-        Intent intent = new Intent(SignupActivity.this,LoginActivity.class);
-        intent.putExtra("isTutorialPage",true);
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        intent.putExtra("isTutorialPage", true);
         startActivity(intent);
         finish();
     }
@@ -142,7 +142,7 @@ public class SignupActivity extends BaseActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() ||  password.length() <=10) {
+        if (password.isEmpty() || password.length() < 8) {
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {

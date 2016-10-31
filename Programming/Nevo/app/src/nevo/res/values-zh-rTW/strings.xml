@@ -337,7 +337,7 @@
     <string name="register_last_name_hint">姓氏</string>
     <string name="register_password_confirm">確認密碼</string>
     <string name="register_password_confirm_error">確認密碼失敗</string>
-    <string name="register_password_error">密碼長度為4到10個字符</string>
+    <string name="register_password_error">密碼長度必須大於等於8個字符</string>
     <string name="register_popup_message">正在註冊...</string>
     <string name="register_success">註冊成功</string>
     <string name="register_terms_is_agree">我同意這些條款</string>

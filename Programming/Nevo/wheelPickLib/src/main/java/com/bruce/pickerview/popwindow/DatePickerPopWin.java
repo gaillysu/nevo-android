@@ -261,7 +261,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
             case 1:
                 int yearCount = maxYear - minYear;
 
-                for (int i = 0; i < yearCount; i++) {
+                for (int i = 0; i <= yearCount; i++) {
                     leftList.add(format2LenStr(minYear + i));
                 }
 
@@ -277,7 +277,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 break;
 
             case 2://height
-                for (int j = 120; j < 300; j++) {
+                for (int j = 120; j <= 300; j++) {
                     heightList.add(format2LenStr(j));
 
                 }
@@ -286,7 +286,7 @@ public class DatePickerPopWin extends PopupWindow implements OnClickListener {
                 break;
 
             case 3://weight
-                for (int i = 25; i < 300; i++) {
+                for (int i = 25; i <= 300; i++) {
                     weightList.add(format2LenStr(i));
                 }
                 for (int i = 0; i < 10; i++) {

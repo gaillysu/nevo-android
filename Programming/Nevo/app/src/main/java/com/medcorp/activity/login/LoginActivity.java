@@ -2,11 +2,15 @@ package com.medcorp.activity.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -37,6 +41,7 @@ public class LoginActivity extends BaseActivity {
     private static final int REQUEST_SIGN_UP = 0;
     private ProgressDialog progressDialog;
     private String email;
+    private Snackbar snackbar;
 
     @Bind(R.id.input_email)
     EditText _emailText;
@@ -46,6 +51,8 @@ public class LoginActivity extends BaseActivity {
     Button _loginButton;
     @Bind(R.id.link_signup)
     TextView _signupLink;
+    @Bind(R.id.login_activity_layout)
+    CoordinatorLayout loginLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,14 +137,17 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onLoginSuccess() {
-        Toast.makeText(getBaseContext(), R.string.log_in_success, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getBaseContext(), R.string.log_in_success, Toast.LENGTH_SHORT).show();
+//        Snackbar.make(loginLayout,R.string.log_in_success,Snackbar.LENGTH_SHORT).show();
+        showSnackbar(R.string.log_in_success);
         _loginButton.setEnabled(true);
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
         getModel().saveNevoUser(getModel().getNevoUser());
         setResult(RESULT_OK, null);
         Preferences.saveIsFirstLogin(this, false);
         getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG, false).commit();
-        if(getModel().isWatchConnected() ){}
+        if (getModel().isWatchConnected()) {
+        }
         if (getIntent().getBooleanExtra("isTutorialPage", true) &&
                 getSharedPreferences(Constants.PREF_NAME, 0).getBoolean(Constants.FIRST_FLAG, true)) {
             startActivity(TutorialPage1Activity.class);
@@ -149,7 +159,7 @@ public class LoginActivity extends BaseActivity {
 
     public void onLoginFailed() {
         errorSum++;
-        if (errorSum % 3 == 0){
+        if (errorSum % 3 == 0) {
             new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
                     .contentColor(getResources().getColor(R.color.text_color)).titleColor(getResources().getColor(R.color.text_color))
                     .title(getString(R.string.open_forget_password_dialog_title))
@@ -164,8 +174,31 @@ public class LoginActivity extends BaseActivity {
                 }
             }).show();
         }
+        showSnackbar(R.string.log_in_failed);
+//        Snackbar.make(loginLayout, getResources().getString(R.string.log_in_failed), Snackbar.LENGTH_SHORT).show();
 //        Toast.makeText(getBaseContext(), R.string.log_in_failed, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
+    }
+
+    public void showSnackbar(int id){
+        if(snackbar != null){
+            if(snackbar.isShown()){
+                snackbar.dismiss();
+            }
+        }
+        snackbar = Snackbar.make(loginLayout,"",Snackbar.LENGTH_SHORT);
+        TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        tv.setText(getString(id));
+        Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
+        ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
+        snackbar.show();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                    snackbar.dismiss();
+            }
+        }, 1000);
     }
 
     public boolean validate() {
@@ -181,7 +214,7 @@ public class LoginActivity extends BaseActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 ) {
+        if (password.isEmpty() || password.length() < 4) {
             _passwordText.setError(getString(R.string.register_password_error));
             valid = false;
         } else {

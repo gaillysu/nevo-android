@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +31,8 @@ public class EditWorldClockActivity extends BaseActivity {
     ListView showSearchResultCityList;
     @Bind(R.id.choose_activity_list_index_sidebar)
     SideBar sortCityBar;
+    @Bind(R.id.search_world_city_edit_city_name_ed)
+    AutoCompleteTextView searchCityAtuoCompleteTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

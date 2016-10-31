@@ -195,11 +195,12 @@ public class User {
 
 
     public int getConsumedCalories(Steps steps){
+
         return (int) (2.0 * weight * 3.5 / 200 * (steps.getRunDuration() + steps.getWalkDuration()));
     }
 
     public double getDistanceTraveled(Steps steps){
-        double distance = ((height * 0.45 / 100) * steps.getSteps() / 1000);
+        double distance = ((height * 0.45 / 100) * (steps.getWalkSteps()+steps.getRunSteps())/ 1000);
         return distance;
     }
 
