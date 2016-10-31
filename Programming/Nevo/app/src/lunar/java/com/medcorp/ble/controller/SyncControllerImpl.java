@@ -418,7 +418,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                     else
                     {
-                        mSyncAllFlag = false;
                         mCurrentDay = 0;
                         //DatabaseHelper.outPutDatabase(mContext);
                         syncFinished();
@@ -538,7 +537,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     private void syncFinished() {
         Log.i(TAG,"*** Sync finished ***");
-        EventBus.getDefault().post(new OnSyncEvent(OnSyncEvent.SYNC_EVENT.STOPPED));
+        if(mSyncAllFlag) {
+            mSyncAllFlag = false;
+            EventBus.getDefault().post(new OnSyncEvent(OnSyncEvent.SYNC_EVENT.STOPPED));
+        }
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putLong(Constants.LAST_SYNC, Calendar.getInstance().getTimeInMillis()).commit();
         mContext.getSharedPreferences(Constants.PREF_NAME, 0).edit().putString(Constants.LAST_SYNC_TIME_ZONE, TimeZone.getDefault().getID()).commit();
         //tell history to refresh
