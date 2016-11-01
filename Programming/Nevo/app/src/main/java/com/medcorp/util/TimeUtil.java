@@ -20,7 +20,7 @@ public class TimeUtil {
                 activityTime.append((walkDuration / 60)).append("h");
             }
         } else {
-            activityTime.append(walkDuration).append("min");
+            activityTime.append(walkDuration).append(" min");
         }
         return activityTime.toString();
     }

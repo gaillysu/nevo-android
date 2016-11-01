@@ -90,8 +90,8 @@ public class MainClockFragment extends BaseFragment {
     public void initData(Date date) {
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(steps.getWalkDuration()+steps.getRunDistance() != 0 ? TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()) : 0 + " min");
-        showUserSteps.setText(String.valueOf(steps.getRunSteps()+steps.getWalkSteps()));
+        showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
+        showUserSteps.setText(String.valueOf(steps.getSteps()));
         String result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(result);
         showUserCosumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
