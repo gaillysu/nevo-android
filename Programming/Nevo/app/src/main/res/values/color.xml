@@ -14,6 +14,7 @@
     <color name="pupdialogue_background">#22000000</color>
     <color name="wake_sleep">#fffde69c</color>
     <color name="light_sleep">#A08455</color>
+    <color name="edit_world_clock_driver_color">#A2A4A5</color>
     <color name="toolbar_center_date_text_color">#000000</color>
     <color name="deep_sleep">#A08455</color>
     <color name="history_data_black">#ff524e4e</color>

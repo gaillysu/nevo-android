@@ -9,23 +9,39 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="46dp"
         android:orientation="horizontal"
         >
 
-        <AutoCompleteTextView
-            android:id="@+id/search_world_city_edit_city_name_ed"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_height="36dp"
             android:layout_weight="1"
-            android:completionThreshold="2"
-            android:background="@drawable/world_search_city_edit_background"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="8dp"
-            android:drawableTint="#FFFFFF"
-            />
+            android:layout_marginLeft="18dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/world_search_city_edit_background">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_edit_world_clock_search"
+                />
+            <AutoCompleteTextView
+                android:id="@+id/search_world_city_edit_city_name_ed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:dropDownHeight="200dp"
+                android:layout_gravity="bottom"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                android:drawableTint="#FFFFFF"
+                android:dropDownWidth="wrap_content"
+                />
+
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/edit_world_clock_cancel_search_button"
@@ -50,19 +66,18 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         >
+
         <ListView
             android:id="@+id/show_all_city_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
             ></ListView>
+
         <com.medcorp.view.SideBar
             android:id="@+id/choose_activity_list_index_sidebar"
             android:layout_width="30.0dip"
             android:layout_height="fill_parent"
             android:layout_gravity="end|center"/>
-        <ListView
-            android:id="@+id/show_search_city_result_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
     </FrameLayout>
 </LinearLayout>

@@ -39,10 +39,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
     PresetArrayAdapter presetArrayAdapter;
     Goal goal;
     private int steps = 0;
-
-
-
-    private int stepsGoalNumber;
+    private  String lableGoal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +107,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                         .title(R.string.goal_add)
                         .content(R.string.goal_input)
                         .inputType(InputType.TYPE_CLASS_NUMBER)
-                        .input(getString(R.string.goal_step_goal), "",
+                        .input(getString(R.string.goal_step_goal), " ",
                                 new MaterialDialog.InputCallback() {
                                     @Override
                                     public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -121,13 +118,16 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                                                 .title(R.string.goal_add)
                                                 .content(R.string.goal_label_goal)
                                                 .inputType(InputType.TYPE_CLASS_TEXT)
-                                                .input(getString(R.string.goal_name_goal), "",
+                                                .input(getString(R.string.goal_name_goal), " ",
                                                         new MaterialDialog.InputCallback() {
                                                             @Override
                                                             public void onInput(MaterialDialog dialog, CharSequence input) {
-                                                                if (input.length() == 0)
-                                                                    return;
-                                                                goal = new Goal(input.toString(),true,steps);
+                                                                if (input.length() == 0) {
+                                                                    lableGoal = getString(R.string.main_steps_fragment_title) + goalList.size() + 1;
+                                                                }else{
+                                                                    lableGoal = input.toString();
+                                                                }
+                                                                goal = new Goal(lableGoal,true,steps);
                                                                 getModel().addGoal(goal);
                                                                 goalList = getModel().getAllGoal();
                                                                 presetArrayAdapter.setDataset(goalList);

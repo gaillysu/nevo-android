@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.fragment.MainClockFragment;
 import com.medcorp.fragment.MainFragment;
@@ -26,8 +25,7 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
         super(fm);
         this.mainFragment = fragment;
         context = fragment.getContext();
-        //        if(mainFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+        if (mainFragment.getModel().getSyncController().getWatchInfomation().getWatchID() == 1) {
             fragmentAdapterArray = context.getResources().getStringArray(R.array.nevo_main_adapter_fragment);
         } else {
             fragmentAdapterArray = context.getResources().getStringArray(R.array.lunar_main_adapter_fragment);
