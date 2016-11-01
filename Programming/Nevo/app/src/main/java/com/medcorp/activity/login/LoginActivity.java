@@ -137,8 +137,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onLoginSuccess() {
-//        Toast.makeText(getBaseContext(), R.string.log_in_success, Toast.LENGTH_SHORT).show();
-//        Snackbar.make(loginLayout,R.string.log_in_success,Snackbar.LENGTH_SHORT).show();
         showSnackbar(R.string.log_in_success);
         _loginButton.setEnabled(true);
         getModel().getNevoUser().setNevoUserEmail(_emailText.getText().toString());
@@ -175,8 +173,6 @@ public class LoginActivity extends BaseActivity {
             }).show();
         }
         showSnackbar(R.string.log_in_failed);
-//        Snackbar.make(loginLayout, getResources().getString(R.string.log_in_failed), Snackbar.LENGTH_SHORT).show();
-//        Toast.makeText(getBaseContext(), R.string.log_in_failed, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
     }
 

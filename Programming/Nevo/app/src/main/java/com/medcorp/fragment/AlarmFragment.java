@@ -181,11 +181,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 StringBuffer alarmRepeatDay = new StringBuffer();
 
                 if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                    alarmName.setText(getString(R.string.menu_drawer_alarm));
+                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + alarmList.size() + 1);
                 } else {
                     newAlarm.setLabel(alarmName.getText().toString());
                 }
-
                 List<Alarm> allAlarm = getModel().getAllAlarm();
 
                 int num = 0;//awake/normal alarm: 0~6
@@ -345,7 +344,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
     @Subscribe
     public void onEvent(RequestResponseEvent event) {
-        if(showSyncAlarm) {
+        if (showSyncAlarm) {
             showSyncAlarm = false;
             int id = event.isSuccess() ? R.string.alarm_synced : R.string.alarm_error_sync;
             ((MainActivity) getActivity()).showStateString(id, false);

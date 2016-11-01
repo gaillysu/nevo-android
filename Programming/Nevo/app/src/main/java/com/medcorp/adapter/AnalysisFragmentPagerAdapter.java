@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.fragment.AnalysisFragment;
 import com.medcorp.fragment.AnalysisSleepFragment;
@@ -25,8 +24,8 @@ public class AnalysisFragmentPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.analysisFragment = fragment;
         context = fragment.getContext();
-//        if(analysisFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
-            if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO){
+        if(analysisFragment.getModel().getSyncController().getWatchInfomation().getWatchID()==1) {
+//            if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO){
             analysisTableArray = fragment.getResources().getStringArray(R.array.nevo_analysis_fragment_table_array);
         }else{
             analysisTableArray = fragment.getResources().getStringArray(R.array.analysis_fragment_table_array);

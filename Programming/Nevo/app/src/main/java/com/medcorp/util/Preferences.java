@@ -27,7 +27,7 @@ public class Preferences {
         }
     }
 
-    private static void saveUserSelectCity(Context context, String cityName) {
+    public static void saveUserSelectCity(Context context, String cityName) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(context.getString(R.string.key_prefs_save_other_name),cityName).apply();
