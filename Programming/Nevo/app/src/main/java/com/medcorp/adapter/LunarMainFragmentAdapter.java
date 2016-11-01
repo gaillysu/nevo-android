@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.medcorp.R;
 import com.medcorp.fragment.MainClockFragment;
@@ -25,11 +26,14 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
         super(fm);
         this.mainFragment = fragment;
         context = fragment.getContext();
-        if (mainFragment.getModel().getSyncController().getWatchInfomation().getWatchID() == 1) {
+        int watchID = mainFragment.getModel().getSyncController().getWatchInfomation().getWatchID();
+        if (watchID == 1 || watchID == 0) {
             fragmentAdapterArray = context.getResources().getStringArray(R.array.nevo_main_adapter_fragment);
-        } else {
+        } else if (watchID == 2 || watchID == 3) {
             fragmentAdapterArray = context.getResources().getStringArray(R.array.lunar_main_adapter_fragment);
-
+        } else {
+            fragmentAdapterArray = context.getResources().getStringArray(R.array.nevo_main_adapter_fragment);
+            Log.w("Karl", "Unknown Watch id");
         }
     }
 
@@ -37,17 +41,13 @@ public class LunarMainFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                MainClockFragment mainClockFragment = (MainClockFragment) MainClockFragment.instantiate(context, MainClockFragment.class.getName());
-                return mainClockFragment;
+                return MainClockFragment.instantiate(context, MainClockFragment.class.getName());
             case 1:
-                MainStepsFragment mainStepsFragment = (MainStepsFragment) com.medcorp.fragment.MainStepsFragment.instantiate(context, MainStepsFragment.class.getName());
-                return mainStepsFragment;
+                return MainStepsFragment.instantiate(context, MainStepsFragment.class.getName());
             case 2:
-                MainSleepFragment mainSleepFragment = (MainSleepFragment) MainSleepFragment.instantiate(context, MainSleepFragment.class.getName());
-                return mainSleepFragment;
+                return MainSleepFragment.instantiate(context, MainSleepFragment.class.getName());
             case 3:
-                MainSolarFragment solarFragment = (MainSolarFragment) MainSolarFragment.instantiate(context, MainSolarFragment.class.getName());
-                return solarFragment;
+                return MainSolarFragment.instantiate(context, MainSolarFragment.class.getName());
             default:
                 return null;
         }

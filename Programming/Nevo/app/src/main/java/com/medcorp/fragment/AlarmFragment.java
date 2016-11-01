@@ -37,7 +37,6 @@ import com.medcorp.view.ToastHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -81,27 +80,20 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         ButterKnife.bind(this, view);
         this.inflater = inflater;
         alarmList = getModel().getAllAlarm();
-        if (alarmList.size() == 0) {
-            alarmList = new ArrayList<>();
-            Alarm defAlarm;
-            for (int i = 0; i < 2; i++) {
-                if (i == 0) {
-                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_one), (byte) 0, (byte) 0);
-                } else {
-                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_two), (byte) 1, (byte) 1);
-                }
-                getModel().addAlarm(defAlarm);
-                alarmList.add(defAlarm);
-            }
-        }
         alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this);
         alarmListView.setAdapter(alarmArrayAdapter);
         alarmListView.setOnItemClickListener(this);
+        isMondayChecked = true;
         mMap = new TreeMap<>();
         refreshListView();
         setHasOptionsMenu(true);
         return view;
     }
+
+    private void initAddAlarm() {
+        initAlarmDialog((byte)2);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -155,7 +147,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         friday = (Button) alarmDialogView.findViewById(R.id.tog_btn_friday);
         saturday = (Button) alarmDialogView.findViewById(R.id.tag_btn_saturday);
         sunday = (Button) alarmDialogView.findViewById(R.id.tag_btn_sunday);
-
+        initAddAlarm();
         monday.setOnClickListener(this);
         tuesday.setOnClickListener(this);
         wednesday.setOnClickListener(this);
@@ -181,7 +173,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 StringBuffer alarmRepeatDay = new StringBuffer();
 
                 if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + alarmList.size() + 1);
+                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + (alarmList.size() + 1));
                 } else {
                     newAlarm.setLabel(alarmName.getText().toString());
                 }
@@ -368,12 +360,12 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
+
+    private void initAlarmDialog(byte repeatday) {
+        switch(repeatday){
             // 选中周一
-            case R.id.tag_btn_monday:
-                weekDay = 2;
+            case 2:
+               weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -383,7 +375,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周二
-            case R.id.tag_btn_tuesday:
+            case 3:
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -391,11 +383,11 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 friday.setTextColor(getResources().getColor(R.color.text_color));
                 saturday.setTextColor(getResources().getColor(R.color.text_color));
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
-                weekDay = 3;
+                weekDay = repeatday;
                 break;
             // 选中周三
-            case R.id.tag_btn_wednesday:
-                weekDay = 4;
+            case 4:
+                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.colorPrimary));
@@ -405,8 +397,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周四
-            case R.id.tag_btn_thursday:
-                weekDay = 5;
+            case 5:
+                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -416,8 +408,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周五
-            case R.id.tog_btn_friday:
-                weekDay = 6;
+            case 6:
+                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -427,8 +419,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周六
-            case R.id.tag_btn_saturday:
-                weekDay = 7;
+            case 7:
+                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -438,8 +430,8 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 sunday.setTextColor(getResources().getColor(R.color.text_color));
                 break;
             // 选中周日
-            case R.id.tag_btn_sunday:
-                weekDay = 1;
+            case 1:
+                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.text_color));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -447,6 +439,43 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 friday.setTextColor(getResources().getColor(R.color.text_color));
                 saturday.setTextColor(getResources().getColor(R.color.text_color));
                 sunday.setTextColor(getResources().getColor(R.color.colorPrimary));
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            // 选中周一
+            case R.id.tag_btn_monday:
+                initAlarmDialog((byte)2);
+                break;
+            // 选中周二
+            case R.id.tag_btn_tuesday:
+                initAlarmDialog((byte)3);
+
+                weekDay = 3;
+                break;
+            // 选中周三
+            case R.id.tag_btn_wednesday:
+                initAlarmDialog((byte)4);
+
+                break;
+            // 选中周四
+            case R.id.tag_btn_thursday:
+                initAlarmDialog((byte)5);
+                break;
+            // 选中周五
+            case R.id.tog_btn_friday:
+                initAlarmDialog((byte)6);
+                break;
+            // 选中周六
+            case R.id.tag_btn_saturday:
+                initAlarmDialog((byte)7);
+                break;
+            // 选中周日
+            case R.id.tag_btn_sunday:
+                initAlarmDialog((byte)1);
                 break;
         }
     }

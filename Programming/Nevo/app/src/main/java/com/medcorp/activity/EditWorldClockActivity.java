@@ -108,7 +108,7 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
         Preferences.saveUserSelectCity(EditWorldClockActivity.this,chooseCityModel.getDisplayName());
         searchCityAutoCompleteTv.setText(name);
         allCityAdapter.notifyDataSetChanged();
-//        finish();
+        finish();
 
     }
 }

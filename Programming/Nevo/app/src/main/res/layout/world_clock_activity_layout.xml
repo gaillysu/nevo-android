@@ -32,12 +32,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:dropDownHeight="200dp"
+                android:dropDownHeight="match_parent"
                 android:layout_gravity="bottom"
                 android:maxLines="1"
                 android:background="@android:color/transparent"
                 android:drawableTint="#FFFFFF"
-                android:dropDownWidth="wrap_content"
+                android:dropDownWidth="360dp"
                 />
 
 

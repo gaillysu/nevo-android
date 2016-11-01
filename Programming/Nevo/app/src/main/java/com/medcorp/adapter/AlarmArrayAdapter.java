@@ -44,7 +44,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         final Alarm alarm = alarmList.get(position);
         RobotoTextView alarmTimeTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_time);
         RobotoTextView alarmLabelTextView = (RobotoTextView) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_label);
-        SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_switch);
+        final SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.fragment_alarmm_list_view_item_alarm_switch);
 
         RobotoTextView repeatTextDec = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat_dec);
         RobotoTextView repeatText = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat);
@@ -71,11 +71,13 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isDefWeekDay !=0) {
+                if(isDefWeekDay != 0) {
                     onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
                 }else{
-                    ToastHelper.showShortToast(context,R.string.tell_user_change_week_day);
+                    onOffSwitch.setChecked(false);
+                    ToastHelper.showShortToast(context,context.getString(R.string.tell_user_change_week_day));
                 }
+
             }
         });
         return itemView;

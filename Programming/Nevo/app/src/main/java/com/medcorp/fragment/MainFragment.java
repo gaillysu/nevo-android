@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.LunarMainFragmentAdapter;
@@ -60,7 +59,7 @@ public class MainFragment extends BaseObservableFragment {
     }
 
     private void initUiControl() {
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+        if (getModel().getSyncController().getWatchInfomation().getWatchID() == 1) {
             fragmentAdapterArray = getResources().getStringArray(R.array.nevo_main_adapter_fragment);
         } else {
             fragmentAdapterArray = getResources().getStringArray(R.array.lunar_main_adapter_fragment);
@@ -191,10 +190,10 @@ public class MainFragment extends BaseObservableFragment {
 
 
     private void ejectStepsGoalDialog() {
-
         final Dialog dialog = new AlertDialog.Builder(getContext()).create();
         dialog.show();
         Window window = dialog.getWindow();
+
         View stepsGoalView = View.inflate(getContext(), R.layout.steps_fragment_dialog_layout, null);
         window.setContentView(stepsGoalView);
         final RadioGroup stepsGoalGroup = (RadioGroup) stepsGoalView.findViewById(R.id.steps_fragment_dialog_group);
