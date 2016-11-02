@@ -206,7 +206,9 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                         newAlarm.setAlarmType(alarmSelectStyle);
                         newAlarm.setAlarmNumber((byte) num);
                         getModel().addAlarm(newAlarm);
+                        showSyncAlarm = true;
                         getModel().getSyncController().setAlarm(newAlarm);
+                        ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
                         refreshListView();
                     } else {
                         String[] weekDayArray = getContext().getResources().getStringArray(R.array.week_day);
