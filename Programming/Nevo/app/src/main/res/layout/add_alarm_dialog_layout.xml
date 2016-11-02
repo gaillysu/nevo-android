@@ -145,24 +145,19 @@
         <RadioButton
             android:id="@+id/alarm_style_sleep"
             style="@style/StepsGoalDialogRadioBUttonStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:checked="true"
             android:textColor="@color/text_color"
-            android:maxLines="1"
-
             android:text="@string/edit_alarm_sleep"/>
 
         <RadioButton
             android:id="@+id/alarm_style_wake"
             style="@style/StepsGoalDialogRadioBUttonStyle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textColor="@color/text_color"
-            android:maxLines="1"
-            android:layout_weight="1"
             android:text="@string/edit_alarm_wake"/>
     </RadioGroup>
 

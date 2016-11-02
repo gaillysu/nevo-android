@@ -101,6 +101,7 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
         finish();
     }
 
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ChooseCityViewModel chooseCityModel =  chooseCityViewModelsList.get(position);

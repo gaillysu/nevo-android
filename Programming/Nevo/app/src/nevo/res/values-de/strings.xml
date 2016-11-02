@@ -130,6 +130,7 @@
     <string name="alarm_edit">Alarm bearbeiten</string>
     <string name="alarm_label_alarm">Ihren Alarm etikettieren.</string>
     <string name="alarm_label">Etikettname</string>
+    <string name="edit_alarm_sleep">Sleep Alarm</string>
     <string name="alarm_cancel">Abbrechen</string>
     <string name="alarm_deleted">Alarm gelöscht!</string>
     <string name="alarm_could_not_delete">Löschen des Alarms fehlgeschlagen</string>

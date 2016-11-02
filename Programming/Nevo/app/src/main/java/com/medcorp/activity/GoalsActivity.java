@@ -123,7 +123,7 @@ public class GoalsActivity extends BaseActivity implements AdapterView.OnItemCli
                                                             @Override
                                                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                                                 if (input.length() == 0) {
-                                                                    lableGoal = getString(R.string.main_steps_fragment_title) + (goalList.size() + 1);
+                                                                    lableGoal = getString(R.string.def_goal_name)+ " " + (goalList.size() + 1);
                                                                 } else {
                                                                     lableGoal = input.toString();
                                                                 }
