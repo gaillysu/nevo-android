@@ -151,7 +151,7 @@
             android:checked="true"
             android:textColor="@color/text_color"
             android:maxLines="1"
-            android:paddingLeft="5dp"
+
             android:text="@string/edit_alarm_sleep"/>
 
         <RadioButton
@@ -161,8 +161,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textColor="@color/text_color"
+            android:maxLines="1"
             android:layout_weight="1"
-            android:paddingLeft="5dp"
             android:text="@string/edit_alarm_wake"/>
     </RadioGroup>
 

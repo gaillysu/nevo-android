@@ -88,6 +88,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 //here return for keep user history data.
                 return;
             }
+
             TableUtils.dropTable(connectionSource, IDailyHistory.class, true);
             TableUtils.dropTable(connectionSource, UserDAO.class, true);
             TableUtils.dropTable(connectionSource, SleepDAO.class, true);

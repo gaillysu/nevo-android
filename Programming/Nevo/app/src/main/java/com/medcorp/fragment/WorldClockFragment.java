@@ -30,7 +30,7 @@ import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/24.
- * 
+ *
  */
 
 public class WorldClockFragment extends BaseObservableFragment {
