@@ -66,6 +66,8 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         viewHolder.tvTitle.setText(mContent.getDisplayName());
         if (mContent.getDisplayName().equals(otherCityName) | mContent.getDisplayName().equals(locationCityName)){
             viewHolder.isCheck.setVisibility(View.VISIBLE);
+        }else{
+            viewHolder.isCheck.setVisibility(View.GONE);
         }
         return view;
 

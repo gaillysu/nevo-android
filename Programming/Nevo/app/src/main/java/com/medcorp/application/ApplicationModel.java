@@ -137,12 +137,12 @@ public class ApplicationModel extends Application {
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
         Optional<User> user = userDatabaseHelper.getLoginUser();
-        if (Preferences.getIsFirstLogin(this)) {
-            Preferences.saveIsFirstLogin(this, false);
+        if (Preferences.getisInitAlarm(this)) {
+            Preferences.startInitAlarm(this, false);
             Alarm defAlarm;
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
-                    defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7);
+                    defAlarm = new Alarm(21, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_one), (byte) 0, (byte) 7);
                 } else {
                     defAlarm = new Alarm(8, 0, (byte) (0x80 | 0), getString(R.string.def_alarm_two), (byte) 1, (byte) 0);
                 }

@@ -173,7 +173,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 StringBuffer alarmRepeatDay = new StringBuffer();
 
                 if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + (alarmList.size() + 1));
+                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm)+" " + (alarmList.size() + 1));
                 } else {
                     newAlarm.setLabel(alarmName.getText().toString());
                 }

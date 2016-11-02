@@ -30,7 +30,6 @@ import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/24.
- *
  */
 
 public class WorldClockFragment extends BaseObservableFragment {
@@ -106,9 +105,9 @@ public class WorldClockFragment extends BaseObservableFragment {
         // set other city sunrise sunset
         if (otherCityName != null) {
             for (City city : cities) {
-                if (city.getName().equals(otherCityName)) {
+                if ((city.getName() + ", " + city.getCountry()).equals(otherCityName)) {
                     showOtherCityNameAndTime.setText(city.getName());
-                    net.medcorp.library.worldclock.TimeZone zone  = city.getTimezoneRef();
+                    net.medcorp.library.worldclock.TimeZone zone = city.getTimezoneRef();
                     setSunriseAndSunset(showOtherSunrise, showOtherCitySunset, city, zone.getName());
                 }
             }
@@ -126,7 +125,7 @@ public class WorldClockFragment extends BaseObservableFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.choose_goal_menu:
                 startActivity(EditWorldClockActivity.class);
                 break;

@@ -408,5 +408,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_alarm_name">Alarm</string>
+
+    <string name="def_goal_name">Goal </string>
     <!--<lunar end>-->
 </resources>

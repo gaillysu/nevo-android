@@ -73,6 +73,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.login_skip_bt)
     public void skipLogin() {
+        Preferences.saveIsFirstLogin(this,false);
         if (getIntent().getBooleanExtra("isTutorialPage", true) && !getModel().isWatchConnected()) {
             startActivity(TutorialPage1Activity.class);
         } else {

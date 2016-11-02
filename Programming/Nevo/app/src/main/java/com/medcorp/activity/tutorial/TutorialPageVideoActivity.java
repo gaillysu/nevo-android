@@ -32,7 +32,6 @@ public class TutorialPageVideoActivity extends BaseActivity {
                 public void run() {
                   Intent intent = new Intent(TutorialPageVideoActivity.this,LoginActivity.class);
                     intent.putExtra("isTutorialPage",true);
-                    Preferences.saveIsFirstLogin(TutorialPageVideoActivity.this,false);
                     startActivity(intent);
                     finish();
                     overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
