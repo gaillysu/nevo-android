@@ -530,11 +530,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     packetsBuffer.clear();
                     //early nevo firmware doesn't support 0x27 cmd(read watch info), so I put this cmd here
                     sendRequest(new ReadWatchInfoRequest(mContext));
-
-                    //nevo BLE v35 has an issue(not caused by setRTC)--after 00:00, the 0x26 cmd still return yesterday steps count, and press watch key A, the progress bar shows yesterday value  too(in fact, user doesn't walk )
-                    // today, after user walk 1000steps, reconnect watch, the steps count return 0, and watch show progress also reset ( so user will confuse: why my today steps get losed ?)
-
-                    //it is dangerous for evert BLE connection for the same watch, perhaps it will reset some data, so we should only invoke setRTC once time(only get paired)
+                    //it is dangerous when every BLE connection invoke setRtc(), perhaps it will reset some data, so we should invoke setRTC() once time(only get paired with the watch)
                     if(mLocalService.getPairedWatch()!=null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
                         mLocalService.setPairedWatch(null);
                         Log.w(TAG,"SET RTC");
