@@ -56,6 +56,16 @@ public class Preferences {
         editor.putBoolean(context.getString(R.string.key_prefs_is_first_login), isNotFirst).apply();
     }
 
+    public static void startInitAlarm(Context context,boolean isInit){
+        init(context);
+        SharedPreferences.Editor editor =  preferences.edit();
+        editor.putBoolean(context.getString(R.string.key_init_alarm),isInit);
+    }
+
+    public static boolean getisInitAlarm(Context context){
+        init(context);
+        return preferences.getBoolean(context.getString(R.string.key_init_alarm),true);
+    }
     public static boolean getIsFirstLogin(Context context) {
         init(context);
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_first_login), true);

@@ -34,6 +34,7 @@
     <string name="key_prefs_select_date" translatable="false">select_date</string>
     <string name="key_prefs_save_other_name" translatable="false">other_city_name</string>
     <string name="key_prefs_is_first_login" translatable="false">is_not_first_login</string>
+    <string name="key_init_alarm" translatable="false"> is_init_alarm</string>
     <string name="key_prefs_watch_id" translatable="false">watch_id</string>
     <string name="key_prefs_watch_model" translatable="false">watch_model</string>
 

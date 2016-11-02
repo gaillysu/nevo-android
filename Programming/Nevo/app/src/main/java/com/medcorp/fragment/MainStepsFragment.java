@@ -36,7 +36,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jason on 2016/7/19.
- *
  */
 public class MainStepsFragment extends BaseFragment {
 
@@ -59,10 +58,10 @@ public class MainStepsFragment extends BaseFragment {
         View lunarMainFragmentAdapterChart = inflater.inflate(R.layout.chart_fragment_lunar_main_fragment_adapter_layout, container, false);
         ButterKnife.bind(this, lunarMainFragmentAdapterChart);
 
-        String selectDate =  Preferences.getSelectDate(this.getContext());
-        if(selectDate == null){
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if (selectDate == null) {
             userSelectDate = new Date();
-        }else{
+        } else {
             try {
                 userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
             } catch (ParseException e) {
@@ -77,12 +76,12 @@ public class MainStepsFragment extends BaseFragment {
     private void initData(Date date) {
         User user = getModel().getNevoUser();
         steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration()+steps.getRunDuration()));
-        showUserSteps.setText(String.valueOf(steps.getSteps()));
-        String result = String.format(Locale.ENGLISH,"%.2f km", user.getDistanceTraveled(steps));
+        showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
+        showUserSteps.setText(String.valueOf(steps.getRunSteps() + steps.getWalkSteps()));
+        String result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
         showUserStepsDistance.setText(String.valueOf(result));
         showUserConsumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
-        if (steps.getSteps() != 0 && steps.getHourlySteps()!=null){
+        if (steps.getSteps() != 0 && steps.getHourlySteps() != null) {
             JSONArray array = null;
             try {
                 array = new JSONArray(steps.getHourlySteps());
@@ -90,14 +89,13 @@ public class MainStepsFragment extends BaseFragment {
                 e.printStackTrace();
             }
             int[] stepsArray = new int[24];
-            for (int i = 0; i < 24; i++){
-                stepsArray[i] = array.optInt(i,0);
+            for (int i = 0; i < 24; i++) {
+                stepsArray[i] = array.optInt(i, 0);
             }
             hourlyBarChart.setDataInChart(stepsArray);
-        }else{
+        } else {
             hourlyBarChart.setDataInChart(new int[]{0});
         }
-
     }
 
     @Override
@@ -105,7 +103,7 @@ public class MainStepsFragment extends BaseFragment {
         super.onStart();
         EventBus.getDefault().register(this);
         //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
-        if(Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
+        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             getModel().getSyncController().getDailyTrackerInfo(false);
         }
     }
@@ -129,7 +127,7 @@ public class MainStepsFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -138,6 +136,7 @@ public class MainStepsFragment extends BaseFragment {
             });
         }
     }
+
     @Subscribe
     public void onEvent(LittleSyncEvent event) {
         if (event.isSuccess()) {

@@ -137,8 +137,8 @@ public class ApplicationModel extends Application {
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
         Optional<User> user = userDatabaseHelper.getLoginUser();
-        if (Preferences.getIsFirstLogin(this)) {
-            Preferences.saveIsFirstLogin(this, false);
+        if (Preferences.getisInitAlarm(this)) {
+            Preferences.startInitAlarm(this, false);
             Alarm defAlarm;
             for (int i = 0; i < 2; i++) {
                 if (i == 0) {
