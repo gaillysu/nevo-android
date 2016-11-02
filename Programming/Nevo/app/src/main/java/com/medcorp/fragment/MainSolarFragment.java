@@ -77,15 +77,19 @@ public class MainSolarFragment extends BaseFragment {
     private void initData(Date userSelectDate) {
         float powerOnBatteryPercent = 100f;
         float powerOnSolarPercent = 0f;
+        int   powerOnSolarMinutes = 0;
+        int   powOnBatteryMinutes = 1440;
         Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(),userSelectDate);
         if(solarOptional.notEmpty()){
             powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime()*100f/(24*60);
             powerOnBatteryPercent = 100f - powerOnSolarPercent;
+            powerOnSolarMinutes = solarOptional.get().getTotalHarvestingTime();
+            powOnBatteryMinutes = 1440 - powerOnSolarMinutes;
         }
         float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
         setPieChartData(solarPieChartDate);
-        batteryTimeTv.setText(TimeUtil.formatTime((int)(powerOnBatteryPercent*0.01f*24*60)));
-        solarTimeTv.setText(TimeUtil.formatTime((int)(powerOnSolarPercent*0.01f*24*60)));
+        batteryTimeTv.setText(TimeUtil.formatTime(powOnBatteryMinutes));
+        solarTimeTv.setText(TimeUtil.formatTime(powerOnSolarMinutes));
     }
 
     private void setPieChartData(float[] solarPieChartDate) {

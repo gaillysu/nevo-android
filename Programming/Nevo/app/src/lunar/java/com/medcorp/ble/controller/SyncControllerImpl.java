@@ -75,6 +75,7 @@ import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.event.BLEConnectionStateChangedEvent;
+import net.medcorp.library.ble.event.BLEPairStateChangedEvent;
 import net.medcorp.library.ble.event.BLEResponseDataEvent;
 import net.medcorp.library.ble.exception.BLEConnectTimeoutException;
 import net.medcorp.library.ble.exception.BLENotSupportedException;
@@ -496,11 +497,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     packetsBuffer.clear();
                     //step0:firstly read watch infomation, for Lunar and nevo Solar, we use watch ID to show solar power screen
                     sendRequest(new ReadWatchInfoRequest(mContext));
-                    Log.w(TAG,"SET RTC");
-                    //step 1: setRTC every connection
-                    //nevo BLE v35 has an issue(not caused by setRTC)--after 00:00, the 0x26 cmd still return yesterday steps count, and press watch key A, the progress bar shows yesterday value  too(in fact, user doesn't walk )
-                    // today, after user walk 1000steps, reconnect watch, the steps count return 0, and watch show progress also reset ( so user will confuse: why my today steps get losed ?)
-                    setRtc();
+                    //it is dangerous when every BLE connection invoke setRtc(), perhaps it will reset some data, so we should invoke setRTC() once time(only get paired with the watch)
+                    if(mLocalService.getPairedWatch()!=null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
+                        mLocalService.setPairedWatch(null);
+                        Log.w(TAG,"SET RTC");
+                        //step 1: setRTC every connection
+                        setRtc();
+                    }else {
+                        //directly do steps 2 without setRTC
+                        //setp2:start set user profile
+                        sendRequest(new SetProfileRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
+                    }
                 }
             }, 2000);
         } else {
@@ -515,6 +522,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         }
     }
 
+    @Subscribe
+    public void onEvent(BLEPairStateChangedEvent stateChangedEvent) {
+        if(stateChangedEvent.getPairState() == BluetoothDevice.BOND_BONDED)
+        {
+            mLocalService.setPairedWatch(stateChangedEvent.getAddress());
+        }
+        else if(stateChangedEvent.getPairState() == BluetoothDevice.BOND_NONE)
+        {
+            mLocalService.setPairedWatch(null);
+        }
+    }
     /**
      This function will synchronise activity data with the watch.
      It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
@@ -633,6 +651,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         }
         //step2:unpair this watch from system bluetooth setting
         connectionController.unPairDevice(connectionController.getSaveAddress());
+        mLocalService.setPairedWatch(null);
         //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();
         getContext().getSharedPreferences(Constants.PREF_NAME, 0).edit().putBoolean(Constants.FIRST_FLAG,true).commit();
@@ -782,25 +801,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ConnectionController.Singleton.getInstance(context,new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
-                else if(intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED))
-                {
-                    Log.i("LocalService","Low level BT connected");
-                    if(!ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).isConnected())
-                    {
-                        ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
-                    }
-                }
-                else if(intent.getAction().equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    int connectState = device.getBondState();
-                    Log.i("LocalService", "Ble pair state got changed:" + connectState + ",device:" + device.getAddress());
-                    if (BluetoothDevice.BOND_BONDED == connectState) {
-                        pairedBleAddress.set(device.getAddress());
-                    }
-                    else if (BluetoothDevice.BOND_NONE == connectState) {
-                        pairedBleAddress.set(null);
-                    }
-                }
             }
         };
 
@@ -808,8 +808,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         public void onCreate() {
             super.onCreate();
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-            registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-            registerReceiver(myReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
         }
 
         @Override
@@ -874,11 +872,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             {
                 LocalService.this.findCellPhone();
             }
-            public Optional<String> getPairedWatch() {
-                return LocalService.this.pairedBleAddress;
+            public String getPairedWatch() {
+                return LocalService.this.pairedBleAddress.notEmpty()?LocalService.this.pairedBleAddress.get():null;
             }
-            public void resetPairedWatch() {
-                LocalService.this.pairedBleAddress.set(null);
+            public void setPairedWatch(String address) {
+                LocalService.this.pairedBleAddress.set(address);
             }
         }
 
