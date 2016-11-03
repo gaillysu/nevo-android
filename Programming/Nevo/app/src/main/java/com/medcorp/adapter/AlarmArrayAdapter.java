@@ -53,7 +53,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
         isDefWeekDay = alarm.getWeekDay() & 0x0F;
-        if (isDefWeekDay == 0 || (alarm.getWeekDay() & 0x80)== 0) {
+        if ((alarm.getWeekDay() & 0x80)== 0) {
             onOffSwitch.setChecked(false);
         } else {
             onOffSwitch.setChecked(true);
