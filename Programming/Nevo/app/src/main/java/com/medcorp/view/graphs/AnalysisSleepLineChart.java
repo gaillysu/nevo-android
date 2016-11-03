@@ -237,7 +237,6 @@ public class AnalysisSleepLineChart extends LineChart{
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            Log.w("Karl","Test" + value);
             return String.valueOf(Math.round(value)/60+" hours");
         }
 

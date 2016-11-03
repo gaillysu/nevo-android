@@ -177,7 +177,6 @@ public class SleepTodayChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
 
-            Log.w("Karl", "Value = " + value);
             DateTime newDate = startDate.plusHours((int) (value));
             return String.valueOf(newDate.getHourOfDay()) + ":00";
         }
