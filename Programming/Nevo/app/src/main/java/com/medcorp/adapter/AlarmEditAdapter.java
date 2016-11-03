@@ -1,14 +1,15 @@
 package com.medcorp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.medcorp.R;
 import com.medcorp.model.Alarm;
 import com.medcorp.view.customfontview.RobotoTextView;
-import com.medcorp.R;
 
 /**
  * Created by gaillysu on 16/1/19.
@@ -27,7 +28,7 @@ public class AlarmEditAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return isLowVersion == false ? 4 : 3;
     }
 
     @Override

@@ -48,14 +48,14 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         int softWareVersion = Integer.parseInt(getModel().getWatchSoftware() == null ? 0 + "" : getModel().getWatchSoftware());
         int firmVersion = Integer.parseInt(getModel().getWatchFirmware() == null ? 0 + "" : getModel().getWatchFirmware());
-        if (softWareVersion <= 31 && firmVersion <= 18) {
+        if (firmVersion <= 31 && softWareVersion <= 18) {
             isLowVersion = true;
         }
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.title_alarm);
 
@@ -99,6 +99,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         if (!isLowVersion) {
             heightVersion(position);
         }else{

@@ -85,13 +85,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         ButterKnife.bind(this, view);
         this.inflater = inflater;
         alarmList = getModel().getAllAlarm();
-        firmWareVersion = Integer.parseInt(getModel().getWatchFirmware()==null?0+"":getModel().getWatchFirmware());
-        softwareVersion = Integer.parseInt(getModel().getWatchSoftware()==null?0+"":getModel().getWatchSoftware());
-        if(firmWareVersion <= 31 && softwareVersion <= 18){
+        firmWareVersion = Integer.parseInt(getModel().getWatchFirmware() == null ? 0 + "" : getModel().getWatchFirmware());
+        softwareVersion = Integer.parseInt(getModel().getWatchSoftware() == null ? 0 + "" : getModel().getWatchSoftware());
+        if (firmWareVersion <= 31 && softwareVersion <= 18) {
             isLowVersion = true;
         }
 
-        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this,isLowVersion);
+        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this, isLowVersion);
         alarmListView.setAdapter(alarmArrayAdapter);
         alarmListView.setOnItemClickListener(this);
         isMondayChecked = true;
@@ -114,16 +114,15 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                     ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
                     return false;
                 }
-                if (firmWareVersion > 31 && softwareVersion > 18) {
+                if (!isLowVersion) {
                     Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
                     alarmDialog.setTitle(R.string.alarm_add);
                     alarmDialog.show();
-                }
-                if (firmWareVersion <= 31 && softwareVersion <= 18 && getModel().getAllAlarm().size() < 4) {
+                } else if (isLowVersion && getModel().getAllAlarm().size() <3) {
                     Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
                     alarmDialog.setTitle(R.string.alarm_add);
                     alarmDialog.show();
-                } else {
+                } else if (isLowVersion && getModel().getAllAlarm().size() >= 3) {
                     ToastHelper.showShortToast(AlarmFragment.this.getContext(), getString(R.string.tell_user_update_more_alarm));
                 }
                 break;
@@ -146,28 +145,28 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         calendar.setTime(new Date());
         weekDay = (byte) calendar.get(Calendar.DAY_OF_WEEK);
         alarmSelectStyle = 0;//here must reset it when add new alarm, due to it is the class member variable
-        if (firmWareVersion > 31 && softwareVersion > 18) {
+        if (!isLowVersion) {
             editAlarmDialog(hourOfDay, minute);
-        }else{
-         new MaterialDialog.Builder(AlarmFragment.this.getContext()).title(getString(R.string.alarm_add))
-                 .content(getString(R.string.alarm_label_alarm))
-                 .inputType(InputType.TYPE_CLASS_TEXT)
-                 .input(getString(R.string.alarm_label), "", new MaterialDialog.InputCallback() {
-                     @Override
-                     public void onInput(MaterialDialog dialog, CharSequence input) {
-                         String newName;
-                         if(input.toString().length()==0){
-                             newName = getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1);
-                         }else{
-                             newName = input.toString();
-                         }
-                         Alarm lowVersionAlarm = new Alarm(hourOfDay,minute,(byte)0x81,newName,(byte)1,(byte)(getModel().getAllAlarm().size()+1));
-                         getModel().addAlarm(lowVersionAlarm);
-                         alarmArrayAdapter.notifyDataSetChanged();
-                         showSyncAlarm = true;
-                         getModel().getSyncController().setAlarm(getModel().getAllAlarm(),false);
-                     }
-                 }).negativeText(getString(R.string.goal_cancel)).show();
+        } else {
+            new MaterialDialog.Builder(AlarmFragment.this.getContext()).title(getString(R.string.alarm_add))
+                    .content(getString(R.string.alarm_label_alarm))
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(getString(R.string.alarm_label), "", new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            String newName;
+                            if (input.toString().length() == 0) {
+                                newName = getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1);
+                            } else {
+                                newName = input.toString();
+                            }
+                            Alarm lowVersionAlarm = new Alarm(hourOfDay, minute, (byte) 0x80, newName, (byte) 1, (byte) (getModel().getAllAlarm().size() + 1));
+                            getModel().addAlarm(lowVersionAlarm);
+                            showSyncAlarm = true;
+                            getModel().getSyncController().setAlarm(getModel().getAllAlarm(), false);
+                            refreshListView();
+                        }
+                    }).negativeText(getString(R.string.goal_cancel)).show();
         }
     }
 
