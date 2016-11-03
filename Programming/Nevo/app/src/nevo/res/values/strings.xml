@@ -276,6 +276,7 @@ push and hold the third button, until the white LED blinks</string>
 
     <!--lunar-->
     <string name="prompt_user_alarm_no_repeat">There is already a sleep alarm set for</string>
+    <string name="tell_user_update_more_alarm">Only 3 alarms are available. Upgrade your watch for more alarms!</string>
     <string name="prompt_user_alarm_no_repeat_two">There is already a wake alarm set for</string>
     <string name="register_success">Register successfully</string>
     <string name="register_failed">Register up failed</string>

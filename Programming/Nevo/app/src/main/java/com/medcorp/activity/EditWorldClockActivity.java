@@ -3,9 +3,12 @@ package com.medcorp.activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +33,8 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.medcorp.R.id.search_city_result_list;
+
 /**
  * Created by Jason on 2016/10/26.
  */
@@ -45,7 +50,9 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
     @Bind(R.id.choose_activity_list_index_sidebar)
     SideBar sortCityBar;
     @Bind(R.id.search_world_city_edit_city_name_ed)
-    AutoCompleteTextView searchCityAutoCompleteTv;
+    EditText searchCityAutoCompleteTv;
+    @Bind(search_city_result_list)
+    ListView searchResultListView;
 
     private Realm realm = Realm.getDefaultInstance();
     private RealmResults<City> cities;
@@ -53,6 +60,8 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
     private PinyinComparator pinyinComparator;
     private ChooseCityAdapter allCityAdapter;
     private SearchWorldAdapter autoAdapter;
+    private List<ChooseCityViewModel> resultList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,18 +79,19 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
     }
 
     private void initData() {
+        resultList = new ArrayList<>();
+        autoAdapter = new SearchWorldAdapter(resultList, this);
+        searchResultListView.setAdapter(autoAdapter);
+
         cities = realm.where(City.class).findAll();
         chooseCityViewModelsList = new ArrayList<>();
         pinyinComparator = new PinyinComparator();
-        for (int i = 0; i<cities.size();i++) {
+        for (int i = 0; i < cities.size(); i++) {
             chooseCityViewModelsList.add(new ChooseCityViewModel(cities.get(i)));
         }
         Collections.sort(chooseCityViewModelsList, pinyinComparator);
 
-        autoAdapter = new SearchWorldAdapter(chooseCityViewModelsList,this);
-        searchCityAutoCompleteTv.setAdapter(autoAdapter);
-        searchCityAutoCompleteTv.setThreshold(1);
-        searchCityAutoCompleteTv.setOnItemClickListener(this);
+//        autoAdapter = new SearchWorldAdapter(chooseCityViewModelsList, this);
         allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList);
         showAllCityList.setAdapter(allCityAdapter);
         sortCityBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -93,7 +103,10 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
                 }
             }
         });
-         showAllCityList.setOnItemClickListener(this);
+
+        showAllCityList.setOnItemClickListener(this);
+        searchResultListView.setOnItemClickListener(this);
+        searchCityAutoCompleteTv.addTextChangedListener(searchCityInputEditText);
     }
 
     @OnClick(R.id.edit_world_clock_cancel_search_button)
@@ -102,14 +115,48 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
     }
 
 
+    private TextWatcher searchCityInputEditText = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            resultList.clear();
+            searchCity();
+            autoAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    private void searchCity() {
+        String searchCityName = searchCityAutoCompleteTv.getText().toString();
+        if(!TextUtils.isEmpty(searchCityName)){
+            for(ChooseCityViewModel chooseCityModel:chooseCityViewModelsList){
+                if(chooseCityModel.getDisplayName().toLowerCase().contains(searchCityName.toLowerCase())){
+                    resultList.add(chooseCityModel);
+                }
+                if(resultList.size()>0){
+                    Collections.sort(resultList, pinyinComparator);
+                    searchResultListView.setAdapter(autoAdapter);
+                }
+            }
+        }
+    }
+
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ChooseCityViewModel chooseCityModel =  chooseCityViewModelsList.get(position);
+        ChooseCityViewModel chooseCityModel = chooseCityViewModelsList.get(position);
         String name = chooseCityModel.getDisplayName();
-        Preferences.saveUserSelectCity(EditWorldClockActivity.this,chooseCityModel.getDisplayName());
+        Preferences.saveUserSelectCity(EditWorldClockActivity.this, chooseCityModel.getDisplayName());
         searchCityAutoCompleteTv.setText(name);
         allCityAdapter.notifyDataSetChanged();
         finish();
-
     }
 }

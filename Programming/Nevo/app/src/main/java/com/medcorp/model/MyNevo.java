@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Created by gaillysu on 15/12/28.
+ *
  */
 public class MyNevo {
     private String bleFirmwareVersion;

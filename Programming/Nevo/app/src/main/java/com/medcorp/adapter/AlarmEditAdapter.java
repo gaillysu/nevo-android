@@ -16,9 +16,11 @@ import com.medcorp.R;
 public class AlarmEditAdapter extends BaseAdapter {
     Context context;
     Alarm alarm;
+    private boolean isLowVersion;
 
-    public AlarmEditAdapter(Context context, Alarm alarm) {
+    public AlarmEditAdapter(Context context, Alarm alarm, boolean isLowVersion) {
         super();
+        this.isLowVersion = isLowVersion;
         this.context = context;
         this.alarm = alarm;
     }
@@ -47,21 +49,35 @@ public class AlarmEditAdapter extends BaseAdapter {
         RobotoTextView title = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_title_label);
         RobotoTextView summary = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_summary_label);
         RobotoTextView delete = (RobotoTextView) itemView.findViewById(R.id.activity_alarm_edit_list_view_item_delete_label);
-        if (position == 0) {
-            title.setText(alarm.toString());
-            summary.setText(context.getString(R.string.alarm_set_different_time));
-        } else if (position == 1) {
-            title.setText(alarm.getLabel());
-            summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
-        } else if (position == 2) {
-            String [] weekDayArray = context.getResources().getStringArray(R.array.week_day);
-            String weekDay = weekDayArray[alarm.getWeekDay()&0x0F];
-            title.setText(weekDay);
-            summary.setText(context.getString(R.string.alarm_set_week_day));
-        }else if(position == 3){
-            summary.setVisibility(View.GONE);
-            title.setVisibility(View.GONE);
-            delete.setVisibility(View.VISIBLE);
+        if (!isLowVersion) {
+            if (position == 0) {
+                title.setText(alarm.toString());
+                summary.setText(context.getString(R.string.alarm_set_different_time));
+            } else if (position == 1) {
+                title.setText(alarm.getLabel());
+                summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
+            } else if (position == 2) {
+                String[] weekDayArray = context.getResources().getStringArray(R.array.week_day);
+                String weekDay = weekDayArray[alarm.getWeekDay() & 0x0F];
+                title.setText(weekDay);
+                summary.setText(context.getString(R.string.alarm_set_week_day));
+            } else if (position == 3) {
+                summary.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                delete.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (position == 0) {
+                title.setText(alarm.toString());
+                summary.setText(context.getString(R.string.alarm_set_different_time));
+            } else if (position == 1) {
+                title.setText(alarm.getLabel());
+                summary.setText(context.getString(R.string.alarm_set_label_for_alarm));
+            } else if (position == 2) {
+                summary.setVisibility(View.GONE);
+                title.setVisibility(View.GONE);
+                delete.setVisibility(View.VISIBLE);
+            }
         }
 
         return itemView;

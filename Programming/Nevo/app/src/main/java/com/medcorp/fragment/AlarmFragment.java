@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TimePicker;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.EditAlarmActivity;
 import com.medcorp.activity.MainActivity;
@@ -73,6 +75,9 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     private Alarm editAlarm;
     private boolean isRepeat = false;
     private boolean showSyncAlarm = false;
+    private int firmWareVersion = 0;
+    private int softwareVersion = 0;
+    private boolean isLowVersion = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +85,13 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         ButterKnife.bind(this, view);
         this.inflater = inflater;
         alarmList = getModel().getAllAlarm();
-        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this);
+        firmWareVersion = Integer.parseInt(getModel().getWatchFirmware()==null?0+"":getModel().getWatchFirmware());
+        softwareVersion = Integer.parseInt(getModel().getWatchSoftware()==null?0+"":getModel().getWatchSoftware());
+        if(firmWareVersion <= 31 && softwareVersion <= 18){
+            isLowVersion = true;
+        }
+
+        alarmArrayAdapter = new AlarmArrayAdapter(getContext(), alarmList, this,isLowVersion);
         alarmListView.setAdapter(alarmArrayAdapter);
         alarmListView.setOnItemClickListener(this);
         isMondayChecked = true;
@@ -91,7 +102,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
     }
 
     private void initAddAlarm() {
-        initAlarmDialog((byte)2);
+        initAlarmDialog((byte) 2);
     }
 
 
@@ -103,9 +114,18 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                     ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
                     return false;
                 }
-                Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
-                alarmDialog.setTitle(R.string.alarm_add);
-                alarmDialog.show();
+                if (firmWareVersion > 31 && softwareVersion > 18) {
+                    Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
+                    alarmDialog.setTitle(R.string.alarm_add);
+                    alarmDialog.show();
+                }
+                if (firmWareVersion <= 31 && softwareVersion <= 18 && getModel().getAllAlarm().size() < 4) {
+                    Dialog alarmDialog = new TimePickerDialog(getContext(), R.style.NevoDialogStyle, this, 8, 0, true);
+                    alarmDialog.setTitle(R.string.alarm_add);
+                    alarmDialog.show();
+                } else {
+                    ToastHelper.showShortToast(AlarmFragment.this.getContext(), getString(R.string.tell_user_update_more_alarm));
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -126,7 +146,29 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         calendar.setTime(new Date());
         weekDay = (byte) calendar.get(Calendar.DAY_OF_WEEK);
         alarmSelectStyle = 0;//here must reset it when add new alarm, due to it is the class member variable
-        editAlarmDialog(hourOfDay, minute);
+        if (firmWareVersion > 31 && softwareVersion > 18) {
+            editAlarmDialog(hourOfDay, minute);
+        }else{
+         new MaterialDialog.Builder(AlarmFragment.this.getContext()).title(getString(R.string.alarm_add))
+                 .content(getString(R.string.alarm_label_alarm))
+                 .inputType(InputType.TYPE_CLASS_TEXT)
+                 .input(getString(R.string.alarm_label), "", new MaterialDialog.InputCallback() {
+                     @Override
+                     public void onInput(MaterialDialog dialog, CharSequence input) {
+                         String newName;
+                         if(input.toString().length()==0){
+                             newName = getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1);
+                         }else{
+                             newName = input.toString();
+                         }
+                         Alarm lowVersionAlarm = new Alarm(hourOfDay,minute,(byte)0x81,newName,(byte)1,(byte)(getModel().getAllAlarm().size()+1));
+                         getModel().addAlarm(lowVersionAlarm);
+                         alarmArrayAdapter.notifyDataSetChanged();
+                         showSyncAlarm = true;
+                         getModel().getSyncController().setAlarm(getModel().getAllAlarm(),false);
+                     }
+                 }).negativeText(getString(R.string.goal_cancel)).show();
+        }
     }
 
     private void editAlarmDialog(final int hourOfDay, final int minute) {
@@ -173,7 +215,7 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
                 StringBuffer alarmRepeatDay = new StringBuffer();
 
                 if (TextUtils.isEmpty(alarmName.getText().toString())) {
-                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm)+" " + (alarmList.size() + 1));
+                    newAlarm.setLabel(getString(R.string.menu_drawer_alarm) + " " + (alarmList.size() + 1));
                 } else {
                     newAlarm.setLabel(alarmName.getText().toString());
                 }
@@ -364,10 +406,10 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
 
 
     private void initAlarmDialog(byte repeatday) {
-        switch(repeatday){
+        switch (repeatday) {
             // 选中周一
             case 2:
-               weekDay = repeatday;
+                weekDay = repeatday;
                 monday.setTextColor(getResources().getColor(R.color.colorPrimary));
                 tuesday.setTextColor(getResources().getColor(R.color.text_color));
                 wednesday.setTextColor(getResources().getColor(R.color.text_color));
@@ -450,34 +492,34 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         switch (view.getId()) {
             // 选中周一
             case R.id.tag_btn_monday:
-                initAlarmDialog((byte)2);
+                initAlarmDialog((byte) 2);
                 break;
             // 选中周二
             case R.id.tag_btn_tuesday:
-                initAlarmDialog((byte)3);
+                initAlarmDialog((byte) 3);
 
                 weekDay = 3;
                 break;
             // 选中周三
             case R.id.tag_btn_wednesday:
-                initAlarmDialog((byte)4);
+                initAlarmDialog((byte) 4);
 
                 break;
             // 选中周四
             case R.id.tag_btn_thursday:
-                initAlarmDialog((byte)5);
+                initAlarmDialog((byte) 5);
                 break;
             // 选中周五
             case R.id.tog_btn_friday:
-                initAlarmDialog((byte)6);
+                initAlarmDialog((byte) 6);
                 break;
             // 选中周六
             case R.id.tag_btn_saturday:
-                initAlarmDialog((byte)7);
+                initAlarmDialog((byte) 7);
                 break;
             // 选中周日
             case R.id.tag_btn_sunday:
-                initAlarmDialog((byte)1);
+                initAlarmDialog((byte) 1);
                 break;
         }
     }

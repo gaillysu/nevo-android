@@ -417,6 +417,7 @@
     <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
     <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
     <string name="tell_user_change_week_day">Please change repeat week day after open Alarm!</string>
+    <string name="tell_user_update_more_alarm">Only 3 alarms are available. Upgrade your watch for more alarms!</string>
     <string name="tell_user_this_location_time">Location Time</string>
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>

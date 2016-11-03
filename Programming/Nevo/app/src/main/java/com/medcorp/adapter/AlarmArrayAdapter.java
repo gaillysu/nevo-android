@@ -27,12 +27,14 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
     private AlarmArrayAdapter adapter;
     private String alarmStyle;
     private int isDefWeekDay;
+    private boolean isLowVersion;
 
-    public AlarmArrayAdapter(Context context, List<Alarm> alarmList, OnAlarmSwitchListener listener) {
+    public AlarmArrayAdapter(Context context, List<Alarm> alarmList, OnAlarmSwitchListener listener, boolean isLowwVersion) {
         super(context, 0, alarmList);
         this.context = context;
         this.alarmList = alarmList;
         this.onAlarmSwitchedListener = listener;
+        this.isLowVersion = isLowwVersion;
         adapter = this;
     }
 
@@ -48,7 +50,10 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
 
         RobotoTextView repeatTextDec = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat_dec);
         RobotoTextView repeatText = (RobotoTextView) itemView.findViewById(R.id.fragment_alarm_list_view_item_alarm_repeat);
-
+        if (isLowVersion) {
+            repeatTextDec.setVisibility(View.GONE);
+            repeatText.setVisibility(View.GONE);
+        }
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
@@ -71,11 +76,15 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isDefWeekDay != 0) {
+                if (!isLowVersion) {
+                    if (isDefWeekDay != 0) {
+                        onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
+                    } else {
+                        onOffSwitch.setChecked(false);
+                        ToastHelper.showShortToast(context, context.getString(R.string.tell_user_change_week_day));
+                    }
+                } else {
                     onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);
-                }else{
-                    onOffSwitch.setChecked(false);
-                    ToastHelper.showShortToast(context,context.getString(R.string.tell_user_change_week_day));
                 }
 
             }
