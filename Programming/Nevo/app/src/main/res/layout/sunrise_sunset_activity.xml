@@ -12,7 +12,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/sunset_activity_title_tv"
         android:textColor="@color/text_color"
-        android:textSize="28sp"/>
+        android:textSize="25sp"/>
 
     <TextView
         android:id="@+id/show_day_weekday_tv"
@@ -20,14 +20,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/text_color"
-        android:textSize="20sp"
+        android:textSize="18sp"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:layout_weight="2">
 
         <FrameLayout
@@ -68,6 +68,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="15dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
@@ -88,14 +89,16 @@
                 android:id="@+id/world_clock_fragment_show_location_city_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_color"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="sdgjadfj"/>
+                android:text="sdgjadfj"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
 
@@ -103,53 +106,55 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     >
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunrise_icon"/>
 
                     <TextView
                         android:id="@+id/show_today_sunrise_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:layout_weight="1"
-                        android:drawablePadding="20dp"
                         android:textColor="@color/text_color"
                         android:textSize="20sp"
                         />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="30dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/sunrise_icon"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="50dp"
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     >
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunset_icon"/>
+
                     <TextView
                         android:id="@+id/show_today_sunset_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:layout_weight="1"
                         android:textColor="@color/text_color"
                         android:textSize="20sp"
                         />
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="30dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/sunset_icon"/>
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -167,14 +172,16 @@
                 android:id="@+id/world_clock_fragment_show_other_city_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_color"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
-                android:text="sdgjadfj"/>
+                android:text="sdgjadfj"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 >
 
@@ -182,58 +189,55 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="50dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     >
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunrise_icon"/>
 
                     <TextView
                         android:id="@+id/show_other_city_sunrise_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:layout_weight="1"
-                        android:drawablePadding="20dp"
                         android:textColor="@color/text_color"
                         android:textSize="20sp"
                         />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="30dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/sunrise_icon"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="50dp"
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     >
 
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/sunset_icon"/>
+
                     <TextView
                         android:id="@+id/show_other_city_sunset_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:layout_weight="1"
                         android:textColor="@color/text_color"
                         android:textSize="20sp"
                         />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="30dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/sunset_icon"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-
-
     </LinearLayout>
 </LinearLayout>

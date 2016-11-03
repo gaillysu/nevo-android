@@ -179,6 +179,7 @@
     <string name="in_app_notification_syncing_alarm">Syncing Alarm&#8230;</string>
     <string name="in_app_notification_synced">Syncing data finished!</string>
     <string name="in_app_notification_no_watch">No watch connected.</string>
+    <string name="in_app_notification_no_goal">Please select your target.</string>
     <string name="in_app_notification_max_three_alarm">nevo supports only three alarms.</string>
     <string name="in_app_notification_max_fourteen_alarm">nevo supports only fourteen alarms.</string>
     <string name="title_alarm">Alarm</string>
@@ -408,7 +409,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_alarm_name">Alarm</string>
-
+    <string name="tell_user_this_location_time">LocationTime</string>
     <string name="def_goal_name">Goal </string>
     <!--<lunar end>-->
 </resources>

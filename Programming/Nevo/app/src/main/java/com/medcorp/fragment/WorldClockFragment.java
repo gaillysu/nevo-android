@@ -75,6 +75,12 @@ public class WorldClockFragment extends BaseObservableFragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initView();
+    }
+
     private void initView() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -89,9 +95,9 @@ public class WorldClockFragment extends BaseObservableFragment {
         String[] localTimeStr = format.format(calendar.getTime()).split(" ");
 
         if (new Integer(localTimeStr[1].split(":")[0]).intValue() <= 12) {
-            showLocationCityInfo.setText(locationCityName + ": " + localTimeStr[1].split(":")[0] + ":" + localTimeStr[1].split(":")[1] + " AM");
+            showLocationCityInfo.setText(getString(R.string.tell_user_this_location_time) + ": " + localTimeStr[1].split(":")[0] + ":" + localTimeStr[1].split(":")[1] + " AM");
         } else {
-            showLocationCityInfo.setText(locationCityName + ": " + localTimeStr[1].split(":")[0] + ":" + localTimeStr[1].split(":")[1] + " PM");
+            showLocationCityInfo.setText(getString(R.string.tell_user_this_location_time) + ": " + localTimeStr[1].split(":")[0] + ":" + localTimeStr[1].split(":")[1] + " PM");
         }
         for (City city : cities) {
             if (city.getName().equals(locationCityName)) {
