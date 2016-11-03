@@ -13,9 +13,9 @@ public class SetAlarmRequest extends BLERequestData {
 
 	public  final static  byte HEADER = 0x41;
 	public  final static int maxAlarmCount = 3;
-	private int[] mHour;
-	private int[] mMinute;
-	private boolean[] mEnable;
+	private int[] mHour = {0,0,0};
+	private int[] mMinute = {0,0,0};
+	private boolean[] mEnable ={false,false,false};
 	
 	public SetAlarmRequest(Context context, List<Alarm> list)
 	{
@@ -28,8 +28,8 @@ public class SetAlarmRequest extends BLERequestData {
             Alarm alarm = list.get(i);
             mHour[i]  = alarm.getHour();
             mMinute[i] = alarm.getMinute();
-            mEnable[i] = (alarm.getWeekDay()==0?false:true);
-        }
+			mEnable[i] = (alarm.getWeekDay()&0x0f)>0 && (alarm.getWeekDay()&0x80)==0x80;
+		}
 	}
 	
 	@Override
