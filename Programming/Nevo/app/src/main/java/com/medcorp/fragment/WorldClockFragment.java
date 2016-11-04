@@ -68,10 +68,8 @@ public class WorldClockFragment extends BaseObservableFragment {
         View view = inflater.inflate(R.layout.sunrise_sunset_activity, container, false);
         ButterKnife.bind(this, view);
         cities = realm.where(City.class).findAll();
-        otherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
         setHasOptionsMenu(true);
         refreshClock();
-        initView();
         return view;
     }
 
@@ -87,6 +85,7 @@ public class WorldClockFragment extends BaseObservableFragment {
         String currentTime = format.format(date);
         String[] currentTimeArray = currentTime.split("-");
         showLocationDate.setText(currentTimeArray[2] + "," + new SimpleDateFormat("MMM").format(date) + "," + currentTimeArray[0]);
+        otherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
 
         Calendar calendar = Calendar.getInstance();
         TimeZone timeZone = calendar.getTimeZone();
@@ -144,7 +143,6 @@ public class WorldClockFragment extends BaseObservableFragment {
 
         com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
                 new com.luckycatlabs.sunrisesunset.dto.Location(city.getLat() + "", city.getLng() + "");
-
         SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, zone);
         String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());

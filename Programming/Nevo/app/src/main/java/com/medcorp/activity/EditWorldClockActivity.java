@@ -6,7 +6,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -33,13 +36,11 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static com.medcorp.R.id.search_city_result_list;
-
 /**
  * Created by Jason on 2016/10/26.
  */
 
-public class EditWorldClockActivity extends BaseActivity implements AdapterView.OnItemClickListener {
+public class EditWorldClockActivity extends BaseActivity {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -51,7 +52,7 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
     SideBar sortCityBar;
     @Bind(R.id.search_world_city_edit_city_name_ed)
     EditText searchCityAutoCompleteTv;
-    @Bind(search_city_result_list)
+    @Bind(R.id.search_city_result_list)
     ListView searchResultListView;
 
     private Realm realm = Realm.getDefaultInstance();
@@ -86,12 +87,12 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
         cities = realm.where(City.class).findAll();
         chooseCityViewModelsList = new ArrayList<>();
         pinyinComparator = new PinyinComparator();
+
         for (int i = 0; i < cities.size(); i++) {
             chooseCityViewModelsList.add(new ChooseCityViewModel(cities.get(i)));
         }
-        Collections.sort(chooseCityViewModelsList, pinyinComparator);
 
-//        autoAdapter = new SearchWorldAdapter(chooseCityViewModelsList, this);
+        Collections.sort(chooseCityViewModelsList, pinyinComparator);
         allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList);
         showAllCityList.setAdapter(allCityAdapter);
         sortCityBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -104,9 +105,49 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
             }
         });
 
-        showAllCityList.setOnItemClickListener(this);
-        searchResultListView.setOnItemClickListener(this);
-        searchCityAutoCompleteTv.addTextChangedListener(searchCityInputEditText);
+        showAllCityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectCity(chooseCityViewModelsList.get(position));
+            }
+        });
+        searchResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectCity(resultList.get(position));
+            }
+        });
+        searchCityAutoCompleteTv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode()
+                        == KeyEvent.KEYCODE_ENTER)) {
+                    resultList.clear();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        searchCityAutoCompleteTv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence content, int start, int before, int count) {
+                Log.i("jason", content.toString());
+                resultList.clear();
+                searchCity(content.toString());
+                autoAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @OnClick(R.id.edit_world_clock_cancel_search_button)
@@ -114,45 +155,22 @@ public class EditWorldClockActivity extends BaseActivity implements AdapterView.
         finish();
     }
 
-
-    private TextWatcher searchCityInputEditText = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            resultList.clear();
-            searchCity();
-            autoAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
-    private void searchCity() {
-        String searchCityName = searchCityAutoCompleteTv.getText().toString();
-        if(!TextUtils.isEmpty(searchCityName)){
-            for(ChooseCityViewModel chooseCityModel:chooseCityViewModelsList){
-                if(chooseCityModel.getDisplayName().toLowerCase().contains(searchCityName.toLowerCase())){
+    private void searchCity(String content) {
+        if (!TextUtils.isEmpty(content)) {
+            searchResultListView.setVisibility(View.VISIBLE);
+            for (ChooseCityViewModel chooseCityModel : chooseCityViewModelsList) {
+                if (chooseCityModel.getDisplayName().toLowerCase().contains(content.toLowerCase())) {
                     resultList.add(chooseCityModel);
                 }
-                if(resultList.size()>0){
-                    Collections.sort(resultList, pinyinComparator);
-                    searchResultListView.setAdapter(autoAdapter);
-                }
+            }
+            if (resultList.size() > 0) {
+                Collections.sort(resultList, pinyinComparator);
+                autoAdapter.notifyDataSetChanged();
             }
         }
     }
 
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ChooseCityViewModel chooseCityModel = chooseCityViewModelsList.get(position);
+    public void selectCity(ChooseCityViewModel chooseCityModel) {
         String name = chooseCityModel.getDisplayName();
         Preferences.saveUserSelectCity(EditWorldClockActivity.this, chooseCityModel.getDisplayName());
         searchCityAutoCompleteTv.setText(name);

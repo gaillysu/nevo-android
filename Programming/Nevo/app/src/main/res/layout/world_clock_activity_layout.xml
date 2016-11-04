@@ -19,8 +19,8 @@
             android:layout_height="40dp"
             android:layout_marginLeft="18dp"
             android:layout_weight="1"
-            android:background="@drawable/world_search_city_edit_background"
             android:gravity="center_vertical"
+            android:background="@drawable/world_search_city_edit_background"
             android:orientation="horizontal">
 
             <ImageView
@@ -81,7 +81,8 @@
             android:id="@+id/search_city_result_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null"
+            android:divider="@android:color/transparent"
+            android:visibility="gone"
             ></ListView>
     </FrameLayout>
 </LinearLayout>
