@@ -19,7 +19,7 @@
     <string name="ble_command_timeout_title">蓝牙通讯超时</string>
     <string name="ble_connection_timeout_cancel">取消</string>
     <string name="ble_connection_timeout_help">帮助</string>
-
+    <string name="tell_user_update_more_alarm">低版本中最多只可以添加三个闹钟!</string>
     <string name="notification_call_title">电话</string>
     <string name="notification_sms_title">短信</string>
     <string name="notification_email_title">邮件</string>

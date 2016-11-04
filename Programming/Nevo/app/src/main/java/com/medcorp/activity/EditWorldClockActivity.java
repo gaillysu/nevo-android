@@ -181,7 +181,7 @@ public class EditWorldClockActivity extends BaseActivity {
             }
         }
     }
-    
+
     public void selectCity(ChooseCityViewModel chooseCityModel) {
         String name = chooseCityModel.getDisplayName();
         Preferences.saveUserSelectCity(EditWorldClockActivity.this, chooseCityModel.getDisplayName());
