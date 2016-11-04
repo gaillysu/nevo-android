@@ -64,7 +64,9 @@ public class MyNevoActivity  extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(R.string.title_my_nevo);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        title.setText(R.string.title_my_nevo);
         String app_version = "";
         try {
             app_version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -155,6 +156,17 @@ public class EditWorldClockActivity extends BaseActivity {
         finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void searchCity(String content) {
         if (!TextUtils.isEmpty(content)) {
             searchResultListView.setVisibility(View.VISIBLE);
@@ -169,7 +181,7 @@ public class EditWorldClockActivity extends BaseActivity {
             }
         }
     }
-
+    
     public void selectCity(ChooseCityViewModel chooseCityModel) {
         String name = chooseCityModel.getDisplayName();
         Preferences.saveUserSelectCity(EditWorldClockActivity.this, chooseCityModel.getDisplayName());
