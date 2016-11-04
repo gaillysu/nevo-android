@@ -573,6 +573,9 @@ public class OtaControllerImpl implements OtaController  {
         {
             connectionController.restoreSavedAddress();
         }
+        //after BLE&MCU OTA done, the time of watch become default 2015.1.1, and some pair data got destory,forget and repair it to setRTC again
+        forGetDevice();
+
         if(manualmode)
         {
             manualmode = false;

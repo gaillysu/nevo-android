@@ -402,11 +402,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                     back2settings.setVisibility(View.VISIBLE);
                     //show success text or image
                     mNevoOtaController.reset(false);
-                    //after BLE OTA done, perhaps some pair data got destory,forget saved device and repair it
-                    if(enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH )
-                    {
-                        mNevoOtaController.forGetDevice();
-                    }
                     //save date
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                     String strDate = format.format(Calendar.getInstance().getTimeInMillis());
@@ -415,11 +410,6 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                 } else {
                     mUpdateSuccess = true;
                     mNevoOtaController.reset(false);
-                    //after BLE OTA done, perhaps some pair data got destory,forget saved device and repair it
-                    if(enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH )
-                    {
-                        mNevoOtaController.forGetDevice();
-                    }
                     mNevoOtaController.setState(Constants.DFUControllerState.SEND_RESET);
 
                     back2settings.setText(getString(R.string.dfu_continue_button));
