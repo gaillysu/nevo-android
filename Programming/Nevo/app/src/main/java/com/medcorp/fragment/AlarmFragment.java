@@ -335,7 +335,12 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
         alarm.setWeekDay(isChecked ? (byte) (alarm.getWeekDay() | 0x80) : (byte) (alarm.getWeekDay() & 0x0F));
         getModel().updateAlarm(alarm);
         showSyncAlarm = true;
-        getModel().getSyncController().setAlarm(alarm);
+        if(isLowVersion) {
+            getModel().getSyncController().setAlarm(getModel().getAllAlarm(), false);
+        }
+        else {
+            getModel().getSyncController().setAlarm(alarm);
+        }
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
 
@@ -360,7 +365,12 @@ public class AlarmFragment extends BaseObservableFragment implements OnAlarmSwit
             editAlarm = getModel().getAlarmById(editAlarm.getId());
         }
         showSyncAlarm = true;
-        getModel().getSyncController().setAlarm(editAlarm);
+        if(isLowVersion) {
+            getModel().getSyncController().setAlarm(getModel().getAllAlarm(), false);
+        }
+        else {
+            getModel().getSyncController().setAlarm(editAlarm);
+        }
         ((MainActivity) getActivity()).showStateString(R.string.in_app_notification_syncing_alarm, false);
     }
 
