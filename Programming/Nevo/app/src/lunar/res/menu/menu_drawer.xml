@@ -19,7 +19,7 @@
             android:title="@string/menu_drawer_alarm"/>
         <item
             android:id="@+id/nav_world_clock"
-            android:icon="@drawable/ic_sunrise_hour_icon_up"
+            android:icon="@drawable/world_clock_icon"
             android:title="@string/menu_drawer_worldclock"/>
     </group>
 
