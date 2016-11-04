@@ -45,7 +45,6 @@ import com.medcorp.ble.model.packet.DailyTrackerPacket;
 import com.medcorp.ble.model.packet.FindPhonePacket;
 import com.medcorp.ble.model.packet.Packet;
 import com.medcorp.ble.model.packet.WatchInfoPacket;
-import com.medcorp.ble.model.request.FindPhoneRequest;
 import com.medcorp.ble.model.request.FindWatchRequest;
 import com.medcorp.ble.model.request.GetBatteryLevelRequest;
 import com.medcorp.ble.model.request.GetStepsGoalRequest;
@@ -432,6 +431,29 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         syncFinished();
                     }
                 }
+                //press B key once--- down and up within 500ms
+                else if((byte) TestModeRequest.MODE_F1 == nevoData.getRawData()[1])
+                {
+                    //only support old watch-- R18 or previous ble interface, new watch add new command
+                    if(isOldFirmwareWatch()) {
+                        long currentTime = System.currentTimeMillis();
+                        if ((byte) 0x02 == packet.getPackets().get(0).getRawData()[2]) {
+                            //remove repeat press B key down within 6s
+                            if (currentTime - mLastPressAkey > 6000) {
+                                mLastPressAkey = currentTime;
+                            }
+                        }
+                        if ((byte) 0x00 == packet.getPackets().get(0).getRawData()[2]) {
+                            if (currentTime - mLastPressAkey < 500) {
+                                if (mLocalService != null) {
+                                    mLocalService.findCellPhone();
+                                }
+                                //let all color LED light on, means that find CellPhone is successful.
+                                sendRequest(new TestModeRequest(mContext, 0x3F0000, false, TestModeRequest.MODE_F0));
+                            }
+                        }
+                    }
+                }
                 else if((byte) TestModeRequest.MODE_F4 == packet.getHeader())
                 {
                     int battery_adc = HexUtils.bytesToInt(new byte[]{packet.getPackets().get(0).getRawData()[2],packet.getPackets().get(0).getRawData()[3]});
@@ -470,7 +492,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 else if((byte) GetBatteryLevelRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new BatteryEvent(new Battery(new BatteryLevelPacket(packet.getPackets()).getBatteryLevel())));
                 }
-                else if((byte) 0xF0 == packet.getHeader() || FindWatchRequest.HEADER == packet.getHeader()) {
+                else if((byte) TestModeRequest.MODE_F0 == packet.getHeader() || FindWatchRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new FindWatchEvent(true));
                 }
                 else if((byte) SetAlarmRequest.HEADER == packet.getHeader()
@@ -540,14 +562,23 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         }
     }
 
-    private void syncAlarm()
+    /**
+     * firmware v18/v31 or previous is old watch
+     * v26/37 or later is new watch
+     * @return true or false
+     */
+    private boolean isOldFirmwareWatch()
     {
         if(getFirmwareVersion() == null || getSoftwareVersion() == null) {
-            return;
+            return false;
         }
+        return (Integer.parseInt(getFirmwareVersion())<=31|| Integer.parseInt(getSoftwareVersion())<=18);
+    }
+
+    private void syncAlarm()
+    {
         // old nevo watch with 3 alarms and support R18 interface, no sleep alarm
-        if(Integer.parseInt(getFirmwareVersion())<=31
-                || Integer.parseInt(getSoftwareVersion())<=18)
+        if(isOldFirmwareWatch())
         {
             List<Alarm> list = ((ApplicationModel) mContext).getAllAlarm();
             if(!list.isEmpty())
