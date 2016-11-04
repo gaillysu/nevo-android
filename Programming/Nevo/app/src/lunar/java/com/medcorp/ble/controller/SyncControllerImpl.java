@@ -306,6 +306,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         mCurrentDay = 0;
                         savedDailyHistory.add(mCurrentDay, new DailyHistory(thispacket.getDate()));
                     }
+                    else {
+                        savedDailyHistory.get(mCurrentDay).setDate(thispacket.getDate());
+                    }
                     savedDailyHistory.get(mCurrentDay).setTotalSteps(thispacket.getDailySteps());
                     savedDailyHistory.get(mCurrentDay).setHourlySteps(thispacket.getHourlySteps());
 //                        Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Steps:" + savedDailyHistory.get(mCurrentDay).getHourlySteps().toString());

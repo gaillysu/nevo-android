@@ -114,7 +114,7 @@ public class AnalysisStepsLineChart extends LineChart {
             }
         }
 
-        Log.w("Karl", "Max vlaue = " + maxValue);
+        //Log.w("Karl", "Max vlaue = " + maxValue);
         boolean putTop = false;
         if (maxValue == 0 || maxValue < goal.getSteps()) {
             maxValue = goal.getSteps()+ stepsModulo;

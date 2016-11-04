@@ -112,7 +112,7 @@ public class AnalysisSolarLineChart extends LineChart {
             }
         }
 
-        Log.w("Karl", "Max vlaue = " + maxValue);
+        //Log.w("Karl", "Max vlaue = " + maxValue);
         if (maxValue == 0) {
             maxValue = stepsModulo;
         } else {

@@ -178,4 +178,7 @@ public class DailyHistory {
         return mDate;
     }
 
+    public void setDate(Date date) {
+        this.mDate = date;
+    }
 }
