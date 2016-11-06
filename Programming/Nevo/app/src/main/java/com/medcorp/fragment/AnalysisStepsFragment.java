@@ -105,7 +105,7 @@ public class AnalysisStepsFragment extends BaseFragment {
         thisWeekChart.setMarkerView(marker);
         lastWeekChart.addData(lastWeekData, activeGoal, 7);
         lastWeekChart.setMarkerView(marker);
-        lastMonthChart.addData(lastMonthData, activeGoal, 7);
+        lastMonthChart.addData(lastMonthData, activeGoal,30);
         lastMonthChart.setMarkerView(marker);
         thisWeekChart.animateY(3000);
         lastWeekChart.animateY(3000);
