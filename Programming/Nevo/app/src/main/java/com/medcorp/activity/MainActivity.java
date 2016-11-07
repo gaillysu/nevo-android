@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +41,7 @@ import com.medcorp.fragment.SettingsFragment;
 import com.medcorp.fragment.WorldClockFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.PublicUtils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import net.medcorp.library.ble.event.BLEBluetoothOffEvent;
@@ -60,6 +62,8 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.medcorp.R.id.navigation_header_imageview;
 
 /**
  * Created by Karl on 12/10/15.
@@ -146,7 +150,15 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         View headerView = navigationView.getHeaderView(0);
         userView = (TextView) headerView.findViewById(R.id.navigation_header_textview);
         showUserFirstNameText = (TextView) headerView.findViewById(R.id.drawable_left_show_user_name_tv);
-        ImageButton userImageView = (ImageButton) headerView.findViewById(R.id.navigation_header_imageview);
+        ImageButton userImageView = (ImageButton) headerView.findViewById(navigation_header_imageview);
+
+        Bitmap bitmap = PublicUtils.getProfileIcon(this,getModel().getNevoUser());
+        if (bitmap == null) {
+            userImageView.setImageDrawable(getResources().getDrawable(R.drawable.user));
+        }else{
+            userImageView.setImageBitmap(bitmap);
+        }
+
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +166,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 finish();
             }
         });
-
             FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
         if (getModel().getNevoUser().isLogin()) {
             floatingActionButton.setVisibility(View.GONE);

@@ -137,7 +137,7 @@ public class ApplicationModel extends Application {
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
         Optional<User> user = userDatabaseHelper.getLoginUser();
-        if (Preferences.getisInitAlarm(this)&&getAllAlarm().size()==0) {
+        if (Preferences.getisInitAlarm(this) && getAllAlarm().size() == 0) {
             Preferences.startInitAlarm(this, false);
             Alarm defAlarm;
             for (int i = 0; i < 2; i++) {
@@ -744,14 +744,18 @@ public class ApplicationModel extends Application {
         ValidicOperation.getInstance(this).createValidicUser(nevoUser, pin, responseListener);
     }
 
+
+
     @Subscribe
-    public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent validicAddRoutineRecordEvent) {
+    public void onValidicAddRoutineRecordEvent(ValidicAddRoutineRecordEvent
+                                                       validicAddRoutineRecordEvent) {
         saveDailySteps(validicAddRoutineRecordEvent.getSteps());
 
     }
 
     @Subscribe
-    public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent validicAddSleepRecordEvent) {
+    public void onValidicAddSleepRecordEvent(ValidicAddSleepRecordEvent
+                                                     validicAddSleepRecordEvent) {
         saveDailySleep(validicAddSleepRecordEvent.getSleep());
     }
 
@@ -774,7 +778,8 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModelEvent validicDeleteSleepRecordModelEvent) {
+    public void onValidicDeleteSleepRecordModelEvent(ValidicDeleteSleepRecordModelEvent
+                                                             validicDeleteSleepRecordModelEvent) {
         sleepDatabaseHelper.remove(validicDeleteSleepRecordModelEvent.getUserId() + "", validicDeleteSleepRecordModelEvent.getDate());
     }
 
@@ -785,7 +790,8 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onValidicReadMoreRoutineRecordsModelEvent(ValidicReadMoreRoutineRecordsModelEvent validicReadMoreRoutineRecordsModelEvent) {
+    public void onValidicReadMoreRoutineRecordsModelEvent
+            (ValidicReadMoreRoutineRecordsModelEvent validicReadMoreRoutineRecordsModelEvent) {
         for (ValidicRoutineRecordModelBase routine : validicReadMoreRoutineRecordsModelEvent.getValidicReadMoreRoutineRecordsModel().getRoutine()) {
             int activity_id = Integer.parseInt(routine.getActivity_id());
             // if activity_id not exist in local Steps table, save it
@@ -796,7 +802,8 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onValidicReadMoreSleepRecordsModelEvent(ValidicReadMoreSleepRecordsModelEvent validicReadMoreSleepRecordsModelEvent) {
+    public void onValidicReadMoreSleepRecordsModelEvent(ValidicReadMoreSleepRecordsModelEvent
+                                                                validicReadMoreSleepRecordsModelEvent) {
         ValidicReadMoreSleepRecordsModel validicReadMoreSleepRecordsModel = validicReadMoreSleepRecordsModelEvent.getValidicReadMoreSleepRecordsModel();
         for (ValidicSleepRecordModelBase sleep : validicReadMoreSleepRecordsModel.getSleep()) {
             int activity_id = Integer.parseInt(sleep.getActivity_id());
@@ -808,7 +815,8 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent medReadMoreRoutineRecordsModelEvent) {
+    public void onMedReadMoreRoutineRecordsModelEvent(MedReadMoreRoutineRecordsModelEvent
+                                                              medReadMoreRoutineRecordsModelEvent) {
 
         if (medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps() == null || medReadMoreRoutineRecordsModelEvent.getMedReadMoreRoutineRecordsModel().getSteps().length == 0) {
             return;
@@ -827,7 +835,8 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent medReadMoreSleepRecordsModelEvent) {
+    public void onMedReadMoreSleepRecordsModelEvent(MedReadMoreSleepRecordsModelEvent
+                                                            medReadMoreSleepRecordsModelEvent) {
 
         if (medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep() == null || medReadMoreSleepRecordsModelEvent.getMedReadMoreSleepRecordsModel().getSleep().length == 0) {
             return;
@@ -846,13 +855,15 @@ public class ApplicationModel extends Application {
     }
 
     @Subscribe
-    public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent validicUpdateRoutineRecordsModelEvent) {
+    public void onValidicUpdateRoutineRecordsModelEvent(ValidicUpdateRoutineRecordsModelEvent
+                                                                validicUpdateRoutineRecordsModelEvent) {
         saveDailySteps(validicUpdateRoutineRecordsModelEvent.getSteps());
 
     }
 
     @Subscribe
-    public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent validicDeleteRoutineRecordEvent) {
+    public void onValidicDeleteRoutineRecordEvent(ValidicDeleteRoutineRecordEvent
+                                                          validicDeleteRoutineRecordEvent) {
         stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
     }
 
