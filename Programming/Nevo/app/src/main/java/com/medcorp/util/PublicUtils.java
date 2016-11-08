@@ -27,7 +27,7 @@ public class PublicUtils {
     private static Uri imageUri;
     private static Uri imageCropUri;
 
-    public static Bitmap getProfileIcon(Context context, User user){
+    public static Bitmap getProfileIcon(Context context, User user) {
         String path = PublicUtils.getSDCardPath();
         String fileName = null;
         if (user.isLogin()) {
@@ -46,24 +46,23 @@ public class PublicUtils {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return drawCircleView(bitmap);
+        return bitmap == null ? null : drawCircleView(bitmap);
     }
 
-    public static Bitmap drawCircleView(Bitmap bitmap){
+    public static Bitmap drawCircleView(Bitmap bitmap) {
 
-        //前面同上，绘制图像分别需要bitmap，canvas，paint对象
-        bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-        Bitmap bm = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bm);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        //这里需要先画出一个圆
-        canvas.drawCircle(100, 100, 100, paint);
-        //圆画好之后将画笔重置一下
-        paint.reset();
-        //设置图像合成模式，该模式为只在源图像和目标图像相交的地方绘制源图像
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        return bm;
+            bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+            Bitmap bm = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bm);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            //这里需要先画出一个圆
+            canvas.drawCircle(100, 100, 100, paint);
+            //圆画好之后将画笔重置一下
+            paint.reset();
+            //设置图像合成模式，该模式为只在源图像和目标图像相交的地方绘制源图像
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, 0, 0, paint);
+            return bm;
     }
 
     //获取到sd卡的文件路劲
