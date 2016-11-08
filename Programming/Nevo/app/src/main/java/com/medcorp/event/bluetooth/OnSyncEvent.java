@@ -7,7 +7,8 @@ public class OnSyncEvent {
 
     public enum SYNC_EVENT{
         STARTED,
-        STOPPED
+        STOPPED, // means big sync stopped
+        TODAY_SYNC_STOPPED  //means today sync stopped
     }
 
     public final SYNC_EVENT status;

@@ -78,13 +78,13 @@ public class MainSolarFragment extends BaseFragment {
         float powerOnBatteryPercent = 100f;
         float powerOnSolarPercent = 0f;
         int   powerOnSolarMinutes = 0;
-        int   powOnBatteryMinutes = 1440;
+        int   powOnBatteryMinutes = 18*60; //total default time is 18 hours
         Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(),userSelectDate);
         if(solarOptional.notEmpty()){
-            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime()*100f/(24*60);
+            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime()*100f/(powOnBatteryMinutes);
             powerOnBatteryPercent = 100f - powerOnSolarPercent;
             powerOnSolarMinutes = solarOptional.get().getTotalHarvestingTime();
-            powOnBatteryMinutes = 1440 - powerOnSolarMinutes;
+            powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
         }
         float[] solarPieChartDate = {powerOnSolarPercent, powerOnBatteryPercent};
         setPieChartData(solarPieChartDate);
@@ -159,7 +159,7 @@ public class MainSolarFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

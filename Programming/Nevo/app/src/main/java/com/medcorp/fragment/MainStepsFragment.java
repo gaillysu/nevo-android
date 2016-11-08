@@ -128,7 +128,7 @@ public class MainStepsFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
