@@ -1,6 +1,8 @@
 package com.medcorp.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.LunarMainFragmentAdapter;
+import com.medcorp.event.bluetooth.GetWatchInfoEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.model.Goal;
@@ -61,7 +64,7 @@ public class MainFragment extends BaseObservableFragment {
             fragmentAdapterArray = getResources().getStringArray(R.array.lunar_main_adapter_fragment);
 
         }
-
+        uiPageControl.removeAllViews();
         for (int i = 0; i < fragmentAdapterArray.length; i++) {
             ImageView imageView = new ImageView(MainFragment.this.getContext());
             if (i == 0) {
@@ -182,6 +185,17 @@ public class MainFragment extends BaseObservableFragment {
             int id = event.isSuccess() ? R.string.goal_synced : R.string.goal_error_sync;
             ((MainActivity) getActivity()).showStateString(id, false);
         }
+    }
+    @Subscribe
+    public void onEvent(GetWatchInfoEvent event) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                initUiControl();
+                adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), MainFragment.this);
+                showWatchViewPage.setAdapter(adapter);
+            }
+        });
     }
 }
 

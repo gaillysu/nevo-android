@@ -66,6 +66,7 @@ import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
+import com.medcorp.event.bluetooth.GetWatchInfoEvent;
 import com.medcorp.event.bluetooth.InitializeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -508,6 +509,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //save watch infomation into preference
                     Preferences.setWatchId(mContext,watchInfoPacket.getWatchID());
                     Preferences.setWatchModel(mContext,watchInfoPacket.getWatchModel());
+                    EventBus.getDefault().post(new GetWatchInfoEvent(getWatchInfomation()));
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
