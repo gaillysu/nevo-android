@@ -30,13 +30,11 @@ import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.model.User;
+import com.medcorp.util.PublicUtils;
 import com.medcorp.view.UsePicturePopupWindow;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,7 +76,7 @@ public class ProfileActivity extends BaseActivity {
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
 
-        String path = getSDCardPath();
+        String path = PublicUtils.getSDCardPath();
         String fileName = null;
         if (getModel().getNevoUser().isLogin()) {
             fileName = getModel().getNevoUser().getFirstName();
@@ -87,7 +85,7 @@ public class ProfileActivity extends BaseActivity {
         }
         File file = new File(path + "/" + fileName + ".jpg");
         imageUri = Uri.fromFile(file);
-        File cropFile = new File(getSDCardPath() + "/" + fileName + ".jpg");
+        File cropFile = new File(PublicUtils.getSDCardPath() + "/" + fileName + ".jpg");
         imageCropUri = Uri.fromFile(cropFile);
 
         Bitmap bitmap = null;
@@ -366,38 +364,6 @@ public class ProfileActivity extends BaseActivity {
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
         startActivityForResult(intent, RESULT_CAMERA_CROP_PATH_RESULT);
-    }
-
-
-    //获取到sd卡的文件路劲
-    public static String getSDCardPath() {
-        String cmd = "cat /proc/mounts";
-        Runtime run = Runtime.getRuntime();
-        try {
-            Process p = run.exec(cmd);
-            BufferedInputStream in = new BufferedInputStream(p.getInputStream());
-            BufferedReader inBr = new BufferedReader(new InputStreamReader(in));
-
-            String lineStr;
-            while ((lineStr = inBr.readLine()) != null) {
-                if (lineStr.contains("sdcard")
-                        && lineStr.contains(".android_secure")) {
-                    String[] strArray = lineStr.split(" ");
-                    if (strArray != null && strArray.length >= 5) {
-                        String result = strArray[1].replace("/.android_secure",
-                                "");
-                        return result;
-                    }
-                }
-                if (p.waitFor() != 0 && p.exitValue() == 1) {
-                }
-            }
-            inBr.close();
-            in.close();
-        } catch (Exception e) {
-            return Environment.getExternalStorageDirectory().getPath();
-        }
-        return Environment.getExternalStorageDirectory().getPath();
     }
 
     // 解析获取图片库图片Uri物理路径

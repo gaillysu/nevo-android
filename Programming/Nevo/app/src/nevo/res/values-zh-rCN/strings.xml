@@ -382,4 +382,8 @@
     <string name="wednesday">星期三</string>
     <string name="disable">禁用</string>
     <string name="forget_password_input_new_password">新密码</string>
+    <string name="tell_user_update_more_alarm">低版本中最多只可以添加三个闹钟!</string>
+    <string name="profile_activity_popupwindow_title">选择图片</string>
+    <string name="profile_activity_popupwindow_slect_library">相册</string>
+    <string name="profile_activity_popupwindow_form_photo">照片</string>
 </resources>

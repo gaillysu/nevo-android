@@ -54,6 +54,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage(getString(R.string.network_wait_text));
                 progressDialog.show();
+
                 getModel().getNetworkManage().execute(new CheckUserInputEmailIsTrueRequest(getModel()
                         .getNetworkManage().getAccessToken(), email), new ResponseListener<RequestTokenResponse>(){
                     @Override
@@ -66,15 +67,15 @@ public class ForgetPasswordActivity extends BaseActivity {
                     public void onRequestSuccess(RequestTokenResponse requestTokenResponse) {
                         progressDialog.dismiss();
                         if(requestTokenResponse.getStatus() == 1) {
+                        }else{
+                            ToastHelper.showShortToast(ForgetPasswordActivity.this,requestTokenResponse.getMessage());
+                        }
                             Intent intent = new Intent(ForgetPasswordActivity.this, ForgetPasswordResultActivity.class);
                             intent.putExtra("token", requestTokenResponse.getUser().getPassword_token());
                             intent.putExtra("email", email);
                             intent.putExtra("id", requestTokenResponse.getUser().getId());
                             startActivity(intent);
                             finish();
-                        }else{
-                            ToastHelper.showShortToast(ForgetPasswordActivity.this,requestTokenResponse.getMessage());
-                        }
                     }
                 });
 

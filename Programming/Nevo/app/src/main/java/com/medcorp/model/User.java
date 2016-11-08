@@ -200,7 +200,7 @@ public class User {
     }
 
     public double getDistanceTraveled(Steps steps){
-        double distance = ((height * 0.45 / 100) * (steps.getSteps())/ 1000);
+        double distance = ((height * 0.45 / 100) * (steps.getRunSteps()+steps.getWalkSteps())/ 1000);
         return distance;
     }
 

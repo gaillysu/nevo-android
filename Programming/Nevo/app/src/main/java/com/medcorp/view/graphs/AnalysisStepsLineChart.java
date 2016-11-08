@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -26,8 +25,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Math.abs;
 
 /**
  * Created by Karl on 8/24/16.
@@ -120,7 +117,18 @@ public class AnalysisStepsLineChart extends LineChart {
             maxValue = goal.getSteps()+ stepsModulo;
         } else {
             putTop = true;
-            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo)+15000);
+            String formatValue = maxValue + "";
+            char[] newValue = formatValue.toCharArray();
+            StringBuffer str = new StringBuffer();
+            for(int i = 0;i<newValue.length;i++){
+                if(i == 0){
+                    str.append(Integer.parseInt(newValue[0]+"")+1);
+                }else {
+                    str.append(newValue[i]);
+                }
+            }
+            maxValue = Integer.parseInt(str.toString());
+            //            maxValue = maxValue + abs(stepsModulo - (maxValue % stepsModulo));
         }
         //        "Goal: " + goal.getSteps()
         LimitLine limitLine = new LimitLine(0f, "");
