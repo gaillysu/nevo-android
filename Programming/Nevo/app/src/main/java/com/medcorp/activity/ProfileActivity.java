@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,7 +36,6 @@ import com.medcorp.util.PublicUtils;
 import com.medcorp.view.UsePicturePopupWindow;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,6 +55,17 @@ public class ProfileActivity extends BaseActivity {
     Toolbar toolbar;
     @Bind(R.id.profile_activity_select_picture)
     ImageView mImageButton;
+    @Bind(R.id.profile_activity_edit_first_name)
+    LinearLayout editFirstNameL;
+    @Bind(R.id.profile_activity_edit_last_name)
+    LinearLayout editLastName;
+    @Bind(R.id.edit_user_birthday_pop)
+    LinearLayout editUserBirthday;
+    @Bind(R.id.edit_user_height_pop)
+    LinearLayout editUserHeightL;
+    @Bind(R.id.edit_user_weight_pop)
+    LinearLayout editUserWeightL;
+
     private User user;
     private int viewType;
     private UsePicturePopupWindow usePicturePopupWindow;
@@ -79,26 +91,32 @@ public class ProfileActivity extends BaseActivity {
         String path = PublicUtils.getSDCardPath();
         String fileName = null;
         if (getModel().getNevoUser().isLogin()) {
-            fileName = getModel().getNevoUser().getFirstName();
+            fileName = getModel().getNevoUser().getNevoUserEmail();
         } else {
             fileName = "med_corp_app_watch";
         }
         File file = new File(path + "/" + fileName + ".jpg");
-        imageUri = Uri.fromFile(file);
         File cropFile = new File(PublicUtils.getSDCardPath() + "/" + fileName + ".jpg");
-        imageCropUri = Uri.fromFile(cropFile);
-
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageCropUri));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            imageUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
+            imageCropUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", cropFile);
+        } else {
+            imageUri = Uri.fromFile(file);
+            imageCropUri = Uri.fromFile(cropFile);
         }
+        //        Bitmap bitmap = null;
+        //        try {
+        //            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageCropUri));
+        //        } catch (FileNotFoundException e) {
+        //            e.printStackTrace();
+        //        }
+        Bitmap bitmap = PublicUtils.getProfileIcon(this, getModel().getNevoUser());
         if (bitmap == null) {
-            mImageButton.setImageDrawable(getResources().getDrawable(R.drawable.profile_header_icon));
-        }else{
+            mImageButton.setImageDrawable(getResources().getDrawable(R.drawable.user));
+        } else {
             mImageButton.setImageBitmap(bitmap);
         }
+
         user = getModel().getNevoUser();
         initView();
     }
@@ -114,40 +132,40 @@ public class ProfileActivity extends BaseActivity {
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
         //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd,MMM,yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
         userBirthday.setText(simpleDateFormat.format(new Date(user.getBirthday())));
-        userHeight.setText(user.getHeight() + "cm");
-        userWeight.setText(user.getWeight() + "kg");
+        userHeight.setText(user.getHeight() + " cm");
+        userWeight.setText(user.getWeight() + " kg");
 
-        lastName.setOnClickListener(new View.OnClickListener() {
+        editLastName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editUserName(lastName);
             }
         });
 
-        firstName.setOnClickListener(new View.OnClickListener() {
+        editFirstNameL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editUserName(firstName);
             }
         });
 
-        userBirthday.setOnClickListener(new View.OnClickListener() {
+        editUserBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editUserBirthday(userBirthday);
             }
         });
 
-        userHeight.setOnClickListener(new View.OnClickListener() {
+        editUserHeightL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editUserHeight(userHeight);
             }
         });
 
-        userWeight.setOnClickListener(new View.OnClickListener() {
+        editUserWeightL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editUserWeight(userWeight);
@@ -199,7 +217,7 @@ public class ProfileActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        userWeight.setText(dateDesc + "kg");
+                        userWeight.setText(dateDesc + " kg");
                         user.setWeight(new Integer(dateDesc).intValue());
                     }
                 }).viewStyle(viewType)
@@ -218,7 +236,7 @@ public class ProfileActivity extends BaseActivity {
                     @Override
                     public void onDatePickCompleted(int year, int month,
                                                     int day, String dateDesc) {
-                        userHeight.setText(dateDesc + "cm");
+                        userHeight.setText(dateDesc + " cm");
                         user.setHeight(new Integer(dateDesc).intValue());
                     }
                 }).viewStyle(viewType)
@@ -239,7 +257,7 @@ public class ProfileActivity extends BaseActivity {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             Date date = dateFormat.parse(dateDesc);
-                            birthdayText.setText(new SimpleDateFormat("dd,MMM,yyyy", Locale.US).format(date));
+                            birthdayText.setText(new SimpleDateFormat("dd MMM yyyy", Locale.US).format(date));
                             user.setBirthday(date.getTime());
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -289,7 +307,8 @@ public class ProfileActivity extends BaseActivity {
             usePicturePopupWindow.dismiss();
             switch (v.getId()) {
                 case R.id.user_select_library:
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);//ACTION_OPEN_DOCUMENT
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
                     startActivityForResult(intent, RESULT_ALBUM_CROP_PATH);
                     break;
@@ -330,9 +349,14 @@ public class ProfileActivity extends BaseActivity {
                 Bundle extras = data.getExtras();
                 if (extras != null) {
                     try {
-                        Bitmap bitmap = BitmapFactory.decodeStream
-                                (getContentResolver().openInputStream(imageCropUri));
-                        mImageButton.setImageBitmap(bitmap);
+                          Bitmap bitmap = BitmapFactory.decodeStream
+                          (getContentResolver().openInputStream(imageCropUri));
+                        Bitmap afterBitmap = PublicUtils.drawCircleView(bitmap);
+                        if (bitmap == null) {
+                            mImageButton.setImageResource(R.drawable.user);
+                        } else {
+                            mImageButton.setImageBitmap(afterBitmap);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -342,7 +366,12 @@ public class ProfileActivity extends BaseActivity {
             case RESULT_ALBUM_CROP_PATH:
                 String picPath = parsePicturePath(ProfileActivity.this, data.getData());
                 File file = new File(picPath);
-                Uri uri = Uri.fromFile(file);
+                Uri uri;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
+                } else {
+                    uri = Uri.fromFile(file);
+                }
                 cropImg(uri);
 
                 break;
@@ -350,8 +379,8 @@ public class ProfileActivity extends BaseActivity {
 
     }
 
-    //剪切
     public void cropImg(Uri uri) {
+
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");
@@ -368,7 +397,7 @@ public class ProfileActivity extends BaseActivity {
 
     // 解析获取图片库图片Uri物理路径
     @SuppressLint("NewApi")
-    public static String parsePicturePath(Context context, Uri uri) {
+    public String parsePicturePath(Context context, Uri uri) {
 
         if (null == context || uri == null)
             return null;
@@ -422,12 +451,13 @@ public class ProfileActivity extends BaseActivity {
         return null;
     }
 
-    private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+    private String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         String column = "_data";
         String[] projection = {column};
         try {
+
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 int index = cursor.getColumnIndexOrThrow(column);
@@ -438,7 +468,7 @@ public class ProfileActivity extends BaseActivity {
                 if (cursor != null)
                     cursor.close();
             } catch (Exception e) {
-                Log.e("harvic", e.getMessage());
+                Log.e("jason", e.getMessage());
             }
         }
         return null;
@@ -460,5 +490,4 @@ public class ProfileActivity extends BaseActivity {
     private static boolean isGooglePhotosContentUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
-
 }

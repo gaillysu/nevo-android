@@ -8,7 +8,9 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 
 import com.medcorp.model.User;
 
@@ -31,15 +33,21 @@ public class PublicUtils {
         String path = PublicUtils.getSDCardPath();
         String fileName = null;
         if (user.isLogin()) {
-            fileName = user.getFirstName();
+            fileName = user.getNevoUserEmail();
         } else {
             fileName = "med_corp_app_watch";
         }
         File file = new File(path + "/" + fileName + ".jpg");
-        imageUri = Uri.fromFile(file);
         File cropFile = new File(PublicUtils.getSDCardPath() + "/" + fileName + ".jpg");
-        imageCropUri = Uri.fromFile(cropFile);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //imageUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileProvider", file);
+            imageUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
+            //imageCropUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileProvider", cropFile);
+            imageCropUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", cropFile);
+        } else {
+            imageUri = Uri.fromFile(file);
+            imageCropUri = Uri.fromFile(cropFile);
+        }
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(imageCropUri));
@@ -51,23 +59,23 @@ public class PublicUtils {
 
     public static Bitmap drawCircleView(Bitmap bitmap) {
 
-            bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-            Bitmap bm = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bm);
-            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            //这里需要先画出一个圆
-            canvas.drawCircle(100, 100, 100, paint);
-            //圆画好之后将画笔重置一下
-            paint.reset();
-            //设置图像合成模式，该模式为只在源图像和目标图像相交的地方绘制源图像
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-            canvas.drawBitmap(bitmap, 0, 0, paint);
-            return bm;
+        bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+        Bitmap bm = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        //这里需要先画出一个圆
+        canvas.drawCircle(100, 100, 100, paint);
+        //圆画好之后将画笔重置一下
+        paint.reset();
+        //设置图像合成模式，该模式为只在源图像和目标图像相交的地方绘制源图像
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        return bm;
     }
 
     //获取到sd卡的文件路劲
     public static String getSDCardPath() {
-        String cmd = "cat /proc/mounts";
+        String cmd = "cat/proc/mounts";
         Runtime run = Runtime.getRuntime();
         try {
             Process p = run.exec(cmd);
@@ -80,8 +88,7 @@ public class PublicUtils {
                         && lineStr.contains(".android_secure")) {
                     String[] strArray = lineStr.split(" ");
                     if (strArray != null && strArray.length >= 5) {
-                        String result = strArray[1].replace("/.android_secure",
-                                "");
+                        String result = strArray[1].replace("/.android_secure", "");
                         return result;
                     }
                 }
