@@ -16,7 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.MainActivity;
 import com.medcorp.adapter.LunarMainFragmentAdapter;
-import com.medcorp.event.bluetooth.GetWatchInfoEvent;
+import com.medcorp.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.model.Goal;
@@ -187,7 +187,7 @@ public class MainFragment extends BaseObservableFragment {
         }
     }
     @Subscribe
-    public void onEvent(GetWatchInfoEvent event) {
+    public void onEvent(GetWatchInfoChangedEvent event) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {

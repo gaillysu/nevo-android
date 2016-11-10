@@ -66,7 +66,7 @@ import com.medcorp.database.dao.IDailyHistory;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
-import com.medcorp.event.bluetooth.GetWatchInfoEvent;
+import com.medcorp.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.event.bluetooth.InitializeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -324,7 +324,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     savedDailyHistory.get(mCurrentDay).setTotalSleepTime(thispacket.getTotalSleepTime());
                     savedDailyHistory.get(mCurrentDay).setHourlySleepTime(thispacket.getHourlySleepTime());
 
-                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime());
+                    Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Daily Sleep time:" + savedDailyHistory.get(mCurrentDay).getTotalSleepTime() + ",mCurrentDay= " + mCurrentDay + ",mSyncAllFlag= " + mSyncAllFlag);
                     Log.i(savedDailyHistory.get(mCurrentDay).getDate().toString(), "Hourly Sleep time:" + savedDailyHistory.get(mCurrentDay).getHourlySleepTime().toString());
 
                     savedDailyHistory.get(mCurrentDay).setTotalWakeTime(thispacket.getTotalWakeTime());
@@ -507,9 +507,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 else if((byte) ReadWatchInfoRequest.HEADER == packet.getHeader()) {
                     WatchInfoPacket watchInfoPacket = new WatchInfoPacket(packet.getPackets());
                     //save watch infomation into preference
+                    byte savedWatchID = (byte)Preferences.getWatchId(mContext);
                     Preferences.setWatchId(mContext,watchInfoPacket.getWatchID());
                     Preferences.setWatchModel(mContext,watchInfoPacket.getWatchModel());
-                    EventBus.getDefault().post(new GetWatchInfoEvent(getWatchInfomation()));
+                    //only watchID got changed, send event to refresh UI screen, otherwise, do nothing for reduce sync times and battery consuming.
+                    if(savedWatchID != watchInfoPacket.getWatchID()) {
+                        EventBus.getDefault().post(new GetWatchInfoChangedEvent(getWatchInfomation()));
+                    }
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
