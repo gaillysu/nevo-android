@@ -20,12 +20,16 @@ import com.medcorp.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.model.Goal;
+import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -45,11 +49,22 @@ public class MainFragment extends BaseObservableFragment {
     private LunarMainFragmentAdapter adapter;
     private String[] fragmentAdapterArray;
     private int stepsGoalNumber;
+    private Date userSelectDate = new Date();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lunar_main_fragment_layout, container, false);
         ButterKnife.bind(this, view);
+        String selectDate = Preferences.getSelectDate(this.getContext());
+        if (selectDate == null) {
+            userSelectDate = new Date();
+        } else {
+            try {
+                userSelectDate = new SimpleDateFormat("yyyy-MM-dd").parse(selectDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         setHasOptionsMenu(true);
         initUiControl();
         adapter = new LunarMainFragmentAdapter(getChildFragmentManager(), this);
@@ -169,6 +184,10 @@ public class MainFragment extends BaseObservableFragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        //NOTICE: if do full big sync, that will consume more battery power and more time (MAX 7 days data),so only big sync today's data
+        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
+            getModel().getSyncController().getDailyTrackerInfo(false);
+        }
     }
 
     @Override
