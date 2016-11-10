@@ -18,6 +18,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -129,8 +130,8 @@ public class ProfileActivity extends BaseActivity {
         final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
         final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
 
-        firstName.setText(user.getFirstName());
-        lastName.setText(user.getLastName());
+        firstName.setText(TextUtils.isEmpty(user.getFirstName())? getString(R.string.edit_user_first_name) :user.getFirstName());
+        lastName.setText(TextUtils.isEmpty(user.getLastName())?getString(R.string.edit_user_last_name):user.getLastName());
         //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
         userBirthday.setText(simpleDateFormat.format(new Date(user.getBirthday())));
@@ -284,11 +285,13 @@ public class ProfileActivity extends BaseActivity {
             case android.R.id.home:
                 startActivity(MainActivity.class);
                 finish();
+                overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
                 break;
             case R.id.done_menu:
                 getModel().saveNevoUser(user);
                 startActivity(MainActivity.class);
                 finish();
+                overridePendingTransition(R.anim.anim_left_in, R.anim.push_left_out);
                 break;
         }
         return super.onOptionsItemSelected(item);

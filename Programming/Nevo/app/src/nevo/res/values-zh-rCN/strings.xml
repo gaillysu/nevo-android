@@ -308,8 +308,10 @@
     <string name="profile_fragment_edit_first_name_edit_hint">输入名字</string>
     <string name="profile_fragment_first_name_text">名字</string>
     <string name="profile_fragment_input_surname_edit_hint">姓氏</string>
+    <string name="edit_user_first_name">请设置您的名字!</string>
     <string name="profile_fragment_input_user_surname_dialog_title">输入姓氏</string>
     <string name="profile_fragment_last_name_text">姓氏</string>
+    <string name="edit_user_last_name">请设置你的姓氏!</string>
     <string name="profile_fragment_user_birthday_text">生日</string>
     <string name="profile_fragment_user_height_text">身高</string>
     <string name="profile_fragment_user_weight_text">体重</string>

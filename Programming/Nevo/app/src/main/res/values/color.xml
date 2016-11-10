@@ -58,7 +58,8 @@
     <color name="snackbar_bg_color">#6F6F6F</color>
     <color name="my_device_right_show_version_text_color">#BCBCBC</color>
     <color name="profile_fragment_text_color">#000000</color>
-    <color name="profile_fragment_text_right_color">#6F6F6F</color>
+    <color name="profile_fragment_text_right_color">#A08455</color>
+    <color name="profile_fragment_text_value_color">#6F6F6F</color>
     <color name="steps_identification_tint_color">#FFAA79B3</color>
     <color name="calendar_dialog_view_title_bg">#618889</color>
     <color name="pie_chart_child_color">#FF7ED8D1</color>
