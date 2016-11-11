@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -67,7 +69,6 @@ import static com.medcorp.R.id.navigation_header_imageview;
 
 /**
  * Created by Karl on 12/10/15.
- *
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
@@ -99,9 +100,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
     private MenuItem selectItem;
+    private Uri savePictureUri;
 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
+    private static String heardPath = "/sdcard/myHead/";//sd路径
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,11 +155,17 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         showUserFirstNameText = (TextView) headerView.findViewById(R.id.drawable_left_show_user_name_tv);
         ImageButton userImageView = (ImageButton) headerView.findViewById(navigation_header_imageview);
 
-        Bitmap bitmap = PublicUtils.getProfileIcon(this,getModel().getNevoUser());
-        if (bitmap == null) {
-            userImageView.setImageDrawable(getResources().getDrawable(R.drawable.user));
-        }else{
-            userImageView.setImageBitmap(bitmap);
+        String userEmail = null;
+        if (getModel().getNevoUser().isLogin()) {
+            userEmail = getModel().getNevoUser().getNevoUserEmail();
+        } else {
+            userEmail = "watch_med_profile";
+        }
+        Bitmap bt = BitmapFactory.decodeFile(heardPath + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
+        if (bt != null) {
+            userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
+        } else {
+            userImageView.setImageResource(R.drawable.user);
         }
 
         userImageView.setOnClickListener(new View.OnClickListener() {
@@ -166,11 +175,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 finish();
             }
         });
-            FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) headerView.findViewById(R.id.navigation_header_spinner);
         if (getModel().getNevoUser().isLogin()) {
             floatingActionButton.setVisibility(View.GONE);
-        }else{
-          floatingActionButton.setVisibility(View.VISIBLE);
+        } else {
+            floatingActionButton.setVisibility(View.VISIBLE);
         }
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,7 +250,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void onDrawerOpened(View drawerView) {
         userView.setText(getModel().getNevoUser().isLogin() ? getModel().getNevoUser().getNevoUserEmail() : "");
         showUserFirstNameText.setText(getModel().getNevoUser().isLogin() ?
-                getModel().getNevoUser().getFirstName()+" "+getModel().getNevoUser().getLastName() : "");
+                getModel().getNevoUser().getFirstName() + " " + getModel().getNevoUser().getLastName() : "");
     }
 
 

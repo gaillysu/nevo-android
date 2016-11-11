@@ -1,25 +1,16 @@
 package com.medcorp.activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +28,9 @@ import com.medcorp.util.PublicUtils;
 import com.medcorp.view.UsePicturePopupWindow;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,13 +64,9 @@ public class ProfileActivity extends BaseActivity {
     private User user;
     private int viewType;
     private UsePicturePopupWindow usePicturePopupWindow;
-
-    private static final int RESULT_CAMERA_ONLY = 100;
-    private static final int RESULT_ALBUM_CROP_PATH = 10086;
-    private static final int RESULT_CAMERA_CROP_PATH_RESULT = 301;
-    private Uri imageUri;
-    private Uri imageCropUri;
-
+    private Bitmap head;
+    private static String path = "/sdcard/myHead/";
+    private String userEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,37 +78,19 @@ public class ProfileActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
-
-        String path = PublicUtils.getSDCardPath();
-        String fileName = null;
-        if (getModel().getNevoUser().isLogin()) {
-            fileName = getModel().getNevoUser().getNevoUserEmail();
-        } else {
-            fileName = "med_corp_app_watch";
-        }
-        File file = new File(path + "/" + fileName + ".jpg");
-        File cropFile = new File(PublicUtils.getSDCardPath() + "/" + fileName + ".jpg");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            imageUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
-            imageCropUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", cropFile);
-        } else {
-            imageUri = Uri.fromFile(file);
-            imageCropUri = Uri.fromFile(cropFile);
-        }
-        //        Bitmap bitmap = null;
-        //        try {
-        //            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageCropUri));
-        //        } catch (FileNotFoundException e) {
-        //            e.printStackTrace();
-        //        }
-        Bitmap bitmap = PublicUtils.getProfileIcon(this, getModel().getNevoUser());
-        if (bitmap == null) {
-            mImageButton.setImageDrawable(getResources().getDrawable(R.drawable.user));
-        } else {
-            mImageButton.setImageBitmap(bitmap);
-        }
-
         user = getModel().getNevoUser();
+        if (user.isLogin()) {
+            userEmail = user.getNevoUserEmail();
+        } else {
+            userEmail = "watch_med_profile";
+        }
+        Bitmap bt = BitmapFactory.decodeFile(path + userEmail+".jpg");//从Sd中找头像，转换成Bitmap
+
+        if (bt != null) {
+            mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
+        } else {
+            mImageButton.setImageResource(R.drawable.user);
+        }
         initView();
     }
 
@@ -130,8 +102,8 @@ public class ProfileActivity extends BaseActivity {
         final TextView userHeight = (TextView) findViewById(R.id.profile_fragment_user_height_tv);
         final TextView userWeight = (TextView) findViewById(R.id.profile_fragment_user_weight_tv);
 
-        firstName.setText(TextUtils.isEmpty(user.getFirstName())? getString(R.string.edit_user_first_name) :user.getFirstName());
-        lastName.setText(TextUtils.isEmpty(user.getLastName())?getString(R.string.edit_user_last_name):user.getLastName());
+        firstName.setText(TextUtils.isEmpty(user.getFirstName()) ? getString(R.string.edit_user_first_name) : user.getFirstName());
+        lastName.setText(TextUtils.isEmpty(user.getLastName()) ? getString(R.string.edit_user_last_name) : user.getLastName());
         //please strictly refer to our UI design Docs, the date format is dd,MMM,yyyy
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
         userBirthday.setText(simpleDateFormat.format(new Date(user.getBirthday())));
@@ -173,6 +145,7 @@ public class ProfileActivity extends BaseActivity {
             }
         });
     }
+
 
     @Override
     public void onBackPressed() {
@@ -310,13 +283,10 @@ public class ProfileActivity extends BaseActivity {
             usePicturePopupWindow.dismiss();
             switch (v.getId()) {
                 case R.id.user_select_library:
-                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);//ACTION_OPEN_DOCUMENT
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, RESULT_ALBUM_CROP_PATH);
+                    openLibrary();
                     break;
                 case R.id.user_select_camera:
-                    takeCameraCropUri();
+                    openCamera();
                     break;
                 case R.id.user_select_cancel:
                     usePicturePopupWindow.dismiss();
@@ -326,171 +296,102 @@ public class ProfileActivity extends BaseActivity {
         }
     };
 
-
-    private void takeCameraCropUri() {
-        Intent intent = null;
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//action is capture
-        intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true);
-        startActivityForResult(intent, RESULT_CAMERA_ONLY);
-
+    public void openCamera() {
+        Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+               userEmail+ ".jpg")));
+        startActivityForResult(intent2, 2);//采用ForResult打开
     }
+
+    public void openLibrary() {
+        Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+        intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent1, 1);
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK)
-            return;
         switch (requestCode) {
-            case RESULT_CAMERA_ONLY: {
-                cropImg(imageUri);
-            }
-            break;
-            case RESULT_CAMERA_CROP_PATH_RESULT: {
-                Bundle extras = data.getExtras();
-                if (extras != null) {
-                    try {
-                          Bitmap bitmap = BitmapFactory.decodeStream
-                          (getContentResolver().openInputStream(imageCropUri));
-                        Bitmap afterBitmap = PublicUtils.drawCircleView(bitmap);
-                        if (bitmap == null) {
-                            mImageButton.setImageResource(R.drawable.user);
-                        } else {
-                            mImageButton.setImageBitmap(afterBitmap);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    cropPhoto(data.getData());//裁剪图片
                 }
-            }
-            break;
-            case RESULT_ALBUM_CROP_PATH:
-                String picPath = parsePicturePath(ProfileActivity.this, data.getData());
-                File file = new File(picPath);
-                Uri uri;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    uri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
-                } else {
-                    uri = Uri.fromFile(file);
+                break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    File temp = new File(Environment.getExternalStorageDirectory()
+                            + "/"+userEmail+".jpg");
+                    cropPhoto(Uri.fromFile(temp));//裁剪图片
                 }
-                cropImg(uri);
 
                 break;
-        }
 
+            case 3:
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    if(extras != null) {
+                        head = extras.getParcelable("data");
+                    }else{
+                        head = data.getParcelableExtra("data");
+                    }
+                    if(head!=null){
+                        /**
+                         * 上传服务器代码
+                         */
+                        setPicToView(head);//保存在SD卡中
+                        mImageButton.setImageBitmap(PublicUtils.drawCircleView(head));//用ImageView显示出来
+                    }
+                }
+                break;
+
+            default:
+                break;
+
+        }
     }
 
-    public void cropImg(Uri uri) {
-
+    private void cropPhoto(Uri data) {
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
+        intent.setDataAndType(data, "image/*");
         intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", 700);
-        intent.putExtra("outputY", 700);
-        intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageCropUri);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true);
-        startActivityForResult(intent, RESULT_CAMERA_CROP_PATH_RESULT);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, 3);
     }
 
-    // 解析获取图片库图片Uri物理路径
-    @SuppressLint("NewApi")
-    public String parsePicturePath(Context context, Uri uri) {
-
-        if (null == context || uri == null)
-            return null;
-
-        boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        // DocumentUri
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageDocumentsUri
-            if (isExternalStorageDocumentsUri(uri)) {
-                String docId = DocumentsContract.getDocumentId(uri);
-                String[] splits = docId.split(":");
-                String type = splits[0];
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + File.separator + splits[1];
-                }
-            }
-            // DownloadsDocumentsUri
-            else if (isDownloadsDocumentsUri(uri)) {
-                String docId = DocumentsContract.getDocumentId(uri);
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaDocumentsUri
-            else if (isMediaDocumentsUri(uri)) {
-                String docId = DocumentsContract.getDocumentId(uri);
-                String[] split = docId.split(":");
-                String type = split[0];
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-                String selection = "_id=?";
-                String[] selectionArgs = new String[]{split[1]};
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
+    private void setPicToView(Bitmap mBitmap) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+            return;
         }
-        // MediaStore (general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            if (isGooglePhotosContentUri(uri))
-                return uri.getLastPathSegment();
-            return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-        return null;
-    }
-
-    private String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-
-        Cursor cursor = null;
-        String column = "_data";
-        String[] projection = {column};
+        FileOutputStream bot = null;
+        File file = new File(path);
+        file.mkdirs();// 创建文件夹
+        String fileName =path + userEmail+".jpg";//图片名字
         try {
+            bot = new FileOutputStream(fileName);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bot);// 把数据写入文件
 
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } finally {
             try {
-                if (cursor != null)
-                    cursor.close();
-            } catch (Exception e) {
-                Log.e("jason", e.getMessage());
+                if(bot != null) {
+                    //关闭流
+                    bot.flush();
+                    bot.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return null;
-
-    }
-
-    private static boolean isExternalStorageDocumentsUri(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isDownloadsDocumentsUri(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isMediaDocumentsUri(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isGooglePhotosContentUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 }
