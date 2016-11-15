@@ -28,8 +28,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="15dp"
-            android:src="@drawable/lunar_watch_icon"/>
-
+            android:src="@drawable/lunar_watch_icon"
+            />
+        <!--android:src="@drawable/lunar_watch_icon"-->
         <ImageView
             android:id="@+id/HomeClockHour"
             android:layout_width="match_parent"

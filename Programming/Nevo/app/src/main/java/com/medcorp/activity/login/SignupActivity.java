@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -42,7 +41,7 @@ public class SignupActivity extends BaseActivity {
 
     private String firstName;
     private String lastName;
-    private CheckBox checkIsAgreeBt;
+//    private CheckBox checkIsAgreeBt;
     private String email;
     private String password;
 
@@ -52,10 +51,10 @@ public class SignupActivity extends BaseActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
+//        checkIsAgreeBt = (CheckBox) findViewById(R.id.sign_up_check_user_is_agree_terms_radio_bt);
         editTextFirstName = (EditText) findViewById(R.id.register_account_activity_edit_first_name);
         editLastName = (EditText) findViewById(R.id.register_account_activity_edit_last_name);
-        checkIsAgreeBt.setChecked(false);
+//        checkIsAgreeBt.setChecked(false);
     }
 
     @OnClick(R.id.register_title_back_image_button)
@@ -131,9 +130,9 @@ public class SignupActivity extends BaseActivity {
         } else {
             editTextFirstName.setError(null);
         }
-        if (!checkIsAgreeBt.isChecked()) {
-            valid = false;
-        }
+//        if (!checkIsAgreeBt.isChecked()) {
+//            valid = false;
+//        }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError(getString(R.string.register_email_error));
