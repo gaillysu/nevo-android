@@ -50,7 +50,7 @@ public class CloudSyncManager {
     private final String TAG = "CloudSyncManager";
     final long INTERVAL_DATE = 365 * 24 * 60 * 60 *1000l;//user can get all data in a year
     //here select which one cloud server
-    final CloudServerProvider cloudServerProvider = CloudServerProvider.All;
+    final CloudServerProvider cloudServerProvider = CloudServerProvider.Med;
     
     private ApplicationModel context;
     public CloudSyncManager(ApplicationModel context)
