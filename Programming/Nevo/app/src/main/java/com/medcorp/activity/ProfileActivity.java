@@ -1,11 +1,18 @@
 package com.medcorp.activity;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -24,21 +31,20 @@ import com.medcorp.model.User;
 import com.medcorp.util.PublicUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
-
 
 /**
  * Created by med on 16/4/6.
@@ -62,10 +68,11 @@ public class ProfileActivity extends BaseActivity {
 
     private User user;
     private int viewType;
-    private Bitmap head;
-    private static String path = "/sdcard/myHead/";
     private String userEmail;
-    private static final int REQUEST_IMAGE = 100;
+    private static final int REQUEST_IMAGE = 2;
+    protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
+    private ArrayList<String> mSelectPath;
+    private static String heardPath = "/sdcard/myHead/";//sd路径
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,19 +85,19 @@ public class ProfileActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
-        user = getModel().getNevoUser();
-        if (user.isLogin()) {
-            userEmail = user.getNevoUserEmail();
+        String userEmail = null;
+        if (getModel().getNevoUser().isLogin()) {
+            userEmail = getModel().getNevoUser().getNevoUserEmail();
         } else {
             userEmail = "watch_med_profile";
         }
-        Bitmap bt = BitmapFactory.decodeFile(path + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
-
+        Bitmap bt = BitmapFactory.decodeFile(heardPath + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
         if (bt != null) {
             mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
         } else {
             mImageButton.setImageResource(R.drawable.user);
         }
+        user = getModel().getNevoUser();
         initView();
     }
 
@@ -272,42 +279,75 @@ public class ProfileActivity extends BaseActivity {
 
     @OnClick(R.id.profile_activity_select_picture)
     public void settingPicture() {
-        Intent intent = new Intent(this, MultiImageSelectorActivity.class);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, true);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 1);
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_SINGLE);
-        startActivityForResult(intent, REQUEST_IMAGE);
+        pickImage();
+
     }
 
+    private void pickImage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED
+                ) {
+            requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    getString(R.string.mis_permission_rationale),
+                    REQUEST_STORAGE_READ_ACCESS_PERMISSION);
+        } else {
+            MultiImageSelector selector = MultiImageSelector.create();
+            selector.showCamera(true);
+            selector.count(1);
+            selector.single();
+            selector.start(ProfileActivity.this, REQUEST_IMAGE);
+        }
+    }
+
+    private void requestPermission(final String permission, final String permissionCamera, String rationale, final int requestCode) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.mis_permission_dialog_title)
+                    .setMessage(rationale)
+                    .setPositiveButton(R.string.mis_permission_dialog_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(ProfileActivity.this, new String[]
+                                    {permission, permissionCamera}, requestCode);
+                        }
+                    })
+                    .setNegativeButton(R.string.mis_permission_dialog_cancel, null)
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_STORAGE_READ_ACCESS_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                pickImage();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_IMAGE:
-                if (data != null) {
-                    List<String> path = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    if (path.size() > 0) {
-                        String imagePath = path.get(0);
-                        if (imagePath != null) {
-                            Bitmap head = null;
-                            try {
-                                head = BitmapFactory.decodeStream(new FileInputStream(imagePath));
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            setPicToView(head);//保存在SD卡中
-                            mImageButton.setImageBitmap(PublicUtils.drawCircleView(head));//用ImageView显示出来
-                        }
+        if (requestCode == REQUEST_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                 mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if (mSelectPath.size() > 0) {
+                    File imageFilePath = new File(mSelectPath.get(0));
+                    if (imageFilePath != null) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath.getAbsolutePath());
+                        mImageButton.setImageBitmap(PublicUtils.drawCircleView(bitmap));
+                        setPicToView(BitmapFactory.decodeFile(mSelectPath.get(0)));
                     }
                 }
-                break;
-            default:
-                break;
-
+            }
         }
     }
-
 
     private void setPicToView(Bitmap mBitmap) {
         String sdStatus = Environment.getExternalStorageState();
@@ -315,9 +355,9 @@ public class ProfileActivity extends BaseActivity {
             return;
         }
         FileOutputStream bot = null;
-        File file = new File(path);
+        File file = new File(heardPath);
         file.mkdirs();// 创建文件夹
-        String fileName = path + userEmail + ".jpg";//图片名字
+        String fileName = heardPath + userEmail + ".jpg";//图片名字
         try {
             bot = new FileOutputStream(fileName);
             mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bot);// 把数据写入文件

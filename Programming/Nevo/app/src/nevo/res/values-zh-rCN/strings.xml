@@ -31,6 +31,10 @@
     <!-- New App Strings from here -->
     <string name ="location_access_title">该应用需要位置访问</string>
     <string name ="location_access_content">请允许访问的位置，使这个程序可以检测手表.</string>
+    <string name="profile_activity_popupwindow_title">该应用需要访问本地内存卡</string>
+    <string name="profile_activity_popupwindow_slect_library">请允许访问本地相册,使您可以正常的使用设置头像.</string>
+    <string name="profile_activity_popupwindow_form_photo">照片</string>
+
 
     <string name="dfu_update">固件升级</string>
     <string name="dfu_back_to_settings">返回设置</string>
@@ -385,7 +389,5 @@
     <string name="disable">禁用</string>
     <string name="forget_password_input_new_password">新密码</string>
     <string name="tell_user_update_more_alarm">低版本中最多只可以添加三个闹钟!</string>
-    <string name="profile_activity_popupwindow_title">选择图片</string>
-    <string name="profile_activity_popupwindow_slect_library">相册</string>
-    <string name="profile_activity_popupwindow_form_photo">照片</string>
+
 </resources>
