@@ -34,8 +34,8 @@
 
         <ImageView
             android:layout_centerInParent="true"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
             android:layout_weight="1"
             android:padding="20dp"
             android:layout_below="@id/activity_tutorial_page1_notice_textview"

@@ -68,6 +68,7 @@ import static com.medcorp.R.id.navigation_header_imageview;
 
 /**
  * Created by Karl on 12/10/15.
+ *
  */
 public class MainActivity extends BaseActivity implements DrawerLayout.DrawerListener,
         NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener, DatePickerDialog.OnDateSetListener {
@@ -165,12 +166,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } else {
             userImageView.setImageResource(R.drawable.user);
         }
-        // Bitmap bt = BitmapFactory.decodeFile(heardPath + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
-        //        if (bt != null) {
-        //            userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
-        //        } else {
-        //            userImageView.setImageResource(R.drawable.user);
-        //        }
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

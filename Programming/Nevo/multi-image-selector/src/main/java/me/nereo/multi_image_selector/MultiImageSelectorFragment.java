@@ -357,7 +357,7 @@ public class MultiImageSelectorFragment extends Fragment {
                             e.printStackTrace();
                         }
                         if (photoFile != null) {
-                            Uri photoURI = FileProvider.getUriForFile(getActivity(), "me.nereo.fileprovider", photoFile);
+                            Uri photoURI = FileProvider.getUriForFile(getActivity(), "med.corp.fileprovider", photoFile);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                             startActivityForResult(intent, ANDROID_SEVEN_REQUEST_CAMERA);
                         }
