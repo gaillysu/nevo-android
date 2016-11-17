@@ -158,13 +158,19 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } else {
             userEmail = "watch_med_profile";
         }
-        Bitmap bt = BitmapFactory.decodeFile(heardPath + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
+        Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(this, userEmail));
+        //从Sd中找头像，转换成Bitmap
         if (bt != null) {
             userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
         } else {
             userImageView.setImageResource(R.drawable.user);
         }
-
+        // Bitmap bt = BitmapFactory.decodeFile(heardPath + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
+        //        if (bt != null) {
+        //            userImageView.setImageBitmap(PublicUtils.drawCircleView(bt));
+        //        } else {
+        //            userImageView.setImageResource(R.drawable.user);
+        //        }
         userImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

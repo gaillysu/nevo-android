@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
@@ -28,12 +27,10 @@ import com.bruce.pickerview.popwindow.DatePickerPopWin;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.model.User;
+import com.medcorp.util.Preferences;
 import com.medcorp.util.PublicUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.nereo.multi_image_selector.MultiImageSelector;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import me.nereo.multi_image_selector.MultiImageSelectorFragment;
 
 /**
  * Created by med on 16/4/6.
@@ -72,7 +70,6 @@ public class ProfileActivity extends BaseActivity {
     private static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     private ArrayList<String> mSelectPath;
-    private static String heardPath = "/sdcard/myHead/";//sd路径
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,19 +82,18 @@ public class ProfileActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.profile_title);
-        String userEmail = null;
+        user = getModel().getNevoUser();
         if (getModel().getNevoUser().isLogin()) {
-            userEmail = getModel().getNevoUser().getNevoUserEmail();
+            userEmail = user.getNevoUserEmail();
         } else {
             userEmail = "watch_med_profile";
         }
-        Bitmap bt = BitmapFactory.decodeFile(heardPath + userEmail + ".jpg");//从Sd中找头像，转换成Bitmap
+        Bitmap bt = BitmapFactory.decodeFile(Preferences.getUserHeardPicturePath(this, userEmail));//从Sd中找头像，转换成Bitmap
         if (bt != null) {
             mImageButton.setImageBitmap(PublicUtils.drawCircleView(bt));
         } else {
             mImageButton.setImageResource(R.drawable.user);
         }
-        user = getModel().getNevoUser();
         initView();
     }
 
@@ -334,46 +330,57 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE) {
-            if (resultCode == RESULT_OK) {
-                 mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE) {
+                mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                 if (mSelectPath.size() > 0) {
                     File imageFilePath = new File(mSelectPath.get(0));
                     if (imageFilePath != null) {
                         Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath.getAbsolutePath());
                         mImageButton.setImageBitmap(PublicUtils.drawCircleView(bitmap));
-                        setPicToView(BitmapFactory.decodeFile(mSelectPath.get(0)));
+                        Preferences.saveUserHeardPicture(ProfileActivity.this, userEmail, imageFilePath.getAbsolutePath());
+                    }
+                }
+            } else if (requestCode == MultiImageSelectorFragment.ANDROID_SEVEN_REQUEST_CAMERA) {
+                mSelectPath = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                if (mSelectPath.size() > 0) {
+                    File imagePath = new File(mSelectPath.get(0));
+                    if (imagePath != null) {
+                        Bitmap bitImage = BitmapFactory.decodeFile(imagePath.getAbsolutePath());
+                        mImageButton.setImageBitmap(PublicUtils.drawCircleView(bitImage));
+                        // setPicToView(BitmapFactory.decodeFile(mSelectPath.get(0)));
+                        Preferences.saveUserHeardPicture(ProfileActivity.this, userEmail, imagePath.getAbsolutePath());
                     }
                 }
             }
         }
     }
-
-    private void setPicToView(Bitmap mBitmap) {
-        String sdStatus = Environment.getExternalStorageState();
-        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-            return;
-        }
-        FileOutputStream bot = null;
-        File file = new File(heardPath);
-        file.mkdirs();// 创建文件夹
-        String fileName = heardPath + userEmail + ".jpg";//图片名字
-        try {
-            bot = new FileOutputStream(fileName);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bot);// 把数据写入文件
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (bot != null) {
-                    //关闭流
-                    bot.flush();
-                    bot.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    //
+    //    private void setPicToView(Bitmap mBitmap) {
+    //        String sdStatus = Environment.getExternalStorageState();
+    //        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+    //            return;
+    //        }
+    //        FileOutputStream bot = null;
+    //        File file = new File(heardPath);
+    //        file.mkdirs();// 创建文件夹
+    //        String fileName = heardPath + userEmail + ".jpg";//图片名字
+    //        try {
+    //            bot = new FileOutputStream(fileName);
+    //            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bot);// 把数据写入文件
+    //
+    //        } catch (FileNotFoundException e) {
+    //            e.printStackTrace();
+    //        } finally {
+    //            try {
+    //                if (bot != null) {
+    //                    //关闭流
+    //                    bot.flush();
+    //                    bot.close();
+    //                }
+    //            } catch (IOException e) {
+    //                e.printStackTrace();
+    //            }
+    //        }
+    //    }
 }

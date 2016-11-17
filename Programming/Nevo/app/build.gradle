@@ -94,8 +94,7 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:2.4.0'
     compile 'no.nordicsemi.android:dfu:1.0.4'
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
-//    compile project(path: ':multi-image-selector')
-    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
+    compile project(path: ':multi-image-selector')
 }
 
 repositories {

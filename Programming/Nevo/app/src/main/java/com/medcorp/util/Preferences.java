@@ -27,6 +27,17 @@ public class Preferences {
         }
     }
 
+    public static void saveUserHeardPicture(Context context,String userEmail ,String picturePath){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(userEmail,picturePath).apply();
+    }
+
+    public static String getUserHeardPicturePath(Context context,String userEmail ){
+        init(context);
+        return preferences.getString(userEmail,null);
+    }
+
     public static void saveUserSelectCity(Context context, String cityName) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
