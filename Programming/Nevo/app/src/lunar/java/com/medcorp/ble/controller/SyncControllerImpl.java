@@ -49,6 +49,8 @@ import com.medcorp.ble.model.request.SetGoalRequest;
 import com.medcorp.ble.model.request.SetNotificationRequest;
 import com.medcorp.ble.model.request.SetProfileRequest;
 import com.medcorp.ble.model.request.SetRtcRequest;
+import com.medcorp.ble.model.request.SetSunriseAndSunsetTimeRequest;
+import com.medcorp.ble.model.request.SetWorldTimeOffsetRequest;
 import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
@@ -62,6 +64,7 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
+import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneChangedEvent;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
@@ -537,6 +540,14 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         {
             mLocalService.setPairedWatch(null);
         }
+    }
+
+    @Subscribe
+    public void onEvent(SunRiseAndSunSetWithZoneChangedEvent changedEvent) {
+        byte offset = 0;
+        //TODO: offset will be calculated by changedEvent.getZone()
+        sendRequest(new SetWorldTimeOffsetRequest(mContext,offset));
+        sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
     }
     /**
      This function will synchronise activity data with the watch.

@@ -13,10 +13,13 @@ import android.widget.TextView;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.activity.EditWorldClockActivity;
+import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.worldclock.City;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -149,6 +152,11 @@ public class WorldClockFragment extends BaseObservableFragment {
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
         sunrise.setText(officialSunrise);
         sunset.setText(officialSunset);
+        byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
+        byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
+        byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
+        byte sunsetMin  = (byte) Integer.parseInt(officialSunset.split(":")[1]);
+        EventBus.getDefault().post(new SunRiseAndSunSetWithZoneChangedEvent(zone,sunriseHour,sunriseMin,sunsetHour,sunsetMin));
     }
 
     private void refreshClock() {
