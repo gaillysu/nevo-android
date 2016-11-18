@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.activity.EditWorldClockActivity;
-import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneChangedEvent;
+import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
 
@@ -109,7 +109,7 @@ public class WorldClockFragment extends BaseObservableFragment {
         }
 
         //set location sunrise sunset
-        setSunriseAndSunset(showSunriseTv, showSunsetTv, city, timeZone.getID());
+        setSunriseAndSunset(showSunriseTv, showSunsetTv, city, timeZone.getID(),true);
 
         // set other city sunrise sunset
         if (otherCityName != null) {
@@ -117,7 +117,7 @@ public class WorldClockFragment extends BaseObservableFragment {
                 if ((city.getName() + ", " + city.getCountry()).equals(otherCityName)) {
                     showOtherCityNameAndTime.setText(city.getName());
                     net.medcorp.library.worldclock.TimeZone zone = city.getTimezoneRef();
-                    setSunriseAndSunset(showOtherSunrise, showOtherCitySunset, city, zone.getName());
+                    setSunriseAndSunset(showOtherSunrise, showOtherCitySunset, city, zone.getName(),false);
                 }
             }
         } else {
@@ -143,7 +143,7 @@ public class WorldClockFragment extends BaseObservableFragment {
     }
 
     //set sunrise and sunset value
-    public void setSunriseAndSunset(TextView sunrise, TextView sunset, City city, String zone) {
+    public void setSunriseAndSunset(TextView sunrise, TextView sunset, City city, String zone,boolean isLocal) {
 
         com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
                 new com.luckycatlabs.sunrisesunset.dto.Location(city.getLat() + "", city.getLng() + "");
@@ -152,11 +152,14 @@ public class WorldClockFragment extends BaseObservableFragment {
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
         sunrise.setText(officialSunrise);
         sunset.setText(officialSunset);
-        byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
-        byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
-        byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
-        byte sunsetMin  = (byte) Integer.parseInt(officialSunset.split(":")[1]);
-        EventBus.getDefault().post(new SunRiseAndSunSetWithZoneChangedEvent(zone,sunriseHour,sunriseMin,sunsetHour,sunsetMin));
+        if(isLocal) {
+            byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
+            byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
+            byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
+            byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
+            byte timeZoneOffset = (byte) (Calendar.getInstance().getTimeZone().getRawOffset()/3600/1000);
+            EventBus.getDefault().post(new SunRiseAndSunSetWithZoneOffsetChangedEvent(timeZoneOffset, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
+        }
     }
 
     private void refreshClock() {

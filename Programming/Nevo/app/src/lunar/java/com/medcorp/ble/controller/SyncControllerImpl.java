@@ -64,7 +64,7 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
-import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneChangedEvent;
+import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
@@ -543,10 +543,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Subscribe
-    public void onEvent(SunRiseAndSunSetWithZoneChangedEvent changedEvent) {
-        byte offset = 0;
-        //TODO: offset will be calculated by changedEvent.getZone()
-        sendRequest(new SetWorldTimeOffsetRequest(mContext,offset));
+    public void onEvent(SunRiseAndSunSetWithZoneOffsetChangedEvent changedEvent) {
+        sendRequest(new SetWorldTimeOffsetRequest(mContext,changedEvent.getTimeZoneOffset()));
         sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
     }
     /**
