@@ -38,3 +38,4 @@ public class SunRiseAndSunSetWithZoneOffsetChangedEvent {
     public byte getTimeZoneOffset() {
         return timeZoneOffset;
     }
+}
