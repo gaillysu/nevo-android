@@ -30,6 +30,7 @@ import net.medcorp.library.ble.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,7 +79,11 @@ public class MainSolarFragment extends BaseFragment {
         float powerOnBatteryPercent = 100f;
         float powerOnSolarPercent = 0f;
         int   powerOnSolarMinutes = 0;
-        int   powOnBatteryMinutes = 18*60; //total default time is 18 hours
+        int   powOnBatteryMinutes = 24*60; //default battery time,unit in "minutes"
+        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime())
+        {
+            powOnBatteryMinutes = new DateTime().getMinuteOfDay();
+        }
         Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(),userSelectDate);
         if(solarOptional.notEmpty()){
             powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime()*100f/(powOnBatteryMinutes);
