@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -70,7 +69,7 @@ public class AnalysisSolarLineChart extends LineChart {
 
 
         YAxis leftAxis = getAxisLeft();
-        leftAxis.setAxisLineColor(Color.BLACK);
+        leftAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
@@ -84,7 +83,7 @@ public class AnalysisSolarLineChart extends LineChart {
         rightAxis.setDrawLabels(false);
 
         XAxis xAxis = getXAxis();
-        xAxis.setAxisLineColor(Color.BLACK);
+        xAxis.setAxisLineColor(getResources().getColor(R.color.colorPrimary));
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);

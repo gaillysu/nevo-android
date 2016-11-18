@@ -30,6 +30,15 @@
         android:label="@string/app_name"
         android:theme="@style/NevoTheme"
         tools:replace="android:theme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/provider_file_string"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
         <activity
             android:name=".activity.tutorial.TutorialPageVideoActivity"
             android:label="@string/app_name"

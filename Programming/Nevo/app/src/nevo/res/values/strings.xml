@@ -8,7 +8,7 @@
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-
+    <string name="provider_file_string">com.med.fileprovider</string>
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
     <string name="ble_unstable">Bluetooth connection is unstable, please keep the watch closer to the phone.</string>

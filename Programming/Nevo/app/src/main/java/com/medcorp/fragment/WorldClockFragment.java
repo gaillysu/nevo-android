@@ -1,6 +1,7 @@
 package com.medcorp.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +34,6 @@ import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/24.
- *
  */
 
 public class WorldClockFragment extends BaseObservableFragment {
@@ -78,9 +78,14 @@ public class WorldClockFragment extends BaseObservableFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         initView();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     private void initView() {
@@ -116,6 +121,7 @@ public class WorldClockFragment extends BaseObservableFragment {
             for (City city : cities) {
                 if ((city.getName() + ", " + city.getCountry()).equals(otherCityName)) {
                     showOtherCityNameAndTime.setText(city.getName());
+                    Log.i("jason",city.toString());
                     net.medcorp.library.worldclock.TimeZone zone = city.getTimezoneRef();
                     setSunriseAndSunset(showOtherSunrise, showOtherCitySunset, city, zone.getName());
                 }
@@ -155,8 +161,8 @@ public class WorldClockFragment extends BaseObservableFragment {
         byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
         byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
         byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
-        byte sunsetMin  = (byte) Integer.parseInt(officialSunset.split(":")[1]);
-        EventBus.getDefault().post(new SunRiseAndSunSetWithZoneChangedEvent(zone,sunriseHour,sunriseMin,sunsetHour,sunsetMin));
+        byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
+        EventBus.getDefault().post(new SunRiseAndSunSetWithZoneChangedEvent(zone, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
     }
 
     private void refreshClock() {

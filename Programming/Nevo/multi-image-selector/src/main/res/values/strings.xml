@@ -12,6 +12,7 @@
     <string name="mis_permission_dialog_title">Permission Deny</string>
     <string name="mis_permission_dialog_ok">OK</string>
     <string name="all_picture">All Images</string>
+    <string name="provider_file_string">com.med.fileprovider</string>
     <string name="mis_permission_dialog_cancel">CANCEL</string>
     <string name="mis_permission_rationale">Storage read permission is needed to pick files.</string>
     <string name="mis_permission_rationale_write_storage">Storage write permission is needed to save the image.</string>

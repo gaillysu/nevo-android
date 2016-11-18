@@ -1,13 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.nereo.multi_image_selector">
+<manifest package="me.nereo.multi_image_selector"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+
     <application android:allowBackup="true">
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="med.corp.fileprovider"
+            android:authorities="@string/provider_file_string"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -15,8 +16,8 @@
                 android:resource="@xml/file_paths"/>
         </provider>
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"/>
 
     </application>
 
