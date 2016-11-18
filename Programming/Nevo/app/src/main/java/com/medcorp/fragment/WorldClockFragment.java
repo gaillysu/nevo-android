@@ -158,11 +158,7 @@ public class WorldClockFragment extends BaseObservableFragment {
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
         sunrise.setText(officialSunrise);
         sunset.setText(officialSunset);
-        byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
-        byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
-        byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
-        byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
-        EventBus.getDefault().post(new SunRiseAndSunSetWithZoneChangedEvent(zone, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
+
         if(isLocal) {
             byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
             byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);

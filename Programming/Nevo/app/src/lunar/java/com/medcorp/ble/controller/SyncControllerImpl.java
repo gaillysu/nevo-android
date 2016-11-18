@@ -508,11 +508,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Subscribe
     public void onEvent(SunRiseAndSunSetWithZoneChangedEvent changedEvent) {
-        byte offset = 0;
+        byte offset = changedEvent.get;
         //TODO: offset will be calculated by changedEvent.getZone()
-        String cityZone = changedEvent.getZone();
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(cityZone));
-        Log.i("jason",calendar.toString());
         sendRequest(new SetWorldTimeOffsetRequest(mContext, offset));
         sendRequest(new SetSunriseAndSunsetTimeRequest(mContext, changedEvent.getSunriseHour()
                 , changedEvent.getSunriseMin(), changedEvent.getSunsetHour(), changedEvent.getSunsetMin()));
