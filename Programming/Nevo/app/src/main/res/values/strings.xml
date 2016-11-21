@@ -1,3 +1,6 @@
 <resources>
 <!-- for better translation, remove all strings into every flavor: nevo,lunar-->
+    <string name="steps_goal_one">"4500 steps "</string>
+    <string name="profile_gender" translatable="false">profile_gender</string>
+    <string name="profile_gender_values" translatable="false">profile_gender_values</string>
 </resources>

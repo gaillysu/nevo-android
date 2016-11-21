@@ -8,7 +8,7 @@
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="provider_file_string">com.med.fileprovider</string>
+    <string name="provider_file_string" translatable="false">com.med.fileprovider</string>
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
     <string name="ble_unstable">Bluetooth connection is unstable, please keep the watch closer to the phone.</string>
@@ -414,5 +414,7 @@ push and hold the third button, until the white LED blinks</string>
     <string name="def_alarm_name">Alarm</string>
     <string name="tell_user_this_location_time">LocationTime</string>
     <string name="def_goal_name">Goal </string>
+    <string name="solar_describe_battery_text" translatable="false">solar_describe_battery_text</string>
+    <string name="notification_array" translatable="false">notification_array</string>
     <!--<lunar end>-->
 </resources>
