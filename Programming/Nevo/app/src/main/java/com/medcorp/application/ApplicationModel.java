@@ -395,16 +395,17 @@ public class ApplicationModel extends Application {
 
 
     public Steps getDailySteps(String userId, Date date) {
-        Steps stpes = null;
-        Optional<Steps> steps = stepsDatabaseHelper.get(userId, Common.removeTimeFromDate(date));
-        if (steps.notEmpty()) {
-            stpes = steps.get();
+        Steps steps = null;
+        Date dateStart = CalendarWeekUtils.getDayStartTime(date);
+        Optional<Steps> step = stepsDatabaseHelper.get(userId, dateStart);
+        if (step.notEmpty()) {
+            steps = step.get();
         } else {
-            stpes = new Steps(date.getTime());
-            stpes.setDate(date.getTime());
-            stpes.setCreatedDate(date.getTime());
+            steps = new Steps(date.getTime());
+            steps.setDate(date.getTime());
+            steps.setCreatedDate(date.getTime());
         }
-        return stpes;
+        return steps;
     }
 
     public Sleep[] getDailySleep(String userId, Date todayDate) {

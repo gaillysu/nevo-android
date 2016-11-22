@@ -14,9 +14,31 @@ public class CalendarWeekUtils {
     private Date lastWeekStart;
     private Date lastWeekEnd;
     private Date monthStartDate;
+    private Date dayStartTime;
+    private Date dayEndTime;
 
     public Date getMonthEndDate() {
         return monthEndDate;
+    }
+
+    public static Date getDayStartTime(Date date){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date start = calendar.getTime();
+       return start;
+    }
+
+    public static Date getDayEndTime(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.SECOND, -1);
+        Date end = calendar.getTime();
+        return end;
     }
 
     public Date getMonthStartDate() {

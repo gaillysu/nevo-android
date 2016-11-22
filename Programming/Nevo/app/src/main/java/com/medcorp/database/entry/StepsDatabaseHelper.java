@@ -89,6 +89,8 @@ public class StepsDatabaseHelper implements iEntryDatabaseHelper<Steps> {
         return stepsList.isEmpty() ? new Optional<Steps>() : stepsList.get(0);
     }
 
+
+
     @Override
     public List<Optional<Steps>> getAll(String userId) {
         List<Optional<Steps>> stepsList = new ArrayList<>();

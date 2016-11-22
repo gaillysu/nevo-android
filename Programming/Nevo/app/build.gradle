@@ -11,14 +11,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'iMaze'
-            keyPassword 'imaze123'
-            storeFile file('../imaze123.key')
-            storePassword 'imaze123'
-        }
-    }
     compileSdkVersion 24
     buildToolsVersion '23.0.3'
     defaultConfig {
@@ -34,9 +26,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            signingConfig signingConfigs.config
         }
     }
 
