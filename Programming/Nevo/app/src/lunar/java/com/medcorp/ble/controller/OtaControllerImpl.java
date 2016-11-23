@@ -16,6 +16,7 @@ import com.medcorp.ble.model.request.OTAControlRequest;
 import com.medcorp.ble.model.request.OTAPacketFileSizeRequest;
 import com.medcorp.ble.model.request.OTAPacketRequest;
 import com.medcorp.ble.model.request.OTAStartRequest;
+import com.medcorp.util.Common;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.controller.OtaController;
@@ -75,7 +76,7 @@ public class OtaControllerImpl implements OtaController  {
 
     /** check the OTA is doing or stop */
     private Timer mTimeoutTimer = null;
-    public static final int MAX_TIME = 35000;
+    public static final int MAX_TIME = 45000;
     private double lastprogress = 0.0;
     //added for MCU OTA
 
@@ -788,17 +789,29 @@ public class OtaControllerImpl implements OtaController  {
                 //by BLE peer disconnect when normal mode to ota mode
                 else if (state == DFUControllerState.SEND_START_COMMAND)
                 {
-                    state = DFUControllerState.DISCOVERING;
-                    connectionController.setOTAMode(true, true);
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
-                            //when switch to DFU mode, the MAC address has changed to another one
-                            connectionController.forgetSavedAddress();
-                            connectionController.connect();
-                        }
-                    },1000);
+                    final boolean needSearchDFUservice = false;
+                    if(needSearchDFUservice) {
+                        state = DFUControllerState.DISCOVERING;
+                        connectionController.setOTAMode(true, true);
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
+                                //when switch to DFU mode, the MAC address has changed to another one
+                                connectionController.forgetSavedAddress();
+                                connectionController.connect();
+                            }
+                        },1000);
+                    }
+                    //we let DFU library take over the OTA process directly without verify DFU service,
+                    // but here we must calculate the new device address changed by DFU mode
+                    else {
+                        String newDeviceAdress = Common.getMacAdd(event.getAddress());
+                        state = DFUControllerState.SEND_FIRMWARE_DATA;
+                        connectionController.disconnect();
+                        if (mOnOtaControllerListener.notEmpty())
+                            mOnOtaControllerListener.get().onDFUServiceStarted(newDeviceAdress);
+                    }
                 }
             }
         }

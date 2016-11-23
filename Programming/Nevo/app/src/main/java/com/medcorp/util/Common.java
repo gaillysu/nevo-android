@@ -238,11 +238,11 @@ public class Common {
         return  buildinZipFirmware;
     }
     /**
-     * NOTICE: if you put new ZIP file into /res/raw, pls don't forget change "Watch_Build_in_Zip_Firmware" with its name
+     * NOTICE: if you put new ZIP file into "main/res/raw", pls don't forget change "Watch_Build_in_Zip_Firmware" with its name
      * now, lunar use dfu library, nevo and nevo solar still use old workflow,perhaps nevo/solar will use dfu library too.
      * use dfu library, we only send a zip file to watch, that will improve OTA experence.
      */
-    public final static String Watch_Build_in_Zip_Firmware = "lunar_20161011_v3.zip";
+    public final static String Watch_Build_in_Zip_Firmware = "lunar_20161122_v5.zip";
     /**
      *
      * @param context
@@ -250,7 +250,7 @@ public class Common {
      */
     static public int getBuildinZipFirmwareRawResID(Context context)
     {
-        return  R.raw.lunar_20161011_v3;
+        return  R.raw.lunar_20161122_v5;
     }
 
     public static int[] convertJSONArrayIntToArray(String string){
@@ -265,5 +265,23 @@ public class Common {
             e.printStackTrace();
             return new int[0];
         }
+    }
+
+    /**
+     * Mac add 1
+     * @param macAddress Mac address，eg: AB:CD:EF:56:BF:D0
+     * @return macAddress + 1,eg: AB:CD:EF:56:BF:D1
+     */
+    public static String getMacAdd(String macAddress) {
+        String hexMacAddress = macAddress.toUpperCase().replaceAll(":","");
+        String newHexMacAddress = Long.toHexString(Long.parseLong(hexMacAddress, 16) + 1).toUpperCase();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i=0;i<12;i++) {
+            if(i==2||i==4||i==6||i==8||i==10){
+                stringBuilder.append(":");
+            }
+            stringBuilder.append(newHexMacAddress.substring(i,i+1));
+        }
+        return stringBuilder.toString();
     }
 }
