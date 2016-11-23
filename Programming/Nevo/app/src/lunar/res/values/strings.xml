@@ -7,9 +7,11 @@
     <string name="menu_drawer_sleep">Sleep</string>
     <string name="menu_drawer_settings">Settings</string>
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>
-    <string name="provider_file_string">com.med.lunar.fileprovider</string>
+    <string name="provider_file_string" translatable="false">com.med.lunar.fileprovider</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="time_able_morning">AM</string>
+    <string name="time_able_afternoon">PM</string>
 
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
@@ -361,6 +363,7 @@
     <string name="register_terms_is_agree">I agree to the terms and conditions</string>
     <string name="tutorial_1_text">Use your LunaR watch to set, track and analyse\n your personal health and fitness data</string>
     <string name="tutorial_1_lets_activate">Activate your LunaR</string>
+    <string name="change_select_city">Change city</string>
     <string name="tutorial_3_text">Pull out the crown out and turn to set the time on\n your LunaR watch. Be aware that LunaR doesn\’t sync\n time with your phone</string>
     <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
@@ -419,7 +422,7 @@
     <string name="profile_activity_popupwindow_form_photo">Choose from Camera</string>
     <string name="tell_user_change_week_day">Please change repeat week day after open Alarm!</string>
     <string name="tell_user_update_more_alarm">Only 3 alarms are available. Upgrade your watch for more alarms!</string>
-    <string name="tell_user_this_location_time">Location Time</string>
+    <string name="tell_user_this_location_time">Local time</string>
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal </string>

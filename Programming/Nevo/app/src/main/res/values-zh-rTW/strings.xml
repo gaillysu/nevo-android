@@ -26,4 +26,8 @@
     <string name="choose_activity_title_choose_city_tv">選擇城市</string>
     <string name="change_password">確定</string>
     <string name="cancel_update">取消</string>
+    <string name="change_select_city">切換城市</string>
+    <string name="disable">關閉</string>
+    <string name="time_able_afternoon">上午</string>
+    <string name="time_able_morning">下午</string>
 </resources>
