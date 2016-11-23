@@ -144,9 +144,6 @@ public class MainStepsFragment extends BaseFragment {
             if (steps == null) {
                 return;
             }
-            int dailySteps = steps.getSteps();
-            int dailyGoal = steps.getGoal();
-            Log.i("MainStepsFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

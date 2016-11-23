@@ -425,10 +425,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     }
                 } else if ((byte) GetStepsGoalRequest.HEADER == lunarData.getRawData()[1]) {
                     //save current day's step count to "Steps" table
+                    DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
+                    Log.i(TAG,"little sync,Date:"+stepPacket.getDailyDate().toString() + ",steps:" + stepPacket.getDailySteps() + ",goal:"+stepPacket.getDailyStepsGoal());
                     Steps steps = ((ApplicationModel) mContext).getDailySteps(((ApplicationModel) mContext).getNevoUser().getNevoUserID(), Common.removeTimeFromDate(new Date()));
                     steps.setCreatedDate(new Date().getTime());
                     steps.setDate(Common.removeTimeFromDate(new Date()).getTime());
-                    DailyStepsPacket stepPacket = new DailyStepsPacket(packet.getPackets());
                     steps.setSteps(stepPacket.getDailySteps());
                     steps.setGoal(stepPacket.getDailyStepsGoal());
                     steps.setNevoUserID(((ApplicationModel) mContext).getNevoUser().getNevoUserID());

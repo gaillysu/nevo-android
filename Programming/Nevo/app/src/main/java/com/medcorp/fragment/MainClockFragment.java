@@ -120,9 +120,6 @@ public class MainClockFragment extends BaseFragment {
             if (steps == null) {
                 return;
             }
-            int dailySteps = steps.getSteps();
-            int dailyGoal = steps.getGoal();
-            Log.i("MainClockFragment", "dailySteps = " + dailySteps + ",dailyGoal = " + dailyGoal);
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {
