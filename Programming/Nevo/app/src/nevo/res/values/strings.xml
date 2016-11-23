@@ -411,8 +411,11 @@ push and hold the third button, until the white LED blinks</string>
     <string name="tell_user_change_week_day">Please choose a day in the week by modifying the alarm.</string>
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
+    <string name="time_able_morning">AM</string>
+    <string name="time_able_afternoon">PM</string>
     <string name="def_alarm_name">Alarm</string>
     <string name="tell_user_this_location_time">LocationTime</string>
+    <string name="change_select_city">Change City</string>
     <string name="def_goal_name">Goal </string>
     <string name="solar_describe_battery_text" translatable="false">solar_describe_battery_text</string>
     <string name="notification_array" translatable="false">notification_array</string>
