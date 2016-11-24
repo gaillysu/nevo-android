@@ -3,6 +3,9 @@ package com.medcorp.ble.model.packet;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.util.HexUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,5 +46,25 @@ public class DailyStepsPacket extends Packet {
         return dailyStepGoal;
     }
 
+    /**
+     return the Daily date, if setRTC is invoked correctly, it should be return current date & time
+     */
+    public Date getDailyDate()
+    {
+        int year = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[10],getPackets().get(0).getRawData()[11]});
+        int month = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[12]});
+        int day   = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[13]});
+        int hour = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[14]});
+        int minute   = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[15]});
+        int second = HexUtils.bytesToInt(new byte[]{getPackets().get(0).getRawData()[16]});
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        try {
+            Date date = format.parse(String.format("%04d%02d%02d%02d%02d%02d",year,month,day,hour,minute,second));
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date(1970,1,1,0,0,0);
+    }
 
 }
