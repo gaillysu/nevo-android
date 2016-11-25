@@ -475,16 +475,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     //step0:firstly read watch infomation, for Lunar and nevo Solar, we use watch ID to show solar power screen
                     sendRequest(new ReadWatchInfoRequest(mContext));
                     //it is dangerous when every BLE connection invoke setRtc(), perhaps it will reset some data, so we should invoke setRTC() once time(only get paired with the watch)
-                    if (mLocalService.getPairedWatch() != null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
-                        mLocalService.setPairedWatch(null);
-                        Log.w(TAG, "SET RTC");
-                        //step 1: setRTC every connection
-                        setRtc();
-                    } else {
-                        //directly do steps 2 without setRTC
-                        //setp2:start set user profile
-                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
-                    }
+//                    if (mLocalService.getPairedWatch() != null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
+//                        mLocalService.setPairedWatch(null);
+//                        Log.w(TAG, "SET RTC");
+//                        //step 1: setRTC every connection
+//                        setRtc();
+//                    } else {
+//                        //directly do steps 2 without setRTC
+//                        //setp2:start set user profile
+//                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
+//                    }
+                    setRtc();
                 }
             }, 2000);
         } else {
@@ -629,7 +630,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             connectionController.disconnect();
         }
         //step2:unpair this watch from system bluetooth setting
-        connectionController.unPairDevice(connectionController.getSaveAddress());
+        //connectionController.unPairDevice(connectionController.getSaveAddress());
         mLocalService.setPairedWatch(null);
         //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();

@@ -3,6 +3,8 @@ package com.medcorp.ble.model.packet;
 import net.medcorp.library.ble.model.response.MEDRawData;
 import net.medcorp.library.ble.util.HexUtils;
 
+import org.joda.time.DateTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -64,7 +66,7 @@ public class DailyStepsPacket extends Packet {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return new Date(1970,1,1,0,0,0);
+        return new DateTime(1970,1,1,0,0,0).toDate();
     }
 
 }

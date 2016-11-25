@@ -535,17 +535,19 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     packetsBuffer.clear();
                     //early nevo firmware doesn't support 0x27 cmd(read watch info), so I put this cmd here
                     sendRequest(new ReadWatchInfoRequest(mContext));
+                    //we found that it is not caused by setRTC to reset watch data and date, the really reason is that repair watch will clean data and reset date.
                     //it is dangerous when every BLE connection invoke setRtc(), perhaps it will reset some data, so we should invoke setRTC() once time(only get paired with the watch)
-                    if(mLocalService.getPairedWatch()!=null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
-                        mLocalService.setPairedWatch(null);
-                        Log.w(TAG,"SET RTC");
-                        //step 1: setRTC every connection
-                        setRtc();
-                    }else {
-                        //directly do steps 2 without setRTC
-                        //setp2:start set user profile
-                        sendRequest(new SetProfileRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
-                    }
+//                    if(mLocalService.getPairedWatch()!=null && mLocalService.getPairedWatch().equals(connectionController.getSaveAddress())) {
+//                        mLocalService.setPairedWatch(null);
+//                        Log.w(TAG,"SET RTC");
+//                        //step 1: setRTC every connection
+//                        setRtc();
+//                    }else {
+//                        //directly do steps 2 without setRTC
+//                        //setp2:start set user profile
+//                        sendRequest(new SetProfileRequest(mContext,((ApplicationModel)mContext).getNevoUser()));
+//                    }
+                    setRtc();
                 }
             }, 2000);
         } else {
@@ -756,7 +758,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             connectionController.disconnect();
         }
         //step2:unpair this watch from system bluetooth setting
-        connectionController.unPairDevice(connectionController.getSaveAddress());
+        //don't unpair device, we found that if unpair it, watch date and data will reset
+        //connectionController.unPairDevice(connectionController.getSaveAddress());
         mLocalService.setPairedWatch(null);
         //step3:reset MAC address and firstly run flag and big sync stamp
         connectionController.forgetSavedAddress();
