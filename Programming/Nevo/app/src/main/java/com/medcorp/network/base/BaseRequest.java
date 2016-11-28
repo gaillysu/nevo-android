@@ -6,6 +6,7 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Created by Administrator on 2016/7/20.
+ *
  */
 public abstract class BaseRequest<T, R> extends RetrofitSpiceRequest<T, R> {
     public static final String CONTENT_TYPE = "application/json";

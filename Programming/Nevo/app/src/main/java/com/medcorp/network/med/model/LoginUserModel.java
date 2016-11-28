@@ -4,6 +4,7 @@ import net.medcorp.library.user.BaseResponse;
 
 /**
  * Created by Jason on 2016/8/9.
+ *
  */
 public class LoginUserModel extends BaseResponse {
     private UserWithLocation user;
