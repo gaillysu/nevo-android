@@ -2,6 +2,7 @@ package com.medcorp.network.med.model;
 
 /**
  * Created by med on 16/5/3.
+ *
  */
 public class LoginUserObject {
     private String token;
