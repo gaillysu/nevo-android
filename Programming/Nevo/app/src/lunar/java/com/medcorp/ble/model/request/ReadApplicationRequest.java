@@ -11,9 +11,11 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/8/5.
  */
 public class ReadApplicationRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x31;
-    public ReadApplicationRequest(Context context) {
+    public  final static  byte HEADER = 0x51;
+    final byte listNumber; //0~31
+    public ReadApplicationRequest(Context context, byte listNumber) {
         super(new GattAttributesDataSourceImpl(context));
+        this.listNumber = listNumber;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class ReadApplicationRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {       0,HEADER,0,0,
+                {       0,HEADER,listNumber,0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0,

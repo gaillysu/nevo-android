@@ -16,19 +16,24 @@ public class ReadApplicationPacket extends Packet {
     }
     public ApplicationInfomation getApplicationInfomation()
     {
-        byte dataLength = getPackets().get(0).getRawData()[2];
-        if(dataLength == (byte)0xFF)
+        byte appID_Len = getPackets().get(0).getRawData()[2];
+        if(appID_Len == (byte)0xFF)
         {
             return null;
         }
-        byte[] ledPattern = new byte[5];
-        //if bit8 == 1, get led pattern,otherwise disable led pattern
-        if((getPackets().get(0).getRawData()[3] & 0x01) == 0x01)
+        byte[] ledPattern = new byte[]{0,0,0,0,0};
+        //if bit7 == 1, get led pattern,otherwise disable led pattern
+        if((appID_Len & 0x80) == 0x80)
         {
-            System.arraycopy(getPackets().get(0).getRawData(),4,ledPattern,0,5);
+            System.arraycopy(getPackets().get(0).getRawData(),3,ledPattern,0,5);
+        }
+        //bit0~bit6 save the data length,MAX 100 (not 127)
+        byte dataLength = (byte) (appID_Len&0x7F);
+        if(dataLength>100){
+            return null;
         }
         byte[] byteData = new byte[dataLength];
-        int firstRawDataBytes = 11;
+        int firstRawDataBytes = 12;
         if(dataLength<=firstRawDataBytes)
         {
             System.arraycopy(getPackets().get(0).getRawData(),20-firstRawDataBytes,byteData,0,dataLength);
@@ -53,7 +58,7 @@ public class ReadApplicationPacket extends Packet {
                 }
             }
         }
-
+        //why not return app list Number?
         return new ApplicationInfomation((byte)0,ledPattern,new String(byteData));
     }
 }

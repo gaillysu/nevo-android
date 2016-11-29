@@ -11,7 +11,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/8/5.
  */
 public class DeleteApplicationRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x33;
+    public  final static  byte HEADER = 0x53;
     private  byte listNumber;
     public DeleteApplicationRequest(Context context, byte listNumber) {
         super(new GattAttributesDataSourceImpl(context));

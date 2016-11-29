@@ -11,7 +11,7 @@ import net.medcorp.library.ble.model.request.BLERequestData;
  * Created by med on 16/8/5.
  */
 public class GetTotalApplicationRequest extends BLERequestData {
-    public  final static  byte HEADER = 0x30;
+    public  final static  byte HEADER = 0x50;
     public GetTotalApplicationRequest(Context context) {
         super(new GattAttributesDataSourceImpl(context));
     }
