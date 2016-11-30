@@ -16,6 +16,7 @@ import com.medcorp.ble.model.request.OTAControlRequest;
 import com.medcorp.ble.model.request.OTAPacketFileSizeRequest;
 import com.medcorp.ble.model.request.OTAPacketRequest;
 import com.medcorp.ble.model.request.OTAStartRequest;
+import com.medcorp.util.Common;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.controller.OtaController;
@@ -106,6 +107,7 @@ public class OtaControllerImpl implements OtaController  {
     private int totalpage = 0;
     private int checksum = 0;
     private boolean manualmode = false;
+    private boolean useDFUlibrary = true;
     //end added
 
     /**
@@ -188,7 +190,7 @@ public class OtaControllerImpl implements OtaController  {
                 bos.close();
                 is.close();
             }
-            else
+            else if (filetype.equals("bin"))
             {
                 MCU_openfirmware(filename);
             }
@@ -741,6 +743,75 @@ public class OtaControllerImpl implements OtaController  {
                             connectionController.reconnect();
                         }
                     },1000);
+                }
+            }
+        }
+        //use distribution firmware (zip file)
+        else if(dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP)
+        {
+            if (event.isConnected())
+            {
+                if (state == DFUControllerState.SEND_RECONNECT)
+                {
+                    state = DFUControllerState.SEND_START_COMMAND;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionController.sendRequest(new OTAStartRequest(mContext));
+                        }
+                    },1000);
+                }
+                else if (state == DFUControllerState.DISCOVERING)
+                {
+                    state = DFUControllerState.SEND_FIRMWARE_DATA;
+                    //kill connectionController and med-library BT service and use dfu library service
+                    Log.i(TAG,"***********connectionController has found DFU service,disconnect it and dfu library will take over the OTA*******");
+                    connectionController.restoreSavedAddress();
+                    connectionController.disconnect();
+                    if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUServiceStarted(event.getAddress());
+                }
+            }
+            else
+            {
+                if (state == DFUControllerState.IDLE)
+                {
+                    state = DFUControllerState.SEND_RECONNECT;
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionController.reconnect();
+                        }
+                    },1000);
+                }
+
+                //by BLE peer disconnect when normal mode to ota mode
+                else if (state == DFUControllerState.SEND_START_COMMAND)
+                {
+                    final boolean needSearchDFUservice = false;
+                    if(needSearchDFUservice) {
+                        state = DFUControllerState.DISCOVERING;
+                        connectionController.setOTAMode(true, true);
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i(TAG,"***********set OTA mode,forget it firstly,and scan DFU service*******");
+                                //when switch to DFU mode, the MAC address has changed to another one
+                                connectionController.forgetSavedAddress();
+                                connectionController.connect();
+                            }
+                        },1000);
+                    }
+                    //we let DFU library take over the OTA process directly without verify DFU service,
+                    // but here we must calculate the new device address changed by DFU mode
+                    else {
+                        String newDeviceAdress = Common.getMacAdd(event.getAddress());
+                        state = DFUControllerState.SEND_FIRMWARE_DATA;
+                        connectionController.disconnect();
+                        if (mOnOtaControllerListener.notEmpty())
+                            mOnOtaControllerListener.get().onDFUServiceStarted(newDeviceAdress);
+                    }
                 }
             }
         }
