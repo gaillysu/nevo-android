@@ -117,14 +117,14 @@ public class MyNevoActivity  extends BaseActivity {
         }
         else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR)
         {
-            int buildinFirmwareVersion = Common.getBuildinZipFirmwareVersion(this,Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this).get(0));
+            int buildinFirmwareVersion = getResources().getInteger(R.integer.launar_version);
             if(currentFirmwareVersion<buildinFirmwareVersion) {
                 showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this));
+                        bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this,getModel().getSyncController().getWatchInfomation().getWatchID()));
                         intent.putExtras(bundle);
                         MyNevoActivity.this.startActivity(intent);
                         MyNevoActivity.this.finish();

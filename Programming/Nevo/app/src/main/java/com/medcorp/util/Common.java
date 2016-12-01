@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -231,26 +232,48 @@ public class Common {
      * @param context
      * @return all build-in ZIP firmware
      */
-    static public List<String> getAllBuildinZipFirmwareURLs(Context context)
+    static public List<String> getAllBuildinZipFirmwareURLs(Context context,int watchID)
     {
         ArrayList<String> buildinZipFirmware = new ArrayList<>();
-        buildinZipFirmware.add(Watch_Build_in_Zip_Firmware);
+        //TODO: what is the ZIP file? for BLE or MCU or both of them?
+        if(watchID == 1)
+        {
+            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_ble_firmware));
+            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_mcu_firmware));
+        }
+        if(watchID == 2)
+        {
+            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_solar_ble_firmware));
+            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_solar_mcu_firmware));
+        }
+        if(watchID == 3)
+        {
+            buildinZipFirmware.add(context.getResources().getString(R.string.lunar_firmware));
+        }
         return  buildinZipFirmware;
     }
-    /**
-     * NOTICE: if you put new ZIP file into "main/res/raw", pls don't forget change "Watch_Build_in_Zip_Firmware" with its name
-     * now, lunar use dfu library, nevo and nevo solar still use old workflow,perhaps nevo/solar will use dfu library too.
-     * use dfu library, we only send a zip file to watch, that will improve OTA experence.
-     */
-    public final static String Watch_Build_in_Zip_Firmware = "lunar_20161122_v5.zip";
     /**
      *
      * @param context
      * @return all build-in ZIP firmware resource Raw ID
      */
-    static public int getBuildinZipFirmwareRawResID(Context context)
+    static public int getBuildinZipFirmwareRawResID(Context context,int watchID)
     {
-        return  R.raw.lunar_20161122_v5;
+        if(watchID == 1)
+        {
+            //TODO add nevo ZIP file to res/raw
+            return  0;
+        }
+        if(watchID == 2)
+        {
+            //TODO add nevo ZIP file to res/raw
+            return  0;
+        }
+        if(watchID == 3)
+        {
+            return  R.raw.lunar_20161122_v5;
+        }
+        return  0;
     }
 
     public static int[] convertJSONArrayIntToArray(String string){

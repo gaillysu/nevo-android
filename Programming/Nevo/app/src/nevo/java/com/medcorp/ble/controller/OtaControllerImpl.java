@@ -504,6 +504,14 @@ public class OtaControllerImpl implements OtaController  {
             sendRequest(new OTAControlRequest(mContext, new byte[]{(byte) DfuOperations.START_DFU_REQUEST.rawValue(), (byte) DfuFirmwareTypes.BLUETOOTH.rawValue()}));
             sendRequest(new OTAPacketFileSizeRequest(mContext, binFileSize,false));
         }
+        else if(manualmode && dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP)
+        {
+            Log.i(TAG,"***********connectionController disconnect without find DFU service and dfu library will take over the OTA*******,manualmode=true");
+            String newDeviceAdress = Common.getMacAdd(connectionController.getSaveAddress());
+            state = DFUControllerState.SEND_FIRMWARE_DATA;
+            connectionController.disconnect();
+            if (mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUServiceStarted(newDeviceAdress);
+        }
         //pair mode for doing OTA
         else
         {
@@ -811,11 +819,11 @@ public class OtaControllerImpl implements OtaController  {
                     //we let DFU library take over the OTA process directly without verify DFU service,
                     // but here we must calculate the new device address changed by DFU mode
                     else {
+                        Log.i(TAG,"***********connectionController disconnect without find DFU service and dfu library will take over the OTA*******");
                         String newDeviceAdress = Common.getMacAdd(event.getAddress());
                         state = DFUControllerState.SEND_FIRMWARE_DATA;
                         connectionController.disconnect();
-                        if (mOnOtaControllerListener.notEmpty())
-                            mOnOtaControllerListener.get().onDFUServiceStarted(newDeviceAdress);
+                        if (mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUServiceStarted(newDeviceAdress);
                     }
                 }
             }

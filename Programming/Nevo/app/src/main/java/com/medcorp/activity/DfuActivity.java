@@ -473,7 +473,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
                         .setForceDfu(false)
                         .setPacketsReceiptNotificationsEnabled(true)
                         .setPacketsReceiptNotificationsValue(DfuServiceInitiator.DEFAULT_PRN_VALUE);
-                starter.setZip(Common.getBuildinZipFirmwareRawResID(mContext));
+                starter.setZip(Common.getBuildinZipFirmwareRawResID(mContext,getModel().getSyncController().getWatchInfomation().getWatchID()));
                 Log.i(TAG, "***********dfu library starts DfuService*******" + "address = " + device.getAddress() + ",name = " + device.getName());
                 starter.start(mContext, DfuService.class);
             }
