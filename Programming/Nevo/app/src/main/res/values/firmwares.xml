@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    //TODO: zip file only for BLE or MCU or both of them?
-    <string name="nevo_ble_firmware">imaze_20161122_v38.zip</string>
-    <integer name="nevo_ble_version">38</integer>
-
-    <string name="nevo_mcu_firmware">nevo_v26.bin</string>
-    <integer name="nevo_mcu_version">26</integer>
-
-    <string name="nevo_solar_ble_firmware">imaze_solar_dual_20161122_v38.zip</string>
-    <integer name="nevo_solar_ble_version">38</integer>
-
-    <string name="nevo_solar_mcu_firmware">nevo_v26.bin</string>
-    <integer name="nevo_solar_mcu_version">26</integer>
-
     <string name="lunar_firmware">lunar_20161122_v5.zip</string>
     <integer name="launar_version">5</integer>
 

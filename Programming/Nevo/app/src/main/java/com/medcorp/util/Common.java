@@ -235,17 +235,6 @@ public class Common {
     static public List<String> getAllBuildinZipFirmwareURLs(Context context,int watchID)
     {
         ArrayList<String> buildinZipFirmware = new ArrayList<>();
-        //TODO: what is the ZIP file? for BLE or MCU or both of them?
-        if(watchID == 1)
-        {
-            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_ble_firmware));
-            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_mcu_firmware));
-        }
-        if(watchID == 2)
-        {
-            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_solar_ble_firmware));
-            buildinZipFirmware.add(context.getResources().getString(R.string.nevo_solar_mcu_firmware));
-        }
         if(watchID == 3)
         {
             buildinZipFirmware.add(context.getResources().getString(R.string.lunar_firmware));
@@ -259,16 +248,6 @@ public class Common {
      */
     static public int getBuildinZipFirmwareRawResID(Context context,int watchID)
     {
-        if(watchID == 1)
-        {
-            //TODO add nevo ZIP file to res/raw
-            return  0;
-        }
-        if(watchID == 2)
-        {
-            //TODO add nevo ZIP file to res/raw
-            return  0;
-        }
         if(watchID == 3)
         {
             return  R.raw.lunar_20161122_v5;

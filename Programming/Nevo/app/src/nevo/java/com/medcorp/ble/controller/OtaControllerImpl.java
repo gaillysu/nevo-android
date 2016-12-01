@@ -107,7 +107,6 @@ public class OtaControllerImpl implements OtaController  {
     private int totalpage = 0;
     private int checksum = 0;
     private boolean manualmode = false;
-    private boolean useDFUlibrary = true;
     //end added
 
     /**

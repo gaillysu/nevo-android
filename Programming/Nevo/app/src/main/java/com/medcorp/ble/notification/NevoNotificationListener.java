@@ -36,7 +36,9 @@ import net.medcorp.library.ble.exception.BaseBLEException;
 import net.medcorp.library.ble.notification.NotificationCallback;
 import net.medcorp.library.ble.util.Optional;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -87,6 +89,10 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         Log.w("Karl","notification service onListenerConnected() invoked");
     }
 
+    private List<String> getAppListbyType(int type)
+    {
+        return Arrays.asList(getResources().getStringArray(type));
+    }
     @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
         if(statusBarNotification == null) {
@@ -104,37 +110,35 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         Notification notification = statusBarNotification.getNotification();
         NotificationDataHelper helper = new NotificationDataHelper(this);
         if (notification != null) {
-            if(statusBarNotification.getPackageName().equals("com.google.android.talk")
-                    || statusBarNotification.getPackageName().equals("com.android.mms")
-                    || statusBarNotification.getPackageName().equals("com.google.android.apps.messaging")
-                    || statusBarNotification.getPackageName().equals("com.sonyericsson.conversations")
-                    || statusBarNotification.getPackageName().equals("com.htc.sense.mms")
-                    || statusBarNotification.getPackageName().equals("com.google.android.talk")
-                    ) {
-                //BLE keep-connect service will process this message
-                if(helper.getState(new SmsNotification()).isOn())
+            if(getAppListbyType(R.array.CALL_APPS).contains(statusBarNotification.getPackageName())) {
+                if(helper.getState(new TelephoneNotification()).isOn()) {
+                    sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification()).getHexColor());
+                }
+            }
+            else if(getAppListbyType(R.array.SMS_APPS).contains(statusBarNotification.getPackageName())) {
+                if(helper.getState(new SmsNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new SmsNotification()).getHexColor());
-            } else if(statusBarNotification.getPackageName().equals("com.android.email")
-                    || statusBarNotification.getPackageName().equals("com.google.android.email")
-                    || statusBarNotification.getPackageName().equals("com.google.android.gm")
-                    || statusBarNotification.getPackageName().equals("com.kingsoft.email")
-                    || statusBarNotification.getPackageName().equals("com.tencent.androidqqmail")
-                    || statusBarNotification.getPackageName().equals("com.outlook.Z7")){
-                if(helper.getState(new EmailNotification()).isOn())
+                }
+            } else if(getAppListbyType(R.array.EMAIL_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new EmailNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new EmailNotification()).getHexColor());
-            } else if(statusBarNotification.getPackageName().equals("com.google.android.calendar")
-                    || statusBarNotification.getPackageName().equals("com.android.calendar")){
-                if(helper.getState(new CalendarNotification()).isOn())
+                }
+            } else if(getAppListbyType(R.array.CALENDAR_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new CalendarNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new CalendarNotification()).getHexColor());
-            } else if(statusBarNotification.getPackageName().equals("com.facebook.katana")){
-                if(helper.getState(new FacebookNotification()).isOn())
+                }
+            } else if(statusBarNotification.getPackageName().contains("com.facebook") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new FacebookNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new FacebookNotification()).getHexColor());
-            } else if(statusBarNotification.getPackageName().equals("com.tencent.mm")){
-                if(helper.getState(new WeChatNotification()).isOn())
+                }
+            } else if(statusBarNotification.getPackageName().contains("com.tencent") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new WeChatNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new WeChatNotification()).getHexColor());
-            } else if(statusBarNotification.getPackageName().equals("com.whatsapp")){
-                if(helper.getState(new WhatsappNotification()).isOn())
+                }
+            } else if(statusBarNotification.getPackageName().contains("com.whatsapp")&& getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
+                if(helper.getState(new WhatsappNotification()).isOn()) {
                     sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification()).getHexColor());
+                }
             } else {
                 Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());
             }
