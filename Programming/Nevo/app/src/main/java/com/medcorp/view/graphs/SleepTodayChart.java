@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -29,7 +28,6 @@ import java.util.List;
 
 /**
  * Created by karl-john on 19/8/2016.
- *
  */
 
 public class SleepTodayChart extends LineChart {
@@ -69,15 +67,16 @@ public class SleepTodayChart extends LineChart {
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
-        leftAxis.setAxisMinValue(0.0f);
+        leftAxis.setAxisMinValue(-0.1f);
         leftAxis.setAxisMaxValue(2.6f);
         leftAxis.setValueFormatter(new YAxisValueFormatter());
-        leftAxis.setLabelCount(2);
+        leftAxis.setLabelCount(3);
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
         rightAxis.setAxisLineColor(Color.BLACK);
         rightAxis.setDrawGridLines(false);
+        rightAxis.setAxisMinValue(0.1f);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
 
@@ -86,7 +85,7 @@ public class SleepTodayChart extends LineChart {
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
 
     }
 
@@ -104,8 +103,8 @@ public class SleepTodayChart extends LineChart {
             if (awakeMinutes == 0 && lightSleepMinutes == 0 && deepSleepMinutes == 0) {
                 continue;
             }
-            float deep = 1.0f*deepSleepMinutes / (awakeMinutes+lightSleepMinutes+deepSleepMinutes);
-            intList.add(2.3f - deep * 2.0f);
+            float deep = 1.0f * awakeMinutes / (awakeMinutes + lightSleepMinutes + deepSleepMinutes);
+            intList.add(2.3f - (deep * 2.0f == 0 ? 0.1f : deep * 2.0f));
         }
 
         for (int hour = 0; hour < intList.size(); hour++) {
@@ -147,12 +146,14 @@ public class SleepTodayChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
 
-            if (value == 0.0) {
-                return getContext().getResources().getString(R.string.sleep_deep_sleep);
+            if (value < 0  &&value>=-0.2) {
+                return getContext().getResources().getString(R.string.sleep_awake);
+            } else if (value == 0 && value < 0.2) {
+                return "";
             } else if (value >= 0.5 && value <= 1.5) {
                 return getContext().getResources().getString(R.string.sleep_light_sleep);
             } else if (value >= 1.6 && value <= 2.6) {
-                return getContext().getResources().getString(R.string.sleep_awake);
+                return getContext().getResources().getString(R.string.sleep_deep_sleep);
             }
             return "?";
 

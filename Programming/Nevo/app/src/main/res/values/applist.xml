@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
         //if some phone model app package is not include, pls add it
-        <string-array name="CALL_APPS">
+        <string-array name="CALL_APPS" translatable="false">
             <item>com.google.android.dialer</item>
             <item>com.android.dialer</item>
             <item>com.android.server.telecom</item>
@@ -10,7 +10,7 @@
             <item>com.android.phone</item>
         </string-array>
 
-        <string-array name="SMS_APPS">
+        <string-array name="SMS_APPS" translatable="false">
             <item>com.android.mms</item>
             <item>com.google.android.talk</item>
             <item>com.google.android.apps.messaging</item>
@@ -19,7 +19,7 @@
             <item>com.facebook.orca</item>
         </string-array>
 
-        <string-array name="EMAIL_APPS">
+        <string-array name="EMAIL_APPS" translatable="false">
             <item>com.yahoo.mobile.client.android.mail</item>
             <item>com.google.android.gm</item>
             <item>com.google.android.apps.inbox</item>
@@ -33,13 +33,13 @@
             <item>com.motorola.email</item>
         </string-array>
 
-        <string-array name="CALENDAR_APPS">
+        <string-array name="CALENDAR_APPS" translatable="false">
             <item>com.google.android.calendar</item>
             <item>com.android.calendar</item>
             <item>com.htc.calendar</item>
         </string-array>
 
-        <string-array name="SOCIAL_APPS">
+        <string-array name="SOCIAL_APPS" translatable="false">
             <item>com.facebook.katana</item>
             <item>com.facebook.lite</item>
             <item>com.facebook.Mentions</item>
