@@ -64,13 +64,12 @@ public class AnalysisSleepLineChart extends LineChart {
         setTouchEnabled(true);
         setPinchZoom(false);
         setClickable(false);
-        setY(0.3f);
         setHighlightPerTapEnabled(true);
         setHighlightPerDragEnabled(false);
         dispatchSetSelected(false);
         Legend legend = getLegend();
         legend.setEnabled(true);
-        legend.setTextColor(Color.BLACK);
+        legend.setTextColor(getResources().getColor(R.color.graph_text_color));
         legend.setTextSize(12.0f);
         legend.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         legend.setXEntrySpace(5f);
@@ -78,7 +77,7 @@ public class AnalysisSleepLineChart extends LineChart {
         legend.setYOffset(-5f);
 
         YAxis leftAxis = getAxisLeft();
-        leftAxis.setAxisLineColor(Color.BLACK);
+        leftAxis.setAxisLineColor(getResources().getColor(R.color.graph_text_color));
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
@@ -86,13 +85,13 @@ public class AnalysisSleepLineChart extends LineChart {
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
-        rightAxis.setAxisLineColor(Color.BLACK);
+        rightAxis.setAxisLineColor(getResources().getColor(R.color.graph_text_color));
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
 
         XAxis xAxis = getXAxis();
-        xAxis.setAxisLineColor(Color.BLACK);
+        xAxis.setAxisLineColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);

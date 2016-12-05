@@ -20,6 +20,7 @@ import net.medcorp.library.worldclock.City;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -78,7 +79,11 @@ public class WorldClockFragment extends BaseObservableFragment {
     private void initView() {
         otherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
         Calendar calendar = Calendar.getInstance();
-        showLocationDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.MONTH) + " ," + calendar.get(Calendar.YEAR));
+        int month = calendar.get(Calendar.MONTH)+1;
+        showLocationDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + " "
+                +new SimpleDateFormat("MMM").format(calendar.getTime()) + " ,"
+                + calendar.get(Calendar.YEAR));
+
         if (otherCityName == null) {
             otherCityName = timeZone.getID().split("/")[1].replace("_", " ");
             showLocationCityInfo.setText(otherCityName);

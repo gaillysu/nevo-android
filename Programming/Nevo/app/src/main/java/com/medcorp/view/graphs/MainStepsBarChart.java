@@ -54,8 +54,10 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
         setSelected(false);
         setScaleEnabled(false);
         setDescription("");
+        setDrawGridBackground(true);
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.window_background_color));
         setGridBackgroundColor(ContextCompat.getColor(getContext(), R.color.window_background_color));
+        setDrawingCacheBackgroundColor(ContextCompat.getColor(getContext(),R.color.graph_grid_line_color));
         setBorderWidth(widthLines);
         setBorderColor(Color.BLACK);
         setDrawBorders(true);
@@ -64,7 +66,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
         YAxis leftAxis = getAxisLeft();
         leftAxis.setEnabled(true);
         leftAxis.setDrawGridLines(true);
-        leftAxis.setGridColor(Color.BLACK);
+        leftAxis.setGridColor(ContextCompat.getColor(getContext(), R.color.graph_grid_line_color));
         leftAxis.setAxisLineColor(Color.BLACK);
         leftAxis.setAxisLineWidth(widthLines);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
@@ -88,7 +90,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(true);
         rightAxis.setDrawGridLines(false);
-        rightAxis.setGridColor(Color.BLACK);
+        rightAxis.setGridColor(ContextCompat.getColor(getContext(), R.color.graph_grid_line_color));
         rightAxis.setAxisLineColor(Color.BLACK);
         rightAxis.setDrawLimitLinesBehindData(true);
         rightAxis.setDrawAxisLine(true);
@@ -100,6 +102,7 @@ public class MainStepsBarChart extends BarChart implements AxisValueFormatter{
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawGridLines(true);
         xAxis.setDrawLabels(true);
+        xAxis.setAxisLineColor(Color.BLACK);
         xAxis.setGridLineWidth(widthLines);
         xAxis.setTextSize(10f);
         xAxis.setDrawAxisLine(true);

@@ -19,6 +19,7 @@
     <color name="deep_sleep">#A08455</color>
     <color name="history_data_black">#ff524e4e</color>
     <color name="window_background_color">#FFFFFF</color>
+    <color name="graph_grid_line_color">#BCBCBC</color>
     <color name="switch_slider_color">@color/colorPrimary</color>
     <color name="colorPrimary">#A08455</color>
      <color name="colorAccent">#A08455 </color>
