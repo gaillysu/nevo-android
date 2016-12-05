@@ -114,16 +114,16 @@ public class AnalysisStepsLineChart extends LineChart {
         //Log.w("Karl", "Max vlaue = " + maxValue);
         boolean putTop = false;
         if (maxValue == 0 || maxValue < goal.getSteps()) {
-            maxValue = goal.getSteps()+ stepsModulo;
+            maxValue = goal.getSteps() + stepsModulo;
         } else {
             putTop = true;
             String formatValue = maxValue + "";
             char[] newValue = formatValue.toCharArray();
             StringBuffer str = new StringBuffer();
-            for(int i = 0;i<newValue.length;i++){
-                if(i == 0){
-                    str.append(Integer.parseInt(newValue[0]+"")+1);
-                }else {
+            for (int i = 0; i < newValue.length; i++) {
+                if (i == 0) {
+                    str.append(Integer.parseInt(newValue[0] + "") + 1);
+                } else {
                     str.append(newValue[i]);
                 }
             }
@@ -143,7 +143,7 @@ public class AnalysisStepsLineChart extends LineChart {
             limitLine.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_BOTTOM);
         }
         LineDataSet set = new LineDataSet(yValue, "");
-        set.setColor(Color.BLACK);
+        set.setColor(getContext().getResources().getColor(R.color.colorPrimary));
         set.setCircleColor(R.color.transparent);
         set.setLineWidth(0.5f);
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
