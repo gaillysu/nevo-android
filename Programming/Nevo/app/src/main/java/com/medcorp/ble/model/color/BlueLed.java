@@ -8,7 +8,7 @@ import com.medcorp.R;
  */
 public class BlueLed extends NevoLed{
 
-    private final int COLOR = 0x010000;
+    public final static int COLOR = 0x010000;
     private final String TAG = "BLUE";
 
     @Override

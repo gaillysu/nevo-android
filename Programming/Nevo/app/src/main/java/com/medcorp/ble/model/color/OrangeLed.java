@@ -9,7 +9,7 @@ import com.medcorp.R;
 public class OrangeLed extends NevoLed{
 
     private final String TAG = "ORANGE";
-    private final int COLOR = 0x080000;
+    public final static int COLOR = 0x080000;
 
     @Override
     public int getHexColor() {

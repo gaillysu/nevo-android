@@ -7,7 +7,7 @@ import com.medcorp.ble.model.color.visitor.NevoLedVisitor;
  */
 public class UnknownLed extends NevoLed{
 
-    private final int COLOR = 0x000000;
+    public final static int COLOR = 0x000000;
     private final String TAG = "UNKNOWN";
 
     @Override

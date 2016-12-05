@@ -14,6 +14,7 @@ public class TestModeRequest extends BLERequestData {
     private int mLedpattern;
     private byte key;
     private boolean sensor;
+    private boolean vibrator;
 
     /*
     mode type
@@ -35,10 +36,8 @@ public class TestModeRequest extends BLERequestData {
     {
         super(new GattAttributesDataSourceImpl(context));
         HEADER = header;
-        if (motorOnOff)
-            mLedpattern = ledpattern | SetNotificationRequest.SetNortificationRequestValues.VIB_MOTOR;
-        else
-            mLedpattern = ledpattern & ~SetNotificationRequest.SetNortificationRequestValues.VIB_MOTOR;
+        vibrator = motorOnOff;
+        mLedpattern = ledpattern;
     }
 
     /**
@@ -87,10 +86,11 @@ public class TestModeRequest extends BLERequestData {
         if(HEADER == MODE_F0) {
             return new byte[][]{
                     {0, HEADER,
-                            (byte) (mLedpattern & 0xFF),
-                            (byte) ((mLedpattern >> 8) & 0xFF),
+                            (byte) 0xFF, vibrator?(byte) 0x8F : (byte) 0x0F,
                             (byte) ((mLedpattern >> 16) & 0xFF),
-                            0, 0, 0,
+                            (byte) ((mLedpattern >> 8) & 0xFF),
+                            (byte) (mLedpattern & 0xFF),
+                            0,
                             0, 0, 0, 0,
                             0, 0, 0, 0,
                             0, 0, 0, 0

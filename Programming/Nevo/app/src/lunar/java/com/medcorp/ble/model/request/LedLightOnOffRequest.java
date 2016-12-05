@@ -3,6 +3,12 @@ package com.medcorp.ble.model.request;
 import android.content.Context;
 
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
+import com.medcorp.ble.model.color.BlueLed;
+import com.medcorp.ble.model.color.GreenLed;
+import com.medcorp.ble.model.color.LightGreenLed;
+import com.medcorp.ble.model.color.OrangeLed;
+import com.medcorp.ble.model.color.RedLed;
+import com.medcorp.ble.model.color.YellowLed;
 
 import net.medcorp.library.ble.model.request.BLERequestData;
 
@@ -12,14 +18,12 @@ import net.medcorp.library.ble.model.request.BLERequestData;
 public class LedLightOnOffRequest extends BLERequestData {
     public  final static  byte HEADER = (byte)0xF0;
     private int mLedpattern;
-
-    public LedLightOnOffRequest(Context context, int ledpattern, boolean motorOnOff)
+    private boolean onoff;
+    public LedLightOnOffRequest(Context context, int ledpattern, boolean onoff)
     {
         super(new GattAttributesDataSourceImpl(context));
-        if (motorOnOff)
-        mLedpattern = ledpattern | SetNotificationRequest.SetNortificationRequestValues.VIB_MOTOR;
-        else
-        mLedpattern = ledpattern & ~SetNotificationRequest.SetNortificationRequestValues.VIB_MOTOR;
+        mLedpattern = convertColor(ledpattern);
+        this.onoff = onoff;
     }
     @Override
     public byte[] getRawData() {
@@ -29,14 +33,15 @@ public class LedLightOnOffRequest extends BLERequestData {
     @Override
     public byte[][] getRawDataEx() {
         return new byte[][] {
-                {0,HEADER,
-                        (byte)(mLedpattern&0xFF),
-                        (byte)((mLedpattern>>8)&0xFF),
-                        (byte)((mLedpattern>>16)&0xFF),
-                        0,0,0,
-                        0,0,0,0,
-                        0,0,0,0,
-                        0,0,0,0
+                {0, HEADER,
+                        (byte) 0x00, onoff?(byte) 0x88 : (byte) 0x00,
+                        (byte) ((mLedpattern >> 16) & 0xFF),
+                        (byte) ((mLedpattern >> 8) & 0xFF),
+                        (byte) (mLedpattern & 0xFF),
+                        0,
+                        0, 0, 0, 0,
+                        0, 0, 0, 0,
+                        0, 0, 0, 0
                 },
 
                 {(byte) 0xFF,HEADER,0,0,
@@ -51,5 +56,28 @@ public class LedLightOnOffRequest extends BLERequestData {
     @Override
     public byte getHeader() {
         return HEADER;
+    }
+
+    private int convertColor(int ledpattern) {
+        int rgbColor = 0;
+        if(ledpattern == RedLed.COLOR){
+            rgbColor = 0xFF0000;
+        }
+        if(ledpattern == GreenLed.COLOR){
+            rgbColor = 0x00FF00;
+        }
+        if(ledpattern == BlueLed.COLOR){
+            rgbColor = 0x0000FF;
+        }
+        if(ledpattern == LightGreenLed.COLOR){
+            rgbColor = 0x8DC220;
+        }
+        if(ledpattern == YellowLed.COLOR){
+            rgbColor = 0xFAED00;
+        }
+        if(ledpattern == OrangeLed.COLOR){
+            rgbColor = 0xF29600;
+        }
+        return rgbColor;
     }
 }
