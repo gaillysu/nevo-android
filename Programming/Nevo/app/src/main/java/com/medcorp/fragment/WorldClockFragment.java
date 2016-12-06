@@ -79,21 +79,21 @@ public class WorldClockFragment extends BaseObservableFragment {
     private void initView() {
         otherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
         Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH)+1;
+        timeZone = calendar.getTimeZone();
+        int month = calendar.get(Calendar.MONTH) + 1;
         showLocationDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + " "
-                +new SimpleDateFormat("MMM").format(calendar.getTime()) + " ,"
+                + new SimpleDateFormat("MMM").format(calendar.getTime()) + " ,"
                 + calendar.get(Calendar.YEAR));
 
         if (otherCityName == null) {
             otherCityName = timeZone.getID().split("/")[1].replace("_", " ");
             showLocationCityInfo.setText(otherCityName);
-            timeZone = calendar.getTimeZone();
-            for(City city:cities){
-                if(city.getName().equals(otherCityName)){
+            for (City city : cities) {
+                if (city.getName().equals(otherCityName)) {
                     this.locationCity = city;
                 }
             }
-            setSunriseAndSunset(showSunriseTv, showSunsetTv,locationCity, timeZone.getID());
+            setSunriseAndSunset(showSunriseTv, showSunsetTv, locationCity, timeZone.getID());
         } else {
             for (City city : cities) {
                 if ((city.getName() + ", " + city.getCountry()).equals(otherCityName)) {
@@ -134,8 +134,8 @@ public class WorldClockFragment extends BaseObservableFragment {
         SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, zone);
         String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
-        sunrise.setText(officialSunrise+" "+getString(R.string.time_able_morning));
-        sunset.setText(officialSunset+" "+getString(R.string.time_able_afternoon));
+        sunrise.setText(officialSunrise + " " + getString(R.string.time_able_morning));
+        sunset.setText(officialSunset + " " + getString(R.string.time_able_afternoon));
 
         byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
         byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
