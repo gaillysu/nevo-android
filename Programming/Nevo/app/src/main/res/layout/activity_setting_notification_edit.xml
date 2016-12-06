@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/notification_activity_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/window_background_color"
@@ -49,27 +49,31 @@
             >
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
                 >
 
                 <ImageView
                     android:id="@+id/notification_watch_icon"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="260dp"
+                    android:layout_height="260dp"
                     android:layout_centerInParent="true"
                     android:layout_margin="30dp"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/two_clock_notification"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/tutorial_nevo_1"
                     />
             </RelativeLayout>
 
             <LinearLayout
+
                 android:id="@+id/notification_lamp_group"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:gravity="center"
@@ -77,15 +81,15 @@
                 >
 
                 <LinearLayout
+                    android:id="@+id/two_clock_image_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
 
-                    <ImageButton
-                        android:id="@+id/two_clock_image_button"
+                    <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@android:color/transparent"
@@ -95,15 +99,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/four_clock_image_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
 
-                    <ImageButton
-                        android:id="@+id/four_clock_image_button"
+                    <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@android:color/transparent"
@@ -113,15 +117,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/six_clock_image_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
 
-                    <ImageButton
-                        android:id="@+id/six_clock_image_button"
+                    <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@android:color/transparent"
@@ -131,15 +135,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/eight_clock_image_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
 
-                    <ImageButton
-                        android:id="@+id/eight_clock_image_button"
+                    <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@android:color/transparent"
@@ -149,15 +153,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ten_clock_image_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
 
-                    <ImageButton
-                        android:id="@+id/ten_clock_image_button"
+                    <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@android:color/transparent"
@@ -167,15 +171,15 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/tu_clock_image_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="horizontal"
                     >
 
-                    <ImageButton
-                        android:id="@+id/tu_clock_image_button"
+                    <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@android:color/transparent"
@@ -194,5 +198,7 @@
                 android:divider="@null"
                 ></ListView>
         </LinearLayout>
+
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

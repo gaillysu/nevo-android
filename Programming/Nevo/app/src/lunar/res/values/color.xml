@@ -23,6 +23,7 @@
     <color name="steps_fragment_title_color">#54575A</color>
     <color name="text_color">#FFFFFF</color>
     <color name="graph_text_color">#FFF</color>
+    <color name="graph_grid_line_color">#BCBCBC</color>
     <color name="analysis_fragment_tablayout_background_color">#666666</color>
     <color name="list_item_divider">#000333</color>
     <color name="profile_fragment_text_color">#FFFFFF</color>

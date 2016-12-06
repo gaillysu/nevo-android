@@ -146,7 +146,7 @@ public class SleepTodayChart extends LineChart {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
 
-            if (value < 0  &&value>=-0.2) {
+            if (value <= 0  &&value>=-0.3) {
                 return getContext().getResources().getString(R.string.sleep_awake);
             } else if (value == 0 && value < 0.2) {
                 return "";

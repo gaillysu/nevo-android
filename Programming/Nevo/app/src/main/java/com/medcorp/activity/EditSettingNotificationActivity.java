@@ -63,7 +63,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Bind(R.id.notification_activity_layout)
     CoordinatorLayout coordinatorLayout;
 
-
     private int defaultColor = 0;
     private EditNotificationAdapter adapter;
     private Snackbar snackbar;
@@ -73,9 +72,11 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     private Notification notification;
     private NevoLed selectedLed;
     private List<NotificationListItemBean> dataList;
+    private String[] notificationTimeTextArray;
+
     private int[] notificationIcon = {R.drawable.red_dot, R.drawable.blue_dot, R.drawable.light_green_dot,
             R.drawable.yellow_dot, R.drawable.orange_dot, R.drawable.green_dot};
-    private String[] notificationTimeTextArray;
+
     private int[] watchIcon = {R.drawable.two_clock_notification, R.drawable.four_clock_notification,
             R.drawable.six_clock_notification, R.drawable.eight_clock_notificatio,
             R.drawable.ten_clock_notification, R.drawable.twele_clock_notification

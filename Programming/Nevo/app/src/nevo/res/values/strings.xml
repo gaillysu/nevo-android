@@ -28,7 +28,6 @@
     <string name="notification_calendar_title">Calendar</string>
     <string name="notification_wechat_title">WeChat</string>
     <string name="notification_whatsapp_title">WhatsApp</string>
-
     <string name="location_access_title">This app needs location access</string>
     <string name="location_access_content">Please grant location access so it can detect nevo.</string>
 
