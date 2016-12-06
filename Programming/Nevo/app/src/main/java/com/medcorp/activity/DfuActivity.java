@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.dfu.DfuService;
@@ -259,7 +260,12 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         Bundle bundle = getIntent().getExtras();
         manualMode = bundle.getBoolean(getString(R.string.key_manual_mode), false);
         if(manualMode) {
-            firmwareURLs = Common.getAllBuildinFirmwareURLs(this);
+            if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+                firmwareURLs = Common.getAllBuildinFirmwareURLs(this);
+            }
+            else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+                firmwareURLs = Common.getAllBuildinZipFirmwareURLs(this,getModel().getSyncController().getWatchInfomation().getWatchID());
+            }
         } else {
             firmwareURLs = bundle.getStringArrayList(getString(R.string.key_firmwares));
         }

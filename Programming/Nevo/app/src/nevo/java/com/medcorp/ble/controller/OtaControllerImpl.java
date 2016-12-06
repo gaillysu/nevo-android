@@ -506,7 +506,7 @@ public class OtaControllerImpl implements OtaController  {
         else if(manualmode && dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP)
         {
             Log.i(TAG,"***********connectionController disconnect without find DFU service and dfu library will take over the OTA*******,manualmode=true");
-            String newDeviceAdress = Common.getMacAdd(connectionController.getSaveAddress());
+            String newDeviceAdress = connectionController.getSaveAddress();
             state = DFUControllerState.SEND_FIRMWARE_DATA;
             connectionController.disconnect();
             if (mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onDFUServiceStarted(newDeviceAdress);
