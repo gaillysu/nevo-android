@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.notification.CalendarNotification;
+import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.ble.model.notification.FacebookNotification;
 import com.medcorp.ble.model.notification.SmsNotification;
 import com.medcorp.ble.model.request.LedLightOnOffRequest;
@@ -39,6 +40,7 @@ import net.medcorp.library.ble.util.Optional;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -141,6 +143,18 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 }
             } else {
                 Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());
+                String appID = statusBarNotification.getPackageName();
+                Set<String> appList = helper.getNotificationAppList();
+                if(appList.contains(statusBarNotification.getPackageName())){
+                    OtherAppNotification otherAppNotification = new OtherAppNotification(appID);
+                    if(helper.getState(otherAppNotification).isOn()) {
+                        sendNotification(Preferences.getNotificationColor(this, otherAppNotification).getHexColor());
+                    }
+                }
+                else {
+                    appList.add(appID);
+                    helper.setNotificationAppList(appList);
+                }
             }
         }
     }

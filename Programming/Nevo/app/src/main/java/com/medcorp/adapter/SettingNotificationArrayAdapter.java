@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.medcorp.R;
+import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.customfontview.RobotoTextView;
@@ -41,8 +42,14 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         View itemView = inflater.inflate(R.layout.activity_setting_notification_list_view_item, parent, false);
         RobotoTextView notificationValue = (RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_color);
         Notification notification = listNotification.get(position);
-        ((ImageView) itemView.findViewById(R.id.activity_setting_notification_image)).setImageDrawable(ContextCompat.getDrawable(context, notification.getImageResource()));
-        ((RobotoTextView)itemView.findViewById(R.id.activity_setting_notification_name)).setText(notification.getStringResource());
+        if(notification instanceof OtherAppNotification){
+            ((ImageView) itemView.findViewById(R.id.activity_setting_notification_image)).setImageDrawable(((OtherAppNotification) notification).getAppIcon(context));
+            ((RobotoTextView) itemView.findViewById(R.id.activity_setting_notification_name)).setText(((OtherAppNotification) notification).getAppName(context));
+        }
+        else {
+            ((ImageView) itemView.findViewById(R.id.activity_setting_notification_image)).setImageDrawable(ContextCompat.getDrawable(context, notification.getImageResource()));
+            ((RobotoTextView) itemView.findViewById(R.id.activity_setting_notification_name)).setText(notification.getStringResource());
+        }
         if(notification.isOn()) {
             notificationValue.setText(context.getString(Preferences.getNotificationColor(context,notification).getStringResource()));
         }

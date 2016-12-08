@@ -15,6 +15,7 @@ import com.medcorp.adapter.SettingNotificationArrayAdapter;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.notification.CalendarNotification;
+import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.ble.model.notification.EmailNotification;
 import com.medcorp.ble.model.notification.FacebookNotification;
 import com.medcorp.ble.model.notification.Notification;
@@ -24,8 +25,10 @@ import com.medcorp.ble.model.notification.WeChatNotification;
 import com.medcorp.ble.model.notification.WhatsappNotification;
 import com.medcorp.ble.notification.NevoNotificationListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -101,8 +104,19 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 inactiveNotificationList.add(notification);
             }
         }
-
-
+        //add others Apps
+        NotificationDataHelper notificationDataHelper = new NotificationDataHelper(this);
+        Set<String> appList = notificationDataHelper.getNotificationAppList();
+        for(String appID:appList) {
+            OtherAppNotification commonAppNotification = new OtherAppNotification(appID);
+            if(notificationDataHelper.getState(commonAppNotification).isOn())
+            {
+                activeNotificationList.add(commonAppNotification);
+            }
+            else {
+                inactiveNotificationList.add(commonAppNotification);
+            }
+        }
         activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList);
         activeListView.setAdapter(activeNotificationArrayAdapter);
         activeListView.setOnItemClickListener(this);
@@ -137,7 +151,7 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         }
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(getString(R.string.key_notification), applicationNotification);
+        bundle.putSerializable(getString(R.string.key_notification), (Serializable) applicationNotification);
         intent.putExtras(bundle);
         startActivity(intent);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);

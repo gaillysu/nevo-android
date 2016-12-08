@@ -31,6 +31,7 @@ import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.color.OrangeLed;
 import com.medcorp.ble.model.color.RedLed;
 import com.medcorp.ble.model.color.YellowLed;
+import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.model.NotificationListItemBean;
 import com.medcorp.util.Preferences;
@@ -105,13 +106,18 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
         ledList.add(new GreenLed());
-        notification = (Notification) getIntent().getSerializableExtra(getString(R.string.key_notification));
+        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this, notification);
         setDefaultLampColor();
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-        title.setText(notification.getStringResource());
+        if(notification instanceof OtherAppNotification){
+            title.setText(((OtherAppNotification) notification).getAppName(this));
+        }
+        else {
+            title.setText(notification.getStringResource());
+        }
         notificationTimeTextArray = getResources().getStringArray(R.array.notification_array);
         onOffSwitch.setChecked(notification.isOn());
         initView();
