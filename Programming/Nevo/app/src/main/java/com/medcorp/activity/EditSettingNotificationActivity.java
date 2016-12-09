@@ -1,5 +1,6 @@
 package com.medcorp.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,10 +59,14 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Bind(R.id.notification_watch_icon)
     ImageView watchView;
 
-    @Bind(R.id.notification_lamp_group)
+    @Bind(R.id.notification_lamp_edit)
     LinearLayout lunarLedLampGroup;
     @Bind(R.id.notification_activity_layout)
     CoordinatorLayout coordinatorLayout;
+    @Bind(R.id.notification_lunar_lamp_color)
+    ImageView lunarLampColorIv;
+    @Bind(R.id.notification_name_text_view)
+    TextView lampName;
 
     private int defaultColor = 0;
     private EditNotificationAdapter adapter;
@@ -217,36 +222,10 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         return super.onOptionsItemSelected(item);
     }
 
-
-    @OnClick(R.id.two_clock_image_button)
-    public void selectRedLamp() {
-        userSelectChangeLamp(0);
-    }
-
-    @OnClick(R.id.four_clock_image_button)
-    public void selectBlueLamp() {
-        userSelectChangeLamp(1);
-
-    }
-
-    @OnClick(R.id.six_clock_image_button)
-    public void selectLightGreenLamp() {
-        userSelectChangeLamp(2);
-    }
-
-    @OnClick(R.id.eight_clock_image_button)
-    public void selectYellowLamp() {
-        userSelectChangeLamp(3);
-    }
-
-    @OnClick(R.id.ten_clock_image_button)
-    public void selectOrangeLamp() {
-        userSelectChangeLamp(4);
-    }
-
-    @OnClick(R.id.tu_clock_image_button)
-    public void selectGreenLamp() {
-        userSelectChangeLamp(5);
+    @OnClick(R.id.notification_lamp_edit)
+    public void openEditNotificationLampColor(){
+        Intent intent = new Intent(this,EditNotificationLampActivity.class);
+        startActivity(intent);
     }
 
     public void userSelectChangeLamp(int position) {
