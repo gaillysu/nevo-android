@@ -1,18 +1,21 @@
 package com.medcorp.ble.model.color;
 
-import java.io.Serializable;
-
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Jason on 2016/12/8.
+ * s
  */
+public class LedLamp extends RealmObject {
 
-public class LedLamp extends RealmObject implements Serializable{
 
+    @PrimaryKey
+    private String id;
     private String name;
     private int color;
     private boolean isSelect;
+
 
     public String getName() {
         return name;
@@ -36,5 +39,13 @@ public class LedLamp extends RealmObject implements Serializable{
 
     public void setSelect(boolean select) {
         isSelect = select;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

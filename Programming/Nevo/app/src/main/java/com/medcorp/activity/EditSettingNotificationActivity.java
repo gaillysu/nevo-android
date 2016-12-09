@@ -111,6 +111,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
         ledList.add(new GreenLed());
+
         notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
         selectedLed = Preferences.getNotificationColor(this, notification);
         setDefaultLampColor();

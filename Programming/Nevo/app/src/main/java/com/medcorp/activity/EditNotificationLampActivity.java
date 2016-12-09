@@ -35,6 +35,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/12/8.
@@ -51,6 +53,8 @@ public class EditNotificationLampActivity extends BaseActivity {
     private EditLunarNotificationAdapter mEditItemAdapter;
     private List<LedLamp> userSettingAllLamp;
     private String newNtName;
+    private Realm realm;
+    private RealmResults<LedLamp> mAllLedLamp;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +65,8 @@ public class EditNotificationLampActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
+        realm = Realm.getDefaultInstance();
+        mAllLedLamp = realm.where(LedLamp.class).findAll();
     }
 
     @Override
@@ -70,22 +76,15 @@ public class EditNotificationLampActivity extends BaseActivity {
     }
 
     private void initView() {
+
         allNotificationLampList.setLayoutManager(new LinearLayoutManager(this));// 布局管理器。
         allNotificationLampList.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         allNotificationLampList.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
         allNotificationLampList.setSwipeMenuCreator(swipeMenuCreator);
         allNotificationLampList.setSwipeMenuItemClickListener(menuItemClickListener);
-
         userSettingAllLamp = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            LedLamp led = new LedLamp();
-            led.setName("nasndkc" + i);
-            led.setColor(-22102 + 100);
-            if (i == 5) {
-                led.setSelect(true);
-            }
-            userSettingAllLamp.add(led);
+        for (int i = 0; i < mAllLedLamp.size(); i++) {
+            userSettingAllLamp.add(mAllLedLamp.get(i));
         }
         mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp);
         allNotificationLampList.setAdapter(mEditItemAdapter);
@@ -149,6 +148,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                         ledLamp.setColor(selectedColor);
                         ledLamp.setName(newNtName);
                         ledLamp.setSelect(false);
+                        realm.commitTransaction();
                         userSettingAllLamp.add(ledLamp);
                         mEditItemAdapter.notifyDataSetChanged();
                     }
@@ -219,9 +219,7 @@ public class EditNotificationLampActivity extends BaseActivity {
             if (menuPosition == 1) {
                 LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
                 Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("ledLamp", ledLamp);
-                intent.putExtras(bundle);
+                intent.putExtra("id", ledLamp.getId());
                 startActivity(intent);
             }
         }
