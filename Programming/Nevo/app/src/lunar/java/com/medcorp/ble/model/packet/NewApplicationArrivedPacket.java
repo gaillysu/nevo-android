@@ -8,7 +8,7 @@ import java.util.List;
  * Created by med on 16/8/9.
  */
 public class NewApplicationArrivedPacket extends Packet {
-    public  final static  byte HEADER = 0x35;
+    public  final static  byte HEADER = 0x55;
     public NewApplicationArrivedPacket(List<MEDRawData> packets) {
         super(packets);
     }
