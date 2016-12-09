@@ -59,7 +59,7 @@ public class LedLightOnOffRequest extends BLERequestData {
     }
 
     private int convertColor(int ledpattern) {
-        int rgbColor = 0;
+        int rgbColor = ledpattern;
         if(ledpattern == RedLed.COLOR){
             rgbColor = 0xFF0000;
         }
