@@ -75,4 +75,8 @@
     <color name="analysis_sleep_deep_start_color">#88848484</color>
     <color name="analysis_sleep_deep_end_color">#88848484</color>
     <color name="analysis_sleep_deep_line_color">#848484</color>
+    <color name="red_pressed">#FF6666</color>
+    <color name="red_normal">#FF0000</color>
+    <color name="purple_normal">#FF7ED8D1</color>
+    <color name="purple_pressed">#997ED8D1</color>
 </resources>
