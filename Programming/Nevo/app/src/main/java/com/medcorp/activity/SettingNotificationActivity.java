@@ -107,14 +107,15 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         //add others Apps
         NotificationDataHelper notificationDataHelper = new NotificationDataHelper(this);
         Set<String> appList = notificationDataHelper.getNotificationAppList();
+        appList.retainAll(NotificationDataHelper.getAllPackages(this));
         for(String appID:appList) {
-            OtherAppNotification commonAppNotification = new OtherAppNotification(appID);
-            if(notificationDataHelper.getState(commonAppNotification).isOn())
+            OtherAppNotification otherAppNotification = new OtherAppNotification(appID);
+            if(notificationDataHelper.getState(otherAppNotification).isOn())
             {
-                activeNotificationList.add(commonAppNotification);
+                activeNotificationList.add(otherAppNotification);
             }
             else {
-                inactiveNotificationList.add(commonAppNotification);
+                inactiveNotificationList.add(otherAppNotification);
             }
         }
         activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList);

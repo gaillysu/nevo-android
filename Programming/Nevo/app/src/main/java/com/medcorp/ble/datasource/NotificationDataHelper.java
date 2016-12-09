@@ -2,11 +2,13 @@ package com.medcorp.ble.datasource;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 
 import com.medcorp.ble.model.notification.Notification;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -42,5 +44,14 @@ public class NotificationDataHelper {
     {
         Set<String> appList = pref.getStringSet(APPLIST,new HashSet<String>());
         return appList;
+    }
+
+    public static Set<String> getAllPackages(final Context context) {
+        final HashSet<String> set = new HashSet<String>();
+        final Iterator<PackageInfo> iterator = context.getPackageManager().getInstalledPackages(0).iterator();
+        while (iterator.hasNext()) {
+            set.add(iterator.next().packageName);
+        }
+        return set;
     }
 }
