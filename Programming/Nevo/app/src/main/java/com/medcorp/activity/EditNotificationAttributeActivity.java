@@ -106,6 +106,7 @@ public class EditNotificationAttributeActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.done_menu:
                 //保存到数据库
+                finish();
                 return true;
             case android.R.id.home:
                 finish();
