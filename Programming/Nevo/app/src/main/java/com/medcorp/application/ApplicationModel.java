@@ -682,6 +682,17 @@ public class ApplicationModel extends Application {
         return ledDataBase.remove(id);
     }
 
+    public LedLamp getUserSelectLedLamp() {
+        LedLamp ledlamp = null;
+        List<LedLamp> allLedLamp = getAllLedLamp();
+        for(LedLamp lamp : allLedLamp){
+            if(lamp.isSelect()){
+                ledlamp = lamp;
+            }
+        }
+        return ledlamp;
+    }
+
     public boolean isBluetoothOn() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter.isEnabled()) {
@@ -904,6 +915,5 @@ public class ApplicationModel extends Application {
                                                           validicDeleteRoutineRecordEvent) {
         stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
     }
-
 
 }
