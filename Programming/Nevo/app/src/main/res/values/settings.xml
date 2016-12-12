@@ -7,13 +7,13 @@
     // Client Characteristic
     <string name="CLIENT_CHARACTERISTIC_CONFIG" translatable="false">00002902-0000-1000-8000-00805f9b34fb</string>
     //Nevo communicaiton service
-    <string name="NEVO_SERVICE" translatable="false">f0ba3020-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_SERVICE" translatable="false">f0ba3028-6cac-4c99-9089-4b0a1df45002</string>
 
     //This service will return us all the data we ask for through notification
-    <string name="NEVO_CALLBACK_CHARACTERISTIC" translatable="false">f0ba3021-6cac-4c99-9089-4b0a1df45002</string>
-    <string name="NEVO_INPUT_CHARACTERISTIC" translatable="false">f0ba3022-6cac-4c99-9089-4b0a1df45002</string>
-    <string name="NEVO_OTA_CHARACTERISTIC" translatable="false">f0ba3023-6cac-4c99-9089-4b0a1df45002</string>
-    <string name="NEVO_NOTIFICATION_CHARACTERISTIC" translatable="false">f0ba3024-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_CALLBACK_CHARACTERISTIC" translatable="false">f0ba3029-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_INPUT_CHARACTERISTIC" translatable="false">f0ba302a-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_OTA_CHARACTERISTIC" translatable="false">f0ba302b-6cac-4c99-9089-4b0a1df45002</string>
+    <string name="NEVO_NOTIFICATION_CHARACTERISTIC" translatable="false">f0ba302c-6cac-4c99-9089-4b0a1df45002</string>
 
     <string name="NEVO_OTA_SERVICE" translatable="false">00001530-1212-efde-1523-785feabcd123</string>
     <string name="NEVO_OTA_CONTROL_CHARACTERISTIC" translatable="false">00001532-1212-efde-1523-785feabcd123</string>

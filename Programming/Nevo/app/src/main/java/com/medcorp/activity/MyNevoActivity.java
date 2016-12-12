@@ -167,7 +167,12 @@ public class MyNevoActivity  extends BaseActivity {
             @Override
             public void run() {
                 myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
-                myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
+                if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+                    myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
+                }
+                else {
+                    initLunarData();
+                }
             }
         });
     }
