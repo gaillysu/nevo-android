@@ -85,6 +85,8 @@ import java.util.Date;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by Karl on 10/15/15.
@@ -124,6 +126,10 @@ public class ApplicationModel extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
+
+        RealmConfiguration config = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(config);
+
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper(this);

@@ -15,10 +15,10 @@ import com.medcorp.adapter.SettingNotificationArrayAdapter;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.notification.CalendarNotification;
-import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.ble.model.notification.EmailNotification;
 import com.medcorp.ble.model.notification.FacebookNotification;
 import com.medcorp.ble.model.notification.Notification;
+import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.ble.model.notification.SmsNotification;
 import com.medcorp.ble.model.notification.TelephoneNotification;
 import com.medcorp.ble.model.notification.WeChatNotification;
@@ -108,13 +108,11 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
         NotificationDataHelper notificationDataHelper = new NotificationDataHelper(this);
         Set<String> appList = notificationDataHelper.getNotificationAppList();
         appList.retainAll(NotificationDataHelper.getAllPackages(this));
-        for(String appID:appList) {
+        for (String appID : appList) {
             OtherAppNotification otherAppNotification = new OtherAppNotification(appID);
-            if(notificationDataHelper.getState(otherAppNotification).isOn())
-            {
+            if (notificationDataHelper.getState(otherAppNotification).isOn()) {
                 activeNotificationList.add(otherAppNotification);
-            }
-            else {
+            } else {
                 inactiveNotificationList.add(otherAppNotification);
             }
         }
@@ -128,12 +126,12 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
 
         if (activeNotificationList.size() == 0) {
             active.setVisibility(View.GONE);
-        }else{
+        } else {
             active.setVisibility(View.VISIBLE);
         }
         if (inactiveNotificationList.size() == 0) {
             inactive.setVisibility(View.GONE);
-        }else{
+        } else {
             inactive.setVisibility(View.VISIBLE);
         }
     }
@@ -151,10 +149,16 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             applicationNotification = inactiveNotificationList.get(position);
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(getString(R.string.key_notification), (Serializable) applicationNotification);
-        intent.putExtras(bundle);
-        startActivity(intent);
+
+        //TODO
+//        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(getString(R.string.key_notification), (Serializable) applicationNotification);
+            intent.putExtras(bundle);
+            startActivity(intent);
+//        }else{
+//
+//        }
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 

@@ -22,6 +22,7 @@ import com.medcorp.ble.model.color.LedLamp;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 /**
  * Created by Jason on 2016/12/9.
@@ -38,6 +39,9 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     @Bind(R.id.color_picker_view)
     ColorPickerView colorPickerView;
     private String name;
+    private Realm realm;
+    private int color;
+    private LedLamp mLedLamp;
 
 
     @Override
@@ -49,6 +53,7 @@ public class EditNotificationAttributeActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
+        realm = Realm.getDefaultInstance();
         initView();
         registerClick();
     }
@@ -58,17 +63,18 @@ public class EditNotificationAttributeActivity extends BaseActivity {
             @Override
             public void onColorSelected(int selectedColor) {
                 showSelectColor.setColorFilter(selectedColor);
+                color = selectedColor;
             }
         });
     }
 
     private void initView() {
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        LedLamp ledLamp = (LedLamp) bundle.getSerializable("ledLamp");
-        showSelectColor.setColorFilter(ledLamp.getColor());
-        mNameTv.setText(ledLamp.getName());
-        name = ledLamp.getName();
+        String id = intent.getStringExtra("id");
+        mLedLamp = realm.where(LedLamp.class).equalTo("id",id).findFirst();
+        showSelectColor.setColorFilter(mLedLamp.getColor());
+        mNameTv.setText(mLedLamp.getName());
+        name = mLedLamp.getName();
     }
 
     @OnClick(R.id.edit_nt_name_ll)
@@ -105,7 +111,11 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_menu:
-                //保存到数据库
+                LedLamp lamp = realm.where(LedLamp.class).equalTo("id", mLedLamp.getId()).findFirst();
+                lamp.setSelect(mLedLamp.isSelect());
+                lamp.setName(name);
+                lamp.setColor(color);
+                realm.commitTransaction();
                 finish();
                 return true;
             case android.R.id.home:
