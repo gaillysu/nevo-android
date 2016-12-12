@@ -1,12 +1,12 @@
 package com.medcorp.ble.model.color;
 
-import io.realm.RealmObject;
+import com.medcorp.ble.model.color.visitor.NevoLedVisitor;
 
 /**
  * Created by Jason on 2016/12/8.
  * s
  */
-public class LedLamp extends RealmObject {
+public class LedLamp extends NevoLed {
 
 
     private int id;
@@ -45,5 +45,31 @@ public class LedLamp extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+
+    @Override
+    public int getHexColor() {
+        return getColor();
+    }
+
+    @Override
+    public int getStringResource() {
+        return 0;
+    }
+
+    @Override
+    public int getImageResource() {
+        return 0;
+    }
+
+    @Override
+    public String getTag() {
+        return getName();
+    }
+
+    @Override
+    public <T> T accept(NevoLedVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }
