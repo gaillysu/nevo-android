@@ -1,0 +1,68 @@
+package com.medcorp.database.dao;
+
+import com.j256.ormlite.field.DatabaseField;
+
+/**
+ * Created by Jason on 2016/12/12.
+ *
+ */
+
+public class LedLampDAO {
+
+    public static final String IDString = "ID";
+    @DatabaseField(generatedId = true)
+    private int ID;
+
+    public static final String nameString = "name";
+    @DatabaseField
+    private String Name;
+
+    public static final String colorString = "color";
+    @DatabaseField
+    private int Color;
+
+    public static final String IsSelectString = "isSelect";
+    @DatabaseField
+    private boolean IsSelect;
+
+    public LedLampDAO() {
+    }
+
+    public LedLampDAO(String name, int color, boolean isSelect) {
+        this.Name = name;
+        this.Color = color;
+        this.IsSelect = isSelect;
+    }
+
+    public boolean isSelect() {
+        return IsSelect;
+    }
+
+    public void setSelect(boolean select) {
+        IsSelect = select;
+    }
+
+    public int getColor() {
+        return Color;
+    }
+
+    public void setColor(int color) {
+        Color = color;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+}

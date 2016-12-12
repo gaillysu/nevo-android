@@ -12,6 +12,7 @@ import com.medcorp.R;
 import com.medcorp.database.dao.AlarmDAO;
 import com.medcorp.database.dao.GoalDAO;
 import com.medcorp.database.dao.IDailyHistory;
+import com.medcorp.database.dao.LedLampDAO;
 import com.medcorp.database.dao.SleepDAO;
 import com.medcorp.database.dao.SolarDAO;
 import com.medcorp.database.dao.StepsDAO;
@@ -26,27 +27,27 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "nevowatch.db";
     private static final int DATABASE_VERSION = 9; // from 3 to 4, refactor table "Preset" to "Goal"
-                                                   // from 4 to 5, fix table struct to save login data and Validic data.
-                                                   // from 5 to 6, add "User" table "nevoUserIsLogin","validicUserIsConnected" fields
-                                                   //from  6 to 7,fix "Alarm" alarm.enable to alarm.weekDay
-                                                   //from  7 to 8, fix user.Weight to "int" type (old is float type)
-                                                   //from  8 to 9,rename "validicRecordID" to "cloudRecordID" in tables "steps" and "sleep"
-                                                   //from 9 to 10, add table "solarDAO"
-    private  Dao<IDailyHistory,Integer> dailyhistoryDao = null;
-    private  Dao<UserDAO,Integer> userDao = null;
-    private  Dao<SleepDAO,Integer> sleepDao = null;
-    private  Dao<StepsDAO,Integer> stepsDao = null;
-    private  Dao<AlarmDAO,Integer> alarmDao = null;
-    private  Dao<GoalDAO,Integer> goalsDAO = null;
-    private  Dao<SolarDAO,Integer> solarDAO = null;
-    private  Context context;
+    // from 4 to 5, fix table struct to save login data and Validic data.
+    // from 5 to 6, add "User" table "nevoUserIsLogin","validicUserIsConnected" fields
+    //from  6 to 7,fix "Alarm" alarm.enable to alarm.weekDay
+    //from  7 to 8, fix user.Weight to "int" type (old is float type)
+    //from  8 to 9,rename "validicRecordID" to "cloudRecordID" in tables "steps" and "sleep"
+    //from 9 to 10, add table "solarDAO"
+    private Dao<IDailyHistory, Integer> dailyhistoryDao = null;
+    private Dao<UserDAO, Integer> userDao = null;
+    private Dao<SleepDAO, Integer> sleepDao = null;
+    private Dao<StepsDAO, Integer> stepsDao = null;
+    private Dao<AlarmDAO, Integer> alarmDao = null;
+    private Dao<GoalDAO, Integer> goalsDAO = null;
+    private Dao<SolarDAO, Integer> solarDAO = null;
+    private Dao<LedLampDAO, Integer> ledDAO = null;
+    private Context context;
 
     //Classic singleton
     private static DatabaseHelper instance = null;
 
     public static DatabaseHelper getInstance(Context ctx) {
-        if(null == instance )
-        {
+        if (null == instance) {
             instance = new DatabaseHelper(ctx);
         }
         return instance;
@@ -68,6 +69,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, AlarmDAO.class);
             TableUtils.createTable(connectionSource, GoalDAO.class);
             TableUtils.createTable(connectionSource, SolarDAO.class);
+            TableUtils.createTable(connectionSource, LedLampDAO.class);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
         }
@@ -79,8 +81,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             //when user update app from v2.0.1(database is v3) to new version (database >= v4)
             //here create new table "Goal" and add some default records, the best way is copy data from  table "Preset" to "Goal",but now I can't read the table "Preset"
             //due to the PresetDAO class has been renamed to GoalDAO class.
-            if(oldVer == 3 && newVer >=4)
-            {
+            if (oldVer == 3 && newVer >= 4) {
                 TableUtils.createTable(connectionSource, GoalDAO.class);
                 getGoalDao().createIfNotExists(new GoalDAO(context.getString(R.string.startup_goal_light), true, 7000));
                 getGoalDao().createIfNotExists(new GoalDAO(context.getString(R.string.startup_goal_moderate), true, 10000));
@@ -96,6 +97,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, AlarmDAO.class, true);
             TableUtils.dropTable(connectionSource, GoalDAO.class, true);
             TableUtils.dropTable(connectionSource, SolarDAO.class, true);
+            TableUtils.dropTable(connectionSource, LedLampDAO.class, true);
             onCreate(sqliteDatabase, connectionSource);
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "
@@ -126,8 +128,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     public Dao<AlarmDAO, Integer> getAlarmDao() throws SQLException {
-        if (alarmDao== null)
-            alarmDao= getDao(AlarmDAO.class);
+        if (alarmDao == null)
+            alarmDao = getDao(AlarmDAO.class);
         return alarmDao;
     }
 
@@ -141,5 +143,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (solarDAO == null)
             solarDAO = getDao(SolarDAO.class);
         return solarDAO;
+    }
+
+    public Dao<LedLampDAO, Integer> getLadDao() throws SQLException {
+        if (ledDAO == null) {
+            ledDAO = getDao(LedLampDAO.class);
+        }
+        return ledDAO;
     }
 }

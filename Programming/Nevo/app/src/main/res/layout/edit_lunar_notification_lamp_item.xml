@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
+            android:paddingLeft="10dp"
             android:layout_toRightOf="@id/edit_notification_lamp_iv"
             android:text="2 o'clock"
             android:textColor="@color/text_color"

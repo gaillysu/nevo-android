@@ -26,6 +26,7 @@ import io.realm.Realm;
 
 /**
  * Created by Jason on 2016/12/9.
+ *
  */
 
 public class EditNotificationAttributeActivity extends BaseActivity {
@@ -42,6 +43,8 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     private Realm realm;
     private int color;
     private LedLamp mLedLamp;
+    private LedLamp mLamp;
+    private int mLedId;
 
 
     @Override
@@ -53,7 +56,6 @@ public class EditNotificationAttributeActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
-        realm = Realm.getDefaultInstance();
         initView();
         registerClick();
     }
@@ -70,8 +72,8 @@ public class EditNotificationAttributeActivity extends BaseActivity {
 
     private void initView() {
         Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
-        mLedLamp = realm.where(LedLamp.class).equalTo("id",id).findFirst();
+        mLedId = intent.getIntExtra("id",-1);
+        mLedLamp = getModel().getSelectLamp(mLedId);
         showSelectColor.setColorFilter(mLedLamp.getColor());
         mNameTv.setText(mLedLamp.getName());
         name = mLedLamp.getName();
@@ -111,11 +113,10 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_menu:
-                LedLamp lamp = realm.where(LedLamp.class).equalTo("id", mLedLamp.getId()).findFirst();
-                lamp.setSelect(mLedLamp.isSelect());
-                lamp.setName(name);
-                lamp.setColor(color);
-                realm.commitTransaction();
+                mLedLamp.setSelect(mLedLamp.isSelect());
+                mLedLamp.setName(name);
+                mLedLamp.setColor(color);
+                getModel().upDataLedLamp(mLedLamp);
                 finish();
                 return true;
             case android.R.id.home:

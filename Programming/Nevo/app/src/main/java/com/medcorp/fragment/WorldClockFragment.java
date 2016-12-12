@@ -126,6 +126,13 @@ public class WorldClockFragment extends BaseObservableFragment {
         startActivity(EditWorldClockActivity.class);
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
     //set sunrise and sunset value
     public void setSunriseAndSunset(TextView sunrise, TextView sunset, City city, String zone) {
 

@@ -21,6 +21,7 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.medcorp.R;
 import com.medcorp.adapter.EditLunarNotificationAdapter;
+import com.medcorp.application.ApplicationModel;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.model.color.LedLamp;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -30,13 +31,10 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/12/8.
@@ -53,8 +51,7 @@ public class EditNotificationLampActivity extends BaseActivity {
     private EditLunarNotificationAdapter mEditItemAdapter;
     private List<LedLamp> userSettingAllLamp;
     private String newNtName;
-    private Realm realm;
-    private RealmResults<LedLamp> mAllLedLamp;
+    private ApplicationModel mModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,8 +62,7 @@ public class EditNotificationLampActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
-        realm = Realm.getDefaultInstance();
-        mAllLedLamp = realm.where(LedLamp.class).findAll();
+        mModel = getModel();
     }
 
     @Override
@@ -76,16 +72,13 @@ public class EditNotificationLampActivity extends BaseActivity {
     }
 
     private void initView() {
-
+        userSettingAllLamp = mModel.getAllLedLamp();
         allNotificationLampList.setLayoutManager(new LinearLayoutManager(this));// 布局管理器。
         allNotificationLampList.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
         allNotificationLampList.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
         allNotificationLampList.setSwipeMenuCreator(swipeMenuCreator);
         allNotificationLampList.setSwipeMenuItemClickListener(menuItemClickListener);
-        userSettingAllLamp = new ArrayList<>();
-        for (int i = 0; i < mAllLedLamp.size(); i++) {
-            userSettingAllLamp.add(mAllLedLamp.get(i));
-        }
+
         mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp);
         allNotificationLampList.setAdapter(mEditItemAdapter);
         mEditItemAdapter.setOnItemClickListener(onItemClickListener);
@@ -148,7 +141,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                         ledLamp.setColor(selectedColor);
                         ledLamp.setName(newNtName);
                         ledLamp.setSelect(false);
-                        realm.commitTransaction();
+                        mModel.addLedLamp(ledLamp);//添加到数据库
                         userSettingAllLamp.add(ledLamp);
                         mEditItemAdapter.notifyDataSetChanged();
                     }
@@ -176,6 +169,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                 } else {
                     ledLamp.setSelect(false);
                 }
+                mModel.upDataLedLamp(ledLamp);
             }
             mEditItemAdapter.notifyDataSetChanged();
         }
@@ -213,6 +207,8 @@ public class EditNotificationLampActivity extends BaseActivity {
         public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
             closeable.smoothCloseMenu();// 关闭被点击的菜单。
             if (menuPosition == 0) {// 删除按钮被点击。
+                LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
+                mModel.removeLedLamp(ledLamp.getId());
                 userSettingAllLamp.remove(adapterPosition);
                 mEditItemAdapter.notifyItemRemoved(adapterPosition);
             }

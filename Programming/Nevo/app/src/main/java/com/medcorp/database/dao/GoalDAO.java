@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 
 /**
  * Created by Karl on 11/25/15.
+ *
  */
 public class GoalDAO {
 
