@@ -1,7 +1,6 @@
 package com.medcorp.ble.model.color;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Jason on 2016/12/8.
@@ -10,8 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class LedLamp extends RealmObject {
 
 
-    @PrimaryKey
-    private String id;
+    private int id;
     private String name;
     private int color;
     private boolean isSelect;
@@ -41,11 +39,11 @@ public class LedLamp extends RealmObject {
         isSelect = select;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

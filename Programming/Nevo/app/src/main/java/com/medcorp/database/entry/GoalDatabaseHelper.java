@@ -71,7 +71,9 @@ public class GoalDatabaseHelper implements iSettingDatabaseHelper<Goal> {
     public List<Optional<Goal>> get(int presetId) {
         List<Optional<Goal>> presetList = new ArrayList<Optional<Goal>>();
         try {
-            List<GoalDAO> goalDAOList = databaseHelper.getGoalDao().queryBuilder().where().eq(GoalDAO.iDString, presetId).query();
+            List<GoalDAO> goalDAOList = databaseHelper.getGoalDao().queryBuilder()
+                    .where().eq(GoalDAO.iDString, presetId).query();
+
             for(GoalDAO goalDAO : goalDAOList) {
                 Optional<Goal> presetOptional = new Optional<>();
                 presetOptional.set(convertToNormal(goalDAO));

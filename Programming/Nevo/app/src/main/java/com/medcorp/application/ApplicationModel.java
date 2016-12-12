@@ -16,11 +16,13 @@ import com.medcorp.R;
 import com.medcorp.ble.controller.OtaControllerImpl;
 import com.medcorp.ble.controller.SyncController;
 import com.medcorp.ble.controller.SyncControllerImpl;
+import com.medcorp.ble.model.color.LedLamp;
 import com.medcorp.ble.model.goal.NumberOfStepsGoal;
 import com.medcorp.cloud.CloudSyncManager;
 import com.medcorp.cloud.validic.ValidicOperation;
 import com.medcorp.database.entry.AlarmDatabaseHelper;
 import com.medcorp.database.entry.GoalDatabaseHelper;
+import com.medcorp.database.entry.LedLampDatabase;
 import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.database.entry.SolarDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
@@ -120,13 +122,13 @@ public class ApplicationModel extends Application {
     private CloudSyncManager cloudSyncManager;
     private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
+    private LedLampDatabase ledDataBase;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         EventBus.getDefault().register(this);
-
         RealmConfiguration config = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(config);
 
@@ -140,6 +142,8 @@ public class ApplicationModel extends Application {
         solarDatabaseHelper = new SolarDatabaseHelper(this);
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
+        ledDataBase = new LedLampDatabase(this);
+
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
         Optional<User> user = userDatabaseHelper.getLoginUser();
@@ -654,6 +658,41 @@ public class ApplicationModel extends Application {
         return goalDatabaseHelper.remove(goal.getId());
     }
 
+    /**
+     *  user LedLamp Database
+     * @return
+     */
+    public List<LedLamp> getAllLedLamp() {
+        return ledDataBase.convertToNormalList(ledDataBase.getAll());
+    }
+
+    public LedLamp getSelectLamp(int rid) {
+        return ledDataBase.get(rid).isEmpty() ? null : ledDataBase.get(rid).get(0).get();
+    }
+
+    public LedLamp addLedLamp(LedLamp ledLamp){
+        return  ledDataBase.add(ledLamp).get();
+    }
+
+    public boolean upDataLedLamp(LedLamp ledLamp){
+        return ledDataBase.update(ledLamp);
+    }
+
+    public boolean removeLedLamp(int id){
+        return ledDataBase.remove(id);
+    }
+
+    public LedLamp getUserSelectLedLamp() {
+        LedLamp ledlamp = null;
+        List<LedLamp> allLedLamp = getAllLedLamp();
+        for(LedLamp lamp : allLedLamp){
+            if(lamp.isSelect()){
+                ledlamp = lamp;
+            }
+        }
+        return ledlamp;
+    }
+
     public boolean isBluetoothOn() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter.isEnabled()) {
@@ -737,6 +776,10 @@ public class ApplicationModel extends Application {
         return cloudSyncManager;
     }
 
+    public LedLampDatabase getLedDataBase() {
+        return ledDataBase;
+    }
+
     public User getNevoUser() {
         return nevoUser;
     }
@@ -750,7 +793,6 @@ public class ApplicationModel extends Application {
     public void createValidicUser(String pin, ResponseListener<ValidicUser> responseListener) {
         ValidicOperation.getInstance(this).createValidicUser(nevoUser, pin, responseListener);
     }
-
 
 
     @Subscribe
@@ -873,6 +915,5 @@ public class ApplicationModel extends Application {
                                                           validicDeleteRoutineRecordEvent) {
         stepsDatabaseHelper.remove(validicDeleteRoutineRecordEvent.getUserId() + "", validicDeleteRoutineRecordEvent.getDate());
     }
-
 
 }

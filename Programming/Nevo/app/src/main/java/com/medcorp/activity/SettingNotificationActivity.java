@@ -116,11 +116,11 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
                 inactiveNotificationList.add(otherAppNotification);
             }
         }
-        activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList);
+        activeNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, activeNotificationList, getModel());
         activeListView.setAdapter(activeNotificationArrayAdapter);
         activeListView.setOnItemClickListener(this);
 
-        inactiveNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, inactiveNotificationList);
+        inactiveNotificationArrayAdapter = new SettingNotificationArrayAdapter(this, inactiveNotificationList, getModel());
         inactiveListView.setAdapter(inactiveNotificationArrayAdapter);
         inactiveListView.setOnItemClickListener(this);
 
@@ -149,16 +149,10 @@ public class SettingNotificationActivity extends BaseActivity implements Adapter
             applicationNotification = inactiveNotificationList.get(position);
         }
 
-
-        //TODO
-//        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(getString(R.string.key_notification), (Serializable) applicationNotification);
-            intent.putExtras(bundle);
-            startActivity(intent);
-//        }else{
-//
-//        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getString(R.string.key_notification), (Serializable) applicationNotification);
+        intent.putExtras(bundle);
+        startActivity(intent);
         overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
 
