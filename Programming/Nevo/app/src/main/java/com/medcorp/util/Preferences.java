@@ -3,9 +3,12 @@ package com.medcorp.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
+import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.model.color.BlueLed;
 import com.medcorp.ble.model.color.GreenLed;
+import com.medcorp.ble.model.color.LedLamp;
 import com.medcorp.ble.model.color.LightGreenLed;
 import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.color.OrangeLed;
@@ -27,26 +30,26 @@ public class Preferences {
         }
     }
 
-    public static void saveUserHeardPicture(Context context,String userEmail ,String picturePath){
+    public static void saveUserHeardPicture(Context context, String userEmail, String picturePath) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(userEmail,picturePath).apply();
+        editor.putString(userEmail, picturePath).apply();
     }
 
-    public static String getUserHeardPicturePath(Context context,String userEmail ){
+    public static String getUserHeardPicturePath(Context context, String userEmail) {
         init(context);
-        return preferences.getString(userEmail,null);
+        return preferences.getString(userEmail, null);
     }
 
     public static void saveUserSelectCity(Context context, String cityName) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(context.getString(R.string.key_prefs_save_other_name),cityName).apply();
+        editor.putString(context.getString(R.string.key_prefs_save_other_name), cityName).apply();
     }
 
-    public static String getSaveOtherCityName(Context context){
+    public static String getSaveOtherCityName(Context context) {
         init(context);
-        return preferences.getString(context.getString(R.string.key_prefs_save_other_name),null);
+        return preferences.getString(context.getString(R.string.key_prefs_save_other_name), null);
     }
 
     public static void saveSelectDate(Context context, String selectDate) {
@@ -67,16 +70,17 @@ public class Preferences {
         editor.putBoolean(context.getString(R.string.key_prefs_is_first_login), isNotFirst).apply();
     }
 
-    public static void startInitAlarm(Context context,boolean isInit){
+    public static void startInitAlarm(Context context, boolean isInit) {
         init(context);
-        SharedPreferences.Editor editor =  preferences.edit();
-        editor.putBoolean(context.getString(R.string.key_init_alarm),isInit);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(context.getString(R.string.key_init_alarm), isInit);
     }
 
-    public static boolean getisInitAlarm(Context context){
+    public static boolean getisInitAlarm(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_init_alarm),true);
+        return preferences.getBoolean(context.getString(R.string.key_init_alarm), true);
     }
+
     public static boolean getIsFirstLogin(Context context) {
         init(context);
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_first_login), true);
@@ -116,14 +120,14 @@ public class Preferences {
         return preferences.getBoolean(context.getString(R.string.key_prefs_google_fit), false);
     }
 
-    public static void saveNotificationColor(Context context, Notification notification, NevoLed led) {
+    public static void saveNotificationColor(Context context, Notification notification, int ledColor) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(notification.getTag(), led.getHexColor()).apply();
+        editor.putInt(notification.getTag(), ledColor).apply();
     }
 
-    public static NevoLed getNotificationColor(Context context, Notification notification) {
-        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
+    public static NevoLed getNotificationColor(Context context, Notification notification ,ApplicationModel model) {
+        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()),model,notification.getTag());
     }
 
     public static void setProfileUnit(Context context, int unit) {
@@ -159,20 +163,25 @@ public class Preferences {
         return preferences.getInt(context.getString(R.string.key_prefs_watch_model), 1);
     }
 
-    private static NevoLed distinguish(int ledColor) {
-        switch (ledColor) {
-            case 0x100000:
-                return new GreenLed();
-            case 0x020000:
-                return new LightGreenLed();
-            case 0x080000:
-                return new OrangeLed();
-            case 0x010000:
-                return new BlueLed();
-            case 0x040000:
-                return new YellowLed();
-            case 0x200000:
-                return new RedLed();
+    private static NevoLed distinguish(int ledColor , ApplicationModel model ,String tag) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            switch (ledColor) {
+                case 0x100000:
+                    return new GreenLed();
+                case 0x020000:
+                    return new LightGreenLed();
+                case 0x080000:
+                    return new OrangeLed();
+                case 0x010000:
+                    return new BlueLed();
+                case 0x040000:
+                    return new YellowLed();
+                case 0x200000:
+                    return new RedLed();
+            }
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+            LedLamp selectLamp = model.getUserSelectLedLamp(ledColor);
+            return selectLamp;
         }
         return null;
     }

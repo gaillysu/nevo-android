@@ -659,7 +659,8 @@ public class ApplicationModel extends Application {
     }
 
     /**
-     *  user LedLamp Database
+     * user LedLamp Database
+     *
      * @return
      */
     public List<LedLamp> getAllLedLamp() {
@@ -670,25 +671,29 @@ public class ApplicationModel extends Application {
         return ledDataBase.get(rid).isEmpty() ? null : ledDataBase.get(rid).get(0).get();
     }
 
-    public LedLamp addLedLamp(LedLamp ledLamp){
-        return  ledDataBase.add(ledLamp).get();
+    public LedLamp addLedLamp(LedLamp ledLamp) {
+        return ledDataBase.add(ledLamp).get();
     }
 
-    public boolean upDataLedLamp(LedLamp ledLamp){
+    public boolean upDataLedLamp(LedLamp ledLamp) {
         return ledDataBase.update(ledLamp);
     }
 
-    public boolean removeLedLamp(int id){
+    public boolean removeLedLamp(int id) {
         return ledDataBase.remove(id);
     }
 
-    public LedLamp getUserSelectLedLamp() {
+    public LedLamp getUserSelectLedLamp(int color) {
         LedLamp ledlamp = null;
         List<LedLamp> allLedLamp = getAllLedLamp();
-        for(LedLamp lamp : allLedLamp){
-            if(lamp.isSelect()){
+        for (LedLamp lamp : allLedLamp) {
+            if (lamp.getHexColor() == color) {
                 ledlamp = lamp;
             }
+        }
+        if (ledlamp == null) {
+            ledlamp = new LedLamp();
+            ledlamp.setName(getString(R.string.notification_def_name));
         }
         return ledlamp;
     }

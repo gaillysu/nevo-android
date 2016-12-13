@@ -22,7 +22,6 @@ import com.medcorp.ble.model.color.LedLamp;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 
 /**
  * Created by Jason on 2016/12/9.
@@ -40,10 +39,8 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     @Bind(R.id.color_picker_view)
     ColorPickerView colorPickerView;
     private String name;
-    private Realm realm;
     private int color;
     private LedLamp mLedLamp;
-    private LedLamp mLamp;
     private int mLedId;
 
 

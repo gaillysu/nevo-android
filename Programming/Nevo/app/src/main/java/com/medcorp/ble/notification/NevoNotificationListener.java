@@ -18,6 +18,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.notification.CalendarNotification;
 import com.medcorp.ble.model.notification.OtherAppNotification;
@@ -58,6 +59,8 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
 
     private CallStateListener mListener;
 
+    private ApplicationModel mApplicationModel;
+
 
     // listen incoming call and then send led command to nevo watch
     class CallStateListener extends PhoneStateListener {
@@ -68,7 +71,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 case TelephonyManager.CALL_STATE_RINGING:
                     NotificationDataHelper helper = new NotificationDataHelper(NevoNotificationListener.this);
                     if(helper.getState(new TelephoneNotification()).isOn()) {
-                        sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification()).getHexColor());
+                        sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification(),mApplicationModel).getHexColor());
                     }
                     break;
             }
@@ -83,6 +86,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         mListener = new CallStateListener();
         mTm.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
         Log.w("Karl","notification service onCreate() invoked");
+        mApplicationModel = getModel();
     }
 
     @Override
@@ -114,32 +118,32 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         if (notification != null) {
             if(getAppListbyType(R.array.CALL_APPS).contains(statusBarNotification.getPackageName())) {
                 if(helper.getState(new TelephoneNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(NevoNotificationListener.this, new TelephoneNotification(),mApplicationModel).getHexColor());
                 }
             }
             else if(getAppListbyType(R.array.SMS_APPS).contains(statusBarNotification.getPackageName())) {
                 if(helper.getState(new SmsNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new SmsNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(this, new SmsNotification(),mApplicationModel).getHexColor());
                 }
             } else if(getAppListbyType(R.array.EMAIL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new EmailNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new EmailNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(this, new EmailNotification(),mApplicationModel).getHexColor());
                 }
             } else if(getAppListbyType(R.array.CALENDAR_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new CalendarNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new CalendarNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(this, new CalendarNotification(),mApplicationModel).getHexColor());
                 }
             } else if(statusBarNotification.getPackageName().contains("com.facebook") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new FacebookNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new FacebookNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(this, new FacebookNotification(),mApplicationModel).getHexColor());
                 }
             } else if(statusBarNotification.getPackageName().contains("com.tencent") && getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new WeChatNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new WeChatNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(this, new WeChatNotification(),mApplicationModel).getHexColor());
                 }
             } else if(statusBarNotification.getPackageName().contains("com.whatsapp")&& getAppListbyType(R.array.SOCIAL_APPS).contains(statusBarNotification.getPackageName())){
                 if(helper.getState(new WhatsappNotification()).isOn()) {
-                    sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification()).getHexColor());
+                    sendNotification(Preferences.getNotificationColor(this, new WhatsappNotification(),mApplicationModel).getHexColor());
                 }
             } else {
                 Log.v(TAG, "Unknown Notification : "+statusBarNotification.getPackageName());
@@ -148,7 +152,7 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
                 if(appList.contains(statusBarNotification.getPackageName())){
                     OtherAppNotification otherAppNotification = new OtherAppNotification(appID);
                     if(helper.getState(otherAppNotification).isOn()) {
-                        sendNotification(Preferences.getNotificationColor(this, otherAppNotification).getHexColor());
+                        sendNotification(Preferences.getNotificationColor(this, otherAppNotification,mApplicationModel).getHexColor());
                     }
                 }
                 else {

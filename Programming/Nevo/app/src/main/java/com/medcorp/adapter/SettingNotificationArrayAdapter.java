@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
+import com.medcorp.ble.model.color.LedLamp;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.util.Preferences;
@@ -20,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by gaillysu on 15/12/23.
+ *
  */
 public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> {
     private Context context;
@@ -54,9 +56,14 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
         }
         if (notification.isOn()) {
             if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-                notificationValue.setText(context.getString(Preferences.getNotificationColor(context, notification).getStringResource()));
+
+                notificationValue.setText(context.getString(Preferences.getNotificationColor
+                        (context, notification, mApplicationModel).getStringResource()));
+
             } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-                notificationValue.setText(mApplicationModel.getUserSelectLedLamp().getName());
+
+                LedLamp ledLamp = mApplicationModel.getUserSelectLedLamp(notification.getDefaultColor().getHexColor());
+                notificationValue.setText(ledLamp.getName());
             }
         } else {
             notificationValue.setText(R.string.notification_deactivated);

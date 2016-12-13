@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -111,7 +112,8 @@ public class EditNotificationLampActivity extends BaseActivity {
     }
 
     private void addNewNotification() {
-        new MaterialDialog.Builder(this).title(getString(R.string.add_new_notification_dialog_title))
+        new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
+                .title(getString(R.string.add_new_notification_dialog_title)).itemsColor(getResources().getColor(R.color.text_color))
                 .content(getString(R.string.add_new_notification_dialog_hint_content))
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .input("", "", new MaterialDialog.InputCallback() {
@@ -131,12 +133,18 @@ public class EditNotificationLampActivity extends BaseActivity {
         ColorPickerDialogBuilder
                 .with(this)
                 .setTitle(getString(R.string.new_nt_select_color))
-                .initialColor(R.color.window_background_color)
+                .initialColor(getResources().getColor(R.color.window_background_color))
+                .alphaSliderOnly()
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                .setColorEditTextColor(getResources().getColor(R.color.text_color))
+                .noSliders()
                 .density(15)
                 .setPositiveButton(getString(R.string.goal_ok), new ColorPickerClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        for (int i = 0; i < allColors.length; i++) {
+                            Log.i("jason", allColors[i] + "");
+                         }
                         LedLamp ledLamp = new LedLamp();
                         ledLamp.setColor(selectedColor);
                         ledLamp.setName(newNtName);
@@ -214,9 +222,11 @@ public class EditNotificationLampActivity extends BaseActivity {
             }
             if (menuPosition == 1) {
                 LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
-                Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
-                intent.putExtra("id", ledLamp.getId());
-                startActivity(intent);
+                if (ledLamp != null) {
+                    Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
+                    intent.putExtra("id", ledLamp.getId());
+                    startActivity(intent);
+                }
             }
         }
     };

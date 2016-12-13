@@ -14,7 +14,6 @@ public class LedLamp extends NevoLed {
     private int color;
     private boolean isSelect;
 
-
     public String getName() {
         return name;
     }

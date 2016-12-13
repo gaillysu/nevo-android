@@ -5,4 +5,9 @@
     <string name="profile_gender_values" translatable="false">profile_gender_values</string>
     <string name="edit_notification_item_name">Edit</string>
     <string name="edit_notification_delete_item">Del</string>
+    <string name="add_new_notification_dialog_title">Add name</string>
+    <string name="add_new_notification_dialog_hint_content">In put name</string>
+    <string name="new_nt_def_name">name</string>
+    <string name="new_nt_select_color">Choose color</string>
+    <string name="notification_def_name">Def name</string>
 </resources>
