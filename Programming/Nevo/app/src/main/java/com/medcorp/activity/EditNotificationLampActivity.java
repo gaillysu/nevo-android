@@ -175,11 +175,11 @@ public class EditNotificationLampActivity extends BaseActivity {
                 LedLamp ledLamp = userSettingAllLamp.get(i);
                 if (i == position) {
                     ledLamp.setSelect(true);
+                    Preferences.saveNotificationColor(EditNotificationLampActivity.this,notification,ledLamp.getColor());
                 } else {
                     ledLamp.setSelect(false);
                 }
                 mModel.upDataLedLamp(ledLamp);
-                Preferences.saveNotificationColor(EditNotificationLampActivity.this,notification,ledLamp.getColor());
             }
             mEditItemAdapter.notifyDataSetChanged();
         }
