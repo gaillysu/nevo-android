@@ -684,16 +684,15 @@ public class ApplicationModel extends Application {
     }
 
     public LedLamp getUserSelectLedLamp(int color) {
-        LedLamp ledlamp = null;
+        LedLamp ledlamp = new LedLamp();
+        ledlamp.setColor(color);
+        ledlamp.setName(getString(R.string.notification_def_name));
+
         List<LedLamp> allLedLamp = getAllLedLamp();
         for (LedLamp lamp : allLedLamp) {
-            if (lamp.getHexColor() == color) {
-                ledlamp = lamp;
+            if (lamp.getColor() == color) {
+                return lamp;
             }
-        }
-        if (ledlamp == null) {
-            ledlamp = new LedLamp();
-            ledlamp.setName(getString(R.string.notification_def_name));
         }
         return ledlamp;
     }

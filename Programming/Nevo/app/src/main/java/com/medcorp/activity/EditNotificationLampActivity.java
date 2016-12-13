@@ -25,6 +25,8 @@ import com.medcorp.adapter.EditLunarNotificationAdapter;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.model.color.LedLamp;
+import com.medcorp.ble.model.notification.Notification;
+import com.medcorp.util.Preferences;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -53,6 +55,7 @@ public class EditNotificationLampActivity extends BaseActivity {
     private List<LedLamp> userSettingAllLamp;
     private String newNtName;
     private ApplicationModel mModel;
+    private Notification notification;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class EditNotificationLampActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
         mModel = getModel();
+        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
     }
 
     @Override
@@ -142,9 +146,6 @@ public class EditNotificationLampActivity extends BaseActivity {
                 .setPositiveButton(getString(R.string.goal_ok), new ColorPickerClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        for (int i = 0; i < allColors.length; i++) {
-                            Log.i("jason", allColors[i] + "");
-                         }
                         LedLamp ledLamp = new LedLamp();
                         ledLamp.setColor(selectedColor);
                         ledLamp.setName(newNtName);
@@ -178,6 +179,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                     ledLamp.setSelect(false);
                 }
                 mModel.upDataLedLamp(ledLamp);
+                Preferences.saveNotificationColor(EditNotificationLampActivity.this,notification,ledLamp.getColor());
             }
             mEditItemAdapter.notifyDataSetChanged();
         }
