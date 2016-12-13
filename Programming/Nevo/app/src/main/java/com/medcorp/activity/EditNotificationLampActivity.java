@@ -1,5 +1,6 @@
 package com.medcorp.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,11 +16,16 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.medcorp.R;
 import com.medcorp.adapter.EditLunarNotificationAdapter;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.model.color.LedLamp;
+import com.medcorp.ble.model.notification.Notification;
+import com.medcorp.util.Preferences;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -48,6 +54,7 @@ public class EditNotificationLampActivity extends BaseActivity {
     private List<LedLamp> userSettingAllLamp;
     private String newNtName;
     private ApplicationModel mModel;
+    private Notification notification;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +66,7 @@ public class EditNotificationLampActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
         mModel = getModel();
+        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
     }
 
     @Override
@@ -146,6 +154,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                     ledLamp.setSelect(false);
                 }
                 mModel.upDataLedLamp(ledLamp);
+                Preferences.saveNotificationColor(EditNotificationLampActivity.this,notification,ledLamp.getColor());
             }
             mEditItemAdapter.notifyDataSetChanged();
         }

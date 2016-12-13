@@ -127,7 +127,8 @@ public class Preferences {
     }
 
     public static NevoLed getNotificationColor(Context context, Notification notification ,ApplicationModel model) {
-        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()),model,notification.getTag());
+        init(context);
+        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()),model);
     }
 
     public static void setProfileUnit(Context context, int unit) {
@@ -163,7 +164,7 @@ public class Preferences {
         return preferences.getInt(context.getString(R.string.key_prefs_watch_model), 1);
     }
 
-    private static NevoLed distinguish(int ledColor , ApplicationModel model ,String tag) {
+    private static NevoLed distinguish(int ledColor , ApplicationModel model) {
         if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             switch (ledColor) {
                 case 0x100000:
@@ -180,8 +181,7 @@ public class Preferences {
                     return new RedLed();
             }
         } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            LedLamp selectLamp = model.getUserSelectLedLamp(ledColor);
-            return selectLamp;
+            return model.getUserSelectLedLamp(ledColor);
         }
         return null;
     }

@@ -12,6 +12,7 @@ import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.model.color.LedLamp;
+import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.util.Preferences;
@@ -61,9 +62,8 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
                         (context, notification, mApplicationModel).getStringResource()));
 
             } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-
-                LedLamp ledLamp = mApplicationModel.getUserSelectLedLamp(notification.getDefaultColor().getHexColor());
-                notificationValue.setText(ledLamp.getName());
+                NevoLed nevoLed = Preferences.getNotificationColor(mApplicationModel, notification,mApplicationModel);
+                notificationValue.setText(nevoLed.getTag());
             }
         } else {
             notificationValue.setText(R.string.notification_deactivated);
