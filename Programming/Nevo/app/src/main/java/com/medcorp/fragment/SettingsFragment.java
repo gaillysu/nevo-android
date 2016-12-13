@@ -51,7 +51,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
 
     private List<SettingsMenuItem> listMenu;
     private SettingMenuAdapter settingAdapter;
-    final private int REQUEST_LOGIN = 100;
 
     @Nullable
     @Override
@@ -65,7 +64,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_goals), R.drawable.setting_goals));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_more), R.drawable.setting_goals));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_forget_watch), R.drawable.setting_forget));
@@ -117,7 +116,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
 
         } else if (position == 4) {
-
+//            startActivity(MoreActivity.class);
             startActivity(GoalsActivity.class);
 
         } else if (position == 5) {

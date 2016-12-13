@@ -1,6 +1,5 @@
 package com.medcorp.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,15 +10,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.medcorp.R;
 import com.medcorp.adapter.EditLunarNotificationAdapter;
 import com.medcorp.application.ApplicationModel;
@@ -130,37 +125,10 @@ public class EditNotificationLampActivity extends BaseActivity {
     }
 
     private void openChooseColor() {
-        ColorPickerDialogBuilder
-                .with(this)
-                .setTitle(getString(R.string.new_nt_select_color))
-                .initialColor(getResources().getColor(R.color.window_background_color))
-                .alphaSliderOnly()
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .setColorEditTextColor(getResources().getColor(R.color.text_color))
-                .noSliders()
-                .density(15)
-                .setPositiveButton(getString(R.string.goal_ok), new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        for (int i = 0; i < allColors.length; i++) {
-                            Log.i("jason", allColors[i] + "");
-                         }
-                        LedLamp ledLamp = new LedLamp();
-                        ledLamp.setColor(selectedColor);
-                        ledLamp.setName(newNtName);
-                        ledLamp.setSelect(false);
-                        mModel.addLedLamp(ledLamp);//添加到数据库
-                        userSettingAllLamp.add(ledLamp);
-                        mEditItemAdapter.notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel_update), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .build()
-                .show();
+        Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
+        intent.putExtra("isEdit",false);
+        intent.putExtra("name",newNtName);
+        startActivity(intent);
     }
 
 
@@ -225,6 +193,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                 if (ledLamp != null) {
                     Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
                     intent.putExtra("id", ledLamp.getId());
+                    intent.putExtra("isEdit",true);
                     startActivity(intent);
                 }
             }

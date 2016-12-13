@@ -63,6 +63,8 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     ImageView lunarLampColorIv;
     @Bind(R.id.notification_name_text_view)
     TextView lampName;
+    @Bind(R.id.notification_lunar_watch_icon)
+    ImageView lunarWatchIcon;
 
     private int defaultColor = 0;
     private EditNotificationAdapter adapter;
@@ -96,8 +98,11 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
 
         if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             lunarLedLampGroup.setVisibility(View.GONE);
+            lunarWatchIcon.setVisibility(View.GONE);
         } else {
             notificationLampList.setVisibility(View.GONE);
+            watchView.setVisibility(View.GONE);
+            lunarWatchIcon.setVisibility(View.VISIBLE);
         }
 
         helper = new NotificationDataHelper(this);
@@ -217,24 +222,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
                 break;
             case R.id.done_menu:
                 Preferences.saveNotificationColor(this, notification, selectedLed.getHexColor());
-                //                if (snackbar != null) {
-                //                    if (snackbar.isShown()) {
-                //                        snackbar.dismiss();
-                //                    }
-                //                }
-                //                snackbar = Snackbar.make(coordinatorLayout, "", Snackbar.LENGTH_SHORT);
-                //                TextView tv = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
-                //                tv.setTextColor(Color.WHITE);
-                //                tv.setText(getString(R.string.save_notification_ok));
-                //                Snackbar.SnackbarLayout ve = (Snackbar.SnackbarLayout) snackbar.getView();
-                //                ve.setBackgroundColor(getResources().getColor(R.color.snackbar_bg_color));
-                //                snackbar.show();
-                //                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                //                    @Override
-                //                    public void run() {
-                //                        snackbar.dismiss();
-                //                    }
-                //                }, 1800);
                 finish();
                 break;
 
@@ -254,7 +241,8 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
             selectedLed = ledList.get(position);
             Preferences.saveNotificationColor(this, notification, selectedLed.getHexColor());
         }else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR){
-            Preferences.saveNotificationColor(this,notification,lunarLampColorIv.getSolidColor());
+            int solidColor = lunarLampColorIv.getSolidColor();
+            Preferences.saveNotificationColor(this,notification,solidColor);
         }
     }
 }
