@@ -124,6 +124,7 @@ public class EditNotificationLampActivity extends BaseActivity {
         @Override
         public void onItemClick(int position) {
             Preferences.saveNotificationColor(EditNotificationLampActivity.this, notification, userSettingAllLamp.get(position).getColor());
+            //show current selected color
             mEditItemAdapter.setColor(userSettingAllLamp.get(position).getColor());
             mEditItemAdapter.notifyDataSetChanged();
         }
