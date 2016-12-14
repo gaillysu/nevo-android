@@ -28,7 +28,7 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
     public Optional<LedLamp> add(LedLamp object) {
         Optional<LedLamp> presetOptional = new Optional<>();
         try {
-            LedLampDAO res = databaseHelper.getLadDao().createIfNotExists(convertToDao(object));
+            LedLampDAO res = databaseHelper.getLedDao().createIfNotExists(convertToDao(object));
             if (res != null) {
                 presetOptional.set(convertToNormal(res));
             }
@@ -43,7 +43,7 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
     public boolean update(LedLamp object) {
         int result = -1;
         try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLadDao()
+            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao()
                     .queryBuilder().where().eq(LedLampDAO.IDString, object.getId()).query();
 
             if(ledDaoList.isEmpty())
@@ -51,7 +51,7 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
 
             LedLampDAO ledDao = convertToDao(object);
             ledDao.setID(ledDaoList.get(0).getID());
-            result = databaseHelper.getLadDao().update(ledDao);
+            result = databaseHelper.getLedDao().update(ledDao);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -60,13 +60,13 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
     }
 
     @Override
-    public boolean remove(int presetId) {
+    public boolean remove(int rid) {
         try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLadDao()
-                    .queryBuilder().where().eq(LedLampDAO.IDString, presetId).query();
+            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao()
+                    .queryBuilder().where().eq(LedLampDAO.IDString, rid).query();
             if(!ledDaoList.isEmpty())
             {
-                return  databaseHelper.getLadDao().delete(ledDaoList)>=0;
+                return  databaseHelper.getLedDao().delete(ledDaoList)>=0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
     public List<Optional<LedLamp>> get(int rid) {
         List<Optional<LedLamp>> presetList = new ArrayList<>();
         try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLadDao().queryBuilder()
+            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao().queryBuilder()
                     .where().eq(LedLampDAO.IDString, rid).query();
 
             for(LedLampDAO ledDao : ledDaoList) {
@@ -98,7 +98,7 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
     public List<Optional<LedLamp>> getAll() {
         List<Optional<LedLamp>> presetList = new ArrayList<>();
         try {
-            List<LedLampDAO> ledDaoList = databaseHelper.getLadDao().queryBuilder().query();
+            List<LedLampDAO> ledDaoList = databaseHelper.getLedDao().queryBuilder().query();
             for(LedLampDAO dao : ledDaoList) {
                 Optional<LedLamp> presetOptional = new Optional<>();
                 presetOptional.set(convertToNormal(dao));
@@ -136,7 +136,6 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
         dao.setSelect(object.isSelect());
         dao.setColor(object.getColor());
         dao.setName(object.getName());
-        dao.setID(object.getId());
         return dao;
     }
 }
