@@ -686,7 +686,7 @@ public class ApplicationModel extends Application {
 
     public LedLamp getUserSelectLedLamp(int color) {
         LedLamp ledlamp = new LedLamp();
-        ledlamp.setColor(color);
+        ledlamp.setColor(getResources().getColor(R.color.red_normal));
         ledlamp.setName(getString(R.string.notification_def_name));
 
         List<LedLamp> allLedLamp = getAllLedLamp();

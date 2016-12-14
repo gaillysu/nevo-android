@@ -17,6 +17,7 @@ import com.medcorp.adapter.EditLunarNotificationAdapter;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.ble.model.color.LedLamp;
+import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.util.Preferences;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -47,6 +48,7 @@ public class EditNotificationLampActivity extends BaseActivity {
     private List<LedLamp> userSettingAllLamp;
     private ApplicationModel mModel;
     private Notification notification;
+    private NevoLed nevoLed;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class EditNotificationLampActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
+        nevoLed = Preferences.getNotificationColor(this, notification, getModel());
         initView();
     }
 
@@ -74,7 +77,7 @@ public class EditNotificationLampActivity extends BaseActivity {
         allNotificationLampList.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
         allNotificationLampList.setSwipeMenuCreator(swipeMenuCreator);
         allNotificationLampList.setSwipeMenuItemClickListener(menuItemClickListener);
-        mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp,notification);
+        mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp,nevoLed.getHexColor());
         allNotificationLampList.setAdapter(mEditItemAdapter);
         mEditItemAdapter.setOnItemClickListener(onItemClickListener);
     }
@@ -120,16 +123,8 @@ public class EditNotificationLampActivity extends BaseActivity {
     private EditLunarNotificationAdapter.OnItemClickListener onItemClickListener = new EditLunarNotificationAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            for (int i = 0; i < userSettingAllLamp.size(); i++) {
-                LedLamp ledLamp = userSettingAllLamp.get(i);
-                if (i == position) {
-                    ledLamp.setSelect(true);
-                    Preferences.saveNotificationColor(EditNotificationLampActivity.this, notification, ledLamp.getColor());
-                } else {
-                    ledLamp.setSelect(false);
-                }
-                mModel.upDataLedLamp(ledLamp);
-            }
+            Preferences.saveNotificationColor(EditNotificationLampActivity.this, notification, userSettingAllLamp.get(position).getColor());
+            mEditItemAdapter.setColor(userSettingAllLamp.get(position).getColor());
             mEditItemAdapter.notifyDataSetChanged();
         }
     };
