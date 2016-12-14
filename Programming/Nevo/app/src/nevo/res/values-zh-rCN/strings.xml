@@ -4,7 +4,7 @@
     <string name="menu_drawer_alarm">闹钟</string>
     <string name="menu_drawer_sleep">睡眠</string>
     <string name="menu_drawer_settings">设置</string>
-
+    <string name="settings_more">更多设置</string>
     <string name="drawer_open">打开导航栏</string>
     <string name="drawer_close">关闭导航栏</string>
 
@@ -389,5 +389,9 @@
     <string name="disable">禁用</string>
     <string name="forget_password_input_new_password">新密码</string>
     <string name="tell_user_update_more_alarm">低版本中最多只可以添加三个闹钟!</string>
+    <string name="more_setting_unit">单位</string>
+    <string name="user_select_metrics">公制</string>
+    <string name="user_select_imperial">英制</string>
+    <string name="edit_notification_item_name">设置</string>
 
 </resources>

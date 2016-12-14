@@ -4,7 +4,7 @@
     <string name="menu_drawer_alarm">闹钟</string>
     <string name="menu_drawer_sleep">睡眠</string>
     <string name="menu_drawer_settings">设置</string>
-
+    <string name="settings_more">更多设置</string>
     <string name="drawer_open">打开导航栏</string>
     <string name="drawer_close">关闭导航栏</string>
 
@@ -385,4 +385,8 @@
     <string name="profile_activity_popupwindow_title">选择图片</string>
     <string name="profile_activity_popupwindow_slect_library">相册</string>
     <string name="profile_activity_popupwindow_form_photo">照片</string>
+    <string name="more_setting_unit">单位</string>
+    <string name="user_select_metrics">公制</string>
+    <string name="user_select_imperial">英制</string>
+    <string name="edit_notification_item_name">设置</string>
 </resources>

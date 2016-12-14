@@ -16,7 +16,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.R;
 import com.medcorp.activity.ConnectToOtherAppsActivity;
-import com.medcorp.activity.GoalsActivity;
+import com.medcorp.activity.MoreSettingActivity;
 import com.medcorp.activity.MyNevoActivity;
 import com.medcorp.activity.SettingNotificationActivity;
 import com.medcorp.activity.login.LoginActivity;
@@ -116,8 +116,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
 
         } else if (position == 4) {
-//            startActivity(MoreActivity.class);
-            startActivity(GoalsActivity.class);
+            startActivity(MoreSettingActivity.class);
 
         } else if (position == 5) {
             startActivity(ConnectToOtherAppsActivity.class);

@@ -8,7 +8,6 @@ import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.model.color.BlueLed;
 import com.medcorp.ble.model.color.GreenLed;
-import com.medcorp.ble.model.color.LedLamp;
 import com.medcorp.ble.model.color.LightGreenLed;
 import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.color.OrangeLed;
@@ -68,6 +67,17 @@ public class Preferences {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(context.getString(R.string.key_prefs_is_first_login), isNotFirst).apply();
+    }
+
+    public static void saveUnitSelect(Context context,boolean isMetrics){
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(context.getString(R.string.key_prefs_is_metrics),isMetrics).apply();
+    }
+
+    public static boolean getUnitSlect(Context context,boolean defualt){
+        init(context);
+       return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics),defualt);
     }
 
     public static void startInitAlarm(Context context, boolean isInit) {
