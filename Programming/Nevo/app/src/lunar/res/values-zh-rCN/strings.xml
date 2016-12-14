@@ -388,4 +388,5 @@
     <string name="more_setting_unit">单位</string>
     <string name="user_select_metrics">公制</string>
     <string name="user_select_imperial">英制</string>
+    <string name="edit_notification_item_name">设置</string>
 </resources>
