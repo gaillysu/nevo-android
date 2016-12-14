@@ -3,7 +3,6 @@ package com.medcorp.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,7 +36,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jason on 2016/7/19.
- *
  */
 public class MainStepsFragment extends BaseFragment {
 
@@ -82,9 +81,22 @@ public class MainStepsFragment extends BaseFragment {
 
         showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
         showUserSteps.setText(String.valueOf(steps.getSteps()));
-        String result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
+        String result = null;
+        String calories = null;
+        int weight = user.getWeight();
+        DecimalFormat df = new DecimalFormat("######0.00");
+        if (Preferences.getUnitSlect(MainStepsFragment.this.getActivity(), false)) {
+            result = df.format(user.getDistanceTraveled(steps) *  0.6213712f) + getString(R.string.unit_length);
+            double cal = (2.0 * weight * 2.2046226 * 3.5) / 200 * (steps.getRunDuration() + steps.getWalkDuration());
+            calories = df.format(cal* 3.967422f) + getString(R.string.unit_calorie);
+        } else {
+            result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
+            calories = user.getConsumedCalories(steps) + getString(R.string.unit_cal);
+        }
+
         showUserStepsDistance.setText(String.valueOf(result));
-        showUserConsumeCalories.setText(String.valueOf(user.getConsumedCalories(steps)));
+        showUserConsumeCalories.setText(calories);
+
         if (steps.getSteps() != 0 && steps.getHourlySteps() != null) {
             JSONArray array = null;
             try {

@@ -418,5 +418,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="def_goal_name">Goal </string>
     <string name="solar_describe_battery_text" translatable="false">solar_describe_battery_text</string>
     <string name="notification_array" translatable="false">notification_array</string>
+    <string name="more_setting_unit">Unit</string>
+    <string name="user_select_metrics">Metrics</string>
+    <string name="user_select_imperial">Imperial</string>
     <!--<lunar end>-->
 </resources>

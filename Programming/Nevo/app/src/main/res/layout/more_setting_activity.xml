@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+
+    >
+
+    <include layout="@layout/toolbar"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/analysis_sleep_deep_line_color"
+        />
+
+    <RelativeLayout
+        android:id="@+id/more_setting_go_setting_goal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/analysis_fragment_tablayout_background_color"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="@string/def_goal_name"
+            android:textColor="@color/text_color"
+            android:textSize="20dp"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_right"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/analysis_sleep_deep_line_color"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/analysis_sleep_deep_line_color"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/analysis_fragment_tablayout_background_color"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+
+            android:text="@string/more_setting_unit"
+            android:textColor="@color/text_color"
+            android:textSize="20dp"
+            />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/more_select_unit_metrics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/user_select_metrics"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:background="@drawable/more_setting_unit_select_shape"
+                />
+
+            <TextView
+                android:id="@+id/more_select_unit_imperial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/user_select_unit_imperial_def_shape"
+                android:padding="8dp"
+                android:text="@string/user_select_imperial"
+                android:textAllCaps="false"
+                android:textColor="@color/colorAccent"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/analysis_sleep_deep_line_color"
+        />
+</LinearLayout>
