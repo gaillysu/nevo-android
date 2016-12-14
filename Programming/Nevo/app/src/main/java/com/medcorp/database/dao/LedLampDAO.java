@@ -21,9 +21,6 @@ public class LedLampDAO {
     @DatabaseField
     private int Color;
 
-    public static final String IsSelectString = "isSelect";
-    @DatabaseField
-    private boolean IsSelect;
 
     public LedLampDAO() {
     }
@@ -31,15 +28,6 @@ public class LedLampDAO {
     public LedLampDAO(String name, int color, boolean isSelect) {
         this.Name = name;
         this.Color = color;
-        this.IsSelect = isSelect;
-    }
-
-    public boolean isSelect() {
-        return IsSelect;
-    }
-
-    public void setSelect(boolean select) {
-        IsSelect = select;
     }
 
     public int getColor() {

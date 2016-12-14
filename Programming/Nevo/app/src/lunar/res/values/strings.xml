@@ -189,6 +189,7 @@
     <string name="settings_notifications_inactive_title">Inactive Notifications</string>
     <string name="settings_find_my_watch">Find my watch</string>
     <string name="settings_goals">Goals</string>
+    <string name="settings_more">More Settings</string>
     <string name="settings_support">Support</string>
     <string name="settings_about">About</string>
     <string name="settings_forget_watch">Forget watch</string>
@@ -426,8 +427,8 @@
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal </string>
-    <string name="add_new_notification_dialog_title">Add name</string>
-    <string name="add_new_notification_dialog_hint_content">In put name</string>
-    <string name="new_nt_def_name">name</string>
-    <string name="new_nt_select_color">Choose color</string>
+    <!--<string name="add_new_notification_dialog_title">Add name</string>-->
+    <!--<string name="add_new_notification_dialog_hint_content">In put name</string>-->
+    <!--<string name="new_nt_def_name">name</string>-->
+    <!--<string name="new_nt_select_color">Choose color</string>-->
 </resources>

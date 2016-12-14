@@ -25,7 +25,6 @@ import butterknife.OnClick;
 
 /**
  * Created by Jason on 2016/12/9.
- *
  */
 
 public class EditNotificationAttributeActivity extends BaseActivity {
@@ -42,6 +41,7 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     private int color;
     private LedLamp mLedLamp;
     private int mLedId;
+    private boolean isEdit = false;
 
 
     @Override
@@ -69,11 +69,16 @@ public class EditNotificationAttributeActivity extends BaseActivity {
 
     private void initView() {
         Intent intent = getIntent();
-        mLedId = intent.getIntExtra("id",-1);
-        mLedLamp = getModel().getSelectLamp(mLedId);
-        showSelectColor.setColorFilter(mLedLamp.getColor());
-        mNameTv.setText(mLedLamp.getName());
-        name = mLedLamp.getName();
+        isEdit = intent.getBooleanExtra("isEdit", false);
+        if (isEdit) {
+            mLedId = intent.getIntExtra("id", -1);
+            mLedLamp = getModel().getSelectLamp(mLedId);
+            showSelectColor.setColorFilter(mLedLamp.getColor());
+            name = mLedLamp.getName();
+        } else {
+            name = intent.getStringExtra("name");
+        }
+        mNameTv.setText(name);
     }
 
     @OnClick(R.id.edit_nt_name_ll)
@@ -110,7 +115,12 @@ public class EditNotificationAttributeActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.done_menu:
-                mLedLamp.setSelect(mLedLamp.isSelect());
+                if (isEdit) {
+                    mLedLamp.setSelect(mLedLamp.isSelect());
+                } else {
+                    mLedLamp = new LedLamp();
+                    mLedLamp.setSelect(false);
+                }
                 mLedLamp.setName(name);
                 mLedLamp.setColor(color);
                 getModel().upDataLedLamp(mLedLamp);

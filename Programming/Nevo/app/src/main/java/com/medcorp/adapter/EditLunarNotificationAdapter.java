@@ -9,21 +9,25 @@ import android.widget.TextView;
 
 import com.medcorp.R;
 import com.medcorp.ble.model.color.LedLamp;
+import com.medcorp.ble.model.notification.Notification;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
 /**
  * Created by Jason on 2016/12/8.
+ *
  */
 
 public class EditLunarNotificationAdapter extends SwipeMenuAdapter<EditLunarNotificationAdapter.ViewHolder> {
 
     private List<LedLamp> allList;
     private OnItemClickListener mOnItemClickListener;
+    private static Notification mNotification;
 
-    public EditLunarNotificationAdapter(List<LedLamp> list) {
+    public EditLunarNotificationAdapter(List<LedLamp> list, Notification notification) {
         this.allList = list;
+        this.mNotification = notification;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class EditLunarNotificationAdapter extends SwipeMenuAdapter<EditLunarNoti
             if (data != null) {
                 name.setText(data.getName());
                 colorPoint.setColorFilter(data.getColor());
-                if (data.isSelect()) {
+                if (data.getHexColor() == mNotification.getDefaultColor().getHexColor()) {
                     isSelect.setVisibility(View.VISIBLE);
                 } else {
                     isSelect.setVisibility(View.GONE);

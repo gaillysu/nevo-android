@@ -161,7 +161,8 @@ public class ApplicationModel extends Application {
         }
         if (user.isEmpty()) {
             nevoUser = new User(0);
-            nevoUser.setNevoUserID("0"); //"0" means anonymous user login
+            nevoUser.setNevoUserID("0");
+            //"0" means anonymous user login
         } else {
             nevoUser = user.get();
         }

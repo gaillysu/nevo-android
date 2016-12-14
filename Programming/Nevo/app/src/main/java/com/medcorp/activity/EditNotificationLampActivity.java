@@ -1,25 +1,17 @@
 package com.medcorp.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.medcorp.R;
 import com.medcorp.adapter.EditLunarNotificationAdapter;
 import com.medcorp.application.ApplicationModel;
@@ -53,7 +45,6 @@ public class EditNotificationLampActivity extends BaseActivity {
 
     private EditLunarNotificationAdapter mEditItemAdapter;
     private List<LedLamp> userSettingAllLamp;
-    private String newNtName;
     private ApplicationModel mModel;
     private Notification notification;
 
@@ -67,12 +58,12 @@ public class EditNotificationLampActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(R.string.edit_notification_item_name);
         mModel = getModel();
-        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
         initView();
     }
 
@@ -83,8 +74,7 @@ public class EditNotificationLampActivity extends BaseActivity {
         allNotificationLampList.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
         allNotificationLampList.setSwipeMenuCreator(swipeMenuCreator);
         allNotificationLampList.setSwipeMenuItemClickListener(menuItemClickListener);
-
-        mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp);
+        mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp,notification);
         allNotificationLampList.setAdapter(mEditItemAdapter);
         mEditItemAdapter.setOnItemClickListener(onItemClickListener);
     }
@@ -105,7 +95,7 @@ public class EditNotificationLampActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_menu:
-                addNewNotification();
+                openChooseColor();
                 return true;
             case android.R.id.home:
                 finish();
@@ -115,53 +105,12 @@ public class EditNotificationLampActivity extends BaseActivity {
         }
     }
 
-    private void addNewNotification() {
-        new MaterialDialog.Builder(this).backgroundColor(getResources().getColor(R.color.window_background_color))
-                .title(getString(R.string.add_new_notification_dialog_title)).itemsColor(getResources().getColor(R.color.text_color))
-                .content(getString(R.string.add_new_notification_dialog_hint_content))
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input("", "", new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        if (input.length() == 0) {
-                            newNtName = getString(R.string.new_nt_def_name);
-                        } else {
-                            newNtName = input.toString();
-                        }
-                        openChooseColor();
-                    }
-                }).negativeText(R.string.goal_cancel).show();
-    }
 
     private void openChooseColor() {
-        ColorPickerDialogBuilder
-                .with(this)
-                .setTitle(getString(R.string.new_nt_select_color))
-                .initialColor(getResources().getColor(R.color.window_background_color))
-                .alphaSliderOnly()
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .setColorEditTextColor(getResources().getColor(R.color.text_color))
-                .noSliders()
-                .density(15)
-                .setPositiveButton(getString(R.string.goal_ok), new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        LedLamp ledLamp = new LedLamp();
-                        ledLamp.setColor(selectedColor);
-                        ledLamp.setName(newNtName);
-                        ledLamp.setSelect(false);
-                        mModel.addLedLamp(ledLamp);//添加到数据库
-                        userSettingAllLamp.add(ledLamp);
-                        mEditItemAdapter.notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton(getString(R.string.cancel_update), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .build()
-                .show();
+        Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
+        intent.putExtra("isEdit", false);
+        intent.putExtra("name", getResources().getString(R.string.notification_def_name));
+        startActivity(intent);
     }
 
 
@@ -175,7 +124,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                 LedLamp ledLamp = userSettingAllLamp.get(i);
                 if (i == position) {
                     ledLamp.setSelect(true);
-                    Preferences.saveNotificationColor(EditNotificationLampActivity.this,notification,ledLamp.getColor());
+                    Preferences.saveNotificationColor(EditNotificationLampActivity.this, notification, ledLamp.getColor());
                 } else {
                     ledLamp.setSelect(false);
                 }
@@ -227,6 +176,7 @@ public class EditNotificationLampActivity extends BaseActivity {
                 if (ledLamp != null) {
                     Intent intent = new Intent(EditNotificationLampActivity.this, EditNotificationAttributeActivity.class);
                     intent.putExtra("id", ledLamp.getId());
+                    intent.putExtra("isEdit", true);
                     startActivity(intent);
                 }
             }

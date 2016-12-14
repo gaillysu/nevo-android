@@ -126,14 +126,12 @@ public class LedLampDatabase implements iSettingDatabaseHelper<LedLamp> {
         LedLamp led = new LedLamp();
         led.setName(res.getName());
         led.setColor(res.getColor());
-        led.setSelect(res.isSelect());
         led.setId(res.getID());
         return led;
     }
 
     private LedLampDAO convertToDao(LedLamp object) {
         LedLampDAO dao = new LedLampDAO();
-        dao.setSelect(object.isSelect());
         dao.setColor(object.getColor());
         dao.setName(object.getName());
         return dao;

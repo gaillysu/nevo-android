@@ -65,6 +65,17 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/tutorial_nevo_1"
                     />
+                <ImageView
+                    android:id="@+id/notification_lunar_watch_icon"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="30dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:visibility="gone"
+                    android:src="@drawable/tutorial_nevo_1"
+                    />
             </RelativeLayout>
 
 
