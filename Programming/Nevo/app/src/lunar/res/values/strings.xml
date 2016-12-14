@@ -427,8 +427,8 @@
     <string name="def_alarm_one">Alarm 1</string>
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal </string>
-    <string name="add_new_notification_dialog_title">Add name</string>
-    <string name="add_new_notification_dialog_hint_content">In put name</string>
-    <string name="new_nt_def_name">name</string>
-    <string name="new_nt_select_color">Choose color</string>
+    <!--<string name="add_new_notification_dialog_title">Add name</string>-->
+    <!--<string name="add_new_notification_dialog_hint_content">In put name</string>-->
+    <!--<string name="new_nt_def_name">name</string>-->
+    <!--<string name="new_nt_select_color">Choose color</string>-->
 </resources>

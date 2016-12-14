@@ -94,6 +94,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             lunarLedLampGroup.setVisibility(View.GONE);
@@ -111,7 +112,11 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         ledList.add(new YellowLed());
         ledList.add(new OrangeLed());
         ledList.add(new GreenLed());
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -123,11 +128,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         }
         notificationTimeTextArray = getResources().getStringArray(R.array.notification_array);
         onOffSwitch.setChecked(notification.isOn());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         initView();
     }
 
@@ -155,13 +155,12 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     }
 
     private void initView() {
-        selectedLed = Preferences.getNotificationColor(this, notification,getModel());
+        selectedLed = Preferences.getNotificationColor(this, notification, getModel());
 
-        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR){
-                lunarLampColorIv.setColorFilter(selectedLed.getHexColor());
-                lampName.setText(selectedLed.getTag());
-        }
-        else {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+            lunarLampColorIv.setColorFilter(selectedLed.getHexColor());
+            lampName.setText(selectedLed.getTag());
+        } else {
             setDefaultLampColor();
             dataList = new ArrayList<>();
             for (int i = 0; i < notificationIcon.length; i++) {
@@ -232,7 +231,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
 
     public void userSelectChangeLamp(int position) {
         watchView.setImageResource(watchIcon[position]);
-        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             selectedLed = ledList.get(position);
             Preferences.saveNotificationColor(this, notification, selectedLed.getHexColor());
         }
