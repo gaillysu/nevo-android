@@ -95,6 +95,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
 
         if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             lunarLedLampGroup.setVisibility(View.GONE);
@@ -117,7 +118,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Override
     protected void onResume() {
         super.onResume();
-        notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);

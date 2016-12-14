@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.medcorp.R;
 import com.medcorp.ble.model.color.LedLamp;
-import com.medcorp.ble.model.notification.Notification;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -23,11 +22,15 @@ public class EditLunarNotificationAdapter extends SwipeMenuAdapter<EditLunarNoti
 
     private List<LedLamp> allList;
     private OnItemClickListener mOnItemClickListener;
-    private static Notification mNotification;
+    private int color;
 
-    public EditLunarNotificationAdapter(List<LedLamp> list, Notification notification) {
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public EditLunarNotificationAdapter(List<LedLamp> list, int color) {
         this.allList = list;
-        this.mNotification = notification;
+        this.color = color;
     }
 
     @Override
@@ -52,28 +55,28 @@ public class EditLunarNotificationAdapter extends SwipeMenuAdapter<EditLunarNoti
         return allList.size() > 0 ? allList.size() : 0;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         OnItemClickListener mOnItemClickListener;
         TextView name;
         ImageView colorPoint;
-        ImageView isSelect;
+        ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             name = (TextView) itemView.findViewById(R.id.edit_notification_name_text_view);
             colorPoint = (ImageView) itemView.findViewById(R.id.edit_notification_lamp_iv);
-            isSelect = (ImageView) itemView.findViewById(R.id.open_notification_select_lamp_flag);
+            imageView = (ImageView) itemView.findViewById(R.id.open_notification_select_lamp_flag);
         }
 
         public void setData(LedLamp data) {
             if (data != null) {
                 name.setText(data.getName());
                 colorPoint.setColorFilter(data.getColor());
-                if (data.getHexColor() == mNotification.getDefaultColor().getHexColor()) {
-                    isSelect.setVisibility(View.VISIBLE);
+                if (data.getColor() == color) {
+                    imageView.setVisibility(View.VISIBLE);
                 } else {
-                    isSelect.setVisibility(View.GONE);
+                    imageView.setVisibility(View.GONE);
                 }
             }
         }
