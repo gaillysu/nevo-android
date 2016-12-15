@@ -39,7 +39,7 @@ public class MoreSettingActivity extends BaseActivity {
         setTitle(getString(R.string.settings_more));
         setTitle(R.string.edit_notification_item_name);
 
-        if (!Preferences.getUnitSlect(this, true)) {
+        if (!Preferences.getUnitSelect(this)) {
             selectMetrics();
         } else {
             selectImperial();

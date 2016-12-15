@@ -69,15 +69,15 @@ public class Preferences {
         editor.putBoolean(context.getString(R.string.key_prefs_is_first_login), isNotFirst).apply();
     }
 
-    public static void saveUnitSelect(Context context,boolean isMetrics){
+    public static void saveUnitSelect(Context context, boolean isMetrics) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(context.getString(R.string.key_prefs_is_metrics),isMetrics).apply();
+        editor.putBoolean(context.getString(R.string.key_prefs_is_metrics), isMetrics).apply();
     }
 
-    public static boolean getUnitSlect(Context context,boolean defualt){
+    public static boolean getUnitSelect(Context context) {
         init(context);
-       return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics),defualt);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics),false);
     }
 
     public static void startInitAlarm(Context context, boolean isInit) {
@@ -136,9 +136,18 @@ public class Preferences {
         editor.putInt(notification.getTag(), ledColor).apply();
     }
 
-    public static NevoLed getNotificationColor(Context context, Notification notification ,ApplicationModel model) {
+    public static NevoLed getNotificationColor(Context context, Notification notification, ApplicationModel model) {
         init(context);
-        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()),model);
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
+        } else {
+            return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()), model);
+        }
+    }
+
+    public static NevoLed getNotificationColor(Context context, Notification notification) {
+        init(context);
+        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
     }
 
     public static void setProfileUnit(Context context, int unit) {
@@ -174,25 +183,25 @@ public class Preferences {
         return preferences.getInt(context.getString(R.string.key_prefs_watch_model), 1);
     }
 
-    private static NevoLed distinguish(int ledColor , ApplicationModel model) {
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            switch (ledColor) {
-                case 0x100000:
-                    return new GreenLed();
-                case 0x020000:
-                    return new LightGreenLed();
-                case 0x080000:
-                    return new OrangeLed();
-                case 0x010000:
-                    return new BlueLed();
-                case 0x040000:
-                    return new YellowLed();
-                case 0x200000:
-                    return new RedLed();
-            }
-        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            return model.getUserSelectLedLamp(ledColor);
+    private static NevoLed distinguish(int ledColor) {
+        switch (ledColor) {
+            case 0x100000:
+                return new GreenLed();
+            case 0x020000:
+                return new LightGreenLed();
+            case 0x080000:
+                return new OrangeLed();
+            case 0x010000:
+                return new BlueLed();
+            case 0x040000:
+                return new YellowLed();
+            case 0x200000:
+                return new RedLed();
         }
         return null;
+    }
+
+    private static NevoLed distinguish(int ledColor, ApplicationModel model) {
+        return model.getUserSelectLedLamp(ledColor);
     }
 }
