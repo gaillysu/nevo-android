@@ -220,18 +220,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Override
     public void setNotification(boolean init) {
-        initNotification = init;
-        Map<Notification, Integer> applicationNotificationColorMap = new HashMap<Notification, Integer>();
-        NotificationDataHelper dataHelper = new NotificationDataHelper(mContext);
-        Notification applicationNotification = new TelephoneNotification();
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext,new SmsNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new EmailNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new FacebookNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new CalendarNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WeChatNotification()).getHexColor());
-        applicationNotificationColorMap.put(dataHelper.getState(applicationNotification), Preferences.getNotificationColor(mContext, new WhatsappNotification()).getHexColor());
-        sendRequest(new SetNotificationRequest(mContext, applicationNotificationColorMap));
-
+        //do nothing
     }
 
     @Override
@@ -285,15 +274,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     // set Local Notification setting to Nevo, when nevo 's battery removed, the
                     // Steps count is 0, and all notification is off, because Notification is very
                     // important for user, so here need use local's setting sync with nevo
-                    setNotification(true);
                     syncAlarm();
-                }
-                else if((byte) SetNotificationRequest.HEADER == nevoData.getRawData()[1])
-                {
-                    if(initNotification)
-                    {
-                        syncActivityData();
-                    }
+                    syncActivityData();
                 }
                 else if((byte) ReadDailyTrackerInfoRequest.HEADER == nevoData.getRawData()[1])
                 {

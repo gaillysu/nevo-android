@@ -7,6 +7,9 @@ import android.util.Log;
  */
 public class ApplicationFlag {
 
+    /**
+     *
+     */
     public enum Flag {
         LUNAR,NEVO;
     }
