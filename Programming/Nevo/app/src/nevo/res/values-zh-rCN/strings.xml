@@ -4,7 +4,6 @@
     <string name="menu_drawer_alarm">闹钟</string>
     <string name="menu_drawer_sleep">睡眠</string>
     <string name="menu_drawer_settings">设置</string>
-    <string name="settings_more">更多设置</string>
     <string name="drawer_open">打开导航栏</string>
     <string name="drawer_close">关闭导航栏</string>
 
@@ -200,6 +199,7 @@
     <string name="settings_my_nevo">我的手表</string>
     <string name="settings_find_my_watch">寻找手表</string>
     <string name="settings_goals">目标</string>
+    <string name="settings_more">更多设置</string>
     <string name="settings_support">在线支持</string>
     <string name="settings_about">关于</string>
     <string name="settings_forget_watch">解绑手表</string>
