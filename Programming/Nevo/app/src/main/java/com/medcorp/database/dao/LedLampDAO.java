@@ -25,7 +25,7 @@ public class LedLampDAO {
     public LedLampDAO() {
     }
 
-    public LedLampDAO(String name, int color, boolean isSelect) {
+    public LedLampDAO(String name, int color) {
         this.Name = name;
         this.Color = color;
     }

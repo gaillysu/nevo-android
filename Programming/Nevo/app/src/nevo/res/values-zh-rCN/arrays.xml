@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="notification_array">
+        <item>两点钟红灯</item>
+        <item>四点钟蓝灯</item>
+        <item>六点钟浅绿</item>
+        <item>八点钟黄灯</item>
+        <item>十点钟橙灯</item>
+        <item>十二点钟绿灯</item>
+    </string-array>
+</resources>

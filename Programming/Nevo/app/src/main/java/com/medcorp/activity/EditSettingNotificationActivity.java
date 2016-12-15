@@ -118,8 +118,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Override
     protected void onResume() {
         super.onResume();
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         if (notification instanceof OtherAppNotification) {
             title.setText(((OtherAppNotification) notification).getAppName(this));
@@ -158,6 +156,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         selectedLed = Preferences.getNotificationColor(this, notification, getModel());
 
         if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+            int hexColor = selectedLed.getHexColor();
             lunarLampColorIv.setColorFilter(selectedLed.getHexColor());
             lampName.setText(selectedLed.getTag());
         } else {
