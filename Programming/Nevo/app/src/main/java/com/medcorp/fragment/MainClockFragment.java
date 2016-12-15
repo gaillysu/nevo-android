@@ -95,7 +95,7 @@ public class MainClockFragment extends BaseFragment {
 
         String result = null;
         DecimalFormat df = new DecimalFormat("######0.00");
-        if (Preferences.getUnitSlect(MainClockFragment.this.getActivity(), false)) {
+        if (Preferences.getUnitSelect(MainClockFragment.this.getActivity())) {
             result = df.format(user.getDistanceTraveled(steps) * 0.6213712f) + getString(R.string.unit_length);
         } else {
             result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));

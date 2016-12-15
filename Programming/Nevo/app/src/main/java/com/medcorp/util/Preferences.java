@@ -75,9 +75,9 @@ public class Preferences {
         editor.putBoolean(context.getString(R.string.key_prefs_is_metrics), isMetrics).apply();
     }
 
-    public static boolean getUnitSlect(Context context, boolean defualt) {
+    public static boolean getUnitSelect(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics), defualt);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics),false);
     }
 
     public static void startInitAlarm(Context context, boolean isInit) {

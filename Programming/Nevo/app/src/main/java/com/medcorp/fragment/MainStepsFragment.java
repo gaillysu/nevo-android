@@ -84,7 +84,7 @@ public class MainStepsFragment extends BaseFragment {
         String result = null;
         String calories = user.getConsumedCalories(steps) + getString(R.string.unit_cal);
         DecimalFormat df = new DecimalFormat("######0.00");
-        if (Preferences.getUnitSlect(MainStepsFragment.this.getActivity(), false)) {
+        if (Preferences.getUnitSelect(MainStepsFragment.this.getActivity())) {
             result = df.format(user.getDistanceTraveled(steps) * 0.6213712f) + getString(R.string.unit_length);
         } else {
             result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
