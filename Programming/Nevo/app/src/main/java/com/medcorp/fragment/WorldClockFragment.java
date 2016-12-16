@@ -1,6 +1,7 @@
 package com.medcorp.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import com.medcorp.activity.EditWorldClockActivity;
 import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.TimeUtil;
 
 import net.medcorp.library.worldclock.City;
 
@@ -52,8 +54,10 @@ public class WorldClockFragment extends BaseObservableFragment {
     private Realm realm = Realm.getDefaultInstance();
     private RealmResults<City> cities;
     private City locationCity;
-    private String otherCityName;
+    private String localCityName;
     private TimeZone timeZone;
+    private String mOtherCityName;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,14 +65,15 @@ public class WorldClockFragment extends BaseObservableFragment {
         ButterKnife.bind(this, view);
         cities = realm.where(City.class).findAll();
         setHasOptionsMenu(true);
-        refreshClock();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mOtherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
         initView();
+        refreshClock();
     }
 
     @Override
@@ -77,31 +82,19 @@ public class WorldClockFragment extends BaseObservableFragment {
     }
 
     private void initView() {
-        otherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
-        int month = calendar.get(Calendar.MONTH) + 1;
         showLocationDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + " "
                 + new SimpleDateFormat("MMM").format(calendar.getTime()) + " ,"
                 + calendar.get(Calendar.YEAR));
-
-        if (otherCityName == null) {
-            otherCityName = timeZone.getID().split("/")[1].replace("_", " ");
-            showLocationCityInfo.setText(otherCityName);
-            for (City city : cities) {
-                if (city.getName().equals(otherCityName)) {
-                    this.locationCity = city;
-                }
-            }
-            setSunriseAndSunset(showSunriseTv, showSunsetTv, locationCity, timeZone.getID());
-        } else {
-            for (City city : cities) {
-                if ((city.getName() + ", " + city.getCountry()).equals(otherCityName)) {
-                    showLocationCityInfo.setText(city.getName());
-                    setSunriseAndSunset(showSunriseTv, showSunsetTv, city, city.getTimezoneRef().getName());
-                }
+        localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+        showLocationCityInfo.setText(localCityName);
+        for (City city : cities) {
+            if (city.getName().equals(localCityName)) {
+                this.locationCity = city;
             }
         }
+        setSunriseAndSunset(showSunriseTv, showSunsetTv, locationCity, timeZone.getID());
     }
 
     @Override
@@ -135,7 +128,6 @@ public class WorldClockFragment extends BaseObservableFragment {
 
     //set sunrise and sunset value
     public void setSunriseAndSunset(TextView sunrise, TextView sunset, City city, String zone) {
-
         com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
                 new com.luckycatlabs.sunrisesunset.dto.Location(city.getLat() + "", city.getLng() + "");
         SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, zone);
@@ -153,7 +145,19 @@ public class WorldClockFragment extends BaseObservableFragment {
     }
 
     private void refreshClock() {
-        final Calendar mCalendar = Calendar.getInstance();
+        Calendar mCalendar = null;
+
+        if (mOtherCityName == null) {
+            mCalendar = Calendar.getInstance();
+        } else {
+            for (City city : cities) {
+                if ((city.getName()+", "+city.getCountry()).equals(mOtherCityName)) {
+                    Log.i("jason",city.getTimezoneRef().toString());
+                    mCalendar = Calendar.getInstance(TimeZone.getTimeZone(city.getTimezoneRef().getName()));
+                }
+            }
+        }
+
         int mCurHour = mCalendar.get(Calendar.HOUR);
         int mCurMin = mCalendar.get(Calendar.MINUTE);
         minuteClock.setRotation((float) (mCurMin * 6));
