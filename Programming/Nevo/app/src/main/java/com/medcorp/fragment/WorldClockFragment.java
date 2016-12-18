@@ -16,7 +16,6 @@ import com.medcorp.activity.EditWorldClockActivity;
 import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
-import com.medcorp.util.TimeUtil;
 
 import net.medcorp.library.worldclock.City;
 
@@ -153,7 +152,9 @@ public class WorldClockFragment extends BaseObservableFragment {
             for (City city : cities) {
                 if ((city.getName()+", "+city.getCountry()).equals(mOtherCityName)) {
                     Log.i("jason",city.getTimezoneRef().toString());
-                    mCalendar = Calendar.getInstance(TimeZone.getTimeZone(city.getTimezoneRef().getName()));
+                    String temp = city.getTimezoneRef().getGmt();
+                    temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
+                    mCalendar = Calendar.getInstance(TimeZone.getTimeZone(temp));
                 }
             }
         }
