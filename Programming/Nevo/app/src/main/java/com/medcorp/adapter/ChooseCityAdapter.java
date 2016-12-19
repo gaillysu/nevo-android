@@ -32,7 +32,7 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         Calendar calendar = Calendar.getInstance();
         TimeZone timeZone = calendar.getTimeZone();
         locationCityName = timeZone.getID();
-        otherCityName = Preferences.getSaveOtherCityName(mContext);
+        otherCityName = Preferences.getSaveHomeCityName(mContext);
     }
 
     public void updateListView(List<ChooseCityViewModel> list) {

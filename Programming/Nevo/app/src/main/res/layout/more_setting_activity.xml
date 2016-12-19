@@ -13,7 +13,7 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
-        android:background="@color/analysis_sleep_deep_line_color"
+        android:background="@color/more_setting_view_background"
         />
 
     <RelativeLayout
@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:tint="@color/colorPrimary"
             android:layout_marginRight="16dp"
             android:src="@drawable/ic_right"
             />
@@ -48,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/analysis_sleep_deep_line_color"
+        android:background="@color/more_setting_view_background"
         />
 
     <View
@@ -56,7 +57,7 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="20dp"
-        android:background="@color/analysis_sleep_deep_line_color"
+        android:background="@color/more_setting_view_background"
         />
 
     <RelativeLayout
@@ -92,7 +93,7 @@
                 android:padding="8dp"
                 android:text="@string/user_select_metrics"
                 android:textAllCaps="false"
-                android:textColor="@color/text_color"
+                android:textColor="@color/more_setting_text_color"
                 android:background="@drawable/more_setting_unit_select_shape"
                 />
 
@@ -113,6 +114,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/analysis_sleep_deep_line_color"
+        android:background="@color/more_setting_view_background"
         />
 </LinearLayout>
