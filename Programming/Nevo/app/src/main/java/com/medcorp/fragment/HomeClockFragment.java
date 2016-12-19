@@ -53,7 +53,7 @@ public class HomeClockFragment extends BaseObservableFragment {
     private City locationCity;
     private String localCityName;
     private TimeZone timeZone;
-    private String mOtherCityName;
+    private String mHomeCityName;
 
 
     @Override
@@ -68,7 +68,7 @@ public class HomeClockFragment extends BaseObservableFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mOtherCityName = Preferences.getSaveOtherCityName(HomeClockFragment.this.getContext());
+        mHomeCityName = Preferences.getSaveHomeCityName(HomeClockFragment.this.getContext());
         initView();
         refreshClock();
     }
@@ -79,7 +79,7 @@ public class HomeClockFragment extends BaseObservableFragment {
     }
 
     private void initView() {
-        showLocationCityInfo.setText(mOtherCityName);
+        showLocationCityInfo.setText(mHomeCityName);
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
 
@@ -136,11 +136,11 @@ public class HomeClockFragment extends BaseObservableFragment {
     private void refreshClock() {
         Calendar mCalendar = null;
 
-        if (mOtherCityName == null) {
+        if (mHomeCityName == null) {
             mCalendar = Calendar.getInstance();
         } else {
             for (City city : cities) {
-                if ((city.getName() + ", " + city.getCountry()).equals(mOtherCityName)) {
+                if ((city.getName() + ", " + city.getCountry()).equals(mHomeCityName)) {
                     Log.i("jason", city.getTimezoneRef().toString());
                     String temp = city.getTimezoneRef().getGmt();
                     temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));

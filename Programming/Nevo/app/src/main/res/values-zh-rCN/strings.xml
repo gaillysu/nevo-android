@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="menu_drawer_worldclock">家乡时间</string>
+    <string name="menu_drawer_hometime">家乡时间</string>
     <string name="password_change_failure">修改密码出错.在来一次!</string>
     <string name="password_change_success">修改密码成功!</string>
     <string name="password_is_not_empty">密码不能为空!</string>

@@ -3,7 +3,7 @@
     <string name="app_name">Lunar</string>
     <string name="menu_drawer_activity">Dashboard</string>
     <string name="menu_drawer_alarm">Alarm</string>
-    <string name="menu_drawer_worldclock">Home Time</string>
+    <string name="menu_drawer_hometime">Home Time</string>
     <string name="menu_drawer_sleep">Sleep</string>
     <string name="menu_drawer_settings">Settings</string>
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>

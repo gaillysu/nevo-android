@@ -514,6 +514,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
     }
 
+
     /**
      * This function will synchronise activity data with the watch.
      * It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
