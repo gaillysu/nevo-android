@@ -105,7 +105,7 @@ public class HomeClockFragment extends BaseObservableFragment {
             case R.id.choose_goal_menu:
                 startActivity(EditWorldClockActivity.class);
                 return true;
-            
+
         }
         return super.onOptionsItemSelected(item);
     }
