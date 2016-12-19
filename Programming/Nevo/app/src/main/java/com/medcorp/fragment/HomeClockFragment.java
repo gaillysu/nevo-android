@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.activity.EditWorldClockActivity;
+import com.medcorp.event.bluetooth.HomeTimeEvent;
 import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
@@ -27,7 +28,6 @@ import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -35,7 +35,7 @@ import io.realm.RealmResults;
  * Created by Jason on 2016/10/24.
  */
 
-public class WorldClockFragment extends BaseObservableFragment {
+public class HomeClockFragment extends BaseObservableFragment {
 
     @Bind(R.id.show_day_weekday_tv)
     TextView showLocationDate;
@@ -43,10 +43,8 @@ public class WorldClockFragment extends BaseObservableFragment {
     ImageView hourClock;
     @Bind(R.id.minutes_clock_iv)
     ImageView minuteClock;
-    @Bind(R.id.show_today_sunrise_tv)
-    TextView showSunriseTv;
-    @Bind(R.id.show_today_sunset_tv)
-    TextView showSunsetTv;
+    @Bind(R.id.home_time_day_tv)
+    TextView homeDay;
     @Bind(R.id.world_clock_fragment_show_location_city_tv)
     TextView showLocationCityInfo;
 
@@ -70,7 +68,7 @@ public class WorldClockFragment extends BaseObservableFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mOtherCityName = Preferences.getSaveOtherCityName(WorldClockFragment.this.getContext());
+        mOtherCityName = Preferences.getSaveOtherCityName(HomeClockFragment.this.getContext());
         initView();
         refreshClock();
     }
@@ -81,19 +79,17 @@ public class WorldClockFragment extends BaseObservableFragment {
     }
 
     private void initView() {
+        showLocationCityInfo.setText(mOtherCityName);
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
-        showLocationDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + " "
-                + new SimpleDateFormat("MMM").format(calendar.getTime()) + " ,"
-                + calendar.get(Calendar.YEAR));
+
         localCityName = timeZone.getID().split("/")[1].replace("_", " ");
-        showLocationCityInfo.setText(localCityName);
         for (City city : cities) {
             if (city.getName().equals(localCityName)) {
                 this.locationCity = city;
             }
         }
-        setSunriseAndSunset(showSunriseTv, showSunsetTv, locationCity, timeZone.getID());
+        setSunriseAndSunset(locationCity, timeZone.getID());
     }
 
     @Override
@@ -108,16 +104,10 @@ public class WorldClockFragment extends BaseObservableFragment {
         switch (item.getItemId()) {
             case R.id.choose_goal_menu:
                 startActivity(EditWorldClockActivity.class);
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @OnClick(R.id.choose_other_city)
-    public void openEditWorldClock() {
-        startActivity(EditWorldClockActivity.class);
-    }
-
 
     @Override
     public void onDestroy() {
@@ -126,14 +116,12 @@ public class WorldClockFragment extends BaseObservableFragment {
     }
 
     //set sunrise and sunset value
-    public void setSunriseAndSunset(TextView sunrise, TextView sunset, City city, String zone) {
+    public void setSunriseAndSunset(City city, String zone) {
         com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
                 new com.luckycatlabs.sunrisesunset.dto.Location(city.getLat() + "", city.getLng() + "");
         SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, zone);
         String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
-        sunrise.setText(officialSunrise + " " + getString(R.string.time_able_morning));
-        sunset.setText(officialSunset + " " + getString(R.string.time_able_afternoon));
 
         byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
         byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
@@ -141,6 +129,7 @@ public class WorldClockFragment extends BaseObservableFragment {
         byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
         byte timeZoneOffset = (byte) (Calendar.getInstance().getTimeZone().getRawOffset() / 3600 / 1000);
         EventBus.getDefault().post(new SunRiseAndSunSetWithZoneOffsetChangedEvent(timeZoneOffset, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
+
     }
 
     private void refreshClock() {
@@ -150,19 +139,52 @@ public class WorldClockFragment extends BaseObservableFragment {
             mCalendar = Calendar.getInstance();
         } else {
             for (City city : cities) {
-                if ((city.getName()+", "+city.getCountry()).equals(mOtherCityName)) {
-                    Log.i("jason",city.getTimezoneRef().toString());
+                if ((city.getName() + ", " + city.getCountry()).equals(mOtherCityName)) {
+                    Log.i("jason", city.getTimezoneRef().toString());
                     String temp = city.getTimezoneRef().getGmt();
                     temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
                     mCalendar = Calendar.getInstance(TimeZone.getTimeZone(temp));
                 }
             }
         }
-
+        setHomeDay(mCalendar);
         int mCurHour = mCalendar.get(Calendar.HOUR);
         int mCurMin = mCalendar.get(Calendar.MINUTE);
         minuteClock.setRotation((float) (mCurMin * 6));
         hourClock.setRotation((float) ((mCurHour + mCurMin / 60.0) * 30));
+
+        showLocationDate.setText(mCalendar.get(Calendar.DAY_OF_MONTH) + " "
+                + new SimpleDateFormat("MMM").format(mCalendar.getTime()) + " ,"
+                + mCalendar.get(Calendar.YEAR));
+
+        syncWatch(mCalendar);
     }
 
+    private void syncWatch(Calendar mCalendar) {
+
+        byte sunriseHour = (byte) mCalendar.get(Calendar.HOUR);
+        byte sunriseMin = (byte) mCalendar.get(Calendar.MINUTE);
+        byte timeZoneOffset = (byte) (mCalendar.getTimeZone().getRawOffset() / 3600 / 1000);
+        EventBus.getDefault().post(new HomeTimeEvent(timeZoneOffset, sunriseHour, sunriseMin));
+    }
+
+    public void setHomeDay(Calendar mCalendar) {
+        Calendar localCalendar = Calendar.getInstance();
+        int localDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
+        int homeDayOfMonth = mCalendar.get(Calendar.DAY_OF_MONTH);
+        if (localDayOfMonth == homeDayOfMonth) {
+            homeDay.setText(R.string.sunset_activity_title_tv);
+        } else {
+            int timeDifference = homeDayOfMonth - localDayOfMonth;
+            if (timeDifference == 1) {
+                homeDay.setText(R.string.sunset_activity_title_tomorrow);
+            } else if (timeDifference == -1) {
+                homeDay.setText(R.string.sunset_activity_title_yesterday);
+            } else if (timeDifference > 1) {
+                homeDay.setText(R.string.sunset_activity_title_yesterday);
+            } else if (timeDifference < -1) {
+                homeDay.setText(R.string.sunset_activity_title_tomorrow);
+            }
+        }
+    }
 }

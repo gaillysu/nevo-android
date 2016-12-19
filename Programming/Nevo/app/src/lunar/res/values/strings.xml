@@ -3,7 +3,7 @@
     <string name="app_name">Lunar</string>
     <string name="menu_drawer_activity">Dashboard</string>
     <string name="menu_drawer_alarm">Alarm</string>
-    <string name="menu_drawer_worldclock">World Clock</string>
+    <string name="menu_drawer_worldclock">Home Time</string>
     <string name="menu_drawer_sleep">Sleep</string>
     <string name="menu_drawer_settings">Settings</string>
     <string name="choose_activity_title_choose_city_tv">Choose a City</string>
@@ -417,6 +417,8 @@
     <string name="password_change_failure">Modify password failed</string>
     <string name="password_change_success">Change Password Success</string>
     <string name="sunset_activity_title_tv">TODAY</string>
+    <string name="sunset_activity_title_yesterday">YESTERDAY</string>
+    <string name="sunset_activity_title_tomorrow">TOMORROW</string>
     <string name="cancel_update">Cancel</string>
     <string name="profile_activity_popupwindow_title">Choose picture source</string>
     <string name="profile_activity_popupwindow_slect_library">Choose from library </string>

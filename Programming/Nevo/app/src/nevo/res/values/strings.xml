@@ -404,6 +404,8 @@ push and hold the third button, until the white LED blinks</string>
     <string name="password_change_failure">Changing password failed. Try again.</string>
     <string name="password_change_success">Change Password Success</string>
     <string name="sunset_activity_title_tv">TODAY</string>
+    <string name="sunset_activity_title_yesterday">YESTERDAY</string>
+    <string name="sunset_activity_title_tomorrow">TOMORROW</string>
     <string name="sunrise_activity_toolbar_title">Sunrise&amp;Sunset</string>
     <string name="profile_activity_popupwindow_title">Choose picture source</string>
     <string name="profile_activity_popupwindow_slect_library">Choose from library </string>
