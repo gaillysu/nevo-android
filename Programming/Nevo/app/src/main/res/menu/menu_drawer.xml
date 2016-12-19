@@ -6,7 +6,7 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_steps_fragment"
-            android:icon="@drawable/drawable_left_menu_icon"
+            android:icon="@drawable/ic_main_activity_dashboard"
             android:title="@string/menu_drawer_activity"/>
         <item
             android:id="@+id/nav_sleep_fragment"

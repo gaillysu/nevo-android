@@ -37,9 +37,9 @@ import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.AlarmFragment;
 import com.medcorp.fragment.AnalysisFragment;
+import com.medcorp.fragment.HomeClockFragment;
 import com.medcorp.fragment.MainFragment;
 import com.medcorp.fragment.SettingsFragment;
-import com.medcorp.fragment.WorldClockFragment;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
 import com.medcorp.util.PublicUtils;
@@ -303,7 +303,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 fragment = SettingsFragment.instantiate(MainActivity.this, SettingsFragment.class.getName());
                 break;
             case R.id.nav_world_clock:
-                fragment = WorldClockFragment.instantiate(MainActivity.this, WorldClockFragment.class.getName());
+                fragment = HomeClockFragment.instantiate(MainActivity.this, HomeClockFragment.class.getName());
                 break;
         }
 
