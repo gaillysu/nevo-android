@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.Timer10sEvent;
@@ -56,6 +57,12 @@ public class MainClockFragment extends BaseFragment {
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
 
+    @Bind(R.id.main_clock_content_nevo_include)
+    View nevoContentView;
+    @Bind(R.id.main_clock_content_lunar_include)
+    View lunarContentView;
+
+
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
 
@@ -88,6 +95,14 @@ public class MainClockFragment extends BaseFragment {
     }
 
     public void initData(Date date) {
+        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO){
+            nevoContentView.setVisibility(View.VISIBLE);
+            lunarContentView.setVisibility(View.GONE);
+        }else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR){
+            nevoContentView.setVisibility(View.GONE);
+            lunarContentView.setVisibility(View.VISIBLE);
+        }
+
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));

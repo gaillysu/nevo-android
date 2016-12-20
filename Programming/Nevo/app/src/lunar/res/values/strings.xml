@@ -432,4 +432,6 @@
     <string name="more_setting_unit">Unit</string>
     <string name="user_select_metrics">Metrics</string>
     <string name="user_select_imperial">Imperial</string>
+    <string name="edit_home_position_city">Position City</string>
+    <string name="edit_home_all_city">All City</string>
 </resources>

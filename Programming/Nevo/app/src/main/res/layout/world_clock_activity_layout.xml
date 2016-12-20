@@ -9,23 +9,25 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         >
 
         <LinearLayout
             android:id="@+id/search_grounp"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="38dp"
             android:layout_marginLeft="18dp"
             android:layout_weight="1"
-            android:gravity="center_vertical"
             android:background="@drawable/world_search_city_edit_background"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_edit_world_clock_search"
                 />
@@ -35,9 +37,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingLeft="5dp"
                 android:background="@android:color/transparent"
                 android:maxLines="1"
+                android:paddingLeft="5dp"
                 />
         </LinearLayout>
 
@@ -65,24 +67,72 @@
         android:layout_weight="1"
         >
 
-        <ListView
-            android:id="@+id/show_all_city_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            ></ListView>
+            android:orientation="vertical"
+            >
 
-        <com.medcorp.view.SideBar
-            android:id="@+id/choose_activity_list_index_sidebar"
-            android:layout_width="30.0dip"
-            android:layout_height="fill_parent"
-            android:layout_gravity="end|center"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@color/analysis_fragment_tablayout_background_color"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/edit_home_position_city"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:id="@+id/edit_home_city_tv"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/edit_home_position_city"
+                android:textColor="@color/text_color"
+                android:textSize="20dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@color/analysis_fragment_tablayout_background_color"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/edit_home_all_city"
+                android:textColor="@color/colorAccent"
+                android:textSize="20dp"
+                />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <ListView
+                    android:id="@+id/show_all_city_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@android:color/transparent"
+                    />
+
+                <com.medcorp.view.SideBar
+                    android:id="@+id/choose_activity_list_index_sidebar"
+                    android:layout_width="30.0dip"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="end|center"/>
+            </FrameLayout>
+        </LinearLayout>
+
         <ListView
             android:id="@+id/search_city_result_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@android:color/transparent"
             android:visibility="gone"
-            ></ListView>
+            />
     </FrameLayout>
 </LinearLayout>

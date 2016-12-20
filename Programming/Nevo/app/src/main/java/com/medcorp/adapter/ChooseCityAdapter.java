@@ -24,7 +24,7 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
     private List<ChooseCityViewModel> list = null;
     private Context mContext;
     private String locationCityName;
-    private String otherCityName;
+    private int otherCityId;
 
     public ChooseCityAdapter(Context mContext, List<ChooseCityViewModel> list) {
         this.mContext = mContext;
@@ -32,7 +32,7 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         Calendar calendar = Calendar.getInstance();
         TimeZone timeZone = calendar.getTimeZone();
         locationCityName = timeZone.getID();
-        otherCityName = Preferences.getSaveHomeCityName(mContext);
+        otherCityId = Preferences.getSaveHomeCityName(mContext);
     }
 
     public void updateListView(List<ChooseCityViewModel> list) {
@@ -64,9 +64,9 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         }
 
         viewHolder.tvTitle.setText(mContent.getDisplayName());
-        if (mContent.getDisplayName().equals(otherCityName) | mContent.getDisplayName().equals(locationCityName)){
+        if (mContent.getCityId() == otherCityId | mContent.getDisplayName().equals(locationCityName)) {
             viewHolder.isCheck.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             viewHolder.isCheck.setVisibility(View.GONE);
         }
         return view;

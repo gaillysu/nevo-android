@@ -40,15 +40,15 @@ public class Preferences {
         return preferences.getString(userEmail, null);
     }
 
-    public static void saveUserHomeCityName(Context context, String cityName) {
+    public static void saveUserHomeCityName(Context context, int cityId) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(context.getString(R.string.key_prefs_save_other_name), cityName).apply();
+        editor.putInt(context.getString(R.string.key_prefs_save_other_name), cityId).apply();
     }
 
-    public static String getSaveHomeCityName(Context context) {
+    public static int getSaveHomeCityName(Context context) {
         init(context);
-        return preferences.getString(context.getString(R.string.key_prefs_save_other_name), null);
+        return preferences.getInt(context.getString(R.string.key_prefs_save_other_name), -1);
     }
 
     public static void saveSelectDate(Context context, String selectDate) {

@@ -8,12 +8,10 @@ public class HomeTimeEvent {
 
     private final byte hour;
     private final byte minute;
-    private final byte timeZoneOffset;
 
-    public HomeTimeEvent( byte timeZoneOffset ,byte hour, byte minute) {
+    public HomeTimeEvent(byte hour, byte minute) {
         this.hour = hour;
         this.minute = minute;
-        this.timeZoneOffset = timeZoneOffset;
     }
 
     public byte getHour() {
@@ -22,9 +20,5 @@ public class HomeTimeEvent {
 
     public byte getMinute() {
         return minute;
-    }
-
-    public byte getTimeZoneOffset() {
-        return timeZoneOffset;
     }
 }
