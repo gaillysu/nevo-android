@@ -2,7 +2,10 @@ package com.medcorp.activity.tutorial;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.medcorp.activity.DfuActivity;
@@ -31,9 +34,24 @@ public class TutorialPage4Activity extends BaseActivity {
         //in this page, user long press the image, will enable user to continue do OTA
         PermissionRequestDialogBuilder builder =new PermissionRequestDialogBuilder(this);
         builder.addPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        builder.addPermission(Manifest.permission.ACCESS_FINE_LOCATION);
         builder.setText(R.string.location_access_content);
         builder.setTitle(R.string.location_access_title);
         builder.askForPermission(this,1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==1){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("TutorialPage4Activity","request location permission success.");
+                getModel().getLocationController().startUpdateLocation();
+            }
+            else {
+                Log.w("TutorialPage4Activity","request location permission failed.");
+            }
+        }
     }
 
     @OnLongClick(R.id.activity_tutorial_page4_open_bt_image)

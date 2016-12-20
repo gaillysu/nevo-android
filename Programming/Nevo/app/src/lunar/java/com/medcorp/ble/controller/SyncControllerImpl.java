@@ -457,6 +457,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new RequestResponseEvent(true));
                 }
+                else if(packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER)
+                {
+                    ((ApplicationModel)mContext).getLocationController().stopLocation();
+                }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
             }

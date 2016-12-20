@@ -45,6 +45,6 @@ public class LocationController {
     }
     public void stopLocation()
     {
-
+        //TODO stop location listener ???
     }
 }
