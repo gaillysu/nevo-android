@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
@@ -55,6 +56,7 @@ import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
+import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -120,7 +122,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private static final int SYNC_INTERVAL = 1 * 30 * 60 * 1000; //every half hour , do sync when connected again
 
     private ConnectionController connectionController;
-
+    private static TimeZone localTimeZone = TimeZone.getDefault();
 
     private List<MEDRawData> packetsBuffer = new ArrayList<MEDRawData>();
 
@@ -486,6 +488,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 //                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
 //                    }
                     setRtc();
+                    sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) 0));
                 }
             }, 2000);
         } else {
@@ -500,6 +503,19 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Subscribe
+    public void onEvent(LocationChangedEvent event) {
+        com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
+                new com.luckycatlabs.sunrisesunset.dto.Location(event.getLocation().getLatitude() + "", event.getLocation().getLongitude() + "");
+        SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, localTimeZone.getID());
+        String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
+        String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
+        byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
+        byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
+        byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
+        byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
+        sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,sunriseHour,sunriseMin,sunsetHour,sunsetMin));
+    }
+    @Subscribe
     public void onEvent(BLEPairStateChangedEvent stateChangedEvent) {
         if (stateChangedEvent.getPairState() == BluetoothDevice.BOND_BONDED) {
             mLocalService.setPairedWatch(stateChangedEvent.getAddress());
@@ -510,8 +526,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 
     @Subscribe
     public void onEvent(SunRiseAndSunSetWithZoneOffsetChangedEvent changedEvent) {
-        sendRequest(new SetWorldTimeOffsetRequest(mContext,changedEvent.getTimeZoneOffset()));
-        sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
+        //sendRequest(new SetWorldTimeOffsetRequest(mContext,changedEvent.getTimeZoneOffset()));
+        //sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
     }
 
     /**
@@ -780,6 +796,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
+                if (intent.getAction().equals(Intent.ACTION_TIMEZONE_CHANGED)) {
+                    Log.i("LocalService", "timezone got changed," + TimeZone.getDefault().getDisplayName() + "," + TimeZone.getDefault().getID());
+                    localTimeZone = TimeZone.getDefault();
+                    //Timezone changed,reconnect watch and will setRTC again by current tomezone time
+                    ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).disconnect();
+                    ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
+                }
             }
         };
 
@@ -787,6 +810,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         public void onCreate() {
             super.onCreate();
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+            registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED));
         }
 
         @Override
