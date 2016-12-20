@@ -56,8 +56,8 @@ import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
-import com.medcorp.event.DateChangedEvent;
 import com.medcorp.event.LocationChangedEvent;
+import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -67,7 +67,6 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
-import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
@@ -461,7 +460,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 else if(packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER)
                 {
-                    ((ApplicationModel)mContext).getLocationController().stopLocation();
+                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.SUCCESS));
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
@@ -498,7 +497,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     if(isPendingsunriseAndsunset){
                         isPendingsunriseAndsunset = false;
                         //when get local location, will calculate sunrise and sunset time and send it to watch
-                        ((ApplicationModel)mContext).getLocationController().startUpdateLocation();
+                        EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START));
                     }
                 }
             }, 2000);
@@ -533,22 +532,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         }
     }
     @Subscribe
-    public void onEvent(DateChangedEvent event) {
-        ((ApplicationModel)mContext).getLocationController().startUpdateLocation();
-    }
-    @Subscribe
     public void onEvent(BLEPairStateChangedEvent stateChangedEvent) {
         if (stateChangedEvent.getPairState() == BluetoothDevice.BOND_BONDED) {
             mLocalService.setPairedWatch(stateChangedEvent.getAddress());
         } else if (stateChangedEvent.getPairState() == BluetoothDevice.BOND_NONE) {
             mLocalService.setPairedWatch(null);
         }
-    }
-
-    @Subscribe
-    public void onEvent(SunRiseAndSunSetWithZoneOffsetChangedEvent changedEvent) {
-        //sendRequest(new SetWorldTimeOffsetRequest(mContext,changedEvent.getTimeZoneOffset()));
-        //sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
     }
 
     /**
@@ -825,8 +814,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                 }
                 if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
-                    Log.i("LocalService", "date got changed.");
-                    EventBus.getDefault().post(new DateChangedEvent());
+                    Log.i("LocalService", "date got changed. set sunrise and sunset");
+                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START));
                 }
             }
         };

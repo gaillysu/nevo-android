@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.medcorp.activity.DfuActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.R;
+import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 
 import net.medcorp.library.permission.PermissionRequestDialogBuilder;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,10 +50,11 @@ public class TutorialPage4Activity extends BaseActivity {
         if(requestCode==1){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("TutorialPage4Activity","request location permission success.");
-                getModel().getLocationController().startUpdateLocation();
+                EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START));
             }
             else {
                 Log.w("TutorialPage4Activity","request location permission failed.");
+                Toast.makeText(this, getString(R.string.permission_location_message), Toast.LENGTH_LONG).show();
             }
         }
     }

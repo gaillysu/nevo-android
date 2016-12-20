@@ -28,6 +28,7 @@ import com.medcorp.database.entry.SolarDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
 import com.medcorp.database.entry.UserDatabaseHelper;
 import com.medcorp.event.LocationChangedEvent;
+import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionFailedEvent;
@@ -186,6 +187,17 @@ public class ApplicationModel extends Application {
         if (event.isSuccess()) {
             final Steps steps = getDailySteps(nevoUser.getNevoUserID(), Common.removeTimeFromDate(new Date()));
             getCloudSyncManager().launchSyncDaily(nevoUser, steps);
+        }
+    }
+
+    @Subscribe
+    public void onEvent(SetSunriseAndSunsetTimeRequestEvent event) {
+        if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START){
+            getLocationController().startUpdateLocation();
+        }
+        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.SUCCESS)
+        {
+            getLocationController().stopLocation();
         }
     }
 
