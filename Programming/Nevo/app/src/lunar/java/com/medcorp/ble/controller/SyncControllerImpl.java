@@ -56,6 +56,7 @@ import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
+import com.medcorp.event.DateChangedEvent;
 import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
@@ -134,6 +135,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private boolean initAlarm = true;
     private boolean initNotification = true;
     private boolean isHoldRequest = false;
+    private boolean isPendingsunriseAndsunset = true;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -493,6 +495,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 //                    }
                     setRtc();
                     sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) 0));
+                    if(isPendingsunriseAndsunset){
+                        isPendingsunriseAndsunset = false;
+                        //when get local location, will calculate sunrise and sunset time and send it to watch
+                        ((ApplicationModel)mContext).getLocationController().startUpdateLocation();
+                    }
                 }
             }, 2000);
         } else {
@@ -517,7 +524,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
         byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
         byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
-        sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,sunriseHour,sunriseMin,sunsetHour,sunsetMin));
+        if(isConnected()) {
+            sendRequest(new SetSunriseAndSunsetTimeRequest(mContext, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
+        }
+        else {
+            //pending it and send it when got connected next time.
+            isPendingsunriseAndsunset = true;
+        }
+    }
+    @Subscribe
+    public void onEvent(DateChangedEvent event) {
+        ((ApplicationModel)mContext).getLocationController().startUpdateLocation();
     }
     @Subscribe
     public void onEvent(BLEPairStateChangedEvent stateChangedEvent) {
@@ -807,6 +824,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).disconnect();
                     ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                 }
+                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
+                    Log.i("LocalService", "date got changed.");
+                    EventBus.getDefault().post(new DateChangedEvent());
+                }
             }
         };
 
@@ -815,6 +836,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             super.onCreate();
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED));
+            registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_DATE_CHANGED));
         }
 
         @Override
