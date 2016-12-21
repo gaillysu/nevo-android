@@ -419,6 +419,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
             case ON_SEARCHING:
                 PermissionRequestDialogBuilder builder = new PermissionRequestDialogBuilder(this);
                 builder.addPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+                builder.addPermission(Manifest.permission.ACCESS_FINE_LOCATION);
                 builder.setText(R.string.location_access_content);
                 builder.setTitle(R.string.location_access_title);
                 builder.askForPermission(this, 1);

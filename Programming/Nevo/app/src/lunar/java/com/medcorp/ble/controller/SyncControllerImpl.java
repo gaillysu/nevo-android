@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
@@ -55,6 +56,8 @@ import com.medcorp.ble.model.request.TestModeRequest;
 import com.medcorp.ble.model.request.WriteSettingRequest;
 import com.medcorp.ble.notification.NevoNotificationListener;
 import com.medcorp.database.dao.IDailyHistory;
+import com.medcorp.event.LocationChangedEvent;
+import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
@@ -64,7 +67,6 @@ import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.RequestResponseEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
-import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Battery;
 import com.medcorp.model.DailyHistory;
@@ -120,7 +122,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private static final int SYNC_INTERVAL = 1 * 30 * 60 * 1000; //every half hour , do sync when connected again
 
     private ConnectionController connectionController;
-
+    private static TimeZone localTimeZone = TimeZone.getDefault();
 
     private List<MEDRawData> packetsBuffer = new ArrayList<MEDRawData>();
 
@@ -132,6 +134,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private boolean initAlarm = true;
     private boolean initNotification = true;
     private boolean isHoldRequest = false;
+    private boolean isPendingsunriseAndsunset = true;
+    private final Object lockObject = new Object();
+    private boolean setSunriseAndSunsetSuccess = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -455,6 +460,15 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         || (byte) SetGoalRequest.HEADER == packet.getHeader()) {
                     EventBus.getDefault().post(new RequestResponseEvent(true));
                 }
+                else if(packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER)
+                {
+                    setSunriseAndSunsetSuccess = true;
+                    // Notify waiting thread
+                    synchronized (lockObject) {
+                        lockObject.notifyAll();
+                    }
+                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS));
+                }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
             }
@@ -486,6 +500,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 //                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
 //                    }
                     setRtc();
+                    sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) 0));
+                    if(isPendingsunriseAndsunset){
+                        isPendingsunriseAndsunset = false;
+                        //when get local location, will calculate sunrise and sunset time and send it to watch
+                        EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
+                    }
                 }
             }, 2000);
         } else {
@@ -500,6 +520,35 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     @Subscribe
+    public void onEvent(LocationChangedEvent event) {
+        com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
+                new com.luckycatlabs.sunrisesunset.dto.Location(event.getLocation().getLatitude() + "", event.getLocation().getLongitude() + "");
+        SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, localTimeZone.getID());
+        String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
+        String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
+        byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
+        byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
+        byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
+        byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
+        if(isConnected()) {
+            setSunriseAndSunsetSuccess = false;
+            sendRequest(new SetSunriseAndSunsetTimeRequest(mContext, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
+            //wait for maximum 2s, if time out-->send failed event
+            try {
+                lockObject.wait(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(!setSunriseAndSunsetSuccess){
+                EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
+            }
+        }
+        else {
+            //pending it and send it when got connected next time.
+            isPendingsunriseAndsunset = true;
+        }
+    }
+    @Subscribe
     public void onEvent(BLEPairStateChangedEvent stateChangedEvent) {
         if (stateChangedEvent.getPairState() == BluetoothDevice.BOND_BONDED) {
             mLocalService.setPairedWatch(stateChangedEvent.getAddress());
@@ -507,13 +556,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             mLocalService.setPairedWatch(null);
         }
     }
-
-    @Subscribe
-    public void onEvent(SunRiseAndSunSetWithZoneOffsetChangedEvent changedEvent) {
-        sendRequest(new SetWorldTimeOffsetRequest(mContext,changedEvent.getTimeZoneOffset()));
-        sendRequest(new SetSunriseAndSunsetTimeRequest(mContext,changedEvent.getSunriseHour(),changedEvent.getSunriseMin(),changedEvent.getSunsetHour(),changedEvent.getSunsetMin()));
-    }
-
 
     /**
      * This function will synchronise activity data with the watch.
@@ -781,6 +823,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                         ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
                     }
                 }
+                if (intent.getAction().equals(Intent.ACTION_TIMEZONE_CHANGED)) {
+                    Log.i("LocalService", "timezone got changed," + TimeZone.getDefault().getDisplayName() + "," + TimeZone.getDefault().getID());
+                    localTimeZone = TimeZone.getDefault();
+                    //Timezone changed,reconnect watch and will setRTC again by current tomezone time
+                    ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).disconnect();
+                    ConnectionController.Singleton.getInstance(context, new GattAttributesDataSourceImpl(context)).scan();
+                }
+                if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
+                    Log.i("LocalService", "date got changed. set sunrise and sunset");
+                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
+                }
             }
         };
 
@@ -788,6 +841,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         public void onCreate() {
             super.onCreate();
             registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+            registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED));
+            registerReceiver(myReceiver, new IntentFilter(Intent.ACTION_DATE_CHANGED));
         }
 
         @Override
@@ -876,4 +931,4 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             //TODO Sound is fine but not sound from dogs. Thanks.
         }
     }
-}
+}
