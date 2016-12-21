@@ -6,17 +6,18 @@ package com.medcorp.event;
 
 public class SetSunriseAndSunsetTimeRequestEvent {
 
-    public enum SET_EVENT{
+    public enum STATUS {
         START,
-        SUCCESS
+        SUCCESS,
+        FAILED
     }
-    public final SET_EVENT status;
+    public final STATUS status;
 
-    public SetSunriseAndSunsetTimeRequestEvent(SET_EVENT status) {
+    public SetSunriseAndSunsetTimeRequestEvent(STATUS status) {
         this.status = status;
     }
 
-    public SET_EVENT getStatus() {
+    public STATUS getStatus() {
         return status;
     }
 }

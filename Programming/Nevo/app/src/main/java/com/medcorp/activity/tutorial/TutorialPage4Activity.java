@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.medcorp.activity.DfuActivity;
 import com.medcorp.base.BaseActivity;
 import com.medcorp.R;
@@ -50,11 +52,22 @@ public class TutorialPage4Activity extends BaseActivity {
         if(requestCode==1){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d("TutorialPage4Activity","request location permission success.");
-                EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START));
+                EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
             }
             else {
                 Log.w("TutorialPage4Activity","request location permission failed.");
-                Toast.makeText(this, getString(R.string.permission_location_message), Toast.LENGTH_LONG).show();
+                new MaterialDialog.Builder(this)
+                        .title(android.R.string.dialog_alert_title)
+                        .content(R.string.permission_location_message)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                finish();
+                            }
+                        })
+                        .negativeText(android.R.string.ok)
+                        .cancelable(false)
+                        .show();
             }
         }
     }

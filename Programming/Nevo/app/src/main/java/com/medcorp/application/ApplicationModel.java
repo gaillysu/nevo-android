@@ -27,7 +27,6 @@ import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.database.entry.SolarDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
 import com.medcorp.database.entry.UserDatabaseHelper;
-import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -192,12 +191,17 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onEvent(SetSunriseAndSunsetTimeRequestEvent event) {
-        if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START){
+        if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.START){
             getLocationController().startUpdateLocation();
         }
-        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.SUCCESS)
+        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS)
         {
             getLocationController().stopLocation();
+        }
+        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED)
+        {
+            //TODO how to do it
+            Log.w("ApplicationModel","setSunriseAndSunset got failed.");
         }
     }
 

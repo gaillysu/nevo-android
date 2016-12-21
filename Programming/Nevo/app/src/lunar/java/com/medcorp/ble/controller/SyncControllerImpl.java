@@ -135,6 +135,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     private boolean initNotification = true;
     private boolean isHoldRequest = false;
     private boolean isPendingsunriseAndsunset = true;
+    private final Object lockObject = new Object();
+    private boolean setSunriseAndSunsetSuccess = false;
     //IMPORT!!!!, every get connected, will do sync profile data and activity data with Nevo
     //it perhaps long time(sync activity data perhaps need long time, MAX total 7 days)
     //so before sync finished, disable setGoal/setAlarm/getGoalSteps
@@ -460,7 +462,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 else if(packet.getHeader() == (byte) SetSunriseAndSunsetTimeRequest.HEADER)
                 {
-                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.SUCCESS));
+                    setSunriseAndSunsetSuccess = true;
+                    // Notify waiting thread
+                    synchronized (lockObject) {
+                        lockObject.notifyAll();
+                    }
+                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS));
                 }
                 packetsBuffer.clear();
                 QueuedMainThreadHandler.getInstance(QueuedMainThreadHandler.QueueType.SyncController).next();
@@ -497,7 +504,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     if(isPendingsunriseAndsunset){
                         isPendingsunriseAndsunset = false;
                         //when get local location, will calculate sunrise and sunset time and send it to watch
-                        EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START));
+                        EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
                     }
                 }
             }, 2000);
@@ -524,7 +531,17 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
         byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
         if(isConnected()) {
+            setSunriseAndSunsetSuccess = false;
             sendRequest(new SetSunriseAndSunsetTimeRequest(mContext, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
+            //wait for maximum 2s, if time out-->send failed event
+            try {
+                lockObject.wait(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(!setSunriseAndSunsetSuccess){
+                EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
+            }
         }
         else {
             //pending it and send it when got connected next time.
@@ -815,7 +832,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
                 if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
                     Log.i("LocalService", "date got changed. set sunrise and sunset");
-                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.SET_EVENT.START));
+                    EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
                 }
             }
         };
