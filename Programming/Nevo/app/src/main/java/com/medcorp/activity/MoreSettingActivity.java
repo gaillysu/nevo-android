@@ -67,7 +67,7 @@ public class MoreSettingActivity extends BaseActivity {
     }
 
     public void selectMetrics() {
-        metricsUnit.setTextColor(getResources().getColor(R.color.text_color));
+        metricsUnit.setTextColor(getResources().getColor(R.color.more_setting_text_color));
         imperialUnit.setTextColor(getResources().getColor(R.color.colorPrimary));
         metricsUnit.setBackground(getResources().getDrawable(R.drawable.more_setting_unit_select_shape));
         imperialUnit.setBackground(getResources().getDrawable(R.drawable.user_select_unit_imperial_def_shape));
@@ -75,7 +75,7 @@ public class MoreSettingActivity extends BaseActivity {
 
     public void selectImperial() {
         metricsUnit.setTextColor(getResources().getColor(R.color.colorPrimary));
-        imperialUnit.setTextColor(getResources().getColor(R.color.text_color));
+        imperialUnit.setTextColor(getResources().getColor(R.color.more_setting_text_color));
         metricsUnit.setBackground(getResources().getDrawable(R.drawable.more_setting_unit_select_default_shape));
         imperialUnit.setBackground(getResources().getDrawable(R.drawable.user_select_unit_imperial_shape));
     }

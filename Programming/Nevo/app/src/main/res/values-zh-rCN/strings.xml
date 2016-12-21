@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="menu_drawer_worldclock">世界时钟</string>
+    <string name="menu_drawer_hometime">家乡时间</string>
     <string name="password_change_failure">修改密码出错.在来一次!</string>
     <string name="password_change_success">修改密码成功!</string>
     <string name="password_is_not_empty">密码不能为空!</string>
@@ -8,6 +8,8 @@
     <string name="prompt_user_alarm_no_repeat">今天已经有一个睡眠闹钟了.</string>
     <string name="prompt_user_alarm_no_repeat_two">今天已经有一个起床闹钟了.</string>
     <string name="sunset_activity_title_tv">今天</string>
+    <string name="sunset_activity_title_yesterday">昨天</string>
+    <string name="sunset_activity_title_tomorrow">明天</string>
     <string name="sunrise_activity_toolbar_title">日出日落</string>
     <string name="tell_user_change_week_day">请选择闹钟重复的日期.</string>
     <string name="tell_user_this_location_time">本地时间</string>
