@@ -16,10 +16,14 @@ import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.fragment.base.BaseFragment;
+import com.medcorp.model.Sleep;
+import com.medcorp.model.SleepData;
 import com.medcorp.model.Steps;
 import com.medcorp.model.User;
 import com.medcorp.util.Common;
 import com.medcorp.util.Preferences;
+import com.medcorp.util.SleepDataHandler;
+import com.medcorp.util.SleepDataUtils;
 import com.medcorp.util.TimeUtil;
 import com.medcorp.view.RoundProgressBar;
 
@@ -29,8 +33,10 @@ import org.greenrobot.eventbus.Subscribe;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -56,15 +62,35 @@ public class MainClockFragment extends BaseFragment {
     TextView showUserActivityTime;
     @Bind(R.id.lunar_fragment_show_user_steps_tv)
     TextView showUserSteps;
-
     @Bind(R.id.main_clock_content_nevo_include)
     View nevoContentView;
     @Bind(R.id.main_clock_content_lunar_include)
     View lunarContentView;
 
+    //    lunar main clock item
+
+    @Bind(R.id.lunar_main_clock_sleep_time_count)
+    TextView lunarSleepTotal;
+    @Bind(R.id.lunar_main_clock_home_city_time)
+    TextView lunarHomeCityTime;
+    @Bind(R.id.lunar_main_clock_home_city_name)
+    TextView homeCityName;
+    @Bind(R.id.lunar_main_clock_home_country)
+    TextView countryName;
+    @Bind(R.id.lunar_main_clock_home_city_sunrise_time_tv)
+    TextView sunriseOfsunsetTime;
+    @Bind(R.id.lunar_main_clock_home_city_name_tv)
+    TextView sunriseCityName;
+    @Bind(R.id.lunar_main_clock_steps_goal_analysis)
+    RoundProgressBar goalProgress;
+    @Bind(R.id.lunar_main_clock_steps_count)
+    TextView stepsCount;
+    @Bind(R.id.steps_of_goal_percentage)
+    TextView goalPercentage;
 
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
+    private User user = getModel().getNevoUser();
 
     private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
@@ -95,12 +121,15 @@ public class MainClockFragment extends BaseFragment {
     }
 
     public void initData(Date date) {
-        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO){
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            roundProgressBar.setVisibility(View.VISIBLE);
             nevoContentView.setVisibility(View.VISIBLE);
             lunarContentView.setVisibility(View.GONE);
-        }else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR){
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             nevoContentView.setVisibility(View.GONE);
             lunarContentView.setVisibility(View.VISIBLE);
+            roundProgressBar.setVisibility(View.GONE);
+            initLunarData(date);
         }
 
         User user = getModel().getNevoUser();
@@ -121,9 +150,37 @@ public class MainClockFragment extends BaseFragment {
         showUserCosumeCalories.setText(calories);
 
         int countSteps = steps.getSteps();
-        int goal = steps.getGoal();
+//        int goal = steps.getGoal();
         float value = (float) countSteps / (float) steps.getGoal();
         roundProgressBar.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
+        goalProgress.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
+        goalPercentage.setText((value * 100 >= 100f ? 100 : (int) (value * 100))+"%"+getString(R.string.lunar_steps_percentage));
+    }
+
+    private void initLunarData(Date date) {
+        Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
+        lunarSleepTotal.setText(countSleepTime(date));
+        stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
+
+    }
+
+    private String countSleepTime(Date date) {
+        Sleep[] sleepArray = getModel().getDailySleep(user.getNevoUserID(), date);
+        SleepDataHandler handler = new SleepDataHandler(Arrays.asList(sleepArray));
+        List<SleepData> sleepDataList = handler.getSleepData(date);
+        String totalSleepTime;
+        if (!sleepDataList.isEmpty()) {
+            SleepData sleepData;
+            if (sleepDataList.size() == 2) {
+                sleepData = SleepDataUtils.mergeYesterdayToday(sleepDataList.get(1), sleepDataList.get(0));
+                totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+            } else {
+                sleepData = sleepDataList.get(0);
+                totalSleepTime = TimeUtil.formatTime(sleepData.getTotalSleep());
+            }
+            return totalSleepTime;
+        }
+        return new String("00:00");
     }
 
     @Override

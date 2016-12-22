@@ -12,5 +12,6 @@
     <string name="notification_def_name">Default name</string>
     <string name="unit_length" >mi</string>
     <string name="unit_cal">kcal</string>
+    <string name="lunar_steps_percentage">OF GOAL</string>
     <string name="home_time_home_city_name"  translatable="false">Getting location.. </string>
 </resources>
