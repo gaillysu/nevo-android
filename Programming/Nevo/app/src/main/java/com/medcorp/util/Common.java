@@ -23,6 +23,9 @@ import java.util.TimeZone;
  */
 public class Common {
 
+    //NOTICE,DON'T CHANGE THEIR VALUES, THEY COME FROM "src/nevo/assets/firmware","src/nevo/assets/solar_firmware"
+    private static final String NEVO_FIRMWARE_PATH = "firmware";
+    private static final String NEVO_SOLAR_FIRMWARE_PATH = "solar_firmware";
     /**
      * return one day which start 00:00:00
      * @param date : YYYY/MM/DD HH:MM:SS
@@ -78,13 +81,16 @@ public class Common {
      * @param context
      * @return build in MCU firmawre version
      */
-    static public int getBuildinSoftwareVersion(Context context)
+    static public int getBuildinSoftwareVersion(Context context,int watchID)
     {
         int buildinSoftwareVersion = 0;
         String[]files;
-
+        String firmwarePath = NEVO_FIRMWARE_PATH;
+        if(watchID == 2){
+            firmwarePath = NEVO_SOLAR_FIRMWARE_PATH;
+        }
         try {
-            files = context.getAssets().list("firmware");
+            files = context.getAssets().list(firmwarePath);
             for(String file:files)
             {
                 if(file.contains(".bin"))
@@ -113,13 +119,16 @@ public class Common {
      * @param context
      * @return build-in BLE firmware version
      */
-    static public int getBuildinFirmwareVersion(Context context)
+    static public int getBuildinFirmwareVersion(Context context,int watchID)
     {
         int buildinFirmwareVersion = 0;
         String[]files;
-
+        String firmwarePath = NEVO_FIRMWARE_PATH;
+        if(watchID == 2){
+            firmwarePath = NEVO_SOLAR_FIRMWARE_PATH;
+        }
         try {
-            files = context.getAssets().list("firmware");
+            files = context.getAssets().list(firmwarePath);
             for(String file:files)
             {
                 if(file.contains(".hex"))
@@ -166,23 +175,26 @@ public class Common {
      * @param currentBleVersion
      * @return need do OTA 's firmwares
      */
-    static public List<String> needOTAFirmwareURLs(Context context,int currentMcuVersion, int currentBleVersion)
+    static public List<String> needOTAFirmwareURLs(Context context,int currentMcuVersion, int currentBleVersion,int watchID)
     {
         List<String> firmwareURLs = new ArrayList<String>();
-
+        String firmwarePath = NEVO_FIRMWARE_PATH;
+        if(watchID == 2){
+            firmwarePath = NEVO_SOLAR_FIRMWARE_PATH;
+        }
         String[]files;
-        int buildinSoftwareVersion = getBuildinSoftwareVersion(context);
-        int buildinFirmwareVersion = getBuildinFirmwareVersion(context);
+        int buildinSoftwareVersion = getBuildinSoftwareVersion(context,watchID);
+        int buildinFirmwareVersion = getBuildinFirmwareVersion(context,watchID);
 
         try {
-            files = context.getAssets().list("firmware");
+            files = context.getAssets().list(firmwarePath);
             for(String file:files)
             {
                 if(file.contains(".hex"))
                 {
-                    if(currentBleVersion < buildinFirmwareVersion )
+                    if(currentBleVersion <= buildinFirmwareVersion )
                     {
-                        firmwareURLs.add("firmware/" + file);
+                        firmwareURLs.add(firmwarePath + "/" + file);
                         break;
                     }
                 }
@@ -193,18 +205,18 @@ public class Common {
         }
 
         try {
-            files = context.getAssets().list("firmware");
+            files = context.getAssets().list(firmwarePath);
             for(String file:files)
             {
                 if(file.contains(".bin"))
                 {
-                    if(currentMcuVersion < buildinSoftwareVersion )
+                    if(currentMcuVersion <= buildinSoftwareVersion )
                     {
                         //if MCU got broken and reinstall battery, firstly update MCU
                         if(currentMcuVersion == 0)
-                            firmwareURLs.add(0,"firmware/" + file);
+                            firmwareURLs.add(0,firmwarePath + "/" + file);
                         else
-                            firmwareURLs.add("firmware/" + file);
+                            firmwareURLs.add(firmwarePath + "/" + file);
                         break;
                     }
                 }
@@ -222,9 +234,9 @@ public class Common {
      * @param context
      * @return all build-in firmware, first is BLE, then MCU
      */
-    static public List<String> getAllBuildinFirmwareURLs(Context context)
+    static public List<String> getAllBuildinFirmwareURLs(Context context,int watchID)
     {
-        return  needOTAFirmwareURLs(context,-1,-1);
+        return  needOTAFirmwareURLs(context,-1,-1,watchID);
     }
 
     /**
