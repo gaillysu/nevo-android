@@ -27,6 +27,7 @@ import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.database.entry.SolarDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
 import com.medcorp.database.entry.UserDatabaseHelper;
+import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionFailedEvent;
@@ -49,6 +50,7 @@ import com.medcorp.googlefit.GoogleFitManager;
 import com.medcorp.googlefit.GoogleFitStepsDataHandler;
 import com.medcorp.googlefit.GoogleFitTaskCounter;
 import com.medcorp.googlefit.GoogleHistoryUpdateTask;
+import com.medcorp.location.LocationController;
 import com.medcorp.model.Alarm;
 import com.medcorp.model.Goal;
 import com.medcorp.model.Sleep;
@@ -123,6 +125,7 @@ public class ApplicationModel extends Application {
     private User nevoUser;
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
     private LedLampDatabase ledDataBase;
+    private LocationController locationController;
 
     @Override
     public void onCreate() {
@@ -143,6 +146,7 @@ public class ApplicationModel extends Application {
         validicMedManager = new MedManager(this);
         cloudSyncManager = new CloudSyncManager(this);
         ledDataBase = new LedLampDatabase(this);
+        locationController = new LocationController(this);
 
         worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
         worldClockDatabaseHelper.setupWorldClock();
@@ -185,6 +189,22 @@ public class ApplicationModel extends Application {
         }
     }
 
+    @Subscribe
+    public void onEvent(SetSunriseAndSunsetTimeRequestEvent event) {
+        if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.START){
+            getLocationController().startUpdateLocation();
+        }
+        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS)
+        {
+            getLocationController().stopLocation();
+        }
+        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED)
+        {
+            //TODO how to do it
+            Log.w("ApplicationModel","setSunriseAndSunset got failed.");
+        }
+    }
+
     public MedManager getNetworkManage() {
         return validicMedManager;
     }
@@ -193,6 +213,9 @@ public class ApplicationModel extends Application {
         return worldClockDatabaseHelper;
     }
 
+    public LocationController getLocationController(){
+        return locationController;
+    }
     public StepsDatabaseHelper getStepsHelper() {
         return stepsDatabaseHelper;
     }
