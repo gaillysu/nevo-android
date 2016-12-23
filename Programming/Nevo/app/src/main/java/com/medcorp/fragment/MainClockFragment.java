@@ -1,5 +1,6 @@
 package com.medcorp.fragment;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
@@ -38,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -87,10 +90,16 @@ public class MainClockFragment extends BaseFragment {
     TextView stepsCount;
     @Bind(R.id.steps_of_goal_percentage)
     TextView goalPercentage;
+    @Bind(R.id.lunar_main_clock_home_city_sunrise_icon)
+    ImageView sunriseOrSunsetIv;
 
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
-    private User user = getModel().getNevoUser();
+    private User user;
+
+    private String homeName;
+    private String homeCountryName;
+    private String timeZoneId;
 
     private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
@@ -104,7 +113,7 @@ public class MainClockFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, clockFragmentContentView);
-
+        user = getModel().getNevoUser();
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -150,18 +159,62 @@ public class MainClockFragment extends BaseFragment {
         showUserCosumeCalories.setText(calories);
 
         int countSteps = steps.getSteps();
-//        int goal = steps.getGoal();
         float value = (float) countSteps / (float) steps.getGoal();
         roundProgressBar.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
         goalProgress.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
-        goalPercentage.setText((value * 100 >= 100f ? 100 : (int) (value * 100))+"%"+getString(R.string.lunar_steps_percentage));
+        goalPercentage.setText((value * 100 >= 100f ? 100 : (int) (value * 100)) + "%" + getString(R.string.lunar_steps_percentage));
     }
 
     private void initLunarData(Date date) {
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
         lunarSleepTotal.setText(countSleepTime(date));
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
+        Address positionLocal = getModel().getPositionLocal(getModel().getLocationController().getLocation());
+        homeName = Preferences.getPositionCity(MainClockFragment.this.getActivity());
+        homeCountryName = Preferences.getPositionCountry(MainClockFragment.this.getActivity());
+        timeZoneId = Preferences.getHomeTimezoneId(MainClockFragment.this.getActivity());
 
+        if (homeName != null) {
+            homeCityName.setText(homeName);
+            countryName.setText(homeCountryName);
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
+            String am_pm = calendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + am_pm);
+            sunriseCityName.setText(homeCountryName);
+        } else {
+            homeName = positionLocal.getLocality();
+            homeCountryName = positionLocal.getCountryName();
+            homeCityName.setText(homeName);
+            countryName.setText(homeCountryName);
+            Calendar calendar = Calendar.getInstance();
+            String am_pm = calendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + am_pm);
+            sunriseCityName.setText(homeCountryName);
+        }
+
+        SunriseSunsetCalculator calculator = computeSunriseTime(positionLocal.getLatitude(), positionLocal.getLongitude()
+                , Calendar.getInstance().getTimeZone().getID());
+        String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
+        String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
+        int sunriseHour = Integer.parseInt(officialSunrise.split(":")[0]);
+        int sunriseMin = Integer.parseInt(officialSunrise.split(":")[1]);
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        if (sunriseHour * 60 + sunriseMin > hour * 60 + minute) {
+            sunriseOfsunsetTime.setText(officialSunrise);
+            sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunrise_icon));
+        } else {
+            sunriseOfsunsetTime.setText(officialSunset);
+            sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
+        }
+    }
+
+    private SunriseSunsetCalculator computeSunriseTime(double latitude, double longitude, String zone) {
+        com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
+                new com.luckycatlabs.sunrisesunset.dto.Location(latitude + "", longitude + "");
+        return new SunriseSunsetCalculator(sunriseLocation, zone);
     }
 
     private String countSleepTime(Date date) {

@@ -13,9 +13,7 @@ import com.medcorp.R;
 import com.medcorp.model.ChooseCityViewModel;
 import com.medcorp.util.Preferences;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,16 +21,15 @@ import butterknife.ButterKnife;
 public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
     private List<ChooseCityViewModel> list = null;
     private Context mContext;
-    private String locationCityName;
-    private int otherCityId;
+    private String homeCityName;
+    private String homeCityCountry;
 
     public ChooseCityAdapter(Context mContext, List<ChooseCityViewModel> list) {
         this.mContext = mContext;
         this.list = list;
-        Calendar calendar = Calendar.getInstance();
-        TimeZone timeZone = calendar.getTimeZone();
-        locationCityName = timeZone.getID();
-        otherCityId = Preferences.getSaveHomeCityName(mContext);
+
+        homeCityCountry = Preferences.getPositionCountry(mContext);
+        homeCityName = Preferences.getPositionCity(mContext);
     }
 
     public void updateListView(List<ChooseCityViewModel> list) {
@@ -64,7 +61,7 @@ public class ChooseCityAdapter extends BaseAdapter implements SectionIndexer {
         }
 
         viewHolder.tvTitle.setText(mContent.getDisplayName());
-        if (mContent.getCityId() == otherCityId | mContent.getDisplayName().equals(locationCityName)) {
+        if (mContent.getDisplayName().equals(homeCityName + ", " + homeCityCountry)) {
             viewHolder.isCheck.setVisibility(View.VISIBLE);
         } else {
             viewHolder.isCheck.setVisibility(View.GONE);

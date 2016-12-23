@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:gravity="center"
                 android:text="@string/lunar_main_clock_charging_status_title"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
@@ -119,11 +120,11 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_margin="4dp"
+            android:minWidth="2dp"
             android_custom:max="100"
             android_custom:roundColor="@color/graph_grid_line_color"
-            android_custom:roundProgressColor="@android:color/white"
+            android_custom:roundProgressColor="@color/colorAccent"
             android_custom:roundWidth="4dp"
-            android:minWidth="2dp"
             android_custom:textIsDisplayable="false"/>
 
         <LinearLayout
@@ -208,6 +209,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/shape_input_email_account_bg"
+                android:gravity="center"
                 android:textColor="@color/text_color"
                 android:textSize="10sp"
                 />
@@ -277,7 +279,6 @@
                 android:id="@+id/lunar_main_clock_home_city_sunrise_time_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="knsakd"
                 android:textColor="@color/text_color"
                 android:textSize="8sp"
                 />

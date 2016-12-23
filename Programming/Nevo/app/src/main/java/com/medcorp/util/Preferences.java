@@ -40,17 +40,6 @@ public class Preferences {
         return preferences.getString(userEmail, null);
     }
 
-    public static void saveUserHomeCityName(Context context, int cityId) {
-        init(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(context.getString(R.string.key_prefs_save_other_name), cityId).apply();
-    }
-
-    public static int getSaveHomeCityName(Context context) {
-        init(context);
-        return preferences.getInt(context.getString(R.string.key_prefs_save_other_name), -1);
-    }
-
     public static void saveSelectDate(Context context, String selectDate) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -77,7 +66,7 @@ public class Preferences {
 
     public static boolean getUnitSelect(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics),false);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics), false);
     }
 
     public static void startInitAlarm(Context context, boolean isInit) {
@@ -203,5 +192,39 @@ public class Preferences {
 
     private static NevoLed distinguish(int ledColor, ApplicationModel model) {
         return model.getUserSelectLedLamp(ledColor);
+    }
+
+    public static void savePositionCity(Context context, String locality) {
+        init(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(context.getString(R.string.key_prefs_home_city), locality).apply();
+    }
+
+    public static void savePositionCountry(Context context, String countryName) {
+        init(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(context.getString(R.string.key_prefs_home_country), countryName).apply();
+    }
+
+    public static void saveHomeCityCalender(Context context, String timeZoneId) {
+        init(context);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(context.getString(R.string.key_prefs_home_timezone), timeZoneId).apply();
+    }
+
+
+    public static String getPositionCity(Context context) {
+        init(context);
+        return preferences.getString(context.getString(R.string.key_prefs_home_city), null);
+    }
+
+    public static String getPositionCountry(Context context) {
+        init(context);
+        return preferences.getString(context.getString(R.string.key_prefs_home_country), null);
+    }
+
+    public static String getHomeTimezoneId(Context context) {
+        init(context);
+        return preferences.getString(context.getString(R.string.key_prefs_home_timezone), null);
     }
 }

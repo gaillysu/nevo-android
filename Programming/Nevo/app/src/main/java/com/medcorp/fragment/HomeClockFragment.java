@@ -1,5 +1,6 @@
 package com.medcorp.fragment;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +53,8 @@ public class HomeClockFragment extends BaseObservableFragment {
     private City locationCity;
     private String localCityName;
     private TimeZone timeZone;
-    private int homeCityId;
+    private String homeCityName;
+    private String homeCountryName;
     private City mHomeCity;
     private Calendar mHomeCalendar;
 
@@ -79,11 +81,13 @@ public class HomeClockFragment extends BaseObservableFragment {
     }
 
     private void initView() {
-        homeCityId = Preferences.getSaveHomeCityName(HomeClockFragment.this.getContext());
+        homeCityName = Preferences.getPositionCity(HomeClockFragment.this.getContext());
+        homeCountryName = Preferences.getPositionCountry(HomeClockFragment.this.getContext());
 
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
-        localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+        Address positionLocal = getModel().getPositionLocal(getModel().getLocationController().getLocation());
+        localCityName = positionLocal.getLocality() + ", " + positionLocal.getCountryName();
         for (City city : cities) {
             if (city.getName().equals(localCityName)) {
                 this.locationCity = city;
@@ -91,9 +95,10 @@ public class HomeClockFragment extends BaseObservableFragment {
             }
         }
 
-        if (homeCityId != -1) {
-            mHomeCity = realm.where(City.class).equalTo("id", homeCityId).findFirst();
-            showLocationCityInfo.setText(mHomeCity.getName());
+        if (homeCityName != null) {
+            showLocationCityInfo.setText(homeCityName + "," + homeCountryName);
+            mHomeCalendar = Calendar.getInstance(TimeZone.getTimeZone(Preferences.
+                    getHomeTimezoneId(HomeClockFragment.this.getActivity())));
         } else {
             mHomeCalendar = calendar;
             showLocationCityInfo.setText(localCityName);
@@ -143,10 +148,6 @@ public class HomeClockFragment extends BaseObservableFragment {
     }
 
     private void refreshClock() {
-        String temp = mHomeCity.getTimezoneRef().getGmt();
-        temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
-        mHomeCalendar = Calendar.getInstance(TimeZone.getTimeZone(temp));
-
         setHomeDay(mHomeCalendar);
         int mCurHour = mHomeCalendar.get(Calendar.HOUR);
         int mCurMin = mHomeCalendar.get(Calendar.MINUTE);

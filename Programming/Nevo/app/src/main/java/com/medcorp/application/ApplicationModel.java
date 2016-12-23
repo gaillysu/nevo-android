@@ -4,6 +4,9 @@ import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.IntentSender;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -82,6 +85,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -191,17 +196,13 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onEvent(SetSunriseAndSunsetTimeRequestEvent event) {
-        if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.START){
+        if (event.getStatus() == SetSunriseAndSunsetTimeRequestEvent.STATUS.START) {
             getLocationController().startUpdateLocation();
-        }
-        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS)
-        {
+        } else if (event.getStatus() == SetSunriseAndSunsetTimeRequestEvent.STATUS.SUCCESS) {
             getLocationController().stopLocation();
-        }
-        else if(event.getStatus()== SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED)
-        {
+        } else if (event.getStatus() == SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED) {
             //TODO how to do it
-            Log.w("ApplicationModel","setSunriseAndSunset got failed.");
+            Log.w("ApplicationModel", "setSunriseAndSunset got failed.");
         }
     }
 
@@ -213,9 +214,10 @@ public class ApplicationModel extends Application {
         return worldClockDatabaseHelper;
     }
 
-    public LocationController getLocationController(){
+    public LocationController getLocationController() {
         return locationController;
     }
+
     public StepsDatabaseHelper getStepsHelper() {
         return stepsDatabaseHelper;
     }
@@ -705,6 +707,27 @@ public class ApplicationModel extends Application {
 
     public boolean removeLedLamp(int id) {
         return ledDataBase.remove(id);
+    }
+
+    public Address getPositionLocal(Location mLocation) {
+        Address address = null;
+        DecimalFormat decimal = new DecimalFormat("########0.00");
+        DecimalFormat decimal1 = new DecimalFormat("########0.0");
+        double latitude = new Double(decimal.format(mLocation.getLatitude())).doubleValue();
+        double longitude = new Double(decimal1.format(mLocation.getLongitude())).doubleValue();
+        List<Address> addList = null;
+        Geocoder ge = new Geocoder(this);
+        try {
+            addList = ge.getFromLocation(latitude, longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (addList != null && addList.size() > 0) {
+            for (int i = 0; i < addList.size(); i++) {
+                address = addList.get(i);
+            }
+        }
+        return address;
     }
 
     public LedLamp getUserSelectLedLamp(int color) {

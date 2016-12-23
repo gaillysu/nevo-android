@@ -1,7 +1,7 @@
 package com.medcorp.util;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -9,6 +9,9 @@ import java.util.GregorianCalendar;
  */
 
 public class TimeUtil {
+
+    private static final String GOOGLE_MAPS_API_KEY = "abcdefg";
+
     public static String formatTime(int walkDuration) {
         StringBuilder activityTime = new StringBuilder();
         if (walkDuration >= 60) {
