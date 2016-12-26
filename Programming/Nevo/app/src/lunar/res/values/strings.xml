@@ -10,8 +10,8 @@
     <string name="provider_file_string" translatable="false">com.med.lunar.fileprovider</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="time_able_morning">AM</string>
-    <string name="time_able_afternoon">PM</string>
+    <string name="time_able_morning">am</string>
+    <string name="time_able_afternoon">pm</string>
 
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>

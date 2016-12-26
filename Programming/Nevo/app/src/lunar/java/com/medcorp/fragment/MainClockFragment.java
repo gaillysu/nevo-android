@@ -159,7 +159,7 @@ public class MainClockFragment extends BaseFragment {
             homeCityName.setText(homeName);
             countryName.setText(homeCountryName);
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
-            String am_pm = calendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+            String am_pm = calendar.get(Calendar.HOUR_OF_DAY) < 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
             String minute = calendar.get(Calendar.MINUTE) >= 10 ? calendar.get(Calendar.MINUTE) + "" : "0" + calendar.get(Calendar.MINUTE);
             lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
         } else {

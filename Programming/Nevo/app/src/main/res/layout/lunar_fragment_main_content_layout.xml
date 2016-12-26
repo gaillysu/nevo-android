@@ -96,7 +96,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:maxLines="1"
-                android:text="nkasjdbk"
                 android:textColor="@color/text_color"
                 android:textSize="10sp"
                 />
@@ -156,9 +155,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:maxLines="1"
-                android:text="asmdm"
                 android:textColor="@color/text_color"
-                android:textSize="15dp"
+                android:textSize="12sp"
                 />
 
             <TextView
@@ -167,10 +165,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:maxLines="1"
-                android:text="njionon"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="15dp"
+                android:textSize="12sp"
                 />
         </LinearLayout>
     </RelativeLayout>
