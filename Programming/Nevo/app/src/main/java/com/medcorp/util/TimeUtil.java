@@ -10,8 +10,6 @@ import java.util.GregorianCalendar;
 
 public class TimeUtil {
 
-    private static final String GOOGLE_MAPS_API_KEY = "abcdefg";
-
     public static String formatTime(int walkDuration) {
         StringBuilder activityTime = new StringBuilder();
         if (walkDuration >= 60) {
