@@ -95,7 +95,7 @@
     <string name="tutorial_3_next">下一步</string>
 
     <string name="tutorial_4_title">打开手表蓝牙</string>
-    <string name="tutorial_4_text">按住第三键3秒钟，直到蓝灯闪烁.</string>
+    <string name="tutorial_4_text">按下第三键，任意LED灯闪烁表示蓝牙打开.</string>
     <string name="tutorial_4_next">下一步</string>
 
     <string name="tutorial_5_title">正在搜索&#8230;</string>

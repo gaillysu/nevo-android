@@ -15,4 +15,12 @@
     <string name="lunar_steps_percentage">OF GOAL</string>
     <string name="home_time_home_city_name"  translatable="false">Getting location.. </string>
     <string name="permission_location_message">We need your location to search for your LunaR and to determine the sunset and sunrise time</string>
+    <string name="edit_home_position_city">Position City</string>
+    <string name="edit_home_all_city">All City</string>
+    <string name="lunar_main_clock_charging_status_title">REALTIME HARVEST STATUS</string>
+    <string name="lunar_main_clock_sleep_time_title">INACTIVITY</string>
+    <string name="lunar_main_clock_local_home_time">LOCAL HOME TIME</string>
+    <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
+    <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
+    <string name="lunar_home_clock_steps_title_tv">CALORIES BURNED</string>
 </resources>

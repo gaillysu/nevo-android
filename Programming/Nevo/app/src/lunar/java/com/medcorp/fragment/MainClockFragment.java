@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.Timer10sEvent;
@@ -32,46 +31,27 @@ import com.medcorp.view.RoundProgressBar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Administrator on 2016/7/19.
+ * Created by Jason on 2016/12/26.
  */
+
 public class MainClockFragment extends BaseFragment {
 
     @Bind(R.id.HomeClockHour)
     ImageView hourImage;
-
     @Bind(R.id.HomeClockMinute)
     ImageView minImage;
-    @Bind(R.id.main_steps_progress_bar)
-    RoundProgressBar roundProgressBar;
-    @Bind(R.id.lunar_fragment_show_user_consume_calories)
-    TextView showUserCosumeCalories;
-    @Bind(R.id.lunar_fragment_show_user_steps_distance_tv)
-    TextView showUserStepsDistance;
-    @Bind(R.id.lunar_fragment_show_user_activity_time_tv)
-    TextView showUserActivityTime;
-    @Bind(R.id.lunar_fragment_show_user_steps_tv)
-    TextView showUserSteps;
-    @Bind(R.id.main_clock_content_nevo_include)
-    View nevoContentView;
-    @Bind(R.id.main_clock_content_lunar_include)
-    View lunarContentView;
-
-    //    lunar main clock item
-
     @Bind(R.id.lunar_main_clock_sleep_time_count)
     TextView lunarSleepTotal;
     @Bind(R.id.lunar_main_clock_home_city_time)
@@ -92,6 +72,8 @@ public class MainClockFragment extends BaseFragment {
     TextView goalPercentage;
     @Bind(R.id.lunar_main_clock_home_city_sunrise_icon)
     ImageView sunriseOrSunsetIv;
+    @Bind(R.id.lunar_main_clock_home_city_sunrise)
+    TextView sunriseTv;
 
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
@@ -111,8 +93,8 @@ public class MainClockFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
-        ButterKnife.bind(this, clockFragmentContentView);
+        View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
+        ButterKnife.bind(this, mainClockFragmentView);
         user = getModel().getNevoUser();
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
@@ -126,46 +108,10 @@ public class MainClockFragment extends BaseFragment {
         }
         refreshClock();
         initData(userSelectDate);
-        return clockFragmentContentView;
+        return mainClockFragmentView;
     }
 
-    public void initData(Date date) {
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            roundProgressBar.setVisibility(View.VISIBLE);
-            nevoContentView.setVisibility(View.VISIBLE);
-            lunarContentView.setVisibility(View.GONE);
-        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            nevoContentView.setVisibility(View.GONE);
-            lunarContentView.setVisibility(View.VISIBLE);
-            roundProgressBar.setVisibility(View.GONE);
-            initLunarData(date);
-        }
-
-        User user = getModel().getNevoUser();
-        Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
-        showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
-        showUserSteps.setText(String.valueOf(steps.getSteps()));
-
-        String result = null;
-        DecimalFormat df = new DecimalFormat("######0.00");
-        if (Preferences.getUnitSelect(MainClockFragment.this.getActivity())) {
-            result = df.format(user.getDistanceTraveled(steps) * 0.6213712f) + getString(R.string.unit_length);
-        } else {
-            result = String.format(Locale.ENGLISH, "%.2f km", user.getDistanceTraveled(steps));
-        }
-        String calories = user.getConsumedCalories(steps) + getString(R.string.unit_cal);
-
-        showUserStepsDistance.setText(String.valueOf(result));
-        showUserCosumeCalories.setText(calories);
-
-        int countSteps = steps.getSteps();
-        float value = (float) countSteps / (float) steps.getGoal();
-        roundProgressBar.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
-        goalProgress.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
-        goalPercentage.setText((value * 100 >= 100f ? 100 : (int) (value * 100)) + "%" + getString(R.string.lunar_steps_percentage));
-    }
-
-    private void initLunarData(Date date) {
+    private void initData(Date date) {
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
         lunarSleepTotal.setText(countSleepTime(date));
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
@@ -179,7 +125,8 @@ public class MainClockFragment extends BaseFragment {
             countryName.setText(homeCountryName);
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
             String am_pm = calendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
-            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + am_pm);
+            String minute = calendar.get(Calendar.MINUTE) >= 10 ? calendar.get(Calendar.MINUTE) + "" : "0" + calendar.get(Calendar.MINUTE);
+            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
             sunriseCityName.setText(homeCountryName);
         } else {
             homeName = positionLocal.getLocality();
@@ -188,7 +135,8 @@ public class MainClockFragment extends BaseFragment {
             countryName.setText(homeCountryName);
             Calendar calendar = Calendar.getInstance();
             String am_pm = calendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
-            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + am_pm);
+            String minute = calendar.get(Calendar.MINUTE) >= 10 ? calendar.get(Calendar.MINUTE) + "" : "0" + calendar.get(Calendar.MINUTE);
+            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
             sunriseCityName.setText(homeCountryName);
         }
 
@@ -205,10 +153,16 @@ public class MainClockFragment extends BaseFragment {
         if (sunriseHour * 60 + sunriseMin > hour * 60 + minute) {
             sunriseOfsunsetTime.setText(officialSunrise);
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunrise_icon));
+            sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunrise));
         } else {
             sunriseOfsunsetTime.setText(officialSunset);
+            sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunset));
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
         }
+        int countSteps = dailySteps.getSteps();
+        float value = (float) countSteps / (float) dailySteps.getGoal();
+        goalProgress.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
+        goalPercentage.setText((value * 100 >= 100f ? 100 : (int) (value * 100)) + "%" + getString(R.string.lunar_steps_percentage));
     }
 
     private SunriseSunsetCalculator computeSunriseTime(double latitude, double longitude, String zone) {
@@ -296,5 +250,4 @@ public class MainClockFragment extends BaseFragment {
             });
         }
     }
-
 }
