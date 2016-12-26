@@ -305,7 +305,7 @@
     <string name="lunar_fragment_steps_text">Steps</string>
     <string name="lunar_fragment_activity_time_text">Time</string>
     <string name="lunar_fragment_distance_km_text">Km</string>
-    <string name="my_nevo_new_update_available">NEW UPDATE AVAILABLE</string>
+    <string name="my_nevo_new_update_available">UPDATE NOW</string>
     <string name="my_device_version_text">Watch Version</string>
 
     <string name="analysis_fragment_table_steps">Steps</string>

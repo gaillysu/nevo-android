@@ -103,7 +103,7 @@ public class MyNevoActivity extends BaseActivity {
         }
 
         int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
-        int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+        final int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
         if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             firmwareURLs = Common.needOTAFirmwareURLs(this, currentSoftwareVersion, currentFirmwareVersion);
             //only update nevo watch
@@ -113,8 +113,10 @@ public class MyNevoActivity extends BaseActivity {
                 myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
             }
         } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            int buildinFirmwareVersion = getResources().getInteger(R.integer.launar_version);
+            final int buildinFirmwareVersion = getResources().getInteger(R.integer.launar_version);
             if (currentFirmwareVersion < buildinFirmwareVersion) {
+                firmwerUpdateInfomation.setText(currentFirmwareVersion + "/" + buildinFirmwareVersion);
+
                 showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -124,9 +126,11 @@ public class MyNevoActivity extends BaseActivity {
                         intent.putExtras(bundle);
                         MyNevoActivity.this.startActivity(intent);
                         MyNevoActivity.this.finish();
+                        firmwerUpdateInfomation.setVisibility(View.VISIBLE);
                     }
                 });
             } else {
+                showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
                 firmwerUpdateInfomation.setVisibility(View.INVISIBLE);
             }
         }
@@ -173,7 +177,7 @@ public class MyNevoActivity extends BaseActivity {
 
 
     private void initLunarData() {
-        showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
+
         String str_battery = this.getString(R.string.my_nevo_battery_low);
         if (myNevo.getBatteryLevel() == 2) {
             str_battery = this.getString(R.string.my_nevo_battery_full);

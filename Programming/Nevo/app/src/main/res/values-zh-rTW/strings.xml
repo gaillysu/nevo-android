@@ -33,4 +33,19 @@
     <string name="time_able_afternoon">上午</string>
     <string name="time_able_morning">下午</string>
     <string name="permission_location_message">我们需要你的位置信息来访问手表及设置日出日落时间</string>
+    <string name="add_new_notification_dialog_title">添加名字</string>
+    <string name="add_new_notification_dialog_hint_content">输入名字</string>
+    <string name="edit_home_all_city">全部城市</string>
+    <string name="edit_home_position_city">定位城市</string>
+    <string name="edit_notification_delete_item">刪除</string>
+    <string name="edit_notification_item_name">設置</string>
+    <string name="lunar_home_clock_steps_title_tv">步數</string>
+    <string name="lunar_main_clock_charging_status_title">太陽能狀態</string>
+    <string name="lunar_main_clock_home_city_sunrise">日出</string>
+    <string name="lunar_main_clock_home_city_sunset">日落</string>
+    <string name="lunar_main_clock_local_home_time">家鄉時間</string>
+    <string name="lunar_main_clock_sleep_time_title">睡眠</string>
+    <string name="new_nt_def_name">名字</string>
+    <string name="new_nt_select_color">選擇城市</string>
+    <string name="notification_def_name">默認名</string>
 </resources>

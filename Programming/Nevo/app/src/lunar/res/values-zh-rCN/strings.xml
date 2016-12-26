@@ -304,7 +304,6 @@
     <string name="monday">星期一</string>
     <string name="my_device_version_text">手表版本</string>
     <string name="my_nevo_new_update_available">有可用的新版本</string>
-    <string name="network_wait_text">请等待...</string>
     <string name="open_forget_password_dialog_title">忘记密码</string>
     <string name="profile_fragment_edit_first_name_edit_hint">输入名字</string>
     <string name="profile_fragment_first_name_text">名字</string>

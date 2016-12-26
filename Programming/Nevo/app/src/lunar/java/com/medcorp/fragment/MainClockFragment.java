@@ -44,6 +44,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jason on 2016/12/26.
+ *
  */
 
 public class MainClockFragment extends BaseFragment {
@@ -61,7 +62,7 @@ public class MainClockFragment extends BaseFragment {
     @Bind(R.id.lunar_main_clock_home_country)
     TextView countryName;
     @Bind(R.id.lunar_main_clock_home_city_sunrise_time_tv)
-    TextView sunriseOfsunsetTime;
+    TextView sunriseOfSunsetTime;
     @Bind(R.id.lunar_main_clock_home_city_name_tv)
     TextView sunriseCityName;
     @Bind(R.id.lunar_main_clock_steps_goal_analysis)
@@ -140,11 +141,11 @@ public class MainClockFragment extends BaseFragment {
         int minute = calendar.get(Calendar.MINUTE);
 
         if (sunriseHour * 60 + sunriseMin > hour * 60 + minute) {
-            sunriseOfsunsetTime.setText(officialSunrise);
+            sunriseOfSunsetTime.setText(officialSunrise);
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunrise_icon));
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunrise));
         } else {
-            sunriseOfsunsetTime.setText(officialSunset);
+            sunriseOfSunsetTime.setText(officialSunset);
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunset));
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
         }
