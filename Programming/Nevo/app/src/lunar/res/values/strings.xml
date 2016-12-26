@@ -434,10 +434,10 @@
     <string name="user_select_imperial">Imperial</string>
     <string name="edit_home_position_city">Position City</string>
     <string name="edit_home_all_city">All City</string>
-    <string name="lunar_main_clock_charging_status_title">REALTIME HARVEST STATUS</string>
+    <string name="lunar_main_clock_charging_status_title">HARVEST STATUS</string>
     <string name="lunar_main_clock_sleep_time_title">INACTIVITY</string>
-    <string name="lunar_main_clock_local_home_time">LOCAL HOME TIME</string>
+    <string name="lunar_main_clock_local_home_time">HOME TIME</string>
     <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
     <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
-    <string name="lunar_home_clock_steps_title_tv">CALORIES BURNED</string>
+    <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
 </resources>
