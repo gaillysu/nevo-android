@@ -103,11 +103,12 @@ public class MyNevoActivity extends BaseActivity {
         }
 
         int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
-        final int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            firmwareURLs = Common.needOTAFirmwareURLs(this, currentSoftwareVersion, currentFirmwareVersion);
-            //only update nevo watch
-            if (!firmwareURLs.isEmpty() && getModel().getSyncController().getWatchInfomation().getWatchID() == 1) {
+        int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            firmwareURLs = Common.needOTAFirmwareURLs(this, currentSoftwareVersion, currentFirmwareVersion,getModel().getSyncController().getWatchInfomation().getWatchID());
+            //only update nevo watch or nevo solar watch
+            if (!firmwareURLs.isEmpty() && (getModel().getSyncController().getWatchInfomation().getWatchID() ==1
+                    || getModel().getSyncController().getWatchInfomation().getWatchID() ==2)) {
                 myNevo.setAvailableVersion(true);
                 myNevo.setFirmwareURLs(firmwareURLs);
                 myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));

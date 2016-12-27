@@ -261,7 +261,7 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         manualMode = bundle.getBoolean(getString(R.string.key_manual_mode), false);
         if(manualMode) {
             if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-                firmwareURLs = Common.getAllBuildinFirmwareURLs(this);
+                firmwareURLs = Common.getAllBuildinFirmwareURLs(this,getModel().getSyncController().getWatchInfomation().getWatchID());
             }
             else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
                 firmwareURLs = Common.getAllBuildinZipFirmwareURLs(this,getModel().getSyncController().getWatchInfomation().getWatchID());
