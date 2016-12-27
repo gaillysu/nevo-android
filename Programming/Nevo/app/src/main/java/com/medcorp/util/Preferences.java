@@ -69,6 +69,18 @@ public class Preferences {
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics), false);
     }
 
+    public static void savePlaceSelect(Context context, boolean isMetrics) {
+        init(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(context.getString(R.string.key_prefs_is_home), isMetrics).apply();
+    }
+
+    public static boolean getPlaceSelect(Context context) {
+        init(context);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_is_home), false);
+    }
+
+
     public static void startInitAlarm(Context context, boolean isInit) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
