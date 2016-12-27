@@ -8,27 +8,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <!--<RelativeLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="45dp">-->
-
-    <!--<ImageButton-->
-    <!--android:id="@+id/open_tutorial_page_video"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@mipmap/icon_vdioe"-->
-    <!--android:paddingLeft="18dp"-->
-    <!--android:background="@android:color/transparent"-->
-    <!--/>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_centerInParent="true"-->
-    <!--android:typeface="monospace"-->
-    <!--android:text="@string/login_page_activity_title"-->
-    <!--android:textColor="@color/text_color"-->
-    <!--android:textSize="22sp"/>-->
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/login_activity_layout"
         android:layout_width="match_parent"

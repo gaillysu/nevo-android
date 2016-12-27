@@ -10,15 +10,15 @@
     <string name="provider_file_string" translatable="false">com.med.lunar.fileprovider</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="time_able_morning">AM</string>
-    <string name="time_able_afternoon">PM</string>
+    <string name="time_able_morning">am</string>
+    <string name="time_able_afternoon">pm</string>
 
     <string name="ble_not_supported">Smartphone does not support BLE</string>
     <string name="ble_deactivated">Bluetooth is turned off, please turn the bluetooth on to make connection.</string>
     <string name="ble_unstable">Bluetooth connection is unstable, please keep the watch closer to the phone.</string>
     <string name="ble_connect_timeout">If connected to the internet, press Help button for solutions</string>
     <string name="ble_notification_title">Notification</string>
-    <string name="ble_notification_message">nevo is not paired, please pair first</string>
+    <string name="ble_notification_message">Lunar is not paired, please pair first</string>
     <string name="ble_command_timeout_title">Bluetooth communication timeout</string>
     <string name="ble_connect_timeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
     <string name="ble_connection_timeout_title">Bluetooth connection timeout</string>
@@ -49,14 +49,14 @@
     <string name="dfu_back">Back</string>
     <string name="dfu_press_third_button">Press the third button</string>
     <string name="dfu_press_third_button_description">Don’t exit this screen while reactivating your bluetooth!</string>
-    <string name="dfu_failed_preparing">Failed to prepare the update, please restart the BT of nevo or reinstall battery.</string>
+    <string name="dfu_failed_preparing">Failed to prepare the update, please restart the BT of lunar or reinstall battery.</string>
     <string name="dfu_re_upgrade">Try again</string>
     <string name="dfu_continue_button">Continue</string>
-    <string name="dfu_connect_error_no_nevo_do_ota">nevo isn\'t connected, can\'t perform OTA update</string>
+    <string name="dfu_connect_error_no_nevo_do_ota">lunar isn\'t connected, can\'t perform OTA update</string>
     <string name="dfu_checking_firmware">Checking firmware version, please wait&#8230;</string>
     <string name="dfu_error_lowbattery">Not enough battery to upgrade.</string>
     <string name="dfu_error_timeout">Connection timed out</string>
-    <string name="dfu_error_noconnect">No nevo connected</string>
+    <string name="dfu_error_noconnect">No lunar connected</string>
     <string name="dfu_error_openfile">Open Firmware file error.</string>
     <string name="dfu_error_checksum">Checksum error.</string>
     <string name="dfu_error_nofounDFUservice">No OTA service found, please wait for few minutes and try again.</string>
@@ -86,14 +86,14 @@
 
     <string name="tutorial_2_title">Turn on Bluetooth</string>
     <string name="tutorial_2_dialog_negative">Settings</string>
-    <string name="tutorial_2_dialog_positive">Turn on Bluetooth in the settings to connect with nevo</string>
+    <string name="tutorial_2_dialog_positive">Turn on Bluetooth in the settings to connect with lunar</string>
 
     <string name="tutorial_3_title">Set time</string>
     <string name="tutorial_3_next">Next</string>
 
     <string name="tutorial_4_next">Next</string>
 
-    <string name="tutorial_5_text">Keep nevo close to your phone</string>
+    <string name="tutorial_5_text">Keep lunar close to your phone</string>
 
     <string name="tutorial_failed_title">Cannot connect</string>
     <string name="tutorial_failed_try_again">Try Again</string>
@@ -110,7 +110,7 @@
     <string name="sleep_awake">Awake</string>
 
     <string name="sleep_wake_duration">Wake duration</string>
-    <string name="sleep_today_no_sleep_message">You didn\'t sleep with your nevo.</string>
+    <string name="sleep_today_no_sleep_message">You didn\'t sleep with your lunar.</string>
     <string name="sleep_select_date">select a date</string>
 
     <string name="steps_goal_title">Goal</string>
@@ -170,9 +170,9 @@
     <string name="in_app_notification_syncing_alarm">Syncing Alarm&#8230;</string>
     <string name="in_app_notification_synced">Syncing data finished!</string>
     <string name="in_app_notification_no_watch">No watch connected.</string>
-    <string name="in_app_notification_max_fourteen_alarm">nevo supports only fourteen alarms.</string>
+    <string name="in_app_notification_max_fourteen_alarm">Lunar supports only fourteen alarms.</string>
     <string name="title_alarm">Alarm</string>
-    <string name="title_my_nevo">My nevo</string>
+    <string name="title_my_nevo">My Lunar</string>
     <string name="title_about">About</string>
     <string name="title_notifications">Notifications</string>
 
@@ -252,7 +252,7 @@
     <string name="help_track_sleep_title">Track your sleep</string>
     <string name="help_track_sleep_message">To activate sleeping-mode, push and hold the first button, until the white LED blinks.</string>
     <string name="help_track_sleep_goodmorning">Good morning</string>
-    <string name="help_track_sleep_good_morning_message">You just finished tracking your first night of sleep with your nevo. To start tracking your daily routine,
+    <string name="help_track_sleep_good_morning_message">You just finished tracking your first night of sleep with your lunar. To start tracking your daily routine,
         push and hold the third button, until the white LED blinks</string>
     <string name="help_got_it">Got it!</string>
     <string name="help_goto_sleep">How to track you sleep?</string>
@@ -305,7 +305,7 @@
     <string name="lunar_fragment_steps_text">Steps</string>
     <string name="lunar_fragment_activity_time_text">Time</string>
     <string name="lunar_fragment_distance_km_text">Km</string>
-    <string name="my_nevo_new_update_available">NEW UPDATE AVAILABLE</string>
+    <string name="my_nevo_new_update_available">UPDATE NOW</string>
     <string name="my_device_version_text">Watch Version</string>
 
     <string name="analysis_fragment_table_steps">Steps</string>
@@ -369,7 +369,7 @@
     <string name="tutorial_2_text">Tap the Settings button and turn\n Bluetooth on.</string>
     <string name="tutorial_2_continue">Turn Bluetooth on</string>
     <string name="tutorial_4_title">Turn on LunaR </string>
-    <string name="tutorial_4_text">Push and hold the third button, until the \n blue LED blinks.</string>
+    <string name="tutorial_4_text">Push and hold the third button, until the \n LED blinks.</string>
     <string name="tutorial_5_title">Searching...</string>
     <string name="tutorial_failed_text">Make sure the blue LED on the LunaR is blinking\n and try again.</string>
     <string name="in_app_notification_found_nevo">Found LunaR!</string>
@@ -432,4 +432,12 @@
     <string name="more_setting_unit">Unit</string>
     <string name="user_select_metrics">Metrics</string>
     <string name="user_select_imperial">Imperial</string>
+    <string name="edit_home_position_city">Position City</string>
+    <string name="edit_home_all_city">All City</string>
+    <string name="lunar_main_clock_charging_status_title">HARVESTING STATUS</string>
+    <string name="lunar_main_clock_sleep_time_title">INACTIVITY</string>
+    <string name="lunar_main_clock_local_home_time">HOME TIME</string>
+    <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
+    <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
+    <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
 </resources>

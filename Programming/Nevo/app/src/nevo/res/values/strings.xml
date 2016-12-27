@@ -424,5 +424,6 @@ push and hold the third button, until the white LED blinks</string>
     <string name="more_setting_unit">Unit</string>
     <string name="user_select_metrics">Metrics</string>
     <string name="user_select_imperial">Imperial</string>
+
     <!--<lunar end>-->
 </resources>

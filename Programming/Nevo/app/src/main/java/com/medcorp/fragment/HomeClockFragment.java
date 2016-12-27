@@ -1,7 +1,7 @@
 package com.medcorp.fragment;
 
+import android.location.Address;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +53,10 @@ public class HomeClockFragment extends BaseObservableFragment {
     private City locationCity;
     private String localCityName;
     private TimeZone timeZone;
-    private String mHomeCityName;
+    private String homeCityName;
+    private String homeCountryName;
+    private City mHomeCity;
+    private Calendar mHomeCalendar;
 
 
     @Override
@@ -68,7 +71,6 @@ public class HomeClockFragment extends BaseObservableFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mHomeCityName = Preferences.getSaveHomeCityName(HomeClockFragment.this.getContext());
         initView();
         refreshClock();
     }
@@ -79,17 +81,29 @@ public class HomeClockFragment extends BaseObservableFragment {
     }
 
     private void initView() {
-        showLocationCityInfo.setText(mHomeCityName);
+        homeCityName = Preferences.getPositionCity(HomeClockFragment.this.getContext());
+        homeCountryName = Preferences.getPositionCountry(HomeClockFragment.this.getContext());
+
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
-
-        localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+        Address positionLocal = getModel().getPositionLocal(getModel().getLocationController().getLocation());
+        localCityName = positionLocal.getLocality() + ", " + positionLocal.getCountryName();
         for (City city : cities) {
             if (city.getName().equals(localCityName)) {
                 this.locationCity = city;
+                setSunriseAndSunset(locationCity, timeZone.getID());
             }
         }
-        setSunriseAndSunset(locationCity, timeZone.getID());
+
+        if (homeCityName != null) {
+            showLocationCityInfo.setText(homeCityName + "," + homeCountryName);
+            mHomeCalendar = Calendar.getInstance(TimeZone.getTimeZone(Preferences.
+                    getHomeTimezoneId(HomeClockFragment.this.getActivity())));
+        } else {
+            mHomeCalendar = calendar;
+            showLocationCityInfo.setText(localCityName);
+            mHomeCity = locationCity;
+        }
     }
 
     @Override
@@ -134,39 +148,25 @@ public class HomeClockFragment extends BaseObservableFragment {
     }
 
     private void refreshClock() {
-        Calendar mCalendar = null;
-
-        if (mHomeCityName == null) {
-            mCalendar = Calendar.getInstance();
-        } else {
-            for (City city : cities) {
-                if ((city.getName() + ", " + city.getCountry()).equals(mHomeCityName)) {
-                    Log.i("jason", city.getTimezoneRef().toString());
-                    String temp = city.getTimezoneRef().getGmt();
-                    temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
-                    mCalendar = Calendar.getInstance(TimeZone.getTimeZone(temp));
-                }
-            }
-        }
-        setHomeDay(mCalendar);
-        int mCurHour = mCalendar.get(Calendar.HOUR);
-        int mCurMin = mCalendar.get(Calendar.MINUTE);
+        setHomeDay(mHomeCalendar);
+        int mCurHour = mHomeCalendar.get(Calendar.HOUR);
+        int mCurMin = mHomeCalendar.get(Calendar.MINUTE);
         minuteClock.setRotation((float) (mCurMin * 6));
         hourClock.setRotation((float) ((mCurHour + mCurMin / 60.0) * 30));
 
-        showLocationDate.setText(mCalendar.get(Calendar.DAY_OF_MONTH) + " "
-                + new SimpleDateFormat("MMM").format(mCalendar.getTime()) + " ,"
-                + mCalendar.get(Calendar.YEAR));
+        showLocationDate.setText(mHomeCalendar.get(Calendar.DAY_OF_MONTH) + " "
+                + new SimpleDateFormat("MMM").format(mHomeCalendar.getTime()) + " ,"
+                + mHomeCalendar.get(Calendar.YEAR));
 
-        syncWatch(mCalendar);
+        syncWatch(mHomeCalendar);
     }
+
 
     private void syncWatch(Calendar mCalendar) {
 
         byte sunriseHour = (byte) mCalendar.get(Calendar.HOUR);
         byte sunriseMin = (byte) mCalendar.get(Calendar.MINUTE);
-        byte timeZoneOffset = (byte) (mCalendar.getTimeZone().getRawOffset() / 3600 / 1000);
-        EventBus.getDefault().post(new HomeTimeEvent(timeZoneOffset, sunriseHour, sunriseMin));
+        EventBus.getDefault().post(new HomeTimeEvent(sunriseHour, sunriseMin));
     }
 
     public void setHomeDay(Calendar mCalendar) {

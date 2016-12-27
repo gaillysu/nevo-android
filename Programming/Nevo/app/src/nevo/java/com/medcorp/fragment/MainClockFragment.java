@@ -59,6 +59,7 @@ public class MainClockFragment extends BaseFragment {
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
 
+
     private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
         int mCurHour = mCalendar.get(Calendar.HOUR);
@@ -69,9 +70,8 @@ public class MainClockFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View clockFragmentContentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
+        View clockFragmentContentView = inflater.inflate(R.layout.nevo_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, clockFragmentContentView);
-
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -88,6 +88,7 @@ public class MainClockFragment extends BaseFragment {
     }
 
     public void initData(Date date) {
+
         User user = getModel().getNevoUser();
         Steps steps = getModel().getDailySteps(user.getNevoUserID(), date);
         showUserActivityTime.setText(TimeUtil.formatTime(steps.getWalkDuration() + steps.getRunDuration()));
@@ -106,7 +107,6 @@ public class MainClockFragment extends BaseFragment {
         showUserCosumeCalories.setText(calories);
 
         int countSteps = steps.getSteps();
-        int goal = steps.getGoal();
         float value = (float) countSteps / (float) steps.getGoal();
         roundProgressBar.setProgress(value * 100 >= 100f ? 100 : (int) (value * 100));
     }

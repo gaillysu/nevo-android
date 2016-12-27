@@ -1,12 +1,13 @@
 package com.medcorp.activity;
 
+import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.medcorp.view.SideBar;
 import net.medcorp.library.worldclock.City;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,15 +41,12 @@ import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/26.
- *
  */
 
 public class EditWorldClockActivity extends BaseActivity {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
-    @Bind(R.id.toolbar_line_view)
-    View view;
     @Bind(R.id.show_all_city_list)
     ListView showAllCityList;
     @Bind(R.id.choose_activity_list_index_sidebar)
@@ -56,6 +55,8 @@ public class EditWorldClockActivity extends BaseActivity {
     EditText searchCityAutoCompleteTv;
     @Bind(R.id.search_city_result_list)
     ListView searchResultListView;
+    @Bind(R.id.edit_home_city_tv)
+    TextView positionCityName;
 
     private Realm realm = Realm.getDefaultInstance();
     private RealmResults<City> cities;
@@ -64,6 +65,7 @@ public class EditWorldClockActivity extends BaseActivity {
     private ChooseCityAdapter allCityAdapter;
     private SearchWorldAdapter autoAdapter;
     private List<ChooseCityViewModel> resultList;
+    private Location mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,24 +79,37 @@ public class EditWorldClockActivity extends BaseActivity {
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.choose_activity_title_choose_city_tv);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        view.setVisibility(View.GONE);
         initData();
     }
+
 
     private void initData() {
         resultList = new ArrayList<>();
         autoAdapter = new SearchWorldAdapter(resultList, this);
         searchResultListView.setAdapter(autoAdapter);
-
         cities = realm.where(City.class).findAll();
+        mLocation = getModel().getLocationController().getLocation();
+        final Address positionLocal = getModel().getPositionLocal(mLocation);
+        positionCityName.setText(positionLocal.getLocality() + "," + positionLocal.getCountryName());
         chooseCityViewModelsList = new ArrayList<>();
         pinyinComparator = new PinyinComparator();
 
         for (int i = 0; i < cities.size(); i++) {
             chooseCityViewModelsList.add(new ChooseCityViewModel(cities.get(i)));
         }
-
         Collections.sort(chooseCityViewModelsList, pinyinComparator);
+        //position City click event
+        positionCityName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Preferences.savePositionCity(EditWorldClockActivity.this,positionLocal.getLocality());
+                Preferences.savePositionCountry(EditWorldClockActivity.this,positionLocal.getCountryName());
+                Preferences.saveHomeCityCalender(EditWorldClockActivity.this,Calendar.getInstance().getTimeZone().getID());
+                searchCityAutoCompleteTv.setText(positionLocal.getLocality());
+                finish();
+            }
+        });
+
         allCityAdapter = new ChooseCityAdapter(this, chooseCityViewModelsList);
         showAllCityList.setAdapter(allCityAdapter);
         sortCityBar.setOnTouchingLetterChangedListener(new SideBar.OnTouchingLetterChangedListener() {
@@ -110,13 +125,14 @@ public class EditWorldClockActivity extends BaseActivity {
         showAllCityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectCity(chooseCityViewModelsList.get(position));
+                selectCity(chooseCityViewModelsList.get(position).getCityId());
             }
         });
+
         searchResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectCity(resultList.get(position));
+                selectCity(resultList.get(position).getCityId());
             }
         });
         searchCityAutoCompleteTv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -139,7 +155,6 @@ public class EditWorldClockActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence content, int start, int before, int count) {
-                Log.i("jason", content.toString());
                 resultList.clear();
                 searchCity(content.toString());
                 autoAdapter.notifyDataSetChanged();
@@ -151,6 +166,7 @@ public class EditWorldClockActivity extends BaseActivity {
             }
         });
     }
+
 
     @OnClick(R.id.edit_world_clock_cancel_search_button)
     public void cancelClick() {
@@ -183,10 +199,17 @@ public class EditWorldClockActivity extends BaseActivity {
         }
     }
 
-    public void selectCity(ChooseCityViewModel chooseCityModel) {
-        String name = chooseCityModel.getDisplayName();
-        Preferences.saveUserHomeCityName(EditWorldClockActivity.this, chooseCityModel.getDisplayName());
-        searchCityAutoCompleteTv.setText(name);
+    //save select city
+    public void selectCity(int cityId) {
+        //保存home time
+        City selectCity = realm.where(City.class).equalTo("id", cityId).findFirst();
+        String temp = selectCity.getTimezoneRef().getGmt();
+        temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
+        Preferences.savePositionCity(EditWorldClockActivity.this,selectCity.getName());
+        Preferences.savePositionCountry(EditWorldClockActivity.this,selectCity.getCountry());
+        Preferences.saveHomeCityCalender(EditWorldClockActivity.this,temp);
+
+        searchCityAutoCompleteTv.setText(selectCity.getName());
         allCityAdapter.notifyDataSetChanged();
         finish();
     }

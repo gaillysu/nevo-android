@@ -50,4 +50,6 @@ public interface MedCorp {
     @POST("/user/forget_password")
     LoginUserModel forgetPassword(@Body ChangePasswordObject object,@Header("Authorization") String auth,@Header("Content-Type") String type);
 
+
+
 }

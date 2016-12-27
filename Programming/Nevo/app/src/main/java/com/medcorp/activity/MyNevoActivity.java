@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * Created by gaillysu on 15/12/28.
  */
-public class MyNevoActivity  extends BaseActivity {
+public class MyNevoActivity extends BaseActivity {
 
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
@@ -74,11 +74,11 @@ public class MyNevoActivity  extends BaseActivity {
             e.printStackTrace();
         }
 
-        myNevo = new MyNevo(getModel().getWatchFirmware(),getModel().getWatchSoftware(),app_version,battery_level,available_version,null);
-        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+        myNevo = new MyNevo(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
+        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
             showMyDeviceNewsLayout.setVisibility(View.GONE);
             myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
-        }else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR){
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
             myNevoListView.setVisibility(View.GONE);
             showMyDeviceNewsLayout.setVisibility(View.VISIBLE);
             initLunarData();
@@ -88,19 +88,17 @@ public class MyNevoActivity  extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (getModel().isWatchConnected()){
+        if (getModel().isWatchConnected()) {
             getModel().getBatteryLevelOfWatch();
         }
         checkVersion();
     }
 
-    private void checkVersion()
-    {
+    private void checkVersion() {
         List<String> firmwareURLs = new ArrayList<>();
         //check build-in firmwares
         //fill  list by build-in files or download files
-        if(null == getModel().getWatchSoftware() || null == getModel().getWatchFirmware())
-        {
+        if (null == getModel().getWatchSoftware() || null == getModel().getWatchFirmware()) {
             return;
         }
 
@@ -115,24 +113,25 @@ public class MyNevoActivity  extends BaseActivity {
                 myNevo.setFirmwareURLs(firmwareURLs);
                 myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
             }
-        }
-        else if(ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR)
-        {
-            int buildinFirmwareVersion = getResources().getInteger(R.integer.launar_version);
-            if(currentFirmwareVersion<buildinFirmwareVersion) {
+        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+            final int buildinFirmwareVersion = getResources().getInteger(R.integer.launar_version);
+            if (currentFirmwareVersion < buildinFirmwareVersion) {
+                firmwerUpdateInfomation.setText(currentFirmwareVersion + "/" + buildinFirmwareVersion);
+
                 showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this,getModel().getSyncController().getWatchInfomation().getWatchID()));
+                        bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this, getModel().getSyncController().getWatchInfomation().getWatchID()));
                         intent.putExtras(bundle);
                         MyNevoActivity.this.startActivity(intent);
                         MyNevoActivity.this.finish();
+                        firmwerUpdateInfomation.setVisibility(View.VISIBLE);
                     }
                 });
-            }
-            else {
+            } else {
+                showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
                 firmwerUpdateInfomation.setVisibility(View.INVISIBLE);
             }
         }
@@ -162,16 +161,15 @@ public class MyNevoActivity  extends BaseActivity {
     }
 
     @Subscribe
-    public void onEvent(final BatteryEvent batteryEvent){
+    public void onEvent(final BatteryEvent batteryEvent) {
         //fix crash:  Only the original thread that created a view hierarchy can touch its views.
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
-                if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+                if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
                     myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
-                }
-                else {
+                } else {
                     initLunarData();
                 }
             }
@@ -180,14 +178,11 @@ public class MyNevoActivity  extends BaseActivity {
 
 
     private void initLunarData() {
-       showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
-        String str_battery=this.getString(R.string.my_nevo_battery_low);
-        if(myNevo.getBatteryLevel()==2)
-        {
+
+        String str_battery = this.getString(R.string.my_nevo_battery_low);
+        if (myNevo.getBatteryLevel() == 2) {
             str_battery = this.getString(R.string.my_nevo_battery_full);
-        }
-        else if(myNevo.getBatteryLevel()==1)
-        {
+        } else if (myNevo.getBatteryLevel() == 1) {
             str_battery = this.getString(R.string.my_nevo_battery_half);
         }
         showWatchBattery.setText(str_battery);
