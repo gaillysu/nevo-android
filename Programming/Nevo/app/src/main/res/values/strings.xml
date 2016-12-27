@@ -23,4 +23,6 @@
     <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
     <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
     <string name="lunar_home_clock_steps_title_tv">CALORIES BURNED</string>
+    <string name="my_watch_firmwer_version">Version </string>
+    <string name="my_watch_firmwer_version_describe"> is now available for your LunaR!</string>
 </resources>

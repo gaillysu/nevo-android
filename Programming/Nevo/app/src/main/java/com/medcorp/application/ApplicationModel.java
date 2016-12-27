@@ -86,7 +86,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -711,14 +710,10 @@ public class ApplicationModel extends Application {
 
     public Address getPositionLocal(Location mLocation) {
         Address address = null;
-        DecimalFormat decimal = new DecimalFormat("########0.00");
-        DecimalFormat decimal1 = new DecimalFormat("########0.0");
-        double latitude = new Double(decimal.format(mLocation.getLatitude())).doubleValue();
-        double longitude = new Double(decimal1.format(mLocation.getLongitude())).doubleValue();
         List<Address> addList = null;
         Geocoder ge = new Geocoder(this);
         try {
-            addList = ge.getFromLocation(latitude, longitude, 1);
+            addList = ge.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
         } catch (IOException e) {
             e.printStackTrace();
         }

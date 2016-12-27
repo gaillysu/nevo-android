@@ -1,6 +1,7 @@
 package com.medcorp.fragment;
 
 import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,8 @@ import com.medcorp.util.SleepDataUtils;
 import com.medcorp.util.TimeUtil;
 import com.medcorp.view.RoundProgressBar;
 
+import net.medcorp.library.worldclock.City;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -41,10 +44,11 @@ import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/12/26.
- *
  */
 
 public class MainClockFragment extends BaseFragment {
@@ -84,6 +88,9 @@ public class MainClockFragment extends BaseFragment {
     private String homeCountryName;
     private String timeZoneId;
     private Address mPositionLocal;
+    private SunriseSunsetCalculator calculator;
+    private Realm realm = Realm.getDefaultInstance();
+    private City LocalCity;
 
     private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
@@ -116,8 +123,27 @@ public class MainClockFragment extends BaseFragment {
     private void initData(Date date) {
         lunarSleepTotal.setText(countSleepTime(date));
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
-        mPositionLocal = getModel().getPositionLocal(getModel().getLocationController().getLocation());
+        Location location = getModel().getLocationController().getLocation();
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
+        mPositionLocal = getModel().getPositionLocal(location);
+
+        if (mPositionLocal != null) {
+            calculator = computeSunriseTime(mPositionLocal.getLatitude(), mPositionLocal.getLongitude()
+                    , Calendar.getInstance().getTimeZone().getID());
+            sunriseCityName.setText(mPositionLocal.getCountryName());
+        } else {
+            RealmResults<City> cities = realm.where(City.class).findAll();
+            TimeZone timeZone = Calendar.getInstance().getTimeZone();
+            String localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+            for (City city : cities) {
+                if (city.getName().equals(localCityName)) {
+                    calculator = computeSunriseTime(city.getLat(), city.getLng()
+                            , Calendar.getInstance().getTimeZone().getID());
+                    this.LocalCity = city;
+                    sunriseCityName.setText(LocalCity.getCountry());
+                }
+            }
+        }
         setData();
         setSunsetOrSunrise();
 
@@ -125,12 +151,10 @@ public class MainClockFragment extends BaseFragment {
         float valueCalories = (float) countCalories / (float) dailySteps.getGoal();
         goalProgress.setProgress(valueCalories * 100 >= 100f ? 100 : (int) (valueCalories * 100));
         goalPercentage.setText((valueCalories * 100 >= 100f ? 100 : (int) (valueCalories * 100)) + "%" + getString(R.string.lunar_steps_percentage));
-
     }
 
     private void setSunsetOrSunrise() {
-        SunriseSunsetCalculator calculator = computeSunriseTime(mPositionLocal.getLatitude(), mPositionLocal.getLongitude()
-                , Calendar.getInstance().getTimeZone().getID());
+
         String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
 
@@ -149,7 +173,7 @@ public class MainClockFragment extends BaseFragment {
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunset));
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
         }
-        sunriseCityName.setText(mPositionLocal.getCountryName());
+
     }
 
     private void setData() {
@@ -164,8 +188,13 @@ public class MainClockFragment extends BaseFragment {
             String minute = calendar.get(Calendar.MINUTE) >= 10 ? calendar.get(Calendar.MINUTE) + "" : "0" + calendar.get(Calendar.MINUTE);
             lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
         } else {
-            homeName = mPositionLocal.getLocality();
-            homeCountryName = mPositionLocal.getCountryName();
+            if (mPositionLocal == null) {
+                homeName = LocalCity.getName();
+                homeCountryName = LocalCity.getCountry();
+            } else {
+                homeName = mPositionLocal.getLocality();
+                homeCountryName = mPositionLocal.getCountryName();
+            }
             homeCityName.setText(homeName);
             countryName.setText(homeCountryName);
             Calendar calendar = Calendar.getInstance();
