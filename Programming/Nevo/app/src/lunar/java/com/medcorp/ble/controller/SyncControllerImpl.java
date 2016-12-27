@@ -155,9 +155,9 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             public void run() {
                 //here do little sync to refesh current steps
                 getStepsAndGoal();
-                if (BuildConfig.DEBUG) {
-                    sendRequest(new TestModeRequest(mContext, TestModeRequest.MODE_F4));
-                }
+                //for new Lunar UI, query adc every 10s to show solar charging status
+                sendRequest(new TestModeRequest(mContext, TestModeRequest.MODE_F4));
+                
                 //send a 10s event to refresh clock
                 EventBus.getDefault().post(new Timer10sEvent());
             }
@@ -931,4 +931,4 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             //TODO Sound is fine but not sound from dogs. Thanks.
         }
     }
-}
+}
