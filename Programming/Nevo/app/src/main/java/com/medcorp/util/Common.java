@@ -192,7 +192,7 @@ public class Common {
             {
                 if(file.contains(".hex"))
                 {
-                    if(currentBleVersion <= buildinFirmwareVersion )
+                    if(currentBleVersion < buildinFirmwareVersion )
                     {
                         firmwareURLs.add(firmwarePath + "/" + file);
                         break;
@@ -210,7 +210,7 @@ public class Common {
             {
                 if(file.contains(".bin"))
                 {
-                    if(currentMcuVersion <= buildinSoftwareVersion )
+                    if(currentMcuVersion < buildinSoftwareVersion )
                     {
                         //if MCU got broken and reinstall battery, firstly update MCU
                         if(currentMcuVersion == 0)
