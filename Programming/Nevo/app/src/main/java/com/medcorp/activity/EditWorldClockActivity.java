@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,6 +67,8 @@ public class EditWorldClockActivity extends BaseActivity {
     private SearchWorldAdapter autoAdapter;
     private List<ChooseCityViewModel> resultList;
     private Location mLocation;
+    private String cityName;
+    private String countryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,22 @@ public class EditWorldClockActivity extends BaseActivity {
         cities = realm.where(City.class).findAll();
         mLocation = getModel().getLocationController().getLocation();
         final Address positionLocal = getModel().getPositionLocal(mLocation);
-        positionCityName.setText(positionLocal.getLocality() + "," + positionLocal.getCountryName());
+        if (positionLocal != null) {
+            cityName = positionLocal.getLocality();
+            countryName = positionLocal.getCountryName();
+        } else {
+            TimeZone timeZone = Calendar.getInstance().getTimeZone();
+            String localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+            for (City city : cities) {
+                if (city.getName().equals(localCityName)) {
+                    cityName = city.getName();
+                    countryName = city.getCountry();
+                    break;
+                }
+            }
+        }
+        positionCityName.setText(cityName + "," + countryName);
+
         chooseCityViewModelsList = new ArrayList<>();
         pinyinComparator = new PinyinComparator();
 
@@ -102,9 +120,9 @@ public class EditWorldClockActivity extends BaseActivity {
         positionCityName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Preferences.savePositionCity(EditWorldClockActivity.this,positionLocal.getLocality());
-                Preferences.savePositionCountry(EditWorldClockActivity.this,positionLocal.getCountryName());
-                Preferences.saveHomeCityCalender(EditWorldClockActivity.this,Calendar.getInstance().getTimeZone().getID());
+                Preferences.savePositionCity(EditWorldClockActivity.this, cityName);
+                Preferences.savePositionCountry(EditWorldClockActivity.this, countryName);
+                Preferences.saveHomeCityCalender(EditWorldClockActivity.this, Calendar.getInstance().getTimeZone().getID());
                 searchCityAutoCompleteTv.setText(positionLocal.getLocality());
                 finish();
             }
@@ -205,9 +223,9 @@ public class EditWorldClockActivity extends BaseActivity {
         City selectCity = realm.where(City.class).equalTo("id", cityId).findFirst();
         String temp = selectCity.getTimezoneRef().getGmt();
         temp = temp.substring(temp.indexOf("(") + 1, temp.indexOf(")"));
-        Preferences.savePositionCity(EditWorldClockActivity.this,selectCity.getName());
-        Preferences.savePositionCountry(EditWorldClockActivity.this,selectCity.getCountry());
-        Preferences.saveHomeCityCalender(EditWorldClockActivity.this,temp);
+        Preferences.savePositionCity(EditWorldClockActivity.this, selectCity.getName());
+        Preferences.savePositionCountry(EditWorldClockActivity.this, selectCity.getCountry());
+        Preferences.saveHomeCityCalender(EditWorldClockActivity.this, temp);
 
         searchCityAutoCompleteTv.setText(selectCity.getName());
         allCityAdapter.notifyDataSetChanged();

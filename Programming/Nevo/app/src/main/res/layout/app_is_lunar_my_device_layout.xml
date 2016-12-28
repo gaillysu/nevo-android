@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:roboto="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:roboto="http://schemas.android.com/apk/res-auto"
               android:layout_marginTop="15dp"
               android:orientation="vertical"
               android:padding="8dp"
@@ -13,34 +13,44 @@
         android:layout_height="40dp"
         android:orientation="horizontal"
         >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/my_nevo_firmware"
-            android:textColor="@color/text_color"
-            android:textSize="20sp"
-            />
 
-        <TextView
-            android:id="@+id/my_watch_update_tv"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/register_account_text_color"
-            android:textSize="12sp"
-            />
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/firmware"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/my_nevo_firmware"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"
+                />
+
+            <TextView
+                android:id="@+id/my_watch_update_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/firmware"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/register_account_text_color"
+                android:textSize="8sp"
+                />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/my_watch_version_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:drawablePadding="5dp"
-            android:text="@string/my_nevo_new_update_available"
             android:drawableRight="@drawable/right_arrow"
             android:drawableTint="@color/text_color"
-            android:gravity="right"
+            android:gravity="center|right"
+            android:text="@string/my_nevo_new_update_available"
             android:textColor="@color/colorAccent"
-            android:textSize="18sp"
+            android:textSize="20sp"
             />
     </LinearLayout>
 

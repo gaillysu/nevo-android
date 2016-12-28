@@ -33,6 +33,7 @@ import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/24.
+ *
  */
 
 public class HomeClockFragment extends BaseObservableFragment {
@@ -86,12 +87,17 @@ public class HomeClockFragment extends BaseObservableFragment {
 
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
+
         Address positionLocal = getModel().getPositionLocal(getModel().getLocationController().getLocation());
-        localCityName = positionLocal.getLocality() + ", " + positionLocal.getCountryName();
-        for (City city : cities) {
-            if (city.getName().equals(localCityName)) {
-                this.locationCity = city;
-                setSunriseAndSunset(locationCity, timeZone.getID());
+        if (positionLocal != null) {
+            localCityName = positionLocal.getLocality() + ", " + positionLocal.getCountryName();
+        } else {
+            localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+            for (City city : cities) {
+                if (city.getName().equals(localCityName)) {
+                    this.locationCity = city;
+                    setSunriseAndSunset(locationCity, timeZone.getID());
+                }
             }
         }
 

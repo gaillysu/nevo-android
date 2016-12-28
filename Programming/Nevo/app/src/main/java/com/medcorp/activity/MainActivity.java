@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
     private static String heardPath = "/sdcard/myHead/";//sd路径
+    private Calendar mCalendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -377,6 +378,10 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mCalendar = Calendar.getInstance();
+        String strDate = mCalendar.get(Calendar.YEAR) + "-" +
+                (mCalendar.get(Calendar.MONTH) + 1) + "-" + mCalendar.get(Calendar.DAY_OF_MONTH) ;
+        Preferences.saveSelectDate(this, strDate);
     }
 
     @Override
@@ -428,13 +433,11 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         }
     }
 
-
     @OnClick(R.id.lunar_tool_bar)
     public void showDateDialog() {
         if (selectedMenuItem.getItemId() == R.id.nav_steps_fragment) {
-            final Calendar calendar = Calendar.getInstance();
-            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this, calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(MainActivity.this,
+                    mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
             datePickerDialog.setOnDateSetListener(this);
             datePickerDialog.show(getFragmentManager(), "calendarDialog");
         }
@@ -449,6 +452,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String strDate = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Preferences.saveSelectDate(this, strDate);
         try {
             java.util.Date selectDate = format.parse(strDate);
             showDateText.setText(dayOfMonth + " " +
@@ -457,6 +461,5 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Preferences.saveSelectDate(this, strDate);
     }
 }

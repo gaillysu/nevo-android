@@ -114,9 +114,10 @@ public class MyNevoActivity extends BaseActivity {
                 myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
             }
         } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            final int buildinFirmwareVersion = getResources().getInteger(R.integer.launar_version);
-            if (currentFirmwareVersion < buildinFirmwareVersion) {
-                firmwerUpdateInfomation.setText(currentFirmwareVersion + "/" + buildinFirmwareVersion);
+            final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
+            if (currentFirmwareVersion < buildingFirmwareVersion) {
+                firmwerUpdateInfomation.setText(getString(R.string.my_watch_firmwer_version)+" "
+                        +buildingFirmwareVersion+" "+getString(R.string.my_watch_firmwer_version_describe));
 
                 showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
                     @Override
