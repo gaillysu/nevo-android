@@ -534,10 +534,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             setSunriseAndSunsetSuccess = false;
             sendRequest(new SetSunriseAndSunsetTimeRequest(mContext, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
             //wait for maximum 2s, if time out-->send failed event
-            try {
-                lockObject.wait(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            synchronized (lockObject) {
+                try {
+                    lockObject.wait(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             if(!setSunriseAndSunsetSuccess){
                 EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
