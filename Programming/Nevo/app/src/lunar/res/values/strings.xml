@@ -440,4 +440,6 @@
     <string name="lunar_main_clock_home_city_sunrise">SUNRISE</string>
     <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
     <string name="lunar_home_clock_steps_title_tv">STEPS TAKEN</string>
+    <string name="lunar_home_clock_solar_harvest_charge">Charging</string>
+    <string name="lunar_home_clock_solar_harvest_idle">Idle</string>
 </resources>

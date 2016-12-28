@@ -380,4 +380,6 @@
     <string name="validic_pin_code">PIN 碼</string>
     <string name="validic_pin_code_title">輸入 PIN 碼</string>
     <string name="wednesday">星期三</string>
+    <string name="lunar_home_clock_solar_harvest_charge">充電中</string>
+    <string name="lunar_home_clock_solar_harvest_idle">空閑</string>
 </resources>
