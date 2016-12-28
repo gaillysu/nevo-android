@@ -45,7 +45,6 @@ public class MoreSettingActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setTitle(getString(R.string.settings_more));
-        setTitle(R.string.edit_notification_item_name);
         initData();
     }
 

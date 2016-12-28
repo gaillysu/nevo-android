@@ -388,4 +388,9 @@
     <string name="user_select_metrics">公制</string>
     <string name="user_select_imperial">英制</string>
     <string name="edit_notification_item_name">设置</string>
+    <string name="more_setting_place_time">手表数字时间</string>
+    <string name="more_setting_place_local">本地时间</string>
+    <string name="more_setting_place_home">家乡时间</string>
+    <string name="edit_home_position_city">定位城市</string>
+    <string name="edit_home_all_city">城市列表</string>
 </resources>
