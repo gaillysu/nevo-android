@@ -141,6 +141,7 @@ public class MainClockFragment extends BaseFragment {
                             , Calendar.getInstance().getTimeZone().getID());
                     this.LocalCity = city;
                     sunriseCityName.setText(LocalCity.getCountry());
+                    break;
                 }
             }
         }

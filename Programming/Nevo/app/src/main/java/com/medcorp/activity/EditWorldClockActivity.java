@@ -103,6 +103,7 @@ public class EditWorldClockActivity extends BaseActivity {
                 if (city.getName().equals(localCityName)) {
                     cityName = city.getName();
                     countryName = city.getCountry();
+                    break;
                 }
             }
         }

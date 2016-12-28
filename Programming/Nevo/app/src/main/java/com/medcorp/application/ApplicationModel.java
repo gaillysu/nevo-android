@@ -712,6 +712,9 @@ public class ApplicationModel extends Application {
         Address address = null;
         List<Address> addList = null;
         Geocoder ge = new Geocoder(this);
+        if(mLocation == null){
+            return null;
+        }
         try {
             addList = ge.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
         } catch (IOException e) {
