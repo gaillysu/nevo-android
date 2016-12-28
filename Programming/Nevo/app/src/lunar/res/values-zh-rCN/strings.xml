@@ -393,4 +393,6 @@
     <string name="more_setting_place_home">家乡时间</string>
     <string name="edit_home_position_city">定位城市</string>
     <string name="edit_home_all_city">城市列表</string>
+    <string name="lunar_home_clock_solar_harvest_charge">充电中</string>
+    <string name="lunar_home_clock_solar_harvest_idle">空闲</string>
 </resources>

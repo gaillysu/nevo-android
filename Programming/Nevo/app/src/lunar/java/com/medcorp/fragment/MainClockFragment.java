@@ -17,6 +17,7 @@ import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
+import com.medcorp.event.bluetooth.SolarConvertEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Sleep;
 import com.medcorp.model.SleepData;
@@ -79,7 +80,8 @@ public class MainClockFragment extends BaseFragment {
     ImageView sunriseOrSunsetIv;
     @Bind(R.id.lunar_main_clock_home_city_sunrise)
     TextView sunriseTv;
-
+    @Bind(R.id.lunar_main_clock_battery_status)
+    TextView solar_harvest_status;
     private Date userSelectDate;
     private Handler mUiHandler = new Handler(Looper.getMainLooper());
     private User user;
@@ -290,5 +292,21 @@ public class MainClockFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    @Subscribe
+    public void onEvent(final SolarConvertEvent event) {
+        solar_harvest_status.post(new Runnable() {
+            @Override
+            public void run() {
+                //NOTICE: nevo solar adc threshold is 200，but lunar is 170
+                if(event.getPv_adc()>=170) {
+                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
+                }
+                else{
+                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_idle);
+                }
+            }
+        });
     }
 }
