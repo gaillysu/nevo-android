@@ -23,6 +23,7 @@ import butterknife.OnClick;
 
 /**
  * Created by Jason on 2016/12/14.
+ *
  */
 
 public class MoreSettingActivity extends BaseActivity {
@@ -62,8 +63,8 @@ public class MoreSettingActivity extends BaseActivity {
         selectPlaceSpinner.setAdapter(placeAdapter);
         selectUnitSpinner.setAdapter(unitAdapter);
 
-        selectUnitSpinner.setSelection(Preferences.getUnitSelect(this) ? 0 : 1);
-        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 0 : 1);
+        selectUnitSpinner.setSelection(Preferences.getUnitSelect(this) ? 1 : 0);
+        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 1 : 0);
 
         selectUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
