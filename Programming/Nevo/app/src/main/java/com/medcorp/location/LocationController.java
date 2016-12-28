@@ -20,7 +20,6 @@ import org.greenrobot.eventbus.EventBus;
 
 public class LocationController implements LocationListener {
     private Context context;
-    private Location mLocation;
 
     public LocationController(Context context) {
         this.context = context;
@@ -32,7 +31,7 @@ public class LocationController implements LocationListener {
             Log.w("LocationController", "no granted location permission@startUpdateLocation()");
             return;
         }
-        mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (mLocation == null) {
             mLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
@@ -72,10 +71,5 @@ public class LocationController implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    public Location getLocation() {
-        startUpdateLocation();
-        return mLocation;
     }
 }

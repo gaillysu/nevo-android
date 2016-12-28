@@ -123,7 +123,7 @@ public class EditWorldClockActivity extends BaseActivity {
                 Preferences.savePositionCity(EditWorldClockActivity.this, cityName);
                 Preferences.savePositionCountry(EditWorldClockActivity.this, countryName);
                 Preferences.saveHomeCityCalender(EditWorldClockActivity.this, Calendar.getInstance().getTimeZone().getID());
-                searchCityAutoCompleteTv.setText(positionLocal.getLocality());
+                searchCityAutoCompleteTv.setText(cityName + ", " + countryName);
                 finish();
             }
         });
