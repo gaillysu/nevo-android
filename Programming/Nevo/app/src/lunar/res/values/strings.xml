@@ -430,7 +430,7 @@
     <string name="def_alarm_two">Alarm 2</string>
     <string name="def_goal_name">Goal </string>
     <string name="more_setting_unit">Unit</string>
-    <string name="more_setting_place_time">Select city</string>
+    <string name="more_setting_place_time">Home/Local time</string>
     <string name="more_setting_place_local">Local Time</string>
     <string name="more_setting_place_home">Home Time</string>
     <string name="user_select_metrics">Metrics</string>
