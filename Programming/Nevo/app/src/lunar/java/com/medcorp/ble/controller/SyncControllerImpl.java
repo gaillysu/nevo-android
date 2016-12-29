@@ -504,7 +504,6 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                     setRtc();
                     sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) 0));
                     if(isPendingsunriseAndsunset){
-                        isPendingsunriseAndsunset = false;
                         //when get local location, will calculate sunrise and sunset time and send it to watch
                         EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
                     }
@@ -544,7 +543,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
             }
             if(!setSunriseAndSunsetSuccess){
+                isPendingsunriseAndsunset = true;
                 EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
+            }
+            else{
+                isPendingsunriseAndsunset = false;
             }
         }
         else {
