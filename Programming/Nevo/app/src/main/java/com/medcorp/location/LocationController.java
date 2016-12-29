@@ -38,7 +38,7 @@ public class LocationController implements LocationListener {
         }
         if (location == null) {
             Log.w("LocationController", "can't get location");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 12 * 60 * 60, 1000 * 1000,
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10 * 60, 1000 * 1000,
                     (LocationListener) this);
             return;
         }
