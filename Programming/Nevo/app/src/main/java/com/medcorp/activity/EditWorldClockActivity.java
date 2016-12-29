@@ -70,7 +70,6 @@ public class EditWorldClockActivity extends BaseActivity {
     private ChooseCityAdapter allCityAdapter;
     private SearchWorldAdapter autoAdapter;
     private List<ChooseCityViewModel> resultList;
-    private Location mLocation;
     private String cityName;
     private String countryName;
     private Location location;
@@ -97,7 +96,7 @@ public class EditWorldClockActivity extends BaseActivity {
         autoAdapter = new SearchWorldAdapter(resultList, this);
         searchResultListView.setAdapter(autoAdapter);
         cities = realm.where(City.class).findAll();
-        final Address positionLocal = getModel().getPositionLocal(mLocation);
+        final Address positionLocal = getModel().getPositionLocal(location);
         if (positionLocal != null) {
             cityName = positionLocal.getLocality();
             countryName = positionLocal.getCountryName();
