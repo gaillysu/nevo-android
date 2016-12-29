@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -930,7 +932,32 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.acquire();
             wl.release();
 
-            //TODO Sound is fine but not sound from dogs. Thanks.
+            //play ring bell to alert user that phone is here
+            PlayFromRawFile();
+        }
+        private  void PlayFromRawFile()
+        {
+            final MediaPlayer play = MediaPlayer.create(this, R.raw.bell);
+            final long currentTime = System.currentTimeMillis();
+            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume , 0);
+            if(play.isPlaying())
+            {
+                play.stop();
+            }
+            play.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    //if ring duration < 3s,play it twice time
+                    if (System.currentTimeMillis() - currentTime < 3000)
+                    {
+                        play.start();
+                    }
+                }
+            });
+            play.start();
         }
     }
 }

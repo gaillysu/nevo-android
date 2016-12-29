@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private FragmentManager fragmentManager;
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
+    private boolean bluetoothDisable = false;
     private BaseObservableFragment mainStepsFragment;
 
     public static final String DATEPICKER_TAG = "datepicker";
@@ -194,6 +195,7 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     protected void onResume() {
         super.onResume();
+        bluetoothDisable = false;
         if (!getModel().isWatchConnected()) {
             getModel().startConnectToWatch(false);
         }
@@ -415,13 +417,17 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
 
     @Subscribe
     public void onEvent(BLEBluetoothOffEvent event) {
-        showStateString(R.string.in_app_notification_bluetooth_disabled, false);
+        if(bluetoothDisable == false) {
+            bluetoothDisable = true;
+            showStateString(R.string.in_app_notification_bluetooth_disabled, false);
+        }
     }
 
     @Subscribe
     public void onEvent(BLESearchEvent event) {
         switch (event.getSearchEvent()) {
             case ON_SEARCHING:
+                bluetoothDisable = false;
                 PermissionRequestDialogBuilder builder = new PermissionRequestDialogBuilder(this);
                 builder.addPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
                 builder.addPermission(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -429,6 +435,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
                 builder.setTitle(R.string.location_access_title);
                 builder.askForPermission(this, 1);
                 showStateString(R.string.in_app_notification_searching, false);
+                break;
+            case ON_SEARCH_FAILURE:
+                bluetoothDisable = false;
                 break;
         }
     }
