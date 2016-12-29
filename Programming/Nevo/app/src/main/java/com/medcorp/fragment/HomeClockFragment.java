@@ -1,7 +1,9 @@
 package com.medcorp.fragment;
 
 import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.activity.EditWorldClockActivity;
+import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.bluetooth.HomeTimeEvent;
 import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
@@ -21,6 +24,7 @@ import com.medcorp.util.Preferences;
 import net.medcorp.library.worldclock.City;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,7 +62,13 @@ public class HomeClockFragment extends BaseObservableFragment {
     private String homeCountryName;
     private City mHomeCity;
     private Calendar mHomeCalendar;
+    private Location location;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,7 +98,7 @@ public class HomeClockFragment extends BaseObservableFragment {
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
 
-        Address positionLocal = getModel().getPositionLocal(getModel().getLocationController().getLocation());
+        Address positionLocal = getModel().getPositionLocal(location);
         if (positionLocal != null) {
             localCityName = positionLocal.getLocality() + ", " + positionLocal.getCountryName();
         } else {
@@ -175,6 +185,11 @@ public class HomeClockFragment extends BaseObservableFragment {
         EventBus.getDefault().post(new HomeTimeEvent(sunriseHour, sunriseMin));
     }
 
+    @Subscribe
+    public void onEvent(LocationChangedEvent locationChangedEvent) {
+        this.location = locationChangedEvent.getLocation();
+    }
+
     public void setHomeDay(Calendar mCalendar) {
         Calendar localCalendar = Calendar.getInstance();
         int localDayOfMonth = localCalendar.get(Calendar.DAY_OF_MONTH);
@@ -193,5 +208,11 @@ public class HomeClockFragment extends BaseObservableFragment {
                 homeDay.setText(R.string.sunset_activity_title_tomorrow);
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -21,12 +21,16 @@ import com.medcorp.R;
 import com.medcorp.adapter.ChooseCityAdapter;
 import com.medcorp.adapter.SearchWorldAdapter;
 import com.medcorp.base.BaseActivity;
+import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.model.ChooseCityViewModel;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.PinyinComparator;
 import com.medcorp.view.SideBar;
 
 import net.medcorp.library.worldclock.City;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +73,7 @@ public class EditWorldClockActivity extends BaseActivity {
     private Location mLocation;
     private String cityName;
     private String countryName;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +86,7 @@ public class EditWorldClockActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.choose_activity_title_choose_city_tv);
+        EventBus.getDefault().register(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initData();
     }
@@ -91,7 +97,6 @@ public class EditWorldClockActivity extends BaseActivity {
         autoAdapter = new SearchWorldAdapter(resultList, this);
         searchResultListView.setAdapter(autoAdapter);
         cities = realm.where(City.class).findAll();
-        mLocation = getModel().getLocationController().getLocation();
         final Address positionLocal = getModel().getPositionLocal(mLocation);
         if (positionLocal != null) {
             cityName = positionLocal.getLocality();
@@ -215,6 +220,17 @@ public class EditWorldClockActivity extends BaseActivity {
                 autoAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Subscribe
+    public void onEvent(LocationChangedEvent locationChangedEvent) {
+        this.location = locationChangedEvent.getLocation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     //save select city

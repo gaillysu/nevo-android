@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by med on 16/12/19.
+ *
  */
 
 public class LocationController implements LocationListener {

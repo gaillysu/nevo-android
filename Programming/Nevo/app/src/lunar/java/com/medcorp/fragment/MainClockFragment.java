@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
+import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -95,6 +96,7 @@ public class MainClockFragment extends BaseFragment {
     private Realm realm = Realm.getDefaultInstance();
     private City LocalCity;
     private Calendar mCalendar;
+    private Location location;
 
     private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
@@ -107,9 +109,9 @@ public class MainClockFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Location location = getModel().getLocationController().getLocation();
         mPositionLocal = getModel().getPositionLocal(location);
         user = getModel().getNevoUser();
+        EventBus.getDefault().register(this);
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -195,6 +197,7 @@ public class MainClockFragment extends BaseFragment {
             mCalendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
             setHomeCityTime(mCalendar);
         } else {
+            mCalendar = Calendar.getInstance();
             if (mPositionLocal == null) {
                 homeName = LocalCity.getName();
                 homeCountryName = LocalCity.getCountry();
@@ -204,7 +207,6 @@ public class MainClockFragment extends BaseFragment {
             }
             homeCityName.setText(homeName);
             countryName.setText(homeCountryName);
-            mCalendar = Calendar.getInstance();
         }
     }
 
@@ -239,10 +241,9 @@ public class MainClockFragment extends BaseFragment {
         return new String("00:00");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    @Subscribe
+    public void onEvent(LocationChangedEvent locationChangedEvent) {
+        this.location = locationChangedEvent.getLocation();
     }
 
     @Override
@@ -306,11 +307,11 @@ public class MainClockFragment extends BaseFragment {
         solar_harvest_status.post(new Runnable() {
             @Override
             public void run() {
-                //NOTICE: nevo solar adc threshold is 200，but lunar is 170
+                //                NOTICE: nevo solar adc threshold is 200，but lunar is 170
                 if (event.getPv_adc() >= 170) {
-                    //                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
+                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
                 } else {
-                    //                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_idle);
+                    solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_idle);
                 }
             }
         });

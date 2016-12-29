@@ -708,6 +708,7 @@ public class ApplicationModel extends Application {
         return ledDataBase.remove(id);
     }
 
+    //TODO
     public Address getPositionLocal(Location mLocation) {
         Address address = null;
         List<Address> addList = null;
