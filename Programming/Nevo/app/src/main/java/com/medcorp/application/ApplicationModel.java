@@ -708,11 +708,12 @@ public class ApplicationModel extends Application {
         return ledDataBase.remove(id);
     }
 
+    //TODO
     public Address getPositionLocal(Location mLocation) {
         Address address = null;
         List<Address> addList = null;
         Geocoder ge = new Geocoder(this);
-        if(mLocation == null){
+        if (mLocation == null) {
             return null;
         }
         try {
@@ -721,9 +722,9 @@ public class ApplicationModel extends Application {
             e.printStackTrace();
         }
         if (addList != null && addList.size() > 0) {
-            for (int i = 0; i < addList.size(); i++) {
-                address = addList.get(i);
-            }
+            //            for (int i = 0; i < addList.size(); i++) {
+            address = addList.get(0);
+            //            }
         }
         return address;
     }

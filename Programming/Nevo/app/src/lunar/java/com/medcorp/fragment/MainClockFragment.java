@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
+import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -93,6 +95,8 @@ public class MainClockFragment extends BaseFragment {
     private SunriseSunsetCalculator calculator;
     private Realm realm = Realm.getDefaultInstance();
     private City LocalCity;
+    private Calendar mCalendar;
+    private Location location;
 
     private void refreshClock() {
         final Calendar mCalendar = Calendar.getInstance();
@@ -103,10 +107,11 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
-        ButterKnife.bind(this, mainClockFragmentView);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPositionLocal = getModel().getPositionLocal(location);
         user = getModel().getNevoUser();
+        EventBus.getDefault().register(this);
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -117,6 +122,12 @@ public class MainClockFragment extends BaseFragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
+        ButterKnife.bind(this, mainClockFragmentView);
         refreshClock();
         initData(userSelectDate);
         return mainClockFragmentView;
@@ -125,10 +136,7 @@ public class MainClockFragment extends BaseFragment {
     private void initData(Date date) {
         lunarSleepTotal.setText(countSleepTime(date));
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
-        Location location = getModel().getLocationController().getLocation();
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
-        mPositionLocal = getModel().getPositionLocal(location);
-
         if (mPositionLocal != null) {
             calculator = computeSunriseTime(mPositionLocal.getLatitude(), mPositionLocal.getLongitude()
                     , Calendar.getInstance().getTimeZone().getID());
@@ -186,11 +194,10 @@ public class MainClockFragment extends BaseFragment {
         if (homeName != null) {
             homeCityName.setText(homeName);
             countryName.setText(homeCountryName);
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
-            String am_pm = calendar.get(Calendar.HOUR_OF_DAY) < 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
-            String minute = calendar.get(Calendar.MINUTE) >= 10 ? calendar.get(Calendar.MINUTE) + "" : "0" + calendar.get(Calendar.MINUTE);
-            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
+            mCalendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
+            setHomeCityTime(mCalendar);
         } else {
+            mCalendar = Calendar.getInstance();
             if (mPositionLocal == null) {
                 homeName = LocalCity.getName();
                 homeCountryName = LocalCity.getCountry();
@@ -200,11 +207,13 @@ public class MainClockFragment extends BaseFragment {
             }
             homeCityName.setText(homeName);
             countryName.setText(homeCountryName);
-            Calendar calendar = Calendar.getInstance();
-            String am_pm = calendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
-            String minute = calendar.get(Calendar.MINUTE) >= 10 ? calendar.get(Calendar.MINUTE) + "" : "0" + calendar.get(Calendar.MINUTE);
-            lunarHomeCityTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
         }
+    }
+
+    public void setHomeCityTime(Calendar homeCityTime) {
+        String am_pm = homeCityTime.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+        String minute = homeCityTime.get(Calendar.MINUTE) >= 10 ? homeCityTime.get(Calendar.MINUTE) + "" : "0" + homeCityTime.get(Calendar.MINUTE);
+        lunarHomeCityTime.setText(homeCityTime.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
     }
 
     private SunriseSunsetCalculator computeSunriseTime(double latitude, double longitude, String zone) {
@@ -232,10 +241,9 @@ public class MainClockFragment extends BaseFragment {
         return new String("00:00");
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    @Subscribe
+    public void onEvent(LocationChangedEvent locationChangedEvent) {
+        this.location = locationChangedEvent.getLocation();
     }
 
     @Override
@@ -277,7 +285,7 @@ public class MainClockFragment extends BaseFragment {
             @Override
             public void run() {
                 refreshClock();
-                setData();
+                setHomeCityTime(mCalendar);
             }
         });
     }
@@ -299,14 +307,15 @@ public class MainClockFragment extends BaseFragment {
         solar_harvest_status.post(new Runnable() {
             @Override
             public void run() {
-                //NOTICE: nevo solar adc threshold is 200，but lunar is 170
-                if(event.getPv_adc()>=170) {
+                //                NOTICE: nevo solar adc threshold is 200，but lunar is 170
+                if (event.getPv_adc() >= 170) {
                     solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
-                }
-                else{
+                } else {
                     solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_idle);
                 }
             }
         });
     }
+
+
 }
