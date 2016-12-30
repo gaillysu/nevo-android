@@ -128,9 +128,9 @@
     </style>
 
     <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">#7ED8D1</item>
         <item name="android:textColorPrimary">@color/text_color</item>
-        <item name="android:background">@color/window_background_color</item>
+        <item name="android:background">@color/baseBackground</item>
     </style>
 
     <style name="new_alarm_clock_repeat_days_llyt">
@@ -152,5 +152,10 @@
     <style name="Animation_profile_popupwindow">
         <item name="android:windowEnterAnimation">@anim/profile_use_picture_popupwindow_anim</item>
         <item name="android:windowExitAnimation">@anim/popupwindow_out_anim</item>
+    </style>
+    <style name="my_switch_color">
+         <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorSwitchThumbNormal">@android:color/white</item>
+        <item name="android:colorForeground">@color/white</item>
     </style>
 </resources>
