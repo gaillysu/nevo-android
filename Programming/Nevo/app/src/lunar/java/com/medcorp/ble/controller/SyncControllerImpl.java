@@ -13,8 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -28,7 +26,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
@@ -79,7 +76,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
 import com.medcorp.util.LinklossNotificationUtils;
-import com.medcorp.util.MusicUtils;
+import com.medcorp.util.SoundPlayer;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -937,8 +934,12 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.release();
 
             //play ring bell to alert user that phone is here
-            MusicUtils.PlayFromRawFile(this,R.raw.bell);
+            SoundPlayer.PlayFromRawFile(this,R.raw.bell);
         }
 
+    }
+    @Override
+    public int getBluetoothStatus(){
+        return connectionController.getBluetoothStatus();
     }
 }

@@ -112,4 +112,6 @@ public interface SyncController {
 
     public boolean getHoldRequest();
     public void setHoldRequest(boolean holdRequest);
+
+    public int getBluetoothStatus();
 }

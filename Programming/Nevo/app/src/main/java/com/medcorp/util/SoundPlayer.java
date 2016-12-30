@@ -10,7 +10,7 @@ import com.medcorp.R;
  * Created by med on 16/12/30.
  */
 
-public class MusicUtils {
+public class SoundPlayer {
 
     public static void PlayFromRawFile(Context context,int resRawId)
     {

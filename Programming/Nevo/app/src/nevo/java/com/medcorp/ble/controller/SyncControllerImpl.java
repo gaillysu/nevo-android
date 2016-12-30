@@ -82,6 +82,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
 import com.medcorp.util.LinklossNotificationUtils;
+import com.medcorp.util.SoundPlayer;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -989,7 +990,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.acquire();
             wl.release();
 
-            //TODO Sound is fine but not sound from dogs. Thanks.
+            //play ring bell to alert user that phone is here
+            SoundPlayer.PlayFromRawFile(this,R.raw.bell);
         }
+    }
+
+    @Override
+    public int getBluetoothStatus(){
+        return connectionController.getBluetoothStatus();
     }
 }
