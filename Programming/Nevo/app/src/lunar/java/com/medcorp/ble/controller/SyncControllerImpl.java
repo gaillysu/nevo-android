@@ -79,6 +79,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
 import com.medcorp.util.LinklossNotificationUtils;
+import com.medcorp.util.MusicUtils;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -936,31 +937,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.release();
 
             //play ring bell to alert user that phone is here
-            PlayFromRawFile();
+            MusicUtils.PlayFromRawFile(this,R.raw.bell);
         }
-        private  void PlayFromRawFile()
-        {
-            final MediaPlayer play = MediaPlayer.create(this, R.raw.bell);
-            final long currentTime = System.currentTimeMillis();
-            play.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume , 0);
-            if(play.isPlaying())
-            {
-                play.stop();
-            }
-            play.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    //if ring duration < 3s,play it twice time
-                    if (System.currentTimeMillis() - currentTime < 3000)
-                    {
-                        play.start();
-                    }
-                }
-            });
-            play.start();
-        }
+
     }
 }
