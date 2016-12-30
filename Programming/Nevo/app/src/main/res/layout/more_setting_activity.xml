@@ -18,7 +18,7 @@
     <RelativeLayout
         android:id="@+id/more_setting_go_setting_goal"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@color/analysis_fragment_tablayout_background_color"
         >
 
@@ -59,33 +59,34 @@
 
     //select Unit
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:background="@color/analysis_fragment_tablayout_background_color"
+        android:orientation="vertical"
+        android:paddingRight="16dp"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:paddingLeft="16dp"
             android:text="@string/more_setting_unit"
             android:textColor="@color/text_color"
             android:textSize="20dp"
             />
 
-
-        <android.support.v7.widget.AppCompatSpinner
+        <Spinner
             android:id="@+id/more_setting_select_unit_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:spinnerMode="dialog"
-            android:layout_alignParentRight="true"
+            android:layout_marginBottom="3dp"
+            android:paddingLeft="16dp"
+            android:overlapAnchor="false"
             />
-    </RelativeLayout>
+    </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -101,18 +102,19 @@
         />
     //select sync home time or local time
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center_vertical"
+        android:layout_height="45dp"
         android:background="@color/analysis_fragment_tablayout_background_color"
+        android:orientation="vertical"
+        android:paddingRight="16dp"
         >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:paddingLeft="16dp"
             android:text="@string/more_setting_place_time"
             android:textColor="@color/text_color"
             android:textSize="20dp"
@@ -120,16 +122,13 @@
 
         <Spinner
             android:id="@+id/more_setting_select_sync_time_spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:spinnerMode="dialog"
-            android:layout_marginRight="16dp"
-            android:layout_alignParentRight="true"
+            android:paddingLeft="16dp"
+            android:layout_marginBottom="3dp"
+            android:overlapAnchor="false"
             />
-
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
