@@ -67,7 +67,9 @@
                     android:text="@string/my_nevo_notice_message"
                     android:textColor="@color/profile_fragment_text_color"
                     android:textSize="13sp"
-                    roboto:thin="true"/>
+                    roboto:thin="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"/>
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

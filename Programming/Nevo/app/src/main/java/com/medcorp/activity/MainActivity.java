@@ -99,10 +99,6 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     private Snackbar snackbar = null;
     private boolean bigSyncStart = false;
     private BaseObservableFragment mainStepsFragment;
-
-    public static final String DATEPICKER_TAG = "datepicker";
-    public static final String TIMEPICKER_TAG = "timepicker";
-    private static String heardPath = "/sdcard/myHead/";//sd路径
     private Calendar mCalendar;
 
     @Override
