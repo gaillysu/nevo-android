@@ -58,7 +58,7 @@ public class MySpinnerAdapter implements SpinnerAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView textView = new TextView(context);
-        textView.setTextSize(14);
+        textView.setTextSize(10);
         textView.setTextColor(context.getResources().getColor(R.color.text_color));
         textView.setText(contentLists.get(position));
         return textView;
