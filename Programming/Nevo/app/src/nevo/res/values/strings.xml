@@ -424,6 +424,9 @@ push and hold the third button, until the white LED blinks</string>
     <string name="more_setting_unit">Unit</string>
     <string name="user_select_metrics">Metrics</string>
     <string name="user_select_imperial">Imperial</string>
+    <string name="more_setting_place_time">Watch digital time</string>
+    <string name="more_setting_place_local">Local Time</string>
+    <string name="more_setting_place_home">Home Time</string>
 
     <!--<lunar end>-->
 </resources>

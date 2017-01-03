@@ -934,7 +934,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.release();
 
             //play ring bell to alert user that phone is here
-            SoundPlayer.PlayFromRawFile(this,R.raw.bell);
+            new SoundPlayer(this).startPlayer(R.raw.bell);
         }
 
     }
