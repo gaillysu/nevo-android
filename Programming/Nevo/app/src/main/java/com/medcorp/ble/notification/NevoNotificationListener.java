@@ -5,11 +5,9 @@ package com.medcorp.ble.notification;
  * /!\/!\/!\Backbone Class : Modify with care/!\/!\/!\
  */
 
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -18,20 +16,22 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
+import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.ble.datasource.NotificationDataHelper;
 import com.medcorp.ble.model.notification.CalendarNotification;
-import com.medcorp.ble.model.notification.OtherAppNotification;
-import com.medcorp.ble.model.notification.FacebookNotification;
-import com.medcorp.ble.model.notification.SmsNotification;
-import com.medcorp.ble.model.request.LedLightOnOffRequest;
-import com.medcorp.util.Preferences;
-import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
 import com.medcorp.ble.model.notification.EmailNotification;
+import com.medcorp.ble.model.notification.FacebookNotification;
+import com.medcorp.ble.model.notification.OtherAppNotification;
+import com.medcorp.ble.model.notification.SmsNotification;
+import com.medcorp.ble.model.notification.TelephoneNotification;
 import com.medcorp.ble.model.notification.WeChatNotification;
 import com.medcorp.ble.model.notification.WhatsappNotification;
-import com.medcorp.R;
-import com.medcorp.ble.model.notification.TelephoneNotification;
+import com.medcorp.ble.model.request.LedLightOnOffRequest;
+import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
 import net.medcorp.library.ble.exception.BaseBLEException;
@@ -210,21 +210,19 @@ public class NevoNotificationListener extends NotificationBaseListenerService im
         if (enabledNotificationListeners == null || !enabledNotificationListeners.contains(packageName))
         {
             // Let's ask the user to enable notifications
-            new AlertDialog.Builder(ctx,R.style.AppTheme_Dark_Dialog).
-                    setTitle(R.string.notification_access_title)
-                    .setMessage(R.string.notification_access_message)
-                    .setNegativeButton(android.R.string.no, null).
-                    setPositiveButton(android.R.string.yes, new AlertDialog.OnClickListener(){
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ctx.startActivity(intent);
-
-                }
-
-            }).show();
+            new MaterialDialog.Builder(ctx)
+                    .title(R.string.notification_access_title)
+                    .content(R.string.notification_access_message)
+                    .positiveText(android.R.string.yes)
+                    .negativeText(android.R.string.no)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                            Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            ctx.startActivity(intent);
+                        }
+                    }).show();
         }
     }
 

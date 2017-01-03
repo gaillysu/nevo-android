@@ -18,10 +18,9 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
-import com.medcorp.base.BaseActivity;
 import com.medcorp.adapter.SettingMenuAdapter;
+import com.medcorp.base.BaseActivity;
 import com.medcorp.listener.OnCheckedChangeInListListener;
 import com.medcorp.model.SettingsMenuItem;
 import com.medcorp.network.listener.ResponseListener;
@@ -69,13 +68,9 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            toolbar.findViewById(R.id.lunar_tool_bar_title_date_icon).setVisibility(View.GONE);
-            TextView tv = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
-            tv.setText(R.string.settings_other_apps_short);
-        } else {
-            setTitle(R.string.settings_other_apps_short);
-        }
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+        title.setText(R.string.settings_other_apps_short);
     }
 
     @Override

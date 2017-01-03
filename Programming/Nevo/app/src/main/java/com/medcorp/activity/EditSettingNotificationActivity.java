@@ -13,8 +13,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.medcorp.ApplicationFlag;
@@ -56,7 +56,7 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     @Bind(R.id.notification_watch_icon)
     ImageView watchView;
     @Bind(R.id.notification_lamp_edit)
-    LinearLayout lunarLedLampGroup;
+    RelativeLayout lunarLedLampGroup;
     @Bind(R.id.notification_activity_layout)
     CoordinatorLayout coordinatorLayout;
     @Bind(R.id.notification_lunar_lamp_color)

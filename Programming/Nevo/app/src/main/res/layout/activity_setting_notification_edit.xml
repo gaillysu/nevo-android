@@ -67,6 +67,7 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/tutorial_nevo_1"
                     />
+
                 <ImageView
                     android:id="@+id/notification_lunar_watch_icon"
                     android:layout_width="220dp"
@@ -75,76 +76,56 @@
                     android:layout_margin="30dp"
                     android:layout_marginTop="10dp"
                     android:scaleType="fitXY"
-                    android:visibility="gone"
                     android:src="@drawable/tutorial_nevo_1"
+                    android:visibility="gone"
                     />
             </RelativeLayout>
 
 
             <!--lunar lamp edit-->
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/notification_lamp_edit"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="60dp"
-                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal"
                 >
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/black"
+                <ImageView
+                    android:id="@+id/notification_lunar_lamp_color"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="25dp"
+                    android:src="@drawable/red_dot"
                     />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/notification_name_text_view"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    >
-
-                    <ImageView
-                        android:id="@+id/notification_lunar_lamp_color"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="25dp"
-                        android:src="@drawable/red_dot"
-                        />
-
-                    <TextView
-                        android:id="@+id/notification_name_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
-                        android:layout_toRightOf="@id/notification_lunar_lamp_color"
-                        android:text="name"
-                        android:textColor="@color/text_color"
-                        android:textSize="16dp"
-                        />
-
-                    <ImageView
-                        android:id="@+id/open_notification_red_lamp_flag"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="25dp"
-                        android:src="@drawable/ic_right"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@android:color/black"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/notification_lunar_lamp_color"
+                    android:text="name"
+                    android:textColor="@color/text_color"
+                    android:textSize="16dp"
                     />
-            </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/open_notification_red_lamp_flag"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="25dp"
+                    android:src="@drawable/ic_right"
+                    />
+
+            </RelativeLayout>
 
             <ListView
                 android:id="@+id/notification_lamp_list"

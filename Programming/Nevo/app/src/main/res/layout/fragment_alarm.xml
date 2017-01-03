@@ -9,7 +9,8 @@
         android:id="@+id/fragment_alarm_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/window_background_color"
-        android:divider="@drawable/alarm_list_view_divider"
+        android:listSelector="?android:attr/selectableItemBackground"
+        android:scrollbars="none"
+        android:divider="@null"
         android:dividerHeight="1dp"/>
 </LinearLayout>
