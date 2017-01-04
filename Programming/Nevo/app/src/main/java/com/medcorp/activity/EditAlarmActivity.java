@@ -164,9 +164,7 @@ public class EditAlarmActivity extends BaseActivity implements AdapterView.OnIte
             new MaterialDialog.Builder(EditAlarmActivity.this)
                     .title(R.string.alarm_edit)
                     .content(getString(R.string.alarm_set_week_day_dialog_text))
-                    .contentColor(getResources().getColor(R.color.analysis_fragment_tablayout_background_color))
                     .items(javaWeekDays)
-                    .itemsColor(getResources().getColor(R.color.analysis_fragment_tablayout_background_color))
                     .itemsCallbackSingleChoice((alarm.getWeekDay() & 0x0F) - 1, new MaterialDialog.ListCallbackSingleChoice() {
                         @Override
                         public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
