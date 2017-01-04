@@ -29,15 +29,6 @@ import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
-import com.medcorp.ble.datasource.NotificationDataHelper;
-import com.medcorp.ble.model.notification.CalendarNotification;
-import com.medcorp.ble.model.notification.EmailNotification;
-import com.medcorp.ble.model.notification.FacebookNotification;
-import com.medcorp.ble.model.notification.Notification;
-import com.medcorp.ble.model.notification.SmsNotification;
-import com.medcorp.ble.model.notification.TelephoneNotification;
-import com.medcorp.ble.model.notification.WeChatNotification;
-import com.medcorp.ble.model.notification.WhatsappNotification;
 import com.medcorp.ble.model.packet.BatteryLevelPacket;
 import com.medcorp.ble.model.packet.DailyStepsPacket;
 import com.medcorp.ble.model.packet.DailyTrackerInfoPacket;
@@ -82,6 +73,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
 import com.medcorp.util.LinklossNotificationUtils;
+import com.medcorp.util.SoundPlayer;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -114,9 +106,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -989,7 +979,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.acquire();
             wl.release();
 
-            //TODO Sound is fine but not sound from dogs. Thanks.
+            //play ring bell to alert user that phone is here
+            new SoundPlayer(this).startPlayer(R.raw.bell);
         }
+    }
+
+    @Override
+    public int getBluetoothStatus(){
+        return connectionController.getBluetoothStatus();
     }
 }

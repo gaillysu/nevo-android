@@ -16,6 +16,8 @@ import com.medcorp.ble.model.color.YellowLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.model.Goal;
 
+import java.util.TimeZone;
+
 /**
  * Created by karl-john on 29/12/15.
  */
@@ -237,6 +239,6 @@ public class Preferences {
 
     public static String getHomeTimezoneId(Context context) {
         init(context);
-        return preferences.getString(context.getString(R.string.key_prefs_home_timezone), null);
+        return preferences.getString(context.getString(R.string.key_prefs_home_timezone), TimeZone.getDefault().getID());
     }
 }

@@ -1,6 +1,7 @@
 package com.medcorp.activity;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -194,6 +195,9 @@ public class MainActivity extends BaseActivity implements DrawerLayout.DrawerLis
     @Override
     protected void onResume() {
         super.onResume();
+        if (getModel().getSyncController().getBluetoothStatus() == BluetoothAdapter.STATE_OFF) {
+            showStateString(R.string.in_app_notification_bluetooth_disabled, false);
+        }
         if (!getModel().isWatchConnected()) {
             getModel().startConnectToWatch(false);
         }

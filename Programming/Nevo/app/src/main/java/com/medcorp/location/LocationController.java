@@ -32,17 +32,17 @@ public class LocationController implements LocationListener {
             Log.w("LocationController", "no granted location permission@startUpdateLocation()");
             return;
         }
-        Location mLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (mLocation == null) {
-            mLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location == null) {
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
-        if (mLocation == null) {
+        if (location == null) {
             Log.w("LocationController", "can't get location");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 12 * 60 * 60, 1000 * 1000,
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 10 * 60, 1000 * 1000,
                     (LocationListener) this);
             return;
         }
-        EventBus.getDefault().post(new LocationChangedEvent(mLocation));
+        EventBus.getDefault().post(new LocationChangedEvent(location));
     }
 
     public void stopLocation() {
@@ -61,16 +61,37 @@ public class LocationController implements LocationListener {
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-
+        Log.w("LocationController",provider + " location status is " + status);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-
+        Log.w("LocationController",provider + " location is opened.");
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.w("LocationController", "no granted location permission@startUpdateLocation()");
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+        if(provider.equals(LocationManager.GPS_PROVIDER)){
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+        }
+        else {
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+        }
+        if (location == null) {
+            Log.w("LocationController", "not located when gps/network is opened");
+            return;
+        }
+        EventBus.getDefault().post(new LocationChangedEvent(location));
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        Log.w("LocationController",provider + " location is closed.");
     }
 }

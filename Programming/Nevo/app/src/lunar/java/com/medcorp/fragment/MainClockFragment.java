@@ -17,6 +17,7 @@ import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
+import com.medcorp.event.bluetooth.HomeTimeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
@@ -99,9 +100,9 @@ public class MainClockFragment extends BaseFragment {
     private Location location;
 
     private void refreshClock() {
-        final Calendar mCalendar = Calendar.getInstance();
-        int mCurHour = mCalendar.get(Calendar.HOUR);
-        int mCurMin = mCalendar.get(Calendar.MINUTE);
+        final Calendar calendar = Calendar.getInstance();
+        int mCurHour = calendar.get(Calendar.HOUR);
+        int mCurMin = calendar.get(Calendar.MINUTE);
         minImage.setRotation((float) (mCurMin * 6));
         hourImage.setRotation((float) ((mCurHour + mCurMin / 60.0) * 30));
     }
@@ -140,7 +141,7 @@ public class MainClockFragment extends BaseFragment {
         if (mPositionLocal != null) {
             calculator = computeSunriseTime(mPositionLocal.getLatitude(), mPositionLocal.getLongitude()
                     , Calendar.getInstance().getTimeZone().getID());
-            sunriseCityName.setText(mPositionLocal.getCountryName());
+            sunriseCityName.setText(mPositionLocal.getLocality());
         } else {
             RealmResults<City> cities = realm.where(City.class).findAll();
             TimeZone timeZone = Calendar.getInstance().getTimeZone();
@@ -150,7 +151,7 @@ public class MainClockFragment extends BaseFragment {
                     calculator = computeSunriseTime(city.getLat(), city.getLng()
                             , Calendar.getInstance().getTimeZone().getID());
                     this.LocalCity = city;
-                    sunriseCityName.setText(LocalCity.getCountry());
+                    sunriseCityName.setText(LocalCity.getName());
                     break;
                 }
             }
@@ -244,6 +245,13 @@ public class MainClockFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
         this.location = locationChangedEvent.getLocation();
+        mPositionLocal = getModel().getPositionLocal(location);
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                initData(userSelectDate);
+            }
+        });
     }
 
     @Override

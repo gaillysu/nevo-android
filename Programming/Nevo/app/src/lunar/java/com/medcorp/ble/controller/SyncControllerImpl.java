@@ -26,7 +26,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
-import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.datasource.GattAttributesDataSourceImpl;
@@ -62,6 +61,7 @@ import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
 import com.medcorp.event.bluetooth.GetWatchInfoChangedEvent;
+import com.medcorp.event.bluetooth.HomeTimeEvent;
 import com.medcorp.event.bluetooth.InitializeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -77,6 +77,7 @@ import com.medcorp.model.Steps;
 import com.medcorp.model.WatchInfomation;
 import com.medcorp.util.Common;
 import com.medcorp.util.LinklossNotificationUtils;
+import com.medcorp.util.SoundPlayer;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.ble.controller.ConnectionController;
@@ -500,9 +501,8 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 //                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
 //                    }
                     setRtc();
-                    sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) 0));
+                    setWorldClockOffset();
                     if(isPendingsunriseAndsunset){
-                        isPendingsunriseAndsunset = false;
                         //when get local location, will calculate sunrise and sunset time and send it to watch
                         EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
                     }
@@ -542,7 +542,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
                 }
             }
             if(!setSunriseAndSunsetSuccess){
+                isPendingsunriseAndsunset = true;
                 EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.FAILED));
+            }
+            else{
+                isPendingsunriseAndsunset = false;
             }
         }
         else {
@@ -557,6 +561,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         } else if (stateChangedEvent.getPairState() == BluetoothDevice.BOND_NONE) {
             mLocalService.setPairedWatch(null);
         }
+    }
+
+    @Subscribe
+    public void onEvent(HomeTimeEvent homeTimeEvent) {
+        setWorldClockOffset();
     }
 
     /**
@@ -592,6 +601,26 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         //tell history to refresh
     }
 
+    private void setWorldClockOffset() {
+        byte timeZoneOffset = 0;
+        //when user select home city Time
+        if(Preferences.getPlaceSelect(mContext)){
+            TimeZone timezone = TimeZone.getTimeZone(Preferences.getHomeTimezoneId(mContext));
+            byte timeHomeZoneOffset = (byte) (timezone.getRawOffset() / 3600 / 1000);
+
+            TimeZone localTimezone = TimeZone.getDefault();
+            byte timeLocalZoneOffset = (byte) (localTimezone.getRawOffset() / 3600 / 1000);
+
+            if(timeLocalZoneOffset>timeHomeZoneOffset) {
+                timeZoneOffset = (byte) (24 - (timeLocalZoneOffset - timeHomeZoneOffset));
+            }
+            else {
+                timeZoneOffset = (byte) (timeHomeZoneOffset - timeLocalZoneOffset);
+            }
+        }
+        Log.i(TAG, "@HomeTimeEvent,set world time offset,offset:" + timeZoneOffset);
+        sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) timeZoneOffset));
+    }
     private void setRtc() {
         sendRequest(new SetRtcRequest(mContext));
     }
@@ -930,7 +959,13 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             wl.acquire();
             wl.release();
 
-            //TODO Sound is fine but not sound from dogs. Thanks.
+            //play ring bell to alert user that phone is here
+            new SoundPlayer(this).startPlayer(R.raw.bell);
         }
+
+    }
+    @Override
+    public int getBluetoothStatus(){
+        return connectionController.getBluetoothStatus();
     }
 }
