@@ -106,7 +106,6 @@ public class HomeClockFragment extends BaseObservableFragment {
             for (City city : cities) {
                 if (city.getName().equals(localCityName)) {
                     this.locationCity = city;
-                    setSunriseAndSunset(locationCity, timeZone.getID());
                 }
             }
         }
@@ -146,22 +145,6 @@ public class HomeClockFragment extends BaseObservableFragment {
         realm.close();
     }
 
-    //set sunrise and sunset value
-    public void setSunriseAndSunset(City city, String zone) {
-        com.luckycatlabs.sunrisesunset.dto.Location sunriseLocation =
-                new com.luckycatlabs.sunrisesunset.dto.Location(city.getLat() + "", city.getLng() + "");
-        SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(sunriseLocation, zone);
-        String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
-        String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
-
-        byte sunriseHour = (byte) Integer.parseInt(officialSunrise.split(":")[0]);
-        byte sunriseMin = (byte) Integer.parseInt(officialSunrise.split(":")[1]);
-        byte sunsetHour = (byte) Integer.parseInt(officialSunset.split(":")[0]);
-        byte sunsetMin = (byte) Integer.parseInt(officialSunset.split(":")[1]);
-        byte timeZoneOffset = (byte) (Calendar.getInstance().getTimeZone().getRawOffset() / 3600 / 1000);
-        EventBus.getDefault().post(new SunRiseAndSunSetWithZoneOffsetChangedEvent(timeZoneOffset, sunriseHour, sunriseMin, sunsetHour, sunsetMin));
-
-    }
 
     private void refreshClock() {
         setHomeDay(mHomeCalendar);
@@ -180,9 +163,9 @@ public class HomeClockFragment extends BaseObservableFragment {
 
     private void syncWatch(Calendar mCalendar) {
 
-        byte sunriseHour = (byte) mCalendar.get(Calendar.HOUR);
-        byte sunriseMin = (byte) mCalendar.get(Calendar.MINUTE);
-        EventBus.getDefault().post(new HomeTimeEvent(sunriseHour, sunriseMin));
+        byte homeTimeHour = (byte) mCalendar.get(Calendar.HOUR);
+        byte homeTimeMinute = (byte) mCalendar.get(Calendar.MINUTE);
+        EventBus.getDefault().post(new HomeTimeEvent(homeTimeHour, homeTimeMinute));
     }
 
     @Subscribe

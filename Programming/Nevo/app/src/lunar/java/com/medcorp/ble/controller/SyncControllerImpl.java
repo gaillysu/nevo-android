@@ -61,6 +61,7 @@ import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
 import com.medcorp.event.bluetooth.GetWatchInfoChangedEvent;
+import com.medcorp.event.bluetooth.HomeTimeEvent;
 import com.medcorp.event.bluetooth.InitializeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -500,7 +501,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
 //                        sendRequest(new SetProfileRequest(mContext, ((ApplicationModel) mContext).getNevoUser()));
 //                    }
                     setRtc();
-                    sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) 0));
+                    setWorldClockOffset();
                     if(isPendingsunriseAndsunset){
                         //when get local location, will calculate sunrise and sunset time and send it to watch
                         EventBus.getDefault().post(new SetSunriseAndSunsetTimeRequestEvent(SetSunriseAndSunsetTimeRequestEvent.STATUS.START));
@@ -562,6 +563,11 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         }
     }
 
+    @Subscribe
+    public void onEvent(HomeTimeEvent homeTimeEvent) {
+        setWorldClockOffset();
+    }
+
     /**
      * This function will synchronise activity data with the watch.
      * It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
@@ -595,6 +601,26 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
         //tell history to refresh
     }
 
+    private void setWorldClockOffset() {
+        byte timeZoneOffset = 0;
+        //when user select home city Time
+        if(Preferences.getPlaceSelect(mContext)){
+            TimeZone timezone = TimeZone.getTimeZone(Preferences.getHomeTimezoneId(mContext));
+            byte timeHomeZoneOffset = (byte) (timezone.getRawOffset() / 3600 / 1000);
+
+            TimeZone localTimezone = TimeZone.getDefault();
+            byte timeLocalZoneOffset = (byte) (localTimezone.getRawOffset() / 3600 / 1000);
+
+            if(timeLocalZoneOffset>timeHomeZoneOffset) {
+                timeZoneOffset = (byte) (24 - (timeLocalZoneOffset - timeHomeZoneOffset));
+            }
+            else {
+                timeZoneOffset = (byte) (timeHomeZoneOffset - timeLocalZoneOffset);
+            }
+        }
+        Log.i(TAG, "@HomeTimeEvent,set world time offset,offset:" + timeZoneOffset);
+        sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) timeZoneOffset));
+    }
     private void setRtc() {
         sendRequest(new SetRtcRequest(mContext));
     }

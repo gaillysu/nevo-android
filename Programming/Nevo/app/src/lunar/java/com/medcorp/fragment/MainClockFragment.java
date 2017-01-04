@@ -17,6 +17,7 @@ import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
 import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
+import com.medcorp.event.bluetooth.HomeTimeEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
@@ -99,9 +100,9 @@ public class MainClockFragment extends BaseFragment {
     private Location location;
 
     private void refreshClock() {
-        final Calendar mCalendar = Calendar.getInstance();
-        int mCurHour = mCalendar.get(Calendar.HOUR);
-        int mCurMin = mCalendar.get(Calendar.MINUTE);
+        final Calendar calendar = Calendar.getInstance();
+        int mCurHour = calendar.get(Calendar.HOUR);
+        int mCurMin = calendar.get(Calendar.MINUTE);
         minImage.setRotation((float) (mCurMin * 6));
         hourImage.setRotation((float) ((mCurHour + mCurMin / 60.0) * 30));
     }
