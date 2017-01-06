@@ -621,6 +621,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             else {
                 timeZoneOffset = (byte) (timeHomeZoneOffset - timeLocalZoneOffset);
             }
+            //TODO timeZoneOffset range is 0~23, but for some timezone with half hour,firmware and interface will be updated to support it
         }
         Log.i(TAG, "@HomeTimeEvent,set world time offset,offset:" + timeZoneOffset);
         sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) timeZoneOffset));
