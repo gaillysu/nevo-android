@@ -33,6 +33,8 @@ public class MoreSettingActivity extends BaseActivity {
     Spinner selectUnitSpinner;
     @Bind(R.id.more_setting_select_sync_time_spinner)
     Spinner selectPlaceSpinner;
+    @Bind(R.id.lunar_tool_bar_title)
+    TextView title;
 
 
     @Override
@@ -42,7 +44,7 @@ public class MoreSettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
+//        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.settings_more);
         initData();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
