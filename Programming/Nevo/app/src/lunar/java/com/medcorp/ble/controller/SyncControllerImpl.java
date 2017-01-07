@@ -59,6 +59,7 @@ import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.BatteryEvent;
+import com.medcorp.event.bluetooth.DigitalTimeChangedEvent;
 import com.medcorp.event.bluetooth.FindWatchEvent;
 import com.medcorp.event.bluetooth.GetWatchInfoChangedEvent;
 import com.medcorp.event.bluetooth.HomeTimeEvent;
@@ -567,7 +568,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     public void onEvent(HomeTimeEvent homeTimeEvent) {
         setWorldClockOffset();
     }
-
+    @Subscribe
+    public void onEvent(DigitalTimeChangedEvent digitalTimeChangedEvent) {
+        setWorldClockOffset();
+    }
     /**
      * This function will synchronise activity data with the watch.
      * It is a long process and hence shouldn't be done too often, so we save the date of previous sync.
@@ -617,6 +621,7 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
             else {
                 timeZoneOffset = (byte) (timeHomeZoneOffset - timeLocalZoneOffset);
             }
+            //TODO timeZoneOffset range is 0~23, but for some timezone with half hour,firmware and interface will be updated to support it
         }
         Log.i(TAG, "@HomeTimeEvent,set world time offset,offset:" + timeZoneOffset);
         sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) timeZoneOffset));

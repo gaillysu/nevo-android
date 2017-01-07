@@ -12,7 +12,10 @@ import android.widget.TextView;
 import com.medcorp.R;
 import com.medcorp.adapter.MySpinnerAdapter;
 import com.medcorp.base.BaseActivity;
+import com.medcorp.event.bluetooth.DigitalTimeChangedEvent;
 import com.medcorp.util.Preferences;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +91,7 @@ public class MoreSettingActivity extends BaseActivity {
                 } else {
                     Preferences.savePlaceSelect(MoreSettingActivity.this, true);
                 }
-
+                EventBus.getDefault().post(new DigitalTimeChangedEvent(position == 0));
             }
 
             @Override
