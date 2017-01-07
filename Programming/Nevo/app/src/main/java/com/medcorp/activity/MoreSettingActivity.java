@@ -44,7 +44,6 @@ public class MoreSettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        TextView title = (TextView) toolbar.findViewById(R.id.lunar_tool_bar_title);
         title.setText(R.string.settings_more);
         initData();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
