@@ -3,10 +3,11 @@
                 xmlns:roboto="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:paddingBottom="6dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="6dp"
                  >
 
     <ImageView
@@ -22,10 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/activity_setting_notification_image"
         android:background="@color/transparent"
         android:orientation="vertical"
-        android:paddingLeft="15dp">
+        android:layout_marginLeft="56dp">
 
         <com.medcorp.view.customfontview.RobotoTextView
             android:id="@+id/activity_setting_notification_name"

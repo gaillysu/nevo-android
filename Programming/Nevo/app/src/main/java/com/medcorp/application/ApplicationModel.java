@@ -138,7 +138,6 @@ public class ApplicationModel extends Application {
         EventBus.getDefault().register(this);
         RealmConfiguration config = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(config);
-
         syncController = new SyncControllerImpl(this);
         otaController = new OtaControllerImpl(this);
         stepsDatabaseHelper = new StepsDatabaseHelper(this);

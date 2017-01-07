@@ -7,13 +7,14 @@
               android:orientation="vertical">
 
     <include layout="@layout/toolbar"/>
+
     <ListView
         android:id="@+id/activity_edit_alarm_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/window_background_color"
-        android:divider="@drawable/alarm_list_view_divider"
-        android:dividerHeight="1dp"
+        android:listSelector="?android:attr/selectableItemBackground"
+        android:divider="@null"
+        android:scrollbars="none"
         android:visibility="visible"
         />
 </LinearLayout>

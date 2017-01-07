@@ -24,7 +24,6 @@ public class TutorialPageVideoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome_page);
-
         if(Preferences.getIsFirstLogin(this))
         {
             new Handler().postDelayed(new Runnable() {

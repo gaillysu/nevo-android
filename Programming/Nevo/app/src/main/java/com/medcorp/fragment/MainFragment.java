@@ -48,8 +48,7 @@ public class MainFragment extends BaseObservableFragment {
     private boolean showSyncGoal;
     private LunarMainFragmentAdapter adapter;
     private String[] fragmentAdapterArray;
-    private int stepsGoalNumber;
-    private Date userSelectDate = new Date();
+    private Date userSelectDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

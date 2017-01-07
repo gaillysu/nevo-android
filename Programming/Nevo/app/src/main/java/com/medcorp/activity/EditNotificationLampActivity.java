@@ -72,9 +72,9 @@ public class EditNotificationLampActivity extends BaseActivity {
 
     private void initView() {
         userSettingAllLamp = mModel.getAllLedLamp();
-        allNotificationLampList.setLayoutManager(new LinearLayoutManager(this));// 布局管理器。
-        allNotificationLampList.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
-        allNotificationLampList.setItemAnimator(new DefaultItemAnimator());// 设置Item默认动画，加也行，不加也行。
+        allNotificationLampList.setLayoutManager(new LinearLayoutManager(this));
+        allNotificationLampList.setHasFixedSize(true);
+        allNotificationLampList.setItemAnimator(new DefaultItemAnimator());
         allNotificationLampList.setSwipeMenuCreator(swipeMenuCreator);
         allNotificationLampList.setSwipeMenuItemClickListener(menuItemClickListener);
         mEditItemAdapter = new EditLunarNotificationAdapter(userSettingAllLamp,nevoLed.getHexColor());
@@ -160,8 +160,8 @@ public class EditNotificationLampActivity extends BaseActivity {
     private OnSwipeMenuItemClickListener menuItemClickListener = new OnSwipeMenuItemClickListener() {
         @Override
         public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
-            closeable.smoothCloseMenu();// 关闭被点击的菜单。
-            if (menuPosition == 0) {// 删除按钮被点击。
+            closeable.smoothCloseMenu();
+            if (menuPosition == 0) {
                 LedLamp ledLamp = userSettingAllLamp.get(adapterPosition);
                 mModel.removeLedLamp(ledLamp.getId());
                 userSettingAllLamp.remove(adapterPosition);

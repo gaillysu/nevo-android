@@ -187,7 +187,7 @@
     <string name="my_nevo_battery_half">壹半電量</string>
     <string name="my_nevo_battery_full">電量充足</string>
     <string name="my_nevo_application">應用版本</string>
-    <string name="my_nevo_notice_message">為了節省電池電量，手表遠離手機超過2分鐘時，手表藍牙會自動關閉。手機與手表連接斷開時，手表將接收不到手機通知。</string>
+    <string name="my_nevo_notice_message">為了節省電池電量，手表遠離手機超過1小时，手表藍牙會自動關閉。手機與手表連接斷開時，手表將接收不到手機通知。</string>
 
     <string name="settings_link_loss_notification">連接斷開通知</string>
     <string name="settings_notifications">通知</string>

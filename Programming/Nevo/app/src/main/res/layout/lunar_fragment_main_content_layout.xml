@@ -30,7 +30,7 @@
                 android:text="@string/lunar_main_clock_charging_status_title"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="8sp"
+                android:textSize="12sp"
                 />
 
             <ImageView
@@ -77,7 +77,7 @@
                 android:text="@string/lunar_main_clock_sleep_time_title"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="8sp"
+                android:textSize="12sp"
                 />
 
             <ImageView
@@ -97,7 +97,7 @@
                 android:layout_marginBottom="8dp"
                 android:maxLines="1"
                 android:textColor="@color/text_color"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 />
         </LinearLayout>
 
@@ -203,7 +203,7 @@
                 android:text="@string/lunar_main_clock_local_home_time"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="8sp"
+                android:textSize="12sp"
                 />
 
             <TextView
@@ -212,23 +212,23 @@
                 android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/shape_input_email_account_bg"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/main_clock_fragment_tv_bg"
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/text_color"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 />
 
             <TextView
                 android:id="@+id/lunar_main_clock_home_city_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:text="Charging"
                 android:textColor="@color/text_color"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 />
 
             <TextView
@@ -240,7 +240,7 @@
                 android:text="kmskld"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="8sp"
+                android:textSize="12sp"
                 />
         </LinearLayout>
 
@@ -269,7 +269,7 @@
                 android:text="@string/lunar_main_clock_home_city_sunrise"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="8sp"
+                android:textSize="12sp"
                 />
 
             <ImageView
@@ -290,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:textColor="@color/text_color"
-                android:textSize="8sp"
+                android:textSize="12sp"
                 />
 
             <TextView
@@ -301,10 +301,8 @@
                 android:maxLines="1"
                 android:textAllCaps="false"
                 android:textColor="@color/text_color"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 />
         </LinearLayout>
-
-
     </LinearLayout>
 </LinearLayout>

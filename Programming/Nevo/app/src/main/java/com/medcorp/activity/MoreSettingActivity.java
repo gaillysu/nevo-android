@@ -2,12 +2,12 @@ package com.medcorp.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.medcorp.R;
 import com.medcorp.adapter.MySpinnerAdapter;
@@ -33,6 +33,8 @@ public class MoreSettingActivity extends BaseActivity {
     Spinner selectUnitSpinner;
     @Bind(R.id.more_setting_select_sync_time_spinner)
     Spinner selectPlaceSpinner;
+    @Bind(R.id.lunar_tool_bar_title)
+    TextView title;
 
 
     @Override
@@ -41,10 +43,10 @@ public class MoreSettingActivity extends BaseActivity {
         setContentView(R.layout.more_setting_activity);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        setTitle(getString(R.string.settings_more));
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        title.setText(R.string.settings_more);
         initData();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initData() {
