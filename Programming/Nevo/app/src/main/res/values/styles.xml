@@ -157,6 +157,6 @@
     <style name="my_switch_color">
          <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorSwitchThumbNormal">@android:color/white</item>
-        <item name="android:colorForeground">@color/white</item>
+        <item name="android:colorForeground">@android:color/white</item>
     </style>
 </resources>
