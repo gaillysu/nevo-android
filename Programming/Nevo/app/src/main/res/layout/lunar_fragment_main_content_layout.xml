@@ -191,7 +191,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/main_clock_fragment_content_top_right_shape"
-            android:gravity="center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical"
             >
 
@@ -233,7 +233,10 @@
 
             <TextView
                 android:id="@+id/lunar_main_clock_home_country"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:maxLines="1"
@@ -295,7 +298,10 @@
 
             <TextView
                 android:id="@+id/lunar_main_clock_home_city_name_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:maxLines="1"

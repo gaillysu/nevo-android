@@ -1,5 +1,6 @@
 package com.medcorp.fragment;
 
+import android.content.Context;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -90,12 +91,12 @@ public class MainClockFragment extends BaseFragment {
 
     private String homeName;
     private String homeCountryName;
-    private String timeZoneId;
     private Address mPositionLocal;
     private SunriseSunsetCalculator calculator;
     private Realm realm = Realm.getDefaultInstance();
 
     private Location location;
+    private City mDefaultTimeZoneCity;
 
     private void refreshClock() {
         final Calendar calendar = Calendar.getInstance();
@@ -106,9 +107,13 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPositionLocal = getModel().getPositionLocal(location);
         user = getModel().getNevoUser();
         EventBus.getDefault().register(this);
         String selectDate = Preferences.getSelectDate(this.getContext());
@@ -127,6 +132,8 @@ public class MainClockFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, mainClockFragmentView);
+        location = Preferences.getLocation(MainClockFragment.this.getContext());
+        mPositionLocal = getModel().getPositionLocal(location);
         refreshClock();
         initData(userSelectDate);
         return mainClockFragmentView;
@@ -135,14 +142,14 @@ public class MainClockFragment extends BaseFragment {
     private void initData(Date date) {
         lunarSleepTotal.setText(countSleepTime(date));
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
+        mDefaultTimeZoneCity = getDefaultTimeZoneCity();
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
         if (location != null) {
             calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
                     , Calendar.getInstance().getTimeZone().getID());
         } else {
-            City defaultTimeZoneCity = getDefaultTimeZoneCity();
-            calculator = computeSunriseTime(defaultTimeZoneCity.getLat(),
-                    defaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
+            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
+                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
         }
         setHomeCityData();
         setSunsetOrSunrise();
@@ -176,20 +183,23 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void setHomeCityData() {
+        mDefaultTimeZoneCity = getDefaultTimeZoneCity();
         homeName = Preferences.getPositionCity(MainClockFragment.this.getActivity());
         homeCountryName = Preferences.getPositionCountry(MainClockFragment.this.getActivity());
-        timeZoneId = Preferences.getHomeTimezoneId(MainClockFragment.this.getActivity());
         if (homeName == null) {
             if (mPositionLocal == null) {
-                City defaultTimeZoneCity = getDefaultTimeZoneCity();
-                homeName = defaultTimeZoneCity.getName();
-                homeCountryName = defaultTimeZoneCity.getCountry();
+                homeName = mDefaultTimeZoneCity.getName();
+                homeCountryName = mDefaultTimeZoneCity.getCountry();
             } else {
                 homeName = mPositionLocal.getLocality();
                 homeCountryName = mPositionLocal.getCountryName();
             }
         }
-        sunriseCityName.setText(homeName);
+        if (mPositionLocal == null) {
+            sunriseCityName.setText(mDefaultTimeZoneCity.getName());
+        } else {
+            sunriseCityName.setText(mPositionLocal.getLocality());
+        }
         homeCityName.setText(homeName);
         countryName.setText(homeCountryName);
         setHomeCityTime();
@@ -318,7 +328,6 @@ public class MainClockFragment extends BaseFragment {
 
 
     public City getDefaultTimeZoneCity() {
-        City mDefaultTimeZoneCity = null;
         RealmResults<City> cities = realm.where(City.class).findAll();
         TimeZone timeZone = Calendar.getInstance().getTimeZone();
         String localCityName = timeZone.getID().split("/")[1].replace("_", " ");
@@ -330,3 +339,4 @@ public class MainClockFragment extends BaseFragment {
         return new City();
     }
 }
+

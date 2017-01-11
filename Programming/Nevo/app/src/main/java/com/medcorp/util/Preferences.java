@@ -2,7 +2,9 @@ package com.medcorp.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 
+import com.google.gson.Gson;
 import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
@@ -240,5 +242,18 @@ public class Preferences {
     public static String getHomeTimezoneId(Context context) {
         init(context);
         return preferences.getString(context.getString(R.string.key_prefs_home_timezone), TimeZone.getDefault().getID());
+    }
+
+    public static void saveLocation(Context context, Location location) {
+        init(context);
+        Gson gson = new Gson();
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(context.getString(R.string.key_prefs_location_city), gson.toJson(location)).apply();
+    }
+
+    public static Location getLocation(Context context) {
+        init(context);
+        String location = preferences.getString(context.getString(R.string.key_prefs_location_city), null);
+        return new Gson().fromJson(location, Location.class);
     }
 }
