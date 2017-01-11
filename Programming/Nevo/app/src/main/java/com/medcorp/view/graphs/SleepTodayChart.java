@@ -76,7 +76,7 @@ public class SleepTodayChart extends LineChart {
         rightAxis.setEnabled(false);
         rightAxis.setAxisLineColor(Color.BLACK);
         rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinValue(0.1f);
+        rightAxis.setAxisMinValue(0.0f);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
 
@@ -85,7 +85,7 @@ public class SleepTodayChart extends LineChart {
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
     }
 

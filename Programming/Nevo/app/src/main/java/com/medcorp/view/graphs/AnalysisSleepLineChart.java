@@ -77,7 +77,7 @@ public class AnalysisSleepLineChart extends LineChart {
         legend.setYOffset(-5f);
 
         YAxis leftAxis = getAxisLeft();
-        leftAxis.setAxisLineColor(getResources().getColor(R.color.graph_text_color));
+        leftAxis.setAxisLineColor(getResources().getColor(R.color.graph_grid_line_color));
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawLabels(true);
         leftAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
@@ -85,13 +85,13 @@ public class AnalysisSleepLineChart extends LineChart {
 
         YAxis rightAxis = getAxisRight();
         rightAxis.setEnabled(false);
-        rightAxis.setAxisLineColor(getResources().getColor(R.color.graph_text_color));
+        rightAxis.setAxisLineColor(getResources().getColor(R.color.graph_grid_line_color));
         rightAxis.setDrawGridLines(false);
         rightAxis.setDrawLimitLinesBehindData(false);
         rightAxis.setDrawLabels(false);
 
         XAxis xAxis = getXAxis();
-        xAxis.setAxisLineColor(getResources().getColor(R.color.graph_text_color));
+        xAxis.setAxisLineColor(getResources().getColor(R.color.graph_grid_line_color));
         xAxis.setTextColor(getResources().getColor(R.color.graph_text_color));
         xAxis.setDrawLimitLinesBehindData(false);
         xAxis.setDrawLabels(true);
@@ -158,8 +158,8 @@ public class AnalysisSleepLineChart extends LineChart {
                     Color.rgb(160, 132, 85), Color.rgb(188, 188, 188)),
                     Arrays.asList(getLegend().getLabels()));
         } else {
-            getLegend().setCustom(Arrays.asList(Color.rgb(117, 182, 178),
-                    Color.rgb(185, 141, 221), Color.rgb(150, 147, 155)),
+            getLegend().setCustom(Arrays.asList(Color.rgb(126, 216, 206),
+                    Color.rgb(179, 126, 189), Color.rgb(229, 228, 226)),
                     Arrays.asList(getLegend().getLabels()));
         }
         setOnClickListener(null);

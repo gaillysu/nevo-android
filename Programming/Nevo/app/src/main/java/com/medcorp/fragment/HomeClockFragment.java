@@ -12,19 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.luckycatlabs.sunrisesunset.SunriseSunsetCalculator;
 import com.medcorp.R;
 import com.medcorp.activity.EditWorldClockActivity;
-import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.bluetooth.HomeTimeEvent;
-import com.medcorp.event.bluetooth.SunRiseAndSunSetWithZoneOffsetChangedEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.worldclock.City;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,7 +33,6 @@ import io.realm.RealmResults;
 
 /**
  * Created by Jason on 2016/10/24.
- *
  */
 
 public class HomeClockFragment extends BaseObservableFragment {
@@ -55,25 +50,25 @@ public class HomeClockFragment extends BaseObservableFragment {
 
     private Realm realm = Realm.getDefaultInstance();
     private RealmResults<City> cities;
-    private City locationCity;
     private String localCityName;
     private TimeZone timeZone;
     private String homeCityName;
     private String homeCountryName;
-    private City mHomeCity;
     private Calendar mHomeCalendar;
     private Location location;
+    private Address mPositionLocal;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sunrise_sunset_activity, container, false);
         ButterKnife.bind(this, view);
+        location = Preferences.getLocation(HomeClockFragment.this.getContext());
+        mPositionLocal = getModel().getPositionLocal(location);
         cities = realm.where(City.class).findAll();
         setHasOptionsMenu(true);
         return view;
@@ -97,16 +92,11 @@ public class HomeClockFragment extends BaseObservableFragment {
 
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
-
-        Address positionLocal = getModel().getPositionLocal(location);
-        if (positionLocal != null) {
-            localCityName = positionLocal.getLocality() + ", " + positionLocal.getCountryName();
-        } else {
-            localCityName = timeZone.getID().split("/")[1].replace("_", " ");
-            for (City city : cities) {
-                if (city.getName().equals(localCityName)) {
-                    this.locationCity = city;
-                }
+        if (homeCityName == null) {
+            if (mPositionLocal == null) {
+                localCityName = timeZone.getID().split("/")[1].replace("_", " ");
+            } else {
+                localCityName = mPositionLocal.getLocality() + ", " + mPositionLocal.getCountryName();
             }
         }
 
@@ -117,8 +107,8 @@ public class HomeClockFragment extends BaseObservableFragment {
         } else {
             mHomeCalendar = calendar;
             showLocationCityInfo.setText(localCityName);
-            mHomeCity = locationCity;
         }
+        syncWatch(mHomeCalendar);
     }
 
     @Override
@@ -156,8 +146,6 @@ public class HomeClockFragment extends BaseObservableFragment {
         showLocationDate.setText(mHomeCalendar.get(Calendar.DAY_OF_MONTH) + " "
                 + new SimpleDateFormat("MMM").format(mHomeCalendar.getTime()) + " ,"
                 + mHomeCalendar.get(Calendar.YEAR));
-
-        syncWatch(mHomeCalendar);
     }
 
 
@@ -166,11 +154,6 @@ public class HomeClockFragment extends BaseObservableFragment {
         byte homeTimeHour = (byte) mCalendar.get(Calendar.HOUR);
         byte homeTimeMinute = (byte) mCalendar.get(Calendar.MINUTE);
         EventBus.getDefault().post(new HomeTimeEvent(homeTimeHour, homeTimeMinute));
-    }
-
-    @Subscribe
-    public void onEvent(LocationChangedEvent locationChangedEvent) {
-        this.location = locationChangedEvent.getLocation();
     }
 
     public void setHomeDay(Calendar mCalendar) {
@@ -191,11 +174,5 @@ public class HomeClockFragment extends BaseObservableFragment {
                 homeDay.setText(R.string.sunset_activity_title_tomorrow);
             }
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 }

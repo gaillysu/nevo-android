@@ -30,6 +30,7 @@ import com.medcorp.database.entry.SleepDatabaseHelper;
 import com.medcorp.database.entry.SolarDatabaseHelper;
 import com.medcorp.database.entry.StepsDatabaseHelper;
 import com.medcorp.database.entry.UserDatabaseHelper;
+import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
@@ -703,7 +704,6 @@ public class ApplicationModel extends Application {
         return ledDataBase.remove(id);
     }
 
-    //TODO
     public Address getPositionLocal(Location mLocation) {
         Address address = null;
         List<Address> addList = null;
@@ -717,9 +717,7 @@ public class ApplicationModel extends Application {
             e.printStackTrace();
         }
         if (addList != null && addList.size() > 0) {
-            //            for (int i = 0; i < addList.size(); i++) {
             address = addList.get(0);
-            //            }
         }
         return address;
     }
@@ -761,6 +759,12 @@ public class ApplicationModel extends Application {
         if (googleFitManager != null) {
             googleFitManager.disconnect();
         }
+    }
+
+    @Subscribe
+    public void onEvent(LocationChangedEvent locationChangedEvent) {
+        Location location = locationChangedEvent.getLocation();
+        Preferences.saveLocation(this, location);
     }
 
     @Subscribe

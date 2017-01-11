@@ -23,7 +23,7 @@
     <color name="edit_alarm_background_color">#FFF</color>
     <color name="steps_fragment_title_color">#54575A</color>
     <color name="text_color">@android:color/white</color>
-    <color name="graph_text_color">#FFF</color>
+    <color name="graph_text_color">#FFF</color>\
     <color name="graph_grid_line_color">#BCBCBC</color>
     <color name="analysis_fragment_tablayout_background_color">#54575A</color>
     <color name="list_item_divider">#000333</color>
@@ -45,7 +45,7 @@
     <color name="left_menu_item_text_color">#FFF</color>
     <color name="edit_alarm_item_text_color">#000000</color>
     <color name="pie_chart_child_color">#7ED8D1</color>
-    <color name="analysis_sleep_wake_line_color">#75b6b2</color>
+    <color name="analysis_sleep_wake_line_color">#848484</color>
     <color name="analysis_sleep_light_line_color">#ac86cb</color>
-    <color name="analysis_sleep_deep_line_color">#848484</color>
+    <color name="analysis_sleep_deep_line_color">#75b6b2</color>
 </resources>
