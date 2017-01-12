@@ -606,25 +606,24 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     }
 
     private void setWorldClockOffset() {
-        byte timeZoneOffset = 0;
+        float timeZoneOffset = 0f;
         //when user select home city Time
         if(Preferences.getPlaceSelect(mContext)){
             TimeZone timezone = TimeZone.getTimeZone(Preferences.getHomeTimezoneId(mContext));
-            byte timeHomeZoneOffset = (byte) (timezone.getRawOffset() / 3600 / 1000);
+            float timeHomeZoneOffset = timezone.getRawOffset() / 3600f / 1000f;
 
             TimeZone localTimezone = TimeZone.getDefault();
-            byte timeLocalZoneOffset = (byte) (localTimezone.getRawOffset() / 3600 / 1000);
+            float timeLocalZoneOffset = localTimezone.getRawOffset() / 3600f / 1000f;
 
             if(timeLocalZoneOffset>timeHomeZoneOffset) {
-                timeZoneOffset = (byte) (24 - (timeLocalZoneOffset - timeHomeZoneOffset));
+                timeZoneOffset = 24f - (timeLocalZoneOffset - timeHomeZoneOffset);
             }
             else {
-                timeZoneOffset = (byte) (timeHomeZoneOffset - timeLocalZoneOffset);
+                timeZoneOffset = timeHomeZoneOffset - timeLocalZoneOffset;
             }
-            //TODO timeZoneOffset range is 0~23, but for some timezone with half hour,firmware and interface will be updated to support it
         }
         Log.i(TAG, "@HomeTimeEvent,set world time offset,offset:" + timeZoneOffset);
-        sendRequest(new SetWorldTimeOffsetRequest(mContext, (byte) timeZoneOffset));
+        sendRequest(new SetWorldTimeOffsetRequest(mContext, timeZoneOffset));
     }
     private void setRtc() {
         sendRequest(new SetRtcRequest(mContext));

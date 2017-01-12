@@ -14,9 +14,9 @@ import java.util.Date;
  */
 public class SetWorldTimeOffsetRequest extends BLERequestData {
     public  final static  byte HEADER = 0x03;
-    private final byte  offset;// value: [-23,-22,...0,...,22,23]
+    private final float  offset;//0 ~~ 23.5, include such as : 8.5, 16.5 etc.
 
-    public SetWorldTimeOffsetRequest(Context context, byte offset) {
+    public SetWorldTimeOffsetRequest(Context context, float offset) {
         super(new GattAttributesDataSourceImpl(context));
         this.offset = offset;
     }
@@ -31,7 +31,7 @@ public class SetWorldTimeOffsetRequest extends BLERequestData {
     public byte[][] getRawDataEx() {
 
         return new byte[][] {
-                {0,HEADER,offset,0,
+                {0,HEADER,(byte)offset,(((byte)offset)*1f < offset)?(byte)30:(byte)0,
                         0,0,0,0,
                         0,0,0,0,
                         0,0,0,0,
