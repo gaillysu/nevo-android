@@ -1,6 +1,5 @@
 package com.medcorp.fragment;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -108,11 +107,6 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = getModel().getNevoUser();
@@ -143,13 +137,6 @@ public class MainClockFragment extends BaseFragment {
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
         mDefaultTimeZoneCity = getDefaultTimeZoneCity();
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
-        if (location != null) {
-            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
-                    , Calendar.getInstance().getTimeZone().getID());
-        } else {
-            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
-                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
-        }
         setHomeCityData();
         setSunsetOrSunrise();
         int countCalories = dailySteps.getRunSteps() + dailySteps.getWalkSteps();
@@ -160,6 +147,13 @@ public class MainClockFragment extends BaseFragment {
 
     private void setSunsetOrSunrise() {
 
+        if (location != null) {
+            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
+                    , Calendar.getInstance().getTimeZone().getID());
+        } else {
+            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
+                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
+        }
         String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
 

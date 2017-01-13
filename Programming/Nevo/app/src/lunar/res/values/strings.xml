@@ -230,7 +230,7 @@
 
     <string name="register_popup_message">Creating Account...</string>
     <string name="register_email_error">enter a valid email address</string>
-    <string name="register_password_error">Minimum 4 characters</string>
+    <string name="register_password_error">Minimum 8 characters</string>
     <string name="register_password_confirm_error">confirm password failed</string>
 
     <string name="profile_title">Profile</string>

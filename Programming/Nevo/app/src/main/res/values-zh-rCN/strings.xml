@@ -42,4 +42,6 @@
     <string name="new_nt_def_name">名字</string>
     <string name="new_nt_select_color">选择城市</string>
     <string name="notification_def_name">默认名</string>
+    <string name="my_watch_firmwer_version">版本 </string>
+    <string name="my_watch_firmwer_version_describe"> 现在可以为您的Lunar进行更新!</string>
 </resources>
