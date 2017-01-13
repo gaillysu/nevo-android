@@ -32,6 +32,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.medcorp.R.style.AppTheme_Dark_Dialog;
+
 /**
  * Created by Administrator on 2016/7/1.
  */
@@ -97,8 +99,7 @@ public class UserInfoActivity extends BaseActivity {
                 userInfo.setPassword(password);
                 userInfo.setSex(gender);
 
-                progressDialog = new ProgressDialog(this,
-                        R.style.AppTheme_Dark_Dialog);
+                progressDialog = new ProgressDialog(UserInfoActivity.this, AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(false);
                 progressDialog.setCancelable(false);
                 progressDialog.setMessage(getString(R.string.network_wait_text));

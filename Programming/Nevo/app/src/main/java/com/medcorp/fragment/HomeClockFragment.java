@@ -1,8 +1,9 @@
 package com.medcorp.fragment;
 
 import android.location.Address;
-import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,12 +16,14 @@ import android.widget.TextView;
 import com.medcorp.R;
 import com.medcorp.activity.EditWorldClockActivity;
 import com.medcorp.event.bluetooth.HomeTimeEvent;
+import com.medcorp.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.fragment.base.BaseObservableFragment;
 import com.medcorp.util.Preferences;
 
 import net.medcorp.library.worldclock.City;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,8 +58,8 @@ public class HomeClockFragment extends BaseObservableFragment {
     private String homeCityName;
     private String homeCountryName;
     private Calendar mHomeCalendar;
-    private Location location;
     private Address mPositionLocal;
+    private Handler mUiHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,8 +70,7 @@ public class HomeClockFragment extends BaseObservableFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sunrise_sunset_activity, container, false);
         ButterKnife.bind(this, view);
-        location = Preferences.getLocation(HomeClockFragment.this.getContext());
-        mPositionLocal = getModel().getPositionLocal(location);
+        mPositionLocal = Preferences.getLocation(HomeClockFragment.this.getContext());
         cities = realm.where(City.class).findAll();
         setHasOptionsMenu(true);
         return view;
@@ -93,7 +95,7 @@ public class HomeClockFragment extends BaseObservableFragment {
         Calendar calendar = Calendar.getInstance();
         timeZone = calendar.getTimeZone();
         if (homeCityName == null) {
-            if (mPositionLocal == null) {
+            if (mPositionLocal == null ) {
                 localCityName = timeZone.getID().split("/")[1].replace("_", " ");
             } else {
                 localCityName = mPositionLocal.getLocality() + ", " + mPositionLocal.getCountryName();
@@ -109,6 +111,18 @@ public class HomeClockFragment extends BaseObservableFragment {
             showLocationCityInfo.setText(localCityName);
         }
         syncWatch(mHomeCalendar);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -135,6 +149,16 @@ public class HomeClockFragment extends BaseObservableFragment {
         realm.close();
     }
 
+    @Subscribe
+    public void onEvent(PositionAddressChangeEvent addressDateEvent) {
+        mPositionLocal = addressDateEvent.getAddress();
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                initView();
+            }
+        });
+    }
 
     private void refreshClock() {
         setHomeDay(mHomeCalendar);

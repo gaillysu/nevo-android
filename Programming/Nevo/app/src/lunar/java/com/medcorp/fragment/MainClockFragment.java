@@ -20,6 +20,7 @@ import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.Timer10sEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
+import com.medcorp.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.event.bluetooth.SolarConvertEvent;
 import com.medcorp.fragment.base.BaseFragment;
 import com.medcorp.model.Sleep;
@@ -115,7 +116,6 @@ public class MainClockFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = getModel().getNevoUser();
-        EventBus.getDefault().register(this);
         String selectDate = Preferences.getSelectDate(this.getContext());
         if (selectDate == null) {
             userSelectDate = new Date();
@@ -132,8 +132,7 @@ public class MainClockFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View mainClockFragmentView = inflater.inflate(R.layout.lunar_main_fragment_adapter_clock_layout, container, false);
         ButterKnife.bind(this, mainClockFragmentView);
-        location = Preferences.getLocation(MainClockFragment.this.getContext());
-        mPositionLocal = getModel().getPositionLocal(location);
+        mPositionLocal = Preferences.getLocation(MainClockFragment.this.getContext());
         refreshClock();
         initData(userSelectDate);
         return mainClockFragmentView;
@@ -246,13 +245,29 @@ public class MainClockFragment extends BaseFragment {
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
         this.location = locationChangedEvent.getLocation();
-        mPositionLocal = getModel().getPositionLocal(location);
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
                 initData(userSelectDate);
             }
         });
+    }
+
+    @Subscribe
+    public void onEvent(PositionAddressChangeEvent addressDateEvent) {
+        mPositionLocal = addressDateEvent.getAddress();
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                initData(userSelectDate);
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
