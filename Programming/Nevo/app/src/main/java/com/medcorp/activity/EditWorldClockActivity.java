@@ -1,8 +1,9 @@
 package com.medcorp.activity;
 
 import android.location.Address;
-import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -21,12 +22,16 @@ import com.medcorp.R;
 import com.medcorp.adapter.ChooseCityAdapter;
 import com.medcorp.adapter.SearchWorldAdapter;
 import com.medcorp.base.BaseActivity;
+import com.medcorp.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.model.ChooseCityViewModel;
 import com.medcorp.util.Preferences;
 import com.medcorp.view.PinyinComparator;
 import com.medcorp.view.SideBar;
 
 import net.medcorp.library.worldclock.City;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,7 +73,8 @@ public class EditWorldClockActivity extends BaseActivity {
     private List<ChooseCityViewModel> resultList;
     private String cityName;
     private String countryName;
-    private Location location;
+    private Address mPositionLocal;
+    private Handler mUiHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +97,10 @@ public class EditWorldClockActivity extends BaseActivity {
         autoAdapter = new SearchWorldAdapter(resultList, this);
         searchResultListView.setAdapter(autoAdapter);
         cities = realm.where(City.class).findAll();
-        location = Preferences.getLocation(this);
-        final Address positionLocal = getModel().getPositionLocal(location);
-        if (positionLocal != null) {
-            cityName = positionLocal.getLocality();
-            countryName = positionLocal.getCountryName();
+        mPositionLocal = Preferences.getLocation(this);
+        if (mPositionLocal != null) {
+            cityName = mPositionLocal.getLocality();
+            countryName = mPositionLocal.getCountryName();
         } else {
             TimeZone timeZone = Calendar.getInstance().getTimeZone();
             String localCityName = timeZone.getID().split("/")[1].replace("_", " ");
@@ -107,6 +112,7 @@ public class EditWorldClockActivity extends BaseActivity {
                 }
             }
         }
+
         positionCityName.setText(cityName + "," + countryName);
 
         chooseCityViewModelsList = new ArrayList<>();
@@ -185,6 +191,29 @@ public class EditWorldClockActivity extends BaseActivity {
         });
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(PositionAddressChangeEvent addressDateEvent) {
+        mPositionLocal = addressDateEvent.getAddress();
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                positionCityName.setText(mPositionLocal.getLocality() + "," + mPositionLocal.getCountryName());
+            }
+        });
+    }
 
     @OnClick(R.id.edit_world_clock_cancel_search_button)
     public void cancelClick() {

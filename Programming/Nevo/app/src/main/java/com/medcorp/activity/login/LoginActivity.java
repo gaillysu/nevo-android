@@ -90,8 +90,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         _loginButton.setEnabled(false);
-        progressDialog = new ProgressDialog(LoginActivity.this,
-                AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(LoginActivity.this, AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.log_in_popup_message));

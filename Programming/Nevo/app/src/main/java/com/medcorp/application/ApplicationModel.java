@@ -34,6 +34,7 @@ import com.medcorp.event.LocationChangedEvent;
 import com.medcorp.event.SetSunriseAndSunsetTimeRequestEvent;
 import com.medcorp.event.bluetooth.LittleSyncEvent;
 import com.medcorp.event.bluetooth.OnSyncEvent;
+import com.medcorp.event.bluetooth.PositionAddressChangeEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionFailedEvent;
 import com.medcorp.event.google.api.GoogleApiClientConnectionSuspendedEvent;
 import com.medcorp.event.google.fit.GoogleFitUpdateEvent;
@@ -129,6 +130,7 @@ public class ApplicationModel extends Application {
     private WorldClockDatabaseHelper worldClockDatabaseHelper;
     private LedLampDatabase ledDataBase;
     private LocationController locationController;
+    private Address address;
 
     @Override
     public void onCreate() {
@@ -704,22 +706,25 @@ public class ApplicationModel extends Application {
         return ledDataBase.remove(id);
     }
 
-    public Address getPositionLocal(Location mLocation) {
-        Address address = null;
-        List<Address> addList = null;
-        Geocoder ge = new Geocoder(this);
+    public void getPositionLocal(final Location mLocation) {
         if (mLocation == null) {
-            return null;
+            return ;
         }
-        try {
-            addList = ge.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (addList != null && addList.size() > 0) {
-            address = addList.get(0);
-        }
-        return address;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Geocoder ge = new Geocoder(ApplicationModel.this);
+                    List<Address> addList = ge.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
+                    if (addList != null && addList.size() > 0) {
+                        Preferences.saveLocation(ApplicationModel.this, addList.get(0));
+                        EventBus.getDefault().post(new PositionAddressChangeEvent(addList.get(0)));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public LedLamp getUserSelectLedLamp(int color) {
@@ -763,8 +768,7 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
-        Location location = locationChangedEvent.getLocation();
-        Preferences.saveLocation(this, location);
+         getPositionLocal(locationChangedEvent.getLocation());
     }
 
     @Subscribe
