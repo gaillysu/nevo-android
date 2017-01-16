@@ -1,6 +1,5 @@
 package com.medcorp.fragment;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -108,11 +107,6 @@ public class MainClockFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = getModel().getNevoUser();
@@ -143,13 +137,6 @@ public class MainClockFragment extends BaseFragment {
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
         mDefaultTimeZoneCity = getDefaultTimeZoneCity();
         stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
-        if (location != null) {
-            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
-                    , Calendar.getInstance().getTimeZone().getID());
-        } else {
-            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
-                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
-        }
         setHomeCityData();
         setSunsetOrSunrise();
         int countCalories = dailySteps.getRunSteps() + dailySteps.getWalkSteps();
@@ -160,6 +147,13 @@ public class MainClockFragment extends BaseFragment {
 
     private void setSunsetOrSunrise() {
 
+        if (location != null) {
+            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
+                    , Calendar.getInstance().getTimeZone().getID());
+        } else {
+            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
+                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
+        }
         String officialSunrise = calculator.getOfficialSunriseForDate(Calendar.getInstance());
         String officialSunset = calculator.getOfficialSunsetForDate(Calendar.getInstance());
 
@@ -170,11 +164,12 @@ public class MainClockFragment extends BaseFragment {
         int minute = calendar.get(Calendar.MINUTE);
 
         if (sunriseHour * 60 + sunriseMin > hour * 60 + minute) {
-            sunriseOfSunsetTime.setText(officialSunrise);
+            sunriseOfSunsetTime.setText(sunriseHour + ":" + sunriseMin);
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunrise_icon));
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunrise));
         } else {
-            sunriseOfSunsetTime.setText(officialSunset);
+            sunriseOfSunsetTime.setText(new Integer(officialSunset.split(":")[0]).intValue() - 12 + ":"
+                    + officialSunset.split(":")[1] + getString(R.string.time_able_afternoon));
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunset));
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
         }
@@ -212,7 +207,8 @@ public class MainClockFragment extends BaseFragment {
         } else {
             mCalendar = Calendar.getInstance();
         }
-        String am_pm = mCalendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+        String am_pm = mCalendar.get(Calendar.HOUR_OF_DAY) < 12 ?
+                getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
         String minute = mCalendar.get(Calendar.MINUTE) >= 10 ? mCalendar.get(Calendar.MINUTE) + "" : "0" + mCalendar.get(Calendar.MINUTE);
         lunarHomeCityTime.setText(mCalendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
     }
