@@ -471,16 +471,13 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-                final BluetoothDevice device = bluetoothManager.getAdapter().getRemoteDevice(dfuAddress);
-                final DfuServiceInitiator starter = new DfuServiceInitiator(device.getAddress())
-                        .setDeviceName(device.getName())
+                final DfuServiceInitiator starter = new DfuServiceInitiator(dfuAddress)
                         .setKeepBond(false)
                         .setForceDfu(false)
                         .setPacketsReceiptNotificationsEnabled(true)
                         .setPacketsReceiptNotificationsValue(DfuServiceInitiator.DEFAULT_PRN_VALUE);
                 starter.setZip(Common.getBuildinZipFirmwareRawResID(mContext,getModel().getSyncController().getWatchInfomation().getWatchID()));
-                Log.i(TAG, "***********dfu library starts DfuService*******" + "address = " + device.getAddress() + ",name = " + device.getName());
+                Log.i(TAG, "***********dfu library starts DfuService*******" + "address = " + dfuAddress);
                 starter.start(mContext, DfuService.class);
             }
         },2000);

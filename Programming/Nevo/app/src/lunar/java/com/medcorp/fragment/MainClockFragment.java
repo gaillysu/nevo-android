@@ -136,13 +136,19 @@ public class MainClockFragment extends BaseFragment {
         lunarSleepTotal.setText(countSleepTime(date));
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
         mDefaultTimeZoneCity = getDefaultTimeZoneCity();
-        stepsCount.setText(dailySteps.getRunSteps() + dailySteps.getWalkSteps() + "");
+        stepsCount.setText(dailySteps.getSteps() + "");
+        if (location != null) {
+            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
+                    , Calendar.getInstance().getTimeZone().getID());
+        } else {
+            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
+                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
+        }
         setHomeCityData();
         setSunsetOrSunrise();
-        int countCalories = dailySteps.getRunSteps() + dailySteps.getWalkSteps();
-        float valueCalories = (float) countCalories / (float) dailySteps.getGoal();
-        goalProgress.setProgress(valueCalories * 100 >= 100f ? 100 : (int) (valueCalories * 100));
-        goalPercentage.setText((valueCalories * 100 >= 100f ? 100 : (int) (valueCalories * 100)) + "%" + getString(R.string.lunar_steps_percentage));
+        float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
+        goalProgress.setProgress(percent * 100 >= 100f ? 100 : (int) (percent * 100));
+        goalPercentage.setText((percent * 100 >= 100f ? 100 : (int) (percent * 100)) + "%" + getString(R.string.lunar_steps_percentage));
     }
 
     private void setSunsetOrSunrise() {
@@ -327,7 +333,7 @@ public class MainClockFragment extends BaseFragment {
         solar_harvest_status.post(new Runnable() {
             @Override
             public void run() {
-                //                NOTICE: nevo solar adc threshold is 200，but lunar is 170
+                //NOTICE: nevo solar adc threshold is 200，but lunar is 170
                 if (event.getPv_adc() >= 170) {
                     solar_harvest_status.setText(R.string.lunar_home_clock_solar_harvest_charge);
                 } else {
