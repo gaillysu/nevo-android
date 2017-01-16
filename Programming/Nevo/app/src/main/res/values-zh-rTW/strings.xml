@@ -30,8 +30,8 @@
     <string name="cancel_update">取消</string>
     <string name="change_select_city">切換城市</string>
     <string name="disable">關閉</string>
-    <string name="time_able_afternoon">上午</string>
-    <string name="time_able_morning">下午</string>
+    <string name="time_able_afternoon">下午</string>
+    <string name="time_able_morning">上午</string>
     <string name="permission_location_message">我们需要你的位置信息来访问手表及设置日出日落时间</string>
     <string name="add_new_notification_dialog_title">添加名字</string>
     <string name="add_new_notification_dialog_hint_content">输入名字</string>

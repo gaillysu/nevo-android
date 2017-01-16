@@ -164,11 +164,12 @@ public class MainClockFragment extends BaseFragment {
         int minute = calendar.get(Calendar.MINUTE);
 
         if (sunriseHour * 60 + sunriseMin > hour * 60 + minute) {
-            sunriseOfSunsetTime.setText(officialSunrise);
+            sunriseOfSunsetTime.setText(sunriseHour + ":" + sunriseMin);
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunrise_icon));
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunrise));
         } else {
-            sunriseOfSunsetTime.setText(officialSunset);
+            sunriseOfSunsetTime.setText(new Integer(officialSunset.split(":")[0]).intValue() - 12 + ":"
+                    + officialSunset.split(":")[1] + getString(R.string.time_able_afternoon));
             sunriseTv.setText(getString(R.string.lunar_main_clock_home_city_sunset));
             sunriseOrSunsetIv.setImageDrawable(getResources().getDrawable(R.drawable.sunset_icon));
         }
@@ -206,7 +207,8 @@ public class MainClockFragment extends BaseFragment {
         } else {
             mCalendar = Calendar.getInstance();
         }
-        String am_pm = mCalendar.get(Calendar.HOUR_OF_DAY) > 12 ? getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
+        String am_pm = mCalendar.get(Calendar.HOUR_OF_DAY) < 12 ?
+                getString(R.string.time_able_morning) : getString(R.string.time_able_afternoon);
         String minute = mCalendar.get(Calendar.MINUTE) >= 10 ? mCalendar.get(Calendar.MINUTE) + "" : "0" + mCalendar.get(Calendar.MINUTE);
         lunarHomeCityTime.setText(mCalendar.get(Calendar.HOUR_OF_DAY) + ":" + minute + am_pm);
     }
