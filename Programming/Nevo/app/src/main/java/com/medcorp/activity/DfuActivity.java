@@ -390,7 +390,8 @@ public class DfuActivity extends BaseActivity implements OnOtaControllerListener
             @Override
             public void run() {
                 //BLE OTA done, forget the "nevo_dfu" (this is a new MAC address when doing OTA)
-                if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH) {
+                //for lunar OTA, DFU library has forget the new MAC address, but we must also forget the saved address before next time connection(perhaps lunar ota has destoried the BT pair infomation, if we don't do so, after lunar OTA successfully,lunar will not be connected with app)
+                if (enumFirmwareType == Constants.DfuFirmwareTypes.BLUETOOTH || enumFirmwareType == Constants.DfuFirmwareTypes.DISTRIBUTION_ZIP ) {
                     mNevoOtaController.forGetDevice();
                 }
                 currentIndex = currentIndex + 1;
