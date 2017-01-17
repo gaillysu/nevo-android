@@ -186,8 +186,8 @@ public class OtaControllerImpl implements OtaController  {
         if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
         //reset it to INIT status !!!IMPORTANT!!!
         state = DFUControllerState.INIT;
-
-        if(dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH )
+        //BLE OTA and lunar OTA with DFU library, both need forgetSavedAddress(), so here restore it for next time connection
+        if(dfuFirmwareType == DfuFirmwareTypes.BLUETOOTH || dfuFirmwareType == DfuFirmwareTypes.DISTRIBUTION_ZIP)
         {
             connectionController.restoreSavedAddress();
         }
