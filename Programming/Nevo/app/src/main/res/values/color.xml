@@ -78,6 +78,11 @@
     <color name="analysis_sleep_deep_line_color">#848484</color>
     <color name="red_pressed">#FF6666</color>
     <color name="red_normal">#FF0000</color>
+    <color name="blue_normal">#2CA5DF</color>
+    <color name="light_green_normal">#8CC120</color>
+    <color name="yellow_normal">#F9EC01</color>
+    <color name="orange_normal">#F19501</color>
+    <color name="green_normal">#0DAB67</color>
     <color name="purple_normal">#FF7ED8D1</color>
     <color name="purple_pressed">#997ED8D1</color>
 </resources>

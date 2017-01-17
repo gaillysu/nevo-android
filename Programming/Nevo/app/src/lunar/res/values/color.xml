@@ -19,7 +19,7 @@
     <color name="setting_fragment_text_color">#ffffff</color>
     <color name="setting_tint_color_icon">#7ED8D1</color>
     <color name="switch_slider_color">#7ed8d1</color>
-    <color name="tool_bar_bg_color">#3A3739</color>
+    <color name="tool_bar_bg_color">#54575A</color>
     <color name="edit_alarm_background_color">#FFF</color>
     <color name="steps_fragment_title_color">#54575A</color>
     <color name="text_color">@android:color/white</color>

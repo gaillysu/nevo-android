@@ -2,7 +2,7 @@
 
     <style name="NevoTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">#54575A</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimaryInverse</item>
