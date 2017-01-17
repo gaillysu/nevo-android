@@ -267,7 +267,9 @@ public class OtaControllerImpl implements OtaController  {
                 //by BLE peer disconnect when normal mode to ota mode
                 else if (state == DFUControllerState.SEND_START_COMMAND)
                 {
-                    final boolean needSearchDFUservice = false;
+                    //!!!IMPORT!!! here set it true, means that otaController need firstly search the DFU service and connect it, then disconnect it and hand it over to DFU library
+                    //if set it false,means that let DFU library search the DFU service directly, there is a risk that always got ota failed at the first ota (100% occur),even through redo ota can get success 100%, that still is a bad experience for user.
+                    final boolean needSearchDFUservice = true;
                     if(needSearchDFUservice) {
                         state = DFUControllerState.DISCOVERING;
                         connectionController.setOTAMode(true, true);
