@@ -245,7 +245,7 @@ public class OtaControllerImpl implements OtaController  {
             Log.i(TAG,"DFUOperations: onTransferPercentage " + percentage);
             if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onTransferPercentage(percentage);
             writingPacketNumber++;
-            if(mTimeoutTimer!=null) {mTimeoutTimer.cancel();mTimeoutTimer=null;}
+            //here we should keep the timer,wait for Validate and activeReset commands are both been sent and get the right response packets.
             Log.i(TAG,"DFUOperations: onAllPacketsTransfered");
             break;
 
@@ -389,17 +389,16 @@ public class OtaControllerImpl implements OtaController  {
         Log.i(TAG, "processReceiveFirmwareResponseStatus");
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"successfully received notification for whole File transfer");
+            state = DFUControllerState.SEND_VALIDATE_COMMAND;
             validateFirmware();
-            //why call "activateAndReset" here, due to Ble validate Firmware done, will Close nevo BT
-            //before nevo BT closed, we must send Reset cmd 0x05 to nevo,that let nevo service get change from DFU to normal
-            //if no received before BT closed, nevo will keep DFU mode and the name also keep as "Nevo_DFU"
-            activateAndReset();
         }
         else {
             Log.i(TAG,"Firmware Image failed, Error Status:" + responseErrorMessage(dfuResponse.getresponseStatus()));
-            String errorMessage = "Error on Receive Firmware Image\n Message:" + responseErrorMessage(dfuResponse.getresponseStatus());
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.INVALIDRESPONSE);
+            //firstly reset watch, then report error to app
             resetSystem();
+            if(mOnOtaControllerListener.notEmpty()){
+                mOnOtaControllerListener.get().onError(ERRORCODE.INVALIDRESPONSE);
+            }
         }
 
     }
@@ -408,14 +407,17 @@ public class OtaControllerImpl implements OtaController  {
         Log.i(TAG,"processValidateFirmwareResponseStatus");
         if (dfuResponse.getresponseStatus() == DfuOperationStatus.OPERATION_SUCCESSFUL_RESPONSE.rawValue()) {
             Log.i(TAG,"succesfully received notification for ValidateFirmware");
+            state = DFUControllerState.FINISHED;
+            //after activateAndReset is sent, watch will drop the ble connection
             activateAndReset();
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onSuccessfulFileTranfered();
         }
         else {
             Log.i(TAG,"Firmware validate failed, Error Status: "+ responseErrorMessage(dfuResponse.getresponseStatus()));
-            String errorMessage = "Error on Validate Firmware Request\n Message: " + responseErrorMessage(dfuResponse.getresponseStatus());
-            if(mOnOtaControllerListener.notEmpty()) mOnOtaControllerListener.get().onError(ERRORCODE.INVALIDRESPONSE);
+            //firstly reset watch, then report error to app
             resetSystem();
+            if(mOnOtaControllerListener.notEmpty()){
+                mOnOtaControllerListener.get().onError(ERRORCODE.INVALIDRESPONSE);
+            }
         }
 
     }
@@ -683,6 +685,12 @@ public class OtaControllerImpl implements OtaController  {
                             connectionController.connect();
                         }
                     },1000);
+                }
+                //when watch receive activeAndReset command on ota mode, it will drop ble connection, for old ble firmware version, when ble ota done, watch ble is closed, but for current ble firmware, it is opened after ota is done.
+                else if (state == DFUControllerState.FINISHED) {
+                    if(mOnOtaControllerListener.notEmpty()) {
+                        mOnOtaControllerListener.get().onSuccessfulFileTranfered();
+                    }
                 }
             }
         }
