@@ -248,7 +248,6 @@
     <string name="forget_password_result_email_address_text">發送郵件到:</string>
     <string name="forget_password_result_prompt">檢查妳的郵箱</string>
     <string name="forget_password_result_prompt_user_check_email">請打開鏈接來驗證妳的電子郵箱</string>
-    <string name="forget_password_result_test_email_address">電子郵箱</string>
     <string name="forget_password_send_request_bt_text">發送</string>
     <string name="friday">星期五</string>
     <string name="google_fit_cancel">取消</string>

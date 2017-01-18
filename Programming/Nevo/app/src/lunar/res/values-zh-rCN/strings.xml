@@ -249,7 +249,6 @@
     <string name="forget_password_result_email_address_text">发送邮件到:</string>
     <string name="forget_password_result_prompt">检查你的邮箱</string>
     <string name="forget_password_result_prompt_user_check_email">请打开链接来验证你的电子邮箱</string>
-    <string name="forget_password_result_test_email_address">电子邮箱</string>
     <string name="forget_password_send_request_bt_text">发送</string>
     <string name="friday">星期五</string>
     <string name="google_fit_cancel">取消</string>

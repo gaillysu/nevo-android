@@ -37,11 +37,13 @@
     <string name="lunar_main_clock_home_city_sunset">日落</string>
     <string name="lunar_main_clock_local_home_time">家乡时间</string>
     <string name="lunar_main_clock_sleep_time_title">睡眠</string>
-    <string name="lunar_steps_percentage"></string>
+    <string name="lunar_steps_percentage">OF GOAL</string>
     <string name="network_wait_text">请等待...</string>
     <string name="new_nt_def_name">名字</string>
     <string name="new_nt_select_color">选择城市</string>
     <string name="notification_def_name">红色</string>
     <string name="my_watch_firmwer_version">版本 </string>
     <string name="my_watch_firmwer_version_describe"> 现在可以为您的Lunar进行更新!</string>
+    <string name="unit_cal">kcal</string>
+    <string name="unit_length">mi</string>
 </resources>

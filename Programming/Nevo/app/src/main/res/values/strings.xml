@@ -6,7 +6,7 @@
     <string name="edit_notification_item_name">Edit</string>
     <string name="edit_notification_delete_item">Delete</string>
     <string name="add_new_notification_dialog_title">Add name</string>
-    <string name="add_new_notification_dialog_hint_content">In put name</string>
+    <string name="add_new_notification_dialog_hint_content">Input name</string>
     <string name="new_nt_def_name">name</string>
     <string name="new_nt_select_color">Choose color</string>
     <string name="notification_def_name">Red</string>
@@ -24,5 +24,7 @@
     <string name="lunar_main_clock_home_city_sunset">SUNSET</string>
     <string name="lunar_home_clock_steps_title_tv">CALORIES BURNED</string>
     <string name="my_watch_firmwer_version">Version </string>
-    <string name="my_watch_firmwer_version_describe"> is now available for your LunaR!</string>
+    <string name="def_alarm_name">Alarm</string>
+    <string name="sunrise_activity_toolbar_title">Sunset Sunrise</string>
+    <string name="my_watch_firmwer_version_describe">\" is now available for your LunaR!</string>
 </resources>

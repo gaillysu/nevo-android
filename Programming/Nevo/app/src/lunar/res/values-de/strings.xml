@@ -74,7 +74,7 @@
     <string name="notification_connect_title">LunaR ist verbunden</string>
     <string name="notification_connect_content">Ihre LunaR wurde verbunden</string>
     <string name="notification_disconnect_title">LunaR ist nicht verbunden</string>
-    <string name="notification_disconnect_content">Ihre LunaR wurde getrennt</string>
+    <string name="notification_disconnect_content">\"Du LunaR wurde getrennt\"</string>
 
     <string name="tutorial_1_title">Lassen Sie uns beginnen!</string>
     <string name="tutorial_1_text">Verwenden Sie Ihre LunaR Uhr, um Ihre persönliche Gesundheit und Fitness-Daten einzustellen, zu verfolgen und zu analysieren.</string>
@@ -214,4 +214,8 @@
     <string name="tab_title_today">Heute</string>
     <string name="tab_title_History">Verlauf</string>
     <string name="dfu_update_message">Aktualisieren</string>
+
+    <string name="edit_alarm_repeat">Repeat</string>
+    <string name="edit_alarm_name">Alarm Name</string>
+
 </resources>

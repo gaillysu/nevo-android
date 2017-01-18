@@ -50,4 +50,14 @@
     <string name="notification_def_name">红色</string>
     <string name="my_watch_firmwer_version">版本 </string>
     <string name="my_watch_firmwer_version_describe"> 現在可以為您的Lunar進行更新!</string>
+    <string name="more_setting_place_home">家乡时间</string>
+    <string name="more_setting_place_local">本地时间</string>
+    <string name="more_setting_place_time">手表数字时间</string>
+    <string name="more_setting_unit">单位</string>
+    <string name="settings_more">更多设置</string>
+    <string name="lunar_steps_percentage">OF GOAL</string>
+    <string name="user_select_imperial">英制</string>
+    <string name="user_select_metrics">公制</string>
+    <string name="unit_cal">kcal</string>
+    <string name="unit_length">mi</string>
 </resources>

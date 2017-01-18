@@ -216,4 +216,7 @@
     <string name="tab_title_today">Aujourd\'hui</string>
     <string name="tab_title_History">Historique</string>
 
+    <string name="edit_alarm_repeat">Repeat</string>
+    <string name="edit_alarm_name">Alarm Name</string>
+
 </resources>
