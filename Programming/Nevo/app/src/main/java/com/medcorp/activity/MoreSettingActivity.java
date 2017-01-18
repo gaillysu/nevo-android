@@ -56,8 +56,8 @@ public class MoreSettingActivity extends BaseActivity {
         List<String> unitList = new ArrayList<>();
         List<String> placeList = new ArrayList<>();
 
-        placeList.add(getString(R.string.more_setting_place_local));
         placeList.add(getString(R.string.more_setting_place_home));
+        placeList.add(getString(R.string.more_setting_place_local));
         unitList.add(getString(R.string.user_select_metrics));
         unitList.add(getString(R.string.user_select_imperial));
 
@@ -66,7 +66,7 @@ public class MoreSettingActivity extends BaseActivity {
         selectPlaceSpinner.setAdapter(placeAdapter);
         selectUnitSpinner.setAdapter(unitAdapter);
         selectUnitSpinner.setSelection(Preferences.getUnitSelect(this) ? 1 : 0);
-        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 1 : 0);
+        selectPlaceSpinner.setSelection(Preferences.getPlaceSelect(this) ? 0 : 1);
 
         selectUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -87,9 +87,9 @@ public class MoreSettingActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    Preferences.savePlaceSelect(MoreSettingActivity.this, false);
-                } else {
                     Preferences.savePlaceSelect(MoreSettingActivity.this, true);
+                } else {
+                    Preferences.savePlaceSelect(MoreSettingActivity.this, false);
                 }
                 EventBus.getDefault().post(new DigitalTimeChangedEvent(position == 0));
             }

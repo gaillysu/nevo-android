@@ -1,7 +1,6 @@
 package com.medcorp.fragment;
 
 import android.location.Address;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -95,7 +94,6 @@ public class MainClockFragment extends BaseFragment {
     private SunriseSunsetCalculator calculator;
     private Realm realm = Realm.getDefaultInstance();
 
-    private Location location;
     private City mDefaultTimeZoneCity;
 
     private void refreshClock() {
@@ -137,13 +135,6 @@ public class MainClockFragment extends BaseFragment {
         Steps dailySteps = getModel().getDailySteps(user.getNevoUserID(), date);
         mDefaultTimeZoneCity = getDefaultTimeZoneCity();
         stepsCount.setText(dailySteps.getSteps() + "");
-        if (location != null) {
-            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
-                    , Calendar.getInstance().getTimeZone().getID());
-        } else {
-            calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
-                    mDefaultTimeZoneCity.getLng(), Calendar.getInstance().getTimeZone().getID());
-        }
         setHomeCityData();
         setSunsetOrSunrise();
         float percent = (float) dailySteps.getSteps() / (float) dailySteps.getGoal();
@@ -152,9 +143,8 @@ public class MainClockFragment extends BaseFragment {
     }
 
     private void setSunsetOrSunrise() {
-
-        if (location != null) {
-            calculator = computeSunriseTime(location.getLatitude(), location.getLongitude()
+        if (mPositionLocal != null) {
+            calculator = computeSunriseTime(mPositionLocal.getLatitude(), mPositionLocal.getLongitude()
                     , Calendar.getInstance().getTimeZone().getID());
         } else {
             calculator = computeSunriseTime(mDefaultTimeZoneCity.getLat(),
@@ -246,7 +236,6 @@ public class MainClockFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
-        this.location = locationChangedEvent.getLocation();
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {

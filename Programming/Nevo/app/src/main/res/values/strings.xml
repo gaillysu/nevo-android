@@ -9,7 +9,7 @@
     <string name="add_new_notification_dialog_hint_content">In put name</string>
     <string name="new_nt_def_name">name</string>
     <string name="new_nt_select_color">Choose color</string>
-    <string name="notification_def_name">Default name</string>
+    <string name="notification_def_name">Red</string>
     <string name="unit_length" >mi</string>
     <string name="unit_cal">kcal</string>
     <string name="lunar_steps_percentage">OF GOAL</string>

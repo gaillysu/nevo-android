@@ -91,6 +91,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -708,7 +709,7 @@ public class ApplicationModel extends Application {
 
     public void getPositionLocal(final Location mLocation) {
         if (mLocation == null) {
-            return ;
+            return;
         }
         new Thread(new Runnable() {
             @Override
@@ -719,6 +720,11 @@ public class ApplicationModel extends Application {
                     if (addList != null && addList.size() > 0) {
                         Preferences.saveLocation(ApplicationModel.this, addList.get(0));
                         EventBus.getDefault().post(new PositionAddressChangeEvent(addList.get(0)));
+                        if (Preferences.getPositionCity(ApplicationModel.this) == null) {
+                            Preferences.savePositionCountry(ApplicationModel.this, addList.get(0).getCountryName());
+                            Preferences.savePositionCity(ApplicationModel.this, addList.get(0).getLocality());
+                            Preferences.saveHomeCityCalender(ApplicationModel.this, Calendar.getInstance().getTimeZone().getID());
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -768,7 +774,7 @@ public class ApplicationModel extends Application {
 
     @Subscribe
     public void onEvent(LocationChangedEvent locationChangedEvent) {
-         getPositionLocal(locationChangedEvent.getLocation());
+        getPositionLocal(locationChangedEvent.getLocation());
     }
 
     @Subscribe

@@ -81,7 +81,7 @@ public class Preferences {
 
     public static boolean getPlaceSelect(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_prefs_is_home), false);
+        return preferences.getBoolean(context.getString(R.string.key_prefs_is_home), true);
     }
 
 
