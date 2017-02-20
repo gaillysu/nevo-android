@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.location.Address;
 
 import com.google.gson.Gson;
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
 import com.medcorp.ble.model.color.BlueLed;
@@ -143,11 +142,8 @@ public class Preferences {
 
     public static NevoLed getNotificationColor(Context context, Notification notification, ApplicationModel model) {
         init(context);
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
-        } else {
-            return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()), model);
-        }
+        return distinguish(preferences.getInt(notification.getTag(), notification.getDefaultColor().getHexColor()));
+
     }
 
     public static NevoLed getNotificationColor(Context context, Notification notification) {

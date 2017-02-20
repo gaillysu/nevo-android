@@ -78,7 +78,6 @@ import com.medcorp.view.ToastHelper;
 
 import net.medcorp.library.ble.controller.OtaController;
 import net.medcorp.library.ble.util.Optional;
-import net.medcorp.library.worldclock.WorldClockDatabaseHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -128,7 +127,6 @@ public class ApplicationModel extends Application {
     private MedManager validicMedManager;
     private CloudSyncManager cloudSyncManager;
     private User nevoUser;
-    private WorldClockDatabaseHelper worldClockDatabaseHelper;
     private LedLampDatabase ledDataBase;
     private LocationController locationController;
     private Address address;
@@ -151,8 +149,6 @@ public class ApplicationModel extends Application {
         ledDataBase = new LedLampDatabase(this);
         locationController = new LocationController(this);
 
-        worldClockDatabaseHelper = new WorldClockDatabaseHelper(this);
-        worldClockDatabaseHelper.setupWorldClock();
         Optional<User> user = userDatabaseHelper.getLoginUser();
         if (Preferences.getisInitAlarm(this) && getAllAlarm().size() == 0) {
             Preferences.startInitAlarm(this, false);
@@ -206,10 +202,6 @@ public class ApplicationModel extends Application {
 
     public MedManager getNetworkManage() {
         return validicMedManager;
-    }
-
-    public WorldClockDatabaseHelper getWorldClockDatabaseHelper() {
-        return worldClockDatabaseHelper;
     }
 
     public LocationController getLocationController() {

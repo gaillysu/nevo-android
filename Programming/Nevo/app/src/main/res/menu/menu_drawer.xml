@@ -17,12 +17,6 @@
             android:id="@+id/nav_alarm_fragment"
             android:icon="@drawable/ios_alarm"
             android:title="@string/menu_drawer_alarm"/>
-        <item
-            android:id="@+id/nav_world_clock"
-            android:icon="@drawable/ic_sunrise_hour_icon_up"
-            android:title="@string/menu_drawer_hometime"
-            android:visible="false"
-            />
     </group>
 
     <group

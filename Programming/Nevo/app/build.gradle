@@ -14,7 +14,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion '23.0.3'
     defaultConfig {
-        applicationId "com.medcorp"
+        applicationId "com.medcorp.nevo"
         minSdkVersion 18
         targetSdkVersion 24
         versionCode 1
@@ -26,15 +26,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
-    productFlavors{
-        lunar{
-            applicationId "com.medcorp.lunar"
-        }
-        nevo{
-            applicationId "com.medcorp.nevo"
         }
     }
 
@@ -85,7 +76,6 @@ dependencies {
     compile 'com.luckycatlabs:SunriseSunsetCalculator:1.2'
     compile 'com.yanzhenjie:recyclerview-swipe:1.0.2'
     compile project(path: ':multi-image-selector')
-    compile 'com.github.QuadFlask:colorpicker:0.0.12'
 }
 
 repositories {

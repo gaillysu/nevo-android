@@ -1,9 +1,7 @@
 package com.medcorp.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -14,10 +12,8 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.adapter.EditNotificationAdapter;
 import com.medcorp.base.BaseActivity;
@@ -34,14 +30,12 @@ import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.model.NotificationListItemBean;
 import com.medcorp.util.Preferences;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
 
 /**
  * Created by gaillysu on 15/12/31.
@@ -55,20 +49,10 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     ListView notificationLampList;
     @Bind(R.id.notification_watch_icon)
     ImageView watchView;
-    @Bind(R.id.notification_lamp_edit)
-    RelativeLayout lunarLedLampGroup;
     @Bind(R.id.notification_activity_layout)
     CoordinatorLayout coordinatorLayout;
-    @Bind(R.id.notification_lunar_lamp_color)
-    ImageView lunarLampColorIv;
-    @Bind(R.id.notification_name_text_view)
-    TextView lampName;
-    @Bind(R.id.notification_lunar_watch_icon)
-    ImageView lunarWatchIcon;
-
     private int defaultColor = 0;
     private EditNotificationAdapter adapter;
-    private Snackbar snackbar;
 
     private final List<NevoLed> ledList = new ArrayList<>();
     private NotificationDataHelper helper;
@@ -96,15 +80,6 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         notification = (Notification) getIntent().getExtras().getSerializable(getString(R.string.key_notification));
-
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            lunarLedLampGroup.setVisibility(View.GONE);
-            lunarWatchIcon.setVisibility(View.GONE);
-        } else {
-            notificationLampList.setVisibility(View.GONE);
-            watchView.setVisibility(View.GONE);
-            lunarWatchIcon.setVisibility(View.VISIBLE);
-        }
 
         helper = new NotificationDataHelper(this);
         ledList.add(new RedLed());
@@ -155,29 +130,23 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
     private void initView() {
         selectedLed = Preferences.getNotificationColor(this, notification, getModel());
 
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            int hexColor = selectedLed.getHexColor();
-            lunarLampColorIv.setColorFilter(selectedLed.getHexColor());
-            lampName.setText(selectedLed.getTag());
-        } else {
-            setDefaultLampColor();
-            dataList = new ArrayList<>();
-            for (int i = 0; i < notificationIcon.length; i++) {
-                NotificationListItemBean bean = new NotificationListItemBean();
-                bean.setLampId(notificationIcon[i]);
-                bean.setNotificationTimeText(notificationTimeTextArray[i]);
-                if (i == defaultColor) {
-                    bean.setChecked(true);
-                } else {
-                    bean.setChecked(false);
-                }
-                dataList.add(bean);
+        setDefaultLampColor();
+        dataList = new ArrayList<>();
+        for (int i = 0; i < notificationIcon.length; i++) {
+            NotificationListItemBean bean = new NotificationListItemBean();
+            bean.setLampId(notificationIcon[i]);
+            bean.setNotificationTimeText(notificationTimeTextArray[i]);
+            if (i == defaultColor) {
+                bean.setChecked(true);
+            } else {
+                bean.setChecked(false);
             }
-            watchView.setImageResource(watchIcon[defaultColor]);
-            adapter = new EditNotificationAdapter(this, dataList);
-            notificationLampList.setAdapter(adapter);
-            notificationLampList.setOnItemClickListener(this);
+            dataList.add(bean);
         }
+        watchView.setImageResource(watchIcon[defaultColor]);
+        adapter = new EditNotificationAdapter(this, dataList);
+        notificationLampList.setAdapter(adapter);
+        notificationLampList.setOnItemClickListener(this);
     }
 
     @Override
@@ -219,20 +188,9 @@ public class EditSettingNotificationActivity extends BaseActivity implements Ada
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.notification_lamp_edit)
-    public void openEditNotificationLampColor() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(getString(R.string.key_notification), (Serializable) notification);
-        Intent intent = new Intent(this, EditNotificationLampActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     public void userSelectChangeLamp(int position) {
         watchView.setImageResource(watchIcon[position]);
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            selectedLed = ledList.get(position);
-            Preferences.saveNotificationColor(this, notification, selectedLed.getHexColor());
-        }
+        selectedLed = ledList.get(position);
+        Preferences.saveNotificationColor(this, notification, selectedLed.getHexColor());
     }
 }

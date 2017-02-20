@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.model.SleepData;
 
@@ -153,15 +152,9 @@ public class AnalysisSleepLineChart extends LineChart {
         invalidate();
         String[] legend = getLegend().getLabels();
         // TODO Figure out to get the color from colors.xml resource.
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            getLegend().setCustom(Arrays.asList(Color.rgb(127, 127, 127),
-                    Color.rgb(160, 132, 85), Color.rgb(188, 188, 188)),
-                    Arrays.asList(getLegend().getLabels()));
-        } else {
-            getLegend().setCustom(Arrays.asList(Color.rgb(126, 216, 206),
-                    Color.rgb(179, 126, 189), Color.rgb(229, 228, 226)),
-                    Arrays.asList(getLegend().getLabels()));
-        }
+        getLegend().setCustom(Arrays.asList(Color.rgb(127, 127, 127),
+                Color.rgb(160, 132, 85), Color.rgb(188, 188, 188)),
+                Arrays.asList(getLegend().getLabels()));
         setOnClickListener(null);
     }
 
