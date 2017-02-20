@@ -57,8 +57,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         alarmTimeTextView.setText(alarm.toString());
         alarmLabelTextView.setText(alarm.getLabel());
         onOffSwitch.setOnCheckedChangeListener(null);
-        isDefWeekDay = alarm.getWeekDay() & 0x0F;
-        if ((alarm.getWeekDay() & 0x80)== 0) {
+        if ((alarm.getWeekDay() & 0x80) == 0) {
             onOffSwitch.setChecked(false);
         } else {
             onOffSwitch.setChecked(true);
@@ -76,6 +75,7 @@ public class AlarmArrayAdapter extends ArrayAdapter<Alarm> {
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isDefWeekDay = alarm.getWeekDay() & 0x0F;
                 if (!isLowVersion) {
                     if (isDefWeekDay != 0) {
                         onAlarmSwitchedListener.onAlarmSwitch((SwitchCompat) buttonView, alarm);

@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.application.ApplicationModel;
-import com.medcorp.ble.model.color.LedLamp;
-import com.medcorp.ble.model.color.NevoLed;
 import com.medcorp.ble.model.notification.Notification;
 import com.medcorp.ble.model.notification.OtherAppNotification;
 import com.medcorp.util.Preferences;
@@ -22,7 +19,6 @@ import java.util.List;
 
 /**
  * Created by gaillysu on 15/12/23.
- *
  */
 public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> {
     private Context context;
@@ -56,15 +52,9 @@ public class SettingNotificationArrayAdapter extends ArrayAdapter<Notification> 
             ((RobotoTextView) itemView.findViewById(R.id.activity_setting_notification_name)).setText(notification.getStringResource());
         }
         if (notification.isOn()) {
-            if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
+            notificationValue.setText(context.getString(Preferences.getNotificationColor
+                    (context, notification, mApplicationModel).getStringResource()));
 
-                notificationValue.setText(context.getString(Preferences.getNotificationColor
-                        (context, notification, mApplicationModel).getStringResource()));
-
-            } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-                NevoLed nevoLed = Preferences.getNotificationColor(mApplicationModel, notification,mApplicationModel);
-                notificationValue.setText(nevoLed.getTag());
-            }
         } else {
             notificationValue.setText(R.string.notification_deactivated);
         }

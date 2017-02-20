@@ -14,7 +14,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.medcorp.ApplicationFlag;
 import com.medcorp.BuildConfig;
 import com.medcorp.R;
 import com.medcorp.event.DateSelectChangedEvent;
@@ -78,15 +77,14 @@ public class MainSolarFragment extends BaseFragment {
     private void initData(Date userSelectDate) {
         float powerOnBatteryPercent = 100f;
         float powerOnSolarPercent = 0f;
-        int   powerOnSolarMinutes = 0;
-        int   powOnBatteryMinutes = 24*60; //default battery time,unit in "minutes"
-        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime())
-        {
+        int powerOnSolarMinutes = 0;
+        int powOnBatteryMinutes = 24 * 60; //default battery time,unit in "minutes"
+        if (Common.removeTimeFromDate(new Date()).getTime() == Common.removeTimeFromDate(userSelectDate).getTime()) {
             powOnBatteryMinutes = new DateTime().getMinuteOfDay();
         }
-        Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(),userSelectDate);
-        if(solarOptional.notEmpty()){
-            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime()*100f/(powOnBatteryMinutes);
+        Optional<Solar> solarOptional = getModel().getSolarDatabaseHelper().get(getModel().getNevoUser().getNevoUserID(), userSelectDate);
+        if (solarOptional.notEmpty()) {
+            powerOnSolarPercent = solarOptional.get().getTotalHarvestingTime() * 100f / (powOnBatteryMinutes);
             powerOnBatteryPercent = 100f - powerOnSolarPercent;
             powerOnSolarMinutes = solarOptional.get().getTotalHarvestingTime();
             powOnBatteryMinutes = powOnBatteryMinutes - powerOnSolarMinutes;
@@ -113,13 +111,8 @@ public class MainSolarFragment extends BaseFragment {
 
         PieDataSet pieDataSet = new PieDataSet(yValue, "");
         ArrayList<Integer> colors = new ArrayList<>();
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            colors.add(Color.rgb(126, 216, 209));
-            colors.add(Color.rgb(179, 126, 189));
-        } else {
-            colors.add(Color.rgb(160, 132, 85));
-            colors.add(Color.rgb(188, 188, 188));
-        }
+        colors.add(Color.rgb(160, 132, 85));
+        colors.add(Color.rgb(188, 188, 188));
         pieDataSet.setColors(colors);
         pieDataSet.setSliceSpace(1f);
 
@@ -160,7 +153,7 @@ public class MainSolarFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(final OnSyncEvent event) {
-        if(event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
+        if (event.getStatus() == OnSyncEvent.SYNC_EVENT.STOPPED || event.getStatus() == OnSyncEvent.SYNC_EVENT.TODAY_SYNC_STOPPED) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
@@ -175,7 +168,7 @@ public class MainSolarFragment extends BaseFragment {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if(BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     solarTitle.setText("Solar adc:" + event.getPv_adc());
                 }
             }

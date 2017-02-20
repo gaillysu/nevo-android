@@ -156,7 +156,7 @@
     </style>
     <style name="my_switch_color">
          <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="colorSwitchThumbNormal">@android:color/white</item>
-        <item name="android:colorForeground">@android:color/white</item>
+        <item name="colorSwitchThumbNormal">@color/alarm_repeat_text_color</item>
+        <item name="android:colorForeground">@color/alarm_repeat_text_color</item>
     </style>
 </resources>

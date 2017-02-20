@@ -1,6 +1,5 @@
 package com.medcorp.activity;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,13 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.medcorp.ApplicationFlag;
-import com.medcorp.base.BaseActivity;
-import com.medcorp.adapter.MyNevoAdapter;
-import com.medcorp.event.bluetooth.BatteryEvent;
-import com.medcorp.util.Common;
 import com.medcorp.R;
+import com.medcorp.adapter.MyNevoAdapter;
+import com.medcorp.base.BaseActivity;
+import com.medcorp.event.bluetooth.BatteryEvent;
 import com.medcorp.model.MyNevo;
+import com.medcorp.util.Common;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -75,14 +73,9 @@ public class MyNevoActivity extends BaseActivity {
         }
 
         myNevo = new MyNevo(getModel().getWatchFirmware(), getModel().getWatchSoftware(), app_version, battery_level, available_version, null);
-        if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            showMyDeviceNewsLayout.setVisibility(View.GONE);
-            myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
-        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            myNevoListView.setVisibility(View.GONE);
-            showMyDeviceNewsLayout.setVisibility(View.VISIBLE);
-            initLunarData();
-        }
+        showMyDeviceNewsLayout.setVisibility(View.GONE);
+        myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
+
     }
 
     @Override
@@ -104,38 +97,15 @@ public class MyNevoActivity extends BaseActivity {
 
         int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
         int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-        if(ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-            firmwareURLs = Common.needOTAFirmwareURLs(this, currentSoftwareVersion, currentFirmwareVersion,getModel().getSyncController().getWatchInfomation().getWatchID());
-            //only update nevo watch or nevo solar watch
-            if (!firmwareURLs.isEmpty() && (getModel().getSyncController().getWatchInfomation().getWatchID() ==1
-                    || getModel().getSyncController().getWatchInfomation().getWatchID() ==2)) {
-                myNevo.setAvailableVersion(true);
-                myNevo.setFirmwareURLs(firmwareURLs);
-                myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
-            }
-        } else if (ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
-            final int buildingFirmwareVersion = getResources().getInteger(R.integer.launar_version);
-            if (currentFirmwareVersion < buildingFirmwareVersion) {
-                firmwerUpdateInfomation.setText(getString(R.string.my_watch_firmwer_version)+" "
-                        +buildingFirmwareVersion+" "+getString(R.string.my_watch_firmwer_version_describe));
-
-                showFirmwerVersion.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MyNevoActivity.this, DfuActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putStringArrayList(MyNevoActivity.this.getString(R.string.key_firmwares), (ArrayList<String>) Common.getAllBuildinZipFirmwareURLs(MyNevoActivity.this, getModel().getSyncController().getWatchInfomation().getWatchID()));
-                        intent.putExtras(bundle);
-                        MyNevoActivity.this.startActivity(intent);
-                        MyNevoActivity.this.finish();
-                        firmwerUpdateInfomation.setVisibility(View.VISIBLE);
-                    }
-                });
-            } else {
-                showFirmwerVersion.setText(myNevo.getBleFirmwareVersion());
-                firmwerUpdateInfomation.setVisibility(View.INVISIBLE);
-            }
+        firmwareURLs = Common.needOTAFirmwareURLs(this, currentSoftwareVersion, currentFirmwareVersion, getModel().getSyncController().getWatchInfomation().getWatchID());
+        //only update nevo watch or nevo solar watch
+        if (!firmwareURLs.isEmpty() && (getModel().getSyncController().getWatchInfomation().getWatchID() == 1
+                || getModel().getSyncController().getWatchInfomation().getWatchID() == 2)) {
+            myNevo.setAvailableVersion(true);
+            myNevo.setFirmwareURLs(firmwareURLs);
+            myNevoListView.setAdapter(new MyNevoAdapter(this, myNevo));
         }
+
     }
 
     @Override
@@ -168,25 +138,9 @@ public class MyNevoActivity extends BaseActivity {
             @Override
             public void run() {
                 myNevo.setBatteryLevel((int) batteryEvent.getBattery().getBatteryLevel());
-                if (ApplicationFlag.FLAG == ApplicationFlag.Flag.NEVO) {
-                    myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
-                } else {
-                    initLunarData();
-                }
+                myNevoListView.setAdapter(new MyNevoAdapter(MyNevoActivity.this, myNevo));
+
             }
         });
-    }
-
-
-    private void initLunarData() {
-
-        String str_battery = this.getString(R.string.my_nevo_battery_low);
-        if (myNevo.getBatteryLevel() == 2) {
-            str_battery = this.getString(R.string.my_nevo_battery_full);
-        } else if (myNevo.getBatteryLevel() == 1) {
-            str_battery = this.getString(R.string.my_nevo_battery_half);
-        }
-        showWatchBattery.setText(str_battery);
-        showWatchVersion.setText(myNevo.getAppVersion());
     }
 }

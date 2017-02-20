@@ -50,93 +50,43 @@
             android:orientation="vertical"
             >
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                >
+            <!--<RelativeLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_weight="1"-->
+            <!--&gt;-->
 
-                <ImageView
-                    android:id="@+id/notification_watch_icon"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="30dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/tutorial_nevo_1"
-                    />
+            <ImageView
+            android:id="@+id/notification_watch_icon"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="fitXY"
+            />
 
-                <ImageView
-                    android:id="@+id/notification_lunar_watch_icon"
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="30dp"
-                    android:layout_marginTop="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/tutorial_nevo_1"
-                    android:visibility="gone"
-                    />
-            </RelativeLayout>
-
-
+            <!--<ImageView-->
+                <!--android:id="@+id/notification_lunar_watch_icon"-->
+                <!--android:layout_width="220dp"-->
+                <!--android:layout_height="220dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_margin="30dp"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:scaleType="fitXY"-->
+                <!--android:src="@drawable/tutorial_nevo_1"-->
+                <!--/>-->
+            <!--</RelativeLayout>-->
             <!--lunar lamp edit-->
-            <RelativeLayout
-                android:id="@+id/notification_lamp_edit"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="60dp"
-                android:layout_marginTop="10dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:orientation="horizontal"
-                >
-
-                <ImageView
-                    android:id="@+id/notification_lunar_lamp_color"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp"
-                    android:src="@drawable/red_dot"
-                    />
-
-                <TextView
-                    android:id="@+id/notification_name_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/notification_lunar_lamp_color"
-                    android:text="name"
-                    android:textColor="@color/text_color"
-                    android:textSize="16dp"
-                    />
-
-                <ImageView
-                    android:id="@+id/open_notification_red_lamp_flag"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="25dp"
-                    android:src="@drawable/ic_right"
-                    />
-
-            </RelativeLayout>
-
             <ListView
                 android:id="@+id/notification_lamp_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:divider="@null"
                 />
         </LinearLayout>
-
-
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

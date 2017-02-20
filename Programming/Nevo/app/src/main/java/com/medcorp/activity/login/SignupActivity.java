@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.medcorp.ApplicationFlag;
 import com.medcorp.R;
 import com.medcorp.activity.UserInfoActivity;
 import com.medcorp.base.BaseActivity;
@@ -67,7 +66,7 @@ public class SignupActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && ApplicationFlag.FLAG == ApplicationFlag.Flag.LUNAR) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             backClick();
             return true;
         }
