@@ -17,14 +17,16 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+
     <string-array name="notification_array" translatable="false">
-        <item>2 o\'clock</item>
-        <item>4 o\'clock</item>
-        <item>6 o\'clock</item>
-        <item>8 o\'clock</item>
-        <item>10 o\'clock</item>
-        <item>12 o\'clock</item>
+        <item>@string/two_clock</item>
+        <item>@string/four_clock</item>
+        <item>@string/six_clock</item>
+        <item>@string/eight_clock</item>
+        <item>@string/ten_clock</item>
+        <item>@string/twelve_clock</item>
     </string-array>
+
     <string-array name="week_day" translatable="false">
         <item name="disable">@string/disable</item>
         <item name="sunday">@string/sunday</item>

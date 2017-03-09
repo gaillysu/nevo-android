@@ -27,9 +27,10 @@ public class GoogleHistoryUpdateTask extends AsyncTask<DataSet,Void,Boolean>{
         DataSet dataSet = dataSets[0];
         if (googleApiClient == null || dataSet == null) {
             return false;
-
         }
-
+        if(dataSet.isEmpty()){
+            return false;
+        }
         com.google.android.gms.common.api.Status insertStatus = Fitness.HistoryApi.insertData(googleApiClient, dataSet).await(1, TimeUnit.MINUTES);
         if (!insertStatus.isSuccess()) {
             return false;

@@ -26,7 +26,7 @@
     <string name="my_watch_firmwer_version">Version </string>
     <string name="my_watch_firmwer_version_describe">\" is now available for your LunaR!</string>
 
-    <string name="app_name">Nevo</string>
+    <string name="app_name" translatable="false">Nevo</string>
     <string name="menu_drawer_activity">Activity</string>
     <string name="menu_drawer_alarm">Alarm</string>
     <string name="menu_drawer_hometime">Home Time</string>
@@ -43,7 +43,7 @@
     <string name="ble_notification_title">Notification</string>
     <string name="ble_notification_message">nevo is not paired, please pair first</string>
     <string name="ble_command_timeout_title">Bluetooth communication timeout</string>
-    <string name="ble_connect_timeout_url">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
+    <string name="ble_connect_timeout_url" translatable="false">https://nevowatch.freshdesk.com/solution/categories/5000086192/folders/5000257648/articles/5000619809-if-you-are-experiencing-intermittent-bluetooth-disconnection-problems-on-android</string>
     <string name="ble_connection_timeout_title">Bluetooth connection timeout</string>
     <string name="ble_connection_timeout_cancel">Cancel</string>
     <string name="ble_connection_timeout_help">Help</string>
@@ -454,4 +454,12 @@ push and hold the third button, until the white LED blinks</string>
     <string name="more_setting_place_time">Watch digital time</string>
     <string name="more_setting_place_local">Local Time</string>
     <string name="more_setting_place_home">Home Time</string>
+    <string name="two_clock">2 o\'clock</string>
+    <string name="four_clock">4 o\'clock</string>
+    <string name="six_clock">6 o\'clock</string>
+    <string name="eight_clock">8 o\'clock</string>
+    <string name="ten_clock">10 o\'clock</string>
+    <string name="twelve_clock">12 o\'clock</string>
 </resources>
+
+
