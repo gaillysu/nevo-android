@@ -1,11 +1,12 @@
-package com.medcorp.nevo.util;
+package com.medcorp.util;
 
 /**
  * Created by Karl on 11/27/15.
  */
 
-import com.medcorp.nevo.model.Sleep;
-import com.medcorp.nevo.model.SleepData;
+import com.medcorp.model.Sleep;
+import com.medcorp.model.SleepData;
+import com.medcorp.util.SleepDataHandler;
 
 import junit.framework.TestCase;
 

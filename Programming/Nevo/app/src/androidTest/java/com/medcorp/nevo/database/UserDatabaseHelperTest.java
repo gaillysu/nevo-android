@@ -1,10 +1,10 @@
-package com.medcorp.nevo.database;
+package com.medcorp.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.nevo.database.entry.UserDatabaseHelper;
-import com.medcorp.nevo.database.entry.iEntryDatabaseHelper;
-import com.medcorp.nevo.model.User;
+import com.medcorp.database.entry.UserDatabaseHelper;
+import com.medcorp.database.entry.iEntryDatabaseHelper;
+import com.medcorp.model.User;
 
 import net.medcorp.library.ble.util.Optional;
 

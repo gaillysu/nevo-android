@@ -1,11 +1,11 @@
-package com.medcorp.nevo.network.request;
+package com.medcorp.network.request;
 
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.medcorp.nevo.network.validic.manager.ValidicManager;
-import com.medcorp.nevo.network.validic.model.VerifyCredentialModel;
-import com.medcorp.nevo.network.validic.request.VerifyCredentialsRetroRequest;
+import com.medcorp.network.validic.manager.ValidicManager;
+import com.medcorp.network.validic.model.VerifyCredentialModel;
+import com.medcorp.network.validic.request.VerifyCredentialsRetroRequest;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 

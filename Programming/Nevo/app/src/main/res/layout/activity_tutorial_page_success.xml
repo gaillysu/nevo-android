@@ -2,11 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:roboto="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#F6F6F6"
+    android:background="@color/baseBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.medcorp.nevo.view.customfontview.RobotoTextView
+    <com.medcorp.view.customfontview.RobotoTextView
         android:id="@+id/activity_tutorial_page5_search_success_textview"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
@@ -22,15 +22,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/tutorial_nevo_link_success"/>
+        android:src="@drawable/tutorial_nevo_link_success"/>
 
-    <com.medcorp.nevo.view.customfontview.RobotoButton
+    <com.medcorp.view.customfontview.RobotoButton
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/tutorial_success_tap_to_continue"
         style="@style/TutorialButton"
         android:id="@+id/activity_tutorial_success_next_button"
-        android:textColor="@color/white"
+        android:textColor="@color/tutorial_text_color"
+        android:layout_marginBottom="61dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"/>
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

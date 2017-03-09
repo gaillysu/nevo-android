@@ -5,4 +5,5 @@
          https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="navigation_drawer_width">100dp</dimen>
     <dimen name="header_height">36dp</dimen>
+    <dimen name="edit_notification_item_width">60dp</dimen>
 </resources>

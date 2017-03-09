@@ -1,12 +1,12 @@
-package com.medcorp.nevo.database;
+package com.medcorp.database;
 
 import android.test.AndroidTestCase;
 
-import com.medcorp.nevo.database.entry.SleepDatabaseHelper;
-import com.medcorp.nevo.database.entry.UserDatabaseHelper;
-import com.medcorp.nevo.model.Sleep;
-import com.medcorp.nevo.model.User;
-import com.medcorp.nevo.util.Common;
+import com.medcorp.database.entry.SleepDatabaseHelper;
+import com.medcorp.database.entry.UserDatabaseHelper;
+import com.medcorp.model.Sleep;
+import com.medcorp.model.User;
+import com.medcorp.util.Common;
 
 import net.medcorp.library.ble.util.Optional;
 
