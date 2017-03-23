@@ -41,7 +41,7 @@
                 android:id="@+id/activity_setting_notification_active_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@null"
+                android:divider="@drawable/alarm_list_view_divider"
                 android:dividerHeight="1dp"
                 android:visibility="visible"
                 />
@@ -78,7 +78,7 @@
                 android:id="@+id/activity_setting_notification_inactive_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@null"
+                android:divider="@drawable/alarm_list_view_divider"
                 android:dividerHeight="1dp"
                 android:visibility="visible"
                 />

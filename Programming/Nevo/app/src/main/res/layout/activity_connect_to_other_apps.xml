@@ -16,7 +16,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:divider="@drawable/notification_list_view_divider"
-        android:dividerHeight="@null"
+        android:dividerHeight="1dp"
         android:id="@+id/activity_connect_to_other_apps_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

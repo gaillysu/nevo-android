@@ -634,10 +634,15 @@ public class OtaControllerImpl implements OtaController  {
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
                     state = DFUControllerState.SEND_START_COMMAND;
-
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            //sometimes, reconnect watch need more times to get success,so we reset timer  before start OTA (after send start command, need wait 20s to get OTA mode,so here reset timer to avoid invaild timeout)
+                            if(mTimeoutTimer!=null) {
+                                mTimeoutTimer.cancel();
+                                mTimeoutTimer = new Timer();
+                                mTimeoutTimer.schedule(new myOTATimerTask(), MAX_TIME, MAX_TIME);
+                            }
                             connectionController.sendRequest(new OTAStartRequest(mContext));
                         }
                     },1000);
