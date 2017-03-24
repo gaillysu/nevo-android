@@ -77,7 +77,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
-        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this);
+        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this,true);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
         setHasOptionsMenu(true);

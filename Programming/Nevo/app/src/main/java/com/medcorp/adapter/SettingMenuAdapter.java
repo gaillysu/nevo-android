@@ -25,17 +25,14 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
     private List<SettingsMenuItem> listMenu;
     private OnCheckedChangeInListListener onCheckedChangeInListListener;
     private List<SwitchCompat> switchCompatList;
-
-    public SettingMenuAdapter(Context context,List<SettingsMenuItem> listMenu, OnCheckedChangeInListListener listener){
+    private boolean hasTintColor;
+    public SettingMenuAdapter(Context context,List<SettingsMenuItem> listMenu, OnCheckedChangeInListListener listener,boolean hasTintColor){
         super(context,0,listMenu);
         this.context = context;
         this.listMenu = listMenu;
         this.onCheckedChangeInListListener = listener;
         switchCompatList = new ArrayList<>();
-    }
-
-    public SettingMenuAdapter(Context context,List<SettingsMenuItem> listMenu){
-        this(context,listMenu,null);
+        this.hasTintColor = hasTintColor;
     }
 
     @Override
@@ -47,7 +44,13 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item, parent, false);
+        View itemView;
+        if(hasTintColor) {
+            itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item, parent, false);
+        }
+        else {
+            itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item_without_tint, parent, false);
+        }
         ImageView menuImage = (ImageView) itemView.findViewById(R.id.activity_setting_menu_image);
         RobotoTextView menuNameTextView = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
         SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
