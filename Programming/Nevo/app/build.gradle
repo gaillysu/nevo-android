@@ -12,13 +12,13 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.medcorp.nevo"
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 222
-        versionName "2.2.2"
+        versionCode 230
+        versionName "2.3.0"
         multiDexEnabled true
     }
 

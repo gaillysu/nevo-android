@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:listSelector="?android:attr/selectableItemBackground"
-        android:divider="@null"
+        android:divider="@drawable/alarm_list_view_divider"
+        android:dividerHeight="1dp"
         android:scrollbars="none"
         android:visibility="visible"
         />

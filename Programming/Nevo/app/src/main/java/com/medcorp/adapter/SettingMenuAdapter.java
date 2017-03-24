@@ -1,6 +1,7 @@
 package com.medcorp.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,17 +26,14 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
     private List<SettingsMenuItem> listMenu;
     private OnCheckedChangeInListListener onCheckedChangeInListListener;
     private List<SwitchCompat> switchCompatList;
-
-    public SettingMenuAdapter(Context context,List<SettingsMenuItem> listMenu, OnCheckedChangeInListListener listener){
+    private boolean hasTintColor;
+    public SettingMenuAdapter(Context context,List<SettingsMenuItem> listMenu, OnCheckedChangeInListListener listener,boolean hasTintColor){
         super(context,0,listMenu);
         this.context = context;
         this.listMenu = listMenu;
         this.onCheckedChangeInListListener = listener;
         switchCompatList = new ArrayList<>();
-    }
-
-    public SettingMenuAdapter(Context context,List<SettingsMenuItem> listMenu){
-        this(context,listMenu,null);
+        this.hasTintColor = hasTintColor;
     }
 
     @Override
@@ -51,7 +49,9 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
         ImageView menuImage = (ImageView) itemView.findViewById(R.id.activity_setting_menu_image);
         RobotoTextView menuNameTextView = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
         SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
-
+        if(hasTintColor){
+            menuImage.setColorFilter(ContextCompat.getColor(context,R.color.setting_tint_color_icon));
+        }
         menuImage.setImageResource(listMenu.get(position).getIcon());
         menuNameTextView.setText(listMenu.get(position).getTitle());
         if(listMenu.get(position).isWithSwitch())
