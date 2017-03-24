@@ -62,9 +62,9 @@ public class ConnectToOtherAppsActivity extends BaseActivity implements OnChecke
         rootView = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         ButterKnife.bind(this);
         List<SettingsMenuItem> menuList = new ArrayList<>();
-        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit_small, Preferences.isGoogleFitSet(this)));
+        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_google_fit), R.drawable.google_fit, Preferences.isGoogleFitSet(this)));
 //        menuList.add(new SettingsMenuItem(getString(R.string.settings_other_apps_validic), R.drawable.google_fit_small, getModel().getNevoUser().isConnectValidic()));
-        settingsAdapter = new SettingMenuAdapter(this, menuList, this);
+        settingsAdapter = new SettingMenuAdapter(this, menuList, this,false);
         otherAppsListView.setAdapter(settingsAdapter);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
