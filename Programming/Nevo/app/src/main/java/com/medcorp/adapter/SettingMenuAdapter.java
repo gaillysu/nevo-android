@@ -1,6 +1,7 @@
 package com.medcorp.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,17 +45,13 @@ public class SettingMenuAdapter extends ArrayAdapter<SettingsMenuItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView;
-        if(hasTintColor) {
-            itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item, parent, false);
-        }
-        else {
-            itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item_without_tint, parent, false);
-        }
+        View itemView = inflater.inflate(R.layout.activity_setting_menu_list_view_item, parent, false);
         ImageView menuImage = (ImageView) itemView.findViewById(R.id.activity_setting_menu_image);
         RobotoTextView menuNameTextView = (RobotoTextView) itemView.findViewById(R.id.activity_setting_menu_name);
         SwitchCompat onOffSwitch = (SwitchCompat) itemView.findViewById(R.id.activity_setting_menu_switch);
-
+        if(hasTintColor){
+            menuImage.setColorFilter(ContextCompat.getColor(context,R.color.setting_tint_color_icon));
+        }
         menuImage.setImageResource(listMenu.get(position).getIcon());
         menuNameTextView.setText(listMenu.get(position).getTitle());
         if(listMenu.get(position).isWithSwitch())
