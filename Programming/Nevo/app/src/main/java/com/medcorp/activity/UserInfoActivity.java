@@ -43,6 +43,7 @@ public class UserInfoActivity extends BaseActivity {
     private String firstName;
     private String lastName;
     private String password;
+    private Date birthday;
     private Snackbar snackbar;
     private int viewType = -1;
     private ProgressDialog progressDialog;
@@ -91,7 +92,7 @@ public class UserInfoActivity extends BaseActivity {
             try {
                 CreateUser userInfo = new CreateUser();
                 userInfo.setFirst_name(firstName);
-                userInfo.setBirthday(userBirthday);
+                userInfo.setBirthday(new SimpleDateFormat("yyyy-MM-dd").format(birthday));
                 userInfo.setEmail(email);
                 userInfo.setLast_name(lastName);
                 userInfo.setLength(new Integer(userHeight.replace(getString(R.string.info_company_height), "")).intValue());
@@ -201,6 +202,7 @@ public class UserInfoActivity extends BaseActivity {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         try {
                             Date userSelectDate = dateFormat.parse(dateDesc);
+                            birthday = userSelectDate;
                             tv_userBirth.setText(day + "-" + new SimpleDateFormat("MMM").format(userSelectDate) + "-" + year);
                         } catch (ParseException e) {
                             e.printStackTrace();
