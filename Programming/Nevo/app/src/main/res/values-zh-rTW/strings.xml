@@ -447,4 +447,9 @@
     <string name="eight_clock">八点鐘黄灯</string>
     <string name="ten_clock">十点鐘橙灯</string>
     <string name="twelve_clock">十二点鐘绿灯</string>
+    <string name="scan_duration_describe">當手表斷開，它會掃描選定的持續時間。註意，手表將耗盡更多的電池，掃描更長。我們建議不要讓它掃描更長的時間，然後15分鐘。</string>
+    <string name="scan_duration_item_select_one_hour">1小時</string>
+    <string name="scan_duration_time_unit">分鐘</string>
+    <string name="scan_duration_title_title">收索時間</string>
+    <string name="settings_bluetooth_scan">收索時長</string>
 </resources>
