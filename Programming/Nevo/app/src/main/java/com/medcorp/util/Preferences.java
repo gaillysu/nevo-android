@@ -72,15 +72,15 @@ public class Preferences {
         return preferences.getBoolean(context.getString(R.string.key_prefs_is_metrics), false);
     }
 
-    public static void savePlaceSelect(Context context, boolean isMetrics) {
+    public static void saveScanDuration(Context context, int time) {
         init(context);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(context.getString(R.string.key_prefs_is_home), isMetrics).apply();
+        editor.putInt(context.getString(R.string.key_prefs_scan_duration_time), time).apply();
     }
 
-    public static boolean getPlaceSelect(Context context) {
+    public static int getScanDuration(Context context) {
         init(context);
-        return preferences.getBoolean(context.getString(R.string.key_prefs_is_home), true);
+        return preferences.getInt(context.getString(R.string.key_prefs_scan_duration_time), -1);
     }
 
 

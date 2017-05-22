@@ -18,6 +18,7 @@ import com.medcorp.R;
 import com.medcorp.activity.ConnectToOtherAppsActivity;
 import com.medcorp.activity.MoreSettingActivity;
 import com.medcorp.activity.MyNevoActivity;
+import com.medcorp.activity.ScanDurationActivity;
 import com.medcorp.activity.SettingNotificationActivity;
 import com.medcorp.activity.login.LoginActivity;
 import com.medcorp.activity.tutorial.TutorialPage1Activity;
@@ -64,6 +65,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),R.drawable.ic_scan_bluetooth));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_more), R.drawable.setting_goals));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
@@ -115,16 +117,18 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
 
-        } else if (position == 4) {
+        }else if(position == 4){
+            startActivity(ScanDurationActivity.class);
+        } else if (position == 5) {
             startActivity(MoreSettingActivity.class);
 
-        } else if (position == 5) {
-            startActivity(ConnectToOtherAppsActivity.class);
         } else if (position == 6) {
+            startActivity(ConnectToOtherAppsActivity.class);
+        } else if (position == 7) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.support_url)));
             getActivity().startActivity(intent);
 
-        } else if (position == 7) {
+        } else if (position == 8) {
 
             new MaterialDialog.Builder(getContext())
                     .content(R.string.settings_sure)
@@ -141,7 +145,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                     .cancelable(false)
                     .show();
 
-        } else if (position == 8) {
+        } else if (position == 9) {
             if (!getModel().getNevoUser().isLogin()) {
                 getModel().removeUser(getModel().getNevoUser());
                 Intent intent = new Intent(SettingsFragment.this.getContext(), LoginActivity.class);
@@ -157,11 +161,6 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
             SettingsFragment.this.getActivity().finish();
         }
-        //        } else if (position == 9) {
-        //            Intent intent = new Intent(SettingsFragment.this.getContext(), SettingAboutActivity.class);
-        //            startActivity(intent);
-        //
-        //        }
     }
 
     @Override

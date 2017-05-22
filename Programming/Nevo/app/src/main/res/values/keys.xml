@@ -35,6 +35,7 @@
     <string name="key_prefs_is_first_login" translatable="false">is_not_first_login</string>
     <string name="key_prefs_is_metrics" translatable="false">is_not_metrics</string>
     <string name="key_prefs_is_home" translatable="false">is_select_city</string>
+    <string name="key_prefs_scan_duration_time" translatable="false">scan_duration_time</string>
     <string name="key_init_alarm" translatable="false"> is_init_alarm</string>
     <string name="key_prefs_watch_id" translatable="false">watch_id</string>
     <string name="key_prefs_watch_model" translatable="false">watch_model</string>
