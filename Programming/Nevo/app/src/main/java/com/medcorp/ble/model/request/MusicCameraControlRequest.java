@@ -42,6 +42,6 @@ public class MusicCameraControlRequest extends BLERequestData {
 
     @Override
     public byte getHeader() {
-        return 0;
+        return HEADER;
     }
 }
