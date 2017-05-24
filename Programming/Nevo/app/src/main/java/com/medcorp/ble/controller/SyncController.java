@@ -114,4 +114,6 @@ public interface SyncController {
     public void setHoldRequest(boolean holdRequest);
 
     public int getBluetoothStatus();
+
+    public void setBleConnectTimeout(int timeoutInminutes);
 }
