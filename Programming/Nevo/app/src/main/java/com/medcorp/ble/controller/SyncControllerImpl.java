@@ -45,6 +45,7 @@ import com.medcorp.ble.model.request.ReadDailyTrackerRequest;
 import com.medcorp.ble.model.request.ReadWatchInfoRequest;
 import com.medcorp.ble.model.request.SetAlarmRequest;
 import com.medcorp.ble.model.request.SetAlarmWithTypeRequest;
+import com.medcorp.ble.model.request.SetBleConnectTimeoutRequest;
 import com.medcorp.ble.model.request.SetCardioRequest;
 import com.medcorp.ble.model.request.SetGoalRequest;
 import com.medcorp.ble.model.request.SetNotificationRequest;
@@ -987,5 +988,10 @@ public class SyncControllerImpl implements SyncController, BLEExceptionVisitor<V
     @Override
     public int getBluetoothStatus(){
         return connectionController.getBluetoothStatus();
+    }
+
+    @Override
+    public void setBleConnectTimeout(int timeoutInminutes) {
+        sendRequest(new SetBleConnectTimeoutRequest(mContext,timeoutInminutes));
     }
 }
