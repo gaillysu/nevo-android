@@ -65,7 +65,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_notifications), R.drawable.setting_notfications));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_my_nevo), R.drawable.setting_mynevo));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_find_my_watch), R.drawable.setting_findmywatch));
-        listMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan),R.drawable.ic_scan_bluetooth));
+        listMenu.add(new SettingsMenuItem(getString(R.string.settings_bluetooth_scan), R.drawable.ic_scan_bluetooth));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_more), R.drawable.setting_goals));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_other_apps), R.drawable.setting_linkloss));
         listMenu.add(new SettingsMenuItem(getString(R.string.settings_support), R.drawable.setting_support));
@@ -79,7 +79,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
         }
         //        listMenu.add(new SettingsMenuItem(getString(R.string.settings_about), R.drawable.setting_about));
 
-        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this,true);
+        settingAdapter = new SettingMenuAdapter(getContext(), listMenu, this, true);
         settingListView.setAdapter(settingAdapter);
         settingListView.setOnItemClickListener(this);
         setHasOptionsMenu(true);
@@ -117,8 +117,14 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
 
-        }else if(position == 4){
-            startActivity(ScanDurationActivity.class);
+        } else if (position == 4) {
+            int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
+            int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+            if (currentFirmwareVersion >= 40 && currentSoftwareVersion >= 27) {
+                startActivity(ScanDurationActivity.class);
+            } else {
+                askUserIsUpdate();
+            }
         } else if (position == 5) {
             startActivity(MoreSettingActivity.class);
 
@@ -161,6 +167,25 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
             SettingsFragment.this.getActivity().finish();
         }
+    }
+
+    private void askUserIsUpdate() {
+        new MaterialDialog.Builder(getContext())
+                .content(R.string.prompt_user_have_new_version)
+                .negativeText(android.R.string.no)
+                .positiveText(android.R.string.yes)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog dialog, DialogAction which) {
+                        if (getModel().isWatchConnected()) {
+                            startActivity(MyNevoActivity.class);
+                        } else {
+                            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
+                        }
+                    }
+                })
+                .cancelable(false)
+                .show();
     }
 
     @Override
