@@ -424,4 +424,5 @@
     <string name="scan_duration_time_unit">minutes</string>
     <string name="scan_duration_title_title">NEVO SCAN DURATION</string>
     <string name="settings_bluetooth_scan">Scan duration</string>
+    <string name="prompt_user_have_new_version">Update your Nevo to use this feature</string>
 </resources>

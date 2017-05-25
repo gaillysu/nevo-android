@@ -452,4 +452,5 @@
     <string name="scan_duration_time_unit">分鐘</string>
     <string name="scan_duration_title_title">收索時間</string>
     <string name="settings_bluetooth_scan">收索時長</string>
+    <string name="prompt_user_have_new_version">更新妳的手表才可以使用該功能</string>
 </resources>
