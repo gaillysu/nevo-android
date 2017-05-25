@@ -118,12 +118,16 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
             }
 
         } else if (position == 4) {
-            int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
-            int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
-            if (currentFirmwareVersion >= 40 && currentSoftwareVersion >= 27) {
-                startActivity(ScanDurationActivity.class);
+            if (getModel().isWatchConnected()) {
+                int currentSoftwareVersion = Integer.parseInt(getModel().getWatchSoftware());
+                int currentFirmwareVersion = Integer.parseInt(getModel().getWatchFirmware());
+                if (currentFirmwareVersion >= 40 && currentSoftwareVersion >= 27) {
+                    startActivity(ScanDurationActivity.class);
+                } else {
+                    askUserIsUpdate();
+                }
             } else {
-                askUserIsUpdate();
+                ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
             }
         } else if (position == 5) {
             startActivity(MoreSettingActivity.class);
@@ -177,11 +181,7 @@ public class SettingsFragment extends BaseObservableFragment implements AdapterV
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(MaterialDialog dialog, DialogAction which) {
-                        if (getModel().isWatchConnected()) {
-                            startActivity(MyNevoActivity.class);
-                        } else {
-                            ToastHelper.showShortToast(getContext(), R.string.in_app_notification_no_watch);
-                        }
+                        startActivity(MyNevoActivity.class);
                     }
                 })
                 .cancelable(false)
