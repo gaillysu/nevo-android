@@ -7,34 +7,47 @@
     <include layout="@layout/toolbar"
         />
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/scan_duration_layout_background_color"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:text="@string/scan_duration_title_title"
-        android:textColor="@color/scan_duration_title_text_color"
-        android:textSize="18dp"/>
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
 
-    <ListView
-        android:id="@+id/setting_scan_duration_item"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:divider="@color/alarm_repeat_text_color"
-        android:dividerHeight="0.5dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:scrollbars="none"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/scan_duration_layout_background_color"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:text="@string/scan_duration_describe"
-        android:textColor="@color/scan_duration_title_text_color"
-        android:textSize="16sp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/scan_duration_layout_background_color"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="@string/scan_duration_title_title"
+                android:textColor="@color/scan_duration_title_text_color"
+                android:textSize="16sp"/>
+
+            <ListView
+                android:id="@+id/setting_scan_duration_item"
+                android:layout_width="match_parent"
+                android:layout_height="432dp"
+                android:layout_weight="1"
+                android:divider="@null"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:scrollbars="none"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/scan_duration_layout_background_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/scan_duration_describe"
+                android:textColor="@color/scan_duration_title_text_color"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
