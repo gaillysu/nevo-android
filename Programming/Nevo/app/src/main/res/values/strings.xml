@@ -228,6 +228,7 @@
     <string name="settings_notifications_inactive_title">Inactive Notifications</string>
     <string name="settings_my_nevo">My Nevo</string>
     <string name="settings_find_my_watch">Find my watch</string>
+    <string name="settings_bluetooth_scan">Scan duration</string>
     <string name="settings_goals">Goals</string>
     <string name="settings_more">More Settings</string>
     <string name="settings_support">Support</string>
@@ -460,6 +461,11 @@ push and hold the third button, until the white LED blinks</string>
     <string name="eight_clock">8 o\'clock</string>
     <string name="ten_clock">10 o\'clock</string>
     <string name="twelve_clock">12 o\'clock</string>
+    <string name="scan_duration_title_title">NEVO SCAN DURATION</string>
+    <string name="scan_duration_describe">When the watch gets disconnected it will scan for the selected duration. Note that the watch will drain more battery it scans longer. we suggest not to let it scan for longer then 15 minutes.</string>
+    <string name="scan_duration_item_select_one_hour">1 hour</string>
+    <string name="scan_duration_time_unit"> minutes</string>
+    <string name="prompt_user_have_new_version">Update your Nevo to use this feature</string>
 </resources>
 
 
