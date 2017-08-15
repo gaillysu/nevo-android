@@ -633,7 +633,6 @@ public class OtaControllerImpl implements OtaController  {
             {
                 if (state == DFUControllerState.SEND_RECONNECT)
                 {
-                    state = DFUControllerState.SEND_START_COMMAND;
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -643,6 +642,10 @@ public class OtaControllerImpl implements OtaController  {
                                 mTimeoutTimer = new Timer();
                                 mTimeoutTimer.schedule(new myOTATimerTask(), MAX_TIME, MAX_TIME);
                             }
+                            //before send OTA command, clear queue and stop scan
+                            state = DFUControllerState.SEND_START_COMMAND;
+                            connectionController.stopScan();
+                            connectionController.clearQueue();
                             connectionController.sendRequest(new OTAStartRequest(mContext));
                         }
                     },1000);
